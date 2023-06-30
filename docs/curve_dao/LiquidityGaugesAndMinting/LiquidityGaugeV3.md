@@ -2,7 +2,7 @@
 
 ### Outline of modified functionality:
 
-1.  Ability to redirect claimed rewards to an alternative account.  
+1. Ability to redirect claimed rewards to an alternative account.  
 2. Opt-in claiming of rewards on interactions with the gauge, instead of auto-claiming.
 3. Retrieving rewards from the reward contract happens at a minimum of once an hour, for reduced gas costs.
 4. Expose the amount of claimed and claimable rewards for users.

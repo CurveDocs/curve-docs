@@ -1,137 +1,22 @@
-**This is a fixed address, the contract cannot be swapped out or upgraded.**
+The Minter contract in Curve Finance is responsible for the issuance and distribution of the CRV (Curve's governance token) to liquidity providers. It acts as a mechanism to reward users who provide liquidity to Curve's pools. The Minter contract calculates the amount of CRV tokens to be allocated based on various factors such as the duration and amount of liquidity provided. By incentivizing liquidity provision, the Minter contract promotes the growth and sustainability of the Curve ecosystem.
 
-!!! note
-    **`Minter`** contract is deployed to the Ethereum mainnet at: [0xd061D61a4d941c39E5453435B6345Dc261C2fcE0](https://etherscan.io/address/0xd061D61a4d941c39E5453435B6345Dc261C2fcE0#code)
-
+!!! info
+    **`Minter`** contract is deployed to the Ethereum mainnet at: [0xd061D61a4d941c39E5453435B6345Dc261C2fcE0](https://etherscan.io/address/0xd061D61a4d941c39E5453435B6345Dc261C2fcE0#code)  
     Source code of the VotingEscrow contract can be found on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/Minter.vy).
 
+!!!warning
+    This is a fixed address. The contract cannot be swapped out or upgraded.
 
-
-## READ ONLY FUNTIONS/VARIABLES
-### `token`
-!!! description "`Minter.token() -> address: view`"
-
-    Getter for the token address of the Curve DAO Token.
-
-    Returns: `address` of the **Curve DAO Token**.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 4 5"
-        token: public(address)
-
-        @external
-        def __init__(_token: address, _controller: address):
-            self.token = _token
-            self.controller = _controller
-        ```
-
-    === "Example"
-        ```shell
-        >>> Minter.token()
-        '0xD533a949740bb3306d119CC777fa900bA034cd52'
-        ```
-
-
-### `controller`
-!!! description "`Minter.controller() -> address: view`"
-
-    Getter for the address of the Controller.
-
-    Returns: `address` of the **Controller**.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 4 6"
-        controller: public(address)
-
-        @external
-        def __init__(_token: address, _controller: address):
-            self.token = _token
-            self.controller = _controller
-        ```
-
-    === "Example"
-        ```shell
-        >>> Minter.controller()
-        '0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB'
-        ```
-
-
-### `minted (correct?)`
-!!! description "`Minter.minted(arg0: address, arg1: address) -> uint256: view`"
-
-    Getter for the total amount of CRV minted from a specific gauge address by an address.
-
-    Returns: **amount of CRV minted** (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `address` | Wallet Address |
-    | `arg1` |  `address` | Gauge Address |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 6"
-        event Minted:
-            recipient: indexed(address)
-            gauge: address
-            minted: uint256
-
-        minted: public(HashMap[address, HashMap[address, uint256]])
-        ```
-
-    === "Example"
-        ```shell
-        >>> Minter.minted(0x7a16fF8270133F063aAb6C9977183D9e72835428, 0xe5d5aa1bbe72f68df42432813485ca1fc998de32)
-        175216847783215075239045
-        ```
-
-
-### `allowed_to_mint_for`
-!!! description "`Minter.allowed_to_mint_for(arg0: address, arg1: address) -> bool: view`"
-
-    Getter method to check if `minter` has been approved to call `mint_for` on behalf of `for`.
-
-    Returns: `bool`.
-
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `address` | Address |
-    | `arg1` |  `address` | Address |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 9"
-        allowed_to_mint_for: public(HashMap[address, HashMap[address, bool]])
-
-        @external
-        def toggle_approve_mint(minting_user: address):
-            """
-            @notice allow `minting_user` to mint for `msg.sender`
-            @param minting_user Address to toggle permission for
-            """
-            self.allowed_to_mint_for[minting_user][msg.sender] = not self.allowed_to_mint_for[minting_user][msg.sender]
-        ```
-
-    === "Example"
-        ```shell
-        >>> Minter.allowed_to_mint_for(0x7a16fF8270133F063aAb6C9977183D9e72835428, 0x0E33Be39B13c576ff48E14392fBf96b02F40Cd34)
-        false
-        ```
-
-
-## WRITE FUNTCIONS
+## **Minting CRV**
 
 ### `mint`
 !!! description "`Minter.mint(gauge_addr: address)`"
 
-    Function to mint CRV form a gauge.
+    Function to mint allocated tokens for the caller based on a single gauge.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `gauge_addr` |  `address` | Gauge Addresses |
+    | `gauge_addr` |  `address` | Gauge address to get mintable amount from |
 
     ??? quote "Source code"
 
@@ -176,12 +61,14 @@
 ### `mint_many`
 !!! description "`Minter.mint_many(gauge_addrs: address[8])`"
 
-    Function to mint CRV from multiple gauges.
-
+    Function to mint CRV for the caller from multiple gauges.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `gauge_addrs` |  `address` | Gauge Addresses |
+    | `gauge_addrs` |  `address` | List of Gauge Addresses to mint from|
+
+    !!!note
+        If you wish to mint from less than eight gauges, leave the remaining array entries as `ZERO_ADDRESS`.
 
     ??? quote "Source code"
 
@@ -228,13 +115,15 @@
 ### `mint_for`
 !!! description "`Minter.mint_for(gauge_addr: address, _for: address)`"
 
-    Mint tokens for a different address. This function can only be called when the caller has previously been approved by `for` using `toggle_approve_mint`.
-
+    Function to mint tokens from a different address.
+    
+    !!!note
+        In order to call this function, the caller must have been previously approved by `for` using [`toggle_approve_mint`](#toggle_approve_mint).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `gauge_addr` |  `address` | Gauge Addresses |
-    | `_for` |  `address` | Addresses to mint to |
+    | `gauge_addr` |  `address` | Gauge Addresses to get mintable amount from |
+    | `_for` |  `address` | Addresses to mint for |
 
     ??? quote "Source code"
 
@@ -282,7 +171,7 @@
 ### `toggle_approve_mint`
 !!! description "`Minter.toggle_approve_mint(minting_user: address)`"
 
-    Function to toggle approval for `minting_user` to mint CRV on behalf of the caller .
+    Function to toggle approval for `minting_user` to mint CRV on behalf of the caller.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -304,4 +193,121 @@
         ```shell
         >>> Minter.toggle_approve_mint(todo)
         'what to put here'
+        ```
+
+
+### `allowed_to_mint_for`
+!!! description "`Minter.allowed_to_mint_for(arg0: address, arg1: address) -> bool: view`"
+
+    Getter method to check if `minter` has been approved to call [`mint_for`](#mint_for) on behalf of `for`.
+
+    Returns: `bool`.
+
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `arg0` |  `address` | Address |
+    | `arg1` |  `address` | Address |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 9"
+        allowed_to_mint_for: public(HashMap[address, HashMap[address, bool]])
+
+        @external
+        def toggle_approve_mint(minting_user: address):
+            """
+            @notice allow `minting_user` to mint for `msg.sender`
+            @param minting_user Address to toggle permission for
+            """
+            self.allowed_to_mint_for[minting_user][msg.sender] = not self.allowed_to_mint_for[minting_user][msg.sender]
+        ```
+
+    === "Example"
+        ```shell
+        >>> Minter.allowed_to_mint_for(0x989AEb4d175e16225E39E87d0D97A3360524AD80, 0xF147b8125d2ef93FB6965Db97D6746952a133934)
+        'false'
+        ```
+
+
+
+## **Querying Basic Data**
+
+### `token`
+!!! description "`Minter.token() -> address: view`"
+
+    Getter for the token address of Curve DAO Token.
+
+    Returns: `address` of the **Curve DAO Token**.
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 4 5"
+        token: public(address)
+
+        @external
+        def __init__(_token: address, _controller: address):
+            self.token = _token
+            self.controller = _controller
+        ```
+
+    === "Example"
+        ```shell
+        >>> Minter.token()
+        '0xD533a949740bb3306d119CC777fa900bA034cd52'
+        ```
+
+
+### `controller`
+!!! description "`Minter.controller() -> address: view`"
+
+    Getter for the address of the Controller.
+
+    Returns: `address` of the **Controller**.
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 4 6"
+        controller: public(address)
+
+        @external
+        def __init__(_token: address, _controller: address):
+            self.token = _token
+            self.controller = _controller
+        ```
+
+    === "Example"
+        ```shell
+        >>> Minter.controller()
+        '0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB'
+        ```
+
+
+### `minted`
+!!! description "`Minter.minted(arg0: address, arg1: address) -> uint256: view`"
+
+    Getter for the total amount of CRV minted from a specific gauge address by an address.
+
+    Returns: **amount of CRV minted** (`uint256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `arg0` |  `address` | Wallet Address |
+    | `arg1` |  `address` | Gauge Address |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 6"
+        event Minted:
+            recipient: indexed(address)
+            gauge: address
+            minted: uint256
+
+        minted: public(HashMap[address, HashMap[address, uint256]])
+        ```
+
+    === "Example"
+        ```shell
+        >>> Minter.minted(0x989AEb4d175e16225E39E87d0D97A3360524AD80, 0xe5d5aa1bbe72f68df42432813485ca1fc998de32)
+        1296598989597451358023782
         ```

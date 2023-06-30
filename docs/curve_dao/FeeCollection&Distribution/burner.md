@@ -44,7 +44,7 @@ There are multiple burner contracts, each of which handles a different category 
 |`UnderlyingBurner`|`Assets that can be directly deposited into 3pool, or swapped for an asset that is deposited into 3pool`|[0x786b374b5eef874279f4b7b4de16940e57301a58](https://etherscan.io/address/0x786b374b5eef874279f4b7b4de16940e57301a58#code)|
 |`Wrapped stETH Burner`|`Withdraws stETH from Wrapped stETH` **under voting (remove this once passed)**|[0x072C93f12dC274300c79E92Eb61a0feCFa8E8918](https://etherscan.io/address/0x072C93f12dC274300c79E92Eb61a0feCFa8E8918#code)|
 
-!!!note
+!!! info
     Source code for burners is available on [Github](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/burners).  
 
 
@@ -70,7 +70,7 @@ The LP Burner handles non-3CRV LP tokens, collected from metapools.
 LP burner calls to `StableSwap.remove_liquidity_one_coin` to unwrap the LP token into a single asset. The new asset is then transferred on to another burner.
 
 
-#### `get swap data for LP Tokens`
+#### `swap_data`
 !!! description "`LPBurner.swap_data(arg0: adress) -> pool: address, coin: address, burner: address, i: int128`"
 
     Getter method for informations about the LP Token burn process.
@@ -101,7 +101,7 @@ LP burner calls to `StableSwap.remove_liquidity_one_coin` to unwrap the LP token
         i: 1
         ```
 
-#### `set swap data for LP Tokens`
+#### `set_swap_data`
 !!! description "`LPBurner.set_swap_data(_lp_token: address, _coin: address, _burner: address) -> bool:`"
 
     Function to set the `swap_data` of a LP token.
@@ -206,7 +206,7 @@ The optimal sequence when burning assets using the synth burner is thus:
 
 The burner is configurable via the following functions:
 
-#### `set swap data for synths`
+#### `set_swap_for`
 !!! description "`SynthBurner.set_swap_for(_coins: address[10], _targets: address[10]) -> bool:`"
 
     Set target coins that the burner will swap into.
@@ -260,7 +260,7 @@ The burner is configurable via the following functions:
         ```
 
 
-#### `add synths`
+#### `add_synths`
 !!! description "`SynthBurner.add_synths(_synths: address[10]) -> bool:`"
 
     Register synthetic assets within the burner.  
@@ -373,7 +373,7 @@ Once the entire burn process has been completed you must call `execute` as the f
 
 ## **Configuring Fee Bruners**
 
-### `get_burner`
+### `burners`
 !!! description "`PoolProxy.burners(coin: address) -> address: view`"
 
     Getter for the burner contract address for `coin`.

@@ -1,4 +1,4 @@
-# **`The Curve DAO: Liquidity Gauges and Minting CRV`**
+# *`The Curve DAO: Liquidity Gauges and Minting CRV`**
 
 Curve incentivizes liquidity providers with the CRV, the protocol governance token. Allocation, distribution and minting of CRV are managed via several related DAO contracts:
 
@@ -9,7 +9,7 @@ Curve incentivizes liquidity providers with the CRV, the protocol governance tok
 `Minter:` CRV minting contract, generates new CRV according to liquidity gauges
 
 
-# **`Implementation Details`**
+# **Implementation Details**
 
 ## **CRV INFLATION**
 CRV follows a piecewise linear inflation schedule. The inflation is reduced by $2^{1/4}$ each year. Each time the inflation reduces, a new mining epoch starts.
@@ -60,7 +60,7 @@ When a user applies a new weight vote, it gets applied at the start of the next 
 
 
 ## **The Gauge Controller**
-The **Gauge Controller** maintains a list of gauges and their types, with the weights of each gauge and [type]INSERT LINK HERE. In order to implement weight voting, `GaugeController` has to include parameters handling linear character of voting power each user has.
+The **Gauge Controller** maintains a list of gauges and their types, with the weights of each gauge and [type](/docs/curve_dao/liq-gauges%26minting-crv/GaugeTypes.md). In order to implement weight voting, `GaugeController` has to include parameters handling linear character of voting power each user has.
 
 `GaugeController` records points (bias + slope) per gauge in `vote_points`, and _scheduled_ changes in biases and slopes for those points in `vote_bias_changes` and `vote_slope_changes`. New changes are applied at the start of each epoch week.
 

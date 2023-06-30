@@ -8,8 +8,8 @@ Ownership is handled via a series of proxy contracts. At a high level, the flow 
 
 At the ownership proxy level there are two main contracts:
 
-`PoolProxy:` Admin functionality for exchange contracts (insert link)
-`GaugeProxy:` Admin functionality for liquidity gauges (insert link)
+[`PoolProxy:`](/docs/curve_dao/ownership-proxy/PoolProxy.md) Admin functionality for exchange contracts  
+[`GaugeProxy:`](/docs/curve_dao/ownership-proxy/GaugeProxy.md) Admin functionality for liquidity gauges 
 
-The DAO is capable of replacing the ownership proxies via a vote. Deployment addresses for the current contracts can be found in the addresses reference section of the documentation.
+The DAO is capable of replacing the ownership proxies via a vote. Deployment addresses for the current contracts can be found in the addresses reference section of the documentation.  
 

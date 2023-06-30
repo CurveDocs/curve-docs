@@ -9,6 +9,6 @@ Liquidity providers also incur fees when adding or removing liquidity. The fee i
 Exchange contracts are indirectly owned by the Curve DAO via a proxy ownership contract. This contract includes functionality to withdraw the fees, convert them to 3CRV, and forward them into the fee distributor contract. Collectively, this process is referred to as “burning”.
 
 
-!!!note
+!!! info
     The burn process involves multiple transactions and is very gas intensive. Anyone can execute any step of the burn process at any time and there is no hard requirement that it happens in the correct order. However, running the steps out of order can be highly inefficient. If you wish to burn, it is recommended that you review all of the following information so you understand exactly what is happening.
 

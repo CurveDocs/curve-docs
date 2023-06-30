@@ -7,6 +7,7 @@ The current version of the MetaRegistry aggregates of the following four child r
 2. **`Curve Stable Factory`**: A permissionless StableSwap pool factory, which also acts as a registry for pools that its users create.  
 3. **`Curve Crypto Registry`**: A registry of custom CryptoSwap pool implementaions deployed by Curve Core.  
 4. **`Curve Crypto Factory`**: A permissionless CryptoSwap pool factory, which also acts as a registry for pools that its users create.  
+5. **`Curve Tricrypto Factory Handler`**: A permmissionless Tricrypto pool factory, which also acts as a registry for pools that its users create.
 
 Each of the child registries are accompanied by a RegistryHandler, which is a contract that wraps around the child registry and enforces the abi implemented in the MetaRegistry. These registry handlers are then added to the MetaRegistry using the `MetaRegistry.add_registry_handler` method.
 

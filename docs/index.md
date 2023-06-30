@@ -8,24 +8,22 @@ of the protocol.
 
 Non-technical users may prefer the [Resources](https://resources.curve.fi/) site.
 
-!!! note
-
-    All code starting with ``$`` is meant to be run on your terminal. Code starting with ``>>>`` is meant to run 
-    inside the Brownie console.
-
-!!! note
-    
-    This project relies heavily upon ``brownie`` and the documentation assumes a basic familiarity with it. You may 
-    wish to view the [Brownie documentation](https://eth-brownie.readthedocs.io/en/stable/>) if you have not used 
-    it previously.
-
-
 # Protocol Overview
 
 Curve can be broadly separated into the following categories:
 
-1. StableSwap: Exchange contracts for stable assets
-2. CryptoSwap: Exchange contracts for volatile assets
-3. LLAMMA: 
-4. The DAO: Protocol governance and value accrual
+1. The DAO: Protocol governance and value accrual
+2. StableSwap: Exchange contracts for stable assets
+3. CryptoSwap: Exchange contracts for volatile assets
+3. crvUSD: Stablecoin using LLAMMA (lending-liquidating amm algorithm) 
 5. The Registry: Standardized API and on-chain resources to aid 3rd party integrations
+
+
+!!! info "Change this to ape"
+    This project relies heavily upon ``ape`` and the documentation assumes a basic familiarity with it. You may 
+    wish to view the [Ape documentation](https://docs.apeworx.io/ape/stable/index.html) if you have not used 
+    it previously.
+
+!!! tip
+    All code starting with ``$`` is meant to be run on your terminal. Code starting with ``>>>`` is meant to run 
+    inside the Ape console.

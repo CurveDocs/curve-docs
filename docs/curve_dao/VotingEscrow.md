@@ -1,13 +1,16 @@
 Participating in Curve DAO governance requires that an account have a balance of vote-escrowed CRV (veCRV). veCRV is a non-standard ERC20 implementation, used within the Aragon DAO to determine each account’s voting power.
 
-!!! note
-    veCRV is represented by the **`VotingEscrow`** contract, deployed to the Ethereum mainnet at:
+!!! info
+    **veCRV** is represented by the **`VotingEscrow`** contract, deployed to the Ethereum mainnet at:
     [0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2](https://etherscan.io/address/0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2)  
 
-    Source code of the VotingEscrow contract can be found on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/VotingEscrow.vy).
+    Source code of the **`VotingEscrow`** contract can be found on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/VotingEscrow.vy).
 
 !!!warning
-    veCRV cannot be transferred. The only way to obtain veCRV is by locking CRV. The maximum lock time is four years.
+    veCRV cannot be transferred. The only way to obtain veCRV is by locking CRV.  
+    The maximum lock time is four years and the minimum lock is one week.
+
+    To calculate the obtained vecrv after locking make sure to multiply by $\frac{locktime}{4}$, with `locktime` denominated in years. 
 
 | CRV      | veCRV  | Locktime|
 | -------- | -------| --------|
@@ -27,21 +30,21 @@ Slopes and biases change both when a user deposits and locks governance tokens, 
 
 
 ## **Smart Wallet Whitelist**
-The Smart Wallet Checker is an external contract which checks if certain contracts are whitelisted in order to be able to lock CRV.  
+The Smart Wallet Checker is an external contract which checks if certain contracts are whitelisted. If yes, the contract will be able to lock CRV into the VotingEscrow.
 If a contract is not whitelisted it will not be able to lock Curve DAO Tokens.
 
-!!! note
+!!! info
     The current SmartWalletChecker address is [0xca719728Ef172d0961768581fdF35CB116e0B7a4](https://etherscan.io/address/0xca719728Ef172d0961768581fdF35CB116e0B7a4).  
-    This address can be changed so please make sure to check the up-to-dateness when working with this contract.
+    This address can be changed by a DAO vote. Please make sure you are using the current SmartWalletWhitelist.
 
 
-### `check` (how to do formating for solidity???)
+### `check`
 !!! description "`SmartWalletChecker.check(_wallet: address) -> bool: view`"
+
+    Getter method to check if `_wallet` is whitelisted.
 
     !!!note
         Make sure to query `check` on the SmartWalletChecker contract and not on the VotingEscrow contract!
-
-    Getter method to check if `_wallet` is whitelisted.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -70,7 +73,7 @@ If a contract is not whitelisted it will not be able to lock Curve DAO Tokens.
 
     Getter for the current smart wallet checker contract.
     
-    Returns: **current** smart wallet checker contract (`address`).
+    Returns: **smart wallet checker contract** (`address`).
 
     ??? quote "Source code"
 
@@ -90,7 +93,7 @@ If a contract is not whitelisted it will not be able to lock Curve DAO Tokens.
 
     Getter for the future smart wallet checker contract.
 
-    Returns: **future** smart wallet checker contract (`address`).
+    Returns: **future smart wallet checker contract** (`address`).
 
     ??? quote "Source code"
 
@@ -108,11 +111,11 @@ If a contract is not whitelisted it will not be able to lock Curve DAO Tokens.
 ### `commit_smart_wallet_checker`
 !!! description "`vecrv.commit_smart_wallet_checker(addr: address):`"
 
-    Function to change the the smart wallet checker contract. Needs to be applied by calling `apply_smart_contract_wallet` (see below).
+    Function to commit the the smart wallet checker contract address to `addr`. In order to apply the new contract address, [`apply_smart_contract_wallet`](#apply_smart_wallet_checker) need to be called.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `addr`       |  `address` | New Smart Wallet Checker Contract Address |
+    | `addr`     |  `address` | New SmartWalletChecker Contract Address |
 
     ??? quote "Source code"
 
@@ -127,6 +130,9 @@ If a contract is not whitelisted it will not be able to lock Curve DAO Tokens.
             self.future_smart_wallet_checker = addr  
         ```
 
+    !!! permission 
+        This function can only be called by the `admin`.
+
     === "Example"
         ```shell
         >>> vecrv.commit_smart_wallet_checker(addr: address):
@@ -137,7 +143,7 @@ If a contract is not whitelisted it will not be able to lock Curve DAO Tokens.
 ### `apply_smart_wallet_checker`
 !!! description "`vecrv.apply_smart_wallet_checker():`"
 
-    Function to apply the new smart contract wallet checker address.
+    Function to apply the new SmartWalletChecker address.
 
     ??? quote "Source code"
 
@@ -151,6 +157,9 @@ If a contract is not whitelisted it will not be able to lock Curve DAO Tokens.
             self.smart_wallet_checker = self.future_smart_wallet_checker
         ```
 
+    !!! permissions 
+        This function can only be called by the `admin`.
+
     === "Example"
         ```shell
         >>> vecrv.apply_smart_wallet_checker():
@@ -160,17 +169,18 @@ If a contract is not whitelisted it will not be able to lock Curve DAO Tokens.
 
 
 ## **Admin Ownership**
-Ownership of this contract can be transfered by the admin (DAO) by calling `commit_tranfer_ownership`. Calling this function sets the new address as `future_admin`. These changes need to be applied by calling `apply_transfer_ownership`. 
+Ownership of this contract can be transfered by the `admin` (DAO) by calling `commit_tranfer_ownership`. Calling this function sets the new address as `future_admin`. These changes need to be applied by calling `apply_transfer_ownership`. 
 
-!!!note
-    The `commit_transfer_ownership` and `apply_transfer_ownership` function can only be called by the admin of the contract, which is the DAO.
+!!! info
+    The [`commit_transfer_ownership`](#commit_transfer_ownership) and [`apply_transfer_ownership`](#apply_transfer_ownership) function can only be called by the admin of the contract, which is the DA itself.
+
 
 ### `admin`
 !!! description "`vecrv.admin() -> address: view`"
 
     Getter for the current admin of the contract.
 
-    Returns: **current** admin (`address`) of the contract.
+    Returns: **admin** (`address`).
 
     ??? quote "Source code"
 
@@ -219,7 +229,7 @@ Ownership of this contract can be transfered by the admin (DAO) by calling `comm
 
     Getter for the future admin of the contract. This variable is changed when calling `commit_transfer_ownership` successfully.
 
-    Returns: **future** admin address (`address`)
+    Returns: **future admin** (`address`).
 
     ??? quote "Source code"
 
@@ -277,7 +287,7 @@ Ownership of this contract can be transfered by the admin (DAO) by calling `comm
 ### `commit_transfer_ownership`
 !!! description "`vecrv.commit_transfer_ownership(addr: address):`"
 
-    Function to transfer the ownership of the contract.
+    Function to commit the ownership of the contract to `addr`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -303,20 +313,20 @@ Ownership of this contract can be transfered by the admin (DAO) by calling `comm
             log CommitOwnership(addr)   
         ```
 
+    !!! permissions
+        This function can only be called by the `admin` of the contract.
+
     === "Example"
         ```shell
         >>> vecrv.commit_transfer_ownership(todo):
         'todo'
         ```
 
-    !!! note
-        This function can only be called by the admin of the contract.
-
 
 ### `apply_transfer_ownership`
 !!! description "`vecrv.apply_transfer_ownership():`"
 
-    Function to apply the new address as owner of this contract.
+    Function to apply the new ownership.
 
     ??? quote "Source code"
 
@@ -338,6 +348,9 @@ Ownership of this contract can be transfered by the admin (DAO) by calling `comm
             self.admin = _admin
             log ApplyOwnership(_admin)  
         ```
+    
+    !!! permissions
+        This function can only be called by the `admin` of the contract.
 
     === "Example"
         ```shell
@@ -345,13 +358,384 @@ Ownership of this contract can be transfered by the admin (DAO) by calling `comm
         'todo'
         ```
 
-    !!! note
-        This function can only be called by the admin of the contract.
+
+## **Working with VoteLocks**
+
+### `create_lock`
+!!! description "`vecrv.create_lock(_value: uint256, _unlock_time: uint256):`"
+
+    Function to deposit CRV into the contract and create a new lock.
+     
+    Prior to calling this function, the contract must be approved to transfer at least `_value` CRV. A new lock cannot be created when an existing lock already exists. 
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_value`   |  `uint256` | Amount of CRV to deposit |
+    | `_unlock_time` |  `uint256` | Epoch when tokens unlock |
+
+    !!!note
+        Epochs are rounded down to whole weeks.
+
+    ??? quote "Source code"
+
+        ```python hl_lines="3"
+        @external
+        @nonreentrant('lock')
+        def create_lock(_value: uint256, _unlock_time: uint256):
+            """
+            @notice Deposit `_value` tokens for `msg.sender` and lock until `_unlock_time`
+            @param _value Amount to deposit
+            @param _unlock_time Epoch time when tokens unlock, rounded down to whole weeks
+            """
+            self.assert_not_contract(msg.sender)
+            unlock_time: uint256 = (_unlock_time / WEEK) * WEEK  # Locktime is rounded down to weeks
+            _locked: LockedBalance = self.locked[msg.sender]
+
+            assert _value > 0  # dev: need non-zero value
+            assert _locked.amount == 0, "Withdraw old tokens first"
+            assert unlock_time > block.timestamp, "Can only lock until time in the future"
+            assert unlock_time <= block.timestamp + MAXTIME, "Voting lock can be 4 years max"
+
+            self._deposit_for(msg.sender, _value, unlock_time, _locked, CREATE_LOCK_TYPE) 
+        ```
+
+    === "Example"
+        ```shell
+        >>> vecrv.apply_transfer_ownership():
+        ```
+
+### `increase_amount`
+!!! description "`vecrv.increase_amount(_value: uint256):`"
+
+    Deposit additional CRV into an existing lock.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_value`       |  `uint256` | Amount of CRV to deposit |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="3"
+        @external
+        @nonreentrant('lock')
+        def increase_amount(_value: uint256):
+            """
+            @notice Deposit `_value` additional tokens for `msg.sender`
+                    without modifying the unlock time
+            @param _value Amount of tokens to deposit and add to the lock
+            """
+            self.assert_not_contract(msg.sender)
+            _locked: LockedBalance = self.locked[msg.sender]
+
+            assert _value > 0  # dev: need non-zero value
+            assert _locked.amount > 0, "No existing lock found"
+            assert _locked.end > block.timestamp, "Cannot add to expired lock. Withdraw"
+
+            self._deposit_for(msg.sender, _value, 0, _locked, INCREASE_LOCK_AMOUNT)
+        ```
+
+    === "Example"
+        ```shell
+        >>> vecrv.increase_amount(todo):
+        'todo'
+        ```
 
 
+### `increase_unlock_time`
+!!! description "`vecrv.increase_unlock_time(_unlock_time: uint256):`"
+
+    Extend the unlock time on a lock that already exists.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_unlock_time` |  `uint256` | New epoch time for unlocking |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="3"
+        @external
+        @nonreentrant('lock')
+        def increase_unlock_time(_unlock_time: uint256):
+            """
+            @notice Extend the unlock time for `msg.sender` to `_unlock_time`
+            @param _unlock_time New epoch time for unlocking
+            """
+            self.assert_not_contract(msg.sender)
+            _locked: LockedBalance = self.locked[msg.sender]
+            unlock_time: uint256 = (_unlock_time / WEEK) * WEEK  # Locktime is rounded down to weeks
+
+            assert _locked.end > block.timestamp, "Lock expired"
+            assert _locked.amount > 0, "Nothing is locked"
+            assert unlock_time > _locked.end, "Can only increase lock duration"
+            assert unlock_time <= block.timestamp + MAXTIME, "Voting lock can be 4 years max"
+
+            self._deposit_for(msg.sender, 0, unlock_time, _locked, INCREASE_UNLOCK_TIME)
+        ```
+
+    === "Example"
+        ```shell
+        >>> vecrv.increase_unlock_time(todo):
+        ```
 
 
-## **Querying Basic Data**
+### `withdraw`
+!!! description "`vecrv.withdraw()`"
+
+    Withdraw deposited CRV tokens once a lock has expired.
+
+    ??? quote "Source code"
+
+        ```python hl_lines="3"
+        @external
+        @nonreentrant('lock')
+        def withdraw():
+            """
+            @notice Withdraw all tokens for `msg.sender`
+            @dev Only possible if the lock has expired
+            """
+            _locked: LockedBalance = self.locked[msg.sender]
+            assert block.timestamp >= _locked.end, "The lock didn't expire"
+            value: uint256 = convert(_locked.amount, uint256)
+
+            old_locked: LockedBalance = _locked
+            _locked.end = 0
+            _locked.amount = 0
+            self.locked[msg.sender] = _locked
+            supply_before: uint256 = self.supply
+            self.supply = supply_before - value
+
+            # old_locked can have either expired <= timestamp or zero end
+            # _locked has only 0 end
+            # Both can have >= 0 amount
+            self._checkpoint(msg.sender, old_locked, _locked)
+
+            assert ERC20(self.token).transfer(msg.sender, value)
+
+            log Withdraw(msg.sender, value, block.timestamp)
+            log Supply(supply_before, supply_before - value)
+        ```
+
+    === "Example"
+        ```shell
+        >>> vecrv.withdraw():
+        'todo'
+        ```
+
+
+### `deposit_for`
+!!! description "`vecrv.deposit_for(_addr: address, _value: uint256):`"
+
+    todo! anyone can lock for another wallet?? i remember people said this is a bug and is fixed somehow. but how? 
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_addr`       |  `address` | todo |
+    | `_value_` |  `uint256` | todo |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="0"
+        
+        @external
+        @nonreentrant('lock')
+        def deposit_for(_addr: address, _value: uint256):
+            """
+            @notice Deposit `_value` tokens for `_addr` and add to the lock
+            @dev Anyone (even a smart contract) can deposit for someone else, but
+                cannot extend their locktime and deposit for a brand new user
+            @param _addr User's wallet address
+            @param _value Amount to add to user's lock
+            """
+            _locked: LockedBalance = self.locked[_addr]
+
+            assert _value > 0  # dev: need non-zero value
+            assert _locked.amount > 0, "No existing lock found"
+            assert _locked.end > block.timestamp, "Cannot add to expired lock. Withdraw"
+
+            self._deposit_for(_addr, _value, 0, self.locked[_addr], DEPOSIT_FOR_TYPE)
+        ```
+
+    === "Example"
+        ```shell
+        >>> vecrv.apply_transfer_ownership():
+        'todo'
+        ```
+
+
+### `checkpoint`
+!!! description "`vecrv.changeController(_newController: address):`"
+
+    Simple dummy method required for Aragon compatibility.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_newController` |  `address` | New Controller Address |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="2"
+        @external
+        def checkpoint():
+            """
+            @notice Record global data to checkpoint
+            """
+            self._checkpoint(ZERO_ADDRESS, empty(LockedBalance), empty(LockedBalance))
+
+        @internal
+        def _checkpoint(addr: address, old_locked: LockedBalance, new_locked: LockedBalance):
+            """
+            @notice Record global and per-user data to checkpoint
+            @param addr User's wallet address. No user checkpoint if 0x0
+            @param old_locked Pevious locked amount / end lock time for the user
+            @param new_locked New locked amount / end lock time for the user
+            """
+            u_old: Point = empty(Point)
+            u_new: Point = empty(Point)
+            old_dslope: int128 = 0
+            new_dslope: int128 = 0
+            _epoch: uint256 = self.epoch
+
+            if addr != ZERO_ADDRESS:
+                # Calculate slopes and biases
+                # Kept at zero when they have to
+                if old_locked.end > block.timestamp and old_locked.amount > 0:
+                    u_old.slope = old_locked.amount / MAXTIME
+                    u_old.bias = u_old.slope * convert(old_locked.end - block.timestamp, int128)
+                if new_locked.end > block.timestamp and new_locked.amount > 0:
+                    u_new.slope = new_locked.amount / MAXTIME
+                    u_new.bias = u_new.slope * convert(new_locked.end - block.timestamp, int128)
+
+                # Read values of scheduled changes in the slope
+                # old_locked.end can be in the past and in the future
+                # new_locked.end can ONLY by in the FUTURE unless everything expired: than zeros
+                old_dslope = self.slope_changes[old_locked.end]
+                if new_locked.end != 0:
+                    if new_locked.end == old_locked.end:
+                        new_dslope = old_dslope
+                    else:
+                        new_dslope = self.slope_changes[new_locked.end]
+
+            last_point: Point = Point({bias: 0, slope: 0, ts: block.timestamp, blk: block.number})
+            if _epoch > 0:
+                last_point = self.point_history[_epoch]
+            last_checkpoint: uint256 = last_point.ts
+            # initial_last_point is used for extrapolation to calculate block number
+            # (approximately, for *At methods) and save them
+            # as we cannot figure that out exactly from inside the contract
+            initial_last_point: Point = last_point
+            block_slope: uint256 = 0  # dblock/dt
+            if block.timestamp > last_point.ts:
+                block_slope = MULTIPLIER * (block.number - last_point.blk) / (block.timestamp - last_point.ts)
+            # If last point is already recorded in this block, slope=0
+            # But that's ok b/c we know the block in such case
+
+            # Go over weeks to fill history and calculate what the current point is
+            t_i: uint256 = (last_checkpoint / WEEK) * WEEK
+            for i in range(255):
+                # Hopefully it won't happen that this won't get used in 5 years!
+                # If it does, users will be able to withdraw but vote weight will be broken
+                t_i += WEEK
+                d_slope: int128 = 0
+                if t_i > block.timestamp:
+                    t_i = block.timestamp
+                else:
+                    d_slope = self.slope_changes[t_i]
+                last_point.bias -= last_point.slope * convert(t_i - last_checkpoint, int128)
+                last_point.slope += d_slope
+                if last_point.bias < 0:  # This can happen
+                    last_point.bias = 0
+                if last_point.slope < 0:  # This cannot happen - just in case
+                    last_point.slope = 0
+                last_checkpoint = t_i
+                last_point.ts = t_i
+                last_point.blk = initial_last_point.blk + block_slope * (t_i - initial_last_point.ts) / MULTIPLIER
+                _epoch += 1
+                if t_i == block.timestamp:
+                    last_point.blk = block.number
+                    break
+                else:
+                    self.point_history[_epoch] = last_point
+
+            self.epoch = _epoch
+            # Now point_history is filled until t=now
+
+            if addr != ZERO_ADDRESS:
+                # If last point was in this block, the slope change has been applied already
+                # But in such case we have 0 slope(s)
+                last_point.slope += (u_new.slope - u_old.slope)
+                last_point.bias += (u_new.bias - u_old.bias)
+                if last_point.slope < 0:
+                    last_point.slope = 0
+                if last_point.bias < 0:
+                    last_point.bias = 0
+
+            # Record the changed point into history
+            self.point_history[_epoch] = last_point
+
+            if addr != ZERO_ADDRESS:
+                # Schedule the slope changes (slope is going down)
+                # We subtract new_user_slope from [new_locked.end]
+                # and add old_user_slope to [old_locked.end]
+                if old_locked.end > block.timestamp:
+                    # old_dslope was <something> - u_old.slope, so we cancel that
+                    old_dslope += u_old.slope
+                    if new_locked.end == old_locked.end:
+                        old_dslope -= u_new.slope  # It was a new deposit, not extension
+                    self.slope_changes[old_locked.end] = old_dslope
+
+                if new_locked.end > block.timestamp:
+                    if new_locked.end > old_locked.end:
+                        new_dslope -= u_new.slope  # old slope disappeared at this point
+                        self.slope_changes[new_locked.end] = new_dslope
+                    # else: we recorded it already in old_dslope
+
+                # Now handle user history
+                user_epoch: uint256 = self.user_point_epoch[addr] + 1
+
+                self.user_point_epoch[addr] = user_epoch
+                u_new.ts = block.timestamp
+                u_new.blk = block.number
+                self.user_point_history[addr][user_epoch] = u_new
+        ```
+
+    === "Example"
+        ```shell
+        >>> vecrv.checkpoint():
+        'todo'
+        ```
+
+
+### `change_controller`
+!!! description "`vecrv.changeController(_newController: address):`"
+
+    Simple dummy method required for Aragon compatibility.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_newController` |  `address` | New Controller Address |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="0"
+
+        @external
+        def changeController(_newController: address):
+            """
+            @dev Dummy method required for Aragon compatibility
+            """
+            assert msg.sender == self.controller
+            self.controller = _newController
+        ```
+
+    === "Example"
+        ```shell
+        >>> vecrv.changeController(todo):
+        'todo'
+        ```
+    
+
+
+## **Contract Info Methods**
 
 ### `get_last_user_slope`
 !!! description "`vecrv.get_last_user_slope(addr: address) -> int128`"
@@ -720,7 +1104,7 @@ Ownership of this contract can be transfered by the admin (DAO) by calling `comm
         supply: public(uint256)
         ```
 
-        === "Example"
+    === "Example"
         ```shell
         >>> vecrv.supply()
         656407031422810196416981172
@@ -744,7 +1128,7 @@ Ownership of this contract can be transfered by the admin (DAO) by calling `comm
         locked: public(HashMap[address, LockedBalance])
         ```
 
-        === "Example"
+    === "Example"
         ```shell
         >>> vecrv.locked(0x7a16fF8270133F063aAb6C9977183D9e72835428)
         27191329036660104386777000, 1808956800
@@ -813,10 +1197,59 @@ Ownership of this contract can be transfered by the admin (DAO) by calling `comm
         'todo'
         ```
 
-### `user_point_history`
-### `user_point_epoch`
-### `slope_changes`
 ### `controller`
+!!! description "`vecrv.controller():`"
+
+    Getter for the controller address of the contract.
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1"
+        controller: public(address)
+
+        @external
+        def changeController(_newController: address):
+            """
+            @dev Dummy method required for Aragon compatibility
+            """
+            assert msg.sender == self.controller
+            self.controller = _newController
+        ```
+    === "Example"
+        ```shell
+        >>> vecrv.controller()
+        '0xc4AD0Ef33A0A4ddA3461c479ccb6c36d1e4B7Be4'
+        ```
+
+
+### `change_controller`
+!!! description "`vecrv.changeController(_newController: address):`"
+
+    Function to change the controller address.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_newController` |  `address` | New Controller Address |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 4"
+        controller: public(address)
+
+        @external
+        def changeController(_newController: address):
+            """
+            @dev Dummy method required for Aragon compatibility
+            """
+            assert msg.sender == self.controller
+            self.controller = _newController
+        ```
+
+    === "Example"
+        ```shell
+        >>> vecrv.changeController(todo)
+        todo
+        ```
 
 ### `transfersEnabled`
 !!! description "`vecrv.transfersEnabled() -> boolean: view`"
@@ -1057,368 +1490,3 @@ Ownership of this contract can be transfered by the admin (DAO) by calling `comm
         18
         ```
 
-
-## **Working with VoteLocks**
-
-### `create_lock`
-!!! description "`vecrv.create_lock(_value: uint256, _unlock_time: uint256):`"
-
-    Function to deposit CRV into the contract and create a new lock.
-     
-    Prior to calling this function, the contract must be approved to transfer at least `_value` CRV. A new lock cannot be created when an existing lock already exists. 
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_value`   |  `uint256` | Amount of CRV to deposit |
-    | `_unlock_time` |  `uint256` | Epoch when tokens unlock |
-
-    !!!note
-        Epochs are rounded down to whole weeks.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="3"
-        @external
-        @nonreentrant('lock')
-        def create_lock(_value: uint256, _unlock_time: uint256):
-            """
-            @notice Deposit `_value` tokens for `msg.sender` and lock until `_unlock_time`
-            @param _value Amount to deposit
-            @param _unlock_time Epoch time when tokens unlock, rounded down to whole weeks
-            """
-            self.assert_not_contract(msg.sender)
-            unlock_time: uint256 = (_unlock_time / WEEK) * WEEK  # Locktime is rounded down to weeks
-            _locked: LockedBalance = self.locked[msg.sender]
-
-            assert _value > 0  # dev: need non-zero value
-            assert _locked.amount == 0, "Withdraw old tokens first"
-            assert unlock_time > block.timestamp, "Can only lock until time in the future"
-            assert unlock_time <= block.timestamp + MAXTIME, "Voting lock can be 4 years max"
-
-            self._deposit_for(msg.sender, _value, unlock_time, _locked, CREATE_LOCK_TYPE) 
-        ```
-
-    === "Example"
-        ```shell
-        >>> vecrv.apply_transfer_ownership():
-        ```
-
-### `increase_amount`
-!!! description "`vecrv.increase_amount(_value: uint256):`"
-
-    Deposit additional CRV into an existing lock.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_value`       |  `uint256` | Amount of CRV to deposit |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="3"
-        @external
-        @nonreentrant('lock')
-        def increase_amount(_value: uint256):
-            """
-            @notice Deposit `_value` additional tokens for `msg.sender`
-                    without modifying the unlock time
-            @param _value Amount of tokens to deposit and add to the lock
-            """
-            self.assert_not_contract(msg.sender)
-            _locked: LockedBalance = self.locked[msg.sender]
-
-            assert _value > 0  # dev: need non-zero value
-            assert _locked.amount > 0, "No existing lock found"
-            assert _locked.end > block.timestamp, "Cannot add to expired lock. Withdraw"
-
-            self._deposit_for(msg.sender, _value, 0, _locked, INCREASE_LOCK_AMOUNT)
-        ```
-
-    === "Example"
-        ```shell
-        >>> vecrv.increase_amount(todo):
-        'todo'
-        ```
-
-
-### `increase_unlock_time`
-!!! description "`vecrv.increase_unlock_time(_unlock_time: uint256):`"
-
-    Extend the unlock time on a lock that already exists.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_unlock_time` |  `uint256` | New epoch time for unlocking |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="3"
-        @external
-        @nonreentrant('lock')
-        def increase_unlock_time(_unlock_time: uint256):
-            """
-            @notice Extend the unlock time for `msg.sender` to `_unlock_time`
-            @param _unlock_time New epoch time for unlocking
-            """
-            self.assert_not_contract(msg.sender)
-            _locked: LockedBalance = self.locked[msg.sender]
-            unlock_time: uint256 = (_unlock_time / WEEK) * WEEK  # Locktime is rounded down to weeks
-
-            assert _locked.end > block.timestamp, "Lock expired"
-            assert _locked.amount > 0, "Nothing is locked"
-            assert unlock_time > _locked.end, "Can only increase lock duration"
-            assert unlock_time <= block.timestamp + MAXTIME, "Voting lock can be 4 years max"
-
-            self._deposit_for(msg.sender, 0, unlock_time, _locked, INCREASE_UNLOCK_TIME)
-        ```
-
-    === "Example"
-        ```shell
-        >>> vecrv.increase_unlock_time(todo):
-        ```
-
-
-### `withdraw`
-!!! description "`vecrv.withdraw()`"
-
-    Withdraw deposited CRV tokens once a lock has expired.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="3"
-        @external
-        @nonreentrant('lock')
-        def withdraw():
-            """
-            @notice Withdraw all tokens for `msg.sender`
-            @dev Only possible if the lock has expired
-            """
-            _locked: LockedBalance = self.locked[msg.sender]
-            assert block.timestamp >= _locked.end, "The lock didn't expire"
-            value: uint256 = convert(_locked.amount, uint256)
-
-            old_locked: LockedBalance = _locked
-            _locked.end = 0
-            _locked.amount = 0
-            self.locked[msg.sender] = _locked
-            supply_before: uint256 = self.supply
-            self.supply = supply_before - value
-
-            # old_locked can have either expired <= timestamp or zero end
-            # _locked has only 0 end
-            # Both can have >= 0 amount
-            self._checkpoint(msg.sender, old_locked, _locked)
-
-            assert ERC20(self.token).transfer(msg.sender, value)
-
-            log Withdraw(msg.sender, value, block.timestamp)
-            log Supply(supply_before, supply_before - value)
-        ```
-
-    === "Example"
-        ```shell
-        >>> vecrv.withdraw():
-        'todo'
-        ```
-
-
-### `deposit_for`
-!!! description "`vecrv.deposit_for(_addr: address, _value: uint256):`"
-
-    todo! anyone can lock for another wallet?? i remember people said this is a bug and is fixed somehow. but how? 
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_addr`       |  `address` | todo |
-    | `_value_` |  `uint256` | todo |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="0"
-        
-        @external
-        @nonreentrant('lock')
-        def deposit_for(_addr: address, _value: uint256):
-            """
-            @notice Deposit `_value` tokens for `_addr` and add to the lock
-            @dev Anyone (even a smart contract) can deposit for someone else, but
-                cannot extend their locktime and deposit for a brand new user
-            @param _addr User's wallet address
-            @param _value Amount to add to user's lock
-            """
-            _locked: LockedBalance = self.locked[_addr]
-
-            assert _value > 0  # dev: need non-zero value
-            assert _locked.amount > 0, "No existing lock found"
-            assert _locked.end > block.timestamp, "Cannot add to expired lock. Withdraw"
-
-            self._deposit_for(_addr, _value, 0, self.locked[_addr], DEPOSIT_FOR_TYPE)
-        ```
-
-    === "Example"
-        ```shell
-        >>> vecrv.apply_transfer_ownership():
-        'todo'
-        ```
-
-
-
-## **HOW TO CALL THIS????**
-
-### `checkpoint`
-!!! description "`vecrv.changeController(_newController: address):`"
-
-    Simple dummy method required for Aragon compatibility.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_newController` |  `address` | New Controller Address |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="2"
-        @external
-        def checkpoint():
-            """
-            @notice Record global data to checkpoint
-            """
-            self._checkpoint(ZERO_ADDRESS, empty(LockedBalance), empty(LockedBalance))
-
-        @internal
-        def _checkpoint(addr: address, old_locked: LockedBalance, new_locked: LockedBalance):
-            """
-            @notice Record global and per-user data to checkpoint
-            @param addr User's wallet address. No user checkpoint if 0x0
-            @param old_locked Pevious locked amount / end lock time for the user
-            @param new_locked New locked amount / end lock time for the user
-            """
-            u_old: Point = empty(Point)
-            u_new: Point = empty(Point)
-            old_dslope: int128 = 0
-            new_dslope: int128 = 0
-            _epoch: uint256 = self.epoch
-
-            if addr != ZERO_ADDRESS:
-                # Calculate slopes and biases
-                # Kept at zero when they have to
-                if old_locked.end > block.timestamp and old_locked.amount > 0:
-                    u_old.slope = old_locked.amount / MAXTIME
-                    u_old.bias = u_old.slope * convert(old_locked.end - block.timestamp, int128)
-                if new_locked.end > block.timestamp and new_locked.amount > 0:
-                    u_new.slope = new_locked.amount / MAXTIME
-                    u_new.bias = u_new.slope * convert(new_locked.end - block.timestamp, int128)
-
-                # Read values of scheduled changes in the slope
-                # old_locked.end can be in the past and in the future
-                # new_locked.end can ONLY by in the FUTURE unless everything expired: than zeros
-                old_dslope = self.slope_changes[old_locked.end]
-                if new_locked.end != 0:
-                    if new_locked.end == old_locked.end:
-                        new_dslope = old_dslope
-                    else:
-                        new_dslope = self.slope_changes[new_locked.end]
-
-            last_point: Point = Point({bias: 0, slope: 0, ts: block.timestamp, blk: block.number})
-            if _epoch > 0:
-                last_point = self.point_history[_epoch]
-            last_checkpoint: uint256 = last_point.ts
-            # initial_last_point is used for extrapolation to calculate block number
-            # (approximately, for *At methods) and save them
-            # as we cannot figure that out exactly from inside the contract
-            initial_last_point: Point = last_point
-            block_slope: uint256 = 0  # dblock/dt
-            if block.timestamp > last_point.ts:
-                block_slope = MULTIPLIER * (block.number - last_point.blk) / (block.timestamp - last_point.ts)
-            # If last point is already recorded in this block, slope=0
-            # But that's ok b/c we know the block in such case
-
-            # Go over weeks to fill history and calculate what the current point is
-            t_i: uint256 = (last_checkpoint / WEEK) * WEEK
-            for i in range(255):
-                # Hopefully it won't happen that this won't get used in 5 years!
-                # If it does, users will be able to withdraw but vote weight will be broken
-                t_i += WEEK
-                d_slope: int128 = 0
-                if t_i > block.timestamp:
-                    t_i = block.timestamp
-                else:
-                    d_slope = self.slope_changes[t_i]
-                last_point.bias -= last_point.slope * convert(t_i - last_checkpoint, int128)
-                last_point.slope += d_slope
-                if last_point.bias < 0:  # This can happen
-                    last_point.bias = 0
-                if last_point.slope < 0:  # This cannot happen - just in case
-                    last_point.slope = 0
-                last_checkpoint = t_i
-                last_point.ts = t_i
-                last_point.blk = initial_last_point.blk + block_slope * (t_i - initial_last_point.ts) / MULTIPLIER
-                _epoch += 1
-                if t_i == block.timestamp:
-                    last_point.blk = block.number
-                    break
-                else:
-                    self.point_history[_epoch] = last_point
-
-            self.epoch = _epoch
-            # Now point_history is filled until t=now
-
-            if addr != ZERO_ADDRESS:
-                # If last point was in this block, the slope change has been applied already
-                # But in such case we have 0 slope(s)
-                last_point.slope += (u_new.slope - u_old.slope)
-                last_point.bias += (u_new.bias - u_old.bias)
-                if last_point.slope < 0:
-                    last_point.slope = 0
-                if last_point.bias < 0:
-                    last_point.bias = 0
-
-            # Record the changed point into history
-            self.point_history[_epoch] = last_point
-
-            if addr != ZERO_ADDRESS:
-                # Schedule the slope changes (slope is going down)
-                # We subtract new_user_slope from [new_locked.end]
-                # and add old_user_slope to [old_locked.end]
-                if old_locked.end > block.timestamp:
-                    # old_dslope was <something> - u_old.slope, so we cancel that
-                    old_dslope += u_old.slope
-                    if new_locked.end == old_locked.end:
-                        old_dslope -= u_new.slope  # It was a new deposit, not extension
-                    self.slope_changes[old_locked.end] = old_dslope
-
-                if new_locked.end > block.timestamp:
-                    if new_locked.end > old_locked.end:
-                        new_dslope -= u_new.slope  # old slope disappeared at this point
-                        self.slope_changes[new_locked.end] = new_dslope
-                    # else: we recorded it already in old_dslope
-
-                # Now handle user history
-                user_epoch: uint256 = self.user_point_epoch[addr] + 1
-
-                self.user_point_epoch[addr] = user_epoch
-                u_new.ts = block.timestamp
-                u_new.blk = block.number
-                self.user_point_history[addr][user_epoch] = u_new
-        ```
-
-
-### `change_controller`
-!!! description "`vecrv.changeController(_newController: address):`"
-
-    Simple dummy method required for Aragon compatibility.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_newController` |  `address` | New Controller Address |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="0"
-
-        @external
-        def changeController(_newController: address):
-            """
-            @dev Dummy method required for Aragon compatibility
-            """
-            assert msg.sender == self.controller
-            self.controller = _newController
-        ```
