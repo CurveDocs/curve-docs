@@ -17,23 +17,18 @@ nav:
     - Curve DAO Token: curve_dao/ERC20CRV.md
     - Vote-Escrowed CRV: curve_dao/VotingEscrow.md
     - Liquidity Gauges and Minting CRV:             
-      - Implemention Details: curve_dao/liq-gauges&minting-crv/overview.md
+      - Overview: curve_dao/LiquidityGaugesAndMinting/overview.md
+      - Gauge Controller: curve_dao/LiquidityGaugesAndMinting/GaugeController.md
       - Gauges:
-        - Gauge Types: curve_dao/liq-gauges&minting-crv/GaugeTypes.md
-        - LiquidityGaugeReward: curve_dao/liq-gauges&minting-crv/LiquidityGaugeRewards.md
-        - LiquidityGauge: curve_dao/liq-gauges&minting-crv/LiquidityGaugeV1.md
-        - LiquidityGaugeV2: curve_dao/liq-gauges&minting-crv/LiquidityGaugeV2.md
-        - LiquidityGaugeV3: curve_dao/liq-gauges&minting-crv/LiquidityGaugeV3.md
-        - LiquidityGaugeV4: curve_dao/liq-gauges&minting-crv/LiquidityGaugeV4.md
-        - LiquidityGaugeV5: curve_dao/liq-gauges&minting-crv/LiquidityGaugeV5.md
-      - Gauge Controller: curve_dao/liq-gauges&minting-crv/GaugeController.md
-      - Minter: curve_dao/liq-gauges&minting-crv/Minter.md 
-    - Gauges for EVM Sidechains:
-      - Implemention Details: curve_dao/evm-sidechains/implementation.md
-      - RootChainGauge: curve_dao/evm-sidechains/RootChainGauge.md
-      - ChildChainStreamer: curve_dao/evm-sidechains/ChildChainStreamer.md
-      - RewardsOnlyGauge: curve_dao/evm-sidechains/RewardsOnlyGauge.md
-      - RewardsClaimer: curve_dao/evm-sidechains/RewardsClaimer.md
+        - Gauge Types: curve_dao/LiquidityGaugesAndMinting/GaugeTypes.md
+        - LiquidityGaugeReward: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeRewards.md
+        - LiquidityGaugeV1: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV1.md
+        - LiquidityGaugeV2: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV2.md
+        - LiquidityGaugeV3: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV3.md
+        - LiquidityGaugeV4: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV4.md
+        - LiquidityGaugeV5: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV5.md
+      - Minter: curve_dao/LiquidityGaugesAndMinting/Minter.md 
+    - Gauges for EVM Sidechains: curve_dao/evm-sidechains/overview.md
     - Fee Collection and Distribution:
       - Overview: curve_dao/FeeCollection&Distribution/overview.md
       - Withdrawing and Burning Admin Fees: curve_dao/FeeCollection&Distribution/withdraw-and-burn.md
@@ -45,19 +40,18 @@ nav:
       - Agents: curve_dao/ownership-proxy/Agents.md
       - PoolProxy: curve_dao/ownership-proxy/PoolProxy.md
       - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
-    - Governance and Voting:
-      - Overview: curve_dao/gov-and-vote/overview.md
+    - Governance and Voting: curve_dao/gov-and-vote/overview.md
 
     - Registry:
       - Overview: registry/overview.md
       - MetaRegistryAPI: registry/MetaRegistryAPI.md
 
-
   - LLAMMA:
     - Overview: LLAMMA/overview.md
-    - Stablecoin: LLAMMA/stablecoin.md
+    - crvUSD: LLAMMA/crvUSD.md
     - Controller: LLAMMA/controller.md
-    - Deployed Contracts: LLAMMA/deployed-contracts.md
+    - ControllerFactory: LLAMMA/controllerFactory.md
+    - Deployments: LLAMMA/deployments.md
 
   - Stableswap Exchange:    
     - Overview: stableswap_exchange/overview.md 
@@ -89,8 +83,10 @@ nav:
     - Registry API: factory/registry_api.md
     - Admin Controls: factory/admin_controls.md
 
-
-
+  - References:
+    - Deployment Addresses: references/deployed-contracts.md
+    - Whitepaper: references/whitepaper.md
+    - Useful Resources: references/useful-resources.md
 
 # extension
 markdown_extensions:
@@ -113,15 +109,18 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.magiclink
   - pymdownx.mark
+  - pymdownx.snippets
   - pymdownx.smartsymbols
   - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
       use_pygments: true
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
-
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde
