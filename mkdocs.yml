@@ -52,7 +52,7 @@ nav:
       - Lending Pools: stableswap_exchange/pools/lending_pools.md
       - Metapools: stableswap_exchange/pools/metapools.md
       - Admin Controls: stableswap_exchange/pools/admin_pool_settings.md
-    - Lquidity Pool Tokens:
+    - Liquidity Pool Tokens:
       - Overview: stableswap_exchange/lp_tokens/overview.md
       - Curve Token V1: stableswap_exchange/lp_tokens/curve_token_v1.md
       - Curve Token V2: stableswap_exchange/lp_tokens/curve_token_v2.md
