@@ -25,8 +25,6 @@ nav:
         - LiquidityGaugeV1: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV1.md
         - LiquidityGaugeV2: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV2.md
         - LiquidityGaugeV3: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV3.md
-        - LiquidityGaugeV4: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV4.md
-        - LiquidityGaugeV5: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV5.md
       - Minter: curve_dao/LiquidityGaugesAndMinting/Minter.md 
     - Gauges for EVM Sidechains: curve_dao/evm-sidechains/overview.md
     - Fee Collection and Distribution:
@@ -45,13 +43,6 @@ nav:
     - Registry:
       - Overview: registry/overview.md
       - MetaRegistryAPI: registry/MetaRegistryAPI.md
-
-  - LLAMMA:
-    - Overview: LLAMMA/overview.md
-    - crvUSD: LLAMMA/crvUSD.md
-    - Controller: LLAMMA/controller.md
-    - ControllerFactory: LLAMMA/controllerFactory.md
-    - Deployments: LLAMMA/deployments.md
 
   - Stableswap Exchange:    
     - Overview: stableswap_exchange/overview.md 
