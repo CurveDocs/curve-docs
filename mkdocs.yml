@@ -10,7 +10,6 @@ plugins:
   - minify:
       minify_html: true
 
-
 nav:
   - Curve DAO:
     - Overview: curve_dao/overview.md  
