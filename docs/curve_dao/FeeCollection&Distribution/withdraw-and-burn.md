@@ -3,7 +3,7 @@ Admin fees are stored within each exchange contract and viewable via the `admin_
 
 Fees are initially claimed via `PoolProxy.withdraw_many`. This withdraws fees from many pools at once, pulling them into the [PoolProxy](https://etherscan.io/address/0xeCb456EA5365865EbAb8a2661B0c503410e9B347#writeContract) contract.
 
-!!!note
+!!! tip
     Admin fees can also be claimed by calling the `withdraw_admin_fees` function on the pool contract itself.
 
 

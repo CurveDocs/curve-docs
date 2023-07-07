@@ -1,22 +1,15 @@
 **Curve DAO Token (CRV)** is based on the ERC-20 token standard as defined at https://eips.ethereum.org/EIPS/eip-20.
 
-!!! note
+!!! info
     **Curve DAO Token** contract is deployed to the Ethereum mainnet at: [0xD533a949740bb3306d119CC777fa900bA034cd52](https://etherscan.io/address/0xD533a949740bb3306d119CC777fa900bA034cd52#code).
 
     Source code of the VotingEscrow contract can be found on [Github](https://etherscan.io/token/0xD533a949740bb3306d119CC777fa900bA034cd52).
 
 
-The main purposes of the Curve DAO token are to incentivise liquidity providers on the Curve Finance platform as well as getting as many users involved as possible in the governance of the protocol.  
+The main purposes of the Curve DAO token are to incentivise liquidity providers on the Curve Finance platform as well as getting as many users involved in the governance of the protocol as possible.
 
-Currently CRV has three main uses: 
 
-1. voting 
-2. staking
-3. boosting    
-
-Those three things will require you to vote lock your CRV and acquire veCRV.
-
-| Allocation |  |
+| Allocation | More about the release schedule [here](https://dao.curve.fi/releaseschedule). |
 | ------| --------------------------|
 | `57%` |`Inflation`                | 
 | `30%` |`Shareholder (team and investors)` | 
@@ -24,11 +17,215 @@ Those three things will require you to vote lock your CRV and acquire veCRV.
 | `5%`  |`Early user`               | 
 | `3%`  |`Employees`                | 
 
-More about the Inflation can be found [here](/docs/curve_dao/liq-gauges%26minting-crv/overview.md).
+
+## **Admin Ownership**
+
+### `admin`
+!!! description "`CRV.admin() -> address: view`"
+
+    Getter for the admin of the contract.
+
+    Returns: **admin** (`address`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 17"
+        admin: public(address)
+
+        @external
+        def __init__(_name: String[64], _symbol: String[32], _decimals: uint256):
+            """
+            @notice Contract constructor
+            @param _name Token full name
+            @param _symbol Token symbol
+            @param _decimals Number of decimals for token
+            """
+            init_supply: uint256 = INITIAL_SUPPLY * 10 ** _decimals
+            self.name = _name
+            self.symbol = _symbol
+            self.decimals = _decimals
+            self.balanceOf[msg.sender] = init_supply
+            self.total_supply = init_supply
+            self.admin = msg.sender
+            log Transfer(ZERO_ADDRESS, msg.sender, init_supply)
+
+            self.start_epoch_time = block.timestamp + INFLATION_DELAY - RATE_REDUCTION_TIME
+            self.mining_epoch = -1
+            self.rate = 0
+            self.start_epoch_supply = init_supply
+        ```
+
+    === "Example" 
+        ```shell
+        >>> CRV.admin()
+        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
+        ```
+
+### `set_admin`
+!!! description "`CRV.set_admin(_admin: address):`"
+
+    Function to set/change the admin of the contract.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_admin` |  `address` | New Admin Address |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 2 4 7"
+        event SetAdmin:
+            admin: address
+        
+        admin: public(address)
+
+        @external
+        def set_admin(_admin: address):
+            """
+            @notice Set the new admin.
+            @dev After all is set up, admin only can change the token name
+            @param _admin New admin address
+            """
+            assert msg.sender == self.admin  # dev: admin only
+            self.admin = _admin
+            log SetAdmin(_admin)
+        ```
+    
+    !!!note 
+        Admin address was set to the **CurveOwnershipAgent** after deployment ([Tx-Hash](https://etherscan.io/tx/0x2123091548f65028283a5fe1e9165bf036060130cb92d64d7d558ed72cc17a7b)).  
+        Further changes can only be done by a vote via the DAO.
+
+    === "Example"
+        ```shell
+        >>> CRV.set_admin(todo)
+        todo
+        ```
+
+
+## **Name and Symbol**
+
+### `name`
+!!! description "`CRV.name() -> String[64]`"
+
+    Getter for the name of the token.
+
+    Returns: **name** (`String[64]`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 4 7 12"
+        name: public(String[64])
+
+        @external
+        def __init__(_name: String[64], _symbol: String[32], _decimals: uint256):
+            """
+            @notice Contract constructor
+            @param _name Token full name
+            @param _symbol Token symbol
+            @param _decimals Number of decimals for token
+            """
+            init_supply: uint256 = INITIAL_SUPPLY * 10 ** _decimals
+            self.name = _name
+            self.symbol = _symbol
+            self.decimals = _decimals
+            self.balanceOf[msg.sender] = init_supply
+            self.total_supply = init_supply
+            self.admin = msg.sender
+            log Transfer(ZERO_ADDRESS, msg.sender, init_supply)
+
+            self.start_epoch_time = block.timestamp + INFLATION_DELAY - RATE_REDUCTION_TIME
+            self.mining_epoch = -1
+            self.rate = 0
+            self.start_epoch_supply = init_supply
+        ```
+
+    === "Example"
+        ```shell
+        >>> CRV.name()
+        'Curve DAO Token'
+        ```
+
+    !!! note
+        Name be changed by calling the `set_name()` function (see below).
+
+
+### `symbol`
+!!! description "`CRV.symbol() -> String[32]`"
+
+    Getter of the token symbol.
+
+    Returns: **symbol** (`String[32]`).
+    
+    ??? quote "Source code"
+
+        ```python hl_lines="1 4 8 13"
+        symbol: public(String[32])
+
+        @external
+        def __init__(_name: String[64], _symbol: String[32], _decimals: uint256):
+            """
+            @notice Contract constructor
+            @param _name Token full name
+            @param _symbol Token symbol
+            @param _decimals Number of decimals for token
+            """
+            init_supply: uint256 = INITIAL_SUPPLY * 10 ** _decimals
+            self.name = _name
+            self.symbol = _symbol
+            self.decimals = _decimals
+            self.balanceOf[msg.sender] = init_supply
+            self.total_supply = init_supply
+            self.admin = msg.sender
+            log Transfer(ZERO_ADDRESS, msg.sender, init_supply)
+
+            self.start_epoch_time = block.timestamp + INFLATION_DELAY - RATE_REDUCTION_TIME
+            self.mining_epoch = -1
+            self.rate = 0
+            self.start_epoch_supply = init_supply
+        ```
+
+    === "Example"
+        ```shell
+        >>> CRV.symbol()
+        'CRV'
+        ```
+
+    !!! note
+        Symbol be changed by calling the `set_name()` function (see below).
+
+
+### `set_name`
+!!! description "`CRV.set_name(_name: String[64], _symbol: String[32]):`"
+
+    Function to change token name to `_name` and token symbol to `_symbol`.
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 2 5"
+        name: public(String[64])
+        symbol: public(String[32])
+
+        @external
+        def set_name(_name: String[64], _symbol: String[32]):
+            """
+            @notice Change the token name and symbol to `_name` and `_symbol`
+            @dev Only callable by the admin account
+            @param _name New token name
+            @param _symbol New token symbol
+            """
+            assert msg.sender == self.admin, "Only admin is allowed to change name"
+            self.name = _name
+            self.symbol = _symbol
+        ```
+
+    === "Example"
+        ```shell
+        >>> CRV.set_name('todo)
+        'todo'
+        ```
 
 
 
-## **Querying Basic Data**
+## **Contract Info Methods** 
 
 ### `avaliable_supply`
 !!! description "`CRV.avaliably_supply() -> uint256`"
@@ -409,211 +606,126 @@ More about the Inflation can be found [here](/docs/curve_dao/liq-gauges%26mintin
         Emissions per day: 6.161965695807970181 * 86400 = 532393.8361178086
 
 
-## **Name and Symbol**
+## **Minting and Burning**
 
-### `name`
-!!! description "`CRV.name() -> String[64]`"
+### `mint`
+!!! description "`CRV.mint(_to: address, _value: uint256) -> bool:`"
 
-    Getter for the name of the token.
-
-    Returns: **name** (`String[64]`) of the token.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 4 7 12"
-        name: public(String[64])
-
-        @external
-        def __init__(_name: String[64], _symbol: String[32], _decimals: uint256):
-            """
-            @notice Contract constructor
-            @param _name Token full name
-            @param _symbol Token symbol
-            @param _decimals Number of decimals for token
-            """
-            init_supply: uint256 = INITIAL_SUPPLY * 10 ** _decimals
-            self.name = _name
-            self.symbol = _symbol
-            self.decimals = _decimals
-            self.balanceOf[msg.sender] = init_supply
-            self.total_supply = init_supply
-            self.admin = msg.sender
-            log Transfer(ZERO_ADDRESS, msg.sender, init_supply)
-
-            self.start_epoch_time = block.timestamp + INFLATION_DELAY - RATE_REDUCTION_TIME
-            self.mining_epoch = -1
-            self.rate = 0
-            self.start_epoch_supply = init_supply
-        ```
-
-    === "Example"
-        ```shell
-        >>> CRV.name()
-        'Curve DAO Token'
-        ```
-
-    !!! note
-        Name be changed by calling the `set_name()` function (see below).
-
-
-### `symbol`
-!!! description "`CRV.symbol() -> String[32]`"
-
-    Getter of the token symbol.
-
-    Returns: **symbol** (`String[32]`) of the token.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 4 8 13"
-        symbol: public(String[32])
-
-        @external
-        def __init__(_name: String[64], _symbol: String[32], _decimals: uint256):
-            """
-            @notice Contract constructor
-            @param _name Token full name
-            @param _symbol Token symbol
-            @param _decimals Number of decimals for token
-            """
-            init_supply: uint256 = INITIAL_SUPPLY * 10 ** _decimals
-            self.name = _name
-            self.symbol = _symbol
-            self.decimals = _decimals
-            self.balanceOf[msg.sender] = init_supply
-            self.total_supply = init_supply
-            self.admin = msg.sender
-            log Transfer(ZERO_ADDRESS, msg.sender, init_supply)
-
-            self.start_epoch_time = block.timestamp + INFLATION_DELAY - RATE_REDUCTION_TIME
-            self.mining_epoch = -1
-            self.rate = 0
-            self.start_epoch_supply = init_supply
-        ```
-
-    === "Example"
-        ```shell
-        >>> CRV.symbol()
-        'CRV'
-        ```
-
-    !!! note
-        Symbol be changed by calling the `set_name()` function (see below).
-
-
-### `set_name`
-!!! description "`CRV.set_name(_name: String[64], _symbol: String[32]):`"
-
-    Function to change token name to `_name` and token symbol to `_symbol`.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 2 5"
-        name: public(String[64])
-        symbol: public(String[32])
-
-        @external
-        def set_name(_name: String[64], _symbol: String[32]):
-            """
-            @notice Change the token name and symbol to `_name` and `_symbol`
-            @dev Only callable by the admin account
-            @param _name New token name
-            @param _symbol New token symbol
-            """
-            assert msg.sender == self.admin, "Only admin is allowed to change name"
-            self.name = _name
-            self.symbol = _symbol
-        ```
-
-    === "Example"
-        ```shell
-        >>> CRV.set_name('todo)
-        'todo'
-        ```
-
-## **Admin Ownership**
-
-### `admin`
-!!! description "`CRV.admin() -> address: view`"
-
-    Getter for the admin address of the contract.
-
-    Returns: `address` of the admin of the contract.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 17"
-        admin: public(address)
-
-        @external
-        def __init__(_name: String[64], _symbol: String[32], _decimals: uint256):
-            """
-            @notice Contract constructor
-            @param _name Token full name
-            @param _symbol Token symbol
-            @param _decimals Number of decimals for token
-            """
-            init_supply: uint256 = INITIAL_SUPPLY * 10 ** _decimals
-            self.name = _name
-            self.symbol = _symbol
-            self.decimals = _decimals
-            self.balanceOf[msg.sender] = init_supply
-            self.total_supply = init_supply
-            self.admin = msg.sender
-            log Transfer(ZERO_ADDRESS, msg.sender, init_supply)
-
-            self.start_epoch_time = block.timestamp + INFLATION_DELAY - RATE_REDUCTION_TIME
-            self.mining_epoch = -1
-            self.rate = 0
-            self.start_epoch_supply = init_supply
-        ```
-
-    === "Example" 
-        ```shell
-        >>> CRV.admin()
-        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
-        ```
-
-### `set_admin`
-!!! description "`CRV.set_admin(_admin: address):`"
-
-    Function to set/change the admin of the contract (only callable by the current admin).
+    Function to mint `_value (uint256)` and assign them to `_to (address)`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_admin` |  `address` | New Admin Address |
+    | `_to` |  `address` | Assigned Wallet |
+    | `_value` |  `uint256` | Value To Mint  |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="7 9"
+        event Transfer:
+            _from: indexed(address)
+            _to: indexed(address)
+            _value: uint256
+
+        @external
+        def mint(_to: address, _value: uint256) -> bool:
+            """
+            @notice Mint `_value` tokens and assign them to `_to`
+            @dev Emits a Transfer event originating from 0x00
+            @param _to The account that will receive the created tokens
+            @param _value The amount that will be created
+            @return bool success
+            """
+            assert msg.sender == self.minter  # dev: minter only
+            assert _to != ZERO_ADDRESS  # dev: zero address
+
+            if block.timestamp >= self.start_epoch_time + RATE_REDUCTION_TIME:
+                self._update_mining_parameters()
+
+            _total_supply: uint256 = self.total_supply + _value
+            assert _total_supply <= self._available_supply()  # dev: exceeds allowable mint amount
+            self.total_supply = _total_supply
+
+            self.balanceOf[_to] += _value
+            log Transfer(ZERO_ADDRESS, _to, _value)
+
+            return True
+        ```
+
+    === "Example"
+        ```shell
+        >>> CRV.mint()
+        todo
+        ```
+
+### `set_minter`
+!!! description "`CRV.set_minter(_minter: address):`"
+
+    Function to set the minter address of the contract. 
 
     ??? quote "Source code"
 
         ```python hl_lines="1 2 4 7"
-        event SetAdmin:
-            admin: address
+        event SetMinter:
+            minter: address
         
-        admin: public(address)
+        minter: public(address)
 
         @external
-        def set_admin(_admin: address):
+        def set_minter(_minter: address):
             """
-            @notice Set the new admin.
-            @dev After all is set up, admin only can change the token name
-            @param _admin New admin address
+            @notice Set the minter address
+            @dev Only callable once, when minter has not yet been set
+            @param _minter Address of the minter
             """
             assert msg.sender == self.admin  # dev: admin only
-            self.admin = _admin
-            log SetAdmin(_admin)
+            assert self.minter == ZERO_ADDRESS  # dev: can set the minter only once, at creation
+            self.minter = _minter
+            log SetMinter(_minter)
         ```
-    
-    !!!note 
-        Admin address was set to the **CurveOwnershipAgent** after deployment ([Tx-Hash](https://etherscan.io/tx/0x2123091548f65028283a5fe1e9165bf036060130cb92d64d7d558ed72cc17a7b)). 
 
-    === "Example"
+    !!! note
+        The minter of the token can only be set once by calling `set_minter`. This occured in this [transaction](https://etherscan.io/tx/0x98578e36a43c16bce03585bb42d4abb25d497b3e593f9fca56c591c5d0ec8de6).
+
+
+### `burn`
+!!! description "`CRV.burn(_value: uint256) -> bool`"
+    
+    Function to burn `_value` tokens belonging to the caller of the function.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_value` |  `uint256` | Value To Burn |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="2 4"
+        @external
+        def burn(_value: uint256) -> bool:
+            """
+            @notice Burn `_value` tokens belonging to `msg.sender`
+            @dev Emits a Transfer event with a destination of 0x00
+            @param _value The amount that will be burned
+            @return bool success
+            """
+            self.balanceOf[msg.sender] -= _value
+            self.total_supply -= _value
+
+            log Transfer(msg.sender, ZERO_ADDRESS, _value)
+            return True
+        ```
+
+    === "Example"   
         ```shell
-        >>> CRV.set_admin(todo)
+        >>> CRV.burn()
         todo
         ```
 
 
-## WRITE FUNCTIONS (HOW TO CALL THESE ONES?)
+
+
+
+
+## WRITE FUNCTIONS (what to do with these? where to put them?)
 
 ### `update_mining_parameters`
 !!! description "`update_mining_parameters()`"
@@ -753,123 +865,5 @@ More about the Inflation can be found [here](/docs/curve_dao/liq-gauges%26mintin
     === "Example"
         ```shell
         >>> CRV.future_epoch_time_write()
-        todo
-        ```
-
-### `set_minter`
-!!! description "`CRV.set_minter(_minter: address):`"
-
-    Function to set the minter address of the contract. 
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 2 4 7"
-        event SetMinter:
-            minter: address
-        
-        minter: public(address)
-
-        @external
-        def set_minter(_minter: address):
-            """
-            @notice Set the minter address
-            @dev Only callable once, when minter has not yet been set
-            @param _minter Address of the minter
-            """
-            assert msg.sender == self.admin  # dev: admin only
-            assert self.minter == ZERO_ADDRESS  # dev: can set the minter only once, at creation
-            self.minter = _minter
-            log SetMinter(_minter)
-        ```
-
-    !!! note
-        The minter of the token can only be set once by calling `set_minter`. This occured in this [transaction](https://etherscan.io/tx/0x98578e36a43c16bce03585bb42d4abb25d497b3e593f9fca56c591c5d0ec8de6).
-
-
-### `transfer` (x)
-### `transferFrom` (x)
-### `approve` (x)
-
-### `mint`
-!!! description "`CRV.mint(_to: address, _value: uint256) -> bool:`"
-
-    Function to mint `_value (uint256)` and assign them to `_to (address)`.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_to` |  `address` | Assigned Wallet |
-    | `_value` |  `uint256` | Value To Mint  |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="7 9"
-        event Transfer:
-            _from: indexed(address)
-            _to: indexed(address)
-            _value: uint256
-
-        @external
-        def mint(_to: address, _value: uint256) -> bool:
-            """
-            @notice Mint `_value` tokens and assign them to `_to`
-            @dev Emits a Transfer event originating from 0x00
-            @param _to The account that will receive the created tokens
-            @param _value The amount that will be created
-            @return bool success
-            """
-            assert msg.sender == self.minter  # dev: minter only
-            assert _to != ZERO_ADDRESS  # dev: zero address
-
-            if block.timestamp >= self.start_epoch_time + RATE_REDUCTION_TIME:
-                self._update_mining_parameters()
-
-            _total_supply: uint256 = self.total_supply + _value
-            assert _total_supply <= self._available_supply()  # dev: exceeds allowable mint amount
-            self.total_supply = _total_supply
-
-            self.balanceOf[_to] += _value
-            log Transfer(ZERO_ADDRESS, _to, _value)
-
-            return True
-        ```
-
-    === "Example"
-        ```shell
-        >>> CRV.mint()
-        todo
-        ```
-
-
-
-### `burn`
-!!! description "`CRV.burn(_value: uint256) -> bool`"
-    
-    Function to burn `_value` tokens belonging to the caller of the function.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_value` |  `uint256` | Value To Burn |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="2 4"
-        @external
-        def burn(_value: uint256) -> bool:
-            """
-            @notice Burn `_value` tokens belonging to `msg.sender`
-            @dev Emits a Transfer event with a destination of 0x00
-            @param _value The amount that will be burned
-            @return bool success
-            """
-            self.balanceOf[msg.sender] -= _value
-            self.total_supply -= _value
-
-            log Transfer(msg.sender, ZERO_ADDRESS, _value)
-            return True
-        ```
-
-    === "Example"   
-        ```shell
-        >>> CRV.burn()
         todo
         ```

@@ -1,9 +1,11 @@
-´GaugeProxy` is used for indirect ownership of [liquidity gauges](/docs/curve_dao/liq-gauges%26minting-crv/overview.md).
+`GaugeProxy` is used for indirect ownership of [liquidity gauges](/docs/curve_dao/liq-gauges%26minting-crv/overview.md).
 
-Source code for this contract is available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/GaugeProxy.vy).
+!!! info
+    **`GaugeProxy`** contract is deployed on the Ethereum mainnet at: [0x519AFB566c05E00cfB9af73496D00217A630e4D5](https://etherscan.io/address/0x519AFB566c05E00cfB9af73496D00217A630e4D5#code).  
+    Source code for this contract is available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/GaugeProxy.vy).
 
 
-## **GaugeProxy-Contract Ownership**
+## **Admin Ownership**
 
 ### `ownership_admin`
 !!! description "`GaugeProxy.ownership_admin() -> address: view`"
