@@ -2,12 +2,12 @@ todo
 
 
 
-!!! note
+!!! info
     The crvUSD contract is deployed to the Ethereum mainnet at: [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/address/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E).  
     Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/Stablecoin.vy). 
 
 
-!!!warning
+!!! warning
     Due to some testing in production there has been several deployments for the stablecoin and their components. Please always make sure you are using the latest deployment. See [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
 
 
