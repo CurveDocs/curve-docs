@@ -2592,17 +2592,76 @@ If there are some admin fees accumulated they cant be claimed seperately, meanin
         ```
 
 
+## **Callbacks**
+### `liquidity_mining_callback`
+!!! description "`AMM.liquidity_mining_callback() -> address: view`"
+
+    Getter for the liquidity mining callback address.
+
+    Returns: liquidity mining callback contract (`address`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1"
+        liquidity_mining_callback: public(LMGauge)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.liquidity_mining_callback()
+        0x0000000000000000000000000000000000000000
+        ```
+
+
+### `set_callback`
+!!! description "`AMM.set_callback(liquidity_mining_callback: LMGauge):`"
+
+    Output amount is defined, not sure how much of input coin is needed (if input coin is not enough to reach output coin, then the tx will revert). Function only callable by the `admin` of the AMM (which is the controller, which is controlled by the DAO). Callback is not set yet, i think this will be set when implementing curve lp tokens (staked in gauge) as collateral for crvusd.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `liquidity_mining_callback` |  `LMGauge` | Liquidity Mining Gauge Address |
+
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 5 9 15"
+        interface LMGauge:
+            def callback_collateral_shares(n: int256, collateral_per_share: DynArray[uint256, MAX_TICKS_UINT]): nonpayable
+            def callback_user_shares(user: address, n: int256, user_shares: DynArray[uint256, MAX_TICKS_UINT]): nonpayable
+
+        liquidity_mining_callback: public(LMGauge)
+
+        # nonreentrant decorator is in Controller which is admin
+        @external
+        def set_callback(liquidity_mining_callback: LMGauge):
+            """
+            @notice Set a gauge address with callbacks for liquidity mining for collateral
+            @param liquidity_mining_callback Gauge address
+            """
+            assert msg.sender == self.admin
+            self.liquidity_mining_callback = liquidity_mining_callback
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.set_callback("todo")
+        'todo'
+        ```
+
 
 ## **Depositing and Removing Collateral**
 These function can only be called by the `admin` of the AMM, which is the controller. Need to give max_approval to it, so the controller can deposit and withdraw collateral into the AMM.  
 Collateral is put into bands by calling `deposit_range` whenever someone creates a new loan or adds collateral to the existing position.
+
 
 ### `deposit_range`
 !!! description "`AMM.deposit_range(user: address, amount: uint256, n1: int256, n2: int256):`"
 
     Function to deposit collateral `amount` for `user` in the range of bands between `n1` and `n2`. This function can only be called by the admin of the AMM, which is the controller.
 
-    Returns: amount of coins given in and out (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2615,7 +2674,13 @@ Collateral is put into bands by calling `deposit_range` whenever someone creates
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python hl_lines="1 9 84"
+        event Deposit:
+            provider: indexed(address)
+            amount: uint256
+            n1: int256
+            n2: int256
+
         @external
         @nonreentrant('lock')
         def deposit_range(user: address, amount: uint256, n1: int256, n2: int256):
@@ -2703,79 +2768,124 @@ Collateral is put into bands by calling `deposit_range` whenever someone creates
     === "Example"
 
         ```shell
-        >>> AMM.exchange_dy(todo)
+        >>> AMM.deposit_range(todo)
         todo
         ```
 
 ### `withdraw`
+!!! description "`AMM.withdraw(user: address, frac: uint256) -> uint256[2]:`"
 
-
-
-
-
-
-
-
-
-
-
-
-
-## **Callbacks**
-### `liquidity_mining_callback`
-!!! description "`AMM.liquidity_mining_callback() -> address: view`"
-
-    Getter for the liquidity mining callback address.
-
-    Returns: liquidity mining callback contract (`address`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1"
-        liquidity_mining_callback: public(LMGauge)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.liquidity_mining_callback()
-        0x0000000000000000000000000000000000000000
-        ```
-
-
-### `set_callback`
-!!! description "`AMM.set_callback(liquidity_mining_callback: LMGauge):`"
-
-    Output amount is defined, not sure how much of input coin is needed (if input coin is not enough to reach output coin, then the tx will revert). Function only callable by the `admin` of the AMM (which is the controller, which is controlled by the DAO). Callback is not set yet, i think this will be set when implementing curve lp tokens (staked in gauge) as collateral for crvusd.
+    Function to withdraw liquidity for `user`. This function can only be called by the admin of the AMM, which is the controller. 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `liquidity_mining_callback` |  `LMGauge` | Liquidity Mining Gauge Address |
+    | `user` |  `address` | User address |
+    | `frac` |  `uint256` | Fraction to withdraw (1e18 = 100%) |
 
+    Emits: <mark style="background-color: #FFD580; color: black">Withdraw log</mark>
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 9 15"
-        interface LMGauge:
-            def callback_collateral_shares(n: int256, collateral_per_share: DynArray[uint256, MAX_TICKS_UINT]): nonpayable
-            def callback_user_shares(user: address, n: int256, user_shares: DynArray[uint256, MAX_TICKS_UINT]): nonpayable
+        ```python hl_lines="1 9 85"
+        event Withdraw:
+            provider: indexed(address)
+            amount_borrowed: uint256
+            amount_collateral: uint256
 
-        liquidity_mining_callback: public(LMGauge)
-
-        # nonreentrant decorator is in Controller which is admin
         @external
-        def set_callback(liquidity_mining_callback: LMGauge):
+        @nonreentrant('lock')
+        def withdraw(user: address, frac: uint256) -> uint256[2]:
             """
-            @notice Set a gauge address with callbacks for liquidity mining for collateral
-            @param liquidity_mining_callback Gauge address
+            @notice Withdraw all liquidity for the user. Only admin contract can do it
+            @param user User who owns liquidity
+            @param frac Fraction to withdraw (1e18 being 100%)
+            @return Amount of [stablecoins, collateral] withdrawn
             """
             assert msg.sender == self.admin
-            self.liquidity_mining_callback = liquidity_mining_callback
+            assert frac <= 10**18
+
+            lm: LMGauge = self.liquidity_mining_callback
+
+            ns: int256[2] = self._read_user_tick_numbers(user)
+            n: int256 = ns[0]
+            user_shares: DynArray[uint256, MAX_TICKS_UINT] = self._read_user_ticks(user, ns)
+            assert user_shares[0] > 0, "No deposits"
+
+            total_x: uint256 = 0
+            total_y: uint256 = 0
+            min_band: int256 = self.min_band
+            old_min_band: int256 = min_band
+            max_band: int256 = self.max_band
+            old_max_band: int256 = max_band
+
+            for i in range(MAX_TICKS):
+                x: uint256 = self.bands_x[n]
+                y: uint256 = self.bands_y[n]
+                ds: uint256 = unsafe_div(frac * user_shares[i], 10**18)  # Can ONLY zero out when frac == 10**18
+                user_shares[i] = unsafe_sub(user_shares[i], ds)
+                s: uint256 = self.total_shares[n]
+                new_shares: uint256 = s - ds
+                self.total_shares[n] = new_shares
+                s += DEAD_SHARES
+                dx: uint256 = (x + 1) * ds / s
+                dy: uint256 = unsafe_div((y + 1) * ds, s)
+
+                x -= dx
+                y -= dy
+
+                # If withdrawal is the last one - tranfer dust to admin fees
+                if new_shares == 0:
+                    if x > 0:
+                        self.admin_fees_x += x
+                    if y > 0:
+                        self.admin_fees_y += y / COLLATERAL_PRECISION
+                    x = 0
+                    y = 0
+
+                if n == min_band:
+                    if x == 0:
+                        if y == 0:
+                            min_band += 1
+                if x > 0 or y > 0:
+                    max_band = n
+                self.bands_x[n] = x
+                self.bands_y[n] = y
+                total_x += dx
+                total_y += dy
+
+                if n == ns[1]:
+                    break
+                else:
+                    n = unsafe_add(n, 1)
+
+            # Empty the ticks
+            if frac == 10**18:
+                self.user_shares[user].ticks[0] = 0
+            else:
+                self.save_user_shares(user, user_shares)
+
+            if old_min_band != min_band:
+                self.min_band = min_band
+            if old_max_band <= ns[1]:
+                self.max_band = max_band
+
+            total_x = unsafe_div(total_x, BORROWED_PRECISION)
+            total_y = unsafe_div(total_y, COLLATERAL_PRECISION)
+            log Withdraw(user, total_x, total_y)
+
+            self.rate_mul = self._rate_mul()
+            self.rate_time = block.timestamp
+
+            if lm.address != empty(address):
+                lm.callback_collateral_shares(0, [])  # collateral/shares ratio is unchanged
+                lm.callback_user_shares(user, ns[0], user_shares)
+
+            return [total_x, total_y]
         ```
 
     === "Example"
 
         ```shell
-        >>> AMM.set_callback("todo")
-        'todo'
+        >>> AMM.withdraw(todo)
+        todo
         ```
