@@ -3,13 +3,42 @@ explain what the contract does etc.
 
 
 
+## **Manually calculating rates:**
+
+possible to do `` and mathjax at the same time? ask squidfunk or somewhere. would be cool! should i use same variable names here that mich used in the contracts or okay to tweak them a bit?
+
+| variable      | description   | 
+| ----------- | -------|
+| `r` |  `interest rate` |
+| `rate0` |  `interest rate if debtfraction == 0 and price == 10^18. correct?` |
+| `price_peg` |  `price crvusd is pegged to (10^18 = 1.0000)` |
+| `price_crvusd` |  `current crvusd price (fetched from the price oracle contract)` |
+| `DebtFraction` |  `faction of crvusd debt from pegkeepers compared to total debt` |
+| `PegKeeperDebt` |  `debt form pegkeepers (all the crvusd deposited into pools?)` |
+| `TotalDebt` |  `total crvusd debt` |
+
+$r = rate0 * e^{power}$
+
+$power = \frac{price_{peg} - price_{crvusd}}{sigma} - \frac{DebtFraction}{TargetFraction}$
+
+$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
+
+!!!note
+    rate and rate0 are denominated in 10^18. to calc the annual rate do: $\frac{rate}{10^{18}} * (86400 * 365)$
+
+!!! tip
+    Very cool and useful tool for crvUSD rate from [0xreviews](https://twitter.com/0xreviews_xyz):  
+    https://crvusd-rate.0xreviews.xyz/
+
+
 
 ## **Contract Info Methods** (how to call this?)
 ### `rate`
 !!! description "`MonetaryPolicy.rate() -> uint256: view`"
 
     Getter for the rate of the monetary policy contract. rate has to be smaller or equal to `MAX_RATE` (400% APY).
-
+    rate is denominated in $10^18$ and the rate which is being returned is rate per second(?). So to get the annual rate one needs to calc the following: rate/10^18 * (60*60*24*365).
+    
     Returns: rate (`uint256`).
 
     ??? quote "Source code"
@@ -56,6 +85,8 @@ explain what the contract does etc.
 !!! description "`MonetaryPolicy.rate0() -> uint256: view`"
 
     Getter for the rate0 of the monetary policy contract. `rate0` has to be smaller or equal to `MAX_RATE` (400% APY).
+    rate0 is pretty much the base rate of the markets when price == 1 and debt_fraction == 0 (no pegkeeper debt).
+    To calculate annual rate do: rate0/10^18 * (60*60*24*365).
 
     Returns: rate0 (`uint256`).
 
@@ -93,8 +124,8 @@ explain what the contract does etc.
     === "Example"
 
         ```shell
-        >>> MonetaryPolicy.rate()
-        232855059
+        >>> MonetaryPolicy.rate0()
+        3022265993
         ```
 
 
