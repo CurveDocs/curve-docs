@@ -1,301 +1,166 @@
 ## **Architecture of PegKeppers**  
 
 PegKeepers are contracts that help stabilize the peg of crvUSD. They are allocated a specific amount of crvUSD to use in securing the peg. 
-This balance is decided by the DAO and can be set and raised by calling `set_debt_ceiling` in the [factory contract](/curve-docs/docs/LLAMMA/factory.md). 
-
-!!!TODO Every PegKeeper has an corresponding liquidity pool. Currently only two-coin-pools are working.
+This balance is decided by the DAO and can be set and raised by calling `set_debt_ceiling` in the [factory contract](/curve-docs/docs/LLAMMA/factory.md).
 
 
 The underlying actions of the PegKeepers can roughly be divided into two actions, which get exexcuted when calling [`update`](#update):
 
-**price_crvusd > 1**: the PegKeeper deposits crvUSD into the pool to which it's linked and receives LP tokens in exchange. This increases the supply of crvUSD in the pool and therefore decreases the price. It's important to note that the LP tokens are not staked in the gauge (if there is one). Therefore, the PegKeeper does not receive CRV emissions.
+- **price_crvusd > 1**: the PegKeeper deposits crvUSD into the pool to which it's linked and receives LP tokens in exchange. This        increases the supply of crvUSD in the pool and therefore decreases the price. It's important to note that the LP tokens are not staked in the gauge (if there is one). Therefore, the PegKeeper does not receive CRV emissions.
 
-**price_crvusd < 1**: PegKeepers withdraw crvUSD from the liquidity pool if they have a balance of the corresponding LP token; without it, there would be nothing to withdraw. This action decreases the balance of crvUSD in the pool and subsequently increases the price.
-
-
-
-## **Contract Info Methods**
-### `factory`
-!!! description "`PegKeeper.factory() -> address: view`"
-
-    Getter for the address of the factory contract.
-
-    Returns: factory contract (`address`).
-
-    !!! note
-        `FACTORY` variable is **immutable**. It can not be changed.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 4 5 11 35"
-        FACTORY: immutable(address)
-
-        @external
-        def __init__(_pool: CurvePool, _index: uint256, _receiver: address, _caller_share: uint256, _factory: address, _aggregator: StableAggregator, _admin: address):
-            """
-            @notice Contract constructor
-            @param _pool Contract pool address
-            @param _index Index of the pegged
-            @param _receiver Receiver of the profit
-            @param _caller_share Caller's share of profit
-            @param _factory Factory which should be able to take coins away
-            @param _aggregator Price aggregator which shows the price of pegged in real "dollars"
-            @param _admin Admin account
-            """
-            assert _index < 2
-            POOL = _pool
-            I = _index
-            pegged: address = _pool.coins(_index)
-            PEGGED = pegged
-            ERC20(pegged).approve(_pool.address, max_value(uint256))
-            ERC20(pegged).approve(_factory, max_value(uint256))
-
-            PEG_MUL = 10 ** (18 - ERC20(_pool.coins(1 - _index)).decimals())
-
-            self.admin = _admin
-            assert _receiver != empty(address)
-            self.receiver = _receiver
-            log ApplyNewAdmin(msg.sender)
-            log ApplyNewReceiver(_receiver)
-
-            assert _caller_share <= SHARE_PRECISION  # dev: bad part value
-            self.caller_share = _caller_share
-            log SetNewCallerShare(_caller_share)
-
-            FACTORY = _factory
-            AGGREGATOR = _aggregator
-            IS_INVERSE = (_index == 0)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PegKepper.factory()
-        '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
-        ```
+- **price_crvusd < 1**: PegKeepers withdraw crvUSD from the liquidity pool if they have a balance of the corresponding LP token; without it, there would be nothing to withdraw. This action decreases the balance of crvUSD in the pool and subsequently increases the price.
 
 
-### `pegged`
-!!! description "`PegKeeper.pegged() -> address: view`"
+## **heart of pegkeeper** (todo)
+Heart of the PegKeeper is the [`update()`](#update) function. When calling it, the PegKeeper either mints and (only!) deposits crvUSD into the corresponding pool ([`pool`](#pool)) or withdraws and burns crvUSD.  
 
-    Getter for the address of the pegged token (crvUSD). Pegged asset is determined by the index of the token in the corresponding `pool`. Index value is stored in `I`.
+Deposit and Mint: This happens when the price of the stablecoin is > 1. Minting and depositing into the pool will increase the balance of crvusd and therefore decrease its price. The LP tokens the PegKepper receives when depositing crvusd into the pool are not staked in the gauge (if the pool has one), meaning he is not receiving CRV inflation. 
 
-    Returns: pegged token contract (`address`).
+Withdraw and Burn: This mechanism happens when the price of the stablecoin is < 1. Withdrawing crvusd from the pool will decrease its balance and therefore increase the price.
 
-    !!!note
-        `PEGGED` variable is **immutable**. It can not be changed.
+https://etherscan.io/tx/0xe0db5ab1e175c8dbf54765b3b2fa4e98412ae24c1d9db1bd4c2134ee72519942: upping pegkeeper balance
+adding crvusd to pegkeepers happens via calling `_set_debt_ceiling` in the factory contract. will mint crvusd and send it to the pegkeeper.
 
-    ??? quote "Source code"
+approval is given to the pegkeepers so they can interact (deposit/withdraw) with the pool. approval also given to factory.
 
-        ```python hl_lines="1 4 5 9 16 18 19 20"
-        PEGGED: immutable(address)
+### `update`
+!!! description "`PegKeeper.update(_beneficiary: address = msg.sender) -> uint256:`"
+
+    Function to either mint and deposit or withdraw and burn. This function additionally allows to input a `_beneficiary` address where the profit should be sent. If no input is given the function will default it to the caller (`msg.sender`).
+
+    Returns: caller's profit (`uint256`).
+
+    ??? quote "Source code ([deposit and mint](https://etherscan.io/tx/0xe5ceafc4d44e478f49119cbb7420590facc55cc574767e5d14d2d09d66849db7))"
+
+        ```python hl_lines="1 5 13 17 21 56"
+        event Provide:
+            amount: uint256
+
+        @internal
+        def _provide(_amount: uint256):
+            # We already have all reserves here
+            # ERC20(PEGGED).mint(self, _amount)
+            if _amount == 0:
+                return
+
+            amounts: uint256[2] = empty(uint256[2])
+            amounts[I] = _amount
+            POOL.add_liquidity(amounts, 0)
+
+            self.last_change = block.timestamp
+            self.debt += _amount
+            log Provide(_amount)
 
         @external
-        def __init__(_pool: CurvePool, _index: uint256, _receiver: address, _caller_share: uint256, _factory: address, _aggregator: StableAggregator, _admin: address):
+        @nonpayable
+        def update(_beneficiary: address = msg.sender) -> uint256:
             """
-            @notice Contract constructor
-            @param _pool Contract pool address
-            @param _index Index of the pegged
-            @param _receiver Receiver of the profit
-            @param _caller_share Caller's share of profit
-            @param _factory Factory which should be able to take coins away
-            @param _aggregator Price aggregator which shows the price of pegged in real "dollars"
-            @param _admin Admin account
+            @notice Provide or withdraw coins from the pool to stabilize it
+            @param _beneficiary Beneficiary address
+            @return Amount of profit received by beneficiary
             """
-            assert _index < 2
-            POOL = _pool
-            I = _index
-            pegged: address = _pool.coins(_index)
-            PEGGED = pegged
-            ERC20(pegged).approve(_pool.address, max_value(uint256))
-            ERC20(pegged).approve(_factory, max_value(uint256))
+            if self.last_change + ACTION_DELAY > block.timestamp:
+                return 0
 
-            PEG_MUL = 10 ** (18 - ERC20(_pool.coins(1 - _index)).decimals())
+            balance_pegged: uint256 = POOL.balances(I)
+            balance_peg: uint256 = POOL.balances(1 - I) * PEG_MUL
 
-            self.admin = _admin
-            assert _receiver != empty(address)
-            self.receiver = _receiver
-            log ApplyNewAdmin(msg.sender)
-            log ApplyNewReceiver(_receiver)
+            initial_profit: uint256 = self._calc_profit()
 
-            assert _caller_share <= SHARE_PRECISION  # dev: bad part value
-            self.caller_share = _caller_share
-            log SetNewCallerShare(_caller_share)
+            p_agg: uint256 = AGGREGATOR.price()  # Current USD per stablecoin
 
-            FACTORY = _factory
-            AGGREGATOR = _aggregator
-            IS_INVERSE = (_index == 0)
+            # Checking the balance will ensure no-loss of the stabilizer, but to ensure stabilization
+            # we need to exclude "bad" p_agg, so we add an extra check for it
+
+            if balance_peg > balance_pegged:
+                assert p_agg >= 10**18
+                self._provide((balance_peg - balance_pegged) / 5)  # this dumps stablecoin
+
+            else:
+                assert p_agg <= 10**18
+                self._withdraw((balance_pegged - balance_peg) / 5)  # this pumps stablecoin
+
+            # Send generated profit
+            new_profit: uint256 = self._calc_profit()
+            assert new_profit >= initial_profit, "peg unprofitable"
+            lp_amount: uint256 = new_profit - initial_profit
+            caller_profit: uint256 = lp_amount * self.caller_share / SHARE_PRECISION
+            if caller_profit > 0:
+                POOL.transfer(_beneficiary, caller_profit)
+
+            return caller_profit
         ```
 
-    === "Example"
+    ??? quote "Source code ([withdraw and burn](https://etherscan.io/tx/0x96dc057317ead24879d70a69aebfe8aeb75064ff97aeabbcc75bc0b587424711))"
 
-        ```shell
-        >>> PegKepper.pegged()
-        '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
-        ```
+        ```python hl_lines="1 5 14 19 23 58"
+        event Withdraw:
+            amount: uint256
+        
+        @internal
+        def _withdraw(_amount: uint256):
+            if _amount == 0:
+                return
 
+            debt: uint256 = self.debt
+            amount: uint256 = min(_amount, debt)
 
-### `pool`
-!!! description "`PegKeeper.pool() -> address: view`"
+            amounts: uint256[2] = empty(uint256[2])
+            amounts[I] = amount
+            POOL.remove_liquidity_imbalance(amounts, max_value(uint256))
 
-    Getter for the pool contract address.
+            self.last_change = block.timestamp
+            self.debt -= amount
 
-    Returns: pool contract (`address`).
-
-    !!!note
-        `POOL` variable is **immutable**. It can not be changed.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 4 5 8 17"
-        POOL: immutable(CurvePool)
+            log Withdraw(amount)
 
         @external
-        def __init__(_pool: CurvePool, _index: uint256, _receiver: address, _caller_share: uint256, _factory: address, _aggregator: StableAggregator, _admin: address):
+        @nonpayable
+        def update(_beneficiary: address = msg.sender) -> uint256:
             """
-            @notice Contract constructor
-            @param _pool Contract pool address
-            @param _index Index of the pegged
-            @param _receiver Receiver of the profit
-            @param _caller_share Caller's share of profit
-            @param _factory Factory which should be able to take coins away
-            @param _aggregator Price aggregator which shows the price of pegged in real "dollars"
-            @param _admin Admin account
+            @notice Provide or withdraw coins from the pool to stabilize it
+            @param _beneficiary Beneficiary address
+            @return Amount of profit received by beneficiary
             """
-            assert _index < 2
-            POOL = _pool
-            I = _index
-            pegged: address = _pool.coins(_index)
-            PEGGED = pegged
-            ERC20(pegged).approve(_pool.address, max_value(uint256))
-            ERC20(pegged).approve(_factory, max_value(uint256))
+            if self.last_change + ACTION_DELAY > block.timestamp:
+                return 0
 
-            PEG_MUL = 10 ** (18 - ERC20(_pool.coins(1 - _index)).decimals())
+            balance_pegged: uint256 = POOL.balances(I)
+            balance_peg: uint256 = POOL.balances(1 - I) * PEG_MUL
 
-            self.admin = _admin
-            assert _receiver != empty(address)
-            self.receiver = _receiver
-            log ApplyNewAdmin(msg.sender)
-            log ApplyNewReceiver(_receiver)
+            initial_profit: uint256 = self._calc_profit()
 
-            assert _caller_share <= SHARE_PRECISION  # dev: bad part value
-            self.caller_share = _caller_share
-            log SetNewCallerShare(_caller_share)
+            p_agg: uint256 = AGGREGATOR.price()  # Current USD per stablecoin
 
-            FACTORY = _factory
-            AGGREGATOR = _aggregator
-            IS_INVERSE = (_index == 0)
+            # Checking the balance will ensure no-loss of the stabilizer, but to ensure stabilization
+            # we need to exclude "bad" p_agg, so we add an extra check for it
+
+            if balance_peg > balance_pegged:
+                assert p_agg >= 10**18
+                self._provide((balance_peg - balance_pegged) / 5)  # this dumps stablecoin
+
+            else:
+                assert p_agg <= 10**18
+                self._withdraw((balance_pegged - balance_peg) / 5)  # this pumps stablecoin
+
+            # Send generated profit
+            new_profit: uint256 = self._calc_profit()
+            assert new_profit >= initial_profit, "peg unprofitable"
+            lp_amount: uint256 = new_profit - initial_profit
+            caller_profit: uint256 = lp_amount * self.caller_share / SHARE_PRECISION
+            if caller_profit > 0:
+                POOL.transfer(_beneficiary, caller_profit)
+
+            return caller_profit
         ```
 
     === "Example"
 
         ```shell
-        >>> PegKepper.pool()
-        '0x4DEcE678ceceb27446b35C672dC7d61F30bAD69E'
+        >>> PegKepper.update():
         ```
 
-
-### `aggregator`
-!!! description "`PegKeeper.aggregator() -> address: view`"
-
-    Getter for the price aggregator contract for crvUSD. This contract is used to determine the value of crvUSD.
-
-    Returns: price aggregator contract (`address`).
-
-    !!!note
-        `AGGREGATOR` variable is **immutable**. It can not be changed.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 4 5 12 36"
-        AGGREGATOR: immutable(StableAggregator)
-
-        @external
-        def __init__(_pool: CurvePool, _index: uint256, _receiver: address, _caller_share: uint256, _factory: address, _aggregator: StableAggregator, _admin: address):
-            """
-            @notice Contract constructor
-            @param _pool Contract pool address
-            @param _index Index of the pegged
-            @param _receiver Receiver of the profit
-            @param _caller_share Caller's share of profit
-            @param _factory Factory which should be able to take coins away
-            @param _aggregator Price aggregator which shows the price of pegged in real "dollars"
-            @param _admin Admin account
-            """
-            assert _index < 2
-            POOL = _pool
-            I = _index
-            pegged: address = _pool.coins(_index)
-            PEGGED = pegged
-            ERC20(pegged).approve(_pool.address, max_value(uint256))
-            ERC20(pegged).approve(_factory, max_value(uint256))
-
-            PEG_MUL = 10 ** (18 - ERC20(_pool.coins(1 - _index)).decimals())
-
-            self.admin = _admin
-            assert _receiver != empty(address)
-            self.receiver = _receiver
-            log ApplyNewAdmin(msg.sender)
-            log ApplyNewReceiver(_receiver)
-
-            assert _caller_share <= SHARE_PRECISION  # dev: bad part value
-            self.caller_share = _caller_share
-            log SetNewCallerShare(_caller_share)
-
-            FACTORY = _factory
-            AGGREGATOR = _aggregator
-            IS_INVERSE = (_index == 0)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PegKepper.aggregator()
-        '0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7'
-        ```
-
-
-### `last_change`
-!!! description "`PegKeeper.last_change() -> uint256: view`"
-
-    Getter for the timestamp of when the balances of the pegkeeper were last changed. This variable gets updated every time update (`_provide` or `_withdraw`) is called.  
-    This information is also relevant for the update and estimate_caller_profit functions since there is a required delay of 15 * 60 before being able to call them again.
-
-    Returns: timestamp (`uint256`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 4 5 12 36"
-        last_change: public(uint256)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PegKepper.last_change()
-        1688794235
-        ```
-
-
-### `debt`
-!!! description "`PegKeeper.debt() -> uint256: view`"
-
-    Getter for the stablecoin debt of the PegKeeper. When the PegKeeper deposits crvUSD into the pool, the debt is incremented by the deposited amount. Conversely, if the PegKeeper withdraws, the debt is reduced by the withdrawn amount.
-
-    Returns: debt (`uint256`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1"
-        debt: public(uint256)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PegKepper.debt()
-        10569198033275719942044356
-        ```
+https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22
 
 
 
@@ -951,156 +816,285 @@ Committing a new admin or receiver requires calling the commit functions, which 
         ```
 
 
+## **Contract Info Methods**
+### `factory`
+!!! description "`PegKeeper.factory() -> address: view`"
 
+    Getter for the address of the factory contract.
 
+    Returns: factory contract (`address`).
 
-## **heart of pegkeeper** (todo)
-Heart of the PegKeeper is the [`update()`](#update) function. When calling it, the PegKeeper either mints and (only!) deposits crvUSD into the corresponding pool ([`pool`](#pool)) or withdraws and burns crvUSD.  
+    !!! note
+        `FACTORY` variable is **immutable**. It can not be changed.
 
-Deposit and Mint: This happens when the price of the stablecoin is > 1. Minting and depositing into the pool will increase the balance of crvusd and therefore decrease its price. The LP tokens the PegKepper receives when depositing crvusd into the pool are not staked in the gauge (if the pool has one), meaning he is not receiving CRV inflation. 
+    ??? quote "Source code"
 
-Withdraw and Burn: This mechanism happens when the price of the stablecoin is < 1. Withdrawing crvusd from the pool will decrease its balance and therefore increase the price.
-
-https://etherscan.io/tx/0xe0db5ab1e175c8dbf54765b3b2fa4e98412ae24c1d9db1bd4c2134ee72519942: upping pegkeeper balance
-adding crvusd to pegkeepers happens via calling `_set_debt_ceiling` in the factory contract. will mint crvusd and send it to the pegkeeper.
-
-approval is given to the pegkeepers so they can interact (deposit/withdraw) with the pool. approval also given to factory.
-
-### `update`
-!!! description "`PegKeeper.update(_beneficiary: address = msg.sender) -> uint256:`"
-
-    Function to either mint and deposit or withdraw and burn. This function additionally allows to input a `_beneficiary` address where the profit should be sent. If no input is given the function will default it to the caller (`msg.sender`).
-
-    Returns: caller's profit (`uint256`).
-
-    ??? quote "Source code ([deposit and mint](https://etherscan.io/tx/0xe5ceafc4d44e478f49119cbb7420590facc55cc574767e5d14d2d09d66849db7))"
-
-        ```python hl_lines="1 5 13 17 21 56"
-        event Provide:
-            amount: uint256
-
-        @internal
-        def _provide(_amount: uint256):
-            # We already have all reserves here
-            # ERC20(PEGGED).mint(self, _amount)
-            if _amount == 0:
-                return
-
-            amounts: uint256[2] = empty(uint256[2])
-            amounts[I] = _amount
-            POOL.add_liquidity(amounts, 0)
-
-            self.last_change = block.timestamp
-            self.debt += _amount
-            log Provide(_amount)
+        ```python hl_lines="1 4 5 11 35"
+        FACTORY: immutable(address)
 
         @external
-        @nonpayable
-        def update(_beneficiary: address = msg.sender) -> uint256:
+        def __init__(_pool: CurvePool, _index: uint256, _receiver: address, _caller_share: uint256, _factory: address, _aggregator: StableAggregator, _admin: address):
             """
-            @notice Provide or withdraw coins from the pool to stabilize it
-            @param _beneficiary Beneficiary address
-            @return Amount of profit received by beneficiary
+            @notice Contract constructor
+            @param _pool Contract pool address
+            @param _index Index of the pegged
+            @param _receiver Receiver of the profit
+            @param _caller_share Caller's share of profit
+            @param _factory Factory which should be able to take coins away
+            @param _aggregator Price aggregator which shows the price of pegged in real "dollars"
+            @param _admin Admin account
             """
-            if self.last_change + ACTION_DELAY > block.timestamp:
-                return 0
+            assert _index < 2
+            POOL = _pool
+            I = _index
+            pegged: address = _pool.coins(_index)
+            PEGGED = pegged
+            ERC20(pegged).approve(_pool.address, max_value(uint256))
+            ERC20(pegged).approve(_factory, max_value(uint256))
 
-            balance_pegged: uint256 = POOL.balances(I)
-            balance_peg: uint256 = POOL.balances(1 - I) * PEG_MUL
+            PEG_MUL = 10 ** (18 - ERC20(_pool.coins(1 - _index)).decimals())
 
-            initial_profit: uint256 = self._calc_profit()
+            self.admin = _admin
+            assert _receiver != empty(address)
+            self.receiver = _receiver
+            log ApplyNewAdmin(msg.sender)
+            log ApplyNewReceiver(_receiver)
 
-            p_agg: uint256 = AGGREGATOR.price()  # Current USD per stablecoin
+            assert _caller_share <= SHARE_PRECISION  # dev: bad part value
+            self.caller_share = _caller_share
+            log SetNewCallerShare(_caller_share)
 
-            # Checking the balance will ensure no-loss of the stabilizer, but to ensure stabilization
-            # we need to exclude "bad" p_agg, so we add an extra check for it
-
-            if balance_peg > balance_pegged:
-                assert p_agg >= 10**18
-                self._provide((balance_peg - balance_pegged) / 5)  # this dumps stablecoin
-
-            else:
-                assert p_agg <= 10**18
-                self._withdraw((balance_pegged - balance_peg) / 5)  # this pumps stablecoin
-
-            # Send generated profit
-            new_profit: uint256 = self._calc_profit()
-            assert new_profit >= initial_profit, "peg unprofitable"
-            lp_amount: uint256 = new_profit - initial_profit
-            caller_profit: uint256 = lp_amount * self.caller_share / SHARE_PRECISION
-            if caller_profit > 0:
-                POOL.transfer(_beneficiary, caller_profit)
-
-            return caller_profit
-        ```
-
-    ??? quote "Source code ([withdraw and burn](https://etherscan.io/tx/0x96dc057317ead24879d70a69aebfe8aeb75064ff97aeabbcc75bc0b587424711))"
-
-        ```python hl_lines="1 5 14 19 23 58"
-        event Withdraw:
-            amount: uint256
-        
-        @internal
-        def _withdraw(_amount: uint256):
-            if _amount == 0:
-                return
-
-            debt: uint256 = self.debt
-            amount: uint256 = min(_amount, debt)
-
-            amounts: uint256[2] = empty(uint256[2])
-            amounts[I] = amount
-            POOL.remove_liquidity_imbalance(amounts, max_value(uint256))
-
-            self.last_change = block.timestamp
-            self.debt -= amount
-
-            log Withdraw(amount)
-
-        @external
-        @nonpayable
-        def update(_beneficiary: address = msg.sender) -> uint256:
-            """
-            @notice Provide or withdraw coins from the pool to stabilize it
-            @param _beneficiary Beneficiary address
-            @return Amount of profit received by beneficiary
-            """
-            if self.last_change + ACTION_DELAY > block.timestamp:
-                return 0
-
-            balance_pegged: uint256 = POOL.balances(I)
-            balance_peg: uint256 = POOL.balances(1 - I) * PEG_MUL
-
-            initial_profit: uint256 = self._calc_profit()
-
-            p_agg: uint256 = AGGREGATOR.price()  # Current USD per stablecoin
-
-            # Checking the balance will ensure no-loss of the stabilizer, but to ensure stabilization
-            # we need to exclude "bad" p_agg, so we add an extra check for it
-
-            if balance_peg > balance_pegged:
-                assert p_agg >= 10**18
-                self._provide((balance_peg - balance_pegged) / 5)  # this dumps stablecoin
-
-            else:
-                assert p_agg <= 10**18
-                self._withdraw((balance_pegged - balance_peg) / 5)  # this pumps stablecoin
-
-            # Send generated profit
-            new_profit: uint256 = self._calc_profit()
-            assert new_profit >= initial_profit, "peg unprofitable"
-            lp_amount: uint256 = new_profit - initial_profit
-            caller_profit: uint256 = lp_amount * self.caller_share / SHARE_PRECISION
-            if caller_profit > 0:
-                POOL.transfer(_beneficiary, caller_profit)
-
-            return caller_profit
+            FACTORY = _factory
+            AGGREGATOR = _aggregator
+            IS_INVERSE = (_index == 0)
         ```
 
     === "Example"
 
         ```shell
-        >>> PegKepper.update():
+        >>> PegKepper.factory()
+        '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
         ```
 
-https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22
+
+### `pegged`
+!!! description "`PegKeeper.pegged() -> address: view`"
+
+    Getter for the address of the pegged token (crvUSD). Pegged asset is determined by the index of the token in the corresponding `pool`. Index value is stored in `I`.
+
+    Returns: pegged token contract (`address`).
+
+    !!!note
+        `PEGGED` variable is **immutable**. It can not be changed.
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 4 5 9 16 18 19 20"
+        PEGGED: immutable(address)
+
+        @external
+        def __init__(_pool: CurvePool, _index: uint256, _receiver: address, _caller_share: uint256, _factory: address, _aggregator: StableAggregator, _admin: address):
+            """
+            @notice Contract constructor
+            @param _pool Contract pool address
+            @param _index Index of the pegged
+            @param _receiver Receiver of the profit
+            @param _caller_share Caller's share of profit
+            @param _factory Factory which should be able to take coins away
+            @param _aggregator Price aggregator which shows the price of pegged in real "dollars"
+            @param _admin Admin account
+            """
+            assert _index < 2
+            POOL = _pool
+            I = _index
+            pegged: address = _pool.coins(_index)
+            PEGGED = pegged
+            ERC20(pegged).approve(_pool.address, max_value(uint256))
+            ERC20(pegged).approve(_factory, max_value(uint256))
+
+            PEG_MUL = 10 ** (18 - ERC20(_pool.coins(1 - _index)).decimals())
+
+            self.admin = _admin
+            assert _receiver != empty(address)
+            self.receiver = _receiver
+            log ApplyNewAdmin(msg.sender)
+            log ApplyNewReceiver(_receiver)
+
+            assert _caller_share <= SHARE_PRECISION  # dev: bad part value
+            self.caller_share = _caller_share
+            log SetNewCallerShare(_caller_share)
+
+            FACTORY = _factory
+            AGGREGATOR = _aggregator
+            IS_INVERSE = (_index == 0)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PegKepper.pegged()
+        '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
+        ```
+
+
+### `pool`
+!!! description "`PegKeeper.pool() -> address: view`"
+
+    Getter for the pool contract address.
+
+    Returns: pool contract (`address`).
+
+    !!!note
+        `POOL` variable is **immutable**. It can not be changed.
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 4 5 8 17"
+        POOL: immutable(CurvePool)
+
+        @external
+        def __init__(_pool: CurvePool, _index: uint256, _receiver: address, _caller_share: uint256, _factory: address, _aggregator: StableAggregator, _admin: address):
+            """
+            @notice Contract constructor
+            @param _pool Contract pool address
+            @param _index Index of the pegged
+            @param _receiver Receiver of the profit
+            @param _caller_share Caller's share of profit
+            @param _factory Factory which should be able to take coins away
+            @param _aggregator Price aggregator which shows the price of pegged in real "dollars"
+            @param _admin Admin account
+            """
+            assert _index < 2
+            POOL = _pool
+            I = _index
+            pegged: address = _pool.coins(_index)
+            PEGGED = pegged
+            ERC20(pegged).approve(_pool.address, max_value(uint256))
+            ERC20(pegged).approve(_factory, max_value(uint256))
+
+            PEG_MUL = 10 ** (18 - ERC20(_pool.coins(1 - _index)).decimals())
+
+            self.admin = _admin
+            assert _receiver != empty(address)
+            self.receiver = _receiver
+            log ApplyNewAdmin(msg.sender)
+            log ApplyNewReceiver(_receiver)
+
+            assert _caller_share <= SHARE_PRECISION  # dev: bad part value
+            self.caller_share = _caller_share
+            log SetNewCallerShare(_caller_share)
+
+            FACTORY = _factory
+            AGGREGATOR = _aggregator
+            IS_INVERSE = (_index == 0)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PegKepper.pool()
+        '0x4DEcE678ceceb27446b35C672dC7d61F30bAD69E'
+        ```
+
+
+### `aggregator`
+!!! description "`PegKeeper.aggregator() -> address: view`"
+
+    Getter for the price aggregator contract for crvUSD. This contract is used to determine the value of crvUSD.
+
+    Returns: price aggregator contract (`address`).
+
+    !!!note
+        `AGGREGATOR` variable is **immutable**. It can not be changed.
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 4 5 12 36"
+        AGGREGATOR: immutable(StableAggregator)
+
+        @external
+        def __init__(_pool: CurvePool, _index: uint256, _receiver: address, _caller_share: uint256, _factory: address, _aggregator: StableAggregator, _admin: address):
+            """
+            @notice Contract constructor
+            @param _pool Contract pool address
+            @param _index Index of the pegged
+            @param _receiver Receiver of the profit
+            @param _caller_share Caller's share of profit
+            @param _factory Factory which should be able to take coins away
+            @param _aggregator Price aggregator which shows the price of pegged in real "dollars"
+            @param _admin Admin account
+            """
+            assert _index < 2
+            POOL = _pool
+            I = _index
+            pegged: address = _pool.coins(_index)
+            PEGGED = pegged
+            ERC20(pegged).approve(_pool.address, max_value(uint256))
+            ERC20(pegged).approve(_factory, max_value(uint256))
+
+            PEG_MUL = 10 ** (18 - ERC20(_pool.coins(1 - _index)).decimals())
+
+            self.admin = _admin
+            assert _receiver != empty(address)
+            self.receiver = _receiver
+            log ApplyNewAdmin(msg.sender)
+            log ApplyNewReceiver(_receiver)
+
+            assert _caller_share <= SHARE_PRECISION  # dev: bad part value
+            self.caller_share = _caller_share
+            log SetNewCallerShare(_caller_share)
+
+            FACTORY = _factory
+            AGGREGATOR = _aggregator
+            IS_INVERSE = (_index == 0)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PegKepper.aggregator()
+        '0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7'
+        ```
+
+
+### `last_change`
+!!! description "`PegKeeper.last_change() -> uint256: view`"
+
+    Getter for the timestamp of when the balances of the pegkeeper were last changed. This variable gets updated every time update (`_provide` or `_withdraw`) is called.  
+    This information is also relevant for the update and estimate_caller_profit functions since there is a required delay of 15 * 60 before being able to call them again.
+
+    Returns: timestamp (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 4 5 12 36"
+        last_change: public(uint256)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PegKepper.last_change()
+        1688794235
+        ```
+
+
+### `debt`
+!!! description "`PegKeeper.debt() -> uint256: view`"
+
+    Getter for the stablecoin debt of the PegKeeper. When the PegKeeper deposits crvUSD into the pool, the debt is incremented by the deposited amount. Conversely, if the PegKeeper withdraws, the debt is reduced by the withdrawn amount.
+
+    Returns: debt (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1"
+        debt: public(uint256)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PegKepper.debt()
+        10569198033275719942044356
+        ```
