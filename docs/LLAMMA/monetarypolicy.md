@@ -2,6 +2,13 @@ monetary policy contracts are integrated into the crvusd system. every market ha
 explain what the contract does etc.
 
 
+monetary policy contracts are integrated into the crvusd system and are resposible for the rate of crvusd markets. when creating a new market via the [factory contract](/curve-docs/docs/LLAMMA/factory.md) a monetary policy contract needs to be "linked".
+currently there are two different monetary policies:
+- policy for sfrxeth and wsteth markets: due to the nature that they are earning yield as LSD the rate is higher than for other markets
+- weth and wbtc: the rates for these markets are 40% lower than those for the LSD due to the fact that the underlying token is not earning any yield.
+
+Interest rates are updated whenever a new loan is created or repayed. 
+
 When and how are rates updated?
 
 
@@ -254,8 +261,6 @@ $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
         ```
 
 
-
-## **Contract Info Methods** (how to call this?)
 ### `target_debt_fraction`
 !!! description "`MonetaryPolicy.target_debt_fraction() -> uint256: view`"
 
@@ -336,144 +341,6 @@ $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
 
         ```shell
         >>> MonetaryPolicy.set_target_debt_fraction("todo")
-        'todo'
-        ```
-
-
-### `PRICE_ORACLE`
-!!! description "`MonetaryPolicy.PRICE_ORACLE() -> address: view`"
-
-    Getter for the price oracle contract. immutable variable (check format of how i documented other immutable variables)
-
-    Returns: price oracle contract (`address`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 5 12"
-        PRICE_ORACLE: public(immutable(PriceOracle))
-
-        @external
-        def __init__(admin: address,
-                    price_oracle: PriceOracle,
-                    controller_factory: ControllerFactory,
-                    peg_keepers: PegKeeper[5],
-                    rate: uint256,
-                    sigma: uint256,
-                    target_debt_fraction: uint256):
-            self.admin = admin
-            PRICE_ORACLE = price_oracle
-            CONTROLLER_FACTORY = controller_factory
-            for i in range(5):
-                if peg_keepers[i].address == empty(address):
-                    break
-                self.peg_keepers[i] = peg_keepers[i]
-
-            assert sigma >= MIN_SIGMA
-            assert sigma <= MAX_SIGMA
-            assert target_debt_fraction <= MAX_TARGET_DEBT_FRACTION
-            assert rate <= MAX_RATE
-            self.rate0 = rate
-            self.sigma = convert(sigma, int256)
-            self.target_debt_fraction = target_debt_fraction
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> MonetaryPolicy.PRICE_ORACLE()
-        '0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7'
-        ```
-
-
-### `CONTROLLER_FACOTRY`
-!!! description "`MonetaryPolicy.CONTROLLER_FACOTRY() -> address: view`"
-
-    Getter for the controller factory contract. immutable variable!
-
-    Returns: controller factory contract (`address`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 6 13"
-        CONTROLLER_FACTORY: public(immutable(ControllerFactory))
-
-        @external
-        def __init__(admin: address,
-                    price_oracle: PriceOracle,
-                    controller_factory: ControllerFactory,
-                    peg_keepers: PegKeeper[5],
-                    rate: uint256,
-                    sigma: uint256,
-                    target_debt_fraction: uint256):
-            self.admin = admin
-            PRICE_ORACLE = price_oracle
-            CONTROLLER_FACTORY = controller_factory
-            for i in range(5):
-                if peg_keepers[i].address == empty(address):
-                    break
-                self.peg_keepers[i] = peg_keepers[i]
-
-            assert sigma >= MIN_SIGMA
-            assert sigma <= MAX_SIGMA
-            assert target_debt_fraction <= MAX_TARGET_DEBT_FRACTION
-            assert rate <= MAX_RATE
-            self.rate0 = rate
-            self.sigma = convert(sigma, int256)
-            self.target_debt_fraction = target_debt_fraction
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> MonetaryPolicy.CONTROLLER_FACOTRY()
-        '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
-        ```
-
-### `rate_write` (what does this do? what is it used for?)
-!!! description "`MonetaryPolicy.rate_write() -> uint256:`"
-
-    what does this do? link snekmate regarding exp?
-
-    !!! warning
-        This function can only be called by the `admin` of the contract.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="3 22 25 28"
-        @internal
-        @view
-        def calculate_rate() -> uint256:
-            sigma: int256 = self.sigma
-            target_debt_fraction: uint256 = self.target_debt_fraction
-
-            p: int256 = convert(PRICE_ORACLE.price(), int256)
-            pk_debt: uint256 = 0
-            for pk in self.peg_keepers:
-                if pk.address == empty(address):
-                    break
-                pk_debt += pk.debt()
-
-            power: int256 = (10**18 - p) * 10**18 / sigma  # high price -> negative pow -> low rate
-            if pk_debt > 0:
-                total_debt: uint256 = CONTROLLER_FACTORY.total_debt()
-                if total_debt == 0:
-                    return 0
-                else:
-                    power -= convert(pk_debt * 10**18 / total_debt * 10**18 / target_debt_fraction, int256)
-
-            return self.rate0 * min(self.exp(power), MAX_EXP) / 10**18
-            
-        @external
-        def rate_write() -> uint256:
-            # Not needed here but useful for more automated policies
-            # which change rate0 - for example rate0 targeting some fraction pl_debt/total_debt
-            return self.calculate_rate()
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> MonetaryPolicy.rate_write():
         'todo'
         ```
 
@@ -689,5 +556,145 @@ peg keepers need to be added to the monetary policy contract in order to calcula
 
         ```shell
         >>> MonetaryPolicy.set_admin("todo")
+        'todo'
+        ```
+
+
+## **Contract Info Methods**
+
+### `PRICE_ORACLE`
+!!! description "`MonetaryPolicy.PRICE_ORACLE() -> address: view`"
+
+    Getter for the price oracle contract. immutable variable (check format of how i documented other immutable variables)
+
+    Returns: price oracle contract (`address`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 5 12"
+        PRICE_ORACLE: public(immutable(PriceOracle))
+
+        @external
+        def __init__(admin: address,
+                    price_oracle: PriceOracle,
+                    controller_factory: ControllerFactory,
+                    peg_keepers: PegKeeper[5],
+                    rate: uint256,
+                    sigma: uint256,
+                    target_debt_fraction: uint256):
+            self.admin = admin
+            PRICE_ORACLE = price_oracle
+            CONTROLLER_FACTORY = controller_factory
+            for i in range(5):
+                if peg_keepers[i].address == empty(address):
+                    break
+                self.peg_keepers[i] = peg_keepers[i]
+
+            assert sigma >= MIN_SIGMA
+            assert sigma <= MAX_SIGMA
+            assert target_debt_fraction <= MAX_TARGET_DEBT_FRACTION
+            assert rate <= MAX_RATE
+            self.rate0 = rate
+            self.sigma = convert(sigma, int256)
+            self.target_debt_fraction = target_debt_fraction
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> MonetaryPolicy.PRICE_ORACLE()
+        '0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7'
+        ```
+
+
+### `CONTROLLER_FACOTRY`
+!!! description "`MonetaryPolicy.CONTROLLER_FACOTRY() -> address: view`"
+
+    Getter for the controller factory contract. immutable variable!
+
+    Returns: controller factory contract (`address`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 6 13"
+        CONTROLLER_FACTORY: public(immutable(ControllerFactory))
+
+        @external
+        def __init__(admin: address,
+                    price_oracle: PriceOracle,
+                    controller_factory: ControllerFactory,
+                    peg_keepers: PegKeeper[5],
+                    rate: uint256,
+                    sigma: uint256,
+                    target_debt_fraction: uint256):
+            self.admin = admin
+            PRICE_ORACLE = price_oracle
+            CONTROLLER_FACTORY = controller_factory
+            for i in range(5):
+                if peg_keepers[i].address == empty(address):
+                    break
+                self.peg_keepers[i] = peg_keepers[i]
+
+            assert sigma >= MIN_SIGMA
+            assert sigma <= MAX_SIGMA
+            assert target_debt_fraction <= MAX_TARGET_DEBT_FRACTION
+            assert rate <= MAX_RATE
+            self.rate0 = rate
+            self.sigma = convert(sigma, int256)
+            self.target_debt_fraction = target_debt_fraction
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> MonetaryPolicy.CONTROLLER_FACOTRY()
+        '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
+        ```
+
+### `rate_write` (what does this do? what is it used for?)
+!!! description "`MonetaryPolicy.rate_write() -> uint256:`"
+
+    what does this do? link snekmate regarding exp?
+
+    !!! warning
+        This function can only be called by the `admin` of the contract.
+
+    ??? quote "Source code"
+
+        ```python hl_lines="3 22 25 28"
+        @internal
+        @view
+        def calculate_rate() -> uint256:
+            sigma: int256 = self.sigma
+            target_debt_fraction: uint256 = self.target_debt_fraction
+
+            p: int256 = convert(PRICE_ORACLE.price(), int256)
+            pk_debt: uint256 = 0
+            for pk in self.peg_keepers:
+                if pk.address == empty(address):
+                    break
+                pk_debt += pk.debt()
+
+            power: int256 = (10**18 - p) * 10**18 / sigma  # high price -> negative pow -> low rate
+            if pk_debt > 0:
+                total_debt: uint256 = CONTROLLER_FACTORY.total_debt()
+                if total_debt == 0:
+                    return 0
+                else:
+                    power -= convert(pk_debt * 10**18 / total_debt * 10**18 / target_debt_fraction, int256)
+
+            return self.rate0 * min(self.exp(power), MAX_EXP) / 10**18
+            
+        @external
+        def rate_write() -> uint256:
+            # Not needed here but useful for more automated policies
+            # which change rate0 - for example rate0 targeting some fraction pl_debt/total_debt
+            return self.calculate_rate()
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> MonetaryPolicy.rate_write():
         'todo'
         ```
