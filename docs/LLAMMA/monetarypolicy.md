@@ -2,15 +2,15 @@ monetary policy contracts are integrated into the crvusd system. every market ha
 explain what the contract does etc.
 
 
+When and how are rates updated?
 
-## **Manually calculating rates:**
 
-possible to do `` and mathjax at the same time? ask squidfunk or somewhere. would be cool! should i use same variable names here that mich used in the contracts or okay to tweak them a bit?
+## **Interest Rates**
 
 | variable      | description   | 
 | ----------- | -------|
 | `r` |  `interest rate` |
-| `rate0` |  `interest rate if debtfraction == 0 and price == 10^18. correct?` |
+| `rate0` |  `interest rate when DebtFraction = 0 (no debt in PegKeepers) and price of crvUSD = 10^18.` |
 | `price_peg` |  `price crvusd is pegged to (10^18 = 1.0000)` |
 | `price_crvusd` |  `current crvusd price (fetched from the price oracle contract)` |
 | `DebtFraction` |  `faction of crvusd debt from pegkeepers compared to total debt` |
@@ -24,15 +24,13 @@ $power = \frac{price_{peg} - price_{crvusd}}{sigma} - \frac{DebtFraction}{Target
 $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
 
 !!!note
-    rate and rate0 are denominated in 10^18. to calc the annual rate do: $\frac{rate}{10^{18}} * (86400 * 365)$
+    `rate` and `rate0` are denominated in $10^{18}$ -> ${annual_rate} = \frac{rate}{10^{18}} * (86400 * 365)$
 
 !!! tip
-    Very cool and useful tool for crvUSD rate from [0xreviews](https://twitter.com/0xreviews_xyz):  
-    https://crvusd-rate.0xreviews.xyz/
+    Useful tool by [0xreviews](https://twitter.com/0xreviews_xyz) to play around with rates: https://crvusd-rate.0xreviews.xyz/
 
 
 
-## **Contract Info Methods** (how to call this?)
 ### `rate`
 !!! description "`MonetaryPolicy.rate() -> uint256: view`"
 
@@ -256,6 +254,8 @@ $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
         ```
 
 
+
+## **Contract Info Methods** (how to call this?)
 ### `target_debt_fraction`
 !!! description "`MonetaryPolicy.target_debt_fraction() -> uint256: view`"
 
@@ -429,91 +429,58 @@ $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
         '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
         ```
 
+### `rate_write` (what does this do? what is it used for?)
+!!! description "`MonetaryPolicy.rate_write() -> uint256:`"
 
+    what does this do? link snekmate regarding exp?
 
-## **Ownership**
-why no future_admin -> apply_future_admin approach???
-
-
-### `admin`
-!!! description "`MonetaryPolicy.admin() -> address: view`"
-
-    Getter for the admin of the contract. ownership agent is the admin (cruvedao).
-
-    Returns: admin (`address`).
+    !!! warning
+        This function can only be called by the `admin` of the contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 11"
-        admin: public(address)
+        ```python hl_lines="3 22 25 28"
+        @internal
+        @view
+        def calculate_rate() -> uint256:
+            sigma: int256 = self.sigma
+            target_debt_fraction: uint256 = self.target_debt_fraction
 
-        @external
-        def __init__(admin: address,
-                    price_oracle: PriceOracle,
-                    controller_factory: ControllerFactory,
-                    peg_keepers: PegKeeper[5],
-                    rate: uint256,
-                    sigma: uint256,
-                    target_debt_fraction: uint256):
-            self.admin = admin
-            PRICE_ORACLE = price_oracle
-            CONTROLLER_FACTORY = controller_factory
-            for i in range(5):
-                if peg_keepers[i].address == empty(address):
+            p: int256 = convert(PRICE_ORACLE.price(), int256)
+            pk_debt: uint256 = 0
+            for pk in self.peg_keepers:
+                if pk.address == empty(address):
                     break
-                self.peg_keepers[i] = peg_keepers[i]
+                pk_debt += pk.debt()
 
-            assert sigma >= MIN_SIGMA
-            assert sigma <= MAX_SIGMA
-            assert target_debt_fraction <= MAX_TARGET_DEBT_FRACTION
-            assert rate <= MAX_RATE
-            self.rate0 = rate
-            self.sigma = convert(sigma, int256)
-            self.target_debt_fraction = target_debt_fraction
-        ```
+            power: int256 = (10**18 - p) * 10**18 / sigma  # high price -> negative pow -> low rate
+            if pk_debt > 0:
+                total_debt: uint256 = CONTROLLER_FACTORY.total_debt()
+                if total_debt == 0:
+                    return 0
+                else:
+                    power -= convert(pk_debt * 10**18 / total_debt * 10**18 / target_debt_fraction, int256)
 
-    === "Example"
-
-        ```shell
-        >>> MonetaryPolicy.admin()
-        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
-        ```
-
-
-### `set_admin`
-!!! description "`MonetaryPolicy.set_admin(admin: address):`"
-
-    Getter for the admin of the contract. ownership agent is the admin (cruvedao).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `admin` |  `address` | New Admin |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 4 7 10"
-        event SetAdmin:
-            admin: address
-
-        admin: public(address)
-
+            return self.rate0 * min(self.exp(power), MAX_EXP) / 10**18
+            
         @external
-        def set_admin(admin: address):
-            assert msg.sender == self.admin
-            self.admin = admin
-            log SetAdmin(admin)
+        def rate_write() -> uint256:
+            # Not needed here but useful for more automated policies
+            # which change rate0 - for example rate0 targeting some fraction pl_debt/total_debt
+            return self.calculate_rate()
         ```
 
     === "Example"
 
         ```shell
-        >>> MonetaryPolicy.set_admin("todo")
+        >>> MonetaryPolicy.rate_write():
         'todo'
         ```
 
 
+## **PegKeepers**
+peg keepers need to be added to the monetary policy contract in order to calculate the rate as you need the debtfraction for that calculation. PegKeepers can be added via `add_peg_keeper` and removed via `remove_peg_keeper`.
 
-# **PegKeepers**
 ### `peg_keepers`
 !!! description "`MonetaryPolicy.peg_keepers(arg0: uint256) -> address: view`"
 
@@ -646,86 +613,81 @@ why no future_admin -> apply_future_admin approach???
         ```
 
 
-### `rate_write` (todo)
-!!! description "`MonetaryPolicy.rate_write() -> uint256:`"
 
-    what does this do? link snekmate regarding exp?
+## **Admin Ownership**
 
-    !!! warning
-        This function can only be called by the `admin` of the contract.
+### `admin`
+!!! description "`MonetaryPolicy.admin() -> address: view`"
+
+    Getter for the admin of the contract. ownership agent is the admin (cruvedao).
+
+    Returns: admin (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 39 61"
-        @internal
-        @pure
-        def exp(power: int256) -> uint256:
-            if power <= -42139678854452767551:
-                return 0
+        ```python hl_lines="1 4 11"
+        admin: public(address)
 
-            if power >= 135305999368893231589:
-                # Return MAX_EXP when we are in overflow mode
-                return MAX_EXP
-
-            x: int256 = unsafe_div(unsafe_mul(power, 2**96), 10**18)
-
-            k: int256 = unsafe_div(
-                unsafe_add(
-                    unsafe_div(unsafe_mul(x, 2**96), 54916777467707473351141471128),
-                    2**95),
-                2**96)
-            x = unsafe_sub(x, unsafe_mul(k, 54916777467707473351141471128))
-
-            y: int256 = unsafe_add(x, 1346386616545796478920950773328)
-            y = unsafe_add(unsafe_div(unsafe_mul(y, x), 2**96), 57155421227552351082224309758442)
-            p: int256 = unsafe_sub(unsafe_add(y, x), 94201549194550492254356042504812)
-            p = unsafe_add(unsafe_div(unsafe_mul(p, y), 2**96), 28719021644029726153956944680412240)
-            p = unsafe_add(unsafe_mul(p, x), (4385272521454847904659076985693276 * 2**96))
-
-            q: int256 = x - 2855989394907223263936484059900
-            q = unsafe_add(unsafe_div(unsafe_mul(q, x), 2**96), 50020603652535783019961831881945)
-            q = unsafe_sub(unsafe_div(unsafe_mul(q, x), 2**96), 533845033583426703283633433725380)
-            q = unsafe_add(unsafe_div(unsafe_mul(q, x), 2**96), 3604857256930695427073651918091429)
-            q = unsafe_sub(unsafe_div(unsafe_mul(q, x), 2**96), 14423608567350463180887372962807573)
-            q = unsafe_add(unsafe_div(unsafe_mul(q, x), 2**96), 26449188498355588339934803723976023)
-
-            return shift(
-                unsafe_mul(convert(unsafe_div(p, q), uint256), 3822833074963236453042738258902158003155416615667),
-                unsafe_sub(k, 195))
-
-        @internal
-        @view
-        def calculate_rate() -> uint256:
-            sigma: int256 = self.sigma
-            target_debt_fraction: uint256 = self.target_debt_fraction
-
-            p: int256 = convert(PRICE_ORACLE.price(), int256)
-            pk_debt: uint256 = 0
-            for pk in self.peg_keepers:
-                if pk.address == empty(address):
-                    break
-                pk_debt += pk.debt()
-
-            power: int256 = (10**18 - p) * 10**18 / sigma  # high price -> negative pow -> low rate
-            if pk_debt > 0:
-                total_debt: uint256 = CONTROLLER_FACTORY.total_debt()
-                if total_debt == 0:
-                    return 0
-                else:
-                    power -= convert(pk_debt * 10**18 / total_debt * 10**18 / target_debt_fraction, int256)
-
-            return self.rate0 * min(self.exp(power), MAX_EXP) / 10**18
-            
         @external
-        def rate_write() -> uint256:
-            # Not needed here but useful for more automated policies
-            # which change rate0 - for example rate0 targeting some fraction pl_debt/total_debt
-            return self.calculate_rate()
+        def __init__(admin: address,
+                    price_oracle: PriceOracle,
+                    controller_factory: ControllerFactory,
+                    peg_keepers: PegKeeper[5],
+                    rate: uint256,
+                    sigma: uint256,
+                    target_debt_fraction: uint256):
+            self.admin = admin
+            PRICE_ORACLE = price_oracle
+            CONTROLLER_FACTORY = controller_factory
+            for i in range(5):
+                if peg_keepers[i].address == empty(address):
+                    break
+                self.peg_keepers[i] = peg_keepers[i]
+
+            assert sigma >= MIN_SIGMA
+            assert sigma <= MAX_SIGMA
+            assert target_debt_fraction <= MAX_TARGET_DEBT_FRACTION
+            assert rate <= MAX_RATE
+            self.rate0 = rate
+            self.sigma = convert(sigma, int256)
+            self.target_debt_fraction = target_debt_fraction
         ```
 
     === "Example"
 
         ```shell
-        >>> MonetaryPolicy.rate_write():
+        >>> MonetaryPolicy.admin()
+        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
+        ```
+
+
+### `set_admin`
+!!! description "`MonetaryPolicy.set_admin(admin: address):`"
+
+    Getter for the admin of the contract. ownership agent is the admin (cruvedao).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `admin` |  `address` | New Admin |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 4 7 10"
+        event SetAdmin:
+            admin: address
+
+        admin: public(address)
+
+        @external
+        def set_admin(admin: address):
+            assert msg.sender == self.admin
+            self.admin = admin
+            log SetAdmin(admin)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> MonetaryPolicy.set_admin("todo")
         'todo'
         ```
