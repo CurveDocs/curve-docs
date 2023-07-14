@@ -22,7 +22,7 @@ $power = \frac{price_{peg} - price_{crvusd}}{sigma} - \frac{DebtFraction}{Target
 $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
 
 !!!note
-    `rate` and `rate0` are denominated in $10^{18}$ -> ${annual_rate} = \frac{rate}{10^{18}} * (86400 * 365)$
+    `rate` and `rate0` are denominated in $10^{18}$ -> ${annualRate} = \frac{rate}{10^{18}} * (86400 * 365)$
 
 !!! tip
     Useful tool by [0xreviews](https://twitter.com/0xreviews_xyz) to play around with rates: https://crvusd-rate.0xreviews.xyz/
@@ -640,13 +640,11 @@ PegKeepers need to be added to the monetary policy contract in order to calculat
         '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
         ```
 
-### `rate_write` (what does this do? what is it used for?)
+
+### `rate_write`
 !!! description "`MonetaryPolicy.rate_write() -> uint256:`"
 
-    what does this do? link snekmate regarding exp?
-
-    !!! warning
-        This function can only be called by the `admin` of the contract.
+    When adding a new market via the factory contract, it calls this function to check if the MonetaryPolicy has correct ABI.
 
     ??? quote "Source code"
 
