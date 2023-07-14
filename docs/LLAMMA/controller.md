@@ -1,6 +1,8 @@
-There is a specific controller for every market created.
+The controller contract is the contract the user interacts with to create a loan, repay and withdraw. It holds all user debt information. external liquidation are also done through it.
 
-The following Info Methods and Functions will use the "sfrxETH market" as an example.
+each market has its own individual controller and amm.
+
+this documentation utilieses the sfrxeth market to provice examples for contract info methods and functions.
 
 
 ## **Contract Info Methods**
@@ -8,9 +10,9 @@ The following Info Methods and Functions will use the "sfrxETH market" as an exa
 ### `factory`
 !!! description "`controller.factory() -> address: view`"
 
-    Getter of the factory contract address.
+    Getter of the factory contract of the controller.
 
-    Returns: **contract** (`address`) of the controller. 
+    Returns: factory contract (`address`). 
 
     ??? quote "Source code"
 
@@ -73,12 +75,13 @@ The following Info Methods and Functions will use the "sfrxETH market" as an exa
         '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC
         ```
 
+
 ### `amm`
 !!! description "`controller.amm() -> address: view`"
 
-    Getter of the amm contract.
+    Getter of the AMM contract of the controller.
 
-    Returns: **amm** (`address`) of the controller. 
+    Returns: AMM contract (`address`). 
 
     ??? quote "Source code"
 
@@ -135,12 +138,13 @@ The following Info Methods and Functions will use the "sfrxETH market" as an exa
         '0x136e783846ef68C8Bd00a3369F787dF8d683a696'
         ```
 
+
 ### `collateral_token`
 !!! description "`controller.collateral_token() -> address: view`"
 
-    Getter of the collateral token for crvUSD.
+    Getter of the collateral token for the market.
 
-    Returns: **collateral token** (`address`).
+    Returns: collateral token (`address`).
 
     ??? quote "Source code"
 
@@ -197,12 +201,13 @@ The following Info Methods and Functions will use the "sfrxETH market" as an exa
         '0xac3E018457B222d93114458476f3E3416Abbe38F'
         ```
 
+
 ### `debt`
 !!! description "`controller.debt(user: address) -> uint256:`"
 
-    Getter for the value of debt of an address.
+    Getter for the amount of debt for `user`.
 
-    Returns: **debt** (`uint256`).
+    Returns: debt (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -245,12 +250,13 @@ The following Info Methods and Functions will use the "sfrxETH market" as an exa
         1552311414080668514314009
         ```
 
+
 ### `loan_exists`
 !!! description "`controller.loan_exists(user: address) -> bool:`"
 
-    Getter method to check whether there is a loan of `user` in existence.
+    Getter method to check if a loan for `user` exists.
 
-    Returns: **true or false** (`bool`).
+    Returns: true or false (`bool`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -279,9 +285,9 @@ The following Info Methods and Functions will use the "sfrxETH market" as an exa
 ### `total_debt`
 !!! description "`controller.total_debt() -> uint256:`"
 
-    Getter for the total debt of this controller.
+    Getter for the total debt of the controller.
 
-    Returns: **total debt** (`uint256`).
+    Returns: total debt (`uint256`).
 
     ??? quote "Source code"
 
@@ -303,12 +309,13 @@ The following Info Methods and Functions will use the "sfrxETH market" as an exa
         9045646634477681048071827
         ```
 
+
 ### `max_borrowable`
 !!! description "`controller.max_borrowable(collateral: uint256, N: uint256) -> uint256:`"
 
-    Getter method to calculate the maximum which can be borrowed.
+    Getter method to calculate the maximum amount of crvUSD which can be borrowed. If the max_borrowable amount is greater than the crvusd balance of the controller (= essential what is left to be borrowed) it returns the amount whats left to being borrowed.
 
-    Returns: **maximum borrowable amount** (`uint256`).
+    Returns: maximum borrowable amount (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -317,7 +324,36 @@ The following Info Methods and Functions will use the "sfrxETH market" as an exa
 
     ??? quote "Source code"
 
-        ```python hl_lines="4"
+        ```python hl_lines="3 28 33 58"
+        @internal
+        @view
+        def get_y_effective(collateral: uint256, N: uint256, discount: uint256) -> uint256:
+            """
+            @notice Intermediary method which calculates y_effective defined as x_effective / p_base,
+                    however discounted by loan_discount.
+                    x_effective is an amount which can be obtained from collateral when liquidating
+            @param collateral Amount of collateral to get the value for
+            @param N Number of bands the deposit is made into
+            @param discount Loan discount at 1e18 base (e.g. 1e18 == 100%)
+            @return y_effective
+            """
+            # x_effective = sum_{i=0..N-1}(y / N * p(n_{n1+i})) =
+            # = y / N * p_oracle_up(n1) * sqrt((A - 1) / A) * sum_{0..N-1}(((A-1) / A)**k)
+            # === d_y_effective * p_oracle_up(n1) * sum(...) === y_effective * p_oracle_up(n1)
+            # d_y_effective = y / N / sqrt(A / (A - 1))
+            # d_y_effective: uint256 = collateral * unsafe_sub(10**18, discount) / (SQRT_BAND_RATIO * N)
+            # Make some extra discount to always deposit lower when we have DEAD_SHARES rounding
+            d_y_effective: uint256 = collateral * unsafe_sub(
+                10**18, min(discount + (DEAD_SHARES * 10**18) / max(collateral / N, DEAD_SHARES), 10**18)
+            ) / (SQRT_BAND_RATIO * N)
+            y_effective: uint256 = d_y_effective
+            for i in range(1, MAX_TICKS_UINT):
+                if i == N:
+                    break
+                d_y_effective = unsafe_div(d_y_effective * Aminus1, A)
+                y_effective = unsafe_add(y_effective, d_y_effective)
+            return y_effective
+
         @external
         @view
         @nonreentrant('lock')
@@ -359,9 +395,9 @@ The following Info Methods and Functions will use the "sfrxETH market" as an exa
 ### `min_collateral`
 !!! description "`controller.min_collateral(debt: uint256, N: uint256) -> uint256:`"
 
-    Getter method for the minimal amount of collateral required to support the debt.
+    Getter method for the minimal amount of required collateral to put up to support the debt.
 
-    Returns: **minimal collateral amount** (`uint256`).
+    Returns: minimal collateral amount (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -370,7 +406,36 @@ The following Info Methods and Functions will use the "sfrxETH market" as an exa
 
     ??? quote "Source code"
 
-        ```python hl_lines="4"
+        ```python hl_lines="3 28 33 41 42"
+        @internal
+        @view
+        def get_y_effective(collateral: uint256, N: uint256, discount: uint256) -> uint256:
+            """
+            @notice Intermediary method which calculates y_effective defined as x_effective / p_base,
+                    however discounted by loan_discount.
+                    x_effective is an amount which can be obtained from collateral when liquidating
+            @param collateral Amount of collateral to get the value for
+            @param N Number of bands the deposit is made into
+            @param discount Loan discount at 1e18 base (e.g. 1e18 == 100%)
+            @return y_effective
+            """
+            # x_effective = sum_{i=0..N-1}(y / N * p(n_{n1+i})) =
+            # = y / N * p_oracle_up(n1) * sqrt((A - 1) / A) * sum_{0..N-1}(((A-1) / A)**k)
+            # === d_y_effective * p_oracle_up(n1) * sum(...) === y_effective * p_oracle_up(n1)
+            # d_y_effective = y / N / sqrt(A / (A - 1))
+            # d_y_effective: uint256 = collateral * unsafe_sub(10**18, discount) / (SQRT_BAND_RATIO * N)
+            # Make some extra discount to always deposit lower when we have DEAD_SHARES rounding
+            d_y_effective: uint256 = collateral * unsafe_sub(
+                10**18, min(discount + (DEAD_SHARES * 10**18) / max(collateral / N, DEAD_SHARES), 10**18)
+            ) / (SQRT_BAND_RATIO * N)
+            y_effective: uint256 = d_y_effective
+            for i in range(1, MAX_TICKS_UINT):
+                if i == N:
+                    break
+                d_y_effective = unsafe_div(d_y_effective * Aminus1, A)
+                y_effective = unsafe_add(y_effective, d_y_effective)
+            return y_effective
+
         @external
         @view
         @nonreentrant('lock')
@@ -397,7 +462,7 @@ The following Info Methods and Functions will use the "sfrxETH market" as an exa
 
     Getter method to calculate the upper band number for the deposit to sit in to support the give debt.
 
-    Returns: **upper band n1** (`int256`) to depostit into.
+    Returns: upper band n1 (`int256`) to depostit into.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -480,12 +545,13 @@ The following Info Methods and Functions will use the "sfrxETH market" as an exa
         todo
         ```
 
+
 ### `health_calculator`
 !!! description "`controller.health_calculator(user: address, d_collateral: int256, d_debt: int256, full: bool, N: uint256 = 0) -> int256:`"
 
     Function to calculate the health in case a user cahnges the debt or collateral.
 
-    Returns: **signed health value** (`int256`).
+    Returns: **health value** (`int256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1310,6 +1376,16 @@ The following Info Methods and Functions will use the "sfrxETH market" as an exa
         
 
 ## **Loans**
+
+creating loans: user specifies the number of bands to deposit into and the amount of debt to borrow. max amount to borrow is determined by b of bands, collateral amount and oracle price.
+
+low number of bands = narrow liquidation range
+high number of bands = liquidity is spread across more bands -> broader liquidation range
+
+low bands -> can borrow more
+more bands -> can borrow less
+
+
 ### `create_loan`
 !!! description "`controller.create_loan(collateral: uint256, debt: uint256, N: uint256):`"
 

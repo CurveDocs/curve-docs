@@ -10,6 +10,7 @@ plugins:
   - minify:
       minify_html: true
 
+
 nav:
   - Curve DAO:
     - Overview: curve_dao/overview.md  
@@ -24,6 +25,8 @@ nav:
         - LiquidityGaugeV1: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV1.md
         - LiquidityGaugeV2: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV2.md
         - LiquidityGaugeV3: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV3.md
+        - LiquidityGaugeV4: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV4.md
+        - LiquidityGaugeV5: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV5.md
       - Minter: curve_dao/LiquidityGaugesAndMinting/Minter.md 
     - Gauges for EVM Sidechains: curve_dao/evm-sidechains/overview.md
     - Fee Collection and Distribution:
@@ -43,6 +46,17 @@ nav:
       - Overview: registry/overview.md
       - MetaRegistryAPI: registry/MetaRegistryAPI.md
 
+  - LLAMMA:
+    - Overview: LLAMMA/overview.md
+    - crvUSD: LLAMMA/crvUSD.md
+    - Controller: LLAMMA/controller.md
+    - AMM: LLAMMA/amm.md
+    - ControllerFactory: LLAMMA/factory.md
+    - PegKeeper: LLAMMA/pegkeeper.md
+    - MonetaryPolicy: LLAMMA/monetarypolicy.md
+    - PriceAggregator: LLAMMA/priceaggregator.md
+    - Deployments: LLAMMA/deployments.md
+
   - Stableswap Exchange:    
     - Overview: stableswap_exchange/overview.md 
     - Pools:
@@ -51,7 +65,7 @@ nav:
       - Lending Pools: stableswap_exchange/pools/lending_pools.md
       - Metapools: stableswap_exchange/pools/metapools.md
       - Admin Controls: stableswap_exchange/pools/admin_pool_settings.md
-    - Liquidity Pool Tokens:
+    - Lquidity Pool Tokens:
       - Overview: stableswap_exchange/lp_tokens/overview.md
       - Curve Token V1: stableswap_exchange/lp_tokens/curve_token_v1.md
       - Curve Token V2: stableswap_exchange/lp_tokens/curve_token_v2.md

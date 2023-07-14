@@ -1,4 +1,4 @@
-AggregatorStablePrice - aggregator of stablecoin prices for crvUSD
+AggregatorStablePrice contract aggregates different Curve Stableswap pools in order to create an oracle for crvUSD.
 
 https://etherscan.io/address/0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7#code
 
@@ -72,7 +72,7 @@ https://etherscan.io/address/0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7#code
 ### `price` (more)
 !!! description "`PriceAggregator.price() -> uint256:`"
 
-    Getter for the current price of crvUSD aggregated from multiple oarcles.
+    Getter for the current price of crvUSD aggregated from multiple curve stableswap pools.
     
     Returns: price (`uint256`).
 
