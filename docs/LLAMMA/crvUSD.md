@@ -1,19 +1,16 @@
-todo
-
+?
 
 
 !!! info
     The crvUSD contract is deployed to the Ethereum mainnet at: [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/address/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E).  
     Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/Stablecoin.vy). 
 
-
 !!! warning
     Due to some testing in production there has been several deployments for the stablecoin and their components. Please always make sure you are using the latest deployment. See [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
 
 
 
-## **Querying Basic Information**
-
+## **Contract Info Methods**
 ### `decimals`
 !!! description "`crvUSD.decimals() -> uint8: view`"
 
@@ -138,49 +135,6 @@ todo
         ```
 
 
-### `salt`
-!!! description "`crvUSD.salt() -> bytes32: view`"
-
-    Getter for the salt of the token. 
-
-    Returns: salt (`bytes32`) of the token.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 10"
-        salt: public(immutable(bytes32))
-        
-        @external
-        def __init__(_name: String[64], _symbol: String[32]):
-            name = _name
-            symbol = _symbol
-
-            NAME_HASH = keccak256(_name)
-            CACHED_CHAIN_ID = chain.id
-            salt = block.prevhash
-            CACHED_DOMAIN_SEPARATOR = keccak256(
-                _abi_encode(
-                    EIP712_TYPEHASH,
-                    keccak256(_name),
-                    VERSION_HASH,
-                    chain.id,
-                    self,
-                    block.prevhash,
-                )
-            )
-
-            self.minter = msg.sender
-            log SetMinter(msg.sender)
-        ```
-
-    === "Example"
-        ```shell
-        >>> crvUSD.salt()
-        '0xb99ba1c24ff7f96081ccd1ad26ffc380e2cc4c73b87f99e7a0165fa980b3b977'
-        ```
-
-
-
 ### `balanceOf`
 !!! description "`crvUSD.balanceOf(arg0: address) -> uint256: view`"
 
@@ -206,7 +160,7 @@ todo
 
 
 ### `totalSupply`
-!!! description "`crvUSD.balanceOf(arg0: address) -> uint256: view`"
+!!! description "`crvUSD.totalSupply() -> uint256: view`"
 
     Getter for the total supply of crvUSD.
 
@@ -226,10 +180,40 @@ todo
 
 
 ## **Mint and Burn**
+
+New CRVUSD can only be minted by the `minter` of the contract, which is the [Factory](/curve-docs/docs/LLAMMA/factory.md). crvUSD are minted in accordance with the debt_ceiling, either when **adding a new market** or when **raising its debt ceiling**. This is accomplished by calling the set_new_debt_ceiling function within the Factory contract.  
+Burning crvUSD typically occurs when a lower debt ceiling is set, or if a user decides to burn their crvUSD for any reason.
+
+
+### `minter`
+!!! description "`crvUSD.minter() -> address: view`"
+
+    Getter for the minter contract of crvUSD.
+
+    Returns: minter `address`.
+
+    ??? quote "Source code"
+
+        ```python hl_lines="2 4"
+        event SetMinter:
+            minter: indexed(address)
+
+        minter: public(address)
+        ```
+
+    === "Example"
+        ```shell
+        >>> crvUSD.minter()
+        '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
+        ```
+
+
 ### `mint`
 !!! description "`crvUSD.mint(_to: address, _value: uint256) -> bool:`"
 
     Function to mint `_value` amount of tokens to `_to`.
+
+    Returns: true or flase (`boolean`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -238,7 +222,12 @@ todo
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```python hl_lines="1 7 20"
+        event Transfer:
+            sender: indexed(address)
+            receiver: indexed(address)
+            value: uint256
+
         @external
         def mint(_to: address, _value: uint256) -> bool:
             """
@@ -257,13 +246,44 @@ todo
             return True
         ```
 
-    !!!note
-        `Mint` can only be called by the `minter`. for more infos see
-
     === "Example"
         ```shell
         >>> crvUSD.mint(todo)
         todo
+        ```
+
+
+### `set_minter`
+!!! description "`crvUSD.set_minter(_minter: address):`"
+
+    Function to set the minter address of the token.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_minter` |  `address` | Minter address |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 4 7 10 11"
+        event SetMinter:
+            minter: indexed(address)
+
+        minter: public(address)
+
+        @external
+        def set_minter(_minter: address):
+            assert msg.sender == self.minter
+
+            self.minter = _minter
+            log SetMinter(_minter)
+        ```
+
+    !!!note 
+        The minter address can only be set by the minter itself. For that reason the minter address was set to the deployer's address at the time of deployment and was then set to the actual minter address ([Transaction](https://etherscan.io/tx/0xf2a117bf688b7bf2d719cc7d047feadbc3e9fd8fbcb6ed397c3e9f85598b60cd#eventlog)). 
+
+    === "Example"
+        ```shell
+        >>> crvUSD.set_minter(todo)
         ```
 
 
@@ -272,13 +292,20 @@ todo
 
     Function to burn `_value` amount of tokens.
 
+    Returns: true or flase (`boolean`).
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_value` |  `uint256` | Amount of tokens to burn |
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 9"
+        ```python hl_lines="1 7 11 14"
+        event Transfer:
+            sender: indexed(address)
+            receiver: indexed(address)
+            value: uint256
+
         @internal
         def _burn(_from: address, _value: uint256):
             self.balanceOf[_from] -= _value
@@ -302,10 +329,13 @@ todo
         todo
         ```
 
+
 ### `burnFrom`
 !!! description "`crvUSD.burnFrom(_from: address, _value: uint256) -> bool:`"
 
     Function to burn `_value` amount of tokens from `_from`.
+
+    Returns: true or false (`boolean`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -314,7 +344,12 @@ todo
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 9"
+        ```python hl_lines="1 7 11 14"
+        event Transfer:
+            sender: indexed(address)
+            receiver: indexed(address)
+            value: uint256
+
         @internal
         def _burn(_from: address, _value: uint256):
             self.balanceOf[_from] -= _value
@@ -347,62 +382,6 @@ todo
         todo
         ```
 
-
-## **Minter**
-### `minter`
-!!! description "`crvUSD.minter() -> address: view`"
-
-    Getter for the minter address of the token (= crvUSD Controller Factory).
-
-    Returns: minter `address`.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="2 4"
-        event SetMinter:
-            minter: indexed(address)
-
-        minter: public(address)
-        ```
-
-    === "Example"
-        ```shell
-        >>> crvUSD.minter()
-        '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
-        ```
-    
-### `set_minter`
-!!! description "`crvUSD.set_minter(_minter: address):`"
-
-    Function to set the minter address of the token.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_minter` |  `address` | Minter address |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 7 11"
-        event SetMinter:
-            minter: indexed(address)
-
-        minter: public(address)
-
-        @external
-        def set_minter(_minter: address):
-            assert msg.sender == self.minter
-
-            self.minter = _minter
-            log SetMinter(_minter)
-        ```
-
-    !!!note 
-        The minter address can only be set by the minter itself. For that reason the minter address was set to the deployer's address at the time of deployment and was then set to the actual minter address ([Transaction](https://etherscan.io/tx/0xf2a117bf688b7bf2d719cc7d047feadbc3e9fd8fbcb6ed397c3e9f85598b60cd#eventlog)). 
-
-    === "Example"
-        ```shell
-        >>> crvUSD.set_minter(todo)
-        ```
 
 ## **Allowances**
 ### `approve`
