@@ -1,27 +1,35 @@
 ## **Architecture of PegKeppers**  
 
 PegKeepers are contracts that help stabilize the peg of crvUSD. They are allocated a specific amount of crvUSD to use in securing the peg. 
-This balance is decided by the DAO and can be set and raised by calling `set_debt_ceiling` in the [factory contract](/curve-docs/docs/LLAMMA/factory.md).
+This balance is decided by the DAO and can be set, raised or lowered by calling `set_debt_ceiling` in the [factory contract](/curve-docs/docs/LLAMMA/factory.md).
 
 
-The underlying actions of the PegKeepers can roughly be divided into two actions, which get exexcuted when calling [`update`](#update):
+The underlying actions of the PegKeepers can be divided into two actions, which get exexcuted when calling [`update`](#update):
 
-- **price_crvusd > 1**: the PegKeeper deposits crvUSD into the pool to which it's linked and receives LP tokens in exchange. This        increases the supply of crvUSD in the pool and therefore decreases the price. It's important to note that the LP tokens are not staked in the gauge (if there is one). Therefore, the PegKeeper does not receive CRV emissions.
+- **price_crvusd > 1**: the PegKeeper mint and deposits crvUSD singel-sided into the pool to which it is "linked" and receives LP tokens in exchange. This increases the supply of crvUSD in the pool and therefore decreases the price. It is important to note that the LP tokens are not staked in the gauge (if there is one). Thus, the PegKeeper does not receive CRV emissions.
 
-- **price_crvusd < 1**: PegKeepers withdraw crvUSD from the liquidity pool if they have a balance of the corresponding LP token; without it, there would be nothing to withdraw. This action decreases the balance of crvUSD in the pool and subsequently increases the price.
+- **price_crvusd < 1**: PegKeepers withdraw crvUSD from the liquidity pool if they have a balance of the corresponding LP token and burn crvUSD. This action decreases the balance of crvUSD in the pool and should subsequently increase the price.
 
 
-## **heart of pegkeeper** (todo)
-Heart of the PegKeeper is the [`update()`](#update) function. When calling it, the PegKeeper either mints and (only!) deposits crvUSD into the corresponding pool ([`pool`](#pool)) or withdraws and burns crvUSD.  
+Current PegKeepers:
+
+| Description | Address  |
+| -------|-------|
+|`PegKepper for crvUSD/USDC Pool`|[0xaA346781dDD7009caa644A4980f044C50cD2ae22](https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22#code)|
+|`PegKepper for crvUSD/USDT Pool`|[0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8](https://etherscan.io/address/0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8#code)|
+|`PegKepper for crvUSD/USDP Pool`|[0x6B765d07cf966c745B340AdCa67749fE75B5c345](https://etherscan.io/address/0x6B765d07cf966c745B340AdCa67749fE75B5c345#code)|
+|`PegKepper for crvUSD/TUSD Pool`|[0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae](https://etherscan.io/address/0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae#code)|
+
+
+## **Stabilisation Methods** 
+Heart of the PegKeeper is the [`update()`](#update) function. When calling it, the PegKeeper either mints and (only!) deposits crvUSD into the corresponding pool ([`pool`](#pool)) or withdraws from the pool.  
 
 Deposit and Mint: This happens when the price of the stablecoin is > 1. Minting and depositing into the pool will increase the balance of crvusd and therefore decrease its price. The LP tokens the PegKepper receives when depositing crvusd into the pool are not staked in the gauge (if the pool has one), meaning he is not receiving CRV inflation. 
 
 Withdraw and Burn: This mechanism happens when the price of the stablecoin is < 1. Withdrawing crvusd from the pool will decrease its balance and therefore increase the price.
 
-https://etherscan.io/tx/0xe0db5ab1e175c8dbf54765b3b2fa4e98412ae24c1d9db1bd4c2134ee72519942: upping pegkeeper balance
-adding crvusd to pegkeepers happens via calling `_set_debt_ceiling` in the factory contract. will mint crvusd and send it to the pegkeeper.
-
-approval is given to the pegkeepers so they can interact (deposit/withdraw) with the pool. approval also given to factory.
+PegKeepers have unlimited approval regarding the liquidity pool, which allowes them to deposit and withdraw crvUSD.
+ 
 
 ### `update`
 !!! description "`PegKeeper.update(_beneficiary: address = msg.sender) -> uint256:`"
@@ -30,7 +38,7 @@ approval is given to the pegkeepers so they can interact (deposit/withdraw) with
 
     Returns: caller's profit (`uint256`).
 
-    ??? quote "Source code ([deposit and mint](https://etherscan.io/tx/0xe5ceafc4d44e478f49119cbb7420590facc55cc574767e5d14d2d09d66849db7))"
+    ??? quote "Source code mint and deposit"
 
         ```python hl_lines="1 5 13 17 21 56"
         event Provide:
@@ -91,7 +99,7 @@ approval is given to the pegkeepers so they can interact (deposit/withdraw) with
             return caller_profit
         ```
 
-    ??? quote "Source code ([withdraw and burn](https://etherscan.io/tx/0x96dc057317ead24879d70a69aebfe8aeb75064ff97aeabbcc75bc0b587424711))"
+    ??? quote "Source code withdraw and burn"
 
         ```python hl_lines="1 5 14 19 23 58"
         event Withdraw:
@@ -817,6 +825,27 @@ Committing a new admin or receiver requires calling the commit functions, which 
 
 
 ## **Contract Info Methods**
+### `debt`
+!!! description "`PegKeeper.debt() -> uint256: view`"
+
+    Getter for the stablecoin debt of the PegKeeper. When the PegKeeper deposits crvUSD into the pool, the debt is incremented by the deposited amount. Conversely, if the PegKeeper withdraws, the debt is reduced by the withdrawn amount.
+
+    Returns: debt (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1"
+        debt: public(uint256)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PegKepper.debt()
+        10569198033275719942044356
+        ```
+
+
 ### `factory`
 !!! description "`PegKeeper.factory() -> address: view`"
 
@@ -1076,25 +1105,4 @@ Committing a new admin or receiver requires calling the commit functions, which 
         ```shell
         >>> PegKepper.last_change()
         1688794235
-        ```
-
-
-### `debt`
-!!! description "`PegKeeper.debt() -> uint256: view`"
-
-    Getter for the stablecoin debt of the PegKeeper. When the PegKeeper deposits crvUSD into the pool, the debt is incremented by the deposited amount. Conversely, if the PegKeeper withdraws, the debt is reduced by the withdrawn amount.
-
-    Returns: debt (`uint256`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1"
-        debt: public(uint256)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PegKepper.debt()
-        10569198033275719942044356
         ```
