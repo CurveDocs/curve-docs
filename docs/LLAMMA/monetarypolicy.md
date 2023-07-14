@@ -1,11 +1,6 @@
 Monetary policy contracts are integrated into the crvUSD system and are responsible for the interest rate of crvUSD markets. When creating a new market via the factory contract, a monetary policy contract needs to be provided.
 
 
-Interest rates are updated whenever a new loan is created or repayed. 
-
-When and how are rates updated?
-
-
 ## **Interest Rates**
 
 Markets have a **dynamic rate**, depending on **crvUSD price**, **sigma** , **target debt fraction** and the **debt of PegKeepers**.
@@ -340,7 +335,7 @@ $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
 
 
 ## **PegKeepers**
-peg keepers need to be added to the monetary policy contract in order to calculate the rate as you need the debtfraction for that calculation. PegKeepers can be added via `add_peg_keeper` and removed via `remove_peg_keeper`.
+PegKeepers need to be added to the monetary policy contract in order to calculate the rate as it is depending on the DebtFraction. They can be added by calling `add_peg_keeper` and removed with `remove_peg_keeper`.
 
 ### `peg_keepers`
 !!! description "`MonetaryPolicy.peg_keepers(arg0: uint256) -> address: view`"
