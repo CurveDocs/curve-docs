@@ -1,11 +1,5 @@
-monetary policy contracts are integrated into the crvusd system. every market has its policy. some are different to others. e.g. sfrxeth and wsteth have a higher rate than wbtc and eth, etc...
-explain what the contract does etc.
+Monetary policy contracts are integrated into the crvUSD system and are responsible for the interest rate of crvUSD markets. When creating a new market via the factory contract, a monetary policy contract needs to be provided.
 
-
-monetary policy contracts are integrated into the crvusd system and are resposible for the rate of crvusd markets. when creating a new market via the [factory contract](/curve-docs/docs/LLAMMA/factory.md) a monetary policy contract needs to be "linked".
-currently there are two different monetary policies:
-- policy for sfrxeth and wsteth markets: due to the nature that they are earning yield as LSD the rate is higher than for other markets
-- weth and wbtc: the rates for these markets are 40% lower than those for the LSD due to the fact that the underlying token is not earning any yield.
 
 Interest rates are updated whenever a new loan is created or repayed. 
 
@@ -13,6 +7,8 @@ When and how are rates updated?
 
 
 ## **Interest Rates**
+
+Markets have a **dynamic rate**, depending on **crvUSD price**, **sigma** , **target debt fraction** and the **debt of PegKeepers**.
 
 | variable      | description   | 
 | ----------- | -------|
@@ -41,8 +37,7 @@ $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
 ### `rate`
 !!! description "`MonetaryPolicy.rate() -> uint256: view`"
 
-    Getter for the rate of the monetary policy contract. rate has to be smaller or equal to `MAX_RATE` (400% APY).
-    rate is denominated in $10^18$ and the rate which is being returned is rate per second(?). So to get the annual rate one needs to calc the following: rate/10^18 * (60*60*24*365).
+    Getter for the rate of the monetary policy contract. This is the current interest rate paid per second.
     
     Returns: rate (`uint256`).
 
@@ -86,12 +81,11 @@ $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
         ```
 
 
-### `rate0` (fix)
+### `rate0`
 !!! description "`MonetaryPolicy.rate0() -> uint256: view`"
 
-    Getter for the rate0 of the monetary policy contract. `rate0` has to be smaller or equal to `MAX_RATE` (400% APY).
-    rate0 is pretty much the base rate of the markets when price == 1 and debt_fraction == 0 (no pegkeeper debt).
-    To calculate annual rate do: rate0/10^18 * (60*60*24*365).
+    Getter for the rate0 of the monetary policy contract. `rate0` has to be less then or equal to `MAX_RATE` (400% APY).
+    rate0 is the base rate per second when price == 1 and debt_fraction == 0 (no PegKeeper debt).
 
     Returns: rate0 (`uint256`).
 
@@ -137,14 +131,14 @@ $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
 ### `set_rate`
 !!! description "`MonetaryPolicy.set_rate(rate: uint256):`"
 
-    Function to set a new rate. Rate has to be smaller or equal to `MAX_RATE`.
+    Function to set a new rate0. New rate0 has to be less than or equal to `MAX_RATE (=43959106799)`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `rate` |  `uint256` | New Rate |
 
     !!! warning
-        This function can only be called by the `admin` of the contract.
+        This function can only be called by the `admin` of the contract, which is the CurveOwnershipAgent. Therefor it requires a DAO vote to change this parameter.
 
     ??? quote "Source code"
 
@@ -174,7 +168,7 @@ $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
 ### `sigma`
 !!! description "`MonetaryPolicy.sigma() -> int256: view`"
 
-    Getter for the sigma value. sigma value --> 10**14 <= sigma <=10**18
+    Getter for the sigma value: $10^{14} <= sigma <= 10^{18}$.
 
     Returns: sigma (`int256`).
 
@@ -223,14 +217,14 @@ $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
 ### `set_sigma`
 !!! description "`MonetaryPolicy.set_sigma(sigma: uint256):`"
 
-    Function to set a new sigma value. Need value needs to be 10**14 <= sigma <=10**18 again.
+    Function to set a new sigma value.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `sigma` |  `uint256` | New Sigma |
 
     !!! warning
-        This function can only be called by the `admin` of the contract.
+        This function can only be called by the `admin` of the contract, which is the CurveOwnershipAgent. Therefor it requires a DAO vote to change this parameter.
 
     ??? quote "Source code"
 
@@ -309,14 +303,14 @@ $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
 ### `set_target_debt_fraction`
 !!! description "`MonetaryPolicy.set_target_debt_fraction(target_debt_fraction: uint256):`"
 
-    Function to set a new target debt fraction. needs to be within --> <= MAX_TARGET_DEBT_FRACTION ()
+    Function to set a new target debt fraction. New value needs to be less than or equal to `MAX_TARGET_DEBT_FRACTION`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `target_debt_fraction` |  `uint256` | New Target Debt Fraction |
 
     !!! warning
-        This function can only be called by the `admin` of the contract.
+        This function can only be called by the `admin` of the contract, which is the CurveOwnershipAgent. Therefor it requires a DAO vote to change this parameter.
 
     ??? quote "Source code"
 
