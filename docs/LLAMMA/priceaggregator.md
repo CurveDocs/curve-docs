@@ -1,4 +1,4 @@
-The **AggregatorStablePrice** contract is designed to aggregate the prices of crvUSD based on multiple Curve Stableswap pools. This price is mainly used as an oracle for the calculation of the interest rate, providing an aggregated (`price`) and wei
+The **AggregatorStablePrice** contract is designed to aggregate the prices of crvUSD based on multiple Curve Stableswap pools. This price is mainly used as an oracle for the calculation of the interest rate, providing an aggregated (`price`) and a exponential moving average (ema) price.
 
 !!! info
     The AggregatorStablePrice contract is deployed to the Ethereum mainnet at: [0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7](https://etherscan.io/address/0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7).  
@@ -6,277 +6,177 @@ The **AggregatorStablePrice** contract is designed to aggregate the prices of cr
 
 
 
-### `sigma`
-!!! description "`PriceAggregator.sigma() -> uint256:`"
+## **Calculating Prices**
+
+### **_ema_tvl()**
+calculating `_ema_tvl()`:
+
+| Variables for calculations | Type | Description |
+| ----------- | -------| ----|
+| `tvls` |  `DynArray[uint256, MAX_PAIRS]` | dynamic array of ema of the tvl for each price pair |
+| `last_timestamp` |  `uint256` | last timestamp |
+| `block.timestamp`|  `uint256` | current timestamp |
+| `TVL_MA_TIME` |  `uint256` | 50000 seconds |
+| `new_tvl` |  `uint256` | totalSupply of the pool (we don't do virtual price here to save on gas) |
+| `alpha` |  `uint256` | if `last_timestamp` == `block.timestamp` then this value gets defaulted to 10^18. otherwise its newly calculated every time (check below). alpha = 1, when dt = 0 and alpha = 0.0, when dt = inf |
+
+
+
+This function calculates the exponential moving average of the total value locked for multiple curve stableswap pools. the function returns a dynamic array of the ema of the tvl for each price pair.
+
+
+??? quote "Source code"
+
+    ```python hl_lines="5 10 16 21"
+    last_tvl: public(uint256[MAX_PAIRS])
+
+    @internal
+    @view
+    def _ema_tvl() -> DynArray[uint256, MAX_PAIRS]:
+        tvls: DynArray[uint256, MAX_PAIRS] = []
+        last_timestamp: uint256 = self.last_timestamp
+        alpha: uint256 = 10**18
+        if last_timestamp < block.timestamp:
+            alpha = self.exp(- convert((block.timestamp - last_timestamp) * 10**18 / TVL_MA_TIME, int256))
+        n_price_pairs: uint256 = self.n_price_pairs
+
+        for i in range(MAX_PAIRS):
+            if i == n_price_pairs:
+                break
+            tvl: uint256 = self.last_tvl[i]
+            if alpha != 10**18:
+                # alpha = 1.0 when dt = 0
+                # alpha = 0.0 when dt = inf
+                new_tvl: uint256 = self.price_pairs[i].pool.totalSupply()  # We don't do virtual price here to save on gas
+                tvl = (new_tvl * (10**18 - alpha) + tvl * alpha) / 10**18
+            tvls.append(tvl)
 
-    Getter for the sigma value of the contract. value was set when initializing the contract. immutable variable, cant be changed.
-    
-    Returns: sigma (`uint256`).
+        return tvls
+    ```
 
-    ??? quote "Source code"
 
-        ```python hl_lines="1 4 6 11"
-        SIGMA: immutable(uint256)
+$$\text{alpha} = e^{ -\left(\frac{{(\text{block.timestamp} - \text{last_timestamp}) \cdot 10^{18}}}{{\text{TVL_MA_TIME}}}\right)}$$
 
-        @external
-        def __init__(stablecoin: address, sigma: uint256, admin: address):
-            STABLECOIN = stablecoin
-            SIGMA = sigma  # The change is so rare that we can change the whole thing altogether
-            self.admin = admin
+$$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \text{alpha})}{10^{18}}$$
 
-        @external
-        @view
-        def sigma() -> uint256:
-            return SIGMA
-        ```
 
-    === "Example"
 
-        ```shell
-        >>> PriceAggregator.sigma()
-        1000000000000000
-        ```
+### **_price()**
 
 
-### `stablecoin`
-!!! description "`PriceAggregator.stablecoin() -> address:`"
+CALCULATING PRICE:
 
-    Getter for the stablecoin contract. value was set when initializing the contract. immutable variable, cant be changed.
-    
-    Returns: crvUSD contract (`address`).
+??? quote "Source code"
 
-    ??? quote "Source code"
+    ```python hl_lines="3"
+    @internal
+    @view
+    def _price(tvls: DynArray[uint256, MAX_PAIRS]) -> uint256:
+        n: uint256 = self.n_price_pairs
+        prices: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
+        D: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
+        Dsum: uint256 = 0
+        DPsum: uint256 = 0
+        for i in range(MAX_PAIRS):
+            if i == n:
+                break
+            price_pair: PricePair = self.price_pairs[i]
+            pool_supply: uint256 = tvls[i]
+            if pool_supply >= MIN_LIQUIDITY:
+                p: uint256 = price_pair.pool.price_oracle()
+                if price_pair.is_inverse:
+                    p = 10**36 / p
+                prices[i] = p
+                D[i] = pool_supply
+                Dsum += pool_supply
+                DPsum += pool_supply * p
+        if Dsum == 0:
+            return 10**18  # Placeholder for no active pools
+        p_avg: uint256 = DPsum / Dsum
+        e: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
+        e_min: uint256 = max_value(uint256)
+        for i in range(MAX_PAIRS):
+            if i == n:
+                break
+            p: uint256 = prices[i]
+            e[i] = (max(p, p_avg) - min(p, p_avg))**2 / (SIGMA**2 / 10**18)
+            e_min = min(e[i], e_min)
+        wp_sum: uint256 = 0
+        w_sum: uint256 = 0
+        for i in range(MAX_PAIRS):
+            if i == n:
+                break
+            w: uint256 = D[i] * self.exp(- convert(e[i] - e_min, int256)) / 10**18
+            w_sum += w
+            wp_sum += w * prices[i]
+        return wp_sum / w_sum
+    ```
 
-        ```python hl_lines="1 4 5 11"
-        STABLECOIN: immutable(address)
+| Variables for calculations | Type | Description |
+| ----------- | -------| ----|
+| `n` |  `uint256` | Number of price pairs |
+| `prices` |  `uint256[MAX_PAIRS]` | Array with prices of the price_pairs |
+| `D` |  `uint256[MAX_PAIRS]` | Array with the pool tvls (these variables are added by calling `_ema_tvl()`)|
+| `Dsum` |  `uint256` | Sum of tvls (D[i]) for all price pairs |
+| `DPsum` |  `uint256` | Sum of all tvl's multiplied by its corresponding pool price oracle |
+| `p_avg` | `uint256` | calulates the average price: $\frac{DPsum}{Dsum}$  |
+| `e` | `uint256[MAX_PAIRS]` | TODO |
+| `e_min` | `uint256` | max value of uint256 |
 
-        @external
-        def __init__(stablecoin: address, sigma: uint256, admin: address):
-            STABLECOIN = stablecoin
-            SIGMA = sigma  # The change is so rare that we can change the whole thing altogether
-            self.admin = admin
+with these variables a "average" price is calculated...
+continue here!
 
-        @external
-        @view
-        def stablecoin() -> address:
-            return STABLECOIN
-        ```
 
-    === "Example"
 
-        ```shell
-        >>> PriceAggregator.stablecoin()
-        '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
-        ```
 
+**first step calcs**: iterates through all pools again. breaks when `n_price_pairs` is reached. gathers all the data.
 
+??? quote "Source code"
 
-## **price stuff**
+    ```python hl_lines="3"
+    ```
 
-### `ema_tvl` (todo)
-!!! description "`PriceAggregator.ema_tvl() -> uint256:`"
 
-    Getter for the exponential moving average (EMA) of the total value locked in each pool which was added with `add_price_pair`. Time for the moving average is 50000 seconds.
 
-    Returns: exponential moving average of the total value locked (`uint256`).
+**second step calcs**: iterates through all pools again. breaks when `n_price_pairs` is reached.
+??? quote "Source code"
 
-    ??? quote "Source code"
+    ```python hl_lines="1"
+    ```
 
-        ```python hl_lines="1"
-        TVL_MA_TIME: public(constant(uint256)) = 50000  # s
+$e[i] = \frac{max(p, p_{avg}) - min(p, p_{avg})}{\frac{sigma^2}{10^18}}$  
 
-        @internal
-        @view
-        def _ema_tvl() -> DynArray[uint256, MAX_PAIRS]:
-            tvls: DynArray[uint256, MAX_PAIRS] = []
-            last_timestamp: uint256 = self.last_timestamp
-            alpha: uint256 = 10**18
-            if last_timestamp < block.timestamp:
-                alpha = self.exp(- convert((block.timestamp - last_timestamp) * 10**18 / TVL_MA_TIME, int256))
-            n_price_pairs: uint256 = self.n_price_pairs
+$e[i] = max(p, p_{avg}) - min(p, p_{avg})$ is the deviation of the pool price oracle to the avarage of all pools.
 
-            for i in range(MAX_PAIRS):
-                if i == n_price_pairs:
-                    break
-                tvl: uint256 = self.last_tvl[i]
-                if alpha != 10**18:
-                    # alpha = 1.0 when dt = 0
-                    # alpha = 0.0 when dt = inf
-                    new_tvl: uint256 = self.price_pairs[i].pool.totalSupply()  # We don't do virtual price here to save on gas
-                    tvl = (new_tvl * (10**18 - alpha) + tvl * alpha) / 10**18
-                tvls.append(tvl)
+$e_min = min(e[i], e_{min})$
 
-            return tvls
+| Variables for calculations | Type | Description |
+| ----------- | -------| ----|
+| `wp_sum` |  `uint256` | todo |
+| `w_sum` |  `uint256` | todo |
 
 
-        @external
-        @view
-        def ema_tvl() -> DynArray[uint256, MAX_PAIRS]:
-            return self._ema_tvl()
-        ```
 
-    === "Example"
+**third setp calcs**: iterates through all pools again. breaks when `n_price_pairs` is reached.
 
-        ```shell
-        >>> PriceAggregator.ema_tvl()
-        59321570154325618129121893, 42600769394518064802429328, 8535901977675585449164114, 4775645754381802242168047
-        ```
+??? quote "Source code"
 
+    ```python hl_lines="1"
+    ```
 
-### `last_timestamp` (x)
-!!! description "`PriceAggregator.last_timestamp() -> uint256:`"
+$w = \frac{D[i] * {e^e}^[i]-{e_min}}{10^18}$
 
-    Getter for the latest timestamp when `price_w` was called (?).
-    
-    Returns: timestamp (`uint256`).
+$price = \frac{wp_{sum}}{w_{sum}}$
 
-    ??? quote "Source code"
 
-        ```python hl_lines="1"
-        last_timestamp: public(uint256)
-        ```
 
-    === "Example"
 
-        ```shell
-        >>> PriceAggregator.last_timestamp()
-        1689448067
-        ```
-
-
-### `last_tvl` (?????)
-!!! description "`PriceAggregator.last_tvl(arg0: uint256) -> uint256:`"
-
-    Getter for the total value locked in a liquidity pool. why is this not the same as calling totalSupply on the pool conraxct?
-    
-    Returns: total value locked (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `uint256` | Index of the pool |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1"
-        last_tvl: public(uint256[MAX_PAIRS])
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PriceAggregator.last_tvl()
-        1689448067
-        ```
-
-
-### `TVL_MA_TIME`
-!!! description "`PriceAggregator.TVL_MA_TIME() -> uint256:`"
-
-    Getter for the time period for the calculation of the EMA prices.
-    
-    Returns: timestamp (`uint256`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1"
-        TVL_MA_TIME: public(constant(uint256)) = 50000  # s
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PriceAggregator.TVL_MA_TIME()
-        50000
-        ```
-
-    !!!tip
-        50000 seconds is equal to roughly 13.9 hours.
-
-
-### `last_price`
-!!! description "`PriceAggregator.last_price() -> uint256:`"
-
-    Getter for the last price. This variable was set to $10^18$ (1.00) when initialising the contract and is now updated every time calling `[price_w](#price_w)`.
-    
-    Returns: last price (`uint256`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 8 23"
-        last_price: public(uint256)
-
-        @external
-        def __init__(stablecoin: address, sigma: uint256, admin: address):
-            STABLECOIN = stablecoin
-            SIGMA = sigma  # The change is so rare that we can change the whole thing altogether
-            self.admin = admin
-            self.last_price = 10**18
-            self.last_timestamp = block.timestamp
-
-        @external
-        def price_w() -> uint256:
-            if self.last_timestamp == block.timestamp:
-                return self.last_price
-            else:
-                ema_tvl: DynArray[uint256, MAX_PAIRS] = self._ema_tvl()
-                self.last_timestamp = block.timestamp
-                for i in range(MAX_PAIRS):
-                    if i == len(ema_tvl):
-                        break
-                    self.last_tvl[i] = ema_tvl[i]
-                p: uint256 = self._price(ema_tvl)
-                self.last_price = p
-                return p
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PriceAggregator.last_price()
-        999385898759491513
-        ```
-
-
-### `price_w` (todo)
-!!! description "`PriceAggregator.price_w() -> uint256:`"
-
-    Function to calculate the price.
-    
-    Returns: timestamp (`uint256`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="2 13 14"
-        @external
-        def price_w() -> uint256:
-            if self.last_timestamp == block.timestamp:
-                return self.last_price
-            else:
-                ema_tvl: DynArray[uint256, MAX_PAIRS] = self._ema_tvl()
-                self.last_timestamp = block.timestamp
-                for i in range(MAX_PAIRS):
-                    if i == len(ema_tvl):
-                        break
-                    self.last_tvl[i] = ema_tvl[i]
-                p: uint256 = self._price(ema_tvl)
-                self.last_price = p
-                return p
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PriceAggregator.price_w()
-        
-        ```
-
-
-### `price` (more!!)
+#### `price` (more!!)
 !!! description "`PriceAggregator.price() -> uint256:`"
 
-    Getter for the current price of crvUSD. `price()` calls the internal function `_price` which does all the calculations for the price. It takes computes a aggregated price for crvUSD accross mutiple stableswap pools. There is a minimum liquidity threshold of 100k per pool in order to be picked up in the aggregated calculations.
+    Getter for the current price of crvUSD. This function retrieves the crvUSD price from different stablecoin pools (up to 20 (`MAX_PAIRS`) and with a threshold of 100k (`MIN_LIQUIDITY`)) and calculates the weighted average price.
     
-    Returns: price (`uint256`).
+    Returns: price (`uint256`). 
 
     ??? quote "Source code"
 
@@ -348,7 +248,205 @@ The **AggregatorStablePrice** contract is designed to aggregate the prices of cr
         999964013300395878
         ```
 
+#### `ema_tvl` (todo)
+!!! description "`PriceAggregator.ema_tvl() -> uint256:`"
 
+    Getter for the exponential moving average (EMA) of the total value locked in each pool which was added with `add_price_pair`. Time for the moving average is 50000 seconds.
+
+    Returns: exponential moving average of the total value locked (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1"
+        TVL_MA_TIME: public(constant(uint256)) = 50000  # s
+
+        @internal
+        @view
+        def _ema_tvl() -> DynArray[uint256, MAX_PAIRS]:
+            tvls: DynArray[uint256, MAX_PAIRS] = []
+            last_timestamp: uint256 = self.last_timestamp
+            alpha: uint256 = 10**18
+            if last_timestamp < block.timestamp:
+                alpha = self.exp(- convert((block.timestamp - last_timestamp) * 10**18 / TVL_MA_TIME, int256))
+            n_price_pairs: uint256 = self.n_price_pairs
+
+            for i in range(MAX_PAIRS):
+                if i == n_price_pairs:
+                    break
+                tvl: uint256 = self.last_tvl[i]
+                if alpha != 10**18:
+                    # alpha = 1.0 when dt = 0
+                    # alpha = 0.0 when dt = inf
+                    new_tvl: uint256 = self.price_pairs[i].pool.totalSupply()  # We don't do virtual price here to save on gas
+                    tvl = (new_tvl * (10**18 - alpha) + tvl * alpha) / 10**18
+                tvls.append(tvl)
+
+            return tvls
+
+
+        @external
+        @view
+        def ema_tvl() -> DynArray[uint256, MAX_PAIRS]:
+            return self._ema_tvl()
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PriceAggregator.ema_tvl()
+        59321570154325618129121893, 42600769394518064802429328, 8535901977675585449164114, 4775645754381802242168047
+        ```
+
+
+#### `last_timestamp` (x)
+!!! description "`PriceAggregator.last_timestamp() -> uint256:`"
+
+    Getter for the latest timestamp when `price_w` was called (?).
+    
+    Returns: timestamp (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1"
+        last_timestamp: public(uint256)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PriceAggregator.last_timestamp()
+        1689448067
+        ```
+
+
+#### `last_tvl` (?????)
+!!! description "`PriceAggregator.last_tvl(arg0: uint256) -> uint256:`"
+
+    Getter for the total value locked in a liquidity pool. why is this not the same as calling totalSupply on the pool conraxct?
+    
+    Returns: total value locked (`uint256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `arg0` |  `uint256` | Index of the pool |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1"
+        last_tvl: public(uint256[MAX_PAIRS])
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PriceAggregator.last_tvl()
+        1689448067
+        ```
+
+
+#### `TVL_MA_TIME`
+!!! description "`PriceAggregator.TVL_MA_TIME() -> uint256:`"
+
+    Getter for the time period for the calculation of the EMA prices.
+    
+    Returns: timestamp (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1"
+        TVL_MA_TIME: public(constant(uint256)) = 50000  # s
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PriceAggregator.TVL_MA_TIME()
+        50000
+        ```
+
+    !!!tip
+        50000 seconds is equal to roughly 13.9 hours.
+
+
+#### `last_price`
+!!! description "`PriceAggregator.last_price() -> uint256:`"
+
+    Getter for the last price. This variable was set to $10^18$ (1.00) when initialising the contract and is now updated every time calling `[price_w](#price_w)`.
+    
+    Returns: last price (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 8 23"
+        last_price: public(uint256)
+
+        @external
+        def __init__(stablecoin: address, sigma: uint256, admin: address):
+            STABLECOIN = stablecoin
+            SIGMA = sigma  # The change is so rare that we can change the whole thing altogether
+            self.admin = admin
+            self.last_price = 10**18
+            self.last_timestamp = block.timestamp
+
+        @external
+        def price_w() -> uint256:
+            if self.last_timestamp == block.timestamp:
+                return self.last_price
+            else:
+                ema_tvl: DynArray[uint256, MAX_PAIRS] = self._ema_tvl()
+                self.last_timestamp = block.timestamp
+                for i in range(MAX_PAIRS):
+                    if i == len(ema_tvl):
+                        break
+                    self.last_tvl[i] = ema_tvl[i]
+                p: uint256 = self._price(ema_tvl)
+                self.last_price = p
+                return p
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PriceAggregator.last_price()
+        999385898759491513
+        ```
+
+
+#### `price_w` (todo)
+!!! description "`PriceAggregator.price_w() -> uint256:`"
+
+    Function to calculate the price.
+    
+    Returns: timestamp (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="2 13 14"
+        @external
+        def price_w() -> uint256:
+            if self.last_timestamp == block.timestamp:
+                return self.last_price
+            else:
+                ema_tvl: DynArray[uint256, MAX_PAIRS] = self._ema_tvl()
+                self.last_timestamp = block.timestamp
+                for i in range(MAX_PAIRS):
+                    if i == len(ema_tvl):
+                        break
+                    self.last_tvl[i] = ema_tvl[i]
+                p: uint256 = self._price(ema_tvl)
+                self.last_price = p
+                return p
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PriceAggregator.price_w()
+        todo        
+        ```
+
+
+## **Adding and Removing Price Pairs**
 ### `price_pairs`
 !!! description "`PriceAggregator.price_pairs(arg0: uint256) -> tuple: view`"
 
@@ -456,7 +554,7 @@ The **AggregatorStablePrice** contract is designed to aggregate the prices of cr
         ```
 
 
-## **Ownership**
+## **Admin Ownership**
 ### `admin`
 !!! description "`PriceAggregator.admin() -> address:`"
 
@@ -516,3 +614,69 @@ The **AggregatorStablePrice** contract is designed to aggregate the prices of cr
         >>> PriceAggregator.set_admin("todo")
         'todo'
         ```
+
+
+
+## **Contract Info Methods**
+### `sigma`
+!!! description "`PriceAggregator.sigma() -> uint256:`"
+
+    Getter for the sigma value of the contract. value was set when initializing the contract. immutable variable, cant be changed.
+    
+    Returns: sigma (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 4 6 11"
+        SIGMA: immutable(uint256)
+
+        @external
+        def __init__(stablecoin: address, sigma: uint256, admin: address):
+            STABLECOIN = stablecoin
+            SIGMA = sigma  # The change is so rare that we can change the whole thing altogether
+            self.admin = admin
+
+        @external
+        @view
+        def sigma() -> uint256:
+            return SIGMA
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PriceAggregator.sigma()
+        1000000000000000
+        ```
+
+
+### `stablecoin`
+!!! description "`PriceAggregator.stablecoin() -> address:`"
+
+    Getter for the stablecoin contract. value was set when initializing the contract. immutable variable, cant be changed.
+    
+    Returns: crvUSD contract (`address`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 4 5 11"
+        STABLECOIN: immutable(address)
+
+        @external
+        def __init__(stablecoin: address, sigma: uint256, admin: address):
+            STABLECOIN = stablecoin
+            SIGMA = sigma  # The change is so rare that we can change the whole thing altogether
+            self.admin = admin
+
+        @external
+        @view
+        def stablecoin() -> address:
+            return STABLECOIN
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PriceAggregator.stablecoin()
+        '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
+        ```    
