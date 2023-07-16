@@ -1,9 +1,13 @@
 Monetary policy contracts are integrated into the crvUSD system and are responsible for the interest rate of crvUSD markets. When creating a new market via the factory contract, a monetary policy contract needs to be provided.
 
+!!! info
+    Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/mpolicies). 
+
 
 ## **Interest Rates**
 
 Markets have a **dynamic rate**, depending on **crvUSD price**, **sigma** , **target debt fraction** and the **debt of PegKeepers**.
+For the price of crvUSD, a aggregated oracle price of multiple Curve Stablwswap pools is used ([see here](/curve-docs/docs/LLAMMA/priceaggregator.md)).
 
 | variable      | description   | 
 | ----------- | -------|
@@ -644,7 +648,7 @@ PegKeepers need to be added to the monetary policy contract in order to calculat
 ### `rate_write`
 !!! description "`MonetaryPolicy.rate_write() -> uint256:`"
 
-    When adding a new market via the factory contract, it calls this function to check if the MonetaryPolicy has correct ABI.
+    When adding a new market via the factory contract, it calls this function to check if the MonetaryPolicy contract has the correct ABI.
 
     ??? quote "Source code"
 
