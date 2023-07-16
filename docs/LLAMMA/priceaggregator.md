@@ -8,9 +8,10 @@ The **AggregatorStablePrice** contract is designed to aggregate the prices of cr
 
 ## **Calculating Prices**
 
-### **_ema_tvl()**
+### **Exponential Moving Average of TVL**
 
-This function calculates the exponential moving average of the total value locked for multiple curve stableswap pools. the function returns a dynamic array of the ema of the tvl for each price pair. it iterates through all pricepairs which were added by calling `add_price_pair`. there is a maximum of 20 pairs to take into consideration and each pricepair (pool) has to have at least 100k tvl.
+**`_ema_tvl()`**:
+This function calculates the Exponential Moving Average (EMA) of the Total Value Locked (TVL) for multiple Curve StableSwap pools. The function returns a dynamic array of the EMA of the TVL for each price pair. It iterates through all price pairs, which were added by calling `add_price_pair`. There is a maximum of 20 pairs to take into consideration, and each price pair (pool) must have at least 100k TVL.
 
 | Variables for calculations | Type | Description |
 | ----------- | -------| ----|
@@ -19,8 +20,10 @@ This function calculates the exponential moving average of the total value locke
 | `block.timestamp`|  `uint256` | current timestamp |
 | `TVL_MA_TIME` |  `uint256` | 50000 seconds |
 | `new_tvl` |  `uint256` | totalSupply of the pool (we don't do virtual price here to save on gas) |
-| `alpha` |  `uint256` | if `last_timestamp` == `block.timestamp` then this value gets defaulted to 10^18. otherwise its newly calculated every time (check below). alpha = 1, when dt = 0 and alpha = 0.0, when dt = inf |
+| `alpha` |  `uint256` | todo |
 
+!!!tip
+    If `last_timestamp` is equal to `block.timestamp`, then the value of alpha defaults to $10^{18}$. Otherwise, alpha is recalculated every time, as described below. alpha is 1 when dt equals 0 and alpha is 0.0 when dt approaches infinity.
 
 ??? quote "Source code"
 
@@ -59,16 +62,17 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
 
 
-### **_price()**
+### **Price of crvUSD**
 
-This function calculates the aggregated price for crvUSD:
+**`_price()`**
+This function calculates the weighted price, taking into account all price pairs.
 
 
 | Variables for calculations | Type | Description |
 | ----------- | -------| ----|
 | `n` |  `uint256` | Number of price pairs |
 | `prices` |  `uint256[MAX_PAIRS]` | Array with prices of the price_pairs |
-| `D` |  `uint256[MAX_PAIRS]` | Array with the pool tvls (these variables are added by calling `_ema_tvl()`)|
+| `D[i]` |  `uint256[MAX_PAIRS]` | Array with the pool tvls (these variables are added by calling `_ema_tvl()`)|
 
 
 ??? quote "Source code"
@@ -120,8 +124,7 @@ This function calculates the aggregated price for crvUSD:
 This function iterates through all the price pairs which were added to this contract.
 
 
-1. The function iterates over all price pairs and breaks when `n_price_pairs` is reached. 
-it gathers data such as pool_supply (which is _ema_tvl for a pricepair), p (price oracle of the price pair). it stores the pool_supply's of the price pairs in `D` and also computes Dsum (sum of all D's) and a  DPsum (sum of pool_supply * p for all price pairs). if Dsum is equal to 0, 10^18 will be used as a placeholder.
+1. The function iterates over all price pairs and stops when `n_price_pairs` is reached. It collects data such as **pool_supply** (which is the `_ema_tvl` for a price pair) and **p** (price from the price pair's oracle). It stores the pool_supply of the price pairs in **D** and also computes **Dsum** (the sum of D for all price pairs) and **DPsum** (the sum of **$\text{pool_supply * p}$** for all price pairs). If Dsum is equal to 0, then $10^{18}$ is used as a placeholder.
 
     | Variables | Type | Description |
     | ----------- | -------| ----|
@@ -161,7 +164,7 @@ it gathers data such as pool_supply (which is _ema_tvl for a pricepair), p (pric
         ```
 
 
-2. iterates through all pools again. breaks when `n_price_pairs` is reached. calculates the p_avg, e[i] and e_min.
+2. This piece of code calculates an error metric **e** for each price pair, which represents the squared difference between its **price p** and the **average price p_avg**, normalized by a constant `SIGMA`. The minimum error **e_min** across all price pairs is also tracked.
 
     | Variables | Type | Description |
     | ----------- | -------| ----|
@@ -190,7 +193,7 @@ it gathers data such as pool_supply (which is _ema_tvl for a pricepair), p (pric
     $$\text{e_min} = min(\text{e[i], e_min})$$
 
 
-3. iterates through all pools again. breaks when `n_price_pairs` is reached. first calculates all the individual w for all price pairs, then calculates wp_sum and w_sum -> price.
+3. In the last step, **w**, **w_sum**, and **wp_sum** are calculated, from which the final price can be derived.
 
     | Variables | Type | Description |
     | ----------- | -------| ----|
@@ -212,7 +215,7 @@ it gathers data such as pool_supply (which is _ema_tvl for a pricepair), p (pric
         return wp_sum / w_sum
         ```
 
-    $$\text{w} = \frac{{D_i \cdot e^{-1 \cdot (e_i - e_{\text{{min}}})}}}{10^{18}}$$
+    $$\text{w} = \frac{{\text{D[i]} \cdot e^{-1 \cdot (e_i - e_{\text{{min}}})}}}{10^{18}}$$
 
     $$\text{price} = \frac{wp_{sum}}{w_{sum}}$$
 
@@ -220,10 +223,10 @@ it gathers data such as pool_supply (which is _ema_tvl for a pricepair), p (pric
 
 ### **Price Contract Methods**
 
-#### `price` (more!!)
+#### `price`
 !!! description "`PriceAggregator.price() -> uint256:`"
 
-    Getter for the price of crvUSD. 
+    Getter for the price of crvUSD. For calculations see above.
     
     Returns: price (`uint256`). 
 
@@ -297,7 +300,7 @@ it gathers data such as pool_supply (which is _ema_tvl for a pricepair), p (pric
         999964013300395878
         ```
 
-#### `ema_tvl` (todo)
+#### `ema_tvl`
 !!! description "`PriceAggregator.ema_tvl() -> uint256:`"
 
     Getter for the exponential moving average (EMA) of the total value locked in each pool which was added with `add_price_pair`. Time for the moving average is 50000 seconds.
@@ -350,7 +353,7 @@ it gathers data such as pool_supply (which is _ema_tvl for a pricepair), p (pric
 #### `last_timestamp` (x)
 !!! description "`PriceAggregator.last_timestamp() -> uint256:`"
 
-    Getter for the latest timestamp when `price_w` was called (?).
+    Getter for the latest timestamp when `price_w` was called.
     
     Returns: timestamp (`uint256`).
 
@@ -368,7 +371,7 @@ it gathers data such as pool_supply (which is _ema_tvl for a pricepair), p (pric
         ```
 
 
-#### `last_tvl` (?????)
+#### `last_tvl` (fix)
 !!! description "`PriceAggregator.last_tvl(arg0: uint256) -> uint256:`"
 
     Getter for the total value locked in a liquidity pool. why is this not the same as calling totalSupply on the pool conraxct?
