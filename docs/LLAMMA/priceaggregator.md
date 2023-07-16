@@ -9,7 +9,8 @@ The **AggregatorStablePrice** contract is designed to aggregate the prices of cr
 ## **Calculating Prices**
 
 ### **_ema_tvl()**
-calculating `_ema_tvl()`:
+
+This function calculates the exponential moving average of the total value locked for multiple curve stableswap pools. the function returns a dynamic array of the ema of the tvl for each price pair. it iterates through all pricepairs which were added by calling `add_price_pair`. there is a maximum of 20 pairs to take into consideration and each pricepair (pool) has to have at least 100k tvl.
 
 | Variables for calculations | Type | Description |
 | ----------- | -------| ----|
@@ -19,10 +20,6 @@ calculating `_ema_tvl()`:
 | `TVL_MA_TIME` |  `uint256` | 50000 seconds |
 | `new_tvl` |  `uint256` | totalSupply of the pool (we don't do virtual price here to save on gas) |
 | `alpha` |  `uint256` | if `last_timestamp` == `block.timestamp` then this value gets defaulted to 10^18. otherwise its newly calculated every time (check below). alpha = 1, when dt = 0 and alpha = 0.0, when dt = inf |
-
-
-
-This function calculates the exponential moving average of the total value locked for multiple curve stableswap pools. the function returns a dynamic array of the ema of the tvl for each price pair.
 
 
 ??? quote "Source code"
@@ -54,17 +51,28 @@ This function calculates the exponential moving average of the total value locke
         return tvls
     ```
 
-
 $$\text{alpha} = e^{ -\left(\frac{{(\text{block.timestamp} - \text{last_timestamp}) \cdot 10^{18}}}{{\text{TVL_MA_TIME}}}\right)}$$
 
 $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \text{alpha})}{10^{18}}$$
 
 
 
+
+
+
+
+
 ### **_price()**
 
+This function calculates the aggregated price for crvUSD:
 
-CALCULATING PRICE:
+
+| Variables for calculations | Type | Description |
+| ----------- | -------| ----|
+| `n` |  `uint256` | Number of price pairs |
+| `prices` |  `uint256[MAX_PAIRS]` | Array with prices of the price_pairs |
+| `D` |  `uint256[MAX_PAIRS]` | Array with the pool tvls (these variables are added by calling `_ema_tvl()`)|
+
 
 ??? quote "Source code"
 
@@ -112,69 +120,52 @@ CALCULATING PRICE:
         return wp_sum / w_sum
     ```
 
-| Variables for calculations | Type | Description |
-| ----------- | -------| ----|
-| `n` |  `uint256` | Number of price pairs |
-| `prices` |  `uint256[MAX_PAIRS]` | Array with prices of the price_pairs |
-| `D` |  `uint256[MAX_PAIRS]` | Array with the pool tvls (these variables are added by calling `_ema_tvl()`)|
-| `Dsum` |  `uint256` | Sum of tvls (D[i]) for all price pairs |
-| `DPsum` |  `uint256` | Sum of all tvl's multiplied by its corresponding pool price oracle |
-| `p_avg` | `uint256` | calulates the average price: $\frac{DPsum}{Dsum}$  |
-| `e` | `uint256[MAX_PAIRS]` | TODO |
-| `e_min` | `uint256` | max value of uint256 |
-
-with these variables a "average" price is calculated...
-continue here!
+This function iterates through all the price pairs which were added to this contract.
 
 
+1. iterates through all pricepairs, breaks when `n_price_pairs` is reached. gathers all the data: computes D, Dsum and DPsum. also checks if pricepair is inverse, if so: p = 10^36 / p.
+
+    | Variables for calculations | Type | Description |
+    | ----------- | -------| ----|
+    | `D[i]` |  `uint256[MAX_PAIRS]` | tvl of the pricepair (is calculated via `_ema_tvl()`) |
+    | `Dsum` |  `uint256` | Sum of tvls (D[i]) for all price pairs |
+    | `DPsum` |  `uint256` | Sum of all tvl's multiplied by its corresponding pool price oracle |
 
 
-**first step calcs**: iterates through all pools again. breaks when `n_price_pairs` is reached. gathers all the data.
+2. iterates through all pools again. breaks when `n_price_pairs` is reached. calculates the p_avg, e[i] and e_min.
 
-??? quote "Source code"
+    | Variables for calculations | Type | Description |
+    | ----------- | -------| ----|
+    | `p_avg` | `uint256` | calulates the average price: $\frac{DPsum}{Dsum}$  |
+    | `e` | `uint256[MAX_PAIRS]` | TODO |
+    | `e_min` | `uint256` | max value of uint256 |
 
-    ```python hl_lines="3"
-    ```
+    $$\text{p_avg} = \frac{\text{DPsum}}{\text{Dsum}}$$
 
+    $$\text{e[i]} = \frac{max(\text{p, p_{avg}}) - min(\text{p, p_{avg}})}{\frac{sigma^2}{10^{18}}}$$
 
-
-**second step calcs**: iterates through all pools again. breaks when `n_price_pairs` is reached.
-??? quote "Source code"
-
-    ```python hl_lines="1"
-    ```
-
-$e[i] = \frac{max(p, p_{avg}) - min(p, p_{avg})}{\frac{sigma^2}{10^18}}$  
-
-$e[i] = max(p, p_{avg}) - min(p, p_{avg})$ is the deviation of the pool price oracle to the avarage of all pools.
-
-$e_min = min(e[i], e_{min})$
-
-| Variables for calculations | Type | Description |
-| ----------- | -------| ----|
-| `wp_sum` |  `uint256` | todo |
-| `w_sum` |  `uint256` | todo |
+    $$\text{e_min} = min(\text{e[i], e_min})$$
 
 
+3. iterates through all pools again. breaks when `n_price_pairs` is reached. first calculates all the individual w for all price pairs, then calculates wp_sum and w_sum -> price.
 
-**third setp calcs**: iterates through all pools again. breaks when `n_price_pairs` is reached.
+    | Variables for calculations | Type | Description |
+    | ----------- | -------| ----|
+    | `w_sum` |  `uint256` | sum of w for all price pairs |
+    | `wp_sum` |  `uint256` | sum of w*p for all price pairs |
+    | `price` |  `uint256` | aggregated final price |
 
-??? quote "Source code"
 
-    ```python hl_lines="1"
-    ```
+    $$\text{w} = \frac{{D_i \cdot e^{-1 \cdot (e_i - e_{\text{{min}}})}}}{10^{18}}$$
 
-$w = \frac{D[i] * {e^e}^[i]-{e_min}}{10^18}$
-
-$price = \frac{wp_{sum}}{w_{sum}}$
-
+    $$\text{price} = \frac{wp_{sum}}{w_{sum}}$$
 
 
 
 #### `price` (more!!)
 !!! description "`PriceAggregator.price() -> uint256:`"
 
-    Getter for the current price of crvUSD. This function retrieves the crvUSD price from different stablecoin pools (up to 20 (`MAX_PAIRS`) and with a threshold of 100k (`MIN_LIQUIDITY`)) and calculates the weighted average price.
+    Getter for the price of crvUSD. 
     
     Returns: price (`uint256`). 
 
