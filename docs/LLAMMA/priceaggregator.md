@@ -59,9 +59,6 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
 
 
-
-
-
 ### **_price()**
 
 This function calculates the aggregated price for crvUSD:
@@ -123,22 +120,68 @@ This function calculates the aggregated price for crvUSD:
 This function iterates through all the price pairs which were added to this contract.
 
 
-1. iterates through all pricepairs, breaks when `n_price_pairs` is reached. gathers all the data: computes D, Dsum and DPsum. also checks if pricepair is inverse, if so: p = 10^36 / p.
+1. The function iterates over all price pairs and breaks when `n_price_pairs` is reached. 
+it gathers data such as pool_supply (which is _ema_tvl for a pricepair), p (price oracle of the price pair). it stores the pool_supply's of the price pairs in `D` and also computes Dsum (sum of all D's) and a  DPsum (sum of pool_supply * p for all price pairs). if Dsum is equal to 0, 10^18 will be used as a placeholder.
 
-    | Variables for calculations | Type | Description |
+    | Variables | Type | Description |
     | ----------- | -------| ----|
-    | `D[i]` |  `uint256[MAX_PAIRS]` | tvl of the pricepair (is calculated via `_ema_tvl()`) |
+    | `n` |  `uint256` | number of price pairs |
+    | `prices` |  `uint256` | array which cointains all the prrices for the price pairs (= price_oracle from the pool)|
+    | `D` |  `uint256[MAX_PAIRS]` | array which cointains the tvl's of the price pairs (is calculated via `_ema_tvl()`) |
     | `Dsum` |  `uint256` | Sum of tvls (D[i]) for all price pairs |
     | `DPsum` |  `uint256` | Sum of all tvl's multiplied by its corresponding pool price oracle |
 
 
+    ??? quote "Source code"
+
+        ```python
+        @internal
+        @view
+        def _price(tvls: DynArray[uint256, MAX_PAIRS]) -> uint256:
+            n: uint256 = self.n_price_pairs
+            prices: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
+            D: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
+            Dsum: uint256 = 0
+            DPsum: uint256 = 0
+            for i in range(MAX_PAIRS):
+                if i == n:
+                    break
+                price_pair: PricePair = self.price_pairs[i]
+                pool_supply: uint256 = tvls[i]
+                if pool_supply >= MIN_LIQUIDITY:
+                    p: uint256 = price_pair.pool.price_oracle()
+                    if price_pair.is_inverse:
+                        p = 10**36 / p
+                    prices[i] = p
+                    D[i] = pool_supply
+                    Dsum += pool_supply
+                    DPsum += pool_supply * p
+            if Dsum == 0:
+                return 10**18  # Placeholder for no active pools
+        ```
+
+
 2. iterates through all pools again. breaks when `n_price_pairs` is reached. calculates the p_avg, e[i] and e_min.
 
-    | Variables for calculations | Type | Description |
+    | Variables | Type | Description |
     | ----------- | -------| ----|
-    | `p_avg` | `uint256` | calulates the average price: $\frac{DPsum}{Dsum}$  |
+    | `p_avg` | `uint256` | average price: $\frac{DPsum}{Dsum}$  |
     | `e` | `uint256[MAX_PAIRS]` | TODO |
     | `e_min` | `uint256` | max value of uint256 |
+
+    ??? quote "Source code"
+
+        ```python 
+        p_avg: uint256 = DPsum / Dsum
+        e: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
+        e_min: uint256 = max_value(uint256)
+        for i in range(MAX_PAIRS):
+            if i == n:
+                break
+            p: uint256 = prices[i]
+            e[i] = (max(p, p_avg) - min(p, p_avg))**2 / (SIGMA**2 / 10**18)
+            e_min = min(e[i], e_min)
+        ```
 
     $$\text{p_avg} = \frac{\text{DPsum}}{\text{Dsum}}$$
 
@@ -149,18 +192,33 @@ This function iterates through all the price pairs which were added to this cont
 
 3. iterates through all pools again. breaks when `n_price_pairs` is reached. first calculates all the individual w for all price pairs, then calculates wp_sum and w_sum -> price.
 
-    | Variables for calculations | Type | Description |
+    | Variables | Type | Description |
     | ----------- | -------| ----|
     | `w_sum` |  `uint256` | sum of w for all price pairs |
     | `wp_sum` |  `uint256` | sum of w*p for all price pairs |
     | `price` |  `uint256` | aggregated final price |
 
+    ??? quote "Source code"
+
+        ```python 
+        wp_sum: uint256 = 0
+        w_sum: uint256 = 0
+        for i in range(MAX_PAIRS):
+            if i == n:
+                break
+            w: uint256 = D[i] * self.exp(- convert(e[i] - e_min, int256)) / 10**18
+            w_sum += w
+            wp_sum += w * prices[i]
+        return wp_sum / w_sum
+        ```
 
     $$\text{w} = \frac{{D_i \cdot e^{-1 \cdot (e_i - e_{\text{{min}}})}}}{10^{18}}$$
 
     $$\text{price} = \frac{wp_{sum}}{w_{sum}}$$
 
 
+
+### **Price Contract Methods**
 
 #### `price` (more!!)
 !!! description "`PriceAggregator.price() -> uint256:`"
