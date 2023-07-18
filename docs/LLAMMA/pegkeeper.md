@@ -1,19 +1,21 @@
-## **Architecture of PegKeppers**  
+## **Concept of PegKeppers**  
 
 PegKeepers are contracts that help stabilize the peg of crvUSD. They are allocated a specific amount of crvUSD to use in securing the peg. 
-This balance is decided by the DAO and can be set, raised or lowered by calling `set_debt_ceiling` in the [factory contract](/curve-docs/docs/LLAMMA/factory.md).
+This balance is decided by the DAO and can be set, raised or lowered by calling `set_debt_ceiling` in the [FactoryContract](/curve-docs/docs/LLAMMA/factory.md).
 
 
 The underlying actions of the PegKeepers can be divided into two actions, which get exexcuted when calling [`update`](#update):
 
-- **price_crvusd > 1**: the PegKeeper mint and deposits crvUSD singel-sided into the pool to which it is "linked" and receives LP tokens in exchange. This increases the supply of crvUSD in the pool and therefore decreases the price. It is important to note that the LP tokens are not staked in the gauge (if there is one). Thus, the PegKeeper does not receive CRV emissions.
+- **crvUSD price > 1**: The PegKeeper mints and deposits crvUSD single-sidedly into the pool to which it is linked, and receives LP tokens in exchange. This increases the supply of crvUSD in the pool and therefore decreases the price. It is important to note that the LP tokens are not staked in the gauge (if there is one). Thus, the PegKeeper does not receive CRV emissions.
 
-- **price_crvusd < 1**: PegKeepers withdraw crvUSD from the liquidity pool if they have a balance of the corresponding LP token and burn crvUSD. This action decreases the balance of crvUSD in the pool and should subsequently increase the price.
+- **crvUSD price < 1**: PegKeepers, if they hold a balance of the corresponding LP token, can withdraw crvUSD from the liquidity pool and burn it. This action reduces the supply of crvUSD in the pool and should subsequently increase its price.
 
 
-Current PegKeepers:
+!!! info
+    Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/stabilizer/PegKeeper.vy). 
 
-| Description | Address  |
+
+| Current PegKeepers | Address  |
 | -------|-------|
 |`PegKepper for crvUSD/USDC Pool`|[0xaA346781dDD7009caa644A4980f044C50cD2ae22](https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22#code)|
 |`PegKepper for crvUSD/USDT Pool`|[0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8](https://etherscan.io/address/0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8#code)|
@@ -21,24 +23,36 @@ Current PegKeepers:
 |`PegKepper for crvUSD/TUSD Pool`|[0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae](https://etherscan.io/address/0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae#code)|
 
 
-## **Stabilisation Methods** 
-Heart of the PegKeeper is the [`update()`](#update) function. When calling it, the PegKeeper either mints and (only!) deposits crvUSD into the corresponding pool ([`pool`](#pool)) or withdraws from the pool.  
+## **Stabilisation Method** 
+The most crucial function of the contract is the **update()** function. When invoked, the PegKeeper either mints and singel-sidedly deposits crvUSD into the StableSwap pool, or it withdraws crvUSD from the pool by redeeming the LP tokens that were acquired from previous deposits."
 
-Deposit and Mint: This happens when the price of the stablecoin is > 1. Minting and depositing into the pool will increase the balance of crvusd and therefore decrease its price. The LP tokens the PegKepper receives when depositing crvusd into the pool are not staked in the gauge (if the pool has one), meaning he is not receiving CRV inflation. 
+* **Deposit and Mint:** This process is triggered when the price of crvUSD exceeds 1. Minting and depositing into the pool will increase the supply of crvUSD and consequently decrease its price. The LP tokens that the PegKeeper receives when depositing crvUSD into the pool are not staked in the gauge (if the pool has one), which means the PegKeeper does not receive CRV inflation rewards.
 
-Withdraw and Burn: This mechanism happens when the price of the stablecoin is < 1. Withdrawing crvusd from the pool will decrease its balance and therefore increase the price.
+* **Withdraw and Burn:** This mechanism is triggered when the price of crvUSD is less than 1. By withdrawing crvUSD from the pool, the supply of crvUSD decreases, which should increase its price.
 
-PegKeepers have unlimited approval regarding the liquidity pool, which allowes them to deposit and withdraw crvUSD.
- 
+PegKeepers have unlimited approval for the liquidity pool, which allows them to deposit and withdraw crvUSD.
+
 
 ### `update`
 !!! description "`PegKeeper.update(_beneficiary: address = msg.sender) -> uint256:`"
 
-    Function to either mint and deposit or withdraw and burn. This function additionally allows to input a `_beneficiary` address where the profit should be sent. If no input is given the function will default it to the caller (`msg.sender`).
+    Function to either **mint and deposit** or **withdraw and burn** based on the balances of the pools coins:    
+
+    Emits: either `Provide` or `Withdraw` event.
+
+    | Balances  | Action   | 
+    | ----------- | -------| 
+    | $balance_{crvUSD} < balance_{pairedCoin}$ |  mint and deposit |
+    | $balance_{crvUSD} > balance_{pairedCoin}$ | withdraw and borrow |
+
+    A share (`caller_share`) of the generated profit will be awarded to the caller of the function. By default, this is set to `msg.sender`, but there is also the possibility to input a `_beneficiary` address to which the rewards will be sent. 
 
     Returns: caller's profit (`uint256`).
 
-    ??? quote "Source code mint and deposit"
+    !!!note
+        There is an `ACTION_DELAY` of 15 minutes before calling the function again.
+
+    ??? quote "Source code: **Mint and Deposit**"
 
         ```python hl_lines="1 5 13 17 21 56"
         event Provide:
@@ -99,7 +113,7 @@ PegKeepers have unlimited approval regarding the liquidity pool, which allowes t
             return caller_profit
         ```
 
-    ??? quote "Source code withdraw and burn"
+    ??? quote "Source code: **Withdraw and Burn**"
 
         ```python hl_lines="1 5 14 19 23 58"
         event Withdraw:
@@ -167,10 +181,7 @@ PegKeepers have unlimited approval regarding the liquidity pool, which allowes t
         ```shell
         >>> PegKepper.update():
         ```
-
-https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22
-
-
+        
 
 ## **Calculating and Withdrawing Profits**
 
@@ -183,7 +194,7 @@ https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22
 
     ??? quote "Source code"
 
-        ```python hl_lines="7 16 21"
+        ```python hl_lines="7 16 20"
         PRECISION: constant(uint256) = 10 ** 18
         # Calculation error for profit
         PROFIT_THRESHOLD: constant(uint256) = 10 ** 18
@@ -222,7 +233,7 @@ https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22
 ### `estimate_caller_profit`
 !!! description "`PegKeeper.estimate_caller_profit() -> uint256:`"
 
-    Function to estimate the profit from calling update(). The caller of the function will receive 20% of the total profits. However, there is a required delay of 15 minutes between each call to this function. If the function is called earlier, it will return 0.
+    Function to estimate the profit from calling `update()`. The caller of the function will receive 20% of the total profits. 
 
     Returns: expected amount of profit going to the caller (`uint256`).
 
@@ -284,9 +295,9 @@ https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22
 ### `caller_share`
 !!! description "`PegKeeper.caller_share() -> uint256: view`"
 
-    Getter for the caller share of the generated profit when calling `update`. Share precision is set to $10^5$. The caller share exists for the purpose of incentivization."
+    Getter for the caller share which is the share of the profit generated when calling the `update()` function. The share is intended to incentivize the call of the function. The precision of the variable is set to $10^5$.
 
-    Returns: pool contract (`address`).
+    Returns: caller share (`uint256`).
 
     ??? quote "Source code"
 
@@ -342,7 +353,9 @@ https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22
 ### `set_new_caller_share`
 !!! description "`PegKeeper.set_new_caller_share(_new_caller_share: uint256):`"
 
-    Function to update the caller share. The caller share is denominated in $10^5$, which means that 10% would be equivalent to 10000.
+    Function to update the caller share.
+
+    Emits: `SetNewCallerShare` event.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -389,7 +402,9 @@ https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22
 
     Function to withdraw the profit generated by the PegKeeper.
 
-    Returns: amount of LP tokens received (`uint256`).
+    Returns: amount of LP tokens (`uint256`).
+
+    Emits: `Profit` event.
 
     ??? quote "Source code"
 
@@ -422,12 +437,13 @@ https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22
 
 ## **Admin and Receiver**
 PegKeepers have a `admin` and `receiver`. 
-Committing a new admin or receiver requires calling the commit functions, which can only be called by the current admin. After that, the new admin or receiver needs to apply the changes within a timestamp of 3 * 86400, which corresponds to a time window of three days. If the changes are attempted to be applied after the deadline, it will simply not work.
+Committing a new admin or receiver requires the corresponding commit functions to be called, actions which can only be performed by the current admin. Subsequently, the newly committed admin or receiver has to apply these changes within a timespan of 3 * 86400 seconds, corresponding to a window of three days. If an attempt is made to apply these changes after this deadline, the action will simply fail.
+
 
 ### `admin`
 !!! description "`PegKeeper.admin() -> address: view`"
 
-    Getter for the admin of the PegKeeper. The admin is typically the ownership admin, which is controlled by the CurveDAO.
+    Getter for the admin of the PegKeeper. The admin is typically the [CurveOwnershipAgent](/curve-docs/docs/curve_dao/ownership-proxy/Agents.md), which is controlled by the CurveDAO.
 
     Returns: admin (`address`).
 
@@ -585,7 +601,7 @@ Committing a new admin or receiver requires calling the commit functions, which 
 ### `new_admin_deadline`
 !!! description "`PegKeeper.new_admin_deadline() -> uint256: view`"
 
-    This is a getter for the timestamp indicating the deadline by which the future_admin can apply the admin change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a time period of three days.
+    Getter for the timestamp indicating the deadline by which the future_admin can apply the admin change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a time **period of three days**.
 
     Returns: timestamp (`uint256`).
 
@@ -606,7 +622,7 @@ Committing a new admin or receiver requires calling the commit functions, which 
 ### `new_receiver_deadline`
 !!! description "`PegKeeper.new_receiver_deadline() -> uint256: view`"
 
-    This is a getter for the timestamp indicating the deadline by which the future_receiver can apply the receiver change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a time period of three days.
+    Getter for the timestamp indicating the deadline by which the future_receiver can apply the receiver change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a time period of three days.
 
     Returns: timestamp (`uint256`).
 
@@ -628,6 +644,8 @@ Committing a new admin or receiver requires calling the commit functions, which 
 !!! description "`PegKeeper.commit_new_admin(_new_admin: address):`"
 
     Function to commit a new admin.
+
+    Emits: `CommitNewAdmin` event.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -671,10 +689,12 @@ Committing a new admin or receiver requires calling the commit functions, which 
 ### `apply_new_admin`
 !!! description "`PegKeeper.apply_new_admin():`"
 
-    Function to apply the new admin of the PegKeeper. This function can only be called by `future_admin` and only if the deadline is not over.
+    Function to apply the new admin of the PegKeeper.
+
+    Emits: `ApplyNewAdmin` event.
 
     !!! warning
-        The changes can only be applied by the `future_admin`.
+        The changes can only be applied by the designated `future_admin`, and only if the deadline has not yet passed.
 
     ??? quote "Source code"
 
@@ -711,6 +731,8 @@ Committing a new admin or receiver requires calling the commit functions, which 
 !!! description "`PegKeeper.commit_new_receiver(_new_receiver: address):`"
 
     Function to commit a new receiver.
+
+    Emits: `CommitNewReceiver` event.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -755,6 +777,8 @@ Committing a new admin or receiver requires calling the commit functions, which 
 
     Function to apply the new receiver of the PegKeeper's profit.
 
+    Emits: `ApplyNewReceiver` event.
+
     ??? quote "Source code"
 
         ```python hl_lines="1 6 17"
@@ -787,7 +811,9 @@ Committing a new admin or receiver requires calling the commit functions, which 
 ### `revert_new_option`
 !!! description "`PegKeeper.revert_new_options():`"
 
-    Function to revert admin or receiver changes. This function can only be called by the admin. Calling this function sets the admin and receiver deadline to 0 and emits ApplyNewAdmin and ApplyNewReceiver events to revert the changes.
+    Function to revert admin or receiver changes. Calling this function sets the admin and receiver deadline back to 0 and emits ApplyNewAdmin and ApplyNewReceiver events to revert the changes.
+
+    Emits: `ApplyNewAdmin` and `ApplyNewReceiver` event.
 
     !!! warning
         This function can only be called by the `admin` of the PegKeeper.
@@ -828,7 +854,7 @@ Committing a new admin or receiver requires calling the commit functions, which 
 ### `debt`
 !!! description "`PegKeeper.debt() -> uint256: view`"
 
-    Getter for the stablecoin debt of the PegKeeper. When the PegKeeper deposits crvUSD into the pool, the debt is incremented by the deposited amount. Conversely, if the PegKeeper withdraws, the debt is reduced by the withdrawn amount.
+    Getter for the stablecoin debt of the PegKeeper. When the PegKeeper deposits crvUSD into the pool, the debt is incremented by the deposited amount. Conversely, if the PegKeeper withdraws, the debt is reduced by the withdrawn amount. `debt` is used to calculate the DebtFraction of the PegKeepers.
 
     Returns: debt (`uint256`).
 
@@ -969,7 +995,7 @@ Committing a new admin or receiver requires calling the commit functions, which 
 ### `pool`
 !!! description "`PegKeeper.pool() -> address: view`"
 
-    Getter for the pool contract address.
+    Getter for the pool contract address in which the PegKeeper deposits and withdraws.
 
     Returns: pool contract (`address`).
 
@@ -1089,8 +1115,7 @@ Committing a new admin or receiver requires calling the commit functions, which 
 ### `last_change`
 !!! description "`PegKeeper.last_change() -> uint256: view`"
 
-    Getter for the timestamp of when the balances of the pegkeeper were last changed. This variable gets updated every time update (`_provide` or `_withdraw`) is called.  
-    This information is also relevant for the update and estimate_caller_profit functions since there is a required delay of 15 * 60 before being able to call them again.
+    Function which retrieves the timestamp of when the balances of the PegKeeper were last altered. This variable is updated each time `update()` (`_provide` or `_withdraw`) is called. This variable is of importance for `update()` and `estimate_caller_profit()` , as there is a mandatory delay of 15 * 60 seconds before they can be called again.
 
     Returns: timestamp (`uint256`).
 
