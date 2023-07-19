@@ -6,18 +6,26 @@ Monetary policy contracts are integrated into the crvUSD system and are responsi
 
 ## **Interest Rates**
 
-Markets have a **dynamic rate**, depending on **crvUSD price**, **sigma** , **target debt fraction** and the **debt of PegKeepers**.
+Markets have a **dynamic rate**, depending on the following components:  
+
+* crvUSD price  
+* sigma  
+* rate0  
+* TargetFraction  
+* DebtFraction of PegKeepers  
+
 For the price of crvUSD, a aggregated oracle price of multiple Curve Stablwswap pools is used ([see here](/curve-docs/docs/LLAMMA/priceaggregator.md)).
 
 | variable      | description   | 
 | ----------- | -------|
 | `r` |  `interest rate` |
-| `rate0` |  `interest rate when DebtFraction = 0 (no debt in PegKeepers) and price of crvUSD = 10^18.` |
-| `price_peg` |  `price crvusd is pegged to (10^18 = 1.0000)` |
-| `price_crvusd` |  `current crvusd price (fetched from the price oracle contract)` |
-| `DebtFraction` |  `faction of crvusd debt from pegkeepers compared to total debt` |
-| `PegKeeperDebt` |  `debt form pegkeepers (all the crvusd deposited into pools?)` |
-| `TotalDebt` |  `total crvusd debt` |
+| `rate0` |  `"base rate"` |
+| `price_peg` |  `desired crvUSD price: 1.00 (10^18)` |
+| `price_crvusd` |  `actual crvUSD price (aggregated from AggregatorStablePrice Contract)` |
+| `DebtFraction` |  `ratio of the PegKeeper's debt to the total outstanding debt` |
+| `TargetFraction` |  `todo` |
+| `PegKeeperDebt` |  `debt form PegKeepers (all the crvusd deposited into pools?)` |
+| `TotalDebt` |  `total crvUSD debt` |
 
 $r = rate0 * e^{power}$
 
@@ -26,7 +34,10 @@ $power = \frac{price_{peg} - price_{crvusd}}{sigma} - \frac{DebtFraction}{Target
 $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
 
 !!!note
-    `rate` and `rate0` are denominated in $10^{18}$ -> ${annualRate} = \frac{rate}{10^{18}} * (86400 * 365)$
+    `rate` and `rate0` denominated in units of $10^{18}$ for precision and represent the rate per second. The interest rate is charged every block.
+
+    $\text{annualRate} = (1 + \frac{rate}{10^{18}})^{365*24*60*60 - 1}$
+
 
 !!! tip
     Useful tool by [0xreviews](https://twitter.com/0xreviews_xyz) to play around with rates: https://crvusd-rate.0xreviews.xyz/
@@ -84,7 +95,6 @@ $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
 !!! description "`MonetaryPolicy.rate0() -> uint256: view`"
 
     Getter for the rate0 of the monetary policy contract. `rate0` has to be less then or equal to `MAX_RATE` (400% APY).
-    rate0 is the base rate per second when price == 1 and debt_fraction == 0 (no PegKeeper debt).
 
     Returns: rate0 (`uint256`).
 
