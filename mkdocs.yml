@@ -1,5 +1,5 @@
 site_name: Curve Docs
-site_url: https://curvefi.github.io/curve-mkdocs/
+site_url: https://docs.curve.fi/
 site_author: CurveFi
 
 plugins:
@@ -164,5 +164,5 @@ extra_javascript:
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
-repo_name: https://curvefi.github.io/curve-mkdocs/ # for example: 'lyz-code/pydo'
-repo_url: https://curvefi.github.io/curve-mkdocs/  # for example: 'https://github.com/lyz-code/pydo'
+repo_name: CurveDocs/curve-docs
+repo_url: https://github.com/CurveDocs/curve-docs
