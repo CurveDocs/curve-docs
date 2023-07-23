@@ -19,6 +19,1070 @@
 
 
 
+## **Depositing and Removing Collateral**
+These function can only be called by the `admin` of the AMM, which is the controller. Need to give max_approval to it, so the controller can deposit and withdraw collateral into the AMM.  
+Collateral is put into bands by calling `deposit_range` whenever someone creates a new loan or adds collateral to the existing position.
+
+
+### `deposit_range`
+!!! description "`AMM.deposit_range(user: address, amount: uint256, n1: int256, n2: int256):`"
+
+    Function to deposit collateral `amount` for `user` in the range of bands between `n1` and `n2`. This function can only be called by the admin of the AMM, which is the controller.
+
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `user` |  `address` | User address |
+    | `amount` |  `uint256` | Amount of collateral to deposit |
+    | `n1` |  `int256` | Lower band in the deposit range |
+    | `n2` |  `int256` | Upper band in the deposit range |
+
+    Emits: <mark style="background-color: #FFD580; color: black">Deposit log</mark>
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 9 84"
+        event Deposit:
+            provider: indexed(address)
+            amount: uint256
+            n1: int256
+            n2: int256
+
+        @external
+        @nonreentrant('lock')
+        def deposit_range(user: address, amount: uint256, n1: int256, n2: int256):
+            """
+            @notice Deposit for a user in a range of bands. Only admin contract (Controller) can do it
+            @param user User address
+            @param amount Amount of collateral to deposit
+            @param n1 Lower band in the deposit range
+            @param n2 Upper band in the deposit range
+            """
+            assert msg.sender == self.admin
+
+            user_shares: DynArray[uint256, MAX_TICKS_UINT] = []
+            collateral_shares: DynArray[uint256, MAX_TICKS_UINT] = []
+
+            n0: int256 = self.active_band
+
+            # We assume that n1,n2 area already sorted (and they are in Controller)
+            assert n2 < 2**127
+            assert n1 > -2**127
+
+            lm: LMGauge = self.liquidity_mining_callback
+
+            # Autoskip bands if we can
+            for i in range(MAX_SKIP_TICKS + 1):
+                if n1 > n0:
+                    if i != 0:
+                        self.active_band = n0
+                    break
+                assert self.bands_x[n0] == 0 and i < MAX_SKIP_TICKS, "Deposit below current band"
+                n0 -= 1
+
+            n_bands: uint256 = unsafe_add(convert(unsafe_sub(n2, n1), uint256), 1)
+            assert n_bands <= MAX_TICKS_UINT
+
+            y_per_band: uint256 = unsafe_div(amount * COLLATERAL_PRECISION, n_bands)
+            assert y_per_band > 100, "Amount too low"
+
+            assert self.user_shares[user].ticks[0] == 0  # dev: User must have no liquidity
+            self.user_shares[user].ns = unsafe_add(n1, unsafe_mul(n2, 2**128))
+
+            for i in range(MAX_TICKS):
+                band: int256 = unsafe_add(n1, i)
+                if band > n2:
+                    break
+
+                assert self.bands_x[band] == 0, "Band not empty"
+                y: uint256 = y_per_band
+                if i == 0:
+                    y = amount * COLLATERAL_PRECISION - y * unsafe_sub(n_bands, 1)
+
+                total_y: uint256 = self.bands_y[band]
+
+                # Total / user share
+                s: uint256 = self.total_shares[band]
+                ds: uint256 = unsafe_div((s + DEAD_SHARES) * y, total_y + 1)
+                assert ds > 0, "Amount too low"
+                user_shares.append(ds)
+                s += ds
+                assert s <= 2**128 - 1
+                self.total_shares[band] = s
+
+                total_y += y
+                self.bands_y[band] = total_y
+
+                if lm.address != empty(address):
+                    # If initial s == 0 - s becomes equal to y which is > 100 => nonzero
+                    collateral_shares.append(unsafe_div(total_y * 10**18, s))
+
+            self.min_band = min(self.min_band, n1)
+            self.max_band = max(self.max_band, n2)
+
+            self.save_user_shares(user, user_shares)
+
+            self.rate_mul = self._rate_mul()
+            self.rate_time = block.timestamp
+
+            log Deposit(user, amount, n1, n2)
+
+            if lm.address != empty(address):
+                lm.callback_collateral_shares(n1, collateral_shares)
+                lm.callback_user_shares(user, n1, user_shares)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.deposit_range(todo)
+        todo
+        ```
+
+### `withdraw`
+!!! description "`AMM.withdraw(user: address, frac: uint256) -> uint256[2]:`"
+
+    Function to withdraw liquidity for `user`. This function can only be called by the admin of the AMM, which is the controller. 
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `user` |  `address` | User address |
+    | `frac` |  `uint256` | Fraction to withdraw (1e18 = 100%) |
+
+    Emits: <mark style="background-color: #FFD580; color: black">Withdraw log</mark>
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 9 85"
+        event Withdraw:
+            provider: indexed(address)
+            amount_borrowed: uint256
+            amount_collateral: uint256
+
+        @external
+        @nonreentrant('lock')
+        def withdraw(user: address, frac: uint256) -> uint256[2]:
+            """
+            @notice Withdraw all liquidity for the user. Only admin contract can do it
+            @param user User who owns liquidity
+            @param frac Fraction to withdraw (1e18 being 100%)
+            @return Amount of [stablecoins, collateral] withdrawn
+            """
+            assert msg.sender == self.admin
+            assert frac <= 10**18
+
+            lm: LMGauge = self.liquidity_mining_callback
+
+            ns: int256[2] = self._read_user_tick_numbers(user)
+            n: int256 = ns[0]
+            user_shares: DynArray[uint256, MAX_TICKS_UINT] = self._read_user_ticks(user, ns)
+            assert user_shares[0] > 0, "No deposits"
+
+            total_x: uint256 = 0
+            total_y: uint256 = 0
+            min_band: int256 = self.min_band
+            old_min_band: int256 = min_band
+            max_band: int256 = self.max_band
+            old_max_band: int256 = max_band
+
+            for i in range(MAX_TICKS):
+                x: uint256 = self.bands_x[n]
+                y: uint256 = self.bands_y[n]
+                ds: uint256 = unsafe_div(frac * user_shares[i], 10**18)  # Can ONLY zero out when frac == 10**18
+                user_shares[i] = unsafe_sub(user_shares[i], ds)
+                s: uint256 = self.total_shares[n]
+                new_shares: uint256 = s - ds
+                self.total_shares[n] = new_shares
+                s += DEAD_SHARES
+                dx: uint256 = (x + 1) * ds / s
+                dy: uint256 = unsafe_div((y + 1) * ds, s)
+
+                x -= dx
+                y -= dy
+
+                # If withdrawal is the last one - tranfer dust to admin fees
+                if new_shares == 0:
+                    if x > 0:
+                        self.admin_fees_x += x
+                    if y > 0:
+                        self.admin_fees_y += y / COLLATERAL_PRECISION
+                    x = 0
+                    y = 0
+
+                if n == min_band:
+                    if x == 0:
+                        if y == 0:
+                            min_band += 1
+                if x > 0 or y > 0:
+                    max_band = n
+                self.bands_x[n] = x
+                self.bands_y[n] = y
+                total_x += dx
+                total_y += dy
+
+                if n == ns[1]:
+                    break
+                else:
+                    n = unsafe_add(n, 1)
+
+            # Empty the ticks
+            if frac == 10**18:
+                self.user_shares[user].ticks[0] = 0
+            else:
+                self.save_user_shares(user, user_shares)
+
+            if old_min_band != min_band:
+                self.min_band = min_band
+            if old_max_band <= ns[1]:
+                self.max_band = max_band
+
+            total_x = unsafe_div(total_x, BORROWED_PRECISION)
+            total_y = unsafe_div(total_y, COLLATERAL_PRECISION)
+            log Withdraw(user, total_x, total_y)
+
+            self.rate_mul = self._rate_mul()
+            self.rate_time = block.timestamp
+
+            if lm.address != empty(address):
+                lm.callback_collateral_shares(0, [])  # collateral/shares ratio is unchanged
+                lm.callback_user_shares(user, ns[0], user_shares)
+
+            return [total_x, total_y]
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.withdraw(todo)
+        todo
+        ```
+
+
+
+
+
+
+
+
+
+
+
+
+## **Exchange Methods**
+The LLAMMA can be used to exchange tokens like in any other AMM. This is necessary as the price gets tweaked when the price of collateral goes up or down (is in soft liquidation) and arbitrageur can arbitrage those differences. Trading through this AMM essentially means users are getting soft-liquidated or de-liquidated -> every trade is essentially an arbitrage.
+
+### `exchange`
+!!! description "`AMM.exchange(i: uint256, j: uint256, in_amount: uint256, min_amount: uint256, _for: address = msg.sender) -> uint256[2]:`"
+
+    Function to exchange two coins.
+
+    The exchange function always updates the oracle even if we exchange 0.  
+    Amount of input coin is known and need to set minimum amount of output (if not reached, tx will revert).
+
+    Returns: amount of coins given in and out (`uint256`).
+
+    Emits event: `TokenExchange`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `i` |  `uint256` | Input coin index |
+    | `j` |  `uint256` | Output coin index |
+    | `in_amount` |  `uint256` | Amount of input coin to swap |
+    | `min_amount` |  `uint256` | Minimum amount of output coin to get |
+    | `_for` |  `address` | Address to send coins to (defaulted to msg.sender) |
+
+    Emits: <mark style="background-color: #FFD580; color: black">TokenExchange log</mark>
+
+    ??? quote "Source code"
+
+        ```python hl_lines="2 89"
+        @internal
+        def _exchange(i: uint256, j: uint256, amount: uint256, minmax_amount: uint256, _for: address, use_in_amount: bool) -> uint256[2]:
+            """
+            @notice Exchanges two coins, callable by anyone
+            @param i Input coin index
+            @param j Output coin index
+            @param amount Amount of input/output coin to swap
+            @param minmax_amount Minimal/maximum amount to get as output/input
+            @param _for Address to send coins to
+            @param use_in_amount Whether input or output amount is specified
+            @return Amount of coins given in and out
+            """
+            assert (i == 0 and j == 1) or (i == 1 and j == 0), "Wrong index"
+            p_o: uint256[2] = self._price_oracle_w()  # Let's update the oracle even if we exchange 0
+            if amount == 0:
+                return [0, 0]
+
+            lm: LMGauge = self.liquidity_mining_callback
+            collateral_shares: DynArray[uint256, MAX_TICKS_UINT] = []
+
+            in_coin: ERC20 = BORROWED_TOKEN
+            out_coin: ERC20 = COLLATERAL_TOKEN
+            in_precision: uint256 = BORROWED_PRECISION
+            out_precision: uint256 = COLLATERAL_PRECISION
+            if i == 1:
+                in_precision = out_precision
+                in_coin = out_coin
+                out_precision = BORROWED_PRECISION
+                out_coin = BORROWED_TOKEN
+
+            out: DetailedTrade = empty(DetailedTrade)
+            if use_in_amount:
+                out = self.calc_swap_out(i == 0, amount * in_precision, p_o, in_precision, out_precision)
+            else:
+                out = self.calc_swap_in(i == 0, amount * out_precision, p_o, in_precision, out_precision)
+            in_amount_done: uint256 = unsafe_div(out.in_amount, in_precision)
+            out_amount_done: uint256 = unsafe_div(out.out_amount, out_precision)
+            if use_in_amount:
+                assert out_amount_done >= minmax_amount, "Slippage"
+            else:
+                assert in_amount_done <= minmax_amount, "Slippage"
+            if out_amount_done == 0 or in_amount_done == 0:
+                return [0, 0]
+
+            out.admin_fee = unsafe_div(out.admin_fee, in_precision)
+            if i == 0:
+                self.admin_fees_x += out.admin_fee
+            else:
+                self.admin_fees_y += out.admin_fee
+
+            assert in_coin.transferFrom(msg.sender, self, in_amount_done, default_return_value=True)
+            assert out_coin.transfer(_for, out_amount_done, default_return_value=True)
+
+            n: int256 = min(out.n1, out.n2)
+            n_start: int256 = n
+            n_diff: int256 = abs(unsafe_sub(out.n2, out.n1))
+
+            for k in range(MAX_TICKS):
+                x: uint256 = 0
+                y: uint256 = 0
+                if i == 0:
+                    x = out.ticks_in[k]
+                    if n == out.n2:
+                        y = out.last_tick_j
+                else:
+                    y = out.ticks_in[unsafe_sub(n_diff, k)]
+                    if n == out.n2:
+                        x = out.last_tick_j
+                self.bands_x[n] = x
+                self.bands_y[n] = y
+                if lm.address != empty(address):
+                    s: uint256 = 0
+                    if y > 0:
+                        s = unsafe_div(y * 10**18, self.total_shares[n])
+                    collateral_shares.append(s)
+                if k == n_diff:
+                    break
+                n = unsafe_add(n, 1)
+
+            self.active_band = out.n2
+
+            log TokenExchange(_for, i, in_amount_done, j, out_amount_done)
+
+            if lm.address != empty(address):
+                lm.callback_collateral_shares(n_start, collateral_shares)
+
+            return [in_amount_done, out_amount_done]
+
+        @external
+        @nonreentrant('lock')
+        def exchange(i: uint256, j: uint256, in_amount: uint256, min_amount: uint256, _for: address = msg.sender) -> uint256[2]:
+            """
+            @notice Exchanges two coins, callable by anyone
+            @param i Input coin index
+            @param j Output coin index
+            @param in_amount Amount of input coin to swap
+            @param min_amount Minimal amount to get as output
+            @param _for Address to send coins to
+            @return Amount of coins given in/out
+            """
+            return self._exchange(i, j, in_amount, min_amount, _for, True)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.exchange(todo)
+        todo
+        ```
+
+
+
+### `exchange_dy`
+!!! description "`AMM.exchange_dy(i: uint256, j: uint256, out_amount: uint256, max_amount: uint256, _for: address = msg.sender) -> uint256[2]:`"
+
+    Output amount is defined, not sure how much of input coin is needed (if input coin is not enough to reach output coin, then the tx will revert).
+
+    Returns: amount of coins given in and out (`uint256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `i` |  `uint256` | Input coin index |
+    | `j` |  `uint256` | Output coin index |
+    | `in_amount` |  `uint256` | Amount of input coin to swap |
+    | `min_amount` |  `uint256` | Minimum amount of output coin to get |
+    | `_for` |  `address` | Address to send coins to (defaulted to msg.sender) |
+
+    Emits: <mark style="background-color: #FFD580; color: black">TokenExchange log</mark>
+
+    ??? quote "Source code"
+
+        ```python hl_lines="2 89"
+        @internal
+        def _exchange(i: uint256, j: uint256, amount: uint256, minmax_amount: uint256, _for: address, use_in_amount: bool) -> uint256[2]:
+            """
+            @notice Exchanges two coins, callable by anyone
+            @param i Input coin index
+            @param j Output coin index
+            @param amount Amount of input/output coin to swap
+            @param minmax_amount Minimal/maximum amount to get as output/input
+            @param _for Address to send coins to
+            @param use_in_amount Whether input or output amount is specified
+            @return Amount of coins given in and out
+            """
+            assert (i == 0 and j == 1) or (i == 1 and j == 0), "Wrong index"
+            p_o: uint256[2] = self._price_oracle_w()  # Let's update the oracle even if we exchange 0
+            if amount == 0:
+                return [0, 0]
+
+            lm: LMGauge = self.liquidity_mining_callback
+            collateral_shares: DynArray[uint256, MAX_TICKS_UINT] = []
+
+            in_coin: ERC20 = BORROWED_TOKEN
+            out_coin: ERC20 = COLLATERAL_TOKEN
+            in_precision: uint256 = BORROWED_PRECISION
+            out_precision: uint256 = COLLATERAL_PRECISION
+            if i == 1:
+                in_precision = out_precision
+                in_coin = out_coin
+                out_precision = BORROWED_PRECISION
+                out_coin = BORROWED_TOKEN
+
+            out: DetailedTrade = empty(DetailedTrade)
+            if use_in_amount:
+                out = self.calc_swap_out(i == 0, amount * in_precision, p_o, in_precision, out_precision)
+            else:
+                out = self.calc_swap_in(i == 0, amount * out_precision, p_o, in_precision, out_precision)
+            in_amount_done: uint256 = unsafe_div(out.in_amount, in_precision)
+            out_amount_done: uint256 = unsafe_div(out.out_amount, out_precision)
+            if use_in_amount:
+                assert out_amount_done >= minmax_amount, "Slippage"
+            else:
+                assert in_amount_done <= minmax_amount, "Slippage"
+            if out_amount_done == 0 or in_amount_done == 0:
+                return [0, 0]
+
+            out.admin_fee = unsafe_div(out.admin_fee, in_precision)
+            if i == 0:
+                self.admin_fees_x += out.admin_fee
+            else:
+                self.admin_fees_y += out.admin_fee
+
+            assert in_coin.transferFrom(msg.sender, self, in_amount_done, default_return_value=True)
+            assert out_coin.transfer(_for, out_amount_done, default_return_value=True)
+
+            n: int256 = min(out.n1, out.n2)
+            n_start: int256 = n
+            n_diff: int256 = abs(unsafe_sub(out.n2, out.n1))
+
+            for k in range(MAX_TICKS):
+                x: uint256 = 0
+                y: uint256 = 0
+                if i == 0:
+                    x = out.ticks_in[k]
+                    if n == out.n2:
+                        y = out.last_tick_j
+                else:
+                    y = out.ticks_in[unsafe_sub(n_diff, k)]
+                    if n == out.n2:
+                        x = out.last_tick_j
+                self.bands_x[n] = x
+                self.bands_y[n] = y
+                if lm.address != empty(address):
+                    s: uint256 = 0
+                    if y > 0:
+                        s = unsafe_div(y * 10**18, self.total_shares[n])
+                    collateral_shares.append(s)
+                if k == n_diff:
+                    break
+                n = unsafe_add(n, 1)
+
+            self.active_band = out.n2
+
+            log TokenExchange(_for, i, in_amount_done, j, out_amount_done)
+
+            if lm.address != empty(address):
+                lm.callback_collateral_shares(n_start, collateral_shares)
+
+            return [in_amount_done, out_amount_done]
+
+        @external
+        @nonreentrant('lock')
+        def exchange_dy(i: uint256, j: uint256, out_amount: uint256, max_amount: uint256, _for: address = msg.sender) -> uint256[2]:
+            """
+            @notice Exchanges two coins, callable by anyone
+            @param i Input coin index
+            @param j Output coin index
+            @param out_amount Desired amount of output coin to receive
+            @param max_amount Maximum amount to spend (revert if more)
+            @param _for Address to send coins to
+            @return Amount of coins given in/out
+            """
+            return self._exchange(i, j, out_amount, max_amount, _for, False)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.exchange_dy(todo)
+        todo
+        ```
+
+
+### `get_dy`
+!!! description "`AMM.get_dy(i: uint256, j: uint256, in_amount: uint256) -> uint256:`"
+
+    Function to calculate the `out_amount` when swapping tokens through the AMM. `get_dy` calls the internal function `_get_dxdy` which outputs a struct alled DetailedTrade. `get_dy` only ouputs the `out_amount` of the detailed trade.
+
+    Returns: out amount (`uint256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `i` |  `uint256` | Input coin index |
+    | `j` |  `uint256` | Output coin index |
+    | `in_amount` |  `uint256` | Amount of input coin to swap |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 3 12 44 52"
+        struct DetailedTrade:
+            in_amount: uint256
+            out_amount: uint256
+            n1: int256
+            n2: int256
+            ticks_in: DynArray[uint256, MAX_TICKS_UINT]
+            last_tick_j: uint256
+            admin_fee: uint256
+
+        @internal
+        @view
+        def _get_dxdy(i: uint256, j: uint256, amount: uint256, is_in: bool) -> DetailedTrade:
+            """
+            @notice Method to use to calculate out amount and spent in amount
+            @param i Input coin index
+            @param j Output coin index
+            @param amount Amount of input coin to swap
+            @param is_in Whether IN our OUT amount is known
+            @return DetailedTrade with all swap results
+            """
+            # i = 0: borrowable (USD) in, collateral (ETH) out; going up
+            # i = 1: collateral (ETH) in, borrowable (USD) out; going down
+            assert (i == 0 and j == 1) or (i == 1 and j == 0), "Wrong index"
+            out: DetailedTrade = empty(DetailedTrade)
+            if amount == 0:
+                return out
+            in_precision: uint256 = COLLATERAL_PRECISION
+            out_precision: uint256 = BORROWED_PRECISION
+            if i == 0:
+                in_precision = BORROWED_PRECISION
+                out_precision = COLLATERAL_PRECISION
+            p_o: uint256[2] = self._price_oracle_ro()
+            if is_in:
+                out = self.calc_swap_out(i == 0, amount * in_precision, p_o, in_precision, out_precision)
+            else:
+                out = self.calc_swap_in(i == 0, amount * out_precision, p_o, in_precision, out_precision)
+            out.in_amount = unsafe_div(out.in_amount, in_precision)
+            out.out_amount = unsafe_div(out.out_amount, out_precision)
+            return out
+
+        @external
+        @view
+        @nonreentrant('lock')
+        def get_dy(i: uint256, j: uint256, in_amount: uint256) -> uint256:
+            """
+            @notice Method to use to calculate out amount
+            @param i Input coin index
+            @param j Output coin index
+            @param in_amount Amount of input coin to swap
+            @return Amount of coin j to give out
+            """
+            return self._get_dxdy(i, j, in_amount, True).out_amount
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.get_dy(0, 1, 2000000000000000000000)  -> swapping 2000 crvusd (`i`) to sfrxeth (`j`).
+        1012955839734366020
+        ```
+
+
+### `get_dxdy`
+!!! description "`AMM.get_dxdy(i: uint256, j: uint256, in_amount: uint256) -> (uint256, uint256):`"
+
+    Function to calculate `out_amount` and `in_amount` of the DetailedTrade.
+
+    Returns: in and out amounts (`uint256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `i` |  `uint256` | Input coin index |
+    | `j` |  `uint256` | Output coin index |
+    | `in_amount` |  `uint256` | Amount of input coin to swap |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 3 12 44 53"
+        struct DetailedTrade:
+            in_amount: uint256
+            out_amount: uint256
+            n1: int256
+            n2: int256
+            ticks_in: DynArray[uint256, MAX_TICKS_UINT]
+            last_tick_j: uint256
+            admin_fee: uint256
+
+        @internal
+        @view
+        def _get_dxdy(i: uint256, j: uint256, amount: uint256, is_in: bool) -> DetailedTrade:
+            """
+            @notice Method to use to calculate out amount and spent in amount
+            @param i Input coin index
+            @param j Output coin index
+            @param amount Amount of input coin to swap
+            @param is_in Whether IN our OUT amount is known
+            @return DetailedTrade with all swap results
+            """
+            # i = 0: borrowable (USD) in, collateral (ETH) out; going up
+            # i = 1: collateral (ETH) in, borrowable (USD) out; going down
+            assert (i == 0 and j == 1) or (i == 1 and j == 0), "Wrong index"
+            out: DetailedTrade = empty(DetailedTrade)
+            if amount == 0:
+                return out
+            in_precision: uint256 = COLLATERAL_PRECISION
+            out_precision: uint256 = BORROWED_PRECISION
+            if i == 0:
+                in_precision = BORROWED_PRECISION
+                out_precision = COLLATERAL_PRECISION
+            p_o: uint256[2] = self._price_oracle_ro()
+            if is_in:
+                out = self.calc_swap_out(i == 0, amount * in_precision, p_o, in_precision, out_precision)
+            else:
+                out = self.calc_swap_in(i == 0, amount * out_precision, p_o, in_precision, out_precision)
+            out.in_amount = unsafe_div(out.in_amount, in_precision)
+            out.out_amount = unsafe_div(out.out_amount, out_precision)
+            return out
+
+        @external
+        @view
+        @nonreentrant('lock')
+        def get_dxdy(i: uint256, j: uint256, in_amount: uint256) -> (uint256, uint256):
+            """
+            @notice Method to use to calculate out amount and spent in amount
+            @param i Input coin index
+            @param j Output coin index
+            @param in_amount Amount of input coin to swap
+            @return A tuple with in_amount used and out_amount returned
+            """
+            out: DetailedTrade = self._get_dxdy(i, j, in_amount, True)
+            return (out.in_amount, out.out_amount)
+        ```
+
+    === "Example"
+        Selling 2000 crvUSD for sfrxETH:
+        ```shell
+        >>> AMM.get_dxdy(0, 1, 2000000000000000000000)
+        2000000000000000000000, 1012955839734366020
+        ```
+
+
+### `get_dx`
+!!! description "`AMM.get_dx(i: uint256, j: uint256, out_amount: uint256) -> uint256:`"
+
+    Function to calculate the `in_amount` required to receive the desired `out_amount`.
+
+    Returns: out amount (`uint256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `i` |  `uint256` | Input coin index |
+    | `j` |  `uint256` | Output coin index |
+    | `out_amount` |  `uint256` | Desired amount of output coin to receive |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 3 12 44 54"
+        struct DetailedTrade:
+            in_amount: uint256
+            out_amount: uint256
+            n1: int256
+            n2: int256
+            ticks_in: DynArray[uint256, MAX_TICKS_UINT]
+            last_tick_j: uint256
+            admin_fee: uint256
+
+        @internal
+        @view
+        def _get_dxdy(i: uint256, j: uint256, amount: uint256, is_in: bool) -> DetailedTrade:
+            """
+            @notice Method to use to calculate out amount and spent in amount
+            @param i Input coin index
+            @param j Output coin index
+            @param amount Amount of input coin to swap
+            @param is_in Whether IN our OUT amount is known
+            @return DetailedTrade with all swap results
+            """
+            # i = 0: borrowable (USD) in, collateral (ETH) out; going up
+            # i = 1: collateral (ETH) in, borrowable (USD) out; going down
+            assert (i == 0 and j == 1) or (i == 1 and j == 0), "Wrong index"
+            out: DetailedTrade = empty(DetailedTrade)
+            if amount == 0:
+                return out
+            in_precision: uint256 = COLLATERAL_PRECISION
+            out_precision: uint256 = BORROWED_PRECISION
+            if i == 0:
+                in_precision = BORROWED_PRECISION
+                out_precision = COLLATERAL_PRECISION
+            p_o: uint256[2] = self._price_oracle_ro()
+            if is_in:
+                out = self.calc_swap_out(i == 0, amount * in_precision, p_o, in_precision, out_precision)
+            else:
+                out = self.calc_swap_in(i == 0, amount * out_precision, p_o, in_precision, out_precision)
+            out.in_amount = unsafe_div(out.in_amount, in_precision)
+            out.out_amount = unsafe_div(out.out_amount, out_precision)
+            return out
+
+        @external
+        @view
+        @nonreentrant('lock')
+        def get_dx(i: uint256, j: uint256, out_amount: uint256) -> uint256:
+            """
+            @notice Method to use to calculate in amount required to receive the desired out_amount
+            @param i Input coin index
+            @param j Output coin index
+            @param out_amount Desired amount of output coin to receive
+            @return Amount of coin i to spend
+            """
+            # i = 0: borrowable (USD) in, collateral (ETH) out; going up
+            # i = 1: collateral (ETH) in, borrowable (USD) out; going down
+            return self._get_dxdy(i, j, out_amount, False).in_amount
+        ```
+
+    === "Example"
+        How much crvUSD does a user need to swap (sell) in order to receive 1 sfrxeth?
+        ```shell
+        >>> AMM.get_dx(0, 1, 1000000000000000000) 
+        1973249425192953127559
+        ```
+
+
+### `get_dydx`
+!!! description "`AMM.get_dydx(i: uint256, j: uint256, out_amount: uint256) -> (uint256, uint256):`"
+
+    Function to calculate the `in_amount` required and `out_amount` received.
+
+    Returns: out and in amount (`uint256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `i` |  `uint256` | Input coin index |
+    | `j` |  `uint256` | Output coin index |
+    | `out_amount` |  `uint256` | Desired amount of output coin to receive |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 3 12 44 55"
+        struct DetailedTrade:
+            in_amount: uint256
+            out_amount: uint256
+            n1: int256
+            n2: int256
+            ticks_in: DynArray[uint256, MAX_TICKS_UINT]
+            last_tick_j: uint256
+            admin_fee: uint256
+
+        @internal
+        @view
+        def _get_dxdy(i: uint256, j: uint256, amount: uint256, is_in: bool) -> DetailedTrade:
+            """
+            @notice Method to use to calculate out amount and spent in amount
+            @param i Input coin index
+            @param j Output coin index
+            @param amount Amount of input coin to swap
+            @param is_in Whether IN our OUT amount is known
+            @return DetailedTrade with all swap results
+            """
+            # i = 0: borrowable (USD) in, collateral (ETH) out; going up
+            # i = 1: collateral (ETH) in, borrowable (USD) out; going down
+            assert (i == 0 and j == 1) or (i == 1 and j == 0), "Wrong index"
+            out: DetailedTrade = empty(DetailedTrade)
+            if amount == 0:
+                return out
+            in_precision: uint256 = COLLATERAL_PRECISION
+            out_precision: uint256 = BORROWED_PRECISION
+            if i == 0:
+                in_precision = BORROWED_PRECISION
+                out_precision = COLLATERAL_PRECISION
+            p_o: uint256[2] = self._price_oracle_ro()
+            if is_in:
+                out = self.calc_swap_out(i == 0, amount * in_precision, p_o, in_precision, out_precision)
+            else:
+                out = self.calc_swap_in(i == 0, amount * out_precision, p_o, in_precision, out_precision)
+            out.in_amount = unsafe_div(out.in_amount, in_precision)
+            out.out_amount = unsafe_div(out.out_amount, out_precision)
+            return out
+
+        @external
+        @view
+        @nonreentrant('lock')
+        def get_dydx(i: uint256, j: uint256, out_amount: uint256) -> (uint256, uint256):
+            """
+            @notice Method to use to calculate in amount required and out amount received
+            @param i Input coin index
+            @param j Output coin index
+            @param out_amount Desired amount of output coin to receive
+            @return A tuple with out_amount received and in_amount returned
+            """
+            # i = 0: borrowable (USD) in, collateral (ETH) out; going up
+            # i = 1: collateral (ETH) in, borrowable (USD) out; going down
+            out: DetailedTrade = self._get_dxdy(i, j, out_amount, False)
+            return (out.out_amount, out.in_amount)
+        ```
+
+    === "Example"
+        ```shell
+        >>> AMM.get_dydx(0, 1, 1000000000000000000) 
+        1000000000000000000, 1973249425192953127559
+        ```
+
+
+
+### `get_amount_for_price`
+!!! description "`AMM.get_amount_for_price(p: uint256) -> (uint256, bool):`"
+
+    Function to calculate the necessary amount to be exchanged to have the AMM at the funal price `p`.  
+    bool = true --> need to exchange crvusd for collateral (to get the price of the collateral UP)  
+    bool = false --> need to exchange collateral for crvusd (to get the price of the collateral DOWN)  
+    output = the token thats needs to be sold!
+
+    Returns: necessary amount to exchange(`uint256`) and true or flase (`bool`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `p` |  `uint256` | Price of the AMM |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="4"
+        @external
+        @view
+        @nonreentrant('lock')
+        def get_amount_for_price(p: uint256) -> (uint256, bool):
+            """
+            @notice Amount necessary to be exchanged to have the AMM at the final price `p`
+            @return (amount, is_pump)
+            """
+            min_band: int256 = self.min_band
+            max_band: int256 = self.max_band
+            n: int256 = self.active_band
+            p_o: uint256[2] = self._price_oracle_ro()
+            p_o_up: uint256 = self._p_oracle_up(n)
+            p_down: uint256 = unsafe_div(unsafe_div(p_o[0]**2, p_o_up) * p_o[0], p_o_up)  # p_current_down
+            p_up: uint256 = unsafe_div(p_down * A2, Aminus12)  # p_crurrent_up
+            amount: uint256 = 0
+            y0: uint256 = 0
+            f: uint256 = 0
+            g: uint256 = 0
+            Inv: uint256 = 0
+            j: uint256 = MAX_TICKS_UINT
+            pump: bool = True
+
+            for i in range(MAX_TICKS + MAX_SKIP_TICKS):
+                assert p_o_up > 0
+                x: uint256 = self.bands_x[n]
+                y: uint256 = self.bands_y[n]
+                if i == 0:
+                    if p < self._get_p(n, x, y):
+                        pump = False
+                not_empty: bool = x > 0 or y > 0
+                if not_empty:
+                    y0 = self._get_y0(x, y, p_o[0], p_o_up)
+                    f = unsafe_div(unsafe_div(A * y0 * p_o[0], p_o_up) * p_o[0], 10**18)
+                    g = unsafe_div(Aminus1 * y0 * p_o_up, p_o[0])
+                    Inv = (f + x) * (g + y)
+                    if j == MAX_TICKS_UINT:
+                        j = 0
+
+                if p <= p_up:
+                    if p >= p_down:
+                        if not_empty:
+                            ynew: uint256 = unsafe_sub(max(self.sqrt_int(Inv * 10**18 / p), g), g)
+                            xnew: uint256 = unsafe_sub(max(Inv / (g + ynew), f), f)
+                            if pump:
+                                amount += unsafe_sub(max(xnew, x), x)
+                            else:
+                                amount += unsafe_sub(max(ynew, y), y)
+                        break
+
+                # Need this to break if price is too far
+                p_ratio: uint256 = unsafe_div(p_o_up * 10**18, p_o[0])
+
+                if pump:
+                    if not_empty:
+                        amount += (Inv / g - f) - x
+                    if n == max_band:
+                        break
+                    if j == MAX_TICKS_UINT - 1:
+                        break
+                    if p_ratio < 10**36 / MAX_ORACLE_DN_POW:
+                        # Don't allow to be away by more than ~50 ticks
+                        break
+                    n += 1
+                    p_down = p_up
+                    p_up = unsafe_div(p_up * A2, Aminus12)
+                    p_o_up = unsafe_div(p_o_up * Aminus1, A)
+
+                else:
+                    if not_empty:
+                        amount += (Inv / f - g) - y
+                    if n == min_band:
+                        break
+                    if j == MAX_TICKS_UINT - 1:
+                        break
+                    if p_ratio > MAX_ORACLE_DN_POW:
+                        # Don't allow to be away by more than ~50 ticks
+                        break
+                    n -= 1
+                    p_up = p_down
+                    p_down = unsafe_div(p_down * Aminus12, A2)
+                    p_o_up = unsafe_div(p_o_up * A, Aminus1)
+
+                if j != MAX_TICKS_UINT:
+                    j = unsafe_add(j, 1)
+
+            amount = amount * 10**18 / unsafe_sub(10**18, max(self.fee, p_o[1]))
+            if amount == 0:
+                return 0, pump
+
+            # Precision and round up
+            if pump:
+                amount = unsafe_add(unsafe_div(unsafe_sub(amount, 1), BORROWED_PRECISION), 1)
+            else:
+                amount = unsafe_add(unsafe_div(unsafe_sub(amount, 1), COLLATERAL_PRECISION), 1)
+
+            return amount, pump
+        ```
+
+    === "Example"
+        ```shell
+        >>> AMM.get_amount_for_price(2048203821082923793482)
+        547071746795405807643242, true
+        ```
+
+
+
+## **Callbacks**
+### `liquidity_mining_callback`
+!!! description "`AMM.liquidity_mining_callback() -> address: view`"
+
+    Getter for the liquidity mining callback address.
+
+    Returns: liquidity mining callback contract (`address`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1"
+        liquidity_mining_callback: public(LMGauge)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.liquidity_mining_callback()
+        0x0000000000000000000000000000000000000000
+        ```
+
+
+### `set_callback`
+!!! description "`AMM.set_callback(liquidity_mining_callback: LMGauge):`"
+
+    Output amount is defined, not sure how much of input coin is needed (if input coin is not enough to reach output coin, then the tx will revert). Function only callable by the `admin` of the AMM (which is the controller, which is controlled by the DAO). Callback is not set yet, i think this will be set when implementing curve lp tokens (staked in gauge) as collateral for crvusd.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `liquidity_mining_callback` |  `LMGauge` | Liquidity Mining Gauge Address |
+
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 5 9 15"
+        interface LMGauge:
+            def callback_collateral_shares(n: int256, collateral_per_share: DynArray[uint256, MAX_TICKS_UINT]): nonpayable
+            def callback_user_shares(user: address, n: int256, user_shares: DynArray[uint256, MAX_TICKS_UINT]): nonpayable
+
+        liquidity_mining_callback: public(LMGauge)
+
+        # nonreentrant decorator is in Controller which is admin
+        @external
+        def set_callback(liquidity_mining_callback: LMGauge):
+            """
+            @notice Set a gauge address with callbacks for liquidity mining for collateral
+            @param liquidity_mining_callback Gauge address
+            """
+            assert msg.sender == self.admin
+            self.liquidity_mining_callback = liquidity_mining_callback
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.set_callback("todo")
+        'todo'
+        ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## **Contract Info Methods**
 ### `coins`
 !!! description "`AMM.coins(i: uint256) -> address: pure`"
@@ -1869,1023 +2933,4 @@ If there are some admin fees accumulated they cant be claimed seperately, meanin
         ```shell
         >>> AMM.get_xy("0x7a16ff8270133f063aab6c9977183d9e72835428") 
         63380038975112104970972,0,0,0,0,0,0,0,0,0,41547292092819592072,76745129494279646207,80932549271295120487,85505550289434551683,87415762350612525942,88161753995039151371,88913031968634028498,84145723494117511192,79510327248537508812,84498357558739975913
-        ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## **Exchange Methods**
-### `get_dy`
-!!! description "`AMM.get_dy(i: uint256, j: uint256, in_amount: uint256) -> uint256:`"
-
-    Function to calculate the `out_amount` when swapping tokens through the AMM. `get_dy` calls the internal function `_get_dxdy` which outputs a struct alled DetailedTrade. `get_dy` only ouputs the `out_amount` of the detailed trade.
-
-    Returns: out amount (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | Input coin index |
-    | `j` |  `uint256` | Output coin index |
-    | `in_amount` |  `uint256` | Amount of input coin to swap |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 3 12 44 52"
-        struct DetailedTrade:
-            in_amount: uint256
-            out_amount: uint256
-            n1: int256
-            n2: int256
-            ticks_in: DynArray[uint256, MAX_TICKS_UINT]
-            last_tick_j: uint256
-            admin_fee: uint256
-
-        @internal
-        @view
-        def _get_dxdy(i: uint256, j: uint256, amount: uint256, is_in: bool) -> DetailedTrade:
-            """
-            @notice Method to use to calculate out amount and spent in amount
-            @param i Input coin index
-            @param j Output coin index
-            @param amount Amount of input coin to swap
-            @param is_in Whether IN our OUT amount is known
-            @return DetailedTrade with all swap results
-            """
-            # i = 0: borrowable (USD) in, collateral (ETH) out; going up
-            # i = 1: collateral (ETH) in, borrowable (USD) out; going down
-            assert (i == 0 and j == 1) or (i == 1 and j == 0), "Wrong index"
-            out: DetailedTrade = empty(DetailedTrade)
-            if amount == 0:
-                return out
-            in_precision: uint256 = COLLATERAL_PRECISION
-            out_precision: uint256 = BORROWED_PRECISION
-            if i == 0:
-                in_precision = BORROWED_PRECISION
-                out_precision = COLLATERAL_PRECISION
-            p_o: uint256[2] = self._price_oracle_ro()
-            if is_in:
-                out = self.calc_swap_out(i == 0, amount * in_precision, p_o, in_precision, out_precision)
-            else:
-                out = self.calc_swap_in(i == 0, amount * out_precision, p_o, in_precision, out_precision)
-            out.in_amount = unsafe_div(out.in_amount, in_precision)
-            out.out_amount = unsafe_div(out.out_amount, out_precision)
-            return out
-
-        @external
-        @view
-        @nonreentrant('lock')
-        def get_dy(i: uint256, j: uint256, in_amount: uint256) -> uint256:
-            """
-            @notice Method to use to calculate out amount
-            @param i Input coin index
-            @param j Output coin index
-            @param in_amount Amount of input coin to swap
-            @return Amount of coin j to give out
-            """
-            return self._get_dxdy(i, j, in_amount, True).out_amount
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.get_dy(0, 1, 2000000000000000000000)  -> swapping 2000 crvusd (`i`) to sfrxeth (`j`).
-        1012955839734366020
-        ```
-
-
-### `get_dxdy`
-!!! description "`AMM.get_dxdy(i: uint256, j: uint256, in_amount: uint256) -> (uint256, uint256):`"
-
-    Function to calculate `out_amount` and `in_amount` of the DetailedTrade.
-
-    Returns: in and out amounts (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | Input coin index |
-    | `j` |  `uint256` | Output coin index |
-    | `in_amount` |  `uint256` | Amount of input coin to swap |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 3 12 44 53"
-        struct DetailedTrade:
-            in_amount: uint256
-            out_amount: uint256
-            n1: int256
-            n2: int256
-            ticks_in: DynArray[uint256, MAX_TICKS_UINT]
-            last_tick_j: uint256
-            admin_fee: uint256
-
-        @internal
-        @view
-        def _get_dxdy(i: uint256, j: uint256, amount: uint256, is_in: bool) -> DetailedTrade:
-            """
-            @notice Method to use to calculate out amount and spent in amount
-            @param i Input coin index
-            @param j Output coin index
-            @param amount Amount of input coin to swap
-            @param is_in Whether IN our OUT amount is known
-            @return DetailedTrade with all swap results
-            """
-            # i = 0: borrowable (USD) in, collateral (ETH) out; going up
-            # i = 1: collateral (ETH) in, borrowable (USD) out; going down
-            assert (i == 0 and j == 1) or (i == 1 and j == 0), "Wrong index"
-            out: DetailedTrade = empty(DetailedTrade)
-            if amount == 0:
-                return out
-            in_precision: uint256 = COLLATERAL_PRECISION
-            out_precision: uint256 = BORROWED_PRECISION
-            if i == 0:
-                in_precision = BORROWED_PRECISION
-                out_precision = COLLATERAL_PRECISION
-            p_o: uint256[2] = self._price_oracle_ro()
-            if is_in:
-                out = self.calc_swap_out(i == 0, amount * in_precision, p_o, in_precision, out_precision)
-            else:
-                out = self.calc_swap_in(i == 0, amount * out_precision, p_o, in_precision, out_precision)
-            out.in_amount = unsafe_div(out.in_amount, in_precision)
-            out.out_amount = unsafe_div(out.out_amount, out_precision)
-            return out
-
-        @external
-        @view
-        @nonreentrant('lock')
-        def get_dxdy(i: uint256, j: uint256, in_amount: uint256) -> (uint256, uint256):
-            """
-            @notice Method to use to calculate out amount and spent in amount
-            @param i Input coin index
-            @param j Output coin index
-            @param in_amount Amount of input coin to swap
-            @return A tuple with in_amount used and out_amount returned
-            """
-            out: DetailedTrade = self._get_dxdy(i, j, in_amount, True)
-            return (out.in_amount, out.out_amount)
-        ```
-
-    === "Example"
-        Selling 2000 crvUSD for sfrxETH:
-        ```shell
-        >>> AMM.get_dxdy(0, 1, 2000000000000000000000)
-        2000000000000000000000, 1012955839734366020
-        ```
-
-
-### `get_dx`
-!!! description "`AMM.get_dx(i: uint256, j: uint256, out_amount: uint256) -> uint256:`"
-
-    Function to calculate the `in_amount` required to receive the desired `out_amount`.
-
-    Returns: out amount (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | Input coin index |
-    | `j` |  `uint256` | Output coin index |
-    | `out_amount` |  `uint256` | Desired amount of output coin to receive |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 3 12 44 54"
-        struct DetailedTrade:
-            in_amount: uint256
-            out_amount: uint256
-            n1: int256
-            n2: int256
-            ticks_in: DynArray[uint256, MAX_TICKS_UINT]
-            last_tick_j: uint256
-            admin_fee: uint256
-
-        @internal
-        @view
-        def _get_dxdy(i: uint256, j: uint256, amount: uint256, is_in: bool) -> DetailedTrade:
-            """
-            @notice Method to use to calculate out amount and spent in amount
-            @param i Input coin index
-            @param j Output coin index
-            @param amount Amount of input coin to swap
-            @param is_in Whether IN our OUT amount is known
-            @return DetailedTrade with all swap results
-            """
-            # i = 0: borrowable (USD) in, collateral (ETH) out; going up
-            # i = 1: collateral (ETH) in, borrowable (USD) out; going down
-            assert (i == 0 and j == 1) or (i == 1 and j == 0), "Wrong index"
-            out: DetailedTrade = empty(DetailedTrade)
-            if amount == 0:
-                return out
-            in_precision: uint256 = COLLATERAL_PRECISION
-            out_precision: uint256 = BORROWED_PRECISION
-            if i == 0:
-                in_precision = BORROWED_PRECISION
-                out_precision = COLLATERAL_PRECISION
-            p_o: uint256[2] = self._price_oracle_ro()
-            if is_in:
-                out = self.calc_swap_out(i == 0, amount * in_precision, p_o, in_precision, out_precision)
-            else:
-                out = self.calc_swap_in(i == 0, amount * out_precision, p_o, in_precision, out_precision)
-            out.in_amount = unsafe_div(out.in_amount, in_precision)
-            out.out_amount = unsafe_div(out.out_amount, out_precision)
-            return out
-
-        @external
-        @view
-        @nonreentrant('lock')
-        def get_dx(i: uint256, j: uint256, out_amount: uint256) -> uint256:
-            """
-            @notice Method to use to calculate in amount required to receive the desired out_amount
-            @param i Input coin index
-            @param j Output coin index
-            @param out_amount Desired amount of output coin to receive
-            @return Amount of coin i to spend
-            """
-            # i = 0: borrowable (USD) in, collateral (ETH) out; going up
-            # i = 1: collateral (ETH) in, borrowable (USD) out; going down
-            return self._get_dxdy(i, j, out_amount, False).in_amount
-        ```
-
-    === "Example"
-        How much crvUSD does a user need to swap (sell) in order to receive 1 sfrxeth?
-        ```shell
-        >>> AMM.get_dx(0, 1, 1000000000000000000) 
-        1973249425192953127559
-        ```
-
-
-### `get_dydx`
-!!! description "`AMM.get_dydx(i: uint256, j: uint256, out_amount: uint256) -> (uint256, uint256):`"
-
-    Function to calculate the `in_amount` required and `out_amount` received.
-
-    Returns: out and in amount (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | Input coin index |
-    | `j` |  `uint256` | Output coin index |
-    | `out_amount` |  `uint256` | Desired amount of output coin to receive |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 3 12 44 55"
-        struct DetailedTrade:
-            in_amount: uint256
-            out_amount: uint256
-            n1: int256
-            n2: int256
-            ticks_in: DynArray[uint256, MAX_TICKS_UINT]
-            last_tick_j: uint256
-            admin_fee: uint256
-
-        @internal
-        @view
-        def _get_dxdy(i: uint256, j: uint256, amount: uint256, is_in: bool) -> DetailedTrade:
-            """
-            @notice Method to use to calculate out amount and spent in amount
-            @param i Input coin index
-            @param j Output coin index
-            @param amount Amount of input coin to swap
-            @param is_in Whether IN our OUT amount is known
-            @return DetailedTrade with all swap results
-            """
-            # i = 0: borrowable (USD) in, collateral (ETH) out; going up
-            # i = 1: collateral (ETH) in, borrowable (USD) out; going down
-            assert (i == 0 and j == 1) or (i == 1 and j == 0), "Wrong index"
-            out: DetailedTrade = empty(DetailedTrade)
-            if amount == 0:
-                return out
-            in_precision: uint256 = COLLATERAL_PRECISION
-            out_precision: uint256 = BORROWED_PRECISION
-            if i == 0:
-                in_precision = BORROWED_PRECISION
-                out_precision = COLLATERAL_PRECISION
-            p_o: uint256[2] = self._price_oracle_ro()
-            if is_in:
-                out = self.calc_swap_out(i == 0, amount * in_precision, p_o, in_precision, out_precision)
-            else:
-                out = self.calc_swap_in(i == 0, amount * out_precision, p_o, in_precision, out_precision)
-            out.in_amount = unsafe_div(out.in_amount, in_precision)
-            out.out_amount = unsafe_div(out.out_amount, out_precision)
-            return out
-
-        @external
-        @view
-        @nonreentrant('lock')
-        def get_dydx(i: uint256, j: uint256, out_amount: uint256) -> (uint256, uint256):
-            """
-            @notice Method to use to calculate in amount required and out amount received
-            @param i Input coin index
-            @param j Output coin index
-            @param out_amount Desired amount of output coin to receive
-            @return A tuple with out_amount received and in_amount returned
-            """
-            # i = 0: borrowable (USD) in, collateral (ETH) out; going up
-            # i = 1: collateral (ETH) in, borrowable (USD) out; going down
-            out: DetailedTrade = self._get_dxdy(i, j, out_amount, False)
-            return (out.out_amount, out.in_amount)
-        ```
-
-    === "Example"
-        ```shell
-        >>> AMM.get_dydx(0, 1, 1000000000000000000) 
-        1000000000000000000, 1973249425192953127559
-        ```
-
-
-
-### `get_amount_for_price`
-!!! description "`AMM.get_amount_for_price(p: uint256) -> (uint256, bool):`"
-
-    Function to calculate the necessary amount to be exchanged to have the AMM at the funal price `p`.  
-    bool = true --> need to exchange crvusd for collateral (to get the price of the collateral UP)  
-    bool = false --> need to exchange collateral for crvusd (to get the price of the collateral DOWN)  
-    output = the token thats needs to be sold!
-
-    Returns: necessary amount to exchange(`uint256`) and true or flase (`bool`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `p` |  `uint256` | Price of the AMM |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="4"
-        @external
-        @view
-        @nonreentrant('lock')
-        def get_amount_for_price(p: uint256) -> (uint256, bool):
-            """
-            @notice Amount necessary to be exchanged to have the AMM at the final price `p`
-            @return (amount, is_pump)
-            """
-            min_band: int256 = self.min_band
-            max_band: int256 = self.max_band
-            n: int256 = self.active_band
-            p_o: uint256[2] = self._price_oracle_ro()
-            p_o_up: uint256 = self._p_oracle_up(n)
-            p_down: uint256 = unsafe_div(unsafe_div(p_o[0]**2, p_o_up) * p_o[0], p_o_up)  # p_current_down
-            p_up: uint256 = unsafe_div(p_down * A2, Aminus12)  # p_crurrent_up
-            amount: uint256 = 0
-            y0: uint256 = 0
-            f: uint256 = 0
-            g: uint256 = 0
-            Inv: uint256 = 0
-            j: uint256 = MAX_TICKS_UINT
-            pump: bool = True
-
-            for i in range(MAX_TICKS + MAX_SKIP_TICKS):
-                assert p_o_up > 0
-                x: uint256 = self.bands_x[n]
-                y: uint256 = self.bands_y[n]
-                if i == 0:
-                    if p < self._get_p(n, x, y):
-                        pump = False
-                not_empty: bool = x > 0 or y > 0
-                if not_empty:
-                    y0 = self._get_y0(x, y, p_o[0], p_o_up)
-                    f = unsafe_div(unsafe_div(A * y0 * p_o[0], p_o_up) * p_o[0], 10**18)
-                    g = unsafe_div(Aminus1 * y0 * p_o_up, p_o[0])
-                    Inv = (f + x) * (g + y)
-                    if j == MAX_TICKS_UINT:
-                        j = 0
-
-                if p <= p_up:
-                    if p >= p_down:
-                        if not_empty:
-                            ynew: uint256 = unsafe_sub(max(self.sqrt_int(Inv * 10**18 / p), g), g)
-                            xnew: uint256 = unsafe_sub(max(Inv / (g + ynew), f), f)
-                            if pump:
-                                amount += unsafe_sub(max(xnew, x), x)
-                            else:
-                                amount += unsafe_sub(max(ynew, y), y)
-                        break
-
-                # Need this to break if price is too far
-                p_ratio: uint256 = unsafe_div(p_o_up * 10**18, p_o[0])
-
-                if pump:
-                    if not_empty:
-                        amount += (Inv / g - f) - x
-                    if n == max_band:
-                        break
-                    if j == MAX_TICKS_UINT - 1:
-                        break
-                    if p_ratio < 10**36 / MAX_ORACLE_DN_POW:
-                        # Don't allow to be away by more than ~50 ticks
-                        break
-                    n += 1
-                    p_down = p_up
-                    p_up = unsafe_div(p_up * A2, Aminus12)
-                    p_o_up = unsafe_div(p_o_up * Aminus1, A)
-
-                else:
-                    if not_empty:
-                        amount += (Inv / f - g) - y
-                    if n == min_band:
-                        break
-                    if j == MAX_TICKS_UINT - 1:
-                        break
-                    if p_ratio > MAX_ORACLE_DN_POW:
-                        # Don't allow to be away by more than ~50 ticks
-                        break
-                    n -= 1
-                    p_up = p_down
-                    p_down = unsafe_div(p_down * Aminus12, A2)
-                    p_o_up = unsafe_div(p_o_up * A, Aminus1)
-
-                if j != MAX_TICKS_UINT:
-                    j = unsafe_add(j, 1)
-
-            amount = amount * 10**18 / unsafe_sub(10**18, max(self.fee, p_o[1]))
-            if amount == 0:
-                return 0, pump
-
-            # Precision and round up
-            if pump:
-                amount = unsafe_add(unsafe_div(unsafe_sub(amount, 1), BORROWED_PRECISION), 1)
-            else:
-                amount = unsafe_add(unsafe_div(unsafe_sub(amount, 1), COLLATERAL_PRECISION), 1)
-
-            return amount, pump
-        ```
-
-    === "Example"
-        ```shell
-        >>> AMM.get_amount_for_price(2048203821082923793482)
-        547071746795405807643242, true
-        ```
-
-
-### `exchange`
-!!! description "`AMM.exchange(i: uint256, j: uint256, in_amount: uint256, min_amount: uint256, _for: address = msg.sender) -> uint256[2]:`"
-
-    Function to exchange two coin. This function is callable by anyone and can be seen as a regular liquidity pool. It is neccessary that this function is callable by anyone because this allows arbitrage traders to arbitrage the price difference. When trading through this AMM, users get soft-liquidated or de-liquidated. Every trade is essentially an arbitrage.  
-    Flow: user calls `exchange` -> internal function `_exchange` gets called -> calls internal function `calc_swap_in`.  
-    The exchange function always updates the oracle even if we exchange 0.  
-    Amount of input coin is known and need to set minimum amount of output (if not reached, tx will revert).
-
-    Returns: amount of coins given in and out (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | Input coin index |
-    | `j` |  `uint256` | Output coin index |
-    | `in_amount` |  `uint256` | Amount of input coin to swap |
-    | `min_amount` |  `uint256` | Minimum amount of output coin to get |
-    | `_for` |  `address` | Address to send coins to (defaulted to msg.sender) |
-
-    Emits: <mark style="background-color: #FFD580; color: black">TokenExchange log</mark>
-
-    ??? quote "Source code"
-
-        ```python hl_lines="2 89"
-        @internal
-        def _exchange(i: uint256, j: uint256, amount: uint256, minmax_amount: uint256, _for: address, use_in_amount: bool) -> uint256[2]:
-            """
-            @notice Exchanges two coins, callable by anyone
-            @param i Input coin index
-            @param j Output coin index
-            @param amount Amount of input/output coin to swap
-            @param minmax_amount Minimal/maximum amount to get as output/input
-            @param _for Address to send coins to
-            @param use_in_amount Whether input or output amount is specified
-            @return Amount of coins given in and out
-            """
-            assert (i == 0 and j == 1) or (i == 1 and j == 0), "Wrong index"
-            p_o: uint256[2] = self._price_oracle_w()  # Let's update the oracle even if we exchange 0
-            if amount == 0:
-                return [0, 0]
-
-            lm: LMGauge = self.liquidity_mining_callback
-            collateral_shares: DynArray[uint256, MAX_TICKS_UINT] = []
-
-            in_coin: ERC20 = BORROWED_TOKEN
-            out_coin: ERC20 = COLLATERAL_TOKEN
-            in_precision: uint256 = BORROWED_PRECISION
-            out_precision: uint256 = COLLATERAL_PRECISION
-            if i == 1:
-                in_precision = out_precision
-                in_coin = out_coin
-                out_precision = BORROWED_PRECISION
-                out_coin = BORROWED_TOKEN
-
-            out: DetailedTrade = empty(DetailedTrade)
-            if use_in_amount:
-                out = self.calc_swap_out(i == 0, amount * in_precision, p_o, in_precision, out_precision)
-            else:
-                out = self.calc_swap_in(i == 0, amount * out_precision, p_o, in_precision, out_precision)
-            in_amount_done: uint256 = unsafe_div(out.in_amount, in_precision)
-            out_amount_done: uint256 = unsafe_div(out.out_amount, out_precision)
-            if use_in_amount:
-                assert out_amount_done >= minmax_amount, "Slippage"
-            else:
-                assert in_amount_done <= minmax_amount, "Slippage"
-            if out_amount_done == 0 or in_amount_done == 0:
-                return [0, 0]
-
-            out.admin_fee = unsafe_div(out.admin_fee, in_precision)
-            if i == 0:
-                self.admin_fees_x += out.admin_fee
-            else:
-                self.admin_fees_y += out.admin_fee
-
-            assert in_coin.transferFrom(msg.sender, self, in_amount_done, default_return_value=True)
-            assert out_coin.transfer(_for, out_amount_done, default_return_value=True)
-
-            n: int256 = min(out.n1, out.n2)
-            n_start: int256 = n
-            n_diff: int256 = abs(unsafe_sub(out.n2, out.n1))
-
-            for k in range(MAX_TICKS):
-                x: uint256 = 0
-                y: uint256 = 0
-                if i == 0:
-                    x = out.ticks_in[k]
-                    if n == out.n2:
-                        y = out.last_tick_j
-                else:
-                    y = out.ticks_in[unsafe_sub(n_diff, k)]
-                    if n == out.n2:
-                        x = out.last_tick_j
-                self.bands_x[n] = x
-                self.bands_y[n] = y
-                if lm.address != empty(address):
-                    s: uint256 = 0
-                    if y > 0:
-                        s = unsafe_div(y * 10**18, self.total_shares[n])
-                    collateral_shares.append(s)
-                if k == n_diff:
-                    break
-                n = unsafe_add(n, 1)
-
-            self.active_band = out.n2
-
-            log TokenExchange(_for, i, in_amount_done, j, out_amount_done)
-
-            if lm.address != empty(address):
-                lm.callback_collateral_shares(n_start, collateral_shares)
-
-            return [in_amount_done, out_amount_done]
-
-        @external
-        @nonreentrant('lock')
-        def exchange(i: uint256, j: uint256, in_amount: uint256, min_amount: uint256, _for: address = msg.sender) -> uint256[2]:
-            """
-            @notice Exchanges two coins, callable by anyone
-            @param i Input coin index
-            @param j Output coin index
-            @param in_amount Amount of input coin to swap
-            @param min_amount Minimal amount to get as output
-            @param _for Address to send coins to
-            @return Amount of coins given in/out
-            """
-            return self._exchange(i, j, in_amount, min_amount, _for, True)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.exchange(todo)
-        todo
-        ```
-
-
-
-### `exchange_dy`
-!!! description "`AMM.exchange_dy(i: uint256, j: uint256, out_amount: uint256, max_amount: uint256, _for: address = msg.sender) -> uint256[2]:`"
-
-    Output amount is defined, not sure how much of input coin is needed (if input coin is not enough to reach output coin, then the tx will revert).
-
-    Returns: amount of coins given in and out (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | Input coin index |
-    | `j` |  `uint256` | Output coin index |
-    | `in_amount` |  `uint256` | Amount of input coin to swap |
-    | `min_amount` |  `uint256` | Minimum amount of output coin to get |
-    | `_for` |  `address` | Address to send coins to (defaulted to msg.sender) |
-
-    Emits: <mark style="background-color: #FFD580; color: black">TokenExchange log</mark>
-
-    ??? quote "Source code"
-
-        ```python hl_lines="2 89"
-        @internal
-        def _exchange(i: uint256, j: uint256, amount: uint256, minmax_amount: uint256, _for: address, use_in_amount: bool) -> uint256[2]:
-            """
-            @notice Exchanges two coins, callable by anyone
-            @param i Input coin index
-            @param j Output coin index
-            @param amount Amount of input/output coin to swap
-            @param minmax_amount Minimal/maximum amount to get as output/input
-            @param _for Address to send coins to
-            @param use_in_amount Whether input or output amount is specified
-            @return Amount of coins given in and out
-            """
-            assert (i == 0 and j == 1) or (i == 1 and j == 0), "Wrong index"
-            p_o: uint256[2] = self._price_oracle_w()  # Let's update the oracle even if we exchange 0
-            if amount == 0:
-                return [0, 0]
-
-            lm: LMGauge = self.liquidity_mining_callback
-            collateral_shares: DynArray[uint256, MAX_TICKS_UINT] = []
-
-            in_coin: ERC20 = BORROWED_TOKEN
-            out_coin: ERC20 = COLLATERAL_TOKEN
-            in_precision: uint256 = BORROWED_PRECISION
-            out_precision: uint256 = COLLATERAL_PRECISION
-            if i == 1:
-                in_precision = out_precision
-                in_coin = out_coin
-                out_precision = BORROWED_PRECISION
-                out_coin = BORROWED_TOKEN
-
-            out: DetailedTrade = empty(DetailedTrade)
-            if use_in_amount:
-                out = self.calc_swap_out(i == 0, amount * in_precision, p_o, in_precision, out_precision)
-            else:
-                out = self.calc_swap_in(i == 0, amount * out_precision, p_o, in_precision, out_precision)
-            in_amount_done: uint256 = unsafe_div(out.in_amount, in_precision)
-            out_amount_done: uint256 = unsafe_div(out.out_amount, out_precision)
-            if use_in_amount:
-                assert out_amount_done >= minmax_amount, "Slippage"
-            else:
-                assert in_amount_done <= minmax_amount, "Slippage"
-            if out_amount_done == 0 or in_amount_done == 0:
-                return [0, 0]
-
-            out.admin_fee = unsafe_div(out.admin_fee, in_precision)
-            if i == 0:
-                self.admin_fees_x += out.admin_fee
-            else:
-                self.admin_fees_y += out.admin_fee
-
-            assert in_coin.transferFrom(msg.sender, self, in_amount_done, default_return_value=True)
-            assert out_coin.transfer(_for, out_amount_done, default_return_value=True)
-
-            n: int256 = min(out.n1, out.n2)
-            n_start: int256 = n
-            n_diff: int256 = abs(unsafe_sub(out.n2, out.n1))
-
-            for k in range(MAX_TICKS):
-                x: uint256 = 0
-                y: uint256 = 0
-                if i == 0:
-                    x = out.ticks_in[k]
-                    if n == out.n2:
-                        y = out.last_tick_j
-                else:
-                    y = out.ticks_in[unsafe_sub(n_diff, k)]
-                    if n == out.n2:
-                        x = out.last_tick_j
-                self.bands_x[n] = x
-                self.bands_y[n] = y
-                if lm.address != empty(address):
-                    s: uint256 = 0
-                    if y > 0:
-                        s = unsafe_div(y * 10**18, self.total_shares[n])
-                    collateral_shares.append(s)
-                if k == n_diff:
-                    break
-                n = unsafe_add(n, 1)
-
-            self.active_band = out.n2
-
-            log TokenExchange(_for, i, in_amount_done, j, out_amount_done)
-
-            if lm.address != empty(address):
-                lm.callback_collateral_shares(n_start, collateral_shares)
-
-            return [in_amount_done, out_amount_done]
-
-        @external
-        @nonreentrant('lock')
-        def exchange_dy(i: uint256, j: uint256, out_amount: uint256, max_amount: uint256, _for: address = msg.sender) -> uint256[2]:
-            """
-            @notice Exchanges two coins, callable by anyone
-            @param i Input coin index
-            @param j Output coin index
-            @param out_amount Desired amount of output coin to receive
-            @param max_amount Maximum amount to spend (revert if more)
-            @param _for Address to send coins to
-            @return Amount of coins given in/out
-            """
-            return self._exchange(i, j, out_amount, max_amount, _for, False)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.exchange_dy(todo)
-        todo
-        ```
-
-
-## **Callbacks**
-### `liquidity_mining_callback`
-!!! description "`AMM.liquidity_mining_callback() -> address: view`"
-
-    Getter for the liquidity mining callback address.
-
-    Returns: liquidity mining callback contract (`address`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1"
-        liquidity_mining_callback: public(LMGauge)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.liquidity_mining_callback()
-        0x0000000000000000000000000000000000000000
-        ```
-
-
-### `set_callback`
-!!! description "`AMM.set_callback(liquidity_mining_callback: LMGauge):`"
-
-    Output amount is defined, not sure how much of input coin is needed (if input coin is not enough to reach output coin, then the tx will revert). Function only callable by the `admin` of the AMM (which is the controller, which is controlled by the DAO). Callback is not set yet, i think this will be set when implementing curve lp tokens (staked in gauge) as collateral for crvusd.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `liquidity_mining_callback` |  `LMGauge` | Liquidity Mining Gauge Address |
-
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 5 9 15"
-        interface LMGauge:
-            def callback_collateral_shares(n: int256, collateral_per_share: DynArray[uint256, MAX_TICKS_UINT]): nonpayable
-            def callback_user_shares(user: address, n: int256, user_shares: DynArray[uint256, MAX_TICKS_UINT]): nonpayable
-
-        liquidity_mining_callback: public(LMGauge)
-
-        # nonreentrant decorator is in Controller which is admin
-        @external
-        def set_callback(liquidity_mining_callback: LMGauge):
-            """
-            @notice Set a gauge address with callbacks for liquidity mining for collateral
-            @param liquidity_mining_callback Gauge address
-            """
-            assert msg.sender == self.admin
-            self.liquidity_mining_callback = liquidity_mining_callback
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.set_callback("todo")
-        'todo'
-        ```
-
-
-## **Depositing and Removing Collateral**
-These function can only be called by the `admin` of the AMM, which is the controller. Need to give max_approval to it, so the controller can deposit and withdraw collateral into the AMM.  
-Collateral is put into bands by calling `deposit_range` whenever someone creates a new loan or adds collateral to the existing position.
-
-
-### `deposit_range`
-!!! description "`AMM.deposit_range(user: address, amount: uint256, n1: int256, n2: int256):`"
-
-    Function to deposit collateral `amount` for `user` in the range of bands between `n1` and `n2`. This function can only be called by the admin of the AMM, which is the controller.
-
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` | User address |
-    | `amount` |  `uint256` | Amount of collateral to deposit |
-    | `n1` |  `int256` | Lower band in the deposit range |
-    | `n2` |  `int256` | Upper band in the deposit range |
-
-    Emits: <mark style="background-color: #FFD580; color: black">Deposit log</mark>
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 9 84"
-        event Deposit:
-            provider: indexed(address)
-            amount: uint256
-            n1: int256
-            n2: int256
-
-        @external
-        @nonreentrant('lock')
-        def deposit_range(user: address, amount: uint256, n1: int256, n2: int256):
-            """
-            @notice Deposit for a user in a range of bands. Only admin contract (Controller) can do it
-            @param user User address
-            @param amount Amount of collateral to deposit
-            @param n1 Lower band in the deposit range
-            @param n2 Upper band in the deposit range
-            """
-            assert msg.sender == self.admin
-
-            user_shares: DynArray[uint256, MAX_TICKS_UINT] = []
-            collateral_shares: DynArray[uint256, MAX_TICKS_UINT] = []
-
-            n0: int256 = self.active_band
-
-            # We assume that n1,n2 area already sorted (and they are in Controller)
-            assert n2 < 2**127
-            assert n1 > -2**127
-
-            lm: LMGauge = self.liquidity_mining_callback
-
-            # Autoskip bands if we can
-            for i in range(MAX_SKIP_TICKS + 1):
-                if n1 > n0:
-                    if i != 0:
-                        self.active_band = n0
-                    break
-                assert self.bands_x[n0] == 0 and i < MAX_SKIP_TICKS, "Deposit below current band"
-                n0 -= 1
-
-            n_bands: uint256 = unsafe_add(convert(unsafe_sub(n2, n1), uint256), 1)
-            assert n_bands <= MAX_TICKS_UINT
-
-            y_per_band: uint256 = unsafe_div(amount * COLLATERAL_PRECISION, n_bands)
-            assert y_per_band > 100, "Amount too low"
-
-            assert self.user_shares[user].ticks[0] == 0  # dev: User must have no liquidity
-            self.user_shares[user].ns = unsafe_add(n1, unsafe_mul(n2, 2**128))
-
-            for i in range(MAX_TICKS):
-                band: int256 = unsafe_add(n1, i)
-                if band > n2:
-                    break
-
-                assert self.bands_x[band] == 0, "Band not empty"
-                y: uint256 = y_per_band
-                if i == 0:
-                    y = amount * COLLATERAL_PRECISION - y * unsafe_sub(n_bands, 1)
-
-                total_y: uint256 = self.bands_y[band]
-
-                # Total / user share
-                s: uint256 = self.total_shares[band]
-                ds: uint256 = unsafe_div((s + DEAD_SHARES) * y, total_y + 1)
-                assert ds > 0, "Amount too low"
-                user_shares.append(ds)
-                s += ds
-                assert s <= 2**128 - 1
-                self.total_shares[band] = s
-
-                total_y += y
-                self.bands_y[band] = total_y
-
-                if lm.address != empty(address):
-                    # If initial s == 0 - s becomes equal to y which is > 100 => nonzero
-                    collateral_shares.append(unsafe_div(total_y * 10**18, s))
-
-            self.min_band = min(self.min_band, n1)
-            self.max_band = max(self.max_band, n2)
-
-            self.save_user_shares(user, user_shares)
-
-            self.rate_mul = self._rate_mul()
-            self.rate_time = block.timestamp
-
-            log Deposit(user, amount, n1, n2)
-
-            if lm.address != empty(address):
-                lm.callback_collateral_shares(n1, collateral_shares)
-                lm.callback_user_shares(user, n1, user_shares)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.deposit_range(todo)
-        todo
-        ```
-
-### `withdraw`
-!!! description "`AMM.withdraw(user: address, frac: uint256) -> uint256[2]:`"
-
-    Function to withdraw liquidity for `user`. This function can only be called by the admin of the AMM, which is the controller. 
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` | User address |
-    | `frac` |  `uint256` | Fraction to withdraw (1e18 = 100%) |
-
-    Emits: <mark style="background-color: #FFD580; color: black">Withdraw log</mark>
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 9 85"
-        event Withdraw:
-            provider: indexed(address)
-            amount_borrowed: uint256
-            amount_collateral: uint256
-
-        @external
-        @nonreentrant('lock')
-        def withdraw(user: address, frac: uint256) -> uint256[2]:
-            """
-            @notice Withdraw all liquidity for the user. Only admin contract can do it
-            @param user User who owns liquidity
-            @param frac Fraction to withdraw (1e18 being 100%)
-            @return Amount of [stablecoins, collateral] withdrawn
-            """
-            assert msg.sender == self.admin
-            assert frac <= 10**18
-
-            lm: LMGauge = self.liquidity_mining_callback
-
-            ns: int256[2] = self._read_user_tick_numbers(user)
-            n: int256 = ns[0]
-            user_shares: DynArray[uint256, MAX_TICKS_UINT] = self._read_user_ticks(user, ns)
-            assert user_shares[0] > 0, "No deposits"
-
-            total_x: uint256 = 0
-            total_y: uint256 = 0
-            min_band: int256 = self.min_band
-            old_min_band: int256 = min_band
-            max_band: int256 = self.max_band
-            old_max_band: int256 = max_band
-
-            for i in range(MAX_TICKS):
-                x: uint256 = self.bands_x[n]
-                y: uint256 = self.bands_y[n]
-                ds: uint256 = unsafe_div(frac * user_shares[i], 10**18)  # Can ONLY zero out when frac == 10**18
-                user_shares[i] = unsafe_sub(user_shares[i], ds)
-                s: uint256 = self.total_shares[n]
-                new_shares: uint256 = s - ds
-                self.total_shares[n] = new_shares
-                s += DEAD_SHARES
-                dx: uint256 = (x + 1) * ds / s
-                dy: uint256 = unsafe_div((y + 1) * ds, s)
-
-                x -= dx
-                y -= dy
-
-                # If withdrawal is the last one - tranfer dust to admin fees
-                if new_shares == 0:
-                    if x > 0:
-                        self.admin_fees_x += x
-                    if y > 0:
-                        self.admin_fees_y += y / COLLATERAL_PRECISION
-                    x = 0
-                    y = 0
-
-                if n == min_band:
-                    if x == 0:
-                        if y == 0:
-                            min_band += 1
-                if x > 0 or y > 0:
-                    max_band = n
-                self.bands_x[n] = x
-                self.bands_y[n] = y
-                total_x += dx
-                total_y += dy
-
-                if n == ns[1]:
-                    break
-                else:
-                    n = unsafe_add(n, 1)
-
-            # Empty the ticks
-            if frac == 10**18:
-                self.user_shares[user].ticks[0] = 0
-            else:
-                self.save_user_shares(user, user_shares)
-
-            if old_min_band != min_band:
-                self.min_band = min_band
-            if old_max_band <= ns[1]:
-                self.max_band = max_band
-
-            total_x = unsafe_div(total_x, BORROWED_PRECISION)
-            total_y = unsafe_div(total_y, COLLATERAL_PRECISION)
-            log Withdraw(user, total_x, total_y)
-
-            self.rate_mul = self._rate_mul()
-            self.rate_time = block.timestamp
-
-            if lm.address != empty(address):
-                lm.callback_collateral_shares(0, [])  # collateral/shares ratio is unchanged
-                lm.callback_user_shares(user, ns[0], user_shares)
-
-            return [total_x, total_y]
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.withdraw(todo)
-        todo
         ```
