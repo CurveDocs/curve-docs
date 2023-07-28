@@ -56,6 +56,7 @@ nav:
     - MonetaryPolicy: LLAMMA/monetarypolicy.md
     - PriceAggregator: LLAMMA/priceaggregator.md
     - Deployments: LLAMMA/deployments.md
+    - Oracle: LLAMMA/oracle.md
 
   - Stableswap Exchange:    
     - Overview: stableswap_exchange/overview.md 
