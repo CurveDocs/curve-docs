@@ -65,7 +65,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 ### **Price of crvUSD**
 
 **`_price()`**
-This function calculates the weighted price, taking into account all price pairs.
+Calculates the weighted price, taking into account all price pairs.
 
 
 | Variables for calculations | Type | Description |
