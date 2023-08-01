@@ -569,7 +569,7 @@ This function iterates through all the price pairs which were added to this cont
 ### `remove_price_pair`
 !!! description "`PriceAggregator.remove_price_pair(n: uint256):`"
 
-    Function to remove price pairs from the contract. can only be called by the admin of the contract. checks if the pool is the last pool added, if yes and that one gets removed we can just remove it like that (no need to move other pricepairs up). if its not then the most recently added price pair (pricepair(n_max)) will get moved to the index of the price pair that has just been removed, this ensures that there are no empty indexes.
+    Function to remove price pairs from the contract. can only be called by the admin of the contract. checks if the pool is the last pool added, if yes and that one gets removed we can just remove it like that (no need to move other pricepairs up). if it's not then the most recently added price pair (pricepair(n_max)) will get moved to the index of the price pair that has just been removed, this ensures that there are no empty indexes.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
