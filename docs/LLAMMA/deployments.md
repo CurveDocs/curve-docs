@@ -1,6 +1,6 @@
 ## **General Infrastructure**
 
-Due to testing-in-pord purposes, a few contract deployments took place, hence please ensure to utilize the correct and latest version. Latest deployment logs can be found [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
+Due to testing-in-prod purposes, a few contract deployments took place, hence please ensure to utilize the correct and latest version. Latest deployment logs can be found [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
 
 | Type   | Description | Address  |
 | -------- | -------|-------|
