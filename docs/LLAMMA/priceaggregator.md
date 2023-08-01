@@ -1,4 +1,4 @@
-The **AggregatorStablePrice** contract is designed to aggregate the prices of crvUSD based on multiple Curve Stableswap pools. This price is mainly used as an oracle for the calculation of the interest rate, providing an aggregated (`price`) and a exponential moving average (ema) price.
+The **AggregatorStablePrice** contract is designed to aggregate the prices of crvUSD based on multiple Curve Stableswap pools. This price is mainly used as an oracle for the calculation of the interest rate, providing an aggregated (`price`) and an exponential moving average (ema) price.
 
 !!! info
     The AggregatorStablePrice contract is deployed to the Ethereum mainnet at: [0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7](https://etherscan.io/address/0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7).  
