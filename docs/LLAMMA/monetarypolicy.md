@@ -14,7 +14,7 @@ Markets have a **dynamic rate**, depending on the following components:
 * TargetFraction  
 * DebtFraction of PegKeepers  
 
-For the price of crvUSD, a aggregated oracle price of multiple Curve Stablwswap pools is used ([see here](/curve-docs/docs/LLAMMA/priceaggregator.md)).
+For the price of crvUSD, an aggregated oracle price of multiple Curve Stablwswap pools is used ([see here](/curve-docs/docs/LLAMMA/priceaggregator.md)).
 
 | variable      | description   | 
 | ----------- | -------|
