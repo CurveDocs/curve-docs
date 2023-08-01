@@ -437,7 +437,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
 ## **Admin and Receiver**
 PegKeepers have a `admin` and `receiver` addresses. 
-Committing a new admin or receiver requires the corresponding commit functions to be called, actions which can only be performed by the current admin. Subsequently, the newly committed admin or receiver has to apply these changes within a timespan of 3 * 86400 seconds, corresponding to a window of three days. If an attempt is made to apply these changes after this deadline, the action will simply fail.
+Committing a new `admin` or `receiver` requires the corresponding commit functions to be called, actions that can only be performed by the current admin. Subsequently, the newly committed admin or receiver has to apply these changes within a timespan of 3 * 86400 seconds, corresponding to a window of three days. If an attempt is made to apply these changes after this deadline, the action will fail.
 
 
 ### `admin`
