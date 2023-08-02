@@ -78,6 +78,8 @@ nav:
     - Whitepaper: references/whitepaper.md
     - Useful Resources: references/useful-resources.md
 
+  - Curve Resources: https://resources.curve.fi/
+
 # extension
 markdown_extensions:
   - def_list
