@@ -4,3 +4,4 @@ mkdocs-autolinks-plugin
 mkdocs-minify-plugin
 pymdown-extensions
 mkdocs-git-revision-date-localized-plugin
+mkdocs-bootstrap386
