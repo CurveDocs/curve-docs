@@ -1,6 +1,3 @@
-?
-
-
 !!! info
     The crvUSD contract is deployed to the Ethereum mainnet at: [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/address/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E).  
     Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/Stablecoin.vy). 
@@ -431,7 +428,7 @@
         ```
 
 
-### `allowance` (todo)
+### `allowance`
 !!! description "`crvUSD.allowance(arg0: address, arg1: address) -> uint256`"
 
     Getter to check the allowance.
