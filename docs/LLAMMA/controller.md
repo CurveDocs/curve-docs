@@ -1,8 +1,6 @@
-need some plain text on what the controller does:
-The controller contract is the contract the user interacts with to create a loan, repay and withdraw. It holds all user debt information. External liquidations are also done through it.  
+The controller contract is the contract the user interacts with to **create a loan**, **repay** and **withdraw**. It holds all user debt information. External liquidations are also done through it.  
 
 Each market has its individual controller, which is created from a blueprint contract.
-
 
 
 # **Loans**
@@ -28,7 +26,7 @@ when can loans be repaid? can they be repaid during soft-liq?
 
     Function to create a loan. User needs to specify the amount of `collateral` to deposit into `N`-bands and the amount of `debt` to borrow. If a user already has an existing loan, the funtion will revert.
 
-    Emits event: `UserState` and `Borrow`
+    Emits event: `UserState`, `Borrow` and `Deposit` (in AMM)
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -191,10 +189,12 @@ when can loans be repaid? can they be repaid during soft-liq?
         ```
 
 
-### `create_loan_extended` (x)
+### `create_loan_extended`
 !!! description "`controller.create_loan_extended(collateral: uint256, debt: uint256, N: uint256, callbacker: address, callback_args: DynArray[uint256,5]):`"
 
     Extended function to create a loan. This function passes crvUSD to a callback first so that it can leverage up.
+
+    Emits event: `UserState`, `Borrow` and `Deposit` (in AMM)
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -372,7 +372,7 @@ when can loans be repaid? can they be repaid during soft-liq?
 
     Function to partially or fully repay `_d_debt` amount of debt.
 
-    Emits: `UserState` and `Repay` event.
+    Emits event: `UserState` and `Repay`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -574,6 +574,8 @@ when can loans be repaid? can they be repaid during soft-liq?
 !!! description "`controller.repay_extended(callbacker: address, callback_args: DynArray[uint256,5]):`"
 
     Extended function to repay a loan but get a stablecoin for that from callback (to deleverage).
+
+    Emits event: `UserState` and `Repay`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -780,7 +782,9 @@ when can loans be repaid? can they be repaid during soft-liq?
 ### `add_collateral` 
 !!! description "`controller.add_collateral(collateral: uint256, _for: address = msg.sender):`"
 
-    Function to add extra collateral.
+    Function to add extra collateral to a position.
+
+    Emits event: `UserState` and `Borrow`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -980,7 +984,9 @@ when can loans be repaid? can they be repaid during soft-liq?
 ### `remove_collateral`
 !!! description "`controller.remove_collateral(collateral: uint256, use_eth: bool = True):`"
 
-    Function to add extra collateral.
+    Function to remove collateral from a position.
+
+    Emits event: `UserState` and `RemoveCollateral`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1172,7 +1178,9 @@ when can loans be repaid? can they be repaid during soft-liq?
 ### `borrow_more`
 !!! description "`controller.borrow_more(collateral: uint256, debt: uint256):`"
 
-    Function to borrow more stable coins while adding more collateral (not necessary)
+    Function to borrow more stablecoins while adding more collateral (not necessary).
+
+    Emits event: `UserState` and `Borrow`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1361,6 +1369,8 @@ when can loans be repaid? can they be repaid during soft-liq?
 !!! description "`controller.liquidate(user: address, min_x: uint256, use_eth: bool = True):`"
 
     Function to perform a bad liquidation (or self-liquidation) of `user` if `health` is not good.
+
+    Emits event: `Repay` and `Liquidate` 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1600,7 +1610,9 @@ when can loans be repaid? can they be repaid during soft-liq?
 ### `liquidate_extended`
 !!! description "`controller.liquidate_extended(user: address, min_x: uint256, frac: uint256, use_eth: bool, callbacker: address, callback_args: DynArray[uint256,5]):`"
 
-    Function to perform a bad liquidation (or self-liquidation) of `user` if `health` is not good.
+    Extended function to perform a bad liquidation (or self-liquidation) of `user` if `health` is not good.
+
+    Emits event: `Repay` and `Liquidate`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1843,9 +1855,8 @@ when can loans be repaid? can they be repaid during soft-liq?
         todo
         ```
 
+
 ## **Loan Info Methods**
-These view functions are used to get data for outstanding loans etc
-more here
 
 ### `debt`
 !!! description "`controller.debt(user: address) -> uint256:`"
@@ -1899,12 +1910,13 @@ more here
         1552311414080668514314009
         ```
 
+
 ### `total_debt`
 !!! description "`controller.total_debt() -> uint256:`"
 
-    Getter for the total debt of the controller.
+    Getter for the total debt of the controller (=total borrowed crvusd for the market).
 
-    Returns: total debt (`uint256`).
+    Returns: total debt (`uint256`) of the market.
 
     ??? quote "Source code"
 
@@ -1957,12 +1969,13 @@ more here
         'true'
         ```
 
-### `user_prices` (x)
+
+### `user_prices`
 !!! description "`controller.user_prices(user: address) -> uint256[2]:`"
 
     Getter for the highest price of the upper band and lowest price of the lower band the user has deposited in the AMM.
 
-    Returns: **upper and lower price** (`uint256`).
+    Returns: upper and lower band-price (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2065,6 +2078,7 @@ more here
         1975909341832570932896, 1786976990595821859153
         ```
 
+
 ### `health`
 !!! description "`controller.health(user: address, full: bool = False) -> int256:`"
 
@@ -2133,7 +2147,7 @@ more here
 
     Getter for the user state in one call.
 
-    Returns: **collateral, stablecoin, debt and N** (`uint256`).
+    Returns: collateral, stablecoin, debt and number of bands (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2197,12 +2211,13 @@ more here
         523889507286953887976, 643761728367446923280941, 1455238676830152227963549, 10
         ```
 
+
 ### `loans`
 !!! description "`controller.liquidation_discounts(arg0: uint256) -> uint256: view`"
 
     Getter for the user that created loan at index `arg0`.
 
-    Returns: **`address`**.
+    Returns: user (`address`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2226,7 +2241,7 @@ more here
 
     Getter for the posistion of the loan in the list.
 
-    Returns: **index** (`uint256`).
+    Returns: index (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2250,7 +2265,7 @@ more here
 
     Getter for the number of loans.
 
-    Returns: **loans** (`uint256`).
+    Returns: total loans (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2268,9 +2283,8 @@ more here
         136
         ```
 
-
-## **Loan calculations (borrowable, etc...)**
-function to calculate how much collateral to put up etc...
+## **Useful Loan Calculations**
+The following functions can be used to pre-calculate metrics before creating a loan.
 
 ### `max_borrowable`
 !!! description "`controller.max_borrowable(collateral: uint256, N: uint256) -> uint256:`"
@@ -2419,12 +2433,12 @@ function to calculate how much collateral to put up etc...
         ```
 
 
-### `calculate_debt_n1` (todo)
+### `calculate_debt_n1`
 !!! description "`controller.calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256) -> int256:`"
 
     Getter method to calculate the upper band number for the deposit to sit in to support the give debt.
 
-    Returns: upper band n1 (`int256`) to depostit into.
+    Returns: upper band n1 (`int256`) to depostit the collateral into.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2507,7 +2521,8 @@ function to calculate how much collateral to put up etc...
         todo
         ```
 
-### `health_calculator` (todo)
+
+### `health_calculator`
 !!! description "`controller.health_calculator(user: address, d_collateral: int256, d_debt: int256, full: bool, N: uint256 = 0) -> int256:`"
 
     Function to predict the health after changing collateral (`d_collateral`) or debt (`d_debt`).
@@ -2594,7 +2609,7 @@ function to calculate how much collateral to put up etc...
 
     Function to calculate the amount of stablecoins to have in a liquidator's wallet in order to liquidate a user.
 
-    Returns: **amount** (`int256`).
+    Returns: amount (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2636,7 +2651,7 @@ function to calculate how much collateral to put up etc...
 
     Getter for a dynamic array of users who can be "hard-liquidated".
 
-    Returns: **dymamic array** (`DynArray[Position, 1000]`) with detailed info about positions of users.
+    Returns: dymamic array (`DynArray[Position, 1000]`) with detailed info about positions of users.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2688,18 +2703,17 @@ function to calculate how much collateral to put up etc...
     === "Example"
         ```shell
         >>> controller.users_to_liquidate(0)
-        todo
+        []
         ```
 
 
 
-# **Fees** (need more details)
-There are two kinds of fees in the AMM:
+# **Fees**
+There are two kinds of fees:
 1. Borrowing-based fee: interest rate
 2. AMM-based fee: swap fee for trades within the AMM
 
-add more here. what kind of fees. what are current fees and what influence do they have? 0 fee in amm to subsidize borrowers, etc...
-
+While the borrowing-based fee is determined by the MonetaryPolicy Contract, the AMM fee can be set by the DAO. Currently, the AMM fees are set to 0.6% with an admin_fee of 0, meaning all the generated fees from trades within the AMM go to the liquidity providers who are essentially the borrowers.
 
 ### `admin_fees`
 !!! description "`ControllerFactory.admin_fees() -> uint256:`"
@@ -2875,7 +2889,7 @@ add more here. what kind of fees. what are current fees and what influence do th
 ### `collect_fees`
 !!! description "`PoolProxy.collect_fees():`"
 
-    Function to collects all fees, including **Borrwing-based fees (interest rate)** and **AMM-based fees (swap fee)**(if applicable). If there are any AMM-based fees (represented by `admin_fee_x` and/or `admin_fee_y`), the `reset_admin_fee()` method will be invoked, which resets these variables to zero.
+    Function to **collects all fees**, including **Borrwing-based fees (interest rate)** and **AMM-based fees (swap fee)**(if applicable). If there are any AMM-based fees (represented by `admin_fee_x` and/or `admin_fee_y`), the `reset_admin_fee()` method will be invoked, which resets these variables to zero.
 
     !!!note
         The collected fees will be sent to the `fee_receiver` as specified in the [factory contract](/curve-docs/docs/LLAMMA/factory.md).
@@ -2947,11 +2961,6 @@ add more here. what kind of fees. what are current fees and what influence do th
         ```
 
 
-
-
-
-# **DONE:**
-
 # **Monetary Policy**
 MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Documenatation](/curve-docs/docs/LLAMMA/monetarypolicy.md).
 
@@ -2977,7 +2986,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 ### `set_monetary_policy`
 !!! description "`controller.set_monetary_policy(monetary_policy: address):"
 
-    Function to set the monetary policy contract. Initially, the monetary policy contract is configured when a new market is added via the Factory, but this function allows for the contract address to be changed later. When setting the new address, this function calls `rate_write()` from the monetary policy contract to verify if the ABI is correct.
+    Function to set the monetary policy contract. Initially, the monetary policy contract is configured when a new market is added via the Factory. However, this function allows the contract address to be changed later. When setting the new address, the function calls `rate_write()` from the monetary policy contract to verify if the ABI is correct.
 
     Emits: **SetMonetaryPolicy** event.
 
@@ -3034,9 +3043,12 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 ### `factory`
 !!! description "`controller.factory() -> address: view`"
 
-    Getter of the factory contract of the controller. immutable variable, cant be changed.
+    Getter of the factory contract of the controller.
 
     Returns: factory contract (`address`). 
+
+    !!!note
+        `factory` is an immutable variable; hence, it cannot be changed.
 
     ??? quote "Source code"
 
@@ -3107,6 +3119,9 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     Returns: AMM contract (`address`). 
 
+    !!!note
+        `amm` is an immutable variable; hence, it cannot be changed.
+
     ??? quote "Source code"
 
         ```python hl_lines="1 4 9 17 30"
@@ -3170,6 +3185,9 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     Returns: collateral token (`address`).
 
+    !!!note
+        `collateral_token` is an immutable variable; hence, it cannot be changed.
+
     ??? quote "Source code"
 
         ```python hl_lines="1 5 12"
@@ -3231,7 +3249,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     Getter for the current price from the AMM.
 
-    Returns: **price** (`uint256`).
+    Returns: price (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -3307,7 +3325,6 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
         ```
 
 
-
 ### `liquidation_discounts`
 !!! description "`controller.liquidation_discounts(arg0: address) -> uint256: view`"
 
@@ -3330,7 +3347,6 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
         >>> controller.liquidation_discounts("0x7a16fF8270133F063aAb6C9977183D9e72835428")
         60000000000000000
         ```
-
 
 
 ### `minted`
@@ -3497,19 +3513,18 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
         90000000000000000
         ```
 
-
-
-
-## **Setting parameters** todo!!!
+## **Setting parameters** 
 ### `set_borrowing_discounts`
 !!! description "`controller.set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256)`"
 
     Function to set the borrowing discounts for 
 
-    Returns: **total redeemed** (`uint256`).
+    Returns: total redeemed (`uint256`).
+
+    Emits event: `SetBorrowingDiscount`
 
     !!!note
-        This function is only callable by the admin of the contract (= factory). 
+        This function is only callable by the admin of the contract. 
 
     ??? quote "Source code"
 
@@ -3537,22 +3552,50 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
         7731390765158807406740136
         ```  
 
+### `liquidity_mining_callback`
+!!! description "`controller.liquidity_mining_callback() -> uint256: view`"
 
-### `set_callback`
-!!! description "`controller.redeemed() -> uint256: view`"
+    Getter for the liquidity mining callback contract.
 
-    Getter for the total amount of crvUSD redeemed from this controller. Increments by the amount of debt that is repayed when calling `repay` or `repay_extended`.
-
-    Returns: **total redeemed** (`uint256`).
+    Returns: liquidity mining callback address (`uint256`).
 
     ??? quote "Source code"
 
         ```python hl_lines="1"
-        redeemed: public(uint256)
+        liquidity_mining_callback: public(LMGauge)
         ```
 
     === "Example"
         ```shell
-        >>> controller.redeemed()
-        7731390765158807406740136
+        >>> controller.liquidity_mining_callback()
+        '0x0000000000000000000000000000000000000000'
+        ```  
+
+
+### `set_callback`
+!!! description "`controller.redeemed() -> uint256: view`"
+
+    Function to set a callback for liquidity mining.
+
+    !!!note
+        This function is only callable by the admin of the contract. 
+
+    ??? quote "Source code"
+
+        ```python hl_lines="3"
+        # nonreentrant decorator is in Controller which is admin
+        @external
+        def set_callback(liquidity_mining_callback: LMGauge):
+            """
+            @notice Set a gauge address with callbacks for liquidity mining for collateral
+            @param liquidity_mining_callback Gauge address
+            """
+            assert msg.sender == self.admin
+            self.liquidity_mining_callback = liquidity_mining_callback
+        ```
+
+    === "Example"
+        ```shell
+        >>> controller.set_callback('todo')
+        todo
         ```  
