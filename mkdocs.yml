@@ -120,7 +120,7 @@ markdown_extensions:
       generic: true
 
 theme:
-  name: material
+  name: bootstrap386
   include_search_page: false
   search_index_only: true
   font:
