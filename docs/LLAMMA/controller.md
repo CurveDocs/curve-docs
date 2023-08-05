@@ -1,16 +1,18 @@
 need some plain text on what the controller does:
-The controller contract is the contract the user interacts with to create a loan, repay and withdraw. It holds all user debt information. external liquidations are also done through it.  
-each market has its own individual controller and amm. they are created through blueprints.
+The controller contract is the contract the user interacts with to create a loan, repay and withdraw. It holds all user debt information. External liquidations are also done through it.  
+
+Each market has its individual controller, which is created from a blueprint contract.
+
 
 
 # **Loans**
 
 ## **Creating and Repaying Loans**
 
-A new loan of a user is created thourgh the Controller. When creating a loan the user need to spcify the **amount of collateral** and **debt** and the **number of bands** to deposit the collateral into.
-Before creating a new loan, users can utilise some useful functions to pre-calculate imporant number: [Loan calculations](#loan-calculations-borrowable-etc)
+New loans are created via the `ceate_loan` function. When creating a loan the user need to spcify the **amount of collateral** and **debt** and the **number of bands** to deposit the collateral into.
+Before doing that, users can utilise some functions to pre-calculate metrics: [Loan calculations](#loan-calculations-borrowable-etc)
 
-todo: explain concept of bands:
+todo: explain concept of bands
 
 low number of bands = narrow liquidation range
 high number of bands = liquidity is spread across more bands -> broader liquidation range
@@ -192,7 +194,7 @@ when can loans be repaid? can they be repaid during soft-liq?
 ### `create_loan_extended` (x)
 !!! description "`controller.create_loan_extended(collateral: uint256, debt: uint256, N: uint256, callbacker: address, callback_args: DynArray[uint256,5]):`"
 
-    Function to create a loan. This function passes crvUSD to a callback first so that it can leverage up.
+    Extended function to create a loan. This function passes crvUSD to a callback first so that it can leverage up.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -571,7 +573,7 @@ when can loans be repaid? can they be repaid during soft-liq?
 ### `repay_extended`
 !!! description "`controller.repay_extended(callbacker: address, callback_args: DynArray[uint256,5]):`"
 
-    Function to repay a loan but get a stablecoin for that from callback (to deleverage).
+    Extended function to repay a loan but get a stablecoin for that from callback (to deleverage).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1842,7 +1844,7 @@ when can loans be repaid? can they be repaid during soft-liq?
         ```
 
 ## **Loan Info Methods**
-These view functions are used to get data for outstanding loans or calculating stuff...
+These view functions are used to get data for outstanding loans etc
 more here
 
 ### `debt`
@@ -3027,137 +3029,6 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
 
 
-
-
-
-# **TODO**
-
-### `liquidation_discount`
-!!! description "`controller.liquidation_discount() -> uint256: view`"
-
-    Getter for the discount of the maximum loan size compared to `get_x_down()`.
-
-    Returns: **liquidation discount** (`uint256`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 4 8 26"
-        liquidation_discount: public(uint256)
-
-        @external
-        def __init__(
-                collateral_token: address,
-                monetary_policy: address,
-                loan_discount: uint256,
-                liquidation_discount: uint256,
-                amm: address):
-            """
-            @notice Controller constructor deployed by the factory from blueprint
-            @param collateral_token Token to use for collateral
-            @param monetary_policy Address of monetary policy
-            @param loan_discount Discount of the maximum loan size compare to get_x_down() value
-            @param liquidation_discount Discount of the maximum loan size compare to
-                get_x_down() for "bad liquidation" purposes
-            @param amm AMM address (Already deployed from blueprint)
-            """
-            FACTORY = Factory(msg.sender)
-            stablecoin: ERC20 = ERC20(Factory(msg.sender).stablecoin())
-            STABLECOIN = stablecoin
-            assert stablecoin.decimals() == 18
-
-            self.monetary_policy = MonetaryPolicy(monetary_policy)
-
-            self.liquidation_discount = liquidation_discount
-            self.loan_discount = loan_discount
-            self._total_debt.rate_mul = 10**18
-
-            AMM = LLAMMA(amm)
-            _A: uint256 = LLAMMA(amm).A()
-            A = _A
-            Aminus1 = _A - 1
-            LOG2_A_RATIO = self.log2(_A * 10**18 / unsafe_sub(_A, 1))
-
-            COLLATERAL_TOKEN = ERC20(collateral_token)
-            COLLATERAL_PRECISION = pow_mod256(10, 18 - ERC20(collateral_token).decimals())
-
-            SQRT_BAND_RATIO = isqrt(unsafe_div(10**36 * _A, unsafe_sub(_A, 1)))
-
-            stablecoin.approve(msg.sender, max_value(uint256))
-
-            if Factory(msg.sender).WETH() == collateral_token:
-                USE_ETH = True
-        ```
-
-    === "Example"
-        ```shell
-        >>> controller.liquidation_discount()
-        60000000000000000
-        ```
-
-
-### `loan_discounts`
-!!! description "`controller.liquidation_discount() -> uint256: view`"
-
-    Getter for the discount of the maximum loan size compared to `get_x_down()` value.
-
-    Returns: **loan discount** (`uint256`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 4 7 27"
-        loan_discount: public(uint256)
-
-        @external
-        def __init__(
-                collateral_token: address,
-                monetary_policy: address,
-                loan_discount: uint256,
-                liquidation_discount: uint256,
-                amm: address):
-            """
-            @notice Controller constructor deployed by the factory from blueprint
-            @param collateral_token Token to use for collateral
-            @param monetary_policy Address of monetary policy
-            @param loan_discount Discount of the maximum loan size compare to get_x_down() value
-            @param liquidation_discount Discount of the maximum loan size compare to
-                get_x_down() for "bad liquidation" purposes
-            @param amm AMM address (Already deployed from blueprint)
-            """
-            FACTORY = Factory(msg.sender)
-            stablecoin: ERC20 = ERC20(Factory(msg.sender).stablecoin())
-            STABLECOIN = stablecoin
-            assert stablecoin.decimals() == 18
-
-            self.monetary_policy = MonetaryPolicy(monetary_policy)
-
-            self.liquidation_discount = liquidation_discount
-            self.loan_discount = loan_discount
-            self._total_debt.rate_mul = 10**18
-
-            AMM = LLAMMA(amm)
-            _A: uint256 = LLAMMA(amm).A()
-            A = _A
-            Aminus1 = _A - 1
-            LOG2_A_RATIO = self.log2(_A * 10**18 / unsafe_sub(_A, 1))
-
-            COLLATERAL_TOKEN = ERC20(collateral_token)
-            COLLATERAL_PRECISION = pow_mod256(10, 18 - ERC20(collateral_token).decimals())
-
-            SQRT_BAND_RATIO = isqrt(unsafe_div(10**36 * _A, unsafe_sub(_A, 1)))
-
-            stablecoin.approve(msg.sender, max_value(uint256))
-
-            if Factory(msg.sender).WETH() == collateral_token:
-                USE_ETH = True
-        ```
-
-    === "Example"
-        ```shell
-        >>> controller.loan_discount()
-        90000000000000000
-        ```
-
-
 # **Contract Info Methods**
 
 ### `factory`
@@ -3501,7 +3372,187 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
         7731390765158807406740136
         ```        
 
+### `liquidation_discount`
+!!! description "`controller.liquidation_discount() -> uint256: view`"
+
+    Getter for the discount of the maximum loan size compared to `get_x_down()`.
+
+    Returns: **liquidation discount** (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 4 8 26"
+        liquidation_discount: public(uint256)
+
+        @external
+        def __init__(
+                collateral_token: address,
+                monetary_policy: address,
+                loan_discount: uint256,
+                liquidation_discount: uint256,
+                amm: address):
+            """
+            @notice Controller constructor deployed by the factory from blueprint
+            @param collateral_token Token to use for collateral
+            @param monetary_policy Address of monetary policy
+            @param loan_discount Discount of the maximum loan size compare to get_x_down() value
+            @param liquidation_discount Discount of the maximum loan size compare to
+                get_x_down() for "bad liquidation" purposes
+            @param amm AMM address (Already deployed from blueprint)
+            """
+            FACTORY = Factory(msg.sender)
+            stablecoin: ERC20 = ERC20(Factory(msg.sender).stablecoin())
+            STABLECOIN = stablecoin
+            assert stablecoin.decimals() == 18
+
+            self.monetary_policy = MonetaryPolicy(monetary_policy)
+
+            self.liquidation_discount = liquidation_discount
+            self.loan_discount = loan_discount
+            self._total_debt.rate_mul = 10**18
+
+            AMM = LLAMMA(amm)
+            _A: uint256 = LLAMMA(amm).A()
+            A = _A
+            Aminus1 = _A - 1
+            LOG2_A_RATIO = self.log2(_A * 10**18 / unsafe_sub(_A, 1))
+
+            COLLATERAL_TOKEN = ERC20(collateral_token)
+            COLLATERAL_PRECISION = pow_mod256(10, 18 - ERC20(collateral_token).decimals())
+
+            SQRT_BAND_RATIO = isqrt(unsafe_div(10**36 * _A, unsafe_sub(_A, 1)))
+
+            stablecoin.approve(msg.sender, max_value(uint256))
+
+            if Factory(msg.sender).WETH() == collateral_token:
+                USE_ETH = True
+        ```
+
+    === "Example"
+        ```shell
+        >>> controller.liquidation_discount()
+        60000000000000000
+        ```
+
+
+### `loan_discounts`
+!!! description "`controller.liquidation_discount() -> uint256: view`"
+
+    Getter for the discount of the maximum loan size compared to `get_x_down()` value.
+
+    Returns: **loan discount** (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 4 7 27"
+        loan_discount: public(uint256)
+
+        @external
+        def __init__(
+                collateral_token: address,
+                monetary_policy: address,
+                loan_discount: uint256,
+                liquidation_discount: uint256,
+                amm: address):
+            """
+            @notice Controller constructor deployed by the factory from blueprint
+            @param collateral_token Token to use for collateral
+            @param monetary_policy Address of monetary policy
+            @param loan_discount Discount of the maximum loan size compare to get_x_down() value
+            @param liquidation_discount Discount of the maximum loan size compare to
+                get_x_down() for "bad liquidation" purposes
+            @param amm AMM address (Already deployed from blueprint)
+            """
+            FACTORY = Factory(msg.sender)
+            stablecoin: ERC20 = ERC20(Factory(msg.sender).stablecoin())
+            STABLECOIN = stablecoin
+            assert stablecoin.decimals() == 18
+
+            self.monetary_policy = MonetaryPolicy(monetary_policy)
+
+            self.liquidation_discount = liquidation_discount
+            self.loan_discount = loan_discount
+            self._total_debt.rate_mul = 10**18
+
+            AMM = LLAMMA(amm)
+            _A: uint256 = LLAMMA(amm).A()
+            A = _A
+            Aminus1 = _A - 1
+            LOG2_A_RATIO = self.log2(_A * 10**18 / unsafe_sub(_A, 1))
+
+            COLLATERAL_TOKEN = ERC20(collateral_token)
+            COLLATERAL_PRECISION = pow_mod256(10, 18 - ERC20(collateral_token).decimals())
+
+            SQRT_BAND_RATIO = isqrt(unsafe_div(10**36 * _A, unsafe_sub(_A, 1)))
+
+            stablecoin.approve(msg.sender, max_value(uint256))
+
+            if Factory(msg.sender).WETH() == collateral_token:
+                USE_ETH = True
+        ```
+
+    === "Example"
+        ```shell
+        >>> controller.loan_discount()
+        90000000000000000
+        ```
+
+
+
 
 ## **Setting parameters** todo!!!
 ### `set_borrowing_discounts`
+!!! description "`controller.set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256)`"
+
+    Function to set the borrowing discounts for 
+
+    Returns: **total redeemed** (`uint256`).
+
+    !!!note
+        This function is only callable by the admin of the contract (= factory). 
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1"
+        @nonreentrant('lock')
+        @external
+        def set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256):
+            """
+            @notice Set discounts at which we can borrow (defines max LTV) and where bad liquidation starts
+            @param loan_discount Discount which defines LTV
+            @param liquidation_discount Discount where bad liquidation starts
+            """
+            assert msg.sender == FACTORY.admin()
+            assert loan_discount > liquidation_discount
+            assert liquidation_discount >= MIN_LIQUIDATION_DISCOUNT
+            assert loan_discount <= MAX_LOAN_DISCOUNT
+            self.liquidation_discount = liquidation_discount
+            self.loan_discount = loan_discount
+            log SetBorrowingDiscounts(loan_discount, liquidation_discount)
+        ```
+
+    === "Example"
+        ```shell
+        >>> controller.set_borrowing_discounts()
+        7731390765158807406740136
+        ```  
+
+
 ### `set_callback`
+!!! description "`controller.redeemed() -> uint256: view`"
+
+    Getter for the total amount of crvUSD redeemed from this controller. Increments by the amount of debt that is repayed when calling `repay` or `repay_extended`.
+
+    Returns: **total redeemed** (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1"
+        redeemed: public(uint256)
+        ```
+
+    === "Example"
+        ```shell
+        >>> controller.redeemed()
+        7731390765158807406740136
+        ```  
