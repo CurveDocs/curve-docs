@@ -10,16 +10,6 @@ Each market has its individual controller, which is created from a blueprint con
 New loans are created via the `ceate_loan` function. When creating a loan the user need to spcify the **amount of collateral** and **debt** and the **number of bands** to deposit the collateral into.
 Before doing that, users can utilise some functions to pre-calculate metrics: [Loan calculations](#loan-calculations-borrowable-etc)
 
-todo: explain concept of bands
-
-low number of bands = narrow liquidation range
-high number of bands = liquidity is spread across more bands -> broader liquidation range
-
-low bands -> can borrow more
-more bands -> can borrow less
-
-when can loans be repaid? can they be repaid during soft-liq?
-
 
 ### `create_loan`
 !!! description "`controller.create_loan(collateral: uint256, debt: uint256, N: uint256):`"
