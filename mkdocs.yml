@@ -75,7 +75,9 @@ nav:
 
   - References:
     - Deployment Addresses: references/deployed-contracts.md
-    - Whitepaper: references/whitepaper.md
+    - Whitepaper: 
+      - DAO: references/whitepapers/dao.md
+      - StableSwap: references/whitepapers/stableswap.md
     - Resources: https://resources.curve.fi/
 
 # extension
