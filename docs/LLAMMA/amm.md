@@ -1,3 +1,6 @@
+LLAMMA is the market-making contract that rebalances the collateral.
+
+
 | Glossary      |  Description |
 | ----------- | -------| 
 | `ticks`, `bands` | price ranges where liquidity is deposited |
@@ -1759,7 +1762,6 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
 
 ## **Bands**
-need good explainer for bands here:
 
 ### `active_band`
 !!! description "`AMM.active_band() -> int256:`"

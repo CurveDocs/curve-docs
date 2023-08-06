@@ -7,7 +7,8 @@ Each market has its individual controller, which is created from a blueprint con
 
 ## **Creating and Repaying Loans**
 
-New loans are created via the `ceate_loan` function. When creating a loan the user need to spcify the **amount of collateral** and **debt** and the **number of bands** to deposit the collateral into.
+New loans are created via the `ceate_loan` function. When creating a loan the user need to spcify the **amount of collateral** and **debt** and the **number of bands** to deposit the collateral into. The maximum amount of borrowable debt is determined by the number of bands, amount of collateral and the oracle price.  
+
 Before doing that, users can utilise some functions to pre-calculate metrics: [Loan calculations](#loan-calculations-borrowable-etc)
 
 
