@@ -4,12 +4,12 @@
 <p style="text-align: center;">November 10, 2019</p>
 
 
-### **Abstract**
+## **Abstract**
 StableSwap provides a mechanism to create cross-markets for stablecoins in a way which could be called “Uniswap with leverage”. It is a fully autonomous market-maker for stablecoins with very minimal price slippage, as well as an efficient“fiat savings account” for liquidity providers on the other side.  
 This is a brief version which doesn’t show all the details (most notably, the StableSwap invariant).
 
 
-### **Introduction**
+## **Introduction**
 Stablecoins become very popular recently: custodial USDC, USDT, BUSD, PAX, TrueUSD, as well as decentralized DAI. They however(especially decentralized ones) have a problem of price stability and liquidity. This is especially painful for DeFi arbitrage. For example, when MakerDAO decreased its stability fee to 5.5%, many users of Compound (which had the interest rate of 11% at the time) preferred to stay there because they’ve taken the loan in DAI, and converting between DAI and USDC is an expensive task.  
 
 At the same time, many DeFi users are willing to load their stablecoins up for lending in order to earn 5% APR, as it is much more than what traditional banking offers. They, however, would be uncomfortable giving same money to
@@ -18,7 +18,7 @@ trading firms who “promise profits”.
 In this work, I introduce StableSwap - automated liquidity provider for stablecoins. On the demand side, it offers a Uniswap-like automated exchange with very low price slippage (typically 100 times smaller). On the supply side, it offers a multi-stablecoin “savings account” which, according to simulation, can bring 300% APR, according to simulations assuming that traders will arbitrage between the smart contract and existing exchanges, taking into account their trading volumes and prices for stablecoins for the past half a year. This happens with no middleman being responsible for the trading, e.g. no exchange owners, no orderbooks, no human market makers.
 
 
-### **How it works:**
+## **How it works:**
 First of all, imagine a liquidity provider which has constant price. If you have two coins $X$ and $Y$ , for example, selling $dx$ of coin $X$ will lead to buying $−dy = dx$ of coin $Y$ . This can be generalized for any number of coins $X_i$ having a “linear” invariant:
 
 $$\sum x_i = const. $$ 
@@ -54,7 +54,7 @@ The StableSwap invariant has an “amplification coefficient” parameter: the l
 If the price appears to be shifted from equilibrium point (1.0), the invariant starts operating in a suboptimal point, still however providing some liquidity (in most cases larger than constant-product invariant, if optimal $A$ was correctly found). At any price, this invariant, just like a constant-product one, would provide some liquidity (unlike the constant-sum invariant).
 
 
-### **Constructing the StableSwap invariant**
+## **Constructing the StableSwap invariant**
 As depicted in Fig. 1, the constant-price invariant forms a straight line (or a hypersurface if having more than two coins). A constant-product invariant forms a hyperbola.  
 The price is a slope of the line on the graph. We are looking for some invariant which is relatively flat near balance (price changes slowly, the graph is very close to the straight line, likely a “zoomed in” hyperbola), however shifting towards the constant-product invariant as the portfolio becomes more imbalanced (e.g. closer to the axes).  
 Here are constant-sum (constant-price) and constant-product invariants generalized for $n$ coins, enumerated by $i$:
@@ -81,7 +81,7 @@ $$ An^n \sum x_i + D = ADn^n + \frac{D^{n+1}}{n^n \prod x_i}. $$
 When a portfolio of coins $ {x_i} $ is loaded up, we need to calculate D, and we need to hold this equation true when we perform trades (e.g. swap $x_i$ into $x_j$ ). That is done by finding an iterative, converging solution either for $D$, or for $x_j$ when all other variables are known.
 
 
-### **Simulations and Performance**
+## **Simulations and Performance**
 The performance of the algorithm was evaluated and optimized assuming providing liquidity for 3 stablecoins (DAI, USDC and USTD) taking price feeds from Coinbase Pro (DAI/USDC), Binance (USDC/USDT) and HitBtc (USDT/DAI) over the period of 6 months (May - October 2019). The simulations assumed the total liquidity in the contract of $30000. Trades were only done if there was enough volume in the price change. The results were the following:  
 
 - Optimial “amplification coefficient” (“leverage”): $A = 85$;
@@ -89,11 +89,11 @@ The performance of the algorithm was evaluated and optimized assuming providing 
 - Liquidity provider profit at optimal parameters: 312% APR.
 
 
-### **Implementation**
+## **Implementation**
 Multi-stablecoin contract was implemented in Vyper. Solutions of the equations which use the stableswap invariant were obtained iteratiely inside the smart contract itself, using only integer arithmetics. Browser UI (Fig. 3) was implemented in pure client-side Javascript.
 
 
-### **Other applications**
+## **Other applications**
 Apart from liquidity for stablecoins, the same method can be applied for providing liquidity to interest-bearing assets (cDAI) and tokenized stake for stakeable cryptocurrencies. In my opinion, the method is an important part of future DeFi infrastructure.  
 Applying this method to stablecoins can get it battle-tested, and to increase usability of decentralized (non-custodial) stablecoins.
 
