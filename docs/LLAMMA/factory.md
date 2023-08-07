@@ -934,12 +934,15 @@ Implementations are blueprint contracts. When adding a new market by calling `ad
         ```
 
 
-### `collaterals_index` (todo)
+### `collaterals_index`
 !!! description "`ControllerFactory.collaterals(arg0: address, arg1: uint256) -> uint256: view`"
 
-    Getter for the collateral index.
+    Getter for the index of a controller for `arg0`.
 
-    Returns: number of collaterals (`uint256`).
+    Returns: index (`uint256`).
+
+    !!!note
+        The returned value is $2^{128}$ + index.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
