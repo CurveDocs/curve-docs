@@ -78,6 +78,7 @@ nav:
     - Whitepapers: 
       - DAO: references/whitepapers/dao.md
       - StableSwap: references/whitepapers/stableswap.md
+      - CryptoSwap: references/whitepapers/cryptoswap.md
       - All Whitepapers: references/whitepapers/whitepaper.md
     - Resources: https://resources.curve.fi/
 
