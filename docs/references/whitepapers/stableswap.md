@@ -36,18 +36,19 @@ $$\prod x_i^{w_i} = const$$
 While this is suitable for assets like ETH and tokens, it’s not very well working for something which is meant to be stable. The problem is that the price slippage is enormous, and one should provide enormous funds to keep a meaningful liquidity. On the flip side, if one for example loads DAI and USDC into Uniswap’s liquidity pool, the returns will be tiny (perhaps, several percent per year).  
 For StableSwap, there was a middle-ground invariant found (Fig. 1). As expected, the price (equal to derivative) only slightly deviates from 1 when number of coins is closed to balance.
 
-![test](../images/figure1.png)
-
-    INSERT FIGURE1 + caption HERE
-    caption: "Figure 1: Comparison of StableSwap invariant with Uniswap (constant-product) and constant price invariants. The portfolio consists of coins $X$ and $Y$ which have the “ideal” price of 1.0. There are $x = 5$ and $y = 5$ coins loaded up initially. As $x$ decreases, $y$ increases, and the price is the derivative $dy/dx$."
+<figure markdown>
+  ![](../../images/figure1_ss.png){ width="500" }
+  <figcaption>Figure 1: Comparison of StableSwap invariant with Uniswap (constant-product) and constant price invariants. The portfolio consists of coins X and Y which have the “ideal” price of 1.0. There are x = 5 and y = 5 coins loaded up initially. As x decreases, y increases, and the price is the derivative dy/dx.</figcaption>
+</figure>
 
 
 The price slippage (Fig. 2) is much smaller, if compared to constant-product invariant.  
 The StableSwap invariant has an “amplification coefficient” parameter: the lower it is, the closer the invariant is to the constant product. When calculating slippage, we use a practical value of $A = 100$. This is somewhat comparable to using Uniswap with 100x leverage.
 
-
-    INSERT FIGURE2 + caption here:
-    caption: "Figure 2: Price slippage: Uniswap invariant (dashed line) vs Stableswap (solid line)"
+<figure markdown>
+  ![](../../images/figure2_ss.png){ width="500" }
+  <figcaption>Figure 2: Price slippage: Uniswap invariant (dashed line) vs Stableswap (solidline)</figcaption>
+</figure>
 
 
 If the price appears to be shifted from equilibrium point (1.0), the invariant starts operating in a suboptimal point, still however providing some liquidity (in most cases larger than constant-product invariant, if optimal $A$ was correctly found). At any price, this invariant, just like a constant-product one, would provide some liquidity (unlike the constant-sum invariant).
@@ -96,5 +97,7 @@ Multi-stablecoin contract was implemented in Vyper. Solutions of the equations w
 Apart from liquidity for stablecoins, the same method can be applied for providing liquidity to interest-bearing assets (cDAI) and tokenized stake for stakeable cryptocurrencies. In my opinion, the method is an important part of future DeFi infrastructure.  
 Applying this method to stablecoins can get it battle-tested, and to increase usability of decentralized (non-custodial) stablecoins.
 
-    INSERT FIGURE 3 HERE
-    caption: "Figure 3: Stableswap UI"
+<figure markdown>
+  ![](../../images/figure3_ss.png){ width="500" }
+  <figcaption>Figure 3: Stableswap UI</figcaption>
+</figure>

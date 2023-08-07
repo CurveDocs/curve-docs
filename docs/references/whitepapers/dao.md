@@ -4,7 +4,10 @@
 
 Curve DAO consists of multiple smart contracts connected by Aragon. Apart from that, standard Aragon’s 1 token = 1 vote method is replaced with the voting weight proportional to locktime, as will be described below.
 
-    INSERT FIGURE 1 HERE
+<figure markdown>
+  ![](../../images/figure1_dao.png){ width="500" }
+  <figcaption>Figure 1: Curve DAO contracts managed by Aragon</figcaption>
+</figure>
 
 Curve DAO has a token CRV which is used for both governance and value accrual.
 
@@ -19,7 +22,10 @@ The account which locks the tokens cannot be a smart contract (because can be tr
 
 VotingEscrow tries to resemble Aragon’s Minime token. Most importantly, `balanceOf()` / `balanceOfAt()` and `totalSupply()` / `totalSupplyAt()` return the time-weighted voting weight $w$ and the sum of all of those weights $W = \sum w_i$ respectively. Aragon can interface VotingEscrow as if it was a typical governance token.
 
-    INSERT FIGURE 2 
+<figure markdown>
+  ![](../../images/figure2_dao.png){ width="500" }
+  <figcaption>Figure 2: Voting weight of vote-locked tokens</figcaption>
+</figure>
 
 Locks can be created with `create_lock()`, extended in time with `increase_unlock_time()` or token amount with `increase_amount()` and `withdraw()` can remove tokens from the escrow when the lock is expired.    
 
@@ -34,7 +40,10 @@ Slopes and biases change both when a user deposits and locks governance tokens, 
 Token *ERC20CRV* is an ERC20 token which allows a piecewise linear inflation schedule. The inflation is dropping by $2^{1/4}$ every year. Only *Minter* contract can directly mint *ERC20CRV*, but only within the limits defined by inflation.
 Each time the inflation changes, a new mining epoch starts
 
-    INSERT FIGURE 3 
+<figure markdown>
+  ![](../../images/figure3_dao.png){ width="500" }
+  <figcaption>Figure 3: CRV token inflation schedule</figcaption>
+</figure>
 
 Initial supply of CRV is 1.273 billion tokens, which is 42% of the eventual $(t → ∞)$ supply of ≈ 3.03 billion tokens. All of those initial tokens tokens are gradually vested (with every block). The initial inflation rate which supports the above inflation schedule is r = 22.0% (279.6 millions per year). All of the inflation is distributed to users of Curve, according to measurements taken by *gauges*. During the first year, the approximate inflow into circulating supply is 2 millions CRV per day, starting from 0.
 
