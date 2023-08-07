@@ -21,17 +21,17 @@ In this work, I introduce StableSwap - automated liquidity provider for stableco
 ### **How it works:**
 First of all, imagine a liquidity provider which has constant price. If you have two coins $X$ and $Y$ , for example, selling $dx$ of coin $X$ will lead to buying $−dy = dx$ of coin $Y$ . This can be generalized for any number of coins $X_i$ having a “linear” invariant:
 
-$$\sum x_i = const$$ 
+$$\sum x_i = const. $$ 
 
 The price is determined as $−dx_i/dx_j$ which is, in this case, always exactly 1. This doesn’t work in a fluctuating market unless the price is adjusted all the time. It can be done with price oracles, but it has risks and not very decentralized. It’s possible to do better.  
 
 Uniswap, Bancor and Kyber work with inherently volatile and price-unstable markets, so they do it differently. They adjust prices in such a way that the “portfolio” (which is usually just two coins) is rebalances (so that value of coin $X$ and $Y$ in the liquidity pool, when expressed in the same currency, is the same). It appears, that this is given automatically
 
-$$xy = const$$
+$$xy = const. $$
 
 Moreover, it is possible to generalize this invariant to any number of coins with any rations, as was brilliantly done by Balancer:
 
-$$\prod x_i^{w_i} = const$$
+$$\prod x_i^{w_i} = const. $$
 
 While this is suitable for assets like ETH and tokens, it’s not very well working for something which is meant to be stable. The problem is that the price slippage is enormous, and one should provide enormous funds to keep a meaningful liquidity. On the flip side, if one for example loads DAI and USDC into Uniswap’s liquidity pool, the returns will be tiny (perhaps, several percent per year).  
 For StableSwap, there was a middle-ground invariant found (Fig. 1). As expected, the price (equal to derivative) only slightly deviates from 1 when number of coins is closed to balance.
@@ -59,24 +59,24 @@ As depicted in Fig. 1, the constant-price invariant forms a straight line (or a 
 The price is a slope of the line on the graph. We are looking for some invariant which is relatively flat near balance (price changes slowly, the graph is very close to the straight line, likely a “zoomed in” hyperbola), however shifting towards the constant-product invariant as the portfolio becomes more imbalanced (e.g. closer to the axes).  
 Here are constant-sum (constant-price) and constant-product invariants generalized for $n$ coins, enumerated by $i$:
 
-$$\sum x_i = D$$
+$$\sum x_i = D; $$
 
-$$\prod x_i = (\frac{D}{n})^n$$
+$$\prod x_i = (\frac{D}{n})^n. $$
 
 The constant $D$ has a meaning of total amount of coins when they have an equal price.  
 Let’s imagine what would an “amplified” invariant be. It should have a small curvature to have a low price slippage. A “zero slippage” invariant would correspond to infinite leverage. However, the zero-slippage invariant is a constantprice, or constant-sum one! Hence, assuming that constant-product has a “zero leverage”, and constant sum has an “infinite leverage”, let’s construct something in between. Let’s denote the leverage $χ$ . If we multiply the constant-sum invariant by $χ$ and add it to the constant-product one, we will have an invariant which is constant-product when $χ = 0$, and constant-sum when $χ = ∞$: the property we are looking for. However, $χ$ should ideally be a dimensionless parameter, not depending on numbers of coins we have.  
 Therefore, let’s multiply the constant-sum invariant by $χD^{n−1}$ and add to the second invariant:
 
-$$χD^{n−1} \sum x_i + \prod x_i = χD^n + (\frac{D}{n})^n $$
+$$χD^{n−1} \sum x_i + \prod x_i = χD^n + (\frac{D}{n})^n. $$
 
 If this equation holds at all times, we will have trades with a leverage $χ$. However, it wouldn’t support prices going far from the ideal price 1.0. The invariant should support any prices (so that we have some liquidity at all times).  
 In order to do so, we make $χ$ dynamic. When the portfolio is in a perfect balance, it’s equal to a constant $A$, however falls off to 0 when going out of balance:
 
-$$ χ = \frac{A \prod x_i}{(D/n)^n} $$
+$$ χ = \frac{A \prod x_i}{(D/n)^n}. $$
 
 Substituting this to the “leveraged” invariant above, we come to the StableSwap invariant:
 
-$$ An^n \sum x_i + D = ADn^n + \frac{D^{n+1}}{n^n \prod x_i} $$
+$$ An^n \sum x_i + D = ADn^n + \frac{D^{n+1}}{n^n \prod x_i}. $$
 
 When a portfolio of coins $ {x_i} $ is loaded up, we need to calculate D, and we need to hold this equation true when we perform trades (e.g. swap $x_i$ into $x_j$ ). That is done by finding an iterative, converging solution either for $D$, or for $x_j$ when all other variables are known.
 

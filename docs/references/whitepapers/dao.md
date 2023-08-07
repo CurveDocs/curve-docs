@@ -15,7 +15,7 @@ Curve DAO has a token CRV which is used for both governance and value accrual.
 ## **Time-weighted voting. Vote-locked tokens in VotingEscrow**
 Instead of voting with token amount a, in Curve DAO tokens are lockable in a VotingEscrow for a selectable locktime $t_l$, where $t_l < t_{max}$ and $t_{max} = 4$ years. After locking, the time left to unlock is $t ≤ tl$. The voting weight is equal to:
 
-$$ w = a \frac{t}{t_{max}}$$
+$$ w = a \frac{t}{t_{max}}. $$
 
 In other words, the vote is both amount- and time-weighted, where the time counted is how long the tokens cannot be moved in future.  
 The account which locks the tokens cannot be a smart contract (because can be tradable and/or tokenized), unless it is one of whitelisted smart contracts (for example, widely used multi-signature wallets).
@@ -67,7 +67,7 @@ Gauges are per pool (each pool has an individual gauge).
 Suppose we have the inflation rate $r$ changing with every epoch (1 year), gauge weight $w_g$ and gauge type weight $w_t$. Then, all the gauge handles the stream of inflation with the rate $r' = w_g w_t r$ which it can update every time $w_g$, $w_t$, or mining epoch changes.  
 In order to calculate user’s fair share of $r'$ , we essentially need to calculate the integral:
 
-$$ I_u = \int \frac{r'(t) b_u(t)}{S(t)}dt $$
+$$ I_u = \int \frac{r'(t) b_u(t)}{S(t)}dt, $$
 
 where $b_u(t)$ is the balance supplied by user (measured in LP tokens) and $S(t)$ is total liquidity supplied by users, depending on the time $t$; the value $I_u$ gives the amount of tokens which user has to have minted to him. The user’s balance $b_u$ changes every time user *u* makes a deposit or withdrawal, and $S$ changes every time *any* user makes a deposit or withdrawal (so S can change many times in between two events for the user *u*). In *LiquidityGauge* contract, the vaule of $I_u$ is recorded in the **integrate_fraction map, per-user**.
 
