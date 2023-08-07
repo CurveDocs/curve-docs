@@ -51,7 +51,7 @@ nav:
     - $crvUSD: LLAMMA/crvUSD.md
     - Controller: LLAMMA/controller.md
     - LLAMMA: LLAMMA/amm.md
-    - ControllerFactory: LLAMMA/factory.md
+    - Factory: LLAMMA/factory.md
     - PegKeeper: LLAMMA/pegkeeper.md
     - MonetaryPolicy: LLAMMA/monetarypolicy.md
     - PriceAggregator: LLAMMA/priceaggregator.md
