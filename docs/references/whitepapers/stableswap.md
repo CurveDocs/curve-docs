@@ -36,6 +36,7 @@ $$\prod x_i^{w_i} = const$$
 While this is suitable for assets like ETH and tokens, it’s not very well working for something which is meant to be stable. The problem is that the price slippage is enormous, and one should provide enormous funds to keep a meaningful liquidity. On the flip side, if one for example loads DAI and USDC into Uniswap’s liquidity pool, the returns will be tiny (perhaps, several percent per year).  
 For StableSwap, there was a middle-ground invariant found (Fig. 1). As expected, the price (equal to derivative) only slightly deviates from 1 when number of coins is closed to balance.
 
+![test](../images/figure1.png)
 
     INSERT FIGURE1 + caption HERE
     caption: "Figure 1: Comparison of StableSwap invariant with Uniswap (constant-product) and constant price invariants. The portfolio consists of coins $X$ and $Y$ which have the “ideal” price of 1.0. There are $x = 5$ and $y = 5$ coins loaded up initially. As $x$ decreases, $y$ increases, and the price is the derivative $dy/dx$."
