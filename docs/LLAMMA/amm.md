@@ -5,6 +5,7 @@ When creating a new loan, the controller evenly distributes the collateral put u
     
 The **loan-to-value (LTV)** ratio is depending on the number of bands:  
 
+need correct ltv formula here: is this one correct???  
 $LTV = 1 - \text{loan_discount} - (1 - sqrt{1 - \frac{N}{A}})$
 
 Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p_oracle_down`](#p_oracle_down)) price bound. These prices are not real AMM prices, but rather tresholds for the bands! 
