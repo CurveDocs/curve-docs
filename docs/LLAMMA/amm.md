@@ -2337,7 +2337,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
         ```
 
 
-### `active_band_with_skip` (What does this function do)
+### `active_band_with_skip` (todo)
 !!! description "`AMM.active_band_with_skip() -> int256:`"
 
     todo
@@ -2376,7 +2376,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
         ```
 
 
-### `get_sum_xy` (where to put this method?)
+### `get_sum_xy`
 !!! description "`AMM.get_sum_xy(user: address) -> uint256[2]:`"
 
     Function to measure the amount of stablecoin and collateral `user` currently owns inside the AMM.
@@ -2412,15 +2412,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
 
 
-
-
-
-
-
-
-
-
-## **Price Oracle Stuff**
+## **Price Oracles**
 ### `get_base_price`
 !!! description "`AMM.get_base_price() -> uint256:`"
 
@@ -2476,10 +2468,10 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
         ```
 
 
-### `p_current_up` (todo)
+### `p_current_up`
 !!! description "`AMM.p_current_up(n: int256) -> uint256:`"
 
-    Getter for the highest possible price of the band at the current price oracle.
+    Getter for the highest possible price of the band at the current oracle price.
 
     Returns: highest price (`uint256`) of band `n`.
 
@@ -2529,7 +2521,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 ### `p_current_down` 
 !!! description "`AMM.p_current_down(n: int256) -> uint256:`"
 
-    Getter for the lowest possible price of the band at the current price oracle.
+    Getter for the lowest possible price of the band at the current oracle price.
 
     Returns: lowest price (`uint256`) of band `n`.
 
@@ -2878,7 +2870,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
         ```
 
 
-### `dynamic_fee` (check this)
+### `dynamic_fee` (todo)
 !!! description "`AMM.dynamic_fee() -> uint256: view`"
 
     Getter for the dynamic fee of the AMM. Dynamic fee is set to the maixmum of either `fee` or `_price_oracle_ro()`.
