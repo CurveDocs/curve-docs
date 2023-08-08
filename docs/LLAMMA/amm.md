@@ -1,12 +1,11 @@
 LLAMMA is the market-making contract that rebalances the collateral. As the name already suggests, this contract is responsible for lending and liquidating collateral.
 
 
-When creating a new loan, the controller evenly distributes the collateral put up by the user across a specified number of bands in the AMM and mints stablecoins for the user. While the number of bands is, in principle, chosen by the user, there are certain boundaries to be aware of (more details [here](../LLAMMA/controller.md)).
-    
-The **loan-to-value (LTV)** ratio is depending on the number of bands:  
+When creating a new loan, the controller evenly distributes the collateral put up by the user across a specified number of bands in the AMM and mints stablecoins for the user. While the number of bands is, in principle, chosen by the user, there are certain boundaries to be aware of.
 
-need correct ltv formula here: is this one correct???  
-$LTV = 1 - \text{loan_discount} - (1 - sqrt{1 - \frac{N}{A}})$
+The **loan-to-value (LTV)** ratio depends on the number of bands.
+
+$$LTV = 1 - \text{loan_discount} - 1 * \frac{N}{2*A}$$
 
 Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p_oracle_down`](#p_oracle_down)) price bound. These prices are not real AMM prices, but rather tresholds for the bands! 
 It's worth noting, that because it is a continious grid, the lower price-bound of lets say band 0 is the same as the upper price-bound of 1.
@@ -19,8 +18,13 @@ The concept of LLAMMA is to automatically convert collateral into crvUSD as the 
 *There are **three possible compositions** of bands:*   
 
 - `active_band` consists of both crvUSD and the collateral asset, depending on the the oracle price within the band  
-- Bands > `active_band`: fully in crvUSD as the bands above has already gone through soft-liquidation  
-- Bands < `active_band`: fully in the collateral asset as the bands have not been in soft-liquidation mode
+- Bands < `active_band`: fully in crvusd as the bands above has already gone through soft-liquidation  
+- Bands > `active_band`: fully in the collateral asset as the bands have not been in soft-liquidation mode
+
+<figure markdown>
+  ![](../images/amm1.png)
+  <figcaption>bands > -2: fully in collateral asset, bands < -2: fully in crvusd and band -2: contains both (currently in soft-liquidtation)</figcaption>
+</figure>
 
 
 To ensure assets are liquidated or de-liquidated, the AMM adjusts its price to create arbitrage opportunities:
