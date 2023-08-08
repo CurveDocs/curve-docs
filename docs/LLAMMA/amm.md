@@ -1,4 +1,39 @@
-LLAMMA is a market-making contract that rebalances the collateral used to mint crvUSD.
+LLAMMA is the market-making contract that rebalances the collateral. As the name already suggests, this contract is responsible for lending and liquidating collateral.
+
+
+When creating a new loan, the controller evenly distributes the collateral put up by the user across a specified number of bands in the AMM and mints stablecoins for the user. While the number of bands is, in principle, chosen by the user, there are certain boundaries to be aware of (more details [here](../LLAMMA/controller.md)).
+    
+The **loan-to-value (LTV)** ratio is depending on the number of bands:  
+
+$LTV = 1 - \text{loan_discount} - (1 - sqrt{1 - \frac{N}{A}})$
+
+Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p_oracle_down`](#p_oracle_down)) price bound. These prices are not real AMM prices, but rather tresholds for the bands! 
+It's worth noting, that because it is a continious grid, the lower price-bound of lets say band 0 is the same as the upper price-bound of 1.
+
+The concept of LLAMMA is to automatically convert collateral into crvUSD as the price of the collateral decreases, and vice versa, convert crvUSD back into the collateral asset when prices rise. When the price of the collateral is within a band that has deposited assets, the position enters a so-called **soft-liquidation** mode.
+
+!!!note
+    A position is in soft-liquidation mode only when the price oracle is within a band in which the user deposited collateral in.
+
+*There are **three possible compositions** of bands:*   
+
+- `active_band` consists of both crvUSD and the collateral asset, depending on the the oracle price within the band  
+- Bands > `active_band`: fully in crvUSD as the bands above has already gone through soft-liquidation  
+- Bands < `active_band`: fully in the collateral asset as the bands have not been in soft-liquidation mode
+
+
+To ensure assets are liquidated or de-liquidated, the AMM adjusts its price to create arbitrage opportunities:
+
+*The system relies on **two different prices**:*
+
+- `price_oracle`: collateral price fetched from an external OracleContract  
+- `get_p`: oracle price of the AMM itself
+
+When $\text{price_oracle} = \text{get_p}$, the external oracle price and the AMM price are identical, making arbitrage impossible.  
+Generally, when the price oracle begins to change, the AMM price is adjusted (the AMM price is kind of more sensitive than the regular `price_oracle`) to enable arbitrage opportunities.
+
+When the price of the collateral starts to rise, then $\text{price_oracle} < \text{get_p}$, and therefore, arbitrage is possible by swapping the collateral asset into crvUSD until $\text{price_oracle} = \text{get_p}$.  
+Conversely, when the price starts to decrease, $\text{price_oracle} > \text{get_p}$, and therefore, arbitrage is possible by swapping crvUSD into the collateral asset until both prices reach equilibrium. 
 
 
 | Glossary      |  Description |
