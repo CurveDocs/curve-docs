@@ -1,4 +1,4 @@
-LLAMMA is the market-making contract that rebalances the collateral.
+LLAMMA is a market-making contract that rebalances the collateral used to mint crvUSD.
 
 
 | Glossary      |  Description |
