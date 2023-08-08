@@ -7,11 +7,11 @@
 The design of the stablecoin has few concepts: lending-liquidating amm algorithm (LLAMMA), PegKeeper, Monetary Policy are the most important ones. But the main idea is in LLAMMA: replacing liquidations with a special-purpose AMM.
 
 <img width=500 src="/images/figure1_crvusd.png" />
-Figure 1: Overall schematic
+> Figure 1: Overall schematic
 <br />
 
 <img width=500 src="/images/figure2_crvusd.png" />
-Figure 2: Dependence of the loss on the price shift relative to the liquidation theshold. Time window for the observation is 3 days
+> Figure 2: Dependence of the loss on the price shift relative to the liquidation theshold. Time window for the observation is 3 days
 <br />
 
 In this design, if someone borrows against collateral, even at liquidation threshold, and the price of collateral dips and bounces - no significant loss happen. For example, according to simulations using historic data for ETH/USD since Sep 2017, if one leaves the CDP unattended for 3 days and during this time the price drop of 10% below the liquidation theshold happened - only 1% of collateral gets lost.
@@ -22,12 +22,12 @@ The core idea of the stablecoin design is Lending-Liquidating AMM Algorithm. The
 The below description doesn’t serve as a fully self-consistent rigurous proofs. A lot of that (especially the invariant) are obtained from dimensional considerations. More research might be required to have a full mathematical description, however the below is believed to be enough to implement in practice.  
 This is only possible with an external price oracle. In a nutshell, if one makes a typical AMM (for example with a bonding curve being a piece of hyperbola)
 
-<img width=500 src="../../images/figure3_crvusd.png">
-Figure 3: Behavior of an “AMM with an external price source”. External price $p_{center}$ determines a price around which liquidity is formed. AMM supports liquidity concentrated from prices $p_{cd}$ to $p_{cu}$, $p_{cd} < p_{center} < p_{cu}$. When current price $p$ is out of range between $p_{cd}$ and $p_{cu}$, AMM is either fully in stablecoin (when at $p_{cu}$) or fully in collateral (when at $p_{cd}$). When $p_{cd} ≤ p ≤ p_{cu}$, AMM price is equal to the current price $p$.
+<img width=500 src="/images/figure3_crvusd.png">
+> Figure 3: Behavior of an “AMM with an external price source”. External price $p_{center}$ determines a price around which liquidity is formed. AMM supports liquidity concentrated from prices $p_{cd}$ to $p_{cu}$, $p_{cd} < p_{center} < p_{cu}$. When current price $p$ is out of range between $p_{cd}$ and $p_{cu}$, AMM is either fully in stablecoin (when at $p_{cu}$) or fully in collateral (when at $p_{cd}$). When $p_{cd} ≤ p ≤ p_{cu}$, AMM price is equal to the current price $p$.
 <br />
 
-<img width=500 src="../../images/figure4_crvusd.png">
-Figure 4: AMM which we search for. We seek to construct an AMM where $p_{cd}$ and $p_{cu}$ are such functions of $p_o$ that when $p_o$ grows, they grow even faster. In this case, this AMM will be all in ETH when ETH is expensive, and all in USD when ETH is cheap.
+<img width=500 src="/images/figure4_crvusd.png">
+> Figure 4: AMM which we search for. We seek to construct an AMM where $p_{cd}$ and $p_{cu}$ are such functions of $p_o$ that when $p_o$ grows, they grow even faster. In this case, this AMM will be all in ETH when ETH is expensive, and all in USD when ETH is cheap.
 <br />
 
 and ramps its “center price” from (for example) down to up, the tokens will adiabatically convert from (for example) USD to ETH while proving liquidity in both ways on the way (Fig. 3). It is somewhat similar to avoided crossing (also called Landau-Zener transition) in quantum physics (though only as an idea: mathematical description of the process could be very different). The range where the liquidity is concentrated is called band here, at the constant po band has liquidity from $p_{cd}$ to $p_{cu}$. We seek for $p_{cd}(p_{o})$ and $p_{cu}(p_o)$ being functions of $p_o$ only, functions being more steep than linear and, hence, growing faster than $p_o$ (Fig. 4). In addition, let’s define prices $p↓$ and $p↑$ being prices where $p↓(p_o) = p_o$, and $p↑(p_o) = p_o$, definining ends of bands in adiabatic limit (e.g. $p = p_o$).  
