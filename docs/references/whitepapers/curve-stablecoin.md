@@ -24,7 +24,7 @@ This is only possible with an external price oracle. In a nutshell, if one makes
 
 <img width=500 src="../../images/figure3_crvusd.png">
 
-> Figure 3: Behavior of an “AMM with an external price source”. External price \$p_{center}\$ determines a price around which liquidity is formed. AMM supports liquidity concentrated from prices $p_{cd}$ to $p_{cu}$, $p_{cd} < p_{center} < p_{cu}$. When current price $p$ is out of range between $p_{cd}$ and $p_{cu}$, AMM is either fully in stablecoin (when at $p_{cu}$) or fully in collateral (when at $p_{cd}$). When $p_{cd} ≤ p ≤ p_{cu}$, AMM price is equal to the current price $p$.
+> Figure 3: Behavior of an “AMM with an external price source”. External price $p_{center}$ determines a price around which liquidity is formed. AMM supports liquidity concentrated from prices $p_{cd}$ to $p_{cu}$, $p_{cd} < p_{center} < p_{cu}$. When current price $p$ is out of range between $p_{cd}$ and $p_{cu}$, AMM is either fully in stablecoin (when at $p_{cu}$) or fully in collateral (when at $p_{cd}$). When $p_{cd} ≤ p ≤ p_{cu}$, AMM price is equal to the current price $p$.
 > <br>
 
 <img width=500 src="../../images/figure4_crvusd.png">
