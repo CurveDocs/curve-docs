@@ -1,6 +1,6 @@
 LLAMMA is the market-making contract that rebalances the collateral. As the name already suggests, this contract is responsible for lending and liquidating collateral. Every market has its own AMM (created from a blueprint contract), which contains the collateral asset and crvUSD.
 
-When creating a new loan, the controller evenly distributes the collateral put up by the user across a specified number of bands in the AMM and mints stablecoins for the user. While the number of bands is, in principle, chosen by the user, there are certain boundaries to be aware of.
+When creating a new loan, the controller evenly distributes the collateral put up by the user across a specified number of bands in the AMM and mints stablecoins for the user, with each band representing a range of collateral prices. 
 
 The **loan-to-value (LTV)** ratio depends on the number of bands.
 

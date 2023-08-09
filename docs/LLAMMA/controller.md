@@ -1,6 +1,6 @@
-The Controller is the contract the user interacts with to **create a loan**, **repay**, and **withdraw**. It holds all user debt information. External liquidations are also done through it.  
+The Controller is the contract the user interacts with to create a loan and further mangage the position. It holds all user debt information. External liquidations are also done through it.
 
-Each market has its individual controller, which is created from a blueprint contract.
+Each market has its individual Controller, which is created from a blueprint contract.
 
 
 # **Loans**
