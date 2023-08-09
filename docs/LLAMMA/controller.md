@@ -1,4 +1,4 @@
-The controller contract is the contract the user interacts with to **create a loan**, **repay** and **withdraw**. It holds all user debt information. External liquidations are also done through it.  
+The controller contract is the contract the user interacts with to **create a loan**, **repay**, and **withdraw**. It holds all user debt information. External liquidations are also done through it.  
 
 Each market has its individual controller, which is created from a blueprint contract.
 
@@ -7,15 +7,15 @@ Each market has its individual controller, which is created from a blueprint con
 
 ## **Creating and Repaying Loans**
 
-New loans are created via the `ceate_loan` function. When creating a loan the user need to spcify the **amount of collateral** and **debt** and the **number of bands** to deposit the collateral into. The maximum amount of borrowable debt is determined by the number of bands, amount of collateral and the oracle price.  
+New loans are created via the `ceate_loan` function. When creating a loan the user needs to specify the **amount of collateral** and **debt** and the **number of bands** to deposit the collateral into. The maximum amount of borrowable debt is determined by the number of bands, the amount of collateral, and the oracle price.  
 
-Before doing that, users can utilise some functions to pre-calculate metrics: [Loan calculations](#loan-calculations-borrowable-etc)
+Before doing that, users can utilize some functions to pre-calculate metrics: [Loan calculations](#loan-calculations-borrowable-etc)
 
 
 ### `create_loan`
 !!! description "`controller.create_loan(collateral: uint256, debt: uint256, N: uint256):`"
 
-    Function to create a loan. User needs to specify the amount of `collateral` to deposit into `N`-bands and the amount of `debt` to borrow. If a user already has an existing loan, the funtion will revert.
+    Function to create a loan. The user needs to specify the amount of `collateral` to deposit into `N`-bands and the amount of `debt` to borrow. If a user already has an existing loan, the function will revert.
 
     Emits event: `UserState`, `Borrow` and `Deposit` (in AMM)
 

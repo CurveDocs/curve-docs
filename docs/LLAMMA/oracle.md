@@ -1,8 +1,6 @@
-price oracles for crvusd markets
+Price oracles for crvUSD markets.
 
 https://etherscan.io/address/0x19F5B81e5325F882C9853B5585f74f751DE3896d#readContract
-
-
 
 ### `tricrypto`
 !!! description "`Oracle.tricrypto() -> address: view`"
