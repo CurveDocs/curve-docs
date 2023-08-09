@@ -1,5 +1,4 @@
-LLAMMA is the market-making contract that rebalances the collateral. As the name already suggests, this contract is responsible for lending and liquidating collateral.
-
+LLAMMA is the market-making contract that rebalances the collateral. As the name already suggests, this contract is responsible for lending and liquidating collateral. Every market has its own AMM (created from a blueprint contract), which contains the collateral asset and crvUSD.
 
 When creating a new loan, the controller evenly distributes the collateral put up by the user across a specified number of bands in the AMM and mints stablecoins for the user. While the number of bands is, in principle, chosen by the user, there are certain boundaries to be aware of.
 
@@ -7,10 +6,19 @@ The **loan-to-value (LTV)** ratio depends on the number of bands.
 
 $$LTV = 1 - \text{loan_discount} - 1 * \frac{N}{2*A}$$
 
+Interestingly enough, the start of the liquidation range is also determined by the LTV:
+
+$$ \text{starting_price} = \frac{debt} {collateral * LTV} $$
+
+!!!tip
+    The `starting_price` value is in percentage. To calculate the actual starting price, one must multiply the value by the `price_oracle` when creating the loan.
+
+
 Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p_oracle_down`](#p_oracle_down)) price bound. These prices are not real AMM prices, but rather tresholds for the bands! 
 It's worth noting, that because it is a continious grid, the lower price-bound of lets say band 0 is the same as the upper price-bound of 1.
 
-The concept of LLAMMA is to automatically convert collateral into crvUSD as the price of the collateral decreases, and vice versa, convert crvUSD back into the collateral asset when prices rise. When the price of the collateral is within a band that has deposited assets, the position enters a so-called **soft-liquidation** mode.
+The concept of LLAMMA is to automatically convert collateral into crvUSD as the price of the collateral decreases, and vice versa, convert crvUSD back into the collateral asset when prices rise. When the price of the collateral is within a band that has deposited assets, the position enters a so-called **soft-liquidation** mode and the health of the loan starts decreasing.    
+As soon as the `health` drops below 0%, the user is eligible for **hard-liquidation**. These 
 
 !!!note
     A position is in soft-liquidation mode only when the price oracle is within a band in which the user deposited collateral in.
@@ -1016,69 +1024,6 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
         547071746795405807643242, true
         ```
 
-
-
-## **Callbacks**
-### `liquidity_mining_callback`
-!!! description "`AMM.liquidity_mining_callback() -> address: view`"
-
-    Getter for the liquidity mining callback address.
-
-    Returns: liquidity mining callback contract (`address`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1"
-        liquidity_mining_callback: public(LMGauge)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.liquidity_mining_callback()
-        0x0000000000000000000000000000000000000000
-        ```
-
-
-### `set_callback`
-!!! description "`AMM.set_callback(liquidity_mining_callback: LMGauge):`"
-
-    Function to set the liquidity mining callback.
-
-    !!!note
-        This function is only callable by the admin of the contract. 
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `liquidity_mining_callback` |  `LMGauge` | Liquidity Mining Gauge Address |
-
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 5 9 15"
-        interface LMGauge:
-            def callback_collateral_shares(n: int256, collateral_per_share: DynArray[uint256, MAX_TICKS_UINT]): nonpayable
-            def callback_user_shares(user: address, n: int256, user_shares: DynArray[uint256, MAX_TICKS_UINT]): nonpayable
-
-        liquidity_mining_callback: public(LMGauge)
-
-        # nonreentrant decorator is in Controller which is admin
-        @external
-        def set_callback(liquidity_mining_callback: LMGauge):
-            """
-            @notice Set a gauge address with callbacks for liquidity mining for collateral
-            @param liquidity_mining_callback Gauge address
-            """
-            assert msg.sender == self.admin
-            self.liquidity_mining_callback = liquidity_mining_callback
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.set_callback("todo")
-        'todo'
-        ```
 
 
 ## **Contract Info Methods**
@@ -3021,4 +2966,67 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
         ```shell
         >>> AMM.get_xy("0x7a16ff8270133f063aab6c9977183d9e72835428") 
         63380038975112104970972,0,0,0,0,0,0,0,0,0,41547292092819592072,76745129494279646207,80932549271295120487,85505550289434551683,87415762350612525942,88161753995039151371,88913031968634028498,84145723494117511192,79510327248537508812,84498357558739975913
+        ```
+
+
+## **Callbacks**
+### `liquidity_mining_callback`
+!!! description "`AMM.liquidity_mining_callback() -> address: view`"
+
+    Getter for the liquidity mining callback address.
+
+    Returns: liquidity mining callback contract (`address`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1"
+        liquidity_mining_callback: public(LMGauge)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.liquidity_mining_callback()
+        0x0000000000000000000000000000000000000000
+        ```
+
+
+### `set_callback`
+!!! description "`AMM.set_callback(liquidity_mining_callback: LMGauge):`"
+
+    Function to set the liquidity mining callback.
+
+    !!!note
+        This function is only callable by the admin of the contract. 
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `liquidity_mining_callback` |  `LMGauge` | Liquidity Mining Gauge Address |
+
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 5 9 15"
+        interface LMGauge:
+            def callback_collateral_shares(n: int256, collateral_per_share: DynArray[uint256, MAX_TICKS_UINT]): nonpayable
+            def callback_user_shares(user: address, n: int256, user_shares: DynArray[uint256, MAX_TICKS_UINT]): nonpayable
+
+        liquidity_mining_callback: public(LMGauge)
+
+        # nonreentrant decorator is in Controller which is admin
+        @external
+        def set_callback(liquidity_mining_callback: LMGauge):
+            """
+            @notice Set a gauge address with callbacks for liquidity mining for collateral
+            @param liquidity_mining_callback Gauge address
+            """
+            assert msg.sender == self.admin
+            self.liquidity_mining_callback = liquidity_mining_callback
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.set_callback("todo")
+        'todo'
         ```
