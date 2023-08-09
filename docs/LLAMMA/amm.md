@@ -18,10 +18,10 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 It's worth noting, that because it is a continious grid, the lower price-bound of lets say band 0 is the same as the upper price-bound of 1.
 
 The concept of LLAMMA is to automatically convert collateral into crvUSD as the price of the collateral decreases, and vice versa, convert crvUSD back into the collateral asset when prices rise. When the price of the collateral is within a band that has deposited assets, the position enters a so-called **soft-liquidation** mode and the health of the loan starts decreasing.    
-As soon as the `health` drops below 0%, the user is eligible for **hard-liquidation**. These 
+As soon as the `health` drops below 0%, the user is eligible for **hard-liquidation**. The users collateral can be sold off and the position will be closed (just as in regular liquidations).
 
 !!!note
-    A position is in soft-liquidation mode only when the price oracle is within a band in which the user deposited collateral in.
+    A position is in soft-liquidation mode only when the price oracle is within a band where the user has deposited collateral.
 
 *There are **three possible compositions** of bands:*   
 
@@ -35,14 +35,14 @@ As soon as the `health` drops below 0%, the user is eligible for **hard-liquidat
 </figure>
 
 
-To ensure assets are liquidated or de-liquidated, the AMM adjusts its price to create arbitrage opportunities:
+To ensure assets are liquidated or de-liquidated, the AMM adjusts its price to create arbitrage opportunities. Every trade within the AMM that arbitrages the price difference between `oracle_price` and `get_p` is essentially soft-liquidating users.
 
 *The system relies on **two different prices**:*
 
 - `price_oracle`: collateral price fetched from an external OracleContract  
 - `get_p`: oracle price of the AMM itself
 
-When $\text{price_oracle} = \text{get_p}$, the external oracle price and the AMM price are identical, making arbitrage impossible.  
+When $\text{price_oracle} = \text{get_p}$, the external oracle price and the AMM price are identical, making arbitrage impossible.
 Generally, when the price oracle begins to change, the AMM price is adjusted (the AMM price is kind of more sensitive than the regular `price_oracle`) to enable arbitrage opportunities.
 
 When the price of the collateral starts to rise, then $\text{price_oracle} < \text{get_p}$, and therefore, arbitrage is possible by swapping the collateral asset into crvUSD until $\text{price_oracle} = \text{get_p}$.  

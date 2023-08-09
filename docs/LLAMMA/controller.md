@@ -1,4 +1,4 @@
-The controller contract is the contract the user interacts with to **create a loan**, **repay**, and **withdraw**. It holds all user debt information. External liquidations are also done through it.  
+The Controller is the contract the user interacts with to **create a loan**, **repay**, and **withdraw**. It holds all user debt information. External liquidations are also done through it.  
 
 Each market has its individual controller, which is created from a blueprint contract.
 
@@ -7,7 +7,8 @@ Each market has its individual controller, which is created from a blueprint con
 
 ## **Creating and Repaying Loans**
 
-New loans are created via the `ceate_loan` function. When creating a loan the user needs to specify the **amount of collateral** and **debt** and the **number of bands** to deposit the collateral into. The maximum amount of borrowable debt is determined by the number of bands, the amount of collateral, and the oracle price.  
+New loans are created via the `ceate_loan` function. When creating a loan the user needs to specify the **amount of collateral** and **debt** and the **number of bands** to deposit the collateral into. The maximum amount of borrowable debt is determined by the number of bands, the amount of collateral, and the oracle price.
+
 
 Before doing that, users can utilize some functions to pre-calculate metrics: [Loan calculations](#loan-calculations-borrowable-etc)
 
