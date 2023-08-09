@@ -2133,6 +2133,7 @@ Before doing that, users can utilise some functions to pre-calculate metrics: [L
         493166314275207865
         ```
 
+
 ### `user_state`
 !!! description "`controller.user_state(user: address) -> uint256[4]:`"
 
@@ -3382,7 +3383,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 ### `liquidation_discount`
 !!! description "`controller.liquidation_discount() -> uint256: view`"
 
-    Getter for the discount of the maximum loan size compared to `get_x_down()`.
+    Getter for the liquidation discount. This value is used to discount the collateral value when calculating the health for liquidation puroses in order to incentivize liquidators.
 
     Returns: **liquidation discount** (`uint256`).
 
@@ -3445,7 +3446,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 ### `loan_discounts`
 !!! description "`controller.liquidation_discount() -> uint256: view`"
 
-    Getter for the discount of the maximum loan size compared to `get_x_down()` value.
+    Getter for the discount of the maximum loan size compared to `get_x_down()` value. This value defines the LTV.
 
     Returns: **loan discount** (`uint256`).
 
