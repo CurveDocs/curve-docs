@@ -1,29 +1,28 @@
 LLAMMA is the market-making contract that rebalances the collateral. As the name already suggests, this contract is responsible for lending and liquidating collateral.
 
-
-When creating a new loan, the controller evenly distributes the collateral put up by the user across a specified number of bands in the AMM and mints stablecoins for the user. While the number of bands is, in principle, chosen by the user, there are certain boundaries to be aware of.
+When creating a new loan, the [controller](./controller.md) evenly distributes the collateral put up by the user across a specified number of bands in the [AMM](./amm.md) and mints stablecoins for the user. While the number of bands is, in principle, chosen by the user, there are certain boundaries to be aware of.
 
 The **loan-to-value (LTV)** ratio depends on the number of bands.
 
 $$LTV = 1 - \text{loan_discount} - 1 * \frac{N}{2*A}$$
 
-Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p_oracle_down`](#p_oracle_down)) price bound. These prices are not real AMM prices, but rather tresholds for the bands! 
-It's worth noting, that because it is a continious grid, the lower price-bound of lets say band 0 is the same as the upper price-bound of 1.
+Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p_oracle_down`](#p_oracle_down)) price bound. These prices are not real AMM prices, but rather thresholds for the bands! 
+It's worth noting, that because it is a continuous grid, the lower price-bound of let's say band 0 is the same as the upper price-bound of 1.
 
-The concept of LLAMMA is to automatically convert collateral into crvUSD as the price of the collateral decreases, and vice versa, convert crvUSD back into the collateral asset when prices rise. When the price of the collateral is within a band that has deposited assets, the position enters a so-called **soft-liquidation** mode.
+The concept of LLAMMA is to automatically convert collateral into crvUSD as the collateral price decreases, and vice versa, convert crvUSD back into the collateral asset when prices rise. When the price of the collateral is within a band that has deposited assets, the position enters a so-called **soft-liquidation** mode.
 
 !!!note
     A position is in soft-liquidation mode only when the price oracle is within a band in which the user deposited collateral in.
 
 *There are **three possible compositions** of bands:*   
 
-- `active_band` consists of both crvUSD and the collateral asset, depending on the the oracle price within the band  
-- Bands < `active_band`: fully in crvusd as the bands above has already gone through soft-liquidation  
+- `active_band` consists of both crvUSD and the collateral asset, depending on the oracle price within the band  
+- Bands < `active_band`: fully in crvUSD as the bands above have already gone through soft-liquidation  
 - Bands > `active_band`: fully in the collateral asset as the bands have not been in soft-liquidation mode
 
 <figure markdown>
   ![](../images/amm1.png)
-  <figcaption>bands > -2: fully in collateral asset, bands < -2: fully in crvusd and band -2: contains both (currently in soft-liquidtation)</figcaption>
+  <figcaption>bands > -2: fully in collateral asset, bands < -2: fully in crvUSD and band -2: contains both (currently in soft-liquidation)</figcaption>
 </figure>
 
 
@@ -49,7 +48,7 @@ Conversely, when the price starts to decrease, $\text{price_oracle} > \text{get_
 | `A` |  amplification, the measure of how concentrated the tick is  |
 | `rate` |  interest rate |
 | `rate_mul` |  rate multiplier, 1 + integral(rate * dt) |
-| `active_band` |  current band. Other bands are either in one or other coin, but not both |
+| `active_band` |  current band. Other bands are either in one or another coin, but not both |
 | `min_band` | bands below this are definitely empty |
 | `max_band` | bands above this are definitely empty  |
 | `bands_x[n]`, `bands_y[n]` | amounts of coin x or y deposited in band n |
@@ -1295,7 +1294,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
 As with all the curve pools, there are two different kinds of fees: **regular swap fees** and **admin fees**. Regular fees are charged when tokens within the AMM are exchanged. The admin fee determines the percentage of the "total fees", which are ultimately distributed to veCRV holders.
 
-Currently, the admin fees of the AMMs are set to 0 to incentivize borrows, as all the fees are given to liquidity providers who are the borrowers.
+Currently, the admin fees of the AMMs are set to 0 to incentivize borrowers, as all the fees are given to liquidity providers who are the borrowers.
 
 If there are admin fees accumulated, they can't be claimed separately. Instead, they can only be claimed by also claiming the interest rate fees. This is done by calling `collect_fee()` on the controller contract
 
