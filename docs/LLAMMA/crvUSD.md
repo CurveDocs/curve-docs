@@ -3,7 +3,7 @@
     Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/Stablecoin.vy). 
 
 !!! warning
-    Due to some testing in production there has been several deployments for the stablecoin and their components. Please always make sure you are using the latest deployment. See [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
+    Due to some testing in production, there have been several deployments for the stablecoin and its components. Please always make sure you are using the latest deployment. See [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
 
 
 
@@ -180,7 +180,7 @@
 
 - crvUSD can only be minted by the `minter` of the contract, which is the [Factory](/curve-docs/docs/LLAMMA/factory.md)
 - crvUSD is minted in accordance with the debt_ceiling, either when **adding a new market** or when **raising its debt ceiling**
-- This is accomplished by calling the set_new_debt_ceiling function within the Factory contract.  
+- This is accomplished by calling the `set_new_debt_ceiling` function within the Factory contract.  
 - Burning crvUSD typically occurs when a lower debt ceiling is set, or if a user decides to burn their crvUSD for any reason.
 
 
