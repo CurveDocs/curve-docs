@@ -36,7 +36,7 @@ $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
 !!!note
     `rate` and `rate0` denominated in units of $10^{18}$ for precision and represent the rate per second. The interest rate is charged every block.
 
-    $\text{annualRate} = (1 + \frac{rate}{10^{18}})^{365*24*60*60 - 1}$
+    $\text{annualRate} = (1 + \frac{rate}{10^{18}})^{365*24*60*60} - 1$
 
 
 !!! tip
