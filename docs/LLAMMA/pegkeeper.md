@@ -1,4 +1,4 @@
-## **Concept of PegKeppers**  
+## **Concept of PegKeepers**  
 
 PegKeepers are contracts that help stabilize the peg of crvUSD. They are allocated a specific amount of crvUSD to use in securing the peg. 
 This balance is decided by the DAO and can be set, raised, or lowered by calling `set_debt_ceiling` in the [FactoryContract](/curve-docs/docs/LLAMMA/factory.md).
