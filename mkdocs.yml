@@ -66,13 +66,10 @@ nav:
 
   - Cryptoswap Exchange:
     - Overview: cryptoswap_exchange/overview.md
-    - Pools: 
-      - Overview: cryptoswap_exchange/pools/overview.md
-      - CryptoSwap Pool: cryptoswap_exchange/pools/pool.md
-    - Liquidity Pool Tokens:
-      - Overview: cryptoswap_exchange/lp_tokens/overview.md
-      - Curve LP Token: cryptoswap_exchange/lp_tokens/pool.md
-    
+    - Pools: cryptoswap_exchange/pool.md
+    - Factory: cryptoswap_exchange/factory.md
+    - Math: cryptoswap_exchange/math.md
+    - ViweMethodContract: cryptoswap_exchange/ViewMethodContract.md
 
   - Factory:
     - Overview: factory/overview.md
