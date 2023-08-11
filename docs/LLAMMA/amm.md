@@ -25,13 +25,13 @@ As soon as the `health` drops below 0%, the user is eligible for **hard-liquidat
 
 *There are **three possible compositions** of bands:*   
 
-- `active_band` consists of both crvUSD and the collateral asset, depending on the the oracle price within the band  
-- Bands < `active_band`: fully in crvusd as the bands above has already gone through soft-liquidation  
+- `active_band` consists of both crvUSD and the collateral asset, depending on the oracle price within the band  
+- Bands < `active_band`: fully in crvUSD as the bands above have already gone through soft-liquidation  
 - Bands > `active_band`: fully in the collateral asset as the bands have not been in soft-liquidation mode
 
 <figure markdown>
   ![](../images/amm1.png)
-  <figcaption>bands > -2: fully in collateral asset, bands < -2: fully in crvusd and band -2: contains both (currently in soft-liquidtation)</figcaption>
+  <figcaption>bands > -2: fully in collateral asset, bands < -2: fully in crvUSD and band -2: contains both (currently in soft-liquidation)</figcaption>
 </figure>
 
 
