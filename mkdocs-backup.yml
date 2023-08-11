@@ -1,5 +1,5 @@
 site_name: Curve Docs
-site_url: https://docs.curve.fi/
+site_url: https://curvefi.github.io/curve-mkdocs/
 site_author: CurveFi
 
 plugins:
@@ -46,16 +46,15 @@ nav:
       - Overview: registry/overview.md
       - MetaRegistryAPI: registry/MetaRegistryAPI.md
 
-  - crvUSD:
+  - LLAMMA:
     - Overview: LLAMMA/overview.md
-    - $crvUSD: LLAMMA/crvUSD.md
+    - crvUSD: LLAMMA/crvUSD.md
     - Controller: LLAMMA/controller.md
-    - LLAMMA: LLAMMA/amm.md
-    - Factory: LLAMMA/factory.md
+    - AMM: LLAMMA/amm.md
+    - ControllerFactory: LLAMMA/factory.md
     - PegKeeper: LLAMMA/pegkeeper.md
     - MonetaryPolicy: LLAMMA/monetarypolicy.md
     - PriceAggregator: LLAMMA/priceaggregator.md
-    - Oracle: LLAMMA/oracle.md
     - Deployments: LLAMMA/deployments.md
 
   - Stableswap Exchange:    
@@ -66,7 +65,7 @@ nav:
       - Lending Pools: stableswap_exchange/pools/lending_pools.md
       - Metapools: stableswap_exchange/pools/metapools.md
       - Admin Controls: stableswap_exchange/pools/admin_pool_settings.md
-    - Liquidity Pool Tokens:
+    - Lquidity Pool Tokens:
       - Overview: stableswap_exchange/lp_tokens/overview.md
       - Curve Token V1: stableswap_exchange/lp_tokens/curve_token_v1.md
       - Curve Token V2: stableswap_exchange/lp_tokens/curve_token_v2.md
@@ -90,13 +89,8 @@ nav:
 
   - References:
     - Deployment Addresses: references/deployed-contracts.md
-    - Whitepapers: 
-      - DAO: references/whitepapers/dao.md
-      - StableSwap: references/whitepapers/stableswap.md
-      - CryptoSwap: references/whitepapers/cryptoswap.md
-      - Curve Stablecoin: references/whitepapers/curve-stablecoin.md
-      - All Whitepapers: references/whitepapers/whitepaper.md
-    - Resources: https://resources.curve.fi/
+    - Whitepaper: references/whitepaper.md
+    - Useful Resources: references/useful-resources.md
 
 # extension
 markdown_extensions:
@@ -184,5 +178,5 @@ extra_javascript:
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
-repo_name: CurveDocs/curve-docs
-repo_url: https://github.com/CurveDocs/curve-docs
+repo_name: https://curvefi.github.io/curve-mkdocs/ # for example: 'lyz-code/pydo'
+repo_url: https://curvefi.github.io/curve-mkdocs/  # for example: 'https://github.com/lyz-code/pydo'
