@@ -69,6 +69,6 @@ th {
     padding: 9px;
 }
 
-nav > ul > li > label {
+nav > *:not(ul > li > label) {
   margin-left: 20px;
 }
