@@ -69,6 +69,6 @@ th {
     padding: 9px;
 }
 
-a.md-nav__link {
+label:not(.md-nav__title) {
   margin-left: 20px;
 }
