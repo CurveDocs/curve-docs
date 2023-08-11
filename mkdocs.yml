@@ -67,7 +67,7 @@ nav:
   - Cryptoswap Exchange:
     - Overview: cryptoswap_exchange/overview.md
     - Pools: cryptoswap_exchange/pool.md
-    - Factory: cryptoswap_exchange/factory.md
+    - TricryptoFactory: cryptoswap_exchange/factory.md
     - Math: cryptoswap_exchange/math.md
     - ViweMethodContract: cryptoswap_exchange/ViewMethodContract.md
 
