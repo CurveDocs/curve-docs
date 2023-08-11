@@ -81,6 +81,7 @@ nav:
       - CryptoSwap: references/whitepapers/cryptoswap.md
       - Curve Stablecoin: references/whitepapers/curve-stablecoin.md
       - All Whitepapers: references/whitepapers/whitepaper.md
+    - Audits: references/audits/audits.md
     - Resources: https://resources.curve.fi/
 
 # extension
