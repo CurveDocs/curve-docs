@@ -69,6 +69,6 @@ th {
     padding: 9px;
 }
 
-.md-nav__item--nested > *:not(:first-child) {
+nav > ul > label {
   margin-left: 20px;
 }
