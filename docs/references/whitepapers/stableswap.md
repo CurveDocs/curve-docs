@@ -1,3 +1,6 @@
+!!!info
+    See full pdf version [here](../../pdf/stableswap-paper.pdf.)
+
 <h1 style="text-align: center;"></h1>
 <h2 style="text-align: center;">StableSwap - efficient mechanism for Stablecoin liquidity</h2>
 <p style="text-align: center;">Michael Egorov</p>
