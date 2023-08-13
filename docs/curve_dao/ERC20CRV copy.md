@@ -725,12 +725,19 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
 
 
-## **WRITE FUNCTIONS**
+## WRITE FUNCTIONS (what to do with these? where to put them?)
 
 ### `update_mining_parameters`
 !!! description "`update_mining_parameters()`"
 
-    todo
+    IGNORE THIS FIDDY!!!
+    function updates mining parameters --> reduces rate. internal function (cant be called directly -> need to be called via `update_mining_parameters`)  
+    note to myself(!): `update_mining_parameters` calls `_update_mining_parameters` as it is a internal function which can only called this way.  
+    following happens: at deployment rate = 0; start_epoch_supply = initial_supply (1_303_030_303); when successfully called (via `update_mining_parameters`) --> start_epoch_supply + RATE_REDUCTION_TIME and mining_epoch + 1 (which was set to -1 at initialization; so first time calling it actually sets mining_epoch to 0.); if statement to check if rate == 0 (if yes - which is true when called successfully once - then rate is INITIAL_RATE; if no _start_epoch_supply is rate mulitplied by RATE_REDUCTION_TIME (in seconds because rate is also denominated in seconds) to get the entire epoch supply); rate will also be updated and reduced by the RATE_REDUCTION_COEFFICIENT (2 ** (1/4) * 1e18); also start_epoch_time was "modified" at initialization of the contract with an INFLATION_DELAY of 86400s. event is triggered when called successfully.
+
+    `assert block.timestamp >= self.start_epoch_time + RATE_REDUCTION_TIME` makes sure function can not be called to soon.
+    this is fucking genius lol
+
 
     ??? quote "Source code"
 
@@ -796,7 +803,7 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
         ```
 
 
-### `start_epoch_time_write`
+### `start_epoch_time_write` (x)
 !!! description "`CRV.start_epoch_time_write() -> uint256`"
 
     Function to get the current mining epoch start while simultaneously updating mining parameters.
