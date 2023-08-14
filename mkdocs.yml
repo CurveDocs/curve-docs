@@ -47,16 +47,16 @@ nav:
       - MetaRegistryAPI: registry/MetaRegistryAPI.md
 
   - crvUSD:
-    - Overview: LLAMMA/overview.md
-    - $crvUSD: LLAMMA/crvUSD.md
-    - Controller: LLAMMA/controller.md
-    - LLAMMA: LLAMMA/amm.md
-    - Factory: LLAMMA/factory.md
-    - PegKeeper: LLAMMA/pegkeeper.md
-    - MonetaryPolicy: LLAMMA/monetarypolicy.md
-    - PriceAggregator: LLAMMA/priceaggregator.md
-    - Oracle: LLAMMA/oracle.md
-    - Deployments: LLAMMA/deployments.md
+    - Overview: crvUSD/overview.md
+    - $crvUSD: crvUSD/crvUSD.md
+    - Controller: crvUSD/controller.md
+    - LLAMMA: crvUSD/amm.md
+    - Factory: crvUSD/factory.md
+    - PegKeeper: crvUSD/pegkeeper.md
+    - MonetaryPolicy: crvUSD/monetarypolicy.md
+    - PriceAggregator: crvUSD/priceaggregator.md
+    - Oracle: crvUSD/oracle.md
+    - Deployments: crvUSD/deployments.md
 
   - Stableswap Exchange:    
     - Overview: stableswap_exchange/overview.md 
