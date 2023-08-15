@@ -176,8 +176,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.create_loan(todo)
-        todo
+        >>> controller.create_loan(collateral: uint256, debt: uint256, N: uint256)
         ```
 
 
@@ -354,8 +353,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.create_loan_extended(todo)
-        todo
+        >>> controller.create_loan_extended(collateral: uint256, debt: uint256, N: uint256, callbacker: address, callback_args: DynArray[uint256,5])
         ```
 
 
@@ -557,8 +555,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.repay(todo)
-        todo
+        >>> controller.repay(_d_debt: uint256)
         ```
 
 
@@ -764,8 +761,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.repay_extended(todo)
-        todo
+        >>> controller.repay_extended(callbacker: address, callback_args: DynArray[uint256,5])
         ```
 
 
@@ -968,8 +964,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.add_collateral(todo)
-        todo
+        >>> controller.add_collateral(collateral: uint256)
         ```
 
 
@@ -1162,8 +1157,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.remove_collateral(todo)
-        todo
+        >>> controller.remove_collateral(collateral: uint256)
         ```
 
 
@@ -1352,8 +1346,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.borrow_more(todo)
-        todo
+        >>> controller.borrow_more(collateral: uint256, debt: uint256)
         ```
 
 
@@ -1595,7 +1588,6 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
     === "Example"
         ```shell
         >>> controller.liquidate(todo)
-        todo
         ```
 
 
