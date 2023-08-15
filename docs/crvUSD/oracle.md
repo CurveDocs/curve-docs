@@ -3,6 +3,139 @@
 The price-oracle contract of the markets can be fetched by calling `price_oracle_contract` on the AMM contract.
 
 
+The main function in terms of calculating the oracle price of the collateral is the internal function`_raw_price`.
+The function computes the weighted average price of ETH from multiple liquidity pools and then adjusting it based on Chainlink oracle prices for both Ethereum (ETH) and stETH (a tokenized staked Ethereum).
+
+
+stableswap pools are crvusd/usdc and crvusd/usdt
+tricrypto pools are tricryptoUSDC and tricryptoUSDT
+
+stableswap aggregator is the contract which aggregates the price of crvusd
+
+
+## EMA of TVL 
+
+`last_tvl` get updated whenever calling `price_w()` because this sets the variable to the value returned when calling `_ema_tvl()`.
+only calculates ema tvl when $last_{timestamp} < block.timestamp$, otherwise it will just return `last_tvl` again as it is still the same block. 
+13h exponential moving average of tvl
+
+$$\alpha = \exp{(\frac{-(block.timestamp - last_{timestamp}) * 10^{18}}{\text{TVL_MA_TIME}})}$$
+
+$\alpha = 1.0$ when $\delta t = 0$  
+$\alpha = 0.0$ when $\delta t = \infty$
+
+then calculates tvl of the tricrypto pools by iterating through the tricrypto pools (tricryptoUSDC and tricryptoUSDT): 
+
+
+$$tvl = \frac{TS_i * VP_i}{10^{18}}$$
+
+$$\text{last_tvl}_i = \frac{tvl * (10^{18} - \alpha) + \text{last_tvl}_i * \alpha}{10^{18}}$$
+
+$TS_i = \text{total supply of i-th pool}$ in `TRICRYPTO[N_POOLS]`  
+$VP_i = \text{virtual price of i-th pool}$ in `TRICRYPTO[N_POOLS]`  
+
+function returns `last_tvl` for the tricrypto pools.
+
+
+??? quote "`_ema_tvl`"
+
+    ```python
+    last_timestamp: public(uint256)
+    last_tvl: public(uint256[N_POOLS])
+    TVL_MA_TIME: public(constant(uint256)) = 50000  # s
+
+    @internal
+    @view
+    def _ema_tvl() -> uint256[N_POOLS]:
+        last_timestamp: uint256 = self.last_timestamp
+        last_tvl: uint256[N_POOLS] = self.last_tvl
+
+        if last_timestamp < block.timestamp:
+            alpha: uint256 = self.exp(- convert((block.timestamp - last_timestamp) * 10**18 / TVL_MA_TIME, int256))
+            # alpha = 1.0 when dt = 0
+            # alpha = 0.0 when dt = inf
+            for i in range(N_POOLS):
+                tvl: uint256 = TRICRYPTO[i].totalSupply() * TRICRYPTO[i].virtual_price() / 10**18
+                last_tvl[i] = (tvl * (10**18 - alpha) + last_tvl[i] * alpha) / 10**18
+
+        return last_tvl
+    ```
+
+
+## RAW PRICE
+
+input variables for this function: `tvls` which is calculated calling `_ema_tvl` and `agg_price` (which is STABLESWAP_AGGREGATOR.price()). this function iterates over `N_POOLS` again.
+`price_oracle(k: uint256)` returns the oracle price of the coin at index `k` w.r.t the coin at index 0 (USDC / USDT).
+
+
+
+$\text{p_crypto_r} = \text{price oracle of eth w.r.t usdc or usdt}$
+
+$\text{p_stable_r} = \text{price oracle of stableswap pool}$, returns `_ma_price()` of the stableswap pool (price oracle of what coin??). if its inverse then do 10^36 / p_stable_r.
+
+$\text{p_crypto_r} = \text{price oracle of crvusds}$
+
+`weights` = sum of all ema_tvls of tricrypto pools
+
+$$\text{weighted_price} = \text{weighted_price} + (\frac{\text{p_crypto_r} * \text{p_stable_agg}}{\text{p_stable_r}}) * weight$$
+
+$\text{crv_p} = \frac{\text{weighted_price}}{\text{weights}}$
+
+
+calculate stETH price:
+
+$$\text{p_staked} = min(\text{p_staked}, 10^{18}) * WSTETH.stEthPerToken() / 10**18$$
+
+
+
+??? quote "`_raw_price`"
+
+    ```python
+    @internal
+    @view
+    def _raw_price(tvls: uint256[N_POOLS], agg_price: uint256) -> uint256:
+        weighted_price: uint256 = 0
+        weights: uint256 = 0
+        for i in range(N_POOLS):
+            p_crypto_r: uint256 = TRICRYPTO[i].price_oracle(TRICRYPTO_IX[i])   # d_usdt/d_eth
+            p_stable_r: uint256 = STABLESWAP[i].price_oracle()                 # d_usdt/d_st
+            p_stable_agg: uint256 = agg_price                                  # d_usd/d_st
+            if IS_INVERSE[i]:
+                p_stable_r = 10**36 / p_stable_r
+            weight: uint256 = tvls[i]
+            # Prices are already EMA but weights - not so much
+            weights += weight
+            weighted_price += p_crypto_r * p_stable_agg / p_stable_r * weight     # d_usd/d_eth
+        crv_p: uint256 = weighted_price / weights
+
+        use_chainlink: bool = self.use_chainlink
+
+        # Limit ETH price
+        if use_chainlink:
+            chainlink_lrd: ChainlinkAnswer = CHAINLINK_AGGREGATOR_ETH.latestRoundData()
+            if block.timestamp - min(chainlink_lrd.updated_at, block.timestamp) <= CHAINLINK_STALE_THRESHOLD:
+                chainlink_p: uint256 = convert(chainlink_lrd.answer, uint256) * 10**18 / CHAINLINK_PRICE_PRECISION_ETH
+                lower: uint256 = chainlink_p * (10**18 - BOUND_SIZE) / 10**18
+                upper: uint256 = chainlink_p * (10**18 + BOUND_SIZE) / 10**18
+                crv_p = min(max(crv_p, lower), upper)
+
+        p_staked: uint256 = STAKEDSWAP.price_oracle()  # d_eth / d_steth
+
+        # Limit STETH price
+        if use_chainlink:
+            chainlink_lrd: ChainlinkAnswer = CHAINLINK_AGGREGATOR_STETH.latestRoundData()
+            if block.timestamp - min(chainlink_lrd.updated_at, block.timestamp) <= CHAINLINK_STALE_THRESHOLD:
+                chainlink_p: uint256 = convert(chainlink_lrd.answer, uint256) * 10**18 / CHAINLINK_PRICE_PRECISION_STETH
+                lower: uint256 = chainlink_p * (10**18 - BOUND_SIZE) / 10**18
+                upper: uint256 = chainlink_p * (10**18 + BOUND_SIZE) / 10**18
+                p_staked = min(max(p_staked, lower), upper)
+
+        p_staked = min(p_staked, 10**18) * WSTETH.stEthPerToken() / 10**18  # d_eth / d_wsteth
+
+        return p_staked * crv_p / 10**18
+    ```
+
+
 ### `tricrypto`
 !!! description "`Oracle.tricrypto() -> address: view`"
 
