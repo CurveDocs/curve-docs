@@ -333,7 +333,7 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
     Getter for the total number of tokens in existence.
 
-    Returns: total supply (`uint256`)
+    Returns: total supply (`uint256`).
 
     ??? quote "Source code"
 
