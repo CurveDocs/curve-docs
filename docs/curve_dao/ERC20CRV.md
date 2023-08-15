@@ -766,7 +766,7 @@ Effectively, every rate reduction decreases the $CRV inflation by around 15.9%.
         Emissions per day: 6.161965695807970181 * 86400 = 532393.8361178086
 
 
-### `update_mining_parameters`
+### `update_mining_parameters` 
 !!! description "`update_mining_parameters()`"
 
     Function to update the mining parameters for the Curve DAO Token ($CRV).  
