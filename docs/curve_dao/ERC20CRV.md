@@ -880,7 +880,7 @@ Effectively, every rate reduction decreases the $CRV inflation by around 15.9%.
 
     Function to get the next mining epoch start while simultaneously updating mining parameters (if possible).
 
-    Returns: timestamp(`uint256`)
+    Returns: timestamp(`uint256`).
 
     ??? quote "Source code"
 
