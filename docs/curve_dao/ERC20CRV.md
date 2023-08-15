@@ -233,7 +233,7 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
     Getter for the current number of CRV tokens in existence (claimed or unclaimed).
 
-    Returns: number of tokens‚ (`uint256`).
+    Returns: number of tokens (`uint256`).
 
     ??? quote "Source code"
 
