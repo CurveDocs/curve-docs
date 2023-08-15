@@ -67,24 +67,32 @@ function returns `last_tvl` for the tricrypto pools.
 input variables for this function: `tvls` which is calculated calling `_ema_tvl` and `agg_price` (which is STABLESWAP_AGGREGATOR.price()). this function iterates over `N_POOLS` again.
 `price_oracle(k: uint256)` returns the oracle price of the coin at index `k` w.r.t the coin at index 0 (USDC / USDT).
 
+crv_p = eth price
 
+$\text{p_crypto_r} = \text{price oracle of eth w.r.t usdc/usdt}$
 
-$\text{p_crypto_r} = \text{price oracle of eth w.r.t usdc or usdt}$
-
-$\text{p_stable_r} = \text{price oracle of stableswap pool}$, returns `_ma_price()` of the stableswap pool (price oracle of what coin??). if its inverse then do 10^36 / p_stable_r.
+$\text{p_stable_r} = \text{price oracle of stableswap pool}$:  
+returns `_ma_price()` of the stableswap pool (price oracle of what coin??). if `price_oracle` is inverse, meaning it returns the price of eth instead of steth, then do $10^{36} / p_stable_r$ to get the inverse price.
 
 $\text{p_crypto_r} = \text{price oracle of crvusds}$
 
-`weights` = sum of all ema_tvls of tricrypto pools
+
+
+$\text{weights} = \text{sum of all _ema_tvl's of tricrypto pools}$
 
 $$\text{weighted_price} = \text{weighted_price} + (\frac{\text{p_crypto_r} * \text{p_stable_agg}}{\text{p_stable_r}}) * weight$$
 
-$\text{crv_p} = \frac{\text{weighted_price}}{\text{weights}}$
+$\text{eth price} = \frac{\text{weighted_price}}{\text{weights}}$
 
 
-calculate stETH price:
+get price oracle for steth/eth stableswap pool: why no inverse here??  its d_eth / d_steth
+$p_staked: uint256 = STAKEDSWAP.price_oracle()$
 
-$$\text{p_staked} = min(\text{p_staked}, 10^{18}) * WSTETH.stEthPerToken() / 10**18$$
+
+limit the stETH price: minimum of steth price and 1 eth, because 1 steth can always be redeemed for 1 eth, so we assume 10^18 is the minimum price. then we multiply whatever value is smaller by WSTETH.stEthPerToken() to calculate how much steth it really is, as we provide wsteth (is worth more than steth because its rebasing).
+
+$$\text{p_staked} = min(\text{p_staked}, 10^{18}) * \frac{WSTETH.stEthPerToken()}{10**{18}}$$
+
 
 
 
