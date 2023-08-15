@@ -25,7 +25,7 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
     Getter for the admin of the contract.
 
-    Returns: **admin** (`address`).
+    Returns: admin (`address`).
 
     ??? quote "Source code"
 
@@ -66,9 +66,14 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
     Function to set/change the admin of the contract.
 
+    Emits event: `SetAdmin`
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_admin` |  `address` | New Admin Address |
+
+    !!!note
+        This function can only be called by the `admin` of the contract.
 
     ??? quote "Source code"
 
@@ -89,10 +94,6 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
             self.admin = _admin
             log SetAdmin(_admin)
         ```
-    
-    !!!note 
-        Admin address was set to the **CurveOwnershipAgent** after deployment ([Tx-Hash](https://etherscan.io/tx/0x2123091548f65028283a5fe1e9165bf036060130cb92d64d7d558ed72cc17a7b)).  
-        Further changes can only be done by a vote via the DAO.
 
     === "Example"
         ```shell
@@ -108,7 +109,7 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
     Getter for the name of the token.
 
-    Returns: **name** (`String[64]`).
+    Returns: name (`String[64]`).
 
     ??? quote "Source code"
 
@@ -144,16 +145,13 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
         'Curve DAO Token'
         ```
 
-    !!! note
-        Name be changed by calling the `set_name()` function (see below).
-
 
 ### `symbol`
 !!! description "`CRV.symbol() -> String[32]`"
 
     Getter of the token symbol.
 
-    Returns: **symbol** (`String[32]`).
+    Returns: symbol (`String[32]`).
     
     ??? quote "Source code"
 
@@ -198,6 +196,9 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
     Function to change token name to `_name` and token symbol to `_symbol`.
 
+    !!!note
+        This function can only be called by the `admin` of the contract.
+
     ??? quote "Source code"
 
         ```python hl_lines="1 2 5"
@@ -232,7 +233,7 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
     Getter for the current number of CRV tokens in existence (claimed or unclaimed).
 
-    Returns: **number of tokens** (`uint256`).
+    Returns: number of tokens (`uint256`).
 
     ??? quote "Source code"
 
@@ -262,7 +263,7 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
     Getter for mintable supply from start timestamp till end timestamp.
 
-    Returns: **amount of mintable tokens** (`uint256`) within two timestamps.
+    Returns: amount of mintable tokens (`uint256`) within two timestamps.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -332,7 +333,7 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
     Getter for the total number of tokens in existence.
 
-    Returns: **number of tokens** (`uint256`)
+    Returns: total supply (`uint256`).
 
     ??? quote "Source code"
 
@@ -358,7 +359,7 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
     Getter method to check the amount of tokens that an owner allowed to a spender.
 
-    Returns: **amount of tokens** (`uint256`) the `_owner` allowed to `_spender`.
+    Returns: amount of tokens (`uint256`) the `_owner` allowed to `_spender`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -393,7 +394,7 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
     Getter of the decimals of the token.
 
-    Returns: **decimals** (`uint256`) of the token.    
+    Returns: decimals (`uint256`).    
 
     ??? quote "Source code"
 
@@ -431,6 +432,28 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
 
 ### `balanceOf`
+!!! description "`CRV.balanceOf(arg0: address) -> address: view`"
+
+    Getter for the $CRV balance of a specific address.
+
+    Returns: $CRV balance (`uint256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `arg0` |  `address` | Wallet to check $CRV balance for |
+
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1"
+        balanceOf: public(HashMap[address, uint256])
+        ```
+
+    === "Example"
+        ```shell
+        >>> CRV.balanceOf('0xd061D61a4d941c39E5453435B6345Dc261C2fcE0')
+        2187980063734121847368
+        ```
 
 
 ### `minter`
@@ -453,12 +476,149 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
         ```
 
 
+## **Minting and Burning**
+
+### `mint`
+!!! description "`CRV.mint(_to: address, _value: uint256) -> bool:`"
+
+    Function to mint `_value (uint256)` and assign them to `_to (address)`.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_to` |  `address` | Assigned Wallet |
+    | `_value` |  `uint256` | Value To Mint  |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="7 9"
+        event Transfer:
+            _from: indexed(address)
+            _to: indexed(address)
+            _value: uint256
+
+        @external
+        def mint(_to: address, _value: uint256) -> bool:
+            """
+            @notice Mint `_value` tokens and assign them to `_to`
+            @dev Emits a Transfer event originating from 0x00
+            @param _to The account that will receive the created tokens
+            @param _value The amount that will be created
+            @return bool success
+            """
+            assert msg.sender == self.minter  # dev: minter only
+            assert _to != ZERO_ADDRESS  # dev: zero address
+
+            if block.timestamp >= self.start_epoch_time + RATE_REDUCTION_TIME:
+                self._update_mining_parameters()
+
+            _total_supply: uint256 = self.total_supply + _value
+            assert _total_supply <= self._available_supply()  # dev: exceeds allowable mint amount
+            self.total_supply = _total_supply
+
+            self.balanceOf[_to] += _value
+            log Transfer(ZERO_ADDRESS, _to, _value)
+
+            return True
+        ```
+
+    === "Example"
+        ```shell
+        >>> CRV.mint()
+        todo
+        ```
+
+### `set_minter`
+!!! description "`CRV.set_minter(_minter: address):`"
+
+    Function to set the minter address of the contract. 
+
+    Emits event: `SetMinter`
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 2 4 7"
+        event SetMinter:
+            minter: address
+        
+        minter: public(address)
+
+        @external
+        def set_minter(_minter: address):
+            """
+            @notice Set the minter address
+            @dev Only callable once, when minter has not yet been set
+            @param _minter Address of the minter
+            """
+            assert msg.sender == self.admin  # dev: admin only
+            assert self.minter == ZERO_ADDRESS  # dev: can set the minter only once, at creation
+            self.minter = _minter
+            log SetMinter(_minter)
+        ```
+
+    !!! note
+        The minter of the token can only be set once by calling `set_minter`. This occured in this [transaction](https://etherscan.io/tx/0x98578e36a43c16bce03585bb42d4abb25d497b3e593f9fca56c591c5d0ec8de6).
+
+
+### `burn`
+!!! description "`CRV.burn(_value: uint256) -> bool`"
+    
+    Function to burn `_value` tokens belonging to the caller of the function.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_value` |  `uint256` | Value To Burn |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="2 4"
+        @external
+        def burn(_value: uint256) -> bool:
+            """
+            @notice Burn `_value` tokens belonging to `msg.sender`
+            @dev Emits a Transfer event with a destination of 0x00
+            @param _value The amount that will be burned
+            @return bool success
+            """
+            self.balanceOf[msg.sender] -= _value
+            self.total_supply -= _value
+
+            log Transfer(msg.sender, ZERO_ADDRESS, _value)
+            return True
+        ```
+
+    === "Example"   
+        ```shell
+        >>> CRV.burn()
+        todo
+        ```
+
+
+## **$CRV Emissions**
+
+Mining parameters are used to determin the tokens emissions. The emissions are based on epochs (one year). With every epoch passing, the `rate` will reduce and therefore reduce the entire $CRV emissions.
+
+The rate is reduced by updating the mining parameters using the `update_mining_parameters()` function. While anyone can call this function, the call will revert if a year hasn't elapsed. Each time it's successfully called, the `mining_epoch` increments by 1 and the `start_epoch_time` is set to the timestamp of the function call. The `update_mining_parameters()` function is automatically triggered when someone attempts to mint CRV before the rate reduction.
+
+$$rate_{future} = rate_{current} * \frac{\text{RATE_DENOMINATOR}}{\text{RATE_REDUCTION_COEFFICIENT}}$$
+
+*with*:
+
+$\text{RATE_DENOMINATOR} =  10^{18} = 1000000000000000000$  
+$\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18} = 1189207115002721024$
+
+Effectively, every rate reduction decreases the $CRV inflation by around 15.9%.
+
+!!!note
+    Transaction of Curve DAO Token deployment: https://etherscan.io/tx/0x5dc4a688b63cea09bf4d73a695175b77572792a2e2b3656297809ad3596d4bfe
+
+
+
 ### `mining_epoch`
 !!! description "`CRV.mining_epoch() -> int128: view`"
 
-    Getter for the current mining epoch.
+    Getter for the current mining epoch. The mining epoch is incremented by 1 every time `update_mining_parameters()` is successfully called. At deployment, `mining_epoch` was set to -1.
 
-    Returns: **mining epoch** (`int128`).
+    Returns: mining epoch (`int128`).
 
     ??? quote "Source code"
 
@@ -521,9 +681,9 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 ### `start_epoch_time`
 !!! description "`CRV.start_epoch_time() -> uint256: view`"
 
-    Getter for the start time of the current mining epoch.
+    Getter for the start times of the current mining epoch.
 
-    Returns: **timestamp** (`uint256`).
+    Returns: timestamp (`uint256`).
 
     ??? quote "Source code"
 
@@ -565,7 +725,7 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
     Getter for the current rate of CRV emissions.
 
-    Returns: current **rate** (`uint256`) of emissions.
+    Returns: current rate (`uint256`).
 
     ??? quote "Source code"
 
@@ -606,131 +766,16 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
         Emissions per day: 6.161965695807970181 * 86400 = 532393.8361178086
 
 
-## **Minting and Burning**
-
-### `mint`
-!!! description "`CRV.mint(_to: address, _value: uint256) -> bool:`"
-
-    Function to mint `_value (uint256)` and assign them to `_to (address)`.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_to` |  `address` | Assigned Wallet |
-    | `_value` |  `uint256` | Value To Mint  |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="7 9"
-        event Transfer:
-            _from: indexed(address)
-            _to: indexed(address)
-            _value: uint256
-
-        @external
-        def mint(_to: address, _value: uint256) -> bool:
-            """
-            @notice Mint `_value` tokens and assign them to `_to`
-            @dev Emits a Transfer event originating from 0x00
-            @param _to The account that will receive the created tokens
-            @param _value The amount that will be created
-            @return bool success
-            """
-            assert msg.sender == self.minter  # dev: minter only
-            assert _to != ZERO_ADDRESS  # dev: zero address
-
-            if block.timestamp >= self.start_epoch_time + RATE_REDUCTION_TIME:
-                self._update_mining_parameters()
-
-            _total_supply: uint256 = self.total_supply + _value
-            assert _total_supply <= self._available_supply()  # dev: exceeds allowable mint amount
-            self.total_supply = _total_supply
-
-            self.balanceOf[_to] += _value
-            log Transfer(ZERO_ADDRESS, _to, _value)
-
-            return True
-        ```
-
-    === "Example"
-        ```shell
-        >>> CRV.mint()
-        todo
-        ```
-
-### `set_minter`
-!!! description "`CRV.set_minter(_minter: address):`"
-
-    Function to set the minter address of the contract. 
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 2 4 7"
-        event SetMinter:
-            minter: address
-        
-        minter: public(address)
-
-        @external
-        def set_minter(_minter: address):
-            """
-            @notice Set the minter address
-            @dev Only callable once, when minter has not yet been set
-            @param _minter Address of the minter
-            """
-            assert msg.sender == self.admin  # dev: admin only
-            assert self.minter == ZERO_ADDRESS  # dev: can set the minter only once, at creation
-            self.minter = _minter
-            log SetMinter(_minter)
-        ```
-
-    !!! note
-        The minter of the token can only be set once by calling `set_minter`. This occured in this [transaction](https://etherscan.io/tx/0x98578e36a43c16bce03585bb42d4abb25d497b3e593f9fca56c591c5d0ec8de6).
-
-
-### `burn`
-!!! description "`CRV.burn(_value: uint256) -> bool`"
-    
-    Function to burn `_value` tokens belonging to the caller of the function.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_value` |  `uint256` | Value To Burn |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="2 4"
-        @external
-        def burn(_value: uint256) -> bool:
-            """
-            @notice Burn `_value` tokens belonging to `msg.sender`
-            @dev Emits a Transfer event with a destination of 0x00
-            @param _value The amount that will be burned
-            @return bool success
-            """
-            self.balanceOf[msg.sender] -= _value
-            self.total_supply -= _value
-
-            log Transfer(msg.sender, ZERO_ADDRESS, _value)
-            return True
-        ```
-
-    === "Example"   
-        ```shell
-        >>> CRV.burn()
-        todo
-        ```
-
-
-
-
-
-
-## **WRITE FUNCTIONS**
-
-### `update_mining_parameters`
+### `update_mining_parameters` 
 !!! description "`update_mining_parameters()`"
 
-    todo
+    Function to update the mining parameters for the Curve DAO Token ($CRV).  
+
+    Emits event: `UpdateMiningParameters`
+
+    !!!note
+        This function can be called by anyone. However, the call will revert if `block.timestamp` is less than or equal to `start_epoch_time` + `RATE_REDUCTION_TIME`, indicating that one year has not yet passed.
+
 
     ??? quote "Source code"
 
@@ -755,6 +800,16 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
         start_epoch_supply: uint256
 
+        @external
+        def update_mining_parameters():
+            """
+            @notice Update mining rate and supply at the start of the epoch
+            @dev Callable by any address, but only once per epoch
+                Total supply becomes slightly larger if this function is called late
+            """
+            assert block.timestamp >= self.start_epoch_time + RATE_REDUCTION_TIME  # dev: too soon!
+            self._update_mining_parameters()
+
         @internal
         def _update_mining_parameters():
             """
@@ -777,16 +832,6 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
             self.rate = _rate
 
             log UpdateMiningParameters(block.timestamp, _rate, _start_epoch_supply)
-
-        @external
-        def update_mining_parameters():
-            """
-            @notice Update mining rate and supply at the start of the epoch
-            @dev Callable by any address, but only once per epoch
-                Total supply becomes slightly larger if this function is called late
-            """
-            assert block.timestamp >= self.start_epoch_time + RATE_REDUCTION_TIME  # dev: too soon!
-            self._update_mining_parameters()
         ```
 
     === "Example"
@@ -799,13 +844,13 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 ### `start_epoch_time_write`
 !!! description "`CRV.start_epoch_time_write() -> uint256`"
 
-    Function to get the current mining epoch start while simultaneously updating mining parameters.
+    Function to get the current mining epoch start while simultaneously updating mining parameters (if possible).
 
-    Returns: **current mining epoch start** (`uint256`)
+    Returns: timestamp (`uint256`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```python hl_lines="4 13 15"
         start_epoch_time: public(uint256)
 
         @external
@@ -833,9 +878,9 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 ### `future_epoch_time_write`
 !!! description "`CRV.future_epoch_time_write() -> uint256`"
 
-    Function to get the next mining epoch start while simultaneously updating mining parameters.
+    Function to get the next mining epoch start while simultaneously updating mining parameters (if possible).
 
-    Returns: **next mining epoch start** (`uint256`)
+    Returns: timestamp(`uint256`).
 
     ??? quote "Source code"
 
