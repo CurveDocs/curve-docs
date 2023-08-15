@@ -1,5 +1,8 @@
 **More on oracles coming soon-ish!**
 
+The price-oracle contract of the markets can be fetched by calling `price_oracle_contract` on the AMM contract.
+
+
 ### `tricrypto`
 !!! description "`Oracle.tricrypto() -> address: view`"
 
