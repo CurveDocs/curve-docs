@@ -14,14 +14,10 @@ The function computes the weighted average price of ETH from multiple liquidity 
 
 `last_tvl` get updated whenever calling `price_w()` because this sets the variable to the value returned when calling `_ema_tvl()`.
 only calculates ema tvl when $last_{timestamp} < block.timestamp$, otherwise it will just return `last_tvl` again as it is still the same block. 
-<<<<<<< HEAD
 
 ema tvls are calculated to compute the weighted price of an asset later on.
 
 13h exponential moving average of tvl
-=======
-13h exponential moving average of TVL
->>>>>>> 5605908ef8e3f7584552121e7c9a25e18fe92380
 
 ??? quote "abreviations used in code"
     ```
