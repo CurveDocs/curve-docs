@@ -70,10 +70,26 @@ th {
 }
 
 .md-nav__item .md-nav__link {
-    padding-left: 20px;
+    padding-left: 0px; 
 }
 
-.md-nav__title,
-.md-nav__link[id*="__nav_"] {
-    padding-left: 0;
+.md-nav[data-md-level="1"] .md-nav__link {
+    padding-left: 15px;
 }
+
+.md-nav[data-md-level="2"] .md-nav__link {
+    padding-left: 30px;
+}
+
+.md-nav[data-md-level="3"] .md-nav__link {
+    padding-left: 45px;
+}
+
+.md-nav[data-md-level="4"] .md-nav__link {
+    padding-left: 60px;
+}
+
+.md-nav[data-md-level="5"] .md-nav__link {
+    padding-left: 75px;
+}
+
