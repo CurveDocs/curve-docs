@@ -17,22 +17,55 @@ stableswap aggregator is the contract which aggregates the price of crvusd
 
 `last_tvl` get updated whenever calling `price_w()` because this sets the variable to the value returned when calling `_ema_tvl()`.
 only calculates ema tvl when $last_{timestamp} < block.timestamp$, otherwise it will just return `last_tvl` again as it is still the same block. 
+
+ema tvls are calculated to compute the weighted price of an asset later on.
+
 13h exponential moving average of tvl
 
-$$\alpha = \exp{(\frac{-(block.timestamp - last_{timestamp}) * 10^{18}}{\text{TVL_MA_TIME}})}$$
+??? quote "abreviations used in code"
+    ```
+    α = alpha
+    exp = `exp(power: int256) -> uint256:` 
+    $TS_i$ = TRICRYPTO[i].totalSupply()
+    $VP_i$ = TRICRYPTO[i].virtual_price()
+    ```
 
+
+### calculate smoothing factor ($\alpha$)
+formula is converted to a int256 before being able to calculate, because exp() requires an int256 as input.
+
+$$\alpha = \exp{-\frac{(block.timestamp - \text{last_timestamp}) * 10^{18}}{\text{TVL_MA_TIME}}}$$
+
+$\alpha = \text{smoothing factor}$  
+$\text{block.timestamp} = \text{current timestamp}$  
+$\text{last_timestamp} = \text{last timestamp when}$ `price_w()` $\text{was called}$  
+$\text{TVL_MA_TIME} =$ `TVL_MA_TIME`  
+
+alpha values can range between 1 and 0:    
 $\alpha = 1.0$ when $\delta t = 0$  
 $\alpha = 0.0$ when $\delta t = \infty$
 
-then calculates tvl of the tricrypto pools by iterating through the tricrypto pools (tricryptoUSDC and tricryptoUSDT): 
 
+### calculate tvl's
+then calculates tvl of the tricrypto pools by iterating through the tricrypto pools (tricryptoUSDC and tricryptoUSDT), fetching the `totalSupply` and multiplying it with the `virtual_price`: 
 
-$$tvl = \frac{TS_i * VP_i}{10^{18}}$$
+$$tvl_{i} = \frac{TS_i * VP_i}{10^{18}}$$
 
-$$\text{last_tvl}_i = \frac{tvl * (10^{18} - \alpha) + \text{last_tvl}_i * \alpha}{10^{18}}$$
-
+$tvl_i = \text{total value locked of i-th pool}$ in `TRICRYPTO[N_POOLS]`  
 $TS_i = \text{total supply of i-th pool}$ in `TRICRYPTO[N_POOLS]`  
-$VP_i = \text{virtual price of i-th pool}$ in `TRICRYPTO[N_POOLS]`  
+$VP_i = \text{virtual price of i-th pool}$ in `TRICRYPTO[N_POOLS]` 
+
+
+$$\text{last_tvl}_i = \frac{tvl_i * (10^{18} - \alpha) + \text{last_tvl}_i * \alpha}{10^{18}}$$
+
+**why not:** 
+
+$$\text{last_tvl}_i = \frac{tvl_i * \alpha + \text{last_tvl}_i * (10^{18} - \alpha)}{10^{18}}$$
+
+
+
+
+$\text{last_tvl}_i = \text{total value locked of i-th pool}$ in `TRICRYPTO[N_POOLS]` 
 
 function returns `last_tvl` for the tricrypto pools.
 
@@ -62,10 +95,13 @@ function returns `last_tvl` for the tricrypto pools.
     ```
 
 
-## RAW PRICE
+
+
+
+## CALCULATE RAW PRICE
 
 input variables for this function: `tvls` which is calculated calling `_ema_tvl` and `agg_price` (which is STABLESWAP_AGGREGATOR.price()). this function iterates over `N_POOLS` again.
-`price_oracle(k: uint256)` returns the oracle price of the coin at index `k` w.r.t the coin at index 0 (USDC / USDT).
+`price_oracle(k: uint2  56)` returns the oracle price of the coin at index `k` w.r.t the coin at index 0 (USDC / USDT).
 
 crv_p = eth price
 
@@ -92,7 +128,6 @@ $p_staked: uint256 = STAKEDSWAP.price_oracle()$
 limit the stETH price: minimum of steth price and 1 eth, because 1 steth can always be redeemed for 1 eth, so we assume 10^18 is the minimum price. then we multiply whatever value is smaller by WSTETH.stEthPerToken() to calculate how much steth it really is, as we provide wsteth (is worth more than steth because its rebasing).
 
 $$\text{p_staked} = min(\text{p_staked}, 10^{18}) * \frac{WSTETH.stEthPerToken()}{10**{18}}$$
-
 
 
 
@@ -430,12 +465,6 @@ $$\text{p_staked} = min(\text{p_staked}, 10^{18}) * \frac{WSTETH.stEthPerToken()
         >>> Oracle.stablecoin()
         '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
         ```
-
-
-
-
-
-
 
 
 ### `redeemable`
