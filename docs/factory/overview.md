@@ -1,9 +1,17 @@
-# Curve Factory
+# Curve Factorys
 
-The factory allows for permissionless deployment of Curve pools and gauges. Source code for factory contracts may be 
-viewed on [Github](https://github.com/curvefi/curve-factory).
+The factory allows for permissionless deployment of Curve pools and gauges.
 
-# Organization
+StableSwap Factory: [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4)
+
+CryptoSwap Factory (two-coin volatile asset pools): [0xF18056Bbd320E96A48e3Fbf8bC061322531aac99](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99)
+
+Tricrypto Factory (three-coin volatile asset pools): [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963)
+
+Source code for factory contracts may be viewed on [Github](https://github.com/curvefi/curve-factory).
+
+
+# **Organization**
 
 The factory has several core components:
 
@@ -30,30 +38,46 @@ Source code for this contract is may be viewed on
     killed and tokens cannot be rescued from them!
     
     - The token within the new pool must expose a decimals method and use a maximum of 18 decimal places.
-    - The token’s transfer and transferFrom methods must revert upon failure.
+    - The token’s `transfer` and `transferFrom` methods must revert upon failure.
     - Successful token transfers must move exactly the specified number of tokens between the sender and receiver. 
       Tokens that take a fee upon a successful transfer may cause the pool to break or act in unexpected ways.
     - Pools deployed by the factory cannot be paused or killed.
-    - Pools deployed by the factory are not eligible for CRV rewards.
 
-The factory can be used to deploy the following:
+The factories can be used to deploy the following:
 
 - plain pools
+- base pools (needs a DAO vote)
 - metapools (paired against admin-approved base pools)
+- tricrypto pools
 - gauges
 
-# Base Pools
+# **Pools**
+## **Base Pools**
 
 A metapool pairs a coin against the LP token of another pool. This other pool is referred to as the “base pool”. 
 By using LP tokens, metapools allow swaps against any asset within their base pool, without diluting the base pool’s 
 liquidity.
+Existing base pools can be obtained by querying `base_pool_list` within the [MetaRegistry API](../registry/overview.md) or the MetaPoolFactory-Contract itself.
+
+```shell
+>>> MetaRegistry.base_pool_list(0):
+'0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7'
+```
+
 
 The factory allows deployment of metapools that use the following base pools:
 
-- 3pool (USD denominated assets): [0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7](https://etherscan.io/address/0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7)
-- sBTC (BTC denominated assets): [0x7fC77b5c7614E1533320Ea6DDc2Eb61fa00A9714](https://etherscan.io/address/0x7fC77b5c7614E1533320Ea6DDc2Eb61fa00A9714)
+| Name      | Coins   | Contract Address |
+| ----------- | -------| ----|
+| `3pool` |  `USDT <> USDC <> DAI` | [0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7](https://etherscan.io/address/0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7) |
+| `sBTC` |  `sBTC <> wBTC <> renBTC` | [0x7fC77b5c7614E1533320Ea6DDc2Eb61fa00A9714](https://etherscan.io/address/0x7fC77b5c7614E1533320Ea6DDc2Eb61fa00A9714) |
+| `renBTC` |  `renBTC <> wBTC` | [0x93054188d876f558f4a66B2EF1d97d16eDf0895B](https://etherscan.io/address/0x93054188d876f558f4a66B2EF1d97d16eDf0895B) |
+| `fraxBP` |  `FRAX <> USDC` |[0xDcEF968d416a41Cdac0ED8702fAC8128A64241A2](https://etherscan.io/address/0xDcEF968d416a41Cdac0ED8702fAC8128A64241A2) |
+| `sBTC2` |  `sBTC <> wBTC` | [0xf253f83AcA21aAbD2A20553AE0BF7F65C755A07F](https://etherscan.io/address/0xf253f83AcA21aAbD2A20553AE0BF7F65C755A07F) |
 
 It is possible to enable additional base pools through a DAO vote.
+
+## **Meta Pools** (todo)
 
 # Choosing an Amplification Coefficient
 

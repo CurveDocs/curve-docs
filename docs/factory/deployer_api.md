@@ -1,10 +1,17 @@
-## Deploy Pools
+what kind of factories are there?
+stableswap, crypto, tricrypto
+why crypto basepools only on other chains? why not eth mainnet?
+
+
+
+# Deploy Pools
+
+## **StableSwap Pools**
 
 StableSwap Factory: [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4)
 
 !!! note
     After deploying a pool, you must also add initial liquidity before the pool can be used.
-
 
 
 ### `deploy_plain_pool`
@@ -170,15 +177,14 @@ Limitations when deplyoing plain pools:
 
 
 
-### `deploy_metapool`
-
+### `deploy_metapool`  
 Limitations when deplyoing plain pools:
 
 1. $4000000$ (0.04%) $\leq$ `_fee` $\leq 100000000$ (0.1%)
 2. valid `_implementation_idx` (can not be `ZERO_ADDRESS`)
 3. maximum of 18 decimals for the coins
 
-!!! description "`Factory.deploy_metapool(_base_pool: address, _name: String[32], _symbol: String[10], _coin: address, _A: uint256, _fee: uint256) → address: nonpayable`"
+!!! description "`Factory.deploy_metapool(_base_pool: address, _name: String[32], _symbol: String[10], _coin: address, _A: uint256, _fee: uint256, _implementation_idx: uint256 = 0) -> address:`"
 
     Function to deploy a metapool.
 
@@ -194,6 +200,7 @@ Limitations when deplyoing plain pools:
     | `_coin` |  `address` | Address of the coin being used in the metapool |
     | `_A` |  `uint256` | Amplification coefficient |
     | `_fee` |  `uint256` | Trade fee, given as an integer with `1e10` precision |
+    | `_implementation_idx` |  `uint256` | Index of the implementation to use. All possible implementations for a pool of N_COINS can be publicly accessed via `plain_implementations(N_COINS)` |
 
     ??? quote "Source code"
 
@@ -286,20 +293,169 @@ Limitations when deplyoing plain pools:
     === "Example"
 
         ```shell
-        >>> factory = Contract('0xB9fC157394Af804a3578134A6585C0dc9cc990d4')
-        >>> esd = Contract('0x36F3FD68E7325a35EB768F1AedaAe9EA0689d723')
-        >>> threepool = Contract('0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7')
-        
-        >>> tx = factory.deploy_metapool(threepool, "Empty Set Dollar", "ESD", esd, 10, 4000000, {'from': alice})
-        Transaction sent: 0x2702cfc4b96be1877f853c246be567cbe8f80ef7a56348ace1d17c026bc31b68
-          Gas price: 20 gwei   Gas limit: 1100000   Nonce: 9
-        
-        >>> tx.return_value
-        "0xFD9f9784ac00432794c8D370d4910D2a3782324C"
+
         ```
 
 
-## Deploy Tricrypto Pool
+
+
+
+
+
+## **Deploy CryptoSwap Pool**
+### `deploy_pool`
+
+Limitations when deplyoing plain pools:
+
+1. $4000000$ (0.04%) $\leq$ `_fee` $\leq 100000000$ (0.1%)
+2. valid `_implementation_idx` (can not be `ZERO_ADDRESS`)
+3. minimum of 2 coins and maximum of 4 coins
+4. can not pair with a coin which is included in a basepool
+5. if paired against plain eth (0xE...EeE), eth mus be first coin of the pool (`_coins[0] = plain eth`)
+6. maximum of 18 decimals for the coins
+7. no duplicate coins
+
+!!!warning
+    Transaction will fail when the requirements are not met.
+
+!!! description "`Factory.deploy_pool(_name: String[32], _symbol: String[10], _coins: address[2], A: uint256, gamma: uint256, mid_fee: uint256, out_fee: uint256, allowed_extra_profit: uint256, fee_gamma: uint256, adjustment_step: uint256, admin_fee: uint256, ma_half_time: uint256, initial_price: uint256) -> address:`"
+
+    Function to deploy a plain pool.
+
+    Returns: deployed pool (`address`).
+
+    Emits event: `PlainPoolDeployed`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_name` |  `String[32]` | Name of the new plain pool |
+    | `_symbol` |  `String[10]` | Symbol for the new metapool’s LP token. This value will be concatenated with the factory symbol. |
+    | `_coins` |  `address[4]` | List of addresses of the coins being used in the pool |
+    | `_A` |  `uint256` | Amplification coefficient |
+    | `_fee` |  `uint256` | Trade fee, given as an integer with `1e10` precision |
+    | `_asset_type` |  `uint256` | Asset type of the pool as an integer. 0 = `USD`, 1 = `ETH`, 2 = `BTC`, 3 = Other. |
+    | `_implementation_idx` |  `uint256` | Index of the implementation to use. All possible implementations for a pool of N_COINS can be publicly accessed via `plain_implementations(N_COINS)`. |
+
+    ??? quote "Source code"
+
+        ```python
+        event CryptoPoolDeployed:
+            token: address
+            coins: address[2]
+            A: uint256
+            gamma: uint256
+            mid_fee: uint256
+            out_fee: uint256
+            allowed_extra_profit: uint256
+            fee_gamma: uint256
+            adjustment_step: uint256
+            admin_fee: uint256
+            ma_half_time: uint256
+            initial_price: uint256
+            deployer: address
+
+        @external
+        def deploy_pool(
+            _name: String[32],
+            _symbol: String[10],
+            _coins: address[2],
+            A: uint256,
+            gamma: uint256,
+            mid_fee: uint256,
+            out_fee: uint256,
+            allowed_extra_profit: uint256,
+            fee_gamma: uint256,
+            adjustment_step: uint256,
+            admin_fee: uint256,
+            ma_half_time: uint256,
+            initial_price: uint256
+        ) -> address:
+            """
+            @notice Deploy a new pool
+            @param _name Name of the new plain pool
+            @param _symbol Symbol for the new plain pool - will be concatenated with factory symbol
+            Other parameters need some description
+            @return Address of the deployed pool
+            """
+            # Validate parameters
+            assert A > MIN_A-1
+            assert A < MAX_A+1
+            assert gamma > MIN_GAMMA-1
+            assert gamma < MAX_GAMMA+1
+            assert mid_fee > MIN_FEE-1
+            assert mid_fee < MAX_FEE-1
+            assert out_fee >= mid_fee
+            assert out_fee < MAX_FEE-1
+            assert admin_fee < 10**18+1
+            assert allowed_extra_profit < 10**16+1
+            assert fee_gamma < 10**18+1
+            assert fee_gamma > 0
+            assert adjustment_step < 10**18+1
+            assert adjustment_step > 0
+            assert ma_half_time < 7 * 86400
+            assert ma_half_time > 0
+            assert initial_price > 10**6
+            assert initial_price < 10**30
+            assert _coins[0] != _coins[1], "Duplicate coins"
+
+            decimals: uint256[2] = empty(uint256[2])
+            for i in range(2):
+                d: uint256 = ERC20(_coins[i]).decimals()
+                assert d < 19, "Max 18 decimals for coins"
+                decimals[i] = d
+            precisions: uint256 = (18 - decimals[0]) + shift(18 - decimals[1], 8)
+
+
+            name: String[64] = concat("Curve.fi Factory Crypto Pool: ", _name)
+            symbol: String[32] = concat(_symbol, "-f")
+
+            token: address = create_forwarder_to(self.token_implementation)
+            pool: address = create_forwarder_to(self.pool_implementation)
+
+            Token(token).initialize(name, symbol, pool)
+            CryptoPool(pool).initialize(
+                A, gamma, mid_fee, out_fee, allowed_extra_profit, fee_gamma,
+                adjustment_step, admin_fee, ma_half_time, initial_price,
+                token, _coins, precisions)
+
+            length: uint256 = self.pool_count
+            self.pool_list[length] = pool
+            self.pool_count = length + 1
+            self.pool_data[pool].token = token
+            self.pool_data[pool].decimals = shift(decimals[0], 8) + decimals[1]
+            self.pool_data[pool].coins = _coins
+
+            key: uint256 = bitwise_xor(convert(_coins[0], uint256), convert(_coins[1], uint256))
+            length = self.market_counts[key]
+            self.markets[key][length] = pool
+            self.market_counts[key] = length + 1
+
+            log CryptoPoolDeployed(
+                token, _coins,
+                A, gamma, mid_fee, out_fee, allowed_extra_profit, fee_gamma,
+                adjustment_step, admin_fee, ma_half_time, initial_price,
+                msg.sender)
+            return pool
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> factory = Contract('0xB9fC157394Af804a3578134A6585C0dc9cc990d4')
+        >>> llamaUSD1 = Contract('0x...llama1')
+        >>> llamaUSD2 = Contract('0x...llama2')
+        >>> llamaUSD3 = Contract('0x...llama3')
+        >>> factory.deploy_plain_pool("llamaUSD1/llamasUSD2/llamaUSD3", "llama", "'0x...llama1', '0x...llama2', 0x...llama2'", 100, 4000000)
+        'returns address of deployed pool'
+        ```
+
+    !!!note
+        `_asset_type` and `_implementation_idx` values are defaulted to 0 if no other inputs are given.
+
+
+
+
+## **Deploy Tricrypto Pool**
 
 Tricrypto pools are volatile three-coin liquidity pools. For a better understanding please refer to: CryptoSwap
 
