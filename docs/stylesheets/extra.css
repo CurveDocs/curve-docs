@@ -69,6 +69,11 @@ th {
     padding: 9px;
 }
 
-nav > *:not(ul > li > label) {
-  margin-left: 20px;
+.md-nav__item .md-nav__link {
+    padding-left: 20px;
+}
+
+.md-nav__title,
+.md-nav__link[id*="__nav_"] {
+    padding-left: 0;
 }
