@@ -552,7 +552,7 @@ Tricrypto pools are volatile three-coin liquidity pools. For a better understand
 |$fee_{max}$   | $10 * 10^{9} = 10000000000$ |
 
 
-### `TricryptoFactory.deploy_pool`
+### `deploy_pool`
 !!! description "`Factory.deploy_pool(_name: String[64], _symbol: String[32], _coins: address[N_COINS], _weth: address, implementation_id: uint256, A: uint256, gamma: uint256, mid_fee: uint256, out_fee: uint256, fee_gamma: uint256, allowed_extra_profit: uint256, adjustment_step: uint256, ma_exp_time: uint256, initial_prices: uint256[N_COINS-1],) -> address:`"   
 
     Function to deploy a tricrypto pool.
@@ -774,15 +774,12 @@ Tricrypto pools are volatile three-coin liquidity pools. For a better understand
 
 ## Deploy Gauge
 
-!!!warning
-    When deploying gauges, the same contract has to be used as the one that deployed the pool.
+### `deploy_gauge`
 
-### `Factory.deploy_gauge`
-
-!!! description "`Factory.deploy_gauge(_pool: address) -> address`"
+!!! description "`deploy_gauge(_pool: address) -> address`"
 
     Deploy a liquidity gauge for a factory pool. The deployed gauge implementation is whatever the factory admin
-    has set `Factory.gauge_implementation` to.
+    has set `gauge_implementation` to.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -814,5 +811,7 @@ Tricrypto pools are volatile three-coin liquidity pools. For a better understand
     === "Example"
 
         ```shell
-        >>> todo: 
+        >>> Factory.deploy_gauge('0x...')
+
+        >>> 'returns address of the deployed gauge' 
         ```

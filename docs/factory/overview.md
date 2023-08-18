@@ -93,7 +93,11 @@ A metapool pairs a coin against the LP token of another pool (base-pool).
 ## **Plain Pools**
 A plain pool pairs a minimum of 2 and a maximum of 4 coins. These coins are not paired with another pool. However, a plain pool can only pair assets that are not included in any base pool.
 
+## **Two-Coin Crypto Pools** 
+A crypto pool with two volatile coins.
 
+## **Three-Coin Crypto Pools** 
+A crypto pool with three volatile coins, also called "Tricrypto" pool.
 
 
 # **Recommended Parameters**
