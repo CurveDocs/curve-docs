@@ -59,6 +59,8 @@ The factories can be used to deploy the following:
 - gauges
 
 
+# **Poold**
+
 ## **Base Pools**
 
 A metapool pairs a coin against the LP token of another pool. This other pool is referred to as the “base pool”. 
@@ -94,27 +96,52 @@ A plain pool pairs a minimum of 2 and a maximum of 4 coins. These coins are not 
 
 
 
-# Choosing an Amplification Coefficient
+# **Recommended Parameters**
 
-The amplification coefficient (“A”) determines a pool’s tolerance for imbalance between the assets within it. 
-A higher value means that trades will incur slippage sooner as the assets within the pool become imbalanced.
+!!!warning
+    Please understand that these are just recommendations based on date of previously deployed pools.
+    For further undestanding of the parameters please refer to other parts of the documentation.
 
-The appropriate value for A is dependent upon the type of coin being used within the pool. We recommend the following 
-values:
+## **StableSwap Pools**
 
-- Stable Pools (plain-pools, base-pools and meta-pools):
-  - Uncollateralized algorithmic stablecoins: `5-10`
-  - Non-redeemable, collateralized assets: `100`
-  - Redeemable assets: `200-400` 
+| Parameter | Recommendation |
+| ----------------------------- | -------------- |
+| `_A` for Uncollateralized algorithmic stablecoins  | 5 - 10   |
+| `_A` for Non-redeemable, collateralized assets     | 100    | 
+| `_A` for Redeemable assets                         | 200 - 400|
+| `_fee`                                             | - |
 
 
-It is possible to modify the amplification coefficient for a pool after it has been deployed. However, it requires a 
-vote within the Curve DAO and must reach a 15% quorum.
 
-# Trade Fees
 
-Curve pools charge a fee for token exchanges and when adding or removing liquidity in an imbalanced manner. 
-50% of the fees are given to liquidity providers, 50% are distributed to veCRV holders.
+## **Crypto Pools**
 
-For factory pools, the size of the fee is set at deployment. The minimum fee is 0.04% (represented as `4000000`). 
-The maximum fee is 1% (`100000000`). The fee cannot be changed after a pool has been deployed.
+### *Two-Coin-Crypto Pools*
+
+| Parameter | Recommendation |
+| --------- | ---------------|
+| `A`| 20000000 |
+| `gamma`| 10000000000000000 |
+| `mid_fee`| 3000000 |
+| `out_fee`| 45000000 |
+| `fee_gamma`| 300000000000000000 |
+| `allowed_extra_profit`| 10000000000 |
+| `adjustment_step`| 5500000000000 |
+| `admin_fee`| 5000000000 |
+| `ma_half_time`| 600 |
+| `initial_prices`| - |
+
+
+### *Three-Coin-Crypto-Pools (Tricrypto)*
+
+| Parameter | Recommendation |
+| --------- | ---------------|
+| `A`| 2700000 |
+| `gamma`| 1300000000000 |
+| `mid_fee`| 2999999 |
+| `out_fee`| 80000000 |
+| `fee_gamma`| 350000000000000 |
+| `allowed_extra_profit`| 100000000000 |
+| `adjustment_step`| 100000000000 |
+| `ma_exp_time`| 600 |
+| `initial_prices`| - |
