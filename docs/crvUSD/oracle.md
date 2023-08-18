@@ -1,71 +1,24 @@
 **More on oracles coming soon-ish!**
 
-The price-oracle contract of the markets can be fetched by calling `price_oracle_contract` on the AMM contract.
+The price oracle contract of the markets can be fetched by calling `price_oracle_contract` on the AMM contract.
 
-The main function in terms of calculating the oracle price of the collateral is the internal function`_raw_price`.
+The main function in terms of calculating the oracle price of the collateral is the internal function`_raw_price()` and `_ema_tvl()`.
 
-The function computes the weighted average price of ETH from multiple liquidity pools and then adjusts it based on Chainlink oracle prices for both Ethereum (ETH) and stETH (a tokenized staked Ethereum).
 
 - Stableswap pools are: crvUSD/USDC and crvUSD/USDT
 - Tricrypto pools are: tricryptoUSDC and tricryptoUSDT
 - Stableswap aggregator is the contract that aggregates the price of crvUSD
 
-## EMA of TVL 
 
-`last_tvl` get updated whenever calling `price_w()` because this sets the variable to the value returned when calling `_ema_tvl()`.
-only calculates ema tvl when $last_{timestamp} < block.timestamp$, otherwise it will just return `last_tvl` again as it is still the same block. 
+when is price oracle updated? every exchange in AMM which is when internal function `_price_oracle_w()` is called.
 
-ema tvls are calculated to compute the weighted price of an asset later on.
+## EMA of TVL
+`_ema_tvl()` calculates the exponential moving average of the total value locked of `TRICRYPTO[i]`. 
+This value is later on used in the internal function `_raw_price()` to further compute the weighted price of the collateral.
 
-13h exponential moving average of tvl
+This function returns `last_tvl[i]`, which represents the ema tvl of the pool. This variable is updated everytime when calling `price_w()` and $last_{timestamp} < block.timestamp$.
 
-??? quote "abreviations used in code"
-    ```
-    α = alpha
-    exp = `exp(power: int256) -> uint256:` 
-    $TS_i$ = TRICRYPTO[i].totalSupply()
-    $VP_i$ = TRICRYPTO[i].virtual_price()
-    ```
-
-
-### calculate smoothing factor ($\alpha$)
-formula is converted to a int256 before being able to calculate, because exp() requires an int256 as input.
-
-$$\alpha = \exp{-\frac{(block.timestamp - \text{last_timestamp}) * 10^{18}}{\text{TVL_MA_TIME}}}$$
-
-$\alpha = \text{smoothing factor}$  
-$\text{block.timestamp} = \text{current timestamp}$  
-$\text{last_timestamp} = \text{last timestamp when}$ `price_w()` $\text{was called}$  
-$\text{TVL_MA_TIME} =$ `TVL_MA_TIME`  
-
-alpha values can range between 1 and 0:    
-$\alpha = 1.0$ when $\delta t = 0$  
-$\alpha = 0.0$ when $\delta t = \infty$
-
-
-### calculate tvl's
-then calculates tvl of the tricrypto pools by iterating through the tricrypto pools (tricryptoUSDC and tricryptoUSDT), fetching the `totalSupply` and multiplying it with the `virtual_price`: 
-
-$$tvl_{i} = \frac{TS_i * VP_i}{10^{18}}$$
-
-$tvl_i = \text{total value locked of i-th pool}$ in `TRICRYPTO[N_POOLS]`  
-$TS_i = \text{total supply of i-th pool}$ in `TRICRYPTO[N_POOLS]`  
-$VP_i = \text{virtual price of i-th pool}$ in `TRICRYPTO[N_POOLS]` 
-
-
-$$\text{last_tvl}_i = \frac{tvl_i * (10^{18} - \alpha) + \text{last_tvl}_i * \alpha}{10^{18}}$$
-
-**why not:** 
-
-$$\text{last_tvl}_i = \frac{tvl_i * \alpha + \text{last_tvl}_i * (10^{18} - \alpha)}{10^{18}}$$
-
-
-
-
-$\text{last_tvl}_i = \text{total value locked of i-th pool}$ in `TRICRYPTO[N_POOLS]` 
-
-function returns `last_tvl` for the tricrypto pools.
-
+The function only re-calculates the ema tvl when $last_{timestamp} < block.timestamp$, otherwise it will just return `last_tvl` again as it is still the same timestamp. 
 
 ??? quote "`_ema_tvl`"
 
@@ -91,11 +44,57 @@ function returns `last_tvl` for the tricrypto pools.
         return last_tvl
     ```
 
+| terminology used in code | |
+|-----------|----------------|
+| `alpha` | $\alpha$ |
+| `exp(power: int256) -> uint256:`| $\exp$  |
+| `TRICRYPTO[i].totalSupply()` | $TS_i$ | 
+| `TRICRYPTO[i].virtual_price()` | $VP_i$ |
+
+
+### Calculate Smoothing Factor (α)
+When calculating the smoothing factor $\alpha$, the formula is converted to an int256 because `exp()` requires an int256 as input.
+
+
+$$\alpha = \exp{-\frac{(block.timestamp - \text{last_timestamp}) * 10^{18}}{\text{TVL_MA_TIME}}}$$
+
+*with:*
+
+$\alpha = \text{smoothing factor}$  
+$\text{block.timestamp} = \text{current timestamp}$  
+$\text{last_timestamp} = \text{last timestamp when}$ `price_w()` $\text{was called}$  
+$\text{TVL_MA_TIME} =$ `TVL_MA_TIME`  
+
+!!!info
+    alpha values can range between 1 and 0:     
+    $\alpha = 1.0$ when $\delta t = 0$    
+    $\alpha = 0.0$ when $\delta t = \infty$
+
+
+### Calculate TVLs
+
+After computing $\alpha$, the function calculates the `tvl` of the Tricrypto pools. It does this by iterating through all the pools stored in `TRICRYPTO` (currently tricryptoUSDC and tricryptoUSDT), fetching the `totalSupply`, and multiplying it by the `virtual_price`.
+
+$$tvl_{i} = \frac{TS_i * VP_i}{10^{18}}$$
+
+*with:*
+
+$tvl_i = \text{total value locked of i-th pool}$ in `TRICRYPTO[N_POOLS]`  
+$TS_i = \text{total supply of i-th pool}$ in `TRICRYPTO[N_POOLS]`  
+$VP_i = \text{virtual price of i-th pool}$ in `TRICRYPTO[N_POOLS]` 
+
+
+In the last step `tvl` get smoothend out with $\alpha$ and `last_tvl` is obtained.
+
+$$\text{last_tvl}_i = \frac{tvl_i * (10^{18} - \alpha) + \text{last_tvl}_i * \alpha}{10^{18}}$$
+
+*with:*
+
+$\text{last_tvl}_i = \text{total value locked of i-th pool}$ in `TRICRYPTO[N_POOLS]` 
 
 
 
-
-## CALCULATE RAW PRICE
+## Calculate Raw Price
 
 input variables for this function: `tvls` which is calculated calling `_ema_tvl` and `agg_price` (which is STABLESWAP_AGGREGATOR.price()). this function iterates over `N_POOLS` again.
 `price_oracle(k: uint2  56)` returns the oracle price of the coin at index `k` w.r.t the coin at index 0 (USDC / USDT).
