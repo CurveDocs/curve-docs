@@ -2,16 +2,14 @@ what kind of factories are there?
 stableswap, crypto, tricrypto
 why crypto basepools only on other chains? why not eth mainnet?
 
-
+!!! note
+    After deploying a pool, you must also add initial liquidity before the pool can be used.
 
 # Deploy Pools
 
-## **StableSwap Pools**
+## **StableSwap Factory**
 
 StableSwap Factory: [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4)
-
-!!! note
-    After deploying a pool, you must also add initial liquidity before the pool can be used.
 
 
 ### `deploy_plain_pool`
@@ -164,20 +162,28 @@ Limitations when deplyoing plain pools:
     === "Example"
 
         ```shell
-        >>> factory = Contract('0xB9fC157394Af804a3578134A6585C0dc9cc990d4')
-        >>> llamaUSD1 = Contract('0x...llama1')
-        >>> llamaUSD2 = Contract('0x...llama2')
-        >>> llamaUSD3 = Contract('0x...llama3')
-        >>> factory.deploy_plain_pool("llamaUSD1/llamasUSD2/llamaUSD3", "llama", "'0x...llama1', '0x...llama2', 0x...llama2'", 100, 4000000)
-        'returns address of deployed pool'
+        >>> Factory.deploy_plain_pool(
+            _name: "llama threepool",
+            _symbol: "l3pool",
+            _coins: ['0x...llama1', '0x...llama2', '0x...llama3'],
+            _A: 200,
+            _fee: 4000000,
+            _asset_type: uint256 = 0,
+            _implementation_idx: uint256 = 0,
+            )    
+
+        >>> 'returns address of deployed pool'
         ```
 
     !!!note
-        `_asset_type` and `_implementation_idx` values are defaulted to 0 if no other inputs are given.
+        `_asset_type` and `_implementation_idx` values are defaulted to 0 if no other inputs are given.     
+        Asset types: 0 = USD, 1 = ETH, 2 = BTC, 3 = Other.  
+        Implementation ID: check `plain_implementations(N_COINS)`.
 
 
 
-### `deploy_metapool`  
+### `deploy_metapool`
+
 Limitations when deplyoing plain pools:
 
 1. $4000000$ (0.04%) $\leq$ `_fee` $\leq 100000000$ (0.1%)
@@ -293,22 +299,28 @@ Limitations when deplyoing plain pools:
     === "Example"
 
         ```shell
+        >>> Factory.deploy_metapool(
+            _base_pool: '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7',
+            _name: "llama/3CRV",
+            _symbol: "l3CRV",
+            _coin: '0x...llama1',
+            _A: 200,
+            _fee: 4000000,
+            _implementation_idx: uint256 = 0,
+            )
 
+        >>> 'returns address of the deployed pool'
         ```
 
 
 
-
-
-
-
-## **CryptoSwap Pool**
+## **CryptoSwap Factory**
 
 cryptoswap pools are two-coin asset pools which include volatiles assets (not pegged to a certain value)
 
 ### `deploy_pool`
 
-Limitations when deplyoing plain pools:
+Limitations when deplyoing plain crypto pools:
 
 1. $A_{min} - 1 < A < A_{max} + 1$
 2. $gamma_{min} - 1 < gamma < gamma_{max} + 1$
@@ -321,8 +333,8 @@ Limitations when deplyoing plain pools:
 9. $0 < \text{ma_half_time} < 604800$  |
 10. $10^{6} < \text{initial_price} < 10^{30}$ |
 11. no duplicate coins
-12. maximum of 18 decimals of a coin
-
+12. only two coins
+13. maximum of 18 decimals of a coin
 
 
 *with:*
@@ -485,15 +497,28 @@ Limitations when deplyoing plain pools:
     === "Example"
 
         ```shell
-        >>> todo
+        >>> CryptoFactory.deploy_pool(
+            _name: crv/weth crypto pool,
+            _symbol: crv/eth,
+            _coins: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", "0xD533a949740bb3306d119CC777fa900bA034cd52",
+            A: 20000000,
+            gamma: 10000000000000000,
+            mid_fee: 3000000,
+            out_fee: 45000000,
+            allowed_extra_profit: 10000000000,
+            fee_gamma: 300000000000000000,
+            adjustment_step: 5500000000000,
+            admin_fee: 5000000000,
+            ma_half_time: 600,
+            initial_price: todo,
+            ) 
+
+        >>> 'returns address of the deployed pool'
         ```
 
 
 
-
-
-
-## **Deploy Tricrypto Pool**
+## **Tricrypto Factory**
 
 Tricrypto pools are volatile three-coin liquidity pools. For a better understanding please refer to: CryptoSwap
 
@@ -514,7 +539,7 @@ Tricrypto pools are volatile three-coin liquidity pools. For a better understand
 1. $10^{6} < \text{initial_prices[0] and initial_prices[1]} < 10^{30}$ |
 
 
-with: 
+*with:*
 
 | Parameters    | Value |
 |---------------|-------|
@@ -724,19 +749,25 @@ with:
     === "Example"
 
         ```shell
-        >>> TricryptoFactory.deploy_pool("todo")
-        '0x66442B0C5260B92cAa9c234ECf2408CBf6b19a6f'
+        >>> TricryptoFactory.deploy_pool(
+            _name: crv/weth/tbtc tripool,
+            _symbol: crv-weth-tbtc,
+            _coins: '0xD533a949740bb3306d119CC777fa900bA034cd52', '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', '0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa',
+            _weth: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+            implementation_id: 0,
+            A: 2700000,
+            gamma: 1300000000000,
+            mid_fee: 2999999,
+            out_fee: 80000000,
+            fee_gamma: 350000000000000,
+            allowed_extra_profit: 100000000000,
+            adjustment_step: 100000000000,
+            ma_exp_time: 600,
+            initial_prices: todo,
+            )
+
+        >>> 'returns address of the deployed pool'
         ```
-
-
-
-
-
-
-
-
-
-
 
 
 

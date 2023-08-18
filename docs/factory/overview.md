@@ -1,12 +1,17 @@
-# Curve Factorys
+# Curve Pool Factory
+
+Good resource to understand Factory Pools: [here](https://resources.curve.fi/factory-pools/pool-factory/)
+
+!!!tip
+    Pools can be deployed via the [Curve UI](https://curve.fi/#/ethereum/create-pool). More informations on it [here](https://resources.curve.fi/factory-pools/creating-a-factory-pool/).
+    In case of uncertainty regarding the pool paramters etc. please do not hesitate to contract curve members.
+
 
 The factory allows for permissionless deployment of Curve pools and gauges.
 
-StableSwap Factory: [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4)
-
-CryptoSwap Factory (two-coin volatile asset pools): [0xF18056Bbd320E96A48e3Fbf8bC061322531aac99](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99)
-
-Tricrypto Factory (three-coin volatile asset pools): [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963)
+- *StableSwap Factory* (stable asset pools): [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4)
+- *CryptoSwap Factory* (two-coin volatile asset pools): [0xF18056Bbd320E96A48e3Fbf8bC061322531aac99](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99)
+- *Tricrypto Factory* (three-coin volatile asset pools): [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963)
 
 Source code for factory contracts may be viewed on [Github](https://github.com/curvefi/curve-factory).
 
@@ -43,15 +48,17 @@ Source code for this contract is may be viewed on
       Tokens that take a fee upon a successful transfer may cause the pool to break or act in unexpected ways.
     - Pools deployed by the factory cannot be paused or killed.
 
+
 The factories can be used to deploy the following:
 
 - plain pools
-- base pools (needs a DAO vote)
-- metapools (paired against admin-approved base pools)
-- tricrypto pools
+- base-pools (after a successful DAO vote)
+- meta-pools (paired against admin-approved base pools)
+- crypto pools (two-coin pools)
+- tricrypto pools (three-coin pools)
 - gauges
 
-# **Pools**
+
 ## **Base Pools**
 
 A metapool pairs a coin against the LP token of another pool. This other pool is referred to as the “base pool”. 
@@ -77,7 +84,15 @@ The factory allows deployment of metapools that use the following base pools:
 
 It is possible to enable additional base pools through a DAO vote.
 
-## **Meta Pools** (todo)
+
+## **Meta Pools** 
+A metapool pairs a coin against the LP token of another pool (base-pool).
+
+## **Plain Pools**
+A plain pool pairs a minimum of 2 and a maximum of 4 coins. These coins are not paired with another pool. However, a plain pool can only pair assets that are not included in any base pool.
+
+
+
 
 # Choosing an Amplification Coefficient
 
@@ -87,9 +102,11 @@ A higher value means that trades will incur slippage sooner as the assets within
 The appropriate value for A is dependent upon the type of coin being used within the pool. We recommend the following 
 values:
 
-- Uncollateralized algorithmic stablecoins: `5-10`
-- Non-redeemable, collateralized assets: `100`
-- Redeemable assets: `200-400`
+- Stable Pools (plain-pools, base-pools and meta-pools):
+  - Uncollateralized algorithmic stablecoins: `5-10`
+  - Non-redeemable, collateralized assets: `100`
+  - Redeemable assets: `200-400` 
+
 
 It is possible to modify the amplification coefficient for a pool after it has been deployed. However, it requires a 
 vote within the Curve DAO and must reach a 15% quorum.
