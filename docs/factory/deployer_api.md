@@ -302,18 +302,41 @@ Limitations when deplyoing plain pools:
 
 
 
-## **Deploy CryptoSwap Pool**
+## **CryptoSwap Pool**
+
+cryptoswap pools are two-coin asset pools which include volatiles assets (not pegged to a certain value)
+
 ### `deploy_pool`
 
 Limitations when deplyoing plain pools:
 
-1. $4000000$ (0.04%) $\leq$ `_fee` $\leq 100000000$ (0.1%)
-2. valid `_implementation_idx` (can not be `ZERO_ADDRESS`)
-3. minimum of 2 coins and maximum of 4 coins
-4. can not pair with a coin which is included in a basepool
-5. if paired against plain eth (0xE...EeE), eth mus be first coin of the pool (`_coins[0] = plain eth`)
-6. maximum of 18 decimals for the coins
-7. no duplicate coins
+1. $A_{min} - 1 < A < A_{max} + 1$
+2. $gamma_{min} - 1 < gamma < gamma_{max} + 1$
+3. $fee_{min} - 1 < fee_{mid} < fee_{max} - 1$
+4. $fee_{out} >= fee_{mid}$ AND $fee_{out} < fee_{max} - 1$
+1. `admin_fee` $< 10^{18} + 1$ 
+5. $\text{allowed_extra_profit} < 10^{16} + 1$
+6. $0 < gamma_{fee} < 10^{18} + 1$ 
+7. $0 < \text{adjustment_step} < 10^{18} + 1$
+9. $0 < \text{ma_half_time} < 604800$  |
+10. $10^{6} < \text{initial_price} < 10^{30}$ |
+11. no duplicate coins
+12. maximum of 18 decimals of a coin
+
+
+
+*with:*
+
+| Parameters    | Value |
+|---------------|-------|
+|$n_{coins}$    | $2$ |
+|$A_{multiplier}$ | $10000$ |
+|$A_{min}$      | $\frac{n_{coins}^{n_{coins}} * A_{multiplier}}{10} = 4000$ |
+|$A_{max}$      | $n_{coins}^{n_{coins}} * A_{multiplier} * 100000 = 4000000000$|  
+|$gamma_{min}$  | $10^{10} = 10000000000$|  
+|$gamma_{max}$  | $2 * 10^{16} = 20000000000000000$ |
+|$fee_{min}$    | $5 * 10^{5} = 500000$ |
+|$fee_{max}$    | $10 * 10^{9} = 10000000000$ |
 
 !!!warning
     Transaction will fail when the requirements are not met.
@@ -324,17 +347,24 @@ Limitations when deplyoing plain pools:
 
     Returns: deployed pool (`address`).
 
-    Emits event: `PlainPoolDeployed`
+    Emits event: `CryptoPoolDeployed`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_name` |  `String[32]` | Name of the new plain pool |
     | `_symbol` |  `String[10]` | Symbol for the new metapool’s LP token. This value will be concatenated with the factory symbol. |
     | `_coins` |  `address[4]` | List of addresses of the coins being used in the pool |
-    | `_A` |  `uint256` | Amplification coefficient |
-    | `_fee` |  `uint256` | Trade fee, given as an integer with `1e10` precision |
-    | `_asset_type` |  `uint256` | Asset type of the pool as an integer. 0 = `USD`, 1 = `ETH`, 2 = `BTC`, 3 = Other. |
-    | `_implementation_idx` |  `uint256` | Index of the implementation to use. All possible implementations for a pool of N_COINS can be publicly accessed via `plain_implementations(N_COINS)`. |
+    | `A` |  `uint256` | Amplification coefficient |
+    | `gamma` |  `uint256` | Gamma |
+    | `mid_fee` |  `uint256` | Mid fee |
+    | `out_fee` |  `uint256` | Out fee |
+    | `allowed_extra_profit` |  `uint256` | Allowed extra profit |
+    | `fee_gamma` |  `uint256` | Fee Gamma |
+    | `adjustment_step` |  `uint256` | Adjustment step |
+    | `admin_fee` |  `uint256` | Admin fee |
+    | `ma_half_time` |  `uint256` | Moving-Average half time |
+    | `initial_price` |  `uint256` | Initial price |
+
 
     ??? quote "Source code"
 
@@ -353,6 +383,20 @@ Limitations when deplyoing plain pools:
             ma_half_time: uint256
             initial_price: uint256
             deployer: address
+
+        N_COINS: constant(int128) = 2
+        A_MULTIPLIER: constant(uint256) = 10000
+
+        # Limits
+        MAX_ADMIN_FEE: constant(uint256) = 10 * 10 ** 9
+        MIN_FEE: constant(uint256) = 5 * 10 ** 5  # 0.5 bps
+        MAX_FEE: constant(uint256) = 10 * 10 ** 9
+
+        MIN_GAMMA: constant(uint256) = 10 ** 10
+        MAX_GAMMA: constant(uint256) = 2 * 10 ** 16
+
+        MIN_A: constant(uint256) = N_COINS ** N_COINS * A_MULTIPLIER / 10
+        MAX_A: constant(uint256) = N_COINS ** N_COINS * A_MULTIPLIER * 100000
 
         @external
         def deploy_pool(
@@ -441,16 +485,10 @@ Limitations when deplyoing plain pools:
     === "Example"
 
         ```shell
-        >>> factory = Contract('0xB9fC157394Af804a3578134A6585C0dc9cc990d4')
-        >>> llamaUSD1 = Contract('0x...llama1')
-        >>> llamaUSD2 = Contract('0x...llama2')
-        >>> llamaUSD3 = Contract('0x...llama3')
-        >>> factory.deploy_plain_pool("llamaUSD1/llamasUSD2/llamaUSD3", "llama", "'0x...llama1', '0x...llama2', 0x...llama2'", 100, 4000000)
-        'returns address of deployed pool'
+        >>> todo
         ```
 
-    !!!note
-        `_asset_type` and `_implementation_idx` values are defaulted to 0 if no other inputs are given.
+
 
 
 
@@ -461,6 +499,33 @@ Tricrypto pools are volatile three-coin liquidity pools. For a better understand
 
 !!!note
     Tricrypto Factory: [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963)
+
+
+1. three coins; no duplicate coins possible 
+1. `implemention_id` cannot be `ZERO_ADDRESS`
+1. $A_{min} - 1 < A < A_{max} + 1$ |
+1. $gamma_{min} - 1 < gamma < gamma_{max} + 1$ |
+1. $fee_{mid} < fee_{max} - 1$; (`mid_fee` can be 0)|
+1. $fee_{out} >= fee_{mid}$ AND $fee_{out} < fee_{max} - 1$ |
+1. $0 < gamma_{fee} < 10^{18} + 1$  |
+1. $\text{allowed_extra_profit} < 10^{18} + 1$  |
+1. $0 < \text{adjustment_step} < 10^{18} + 1$  |
+1. $86 < \text{ma_exp_time} < 872542$  |
+1. $10^{6} < \text{initial_prices[0] and initial_prices[1]} < 10^{30}$ |
+
+
+with: 
+
+| Parameters    | Value |
+|---------------|-------|
+|$n_{coins}$ | $3$ |
+|$A_{multiplier}$ | $10000$ |
+|$A_{min}$      | $n_{coins}^{n_{coins}} * A_{multiplier} = 270000$ |
+|$A_{max}$      | $1000 * A_{multiplier} * n_{coins}^{n_{coins}} = 270000000$|  
+|$gamma_{min}$  | $10^{10} = 10000000000$|  
+|$gamma_{max}$  | $5 * 10^{16} = 50000000000000000$ |
+|$fee_{max}$   | $10 * 10^{9} = 10000000000$ |
+
 
 ### `TricryptoFactory.deploy_pool`
 !!! description "`Factory.deploy_pool(_name: String[64], _symbol: String[32], _coins: address[N_COINS], _weth: address, implementation_id: uint256, A: uint256, gamma: uint256, mid_fee: uint256, out_fee: uint256, fee_gamma: uint256, allowed_extra_profit: uint256, adjustment_step: uint256, ma_exp_time: uint256, initial_prices: uint256[N_COINS-1],) -> address:`"   
