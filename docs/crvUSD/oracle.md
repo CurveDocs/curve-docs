@@ -1,18 +1,15 @@
-**More on oracles coming soon-ish!**
-
 The price oracle contract of the markets can be fetched by calling `price_oracle_contract` on the AMM contract.
 
 The main function in terms of calculating the oracle price of the collateral is the internal function`_raw_price()` and `_ema_tvl()`.
 
 
-- Stableswap pools are: crvUSD/USDC and crvUSD/USDT
-- Tricrypto pools are: tricryptoUSDC and tricryptoUSDT
+- Stableswap pools: crvUSD/USDC and crvUSD/USDT
+- Tricrypto pools: tricryptoUSDC and tricryptoUSDT
 - Stableswap aggregator is the contract that aggregates the price of crvUSD
-
 
 when is price oracle updated? every exchange in AMM which is when internal function `_price_oracle_w()` is called.
 
-## EMA of TVL
+## **EMA of TVL**
 `_ema_tvl()` calculates the exponential moving average of the total value locked of `TRICRYPTO[i]`. 
 This value is later on used in the internal function `_raw_price()` to further compute the weighted price of the collateral.
 
@@ -20,7 +17,7 @@ This function returns `last_tvl[i]`, which represents the ema tvl of the pool. T
 
 The function only re-calculates the ema tvl when $last_{timestamp} < block.timestamp$, otherwise it will just return `last_tvl` again as it is still the same timestamp. 
 
-??? quote "`_ema_tvl`"
+??? quote "`_ema_tvl() -> uint256[N_POOLS]:`"
 
     ```python
     last_timestamp: public(uint256)
@@ -52,7 +49,7 @@ The function only re-calculates the ema tvl when $last_{timestamp} < block.times
 | `TRICRYPTO[i].virtual_price()` | $VP_i$ |
 
 
-### Calculate Smoothing Factor (α)
+### *Calculate Smoothing Factor (α)*
 When calculating the smoothing factor $\alpha$, the formula is converted to an int256 because `exp()` requires an int256 as input.
 
 
@@ -70,10 +67,12 @@ $\text{TVL_MA_TIME} =$ `TVL_MA_TIME`
     $\alpha = 1.0$ when $\delta t = 0$    
     $\alpha = 0.0$ when $\delta t = \infty$
 
+-----------------------------
 
-### Calculate TVLs
+### *Calculate TVLs*
 
 After computing $\alpha$, the function calculates the `tvl` of the Tricrypto pools. It does this by iterating through all the pools stored in `TRICRYPTO` (currently tricryptoUSDC and tricryptoUSDT), fetching the `totalSupply`, and multiplying it by the `virtual_price`.
+It essentially computes the `weight`, which is later on user in `_raw_prices()` to obtain the final price.
 
 $$tvl_{i} = \frac{TS_i * VP_i}{10^{18}}$$
 
@@ -82,6 +81,8 @@ $$tvl_{i} = \frac{TS_i * VP_i}{10^{18}}$$
 $tvl_i = \text{total value locked of i-th pool}$ in `TRICRYPTO[N_POOLS]`  
 $TS_i = \text{total supply of i-th pool}$ in `TRICRYPTO[N_POOLS]`  
 $VP_i = \text{virtual price of i-th pool}$ in `TRICRYPTO[N_POOLS]` 
+
+-----------------------------
 
 
 In the last step `tvl` get smoothend out with $\alpha$ and `last_tvl` is obtained.
@@ -93,41 +94,11 @@ $$\text{last_tvl}_i = \frac{tvl_i * (10^{18} - \alpha) + \text{last_tvl}_i * \al
 $\text{last_tvl}_i = \text{total value locked of i-th pool}$ in `TRICRYPTO[N_POOLS]` 
 
 
+## **Calculate Raw Price**
 
-## Calculate Raw Price
+This function requires `tvl´ (which was calculated in the step above) and `agg_price` ((which essential is `STABLESWAP_AGGREGATOR.price()`) as input to calculate the raw price of the collateral.
 
-input variables for this function: `tvls` which is calculated calling `_ema_tvl` and `agg_price` (which is STABLESWAP_AGGREGATOR.price()). this function iterates over `N_POOLS` again.
-`price_oracle(k: uint2  56)` returns the oracle price of the coin at index `k` w.r.t the coin at index 0 (USDC / USDT).
-
-crv_p = eth price
-
-$\text{p_crypto_r} = \text{price oracle of eth w.r.t usdc/usdt}$
-
-$\text{p_stable_r} = \text{price oracle of stableswap pool}$:  
-returns `_ma_price()` of the stableswap pool (price oracle of what coin??). if `price_oracle` is inverse, meaning it returns the price of eth instead of steth, then do $10^{36} / p_stable_r$ to get the inverse price.
-
-$\text{p_crypto_r} = \text{price oracle of crvusds}$
-
-
-
-$\text{weights} = \text{sum of all _ema_tvl's of tricrypto pools}$
-
-$$\text{weighted_price} = \text{weighted_price} + (\frac{\text{p_crypto_r} * \text{p_stable_agg}}{\text{p_stable_r}}) * weight$$
-
-$\text{eth price} = \frac{\text{weighted_price}}{\text{weights}}$
-
-
-get price oracle for steth/eth stableswap pool: why no inverse here??  its d_eth / d_steth
-$p_staked: uint256 = STAKEDSWAP.price_oracle()$
-
-
-limit the stETH price: minimum of steth price and 1 eth, because 1 steth can always be redeemed for 1 eth, so we assume 10^18 is the minimum price. then we multiply whatever value is smaller by WSTETH.stEthPerToken() to calculate how much steth it really is, as we provide wsteth (is worth more than steth because its rebasing).
-
-$$\text{p_staked} = min(\text{p_staked}, 10^{18}) * \frac{WSTETH.stEthPerToken()}{10**{18}}$$
-
-
-
-??? quote "`_raw_price`"
+??? quote "`_raw_price(tvls: uint256[N_POOLS], agg_price: uint256) -> uint256:`"
 
     ```python
     @internal
@@ -174,6 +145,57 @@ $$\text{p_staked} = min(\text{p_staked}, 10^{18}) * \frac{WSTETH.stEthPerToken()
         return p_staked * crv_p / 10**18
     ```
 
+| terminology used in code | |
+|-----------|----------------|
+| `` | $$ |
+| `` | $$ |
+
+
+-----------------------------
+
+The function iterates over `N_POOLS` and obtains the following values:
+
+- $\text{p_crypto_r} =$ price oracle of eth in the tricrypto pools w.r.t usdc/usdt  
+- $\text{p_stable_r} =$ price oracle of stableswap pool  
+- $\text{p_crypto_r} =$ price oracle of crvusd   
+
+$$\text{weighted_price} = \text{weighted_price} + (\frac{\text{p_crypto_r} * \text{p_stable_agg}}{\text{p_stable_r}}) * weight$$
+
+While looping through the pools, the variables `weighted_price` and `weights` are incremented by the individual pool's values, which means they represent the sum across all `N_POOLS`.
+
+-----------------------------
+
+The **total weighted price of ETH** is then obtained by dividing `weighted_price` by `weights`.
+
+$\text{final total weighted steth price} = \frac{\text{weighted_price}}{\text{weights}}$
+
+*with:*
+
+$\text{weighted_price} =$ sum of the weighted prices  
+$\text{weights} =$ sum of all _ema_tvl's of tricrypto pools  
+
+------------------------
+
+Now, the **price of stETH w.r.t ETH** is obtained by calling the `price_oracle()` function on `STAKEDSWAP` (stETH/ETH pool):
+
+$\text{p_staked} =$ `STAKEDSWAP.price_oracle()`
+
+------------------------
+
+limit the stETH price: minimum of steth price and 1 eth, because 1 steth can always be redeemed for 1 eth, so we assume 10^18 is the minimum price. then we multiply whatever value is smaller by WSTETH.stEthPerToken() to calculate how much steth it really is, as we provide wsteth (is worth more than steth because its rebasing).
+
+Next, the price of stETH is limited. It takes the minimum value of either the price of steth in the curve pool or 1. This is done because if stETH price in the pool is > 1, there is an arb opportunity to exchange eth for steth 1:1 and then sell it in the pool, which should drive exchange rate back down to 1.
+
+This limited value is then multiplied by `WSTETH.stEthPerToken()` which is the ratio of wsteth and steth.
+
+$$\text{p_staked} = min(\text{p_staked}, 10^{18}) * \frac{WSTETH.stEthPerToken()}{10**{18}}$$
+
+------------------------
+
+Final step: the limited value of p_staked is then multiplied by the price of eth calculated above and then divided by the number of decimals ($10^{18}$).
+
+
+## **Contract Info Methods**
 
 ### `tricrypto`
 !!! description "`Oracle.tricrypto() -> address: view`"
