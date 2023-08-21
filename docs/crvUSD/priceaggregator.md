@@ -1,4 +1,4 @@
-The **AggregatorStablePrice** contract is designed to aggregate the prices of crvUSD based on multiple Curve Stableswap pools. This price is mainly used as an oracle for the calculation of the interest rate, providing an aggregated (`price`) and an exponential moving average (ema) price.
+The **AggregatorStablePrice** contract is designed to aggregate the prices of crvUSD based on multiple Curve Stableswap pools. This price is mainly used as an oracle for calculating the interest rate, providing an aggregated (`price`) and an exponential moving average (ema) price.
 
 !!! info
     The AggregatorStablePrice contract is deployed to the Ethereum mainnet at: [0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7](https://etherscan.io/address/0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7).  
@@ -11,7 +11,7 @@ The **AggregatorStablePrice** contract is designed to aggregate the prices of cr
 ### **Exponential Moving Average of TVL**
 
 **`_ema_tvl()`**: This function is later on used to compute the aggregated price for crvUSD.  
-This function calculates the Exponential Moving Average (EMA) of the Total Value Locked (TVL) for multiple Curve StableSwap pools. The function returns a dynamic array of the EMA of the TVL for each price pair. It iterates through all price pairs, which were added by calling `add_price_pair`. There is a maximum of 20 pairs to take into consideration, and each price pair (pool) must have at least 100k TVL.
+This function calculates the Exponential Moving Average (EMA) of the Total Value Locked (TVL) for multiple Curve StableSwap pools. The function returns a dynamic array of the EMA of the TVL for each price pair. It iterates through all price pairs, which were added by calling `add_price_pair`. There is a maximum of 20 pairs to consider, and each price pair (pool) must have at least 100k TVL.
 
 | Variables for calculations | Type | Description |
 | ----------- | -------| ----|
@@ -23,7 +23,7 @@ This function calculates the Exponential Moving Average (EMA) of the Total Value
 | `alpha` |  `uint256` | todo |
 
 !!!tip
-    If `last_timestamp` is equal to `block.timestamp`, then the value of alpha defaults to $10^{18}$. Otherwise, alpha is recalculated every time, as described below. alpha is 1 when dt equals 0 and alpha is 0.0 when dt approaches infinity.
+    If `last_timestamp` equals `block.timestamp`, the alpha value defaults to $10^{18}$. Otherwise, alpha is recalculated every time, as described below. alpha is 1 when dt equals 0 and alpha is 0.0 when dt approaches infinity.
 
 ??? quote "Source code"
 
@@ -121,16 +121,16 @@ Calculates the weighted price, taking into account all price pairs.
         return wp_sum / w_sum
     ```
 
-This function iterates through all the price pairs which were added to this contract.
+This function iterates through all the price pairs added to this contract.
 
 
-1. The function iterates over all price pairs and stops when `n_price_pairs` is reached. It collects data such as **pool_supply** (which is the `_ema_tvl` for a price pair) and **p** (price from the price pair's oracle). It stores the pool_supply of the price pairs in **D** and also computes **Dsum** (the sum of D for all price pairs) and **DPsum** (the sum of **$\text{pool_supply * p}$** for all price pairs). If Dsum is equal to 0, then $10^{18}$ is used as a placeholder.
+1. The function iterates over all price pairs and stops when `n_price_pairs` is reached. It collects data such as **pool_supply** (the `_ema_tvl` for a price pair) and **p** (price from the price pair's oracle). It stores the pool_supply of the price pairs in **D** and also computes **Dsum** (the sum of D for all price pairs) and **DPsum** (the sum of **$\text{pool_supply * p}$** for all price pairs). If Dsum equals 0, then $10^{18}$ is used as a placeholder.
 
     | Variables | Type | Description |
     | ----------- | -------| ----|
     | `n` |  `uint256` | number of price pairs |
-    | `prices` |  `uint256` | array which cointains all the prrices for the price pairs (= price_oracle from the pool)|
-    | `D` |  `uint256[MAX_PAIRS]` | array which cointains the tvl's of the price pairs (is calculated via `_ema_tvl()`) |
+    | `prices` |  `uint256` | array which contains all the prices for the price pairs (= price_oracle from the pool)|
+    | `D` |  `uint256[MAX_PAIRS]` | array which contains the tvl's of the price pairs (is calculated via `_ema_tvl()`) |
     | `Dsum` |  `uint256` | Sum of tvls (D[i]) for all price pairs |
     | `DPsum` |  `uint256` | Sum of all tvl's multiplied by its corresponding pool price oracle |
 
@@ -423,7 +423,7 @@ This function iterates through all the price pairs which were added to this cont
 #### `last_price`
 !!! description "`PriceAggregator.last_price() -> uint256:`"
 
-    Getter for the last price. This variable was set to $10^18$ (1.00) when initialising the contract and is now updated every time calling `[price_w](#price_w)`.
+    Getter for the last price. This variable was set to $10^18$ (1.00) when initializing the contract and is now updated every time calling `[price_w](#price_w)`.
     
     Returns: last price (`uint256`).
 
