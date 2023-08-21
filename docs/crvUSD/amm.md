@@ -1,6 +1,6 @@
-LLAMMA is the market-making contract that rebalances the collateral. As the name already suggests, this contract is responsible for lending and liquidating collateral. Every market has its own AMM (created from a blueprint contract), which contains the collateral asset and crvUSD.
+LLAMMA is the market-making contract that rebalances the collateral. As the name suggests, this contract is responsible for lending and liquidating collateral. Every market has its own AMM (created from a blueprint contract) containing the collateral asset and crvUSD.
 
-When creating a new loan, the controller evenly distributes the collateral put up by the user across a specified number of bands in the AMM and mints stablecoins for the user, with each band representing a range of collateral prices. 
+When creating a new loan, the controller evenly distributes the collateral put up by the user across a specified number of bands in the AMM and mints stablecoins for the user, each representing a range of collateral prices. 
 
 The **loan-to-value (LTV)** ratio depends on the number of bands.
 
@@ -11,14 +11,14 @@ Interestingly enough, the start of the liquidation range is also determined by t
 $$ \text{starting_price} = \frac{debt} {collateral * LTV} $$
 
 !!!tip
-    The `starting_price` value is in percentage. To calculate the actual starting price, one must multiply the value by the `price_oracle` when creating the loan.
+    The `starting_price` value is in percentage. To calculate the starting price, one must multiply the value by the `price_oracle` when creating the loan.
 
 
 Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p_oracle_down`](#p_oracle_down)) price bound. These prices are not real AMM prices, but rather tresholds for the bands! 
-It's worth noting, that because it is a continious grid, the lower price-bound of lets say band 0 is the same as the upper price-bound of 1.
+It's worth noting, that because it is a continuous grid, the lower price-bound of let's say band 0 is the same as the upper price-bound of 1.
 
-The concept of LLAMMA is to automatically convert collateral into crvUSD as the price of the collateral decreases, and vice versa, convert crvUSD back into the collateral asset when prices rise. When the price of the collateral is within a band that has deposited assets, the position enters a so-called **soft-liquidation** mode and the health of the loan starts decreasing.    
-As soon as the `health` drops below 0%, the user is eligible for **hard-liquidation**. The users collateral can be sold off and the position will be closed (just as in regular liquidations).
+The concept of LLAMMA is to convert collateral into crvUSD as the collateral price decreases automatically, and vice versa, convert crvUSD back into the collateral asset when prices rise. When the collateral price is within a band that has deposited assets, the position enters a so-called **soft-liquidation** mode and the health of the loan starts decreasing.    
+When the `health` drops below 0%, the user is eligible for **hard-liquidation**. The users collateral can be sold off and the position will be closed (just as in regular liquidations).
 
 !!!note
     A position is in soft-liquidation mode only when the price oracle is within a band where the user has deposited collateral.
@@ -43,7 +43,7 @@ To ensure assets are liquidated or de-liquidated, the AMM adjusts its price to c
 - `get_p`: oracle price of the AMM itself
 
 When $\text{price_oracle} = \text{get_p}$, the external oracle price and the AMM price are identical, making arbitrage impossible.
-Generally, when the price oracle begins to change, the AMM price is adjusted (the AMM price is kind of more sensitive than the regular `price_oracle`) to enable arbitrage opportunities.
+Generally, when the price oracle begins to change, the AMM price is adjusted (the AMM price is more sensitive than the regular `price_oracle`) to enable arbitrage opportunities.
 
 When the price of the collateral starts to rise, then $\text{price_oracle} < \text{get_p}$, and therefore, arbitrage is possible by swapping the collateral asset into crvUSD until $\text{price_oracle} = \text{get_p}$.  
 Conversely, when the price starts to decrease, $\text{price_oracle} > \text{get_p}$, and therefore, arbitrage is possible by swapping crvUSD into the collateral asset until both prices reach equilibrium. 
@@ -70,8 +70,8 @@ Conversely, when the price starts to decrease, $\text{price_oracle} > \text{get_
 
 
 ## **Depositing and Removing Collateral**
-Depositing and removing collateral can only be done by the `admin` of the AMM, which is the Controller. 
-Therefore the controller contract needs to be granted max approval in order to successfully call these functions. Max approval is given when `set_admin()` is called.
+Depositing and removing collateral can only be done by the `admin` of the AMM, the Controller. 
+Therefore the controller contract must be granted max approval to call these functions successfully. Max approval is given when `set_admin()` is called.
 
 Collateral is put into bands by calling `deposit_range()` whenever someone creates a new loan or adds collateral to the existing position. Collateral is removed by calling `withdraw()`.
 
@@ -905,12 +905,12 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 ### `get_amount_for_price` (todo)
 !!! description "`AMM.get_amount_for_price(p: uint256) -> (uint256, bool):`"
 
-    Function to calculate the necessary amount to be exchanged to have the AMM at the funal price `p`.  
-    bool = true --> need to exchange crvusd for collateral (to get the price of the collateral UP)  
-    bool = false --> need to exchange collateral for crvusd (to get the price of the collateral DOWN)  
-    output = the token thats needs to be sold!
+    Function to calculate the necessary amount to be exchanged to have the AMM at the final price `p`.  
+    bool = true --> need to exchange crvUSD for collateral (to get the price of the collateral UP)  
+    bool = false --> need to exchange collateral for crvUSD (to get the price of the collateral DOWN)  
+    output = the token that needs to be sold!
 
-    Returns: necessary amount to exchange(`uint256`) and true or flase (`bool`).
+    Returns: necessary amount to exchange(`uint256`) and true or false (`bool`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1198,7 +1198,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 ### `set_admin`
 !!! description "`AMM.set_admin(_admin: address):`"
 
-    Function to set the admin of AMM. Approval needs to be given to the controller in order for it to effectively call functions such as `deposit_range` and `withdraw`. The implementation of `approve_max` as a separate function was chosen because it consumes fewer bytespace compared to calling it directly.  
+    Function to set the admin of AMM. Approval needs to be given to the controller in order for it to effectively call functions such as `deposit_range` and `withdraw`. The implementation of `approve_max` as a separate function was chosen because it consumes less bytespace compared to calling it directly.  
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1218,7 +1218,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
         @external
         def set_admin(_admin: address):
             """
-            @notice Set admin of the AMM. Typically it's a controller (unless it's tests)
+            @notice Set admin of the AMM. Typically it's a controller (unless it's tested)
             @param _admin Admin address
             """
             assert self.admin == empty(address)
@@ -1240,7 +1240,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
 As with all the curve pools, there are two different kinds of fees: **regular swap fees** and **admin fees**. Regular fees are charged when tokens within the AMM are exchanged. The admin fee determines the percentage of the "total fees", which are ultimately distributed to veCRV holders.
 
-Currently, the admin fees of the AMMs are set to 0 to incentivize borrows, as all the fees are given to liquidity providers who are the borrowers.
+Currently, the admin fees of the AMMs are set to 0 to incentivize borrowers, as all the fees are given to liquidity providers who are the borrowers.
 
 If there are admin fees accumulated, they can't be claimed separately. Instead, they can only be claimed by also claiming the interest rate fees. This is done by calling `collect_fee()` on the controller contract
 
@@ -1814,7 +1814,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 ### `bands_x` (check this)
 !!! description "`AMM.bands_x(arg0: uint256) -> uint256:`"
 
-    Getter for the amount of x (= coin, which is being borrowed) deposited in band n (`uint256`). X represents the token which is being borrowed, meaning that all bands below the active one will be full in token x as they have been soft-liquidated and the collateral was sold into the collateral token. The currently active band is the only band which includes coin x and coin y (thats the band which is in soft liquidation atm).
+    Getter for the amount of x (= coin, which is being borrowed) deposited in band n (`uint256`). X represents the token that is being borrowed, meaning that all bands below the active one will be full in token x as they have been soft-liquidated and the collateral was sold into the collateral token. The currently active band is the only band that includes coin x and coin y (that's the band that is in soft liquidation atm).
 
     Returns: amount (`uint256`) of coin x deposited in band n.
 
@@ -1839,7 +1839,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 ### `bands_y` (check this)
 !!! description "`AMM.bands_y(arg0: uint256) -> uint256:`"
 
-    Getter for the amount of y (= coin, which is put up as collateral) deposited in band n (`uint256`). Y represents the token which is put up as collateral, meaning that all bands above the active one will be fully in token y as they have not been soft-liquidated yet. The currently active band is the only band which includes coin x and coin y (thats the band which is in soft liquidation atm).
+    Getter for the amount of y (= coin, which is put up as collateral) deposited in band n (`uint256`). Y represents the token that is put up as collateral, meaning that all bands above the active one will be fully in token y as they have not been soft-liquidated yet. The currently active band is the only band that includes coin x and coin y (that's the band that is in soft liquidation atm).
 
     Returns: amount (`uint256`) of coin y deposited in band n.
 
@@ -1863,7 +1863,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 ### `read_user_tick_numbers`
 !!! description "`AMM.read_user_tick_numbers(user: address) -> int256[2]:`"
 
-    Function to unpack and read the users tick numbers (= lowest and highest band the user deposited into). 
+    Function to unpack and read the user's tick numbers (= lowest and highest band the user deposited into). 
 
     Returns: lowest and highest band (`int256`).
 
