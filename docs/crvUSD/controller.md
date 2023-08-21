@@ -1,6 +1,6 @@
-The Controller is the contract the user interacts with to create a loan and further mangage the position. It holds all user debt information. External liquidations are also done through it.
+The Controller is the contract the user interacts with to create a loan and further manage the position. It holds all user debt information. External liquidations are also done through it.
 
-Each market has its individual Controller, which is created from a blueprint contract.
+Each market has its Controller, created from a blueprint contract.
 
 
 # **Loans**
@@ -16,7 +16,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 ### `create_loan`
 !!! description "`controller.create_loan(collateral: uint256, debt: uint256, N: uint256):`"
 
-    Function to create a loan. The user needs to specify the amount of `collateral` to deposit into `N`-bands and the amount of `debt` to borrow. If a user already has an existing loan, the function will revert.
+    Function to create a loan. The user must specify the amount of `collateral` to deposit into `N`-bands and the amount of `debt` to borrow. If a user already has an existing loan, the function will revert.
 
     Emits event: `UserState`, `Borrow` and `Deposit` (in AMM)
 
@@ -845,7 +845,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
             @nonreentrant('lock')
             def add_collateral(collateral: uint256, _for: address = msg.sender):
                 """
-                @notice Add extra collateral to avoid bad liqidations
+                @notice Add extra collateral to avoid bad liquidations
                 @param collateral Amount of collateral to add
                 @param _for Address to add collateral for
                 """
@@ -2423,7 +2423,7 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     Getter method to calculate the upper band number for the deposit to sit in to support the give debt.
 
-    Returns: upper band n1 (`int256`) to depostit the collateral into.
+    Returns: upper band n1 (`int256`) to deposit the collateral into.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2636,7 +2636,7 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     Getter for a dynamic array of users who can be "hard-liquidated".
 
-    Returns: dymamic array (`DynArray[Position, 1000]`) with detailed info about positions of users.
+    Returns: dynamic array (`DynArray[Position, 1000]`) with detailed info about positions of users.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
