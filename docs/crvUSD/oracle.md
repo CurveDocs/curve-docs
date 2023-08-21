@@ -5,7 +5,7 @@ crvUSD markets primarily utilize internal oracles to determine the price of the 
 
 
 !!!tip
-    The formulas below use slightly different terminologies than in the code to make them easier to read.  
+    The formulas below use slightly different terminologies than the code to make them easier to read.  
     For abbreviations, see [here](#terminology-used-in-code).
 
 
