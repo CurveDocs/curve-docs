@@ -24,7 +24,7 @@ For the price of crvUSD, an aggregated oracle price of multiple Curve Stablwswap
 | `price_crvusd` |  `actual crvUSD price (aggregated from AggregatorStablePrice Contract)` |
 | `DebtFraction` |  `ratio of the PegKeeper's debt to the total outstanding debt` |
 | `TargetFraction` |  `todo` |
-| `PegKeeperDebt` |  `debt form PegKeepers (all the crvusd deposited into pools?)` |
+| `PegKeeperDebt` |  `debt form PegKeepers (all the crvUSD deposited into pools?)` |
 | `TotalDebt` |  `total crvUSD debt` |
 
 $r = rate0 * e^{power}$
@@ -34,7 +34,7 @@ $power = \frac{price_{peg} - price_{crvusd}}{sigma} - \frac{DebtFraction}{Target
 $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
 
 !!!note
-    `rate` and `rate0` denominated in units of $10^{18}$ for precision and represent the rate per second. The interest rate is charged every block.
+    `rate` and `rate0` denominated in units of $10^{18}$ for precision and represent the rate per second. The interest rate is charged for every block.
 
     $\text{annualRate} = (1 + \frac{rate}{10^{18}})^{365*24*60*60} - 1$
 
@@ -94,7 +94,7 @@ $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
 ### `rate0`
 !!! description "`MonetaryPolicy.rate0() -> uint256: view`"
 
-    Getter for the rate0 of the monetary policy contract. `rate0` has to be less then or equal to `MAX_RATE` (400% APY).
+    Getter for the rate0 of the monetary policy contract. `rate0` has to be less than or equal to `MAX_RATE` (400% APY).
 
     Returns: rate0 (`uint256`).
 
@@ -233,7 +233,7 @@ $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
     | `sigma` |  `uint256` | New Sigma |
 
     !!! warning
-        This function can only be called by the `admin` of the contract, which is the CurveOwnershipAgent. Therefor it requires a DAO vote to change this parameter.
+        This function can only be called by the `admin` of the contract, the CurveOwnershipAgent. Therefor it requires a DAO vote to change this parameter.
 
     ??? quote "Source code"
 
@@ -319,7 +319,7 @@ $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
     | `target_debt_fraction` |  `uint256` | New Target Debt Fraction |
 
     !!! warning
-        This function can only be called by the `admin` of the contract, which is the CurveOwnershipAgent. Therefor it requires a DAO vote to change this parameter.
+        This function can only be called by the `admin` of the contract, the CurveOwnershipAgent. Therefore it requires a DAO vote to change this parameter.
 
     ??? quote "Source code"
 
@@ -349,7 +349,7 @@ $DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
 
 
 ## **PegKeepers**
-PegKeepers need to be added to the monetary policy contract in order to calculate the rate as it is depending on the DebtFraction. They can be added by calling `add_peg_keeper` and removed with `remove_peg_keeper`.
+PegKeepers must be added to the monetary policy contract to calculate the rate as it depends on the DebtFraction. They can be added by calling `add_peg_keeper` and removed with `remove_peg_keeper`.
 
 ### `peg_keepers`
 !!! description "`MonetaryPolicy.peg_keepers(arg0: uint256) -> address: view`"
