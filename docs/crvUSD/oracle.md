@@ -388,7 +388,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 | $\exp$  | `exp(power: int256) -> uint256:` |
 | $TS_i$ | `TRICRYPTO[i].totalSupply()`
 | $VP_i$ | `TRICRYPTO[i].virtual_price()` |
-| $total_ETH_weighted_price$ | `crv_p` |
+| $\text{total_ETH_weighted_price}$ | `crv_p` |
 
 
 
