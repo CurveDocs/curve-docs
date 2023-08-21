@@ -1218,7 +1218,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
         @external
         def set_admin(_admin: address):
             """
-            @notice Set admin of the AMM. Typically it's a controller (unless it's tested)
+            @notice Set admin of the AMM. Typically it's a controller (unless it's tests)
             @param _admin Admin address
             """
             assert self.admin == empty(address)
