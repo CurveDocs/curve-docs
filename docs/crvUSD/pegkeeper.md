@@ -1,14 +1,14 @@
 ## **Concept of PegKeepers**  
 
-PegKeepers are contracts that help stabilize the peg of crvUSD. They are allocated a specific amount of crvUSD to use in securing the peg. 
-This balance is decided by the DAO and can be set, raised, or lowered by calling `set_debt_ceiling` in the [FactoryContract](/curve-docs/docs/LLAMMA/factory.md).
+PegKeepers are contracts that help stabilize the peg of crvUSD. They are allocated a specific amount of crvUSD to secure the peg. 
+The DAO decides this balance and can be set, raised, or lowered by calling `set_debt_ceiling` in the [FactoryContract](/curve-docs/docs/LLAMMA/factory.md).
 
 
 The underlying actions of the PegKeepers can be divided into two actions, which get executed when calling [`update`](#update):
 
 - **crvUSD price > 1**: The PegKeeper mints and deposits crvUSD single-sidedly into the pool to which it is linked, and receives LP tokens in exchange. This increases the supply of crvUSD in the pool and therefore decreases the price. It is important to note that the LP tokens are not staked in the gauge (if there is one). Thus, the PegKeeper does not receive CRV emissions.
 
-- **crvUSD price < 1**: PegKeepers, if they hold a balance of the corresponding LP token, can withdraw crvUSD from the liquidity pool and burn it. This action reduces the supply of crvUSD in the pool and should subsequently increase its price.
+- **crvUSD price < 1**: If PegKeepers hold a balance of the corresponding LP token, they can withdraw crvUSD from the liquidity pool and burn it. This action reduces the supply of crvUSD in the pool and should subsequently increase its price.
 
 
 !!! info
@@ -24,9 +24,9 @@ The underlying actions of the PegKeepers can be divided into two actions, which 
 
 
 ## **Stabilisation Method** 
-The most crucial function of the contract is the **update()** function. When invoked, the PegKeeper either mints and single-sided deposits crvUSD into the StableSwap pool, or it withdraws crvUSD from the pool by redeeming the LP tokens that were acquired from previous deposits."
+The most crucial function of the contract is the **update()** function. When invoked, the PegKeeper either mints and single-sided deposits crvUSD into the StableSwap pool, or it withdraws crvUSD from the pool by redeeming the LP tokens acquired from previous deposits."
 
-* **Deposit and Mint:** This process is triggered when the price of crvUSD exceeds 1. Minting and depositing into the pool will increase the supply of crvUSD and consequently decrease its price. The LP tokens that the PegKeeper receives when depositing crvUSD into the pool are not staked in the gauge (if the pool has one), which means the PegKeeper does not receive CRV inflation rewards.
+* **Deposit and Mint:** This process is triggered when the price of crvUSD exceeds 1. Minting and depositing into the pool will increase the crvUSD supply and decrease its price. The LP tokens that the PegKeeper receives when depositing crvUSD into the pool are not staked in the gauge (if the pool has one), which means the PegKeeper does not receive CRV inflation rewards.
 
 * **Withdraw and Burn:** This mechanism is triggered when the price of crvUSD is less than 1. By withdrawing crvUSD from the pool, the supply of crvUSD decreases, which should increase its price.
 
@@ -45,7 +45,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
     | $balance_{crvUSD} < balance_{pairedCoin}$ |  mint and deposit |
     | $balance_{crvUSD} > balance_{pairedCoin}$ | withdraw and borrow |
 
-    A share (`caller_share`) of the generated profit will be awarded to the caller of the function. By default, this is set to `msg.sender`, but there is also the possibility to input a `_beneficiary` address to which the rewards will be sent. 
+    A share (`caller_share`) of the generated profit will be awarded to the function's caller. By default, this is set to `msg.sender`, but there is also the possibility to input a `_beneficiary` address to which the rewards will be sent. 
 
     Returns: caller's profit (`uint256`).
 
@@ -540,7 +540,7 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
             @param _receiver Receiver of the profit
             @param _caller_share Caller's share of profit
             @param _factory Factory which should be able to take coins away
-            @param _aggregator Price aggregator which shows the price of pegged in real "dollars"
+            @param _aggregator Price aggregator which shows the price pegged in real "dollars"
             @param _admin Admin account
             """
             assert _index < 2
