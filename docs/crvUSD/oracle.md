@@ -1,11 +1,11 @@
 crvUSD markets primarily utilize internal oracles to determine the price of the collateral. There is a possibility to use Chainlink oracle prices as safety limits.
 
 !!!warning
-    Every market has its own individual price oracle contract, which can be fetched by calling `price_oracle_contract` within the controller of the market. The [wstETH oracle](https://etherscan.io/address/0xc1793A29609ffFF81f10139fa0A7A444c9e106Ad#code) will be used for the purpose of this documentation. Please be aware that oracle contracts can vary based on the collateral token.
+    Every market has its own price oracle contract, which can be fetched by calling `price_oracle_contract` within the controller of the market. The [wstETH oracle](https://etherscan.io/address/0xc1793A29609ffFF81f10139fa0A7A444c9e106Ad#code) will be used for the purpose of this documentation. Please be aware that oracle contracts can vary based on the collateral token.
 
 
 !!!tip
-    The formulas below use slightly different terminologies than in the code itself to make them easier to read.  
+    The formulas below use slightly different terminologies than in the code to make them easier to read.  
     For abbreviations, see [here](#terminology-used-in-code).
 
 
@@ -41,7 +41,7 @@ This value is subsequently used in the internal function `_raw_price()` to compu
 
 
 ### *Calculate Smoothing Factor (α)*
-When calculating the smoothing factor, represented as $\alpha$, the formula is converted to an int256 type because the exp() function requires an int256 as its input.
+When calculating the smoothing factor, represented as $\alpha$, the formula is converted to an int256 type because the exp() function requires an int256 input.
 
 
 $$\alpha = \exp{-\frac{(block.timestamp - \text{last_timestamp}) * 10^{18}}{\text{TVL_MA_TIME}}}$$
@@ -54,7 +54,7 @@ $\text{last_timestamp} = \text{last timestamp when}$ `price_w()` $\text{was call
 $\text{TVL_MA_TIME} =$ `TVL_MA_TIME`  
 
 !!!info
-    alpha values can range between 1 and 0, depening on the time passed since calling:     
+    alpha values can range between 1 and 0, depending on the time passed since calling:     
     $\alpha = 1.0$ when $\delta t = 0$    
     $\alpha = 0.0$ when $\delta t = \infty$
 
@@ -73,7 +73,7 @@ $VP_i = \text{virtual price of i-th pool}$ in `TRICRYPTO[N_POOLS]`
 
 -----------------------------
 
-In the last step, TVL is smoothed out using $\alpha$, and `last_tvl` is obtained.
+TVL is smoothed out using $\alpha$ in the last step, and `last_tvl` is obtained.
 
 $$\text{last_tvl}_i = \frac{tvl_i * (10^{18} - \alpha) + \text{last_tvl}_i * \alpha}{10^{18}}$$
 
@@ -208,9 +208,9 @@ Now, the **price of stETH w.r.t ETH** is obtained by calling the `price_oracle()
 
 $\text{p_staked} =$ `STAKEDSWAP.price_oracle()`
 
-Next, the price of stETH w.r.t ETH is capped. It's determined by taking the lesser value between the price of stETH in the curve pool and 1. This adjustment is necessary because if the stETH price in the pool exceeds 1, it creates an arbitrage opportunity. Traders could convert ETH for stETH at a 1:1 ratio and then sell it in the pool, which should push the exchange rate back down to 1.
+Next, the price of stETH w.r.t ETH is capped. It's determined by taking the lesser value between the price of stETH in the curve pool and 1. This adjustment is necessary because if the stETH price in the pool exceeds 1, it creates an arbitrage opportunity. Traders could convert ETH for stETH at a 1:1 ratio and then sell it in the pool, pushing the exchange rate back to 1.
 
-This capped value is then multiplied by `WSTETH.stEthPerToken()`, which represents the ratio between wstETH and stETH.
+This capped value is then multiplied by `WSTETH.stEthPerToken()`, representing the ratio between wstETH and stETH.
 
 $$\text{p_staked} = min(\text{p_staked}, 10^{18}) * \frac{WSTETH.stEthPerToken()}{10**{18}}$$
 
@@ -398,7 +398,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 ### `N_POOLS`
 !!! description "`Oracle.N_POOLS() -> uint256:`"
 
-    Getter for number of external pools used by the oracle.
+    Getter for the number of external pools used by the oracle.
 
     Returns: number of pools (`uint256`).
 
@@ -448,7 +448,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
     Returns: Index of ETH price oracle in the tricrypto pool (`uint256`).
 
     !!!tip
-        Returns 1, as ETH price oracle index in the tricrypto pool is 1. If the same index would be 0, it would return the price oracle of ETH. There prices are all w.r.t the coin at index 0 (USDC or USDT).
+        Returns 1, as ETH price oracle index in the tricrypto pool is 1. If the same index would be 0, it would return the price oracle of ETH. Their prices are all w.r.t the coin at index 0 (USDC or USDT).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
