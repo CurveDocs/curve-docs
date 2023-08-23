@@ -18,12 +18,12 @@ For the price of crvUSD, an aggregated oracle price of multiple Curve Stablwswap
 
 | variable      | description   | 
 | ----------- | -------|
-| `r` |  `interest rate` |
+| `r` |  `rate` |
 | `rate0` |  `"base rate"` |
 | `price_peg` |  `desired crvUSD price: 1.00 (10^18)` |
 | `price_crvusd` |  `actual crvUSD price (aggregated from AggregatorStablePrice Contract)` |
 | `DebtFraction` |  `ratio of the PegKeeper's debt to the total outstanding debt` |
-| `TargetFraction` |  `todo` |
+| `TargetFraction` |  `` |
 | `PegKeeperDebt` |  `debt form PegKeepers (all the crvUSD deposited into pools?)` |
 | `TotalDebt` |  `total crvUSD debt` |
 
