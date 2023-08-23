@@ -3,7 +3,7 @@
 Admin controls 
 
 
-### `Factory.add_base_pool`
+### `add_base_pool`
 
 !!! description "`Factory.add_base_pool(_base_pool: address, _fee_receiver: address, _asset_type: uint256, _implementations: address[10])`"
 
