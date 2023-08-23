@@ -194,6 +194,9 @@ Limitations when deplyoing meta pools:
 - valid `_implementation_idx` (can not be `ZERO_ADDRESS`)
 - maximum of 18 decimals for the coins
 
+!!!warning
+    Transaction will fail when the requirements are not met.
+
 !!! description "`Factory.deploy_metapool(_base_pool: address, _name: String[32], _symbol: String[10], _coin: address, _A: uint256, _fee: uint256, _implementation_idx: uint256 = 0) -> address:`"
 
     Function to deploy a metapool.
