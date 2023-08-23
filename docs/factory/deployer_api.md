@@ -7,9 +7,6 @@
 
 ## **StableSwap Factory**
 
-StableSwap Factory: [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4)
-
-
 ### `deploy_plain_pool`
 
 Limitations when deplyoing plain pools:

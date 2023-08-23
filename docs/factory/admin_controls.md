@@ -9,6 +9,8 @@ Admin controls
 
     Add a base pool to the registry, which may be used in factory metapools. Only callable by fatory `admin`.
 
+    Emits event: `BasePoolAdded`
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_base_pool` |  `address` | Pool address to add |
@@ -16,11 +18,12 @@ Admin controls
     | `_asset_type` |  `uint256` | Asset type for pool, as an integer  `0` = USD, `1` = ETH, `2` = BTC, `3` = Other |
     | `implementations` | `address` | List of implementation addresses that can be used with this base pool |
 
-    Emits: <mark style="background-color: #FFD580; color: black">BasePoolAdded</mark>
-
     ??? quote "Source code"
 
         ```python
+        event BasePoolAdded:
+            base_pool: address
+
         @external
         def add_base_pool(
             _base_pool: address,
@@ -75,11 +78,10 @@ Admin controls
     === "Example"
 
         ```shell
-        >>> todo:
+        >>> Factory.add_base_pool(
+            _base_pool: "0x4dece678ceceb27446b35c672dc7d61f30bad69e",
+            _fee_receiver: "0xeCb456EA5365865EbAb8a2661B0c503410e9B347",
+            _asset_type: 0,
+            _implementations: ["0x213be373FDff327658139C7df330817DAD2d5bBE", "0x55Aa9BF126bCABF0bDC17Fa9E39Ec9239e1ce7A9"]
+            ):
         ```
-
-
-
-
-
-
