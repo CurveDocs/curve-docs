@@ -10,10 +10,10 @@ Source code for factory contracts may be viewed on [Github](https://github.com/c
 
 | Factory | Contract Address |
 | ----------- | ------- |
-| StableSwap Factory (stable asset pools): | [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4) | 
-| CryptoSwap Factory (two-coin volatile asset pools): | [0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d](https://etherscan.io/address/0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d) | 
-| Tricrypto Factory (three-coin volatile asset pools) | [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963) | 
+| StableSwap Factory (with `plain_whitelist`): | [0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d](https://etherscan.io/address/0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d) | 
+| MetaPool Factory (stable asset pools): | [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4) |  
 | CryptoSwap Factory (two-coin volatile asset pools) | [0xF18056Bbd320E96A48e3Fbf8bC061322531aac99](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99) | 
+| Tricrypto Factory (three-coin volatile asset pools) | [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963) | 
 
 
 # **Organization**
