@@ -1,4 +1,4 @@
-As crvusd markets use interal oracles, they utilizes in-house liquidity pools to aggregate the price of collateral. But there is a possibility to use Chainlink oracle prices as safety limits.
+crvUSD markets primarily utilize internal oracles to determine the price of the collateral. There is a possibility to use Chainlink oracle prices as safety limits.
 
 !!!warning
     Every market has its own price oracle contract, which can be fetched by calling `price_oracle_contract` within the controller of the market. The [wstETH oracle](https://etherscan.io/address/0xc1793A29609ffFF81f10139fa0A7A444c9e106Ad#code) will be used for the purpose of this documentation. Please be aware that oracle contracts can vary based on the collateral token.
@@ -9,9 +9,8 @@ As crvusd markets use interal oracles, they utilizes in-house liquidity pools to
     For abbreviations, see [here](#terminology-used-in-code).
 
 
-
 ## **EMA of TVL**
-`_ema_tvl()` calculates the exponential moving average (EMA) of the total value locked (TVL) for tricrypto pools.It uses a smoothing factor $\alpha$ to smooth out the TVL based on the duration since it was last called.
+`_ema_tvl()` calculates the exponential moving average of the total value locked (TVL) for `TRICRYPTO[i]` and returns `last_tvl[i]`, which represents the Exponential Moving Average (EMA) of the TVL of the Tricrypto pool at index i. This variable is updated every time `price_w()` is called and $last_{timestamp} < block.timestamp$. If the latter condition is not met, it will simply return last_tvl.
 
 This value is subsequently used in the internal function `_raw_price()` to compute the weighted price of ETH.
 
@@ -40,17 +39,47 @@ This value is subsequently used in the internal function `_raw_price()` to compu
         return last_tvl
     ```
 
+
+### *Calculate Smoothing Factor (α)*
+When calculating the smoothing factor, represented as $\alpha$, the formula is converted to an int256 type because the exp() function requires an int256 input.
+
+
+$$\alpha = \exp{-\frac{(block.timestamp - \text{last_timestamp}) * 10^{18}}{\text{TVL_MA_TIME}}}$$
+
+*with:*
+
+$\alpha = \text{smoothing factor}$  
+$\text{block.timestamp} = \text{current timestamp}$  
+$\text{last_timestamp} = \text{last timestamp when}$ `price_w()` $\text{was called}$  
+$\text{TVL_MA_TIME} =$ `TVL_MA_TIME`  
+
+!!!info
+    alpha values can range between 1 and 0, depending on the time passed since calling:     
+    $\alpha = 1.0$ when $\delta t = 0$    
+    $\alpha = 0.0$ when $\delta t = \infty$
+
+
+### *Calculate TVLs*
+
+After computing $\alpha$, the function calculates the TVL for the Tricrypto pools. It accomplishes this by iterating through all the pools stored in `TRICRYPTO` (tricryptoUSDC and tricryptoUSDT), fetching its `totalSupply`, and multiplying it by the `virtual_price`. This process essentially computes the **weight**, which is subsequently used in `_raw_prices()` to determine the final price.
+
 $$tvl_{i} = \frac{TS_i * VP_i}{10^{18}}$$
+
+*with:*
+
+$tvl_i = \text{total value locked of i-th pool}$ in `TRICRYPTO[N_POOLS]`  
+$TS_i = \text{total supply of i-th pool}$ in `TRICRYPTO[N_POOLS]`  
+$VP_i = \text{virtual price of i-th pool}$ in `TRICRYPTO[N_POOLS]` 
+
+-----------------------------
+
+TVL is smoothed out using $\alpha$ in the last step, and `last_tvl` is obtained.
 
 $$\text{last_tvl}_i = \frac{tvl_i * (10^{18} - \alpha) + \text{last_tvl}_i * \alpha}{10^{18}}$$
 
+*with:*
 
-$tvl_i = \text{TVL of i-th pool}$ in `TRICRYPTO[N_POOLS]`  
-$TS_i = \text{total supply of i-th pool}$ in `TRICRYPTO[N_POOLS]`  
-$VP_i = \text{virtual price of i-th pool}$ in `TRICRYPTO[N_POOLS]` 
-$\text{last_tvl}_i = \text{smoothed TVL of i-th pool}$ in `TRICRYPTO[N_POOLS]` 
-
-$tvl_i$ essentially represents the weight.
+$\text{last_tvl}_i = \text{total value locked of i-th pool}$ in `TRICRYPTO[N_POOLS]` 
 
 
 ### `ema_tvl`
@@ -62,27 +91,11 @@ $tvl_i$ essentially represents the weight.
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 4 8 20"
+        ```python hl_lines="3"
         @external
         @view
         def ema_tvl() -> uint256[N_POOLS]:
             return self._ema_tvl()
-
-        @internal
-        @view
-        def _ema_tvl() -> uint256[N_POOLS]:
-            last_timestamp: uint256 = self.last_timestamp
-            last_tvl: uint256[N_POOLS] = self.last_tvl
-
-            if last_timestamp < block.timestamp:
-                alpha: uint256 = self.exp(- convert((block.timestamp - last_timestamp) * 10**18 / TVL_MA_TIME, int256))
-                # alpha = 1.0 when dt = 0
-                # alpha = 0.0 when dt = inf
-                for i in range(N_POOLS):
-                    tvl: uint256 = TRICRYPTO[i].totalSupply() * TRICRYPTO[i].virtual_price() / 10**18
-                    last_tvl[i] = (tvl * (10**18 - alpha) + last_tvl[i] * alpha) / 10**18
-
-            return last_tvl
         ```
 
     === "Example"
@@ -166,24 +179,42 @@ $tvl_i$ essentially represents the weight.
         p_staked = min(p_staked, 10**18) * WSTETH.stEthPerToken() / 10**18  # d_eth / d_wsteth
 
         return p_staked * crv_p / 10**18
-    ```   
+    ```
 
+-----------------------------
 
-$$price_{weighted} = (\frac{price_{eth} * price_{crvusd}}{price_{usd}}) * weight$$
+The function iterates over the range of `N_POOLS` and obtains the following values:
 
-$$totalPrice_{weighted} = \frac{\sum{price_{weighted}}}{\sum{weight}}$$
+- $\text{p_crypto_r} =$ price oracle of eth in the tricrypto pools w.r.t usdc/usdt  
+- $\text{p_stable_r} =$ price oracle of stableswap pool  
+- $\text{p_crypto_r} =$ price oracle of crvusd   
 
-$$price_{stETH} = min(price_{stETH}, 10^{18}) * \frac{rate_{wstETH}}{10^{18}}$$
+$$\text{eth_weighted_price} = \text{eth_weighted_price} + (\frac{\text{p_crypto_r} * \text{p_stable_agg}}{\text{p_stable_r}}) * weight$$
 
-$$price = price_{stETH} * totalPrice_{weighted}$$
+While looping through the pools, the variables `weighted_price` and `weights` accumulate the values from each individual pool, representing the total sum across all `N_POOLS`.
 
-$price_{weighted} =$ weighted price of ETH  
-$totalPrice_{weighted} =$ total weighted price of ETH  
-$price_{eth} =$ price oracle of eth in the tricrypto pools w.r.t usdc/usdt  
-$price_{usd} =$ price oracle of stableswap pool  
-$price_{crvusd} =$ price oracle of crvusd  
-$price_{stETH} =$ price of stETH w.r.t ETH  
-$rate_{wstETH} =$ amount of stETH for 1 wstETH
+The **total weighted price of ETH** is then obtained by dividing `weighted_price` by `weights`.
+
+$$\text{total_ETH_weighted_price} = \frac{\text{weighted_price}}{\text{weights}}$$
+
+*with:*
+
+$\text{weighted_price} =$ sum of the weighted prices  
+$\text{weights} =$ sum of all _ema_tvl's of tricrypto pools  
+
+------------------------
+
+Now, the **price of stETH w.r.t ETH** is obtained by calling the `price_oracle()` function on the stETH/ETH pool:
+
+$\text{p_staked} =$ `STAKEDSWAP.price_oracle()`
+
+Next, the price of stETH w.r.t ETH is capped. It's determined by taking the lesser value between the price of stETH in the curve pool and 1. This adjustment is necessary because if the stETH price in the pool exceeds 1, it creates an arbitrage opportunity. Traders could convert ETH for stETH at a 1:1 ratio and then sell it in the pool, pushing the exchange rate back to 1.
+
+This capped value is then multiplied by `WSTETH.stEthPerToken()`, representing the ratio between wstETH and stETH.
+
+$$\text{p_staked} = min(\text{p_staked}, 10^{18}) * \frac{WSTETH.stEthPerToken()}{10^{18}}$$
+
+In the final step, the obtained value of `p_staked` is multiplied by the weighted price of ETH, as calculated earlier, and then divided by the number of decimals (represented by $10^{18}$.
 
 
 ### `raw_price`
@@ -357,11 +388,8 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 | $\exp$  | `exp(power: int256) -> uint256:` |
 | $TS_i$ | `TRICRYPTO[i].totalSupply()`
 | $VP_i$ | `TRICRYPTO[i].virtual_price()` |
-| $price_{eth}$ | `p_crypto_r` |
-| $price_{usd}$ | `p_stable_agg` |
-| $price_{crvusd}$ | `p_stable_r` |
-| $price_{weighted}$ | `weighted_price` |
-| $totalETH_{price}$ | `crv_p` |
+| $\text{total_ETH_weighted_price}$ | `crv_p` |
+
 
 
 
