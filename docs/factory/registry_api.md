@@ -1,6 +1,6 @@
 # Factory Getters
 
-### `Factory.metapool_implementations`
+### `metapool_implementations`
 
 !!! description "`Factory.metapool_implementations(_base_pool: address) -> address[10]`"
 
@@ -35,7 +35,7 @@
 
 The following getter methods are available for finding pools that were deployed via the factory:
 
-### `Factory.pool_count`
+### `pool_count`
 
 !!! description "`Factory.pool_count() → uint256: view`"
 
@@ -54,7 +54,7 @@ The following getter methods are available for finding pools that were deployed 
         >>> todo:
         ```
 
-### `Factory.pool_list`
+### `pool_list`
 
 !!! description "`Factory.pool_list(i: uint256) → address: view`"
 
@@ -83,7 +83,7 @@ The following getter methods are available for finding pools that were deployed 
         As factory-deployed pools are not killable, they also cannot be removed from the registry. For this 
         reason the ordering of pools within this array will never change.
 
-### `Factory.find_pool_for_coins`
+### `find_pool_for_coins`
 
 !!! description "`Factory.find_pool_for_coins(_from: address, _to: address, i: uint256 = 0) → address: view`"
 
@@ -132,7 +132,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
 ## Coins and Coin Info
 
-### `Factory.get_n_coins`
+### `get_n_coins`
 
 !!! description "`Factory.get_n_coins(pool: address) → (uint256): view`"
 
@@ -164,7 +164,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         todo: 
         ```
 
-### `Factory.get_coins`
+### `get_coins`
 
 !!! description "`Factory.get_coins(_pool: address) -> address[4]`"
 
@@ -195,7 +195,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         ("0x36F3FD68E7325a35EB768F1AedaAe9EA0689d723", "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490")
         ```
 
-### `Factory.get_underlying_coins`
+### `get_underlying_coins`
 
 !!! description "`Factory.get_underlying_coins(pool: address) → address[8]: view`"
 
@@ -246,7 +246,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         )
         ```
 
-### `Factory.get_decimals`
+### `get_decimals`
 
 !!! description "`Factory.get_decimals(pool: address) → uint256[8]: view`"
 
@@ -282,7 +282,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         (18, 18, 0, 0, 0, 0, 0, 0)
         ```
 
-### `Factory.get_underlying_decimals`
+### `get_underlying_decimals`
 
 !!! description "`Factory.get_underlying_decimals(pool: address) → uint256[8]: view`"
 
@@ -332,7 +332,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         For pools that do not involve lending, the return value is identical to ``Registry.get_decimals``. 
         Non-lending coins that still involve querying a rate (e.g. renBTC) are marked as having `0` decimals.
 
-### `Factory.get_coin_indices`
+### `get_coin_indices`
 
 !!! description "`Factory.get_coin_indices(pool: address, _from: address, _to: address) → (int128, int128, bool): view`"
 
@@ -420,7 +420,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         >>> swap.exchange_underlying(2, 1, 1e18, 0, {'from': alice})
         ```
 
-### `Factory.get_gauge`
+### `get_gauge`
 
 !!! description "`Factory.get_gauge(_pool: address) -> address`"
 
@@ -451,7 +451,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         >>> todo: 
         ```
 
-### `Factory.get_implementation_address`
+### `get_implementation_address`
 
 !!! description "`Factory.get_implementation_address(_pool: address) -> address`"
 
@@ -482,7 +482,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         >>> todo: 
         ```
 
-### `Factory.is_meta`
+### `is_meta`
 
 !!! description "`Factory.is_meta(_pool: address) -> bool`"
 
@@ -512,7 +512,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         >>> todo: 
         ```
 
-### `Factory.get_pool_asset_type`
+### `get_pool_asset_type`
 
 !!! description "`Factory.get_pool_asset_type(_pool: address) -> uint256`"
 
@@ -549,7 +549,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         >>> todo: 
         ```
 
-### `Factory.get_fee_receiver`
+### `get_fee_receiver`
 
 !!! description "`Factory.get_fee_receiver(_pool: address) -> address`"
 
@@ -581,7 +581,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
 ## Balances and Rates
 
-### `Factory.get_balances`
+### `get_balances`
 
 !!! description "`Factory.get_balances(_pool: address) → uint256[2]: view`"
 
@@ -627,7 +627,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         These values are not necessarily the same as calling `Token.balanceOf(pool)` as the total balance also includes 
         unclaimed admin fees.
 
-### `Factory.get_underlying_balances`
+### `get_underlying_balances`
 
 !!! description "`Factory.get_underlying_balances(pool: address) → uint256[8]: view`"
 
@@ -682,7 +682,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         )  
         ```
 
-### `Factory.get_admin_balances`
+### `get_admin_balances`
 
 !!! description "`Factory.get_admin_balances(pool: address) → uint256[2]: view`"
 
@@ -719,7 +719,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         (10800690926373756722358, 30891687335)  
         ```
 
-### `Factory.get_metapool_rates`
+### `get_metapool_rates`
 
 !!! description "`Factory.get_metapool_rates(_pool: address) → uint256[2]: view`"
 
