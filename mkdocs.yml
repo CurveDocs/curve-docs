@@ -82,7 +82,7 @@ nav:
   - Cryptoswap Exchange:
     - Overview: cryptoswap_exchange/overview.md
 
-  - Factory:
+  - Pool Factory:
     - Overview: factory/overview.md
     - Deployer API: factory/deployer_api.md
     - Registry API: factory/registry_api.md
