@@ -77,28 +77,3 @@ The following are methods that may only be called by the owner of the contract.
         ```shell
         >>> MetaRegistry.update_registry_handler(0, "new handler contract")
         ```
-
-
-### `owner`
-!!! description "`MetaRegistry.owner() -> address:`"
-
-    Getter for the owner of the contract.
-
-    Returns: owner (`address`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 6"
-        owner: public(address)
-
-        @external
-        def __init__(_address_provider: address):
-            self.address_provider = AddressProvider(_address_provider)
-            self.owner = AddressProvider(_address_provider).admin()
-        ```
-
-    === "Example"
-        ```shell
-        >>> MetaRegistry.owner()
-        '0xEdf2C58E16Cc606Da1977e79E1e69e79C54fe242'
-        ```
