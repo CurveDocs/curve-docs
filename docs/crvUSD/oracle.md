@@ -1,4 +1,4 @@
-As crvusd markets use interal oracles, they utilizes in-house liquidity pools to aggregate the price of collateral. But there is a possibility to use Chainlink oracle prices as safety limits.
+As crvUSD markets use internal oracles, they utilize in-house liquidity pools to aggregate the price of collateral. There is also a possibility to use Chainlink oracle prices as safety limits.
 
 !!!warning
     Every market has its own price oracle contract, which can be fetched by calling `price_oracle_contract` within the controller of the market. The [wstETH oracle](https://etherscan.io/address/0xc1793A29609ffFF81f10139fa0A7A444c9e106Ad#code) will be used for the purpose of this documentation. Please be aware that oracle contracts can vary based on the collateral token.

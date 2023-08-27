@@ -29,4 +29,4 @@ PegKeepers are contracts that help stabilize the peg of crvUSD. They are allocat
 The AggregatorStablePrice contract is designed to aggregate the prices of crvUSD based on multiple Curve Stableswap pools. This price is mainly used as an oracle for calculating the interest rate, providing an aggregated and exponential moving average price.
 
 ## *[Oracles](../LLAMMA/oracle.md)*
-coming soon...
+As crvUSD markets use internal oracles, they utilize in-house liquidity pools to aggregate the price of collateral. There is also a possibility to use Chainlink oracle prices as safety limits.
