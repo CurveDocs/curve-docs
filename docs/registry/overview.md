@@ -1,14 +1,14 @@
-The metaregistry is a Curve Finance Pool Registry Aggregator that consolidates different registries used at Curve Finance for a single chain into a single contract.
+The MetaRegistry is a Curve Finance Pool Registry Aggregator that consolidates different registries used at Curve Finance for a single chain into a single contract.
 
-The current version of the MetaRegistry aggregates of the following six child registries:
+The current version of the MetaRegistry aggregates the following six child registries:
 
 ## **Mainnet:**
 1. **`Curve Stable Registry`**: A registry of custom pool implementations deployed by Curve Core.  
-2. **`Curve Stable Factory`**: A permissionless StableSwap pool factory, which also acts as a registry for pools that its users create.  
-3. **`Curve Crypto Registry`**: A registry of custom CryptoSwap pool implementaions deployed by Curve Core.  
-4. **`Curve Crypto Factory`**: A permissionless CryptoSwap pool factory, which also acts as a registry for pools that its users create.  
-5. **`Curve Tricrypto Factory`**: A permmissionless Tricrypto pool factory, which also acts as a registry for pools that its users create.
-6. **`Curve Stable Factory`**: A permmissionless Tricrypto pool factory, which also acts as a registry for pools that its users create.
+2. **`Curve Stable Factory`**: A permissionless StableSwap pool factory, also acts as a registry for pools its users create.  
+3. **`Curve Crypto Registry`**: A registry of custom CryptoSwap pool implementations deployed by Curve Core.  
+4. **`Curve Crypto Factory`**: A permissionless CryptoSwap pool factory, also acts as a registry for pools its users create.  
+5. **`Curve Tricrypto Factory`**: A permissionless Tricrypto pool factory, which also acts as a registry for pools its users create.
+6. **`Curve Stable Factory`**: A permissionless Tricrypto pool factory, also acts as a registry for pools its users create.
 
 
 Each of the child registries are accompanied by a RegistryHandler, which is a contract that wraps around the child registry and enforces the abi implemented in the MetaRegistry. These registry handlers are then added to the MetaRegistry using the `MetaRegistry.add_registry_handler` method.
@@ -32,15 +32,15 @@ Each of the child registries are accompanied by a RegistryHandler, which is a co
 | `CurveTricryptoFactory` |  [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963#code) |
 | `CurveTricryptoFactoryHandler` |  [0x30a4249C42be05215b6063691949710592859697](https://etherscan.io/address/0x30a4249C42be05215b6063691949710592859697#code) |
 
-In principle, a child registry does not need a registry handler wrapper, if it already conforms to the MetaRegistry's abi standards. However, a wrapper around the child registries can be used to hotfix bugs detected in production when such fixes cannot be introduced to the child registry without significant breaking changes.
+A child registry does not need a registry handler wrapper if it already conforms to the MetaRegistry's ABI standards. However, a wrapper around the child registries can be used to hotfix bugs detected in production when such fixes cannot be introduced to the child registry without significant breaking changes.
 
 
 ## **Who should use the MetaRegistry?**
-Integrators find it quite challenging to integrate a protocol into their dapp if there are multiple on-chain registry stored in separate contracts: They do not have intrinsic knowledge in the protocol level to accommodate edge cases and onboard multiple registries. A single source of information that aggregates all registries makes integrations trivial. If you are an integrator looking to integrate Curve, the MetaRegistry is your best friend.
+Integrators find it quite challenging to integrate a protocol into their dapp if multiple on-chain registries are stored in separate contracts: They do not have intrinsic knowledge at the protocol level to accommodate edge cases and onboard multiple registries. A single source of information that aggregates all registries makes integrations trivial. If you are an integrator looking to integrate Curve, the MetaRegistry is your best friend.
 
 
 ## **Setup**
-Set up the python environment using the following steps: For more details please visit [Github](https://github.com/curvefi/metaregistry).
+Set up the Python environment using the following steps: Please visit [Github](https://github.com/curvefi/metaregistry) for more details.
 
 ```shell
 > python -m venv venv
@@ -56,9 +56,9 @@ This project uses `eth-ape >= 0.4.0` developed at [Apeworx](https://apeworx.io/)
 4. `ape-ledger`  
 5. `ape-etherscan`  
 
-To install these, please follow instructions laid out in their respective Github repositories (by clicking on the links above).
+To install these, please follow the instructions in their respective Github repositories (by clicking on the links above).
 
-Note: If you choose to run tests using `Alchemy` as the upstream provider, please set up an alchemy api key into an environment variable labelled `WEB3_ALCHEMY_PROJECT_ID` or `WEB3_ALCHEMY_API_KEY`. If you choose to use a local node (`geth` or `erigon`) please change the hardhat upstream provider for mainnet-fork to `geth` in [ape-config.yaml](https://github.com/curvefi/metaregistry/blob/main/ape-config.yaml):
+Note: If you choose to run tests using `Alchemy` as the upstream provider, please set up an Alchemy API key into an environment variable labeled `WEB3_ALCHEMY_PROJECT_ID` or `WEB3_ALCHEMY_API_KEY`. If you use a local node (`geth` or `erigon`), please change the hardhat upstream provider for mainnet-fork to `geth` in [ape-config.yaml](https://github.com/curvefi/metaregistry/blob/main/ape-config.yaml):
 
 ```shell
 hardhat:
@@ -78,7 +78,7 @@ To run tests in interactive mode, please do the following:
 ```
 
 ## **Deployment**
-First, set up your account in Ape. If you're using an EOA that is a cold wallet, please do:
+First, set up your account in Ape. If you're using an EOA that is a cold wallet, do:
 ```shell
 > ape accounts import <alias>
 ```

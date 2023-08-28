@@ -313,9 +313,9 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `get_fees`
 !!! description "`MetaRegistry.get_fees(_pool: address, _handler_id: uint256 = 0) -> uint256[10]:`"
 
-    Getter for the fees that a Curve pool charges per swap. The returned fee data is different for StableSwap pools (which just use a single parameter for fees, other than admin fees), than CryptoSwap pools (which use multiple parameters for fees, due to its dynamic fee structure).
+    Getter for the fees that a Curve pool charges per swap. The returned fee data differs for StableSwap pools (which use a single parameter for fees, other than admin fees) than CryptoSwap pools (which use multiple fee parameters due to its dynamic fee structure).
 
-    For Stableswap, the getter returns the `fee` per swap as well as the `admin_fee` percentage. For the `3pool`, it shows that the pool charges 1 basis points per swap, 50% of which goes to the DAO.
+    For Stableswap, the getter returns the `fee` per swap and the `admin_fee` percentage. For the `3pool`, it shows that the pool charges 1 basis point per swap, 50% of which goes to the DAO.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -349,7 +349,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         ```
 
 
-    For **CryptoSwap**, the getter returns: `fee`, `admin_fee` percentage, `mid_fee` and `out_fee`. The fee is the dynamic fee charged per swap, and depends on the `mid_fee` (fee when the CryptoSwap pool is pegged) and the `out_fee`. For understanding the dynamic fee algorithm, the reader is pointed to the CryptoSwap Paper.
+    For **CryptoSwap**, the getter returns: `fee`, `admin_fee` percentage, `mid_fee` and `out_fee`. The fee is the dynamic fee charged per swap, and depends on the `mid_fee` (fee when the CryptoSwap pool is pegged) and the `out_fee`. To understand the dynamic fee algorithm, the reader is pointed to the CryptoSwap Paper.
 
     === "Example"
         ```shell
@@ -363,7 +363,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     Getter for a pool's parameters.
 
-    For **StableSwap**, the getter returns the amplification coefficient (`A`) of the pool.
+    For **StableSwap**, the getter returns the pool's amplification coefficient (`A`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -715,7 +715,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         def get_underlying_coins(_pool: address, _handler_id: uint256 = 0) -> address[MAX_COINS]:
             """
             @notice Get the underlying coins within a pool
-            @dev For non metapools, returns the same value as `get_coins`
+            @dev For non-metapools, returns the same value as `get_coins`
             @param _pool Pool address
             @param _handler_id id of registry handler
             @return List of coin addresses
@@ -789,7 +789,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         def get_n_underlying_coins(_pool: address, _handler_id: uint256 = 0) -> uint256:
             """
             @notice Get the number of underlying coins in a pool
-            @dev For non metapools, returns the same as get_n_coins
+            @dev For non-metapools, returns the same as get_n_coins
             @param _pool Pool address
             @return Number of coins
             """
@@ -857,7 +857,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         def get_underlying_decimals(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:
             """
             @notice Get decimal places for each underlying coin within a pool
-            @dev For non metapools, returns the same value as `get_decimals`
+            @dev For non-metapools, returns the same value as `get_decimals`
             @param _pool Pool address
             @param _handler_id id of registry handler
             @return uint256 list of decimals
@@ -963,10 +963,10 @@ The factory has a similar API to that of the main Registry, which can be used to
         def get_underlying_balances(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:
             """
             @notice Get balances for each underlying coin within a pool
-            @dev For non metapools, returns the same value as `get_balances`
+            @dev For non-metapools, returns the same value as `get_balances`
             @param _pool Pool address
             @param _handler_id id of registry handler
-            @return uint256 List of underlyingbalances
+            @return uint256 List of underlying balances
             """
             return RegistryHandler(self._get_registry_handlers_from_pool(_pool)[_handler_id]).get_underlying_balances(_pool)
         ```
@@ -1139,7 +1139,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `registry_length`
 !!! description "`MetaRegistry.registry_length() -> uin256:`"
 
-    Getter for the registry lenght.
+    Getter for the registry length.
 
     Returns: number of registries (`uint256`).
 
