@@ -1,16 +1,31 @@
 AMM Math for 3-coin Curve Cryptoswap Pools.
+Curve AMM Math for 3 unpegged assets (e.g. ETH, BTC, USD).
 
+
+!!!need fiddys help here!!!
+
+
+!!! note
+    The Math contract is deployed to the Ethereum mainnet at: [0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE](https://etherscan.io/address/0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE#code).
+    Source code for this contract is available on [Github](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveCryptoMathOptimized3.vy). 
+
+
+## AMM Math Functions
 
 ### `get_y`
-!!! description "`Math.get_y() -> address: view`"
+!!! description "`Math.get_y(_ANN: uint256, _gamma: uint256, x: uint256[N_COINS], _D: uint256, i: uint256) -> uint256[2]:`"
 
-    todo
+    Function to calculate x[i] given other balances x[0..N_COINS-1] and invariant D.
 
-    Returns:
+    Returns: 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `input` |  `type` | Contract input |
+    | `_ANN` |  `uint256` | ANN = A * N**N |
+    | `_gamma` |  `_gamma` | AMM.gamma() value |
+    | `x` |  `uint256[N_COINS]` | Balances multiplied by prices and precisions of all coins |
+    | `_D` |  `uint256` | Invariant |
+    | `i` |  `uint256` | Index of coin to calculate y |
 
     ??? quote "Source code"
 
@@ -228,7 +243,7 @@ AMM Math for 3-coin Curve Cryptoswap Pools.
     === "Example"
 
         ```shell
-        >>> Math.get_y()
+        >>> Math.get_y('todo')
         'todo'
         ```
 
@@ -242,7 +257,10 @@ AMM Math for 3-coin Curve Cryptoswap Pools.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `input` |  `type` | Contract input |
+    | `ANN` |  `uint256` | ANN = A * N**N |
+    | `gamma` |  `uint256` | AMM.gamma() value |
+    | `x_unsorted` |  `uint256[N_COINS]` | Unsorted array of coin balances |
+    | `K0_prev` |  `uint256` | apriori for newton's method derived from get_y_int. Defaults to zero (no apriori) |
 
     ??? quote "Source code"
 
@@ -466,7 +484,9 @@ AMM Math for 3-coin Curve Cryptoswap Pools.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `input` |  `type` | Contract input |
+    | `_xp` |  `uint256[N_COINS]` | Balances of the pool |
+    | `_D` |  `uint256` | Current value of D |
+    | `_A_gamma` |  `uint256[N_COINS-1]` | Amplification coefficient and gamma |
 
     ??? quote "Source code"
 
@@ -533,18 +553,17 @@ AMM Math for 3-coin Curve Cryptoswap Pools.
     === "Example"
 
         ```shell
-        >>> Math.get_p()
+        >>> Math.get_p('todo')
         'todo'
         ```
 
 
-## **Math Utils**
+## **Math Utilities**
 
 ### `cbrt`
 !!! description "`Math.cbrt(x: uint256) -> uint256:`"
 
     Function to calculate the cubic root of `x` in 1e18 precision.  
-    More here: https://github.com/pcaversaccio/snekmate
 
     Returns: cubic root (`uint256`).
 
@@ -552,9 +571,12 @@ AMM Math for 3-coin Curve Cryptoswap Pools.
     | ----------- | -------| ----|
     | `x` |  `uint256` | Value to calculate cubic root for |
 
+    !!!tip
+        More here: https://github.com/pcaversaccio/snekmate.
+
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python hl_lines="3 9 13 "
         @external
         @view
         def cbrt(x: uint256) -> uint256:
@@ -675,15 +697,15 @@ AMM Math for 3-coin Curve Cryptoswap Pools.
     === "Example"
 
         ```shell
-        >>> Math.cbrt()
-        'todo'
+        >>> Math.cbrt(8000000000000000000)
+        2000000000000000000
         ```
 
 
 ### `geometric_mean`
 !!! description "`Math.geometric_mean(_x: uint256[3]) -> uint256:`"
 
-    Function to calculate the geometric mean of a a list of numbers in 1e18 precision.
+    Function to calculate the geometric mean of a list of numbers in 1e18 precision.
 
     Returns: gemoetric mean (`uint256`).
 
@@ -778,22 +800,22 @@ AMM Math for 3-coin Curve Cryptoswap Pools.
     === "Example"
 
         ```shell
-        >>> Math.geometric_mean()
-        'todo'
+        >>> Math.geometric_mean([3000000000000000000,3000000000000000000,3000000000000000000])
+        3000000000000000000
         ```
 
 
 ### `reduction_coefficient`
 !!! description "`Math.reduction_coefficient(x: uint256[N_COINS], fee_gamma: uint256) -> uint256:`"
 
-    Function to calculate the reduction coefficient for `x` and `fee_gamma`.
+    Function to calculate the reduction coefficient for `x` and `fee_gamma`. This method is used for calculating fees.
 
     Returns: reduction coefficient (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `x` |  `uint256[N_COINS]` | Values of x's |
-    | `fee_gamma` |  `uint256` | Gamma Fee |
+    | `x` |  `uint256[N_COINS]` | Values of x |
+    | `fee_gamma` |  `uint256` | Fee gamma |
 
     ??? quote "Source code"
 
@@ -834,7 +856,7 @@ AMM Math for 3-coin Curve Cryptoswap Pools.
     === "Example"
 
         ```shell
-        >>> Math.reduction_coefficient()
+        >>> Math.reduction_coefficient('todo')
         'todo'
         ```
 
@@ -843,13 +865,15 @@ AMM Math for 3-coin Curve Cryptoswap Pools.
 !!! description "`Math.wad_exp(_power: int256) -> uint256:`"
 
     Function to calculate the natural exponential function of a signed integer with a precision of 1e18.  
-    More here: https://github.com/pcaversaccio/snekmate
 
     Returns: natural exponential (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_power` |  `int256` | Value to calculate the natural exponential function of|
+
+    !!!tip
+        More here: https://github.com/pcaversaccio/snekmate.
 
     ??? quote "Source code"
 
@@ -937,9 +961,10 @@ AMM Math for 3-coin Curve Cryptoswap Pools.
     === "Example"
 
         ```shell
-        >>> Math.wad_exp()
+        >>> Math.wad_exp('todo')
         'todo'
         ```
+
 
 ### `version`
 !!! description "`Math.version() -> String[8]: view`"
