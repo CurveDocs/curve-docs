@@ -1,16 +1,11 @@
 AMM Math for 3-coin Curve Cryptoswap Pools.
-Curve AMM Math for 3 unpegged assets (e.g. ETH, BTC, USD).
-
-
-!!!need fiddys help here!!!
-
 
 !!! note
     The Math contract is deployed to the Ethereum mainnet at: [0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE](https://etherscan.io/address/0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE#code).
     Source code for this contract is available on [Github](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveCryptoMathOptimized3.vy). 
 
 
-## AMM Math Functions
+## **AMM Math Functions**
 
 ### `get_y`
 !!! description "`Math.get_y(_ANN: uint256, _gamma: uint256, x: uint256[N_COINS], _D: uint256, i: uint256) -> uint256[2]:`"
@@ -856,8 +851,8 @@ Curve AMM Math for 3 unpegged assets (e.g. ETH, BTC, USD).
     === "Example"
 
         ```shell
-        >>> Math.reduction_coefficient('todo')
-        'todo'
+        >>> Math.reduction_coefficient([1123,1123,11], 500000000000000)
+        516570424625783
         ```
 
 
@@ -961,8 +956,8 @@ Curve AMM Math for 3 unpegged assets (e.g. ETH, BTC, USD).
     === "Example"
 
         ```shell
-        >>> Math.wad_exp('todo')
-        'todo'
+        >>> Math.wad_exp(1000000)
+        1000000000001000000
         ```
 
 
