@@ -14,8 +14,8 @@ The current version of the MetaRegistry aggregates the following six child regis
 Each of the child registries are accompanied by a RegistryHandler, which is a contract that wraps around the child registry and enforces the abi implemented in the MetaRegistry. These registry handlers are then added to the MetaRegistry using the `MetaRegistry.add_registry_handler` method.
 
 ### **Contract Deployments**
-| Contract    | Address   | Chain |
-| ----------- | -------| ----|
+| Description    | Contract Address   |
+| ----------- | -------| 
 | `MetaRegistry` |  [0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC](https://etherscan.io/address/0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC#code) |
 | `BasePoolRegistry` |  [0xDE3eAD9B2145bBA2EB74007e58ED07308716B725](https://etherscan.io/address/0xDE3eAD9B2145bBA2EB74007e58ED07308716B725#code) | 
 | `AddressProvider` |  [0x0000000022D53366457F9d5E68Ec105046FC4383](https://etherscan.io/address/0x0000000022D53366457F9d5E68Ec105046FC4383#code) | 
