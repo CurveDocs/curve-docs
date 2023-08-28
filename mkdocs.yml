@@ -42,10 +42,6 @@ nav:
       - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
     - Governance and Voting: curve_dao/gov-and-vote/overview.md
 
-    - Registry:
-      - Overview: registry/overview.md
-      - MetaRegistryAPI: registry/MetaRegistryAPI.md
-
   - crvUSD:
     - Overview: LLAMMA/overview.md
     - $crvUSD: LLAMMA/crvUSD.md
@@ -81,6 +77,12 @@ nav:
 
   - Cryptoswap Exchange:
     - Overview: cryptoswap_exchange/overview.md
+
+  - Registry:
+    - Overview: registry/overview.md
+    - MetaRegistryAPI: registry/MetaRegistryAPI.md
+    - Admin Controls: registry/admin_controls.md
+
 
   - Factory:
     - Overview: factory/overview.md
