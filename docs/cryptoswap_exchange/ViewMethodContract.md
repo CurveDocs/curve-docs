@@ -1,7 +1,7 @@
 This contract contains view-only external methods which can be gas-inefficient when called from smart contracts.
 
 !!! note
-    The Math contract is deployed to the Ethereum mainnet at: [0x064253915b8449fdEFac2c4A74aA9fdF56691a31](https://etherscan.io/address/0x064253915b8449fdEFac2c4A74aA9fdF56691a31#code).
+    The ViewMethodContract is deployed to the Ethereum mainnet at: [0x064253915b8449fdEFac2c4A74aA9fdF56691a31](https://etherscan.io/address/0x064253915b8449fdEFac2c4A74aA9fdF56691a31#code).
     Source code for this contract is available on [Github](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveCryptoViews3Optimized.vy).
 
 
