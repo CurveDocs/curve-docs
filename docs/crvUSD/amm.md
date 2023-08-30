@@ -2,11 +2,11 @@ LLAMMA is the market-making contract that rebalances the collateral. As the name
 
 When creating a new loan, the controller evenly distributes the collateral put up by the user across a specified number of bands in the AMM and mints stablecoins for the user, each representing a range of collateral prices. 
 
-The **loan-to-value (LTV)** ratio depends on the number of bands.
+The **loan-to-value (LTV)** ratio depends on the number of bands:
 
 $$LTV = 1 - \text{loan_discount} - 1 * \frac{N}{2*A}$$
 
-Interestingly enough, the start of the liquidation range is also determined by the LTV:
+The start of the liquidation range is also determined by the LTV:
 
 $$ \text{starting_price} = \frac{debt} {collateral * LTV} $$
 
@@ -17,7 +17,7 @@ $$ \text{starting_price} = \frac{debt} {collateral * LTV} $$
 Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p_oracle_down`](#p_oracle_down)) price bound. These prices are not real AMM prices, but rather tresholds for the bands! 
 It's worth noting, that because it is a continuous grid, the lower price-bound of let's say band 0 is the same as the upper price-bound of 1.
 
-The concept of LLAMMA is to convert collateral into crvUSD as the collateral price decreases automatically, and vice versa, convert crvUSD back into the collateral asset when prices rise. When the collateral price is within a band that has deposited assets, the position enters a so-called **soft-liquidation** mode and the health of the loan starts decreasing.    
+The concept of LLAMMA is to automatically convert collateral into crvUSD as the collateral price decreases, and vice versa, convert crvUSD back into the collateral asset when prices rise. When the collateral price is within a band that has deposited collateral, the position enters a so-called **soft-liquidation** mode and the health of the loan starts decreasing.    
 When the `health` drops below 0%, the user is eligible for **hard-liquidation**. The users collateral can be sold off and the position will be closed (just as in regular liquidations).
 
 !!!note
@@ -35,7 +35,7 @@ When the `health` drops below 0%, the user is eligible for **hard-liquidation**.
 </figure>
 
 
-To ensure assets are liquidated or de-liquidated, the AMM adjusts its price to create arbitrage opportunities. Every trade within the AMM that arbitrages the price difference between `oracle_price` and `get_p` is essentially soft-liquidating users.
+To ensure assets are liquidated or de-liquidated, the AMM adjusts its price (`get_p`) to create arbitrage opportunities. Every trade within the AMM that arbitrages the price difference between `oracle_price` and `get_p` is essentially soft-liquidating users.
 
 *The system relies on **two different prices**:*
 
@@ -902,19 +902,20 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
 
 
-### `get_amount_for_price` (todo)
+### `get_amount_for_price`
 !!! description "`AMM.get_amount_for_price(p: uint256) -> (uint256, bool):`"
 
-    Function to calculate the necessary amount to be exchanged to have the AMM at the final price `p`.  
-    bool = true --> need to exchange crvUSD for collateral (to get the price of the collateral UP)  
-    bool = false --> need to exchange collateral for crvUSD (to get the price of the collateral DOWN)  
-    output = the token that needs to be sold!
+    Function to calculate the necessary amount to be exchanged to have the AMM at the final price `p`.   
 
-    Returns: necessary amount to exchange(`uint256`) and true or false (`bool`).
+    Returns: necessary amount to exchange (`uint256`) and true or false (`bool`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `p` |  `uint256` | Price of the AMM |
+
+    !!!info
+        `bool = true` -> need to exchange crvUSD for collateral (to get the price of the collateral **UP**)      
+        `bool = false` -> need to exchange collateral for crvUSD (to get the price of the collateral **DOWN**)
 
     ??? quote "Source code"
 
@@ -1811,12 +1812,12 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
         ```
 
 
-### `bands_x` (check this)
+### `bands_x`
 !!! description "`AMM.bands_x(arg0: uint256) -> uint256:`"
 
-    Getter for the amount of x (= coin, which is being borrowed) deposited in band n (`uint256`). X represents the token that is being borrowed, meaning that all bands below the active one will be full in token x as they have been soft-liquidated and the collateral was sold into the collateral token. The currently active band is the only band that includes coin x and coin y (that's the band that is in soft liquidation atm).
+    Getter for the amount of x deposited in band `arg0` (`uint256`). X represents the token that is being borrowed.
 
-    Returns: amount (`uint256`) of coin x deposited in band n.
+    Returns: amount (`uint256`) of coin x deposited in a band.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1836,12 +1837,12 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
         ```
 
 
-### `bands_y` (check this)
+### `bands_y`
 !!! description "`AMM.bands_y(arg0: uint256) -> uint256:`"
 
-    Getter for the amount of y (= coin, which is put up as collateral) deposited in band n (`uint256`). Y represents the token that is put up as collateral, meaning that all bands above the active one will be fully in token y as they have not been soft-liquidated yet. The currently active band is the only band that includes coin x and coin y (that's the band that is in soft liquidation atm).
+    Getter for the amount of y deposited in band `arg0` (`uint256`). Y represents the token that is put up as collateral.
 
-    Returns: amount (`uint256`) of coin y deposited in band n.
+    Returns: amount (`uint256`) of coin y deposited in a band.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1912,7 +1913,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
         ```
 
 
-### `get_y_up` (check this)
+### `get_y_up`
 !!! description "`AMM.get_y_up(user: address) -> uint256:`"
 
     Function to measure the amount of y (collateral) in band n for `user` if we adiabatically trade near p_oracle on the way up.
@@ -2283,45 +2284,6 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
         ```shell
         >>> AMM.can_skip_bands(-5)
         'False'
-        ```
-
-
-### `active_band_with_skip` (todo)
-!!! description "`AMM.active_band_with_skip() -> int256:`"
-
-    todo
-
-    Returns: 
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `n_end` |  `int256` | Band |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="4"
-        @external
-        @view
-        @nonreentrant('lock')
-        def active_band_with_skip() -> int256:
-            n0: int256 = self.active_band
-            n: int256 = n0
-            min_band: int256 = self.min_band
-            for i in range(MAX_SKIP_TICKS):
-                if n < min_band:
-                    n = n0 - MAX_SKIP_TICKS
-                    break
-                if self.bands_x[n] != 0:
-                    break
-                n -= 1
-            return n
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.active_band_with_skip()
-        -7
         ```
 
 
@@ -2819,7 +2781,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
         ```
 
 
-### `dynamic_fee` (todo)
+### `dynamic_fee`
 !!! description "`AMM.dynamic_fee() -> uint256: view`"
 
     Getter for the dynamic fee of the AMM. Dynamic fee is set to the maixmum of either `fee` or `_price_oracle_ro()`.
