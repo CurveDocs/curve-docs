@@ -69,6 +69,9 @@ nav:
     - Pools:
       - CryptoSwap Pool: cryptoswap_exchange/pool.md
       - Admin Controls: cryptoswap_exchange/admin_controls_pool.md
+    - Liquidity Pool Token:  
+      - Overview: cryptoswap_exchange/lp_token_overview.md
+      - LP Token: cryptoswap_exchange/lp_token.md
     - Utility Contracts: 
       - Math: cryptoswap_exchange/math.md
       - ViewMethodContract: cryptoswap_exchange/ViewMethodContract.md
