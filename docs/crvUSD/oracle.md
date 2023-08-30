@@ -50,8 +50,6 @@ $TS_i = \text{total supply of i-th pool}$ in `TRICRYPTO[N_POOLS]`
 $VP_i = \text{virtual price of i-th pool}$ in `TRICRYPTO[N_POOLS]` 
 $\text{last_tvl}_i = \text{smoothed TVL of i-th pool}$ in `TRICRYPTO[N_POOLS]` 
 
-$tvl_i$ essentially represents the weight.
-
 
 ### `ema_tvl`
 !!! description "`Oracle.ema_tvl() -> uint256[N_POOLS]:`"
