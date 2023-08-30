@@ -3498,7 +3498,8 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
         90000000000000000
         ```
 
-## **Setting parameters** 
+# **Setting parameters** 
+
 ### `set_borrowing_discounts`
 !!! description "`controller.set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256)`"
 
