@@ -381,7 +381,7 @@
 ### `approve`
 !!! description "`LPToken.approve(_spender: address, _value: uint256) -> bool:`"
 
-    Getter for the LP token balance of an address.
+    Getter for the allowance.
 
     Returns: True or False (`bool`).
 
