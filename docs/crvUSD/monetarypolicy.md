@@ -3,6 +3,9 @@ Monetary policy contracts are integrated into the crvUSD system and are responsi
 !!! info
     Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/mpolicies). 
 
+!!! tip
+    Useful tool by [0xreviews](https://twitter.com/0xreviews_xyz) to play around with rates: https://crvusd-rate.0xreviews.xyz/
+
 
 ## **Interest Rates**
 
@@ -14,7 +17,7 @@ Markets have a **dynamic rate**, depending on the following components:
 * TargetFraction  
 * DebtFraction of PegKeepers  
 
-For the price of crvUSD, an aggregated oracle price of multiple Curve Stablwswap pools is used ([see here](/curve-docs/docs/LLAMMA/priceaggregator.md)).
+For the price of crvUSD, an aggregated oracle price of multiple Curve Stablwswap pools is used ([see here](/curve-docs/docs/crvUSD/priceaggregator%20copy.md)).
 
 | variable      | description   | 
 | ----------- | -------|
@@ -27,20 +30,16 @@ For the price of crvUSD, an aggregated oracle price of multiple Curve Stablwswap
 | `PegKeeperDebt` |  `debt form PegKeepers (all the crvUSD deposited into pools?)` |
 | `TotalDebt` |  `total crvUSD debt` |
 
-$r = rate0 * e^{power}$
+$$r = rate0 * e^{power}$$
 
-$power = \frac{price_{peg} - price_{crvusd}}{sigma} - \frac{DebtFraction}{TargetFraction}$
+$$power = \frac{price_{peg} - price_{crvusd}}{sigma} - \frac{DebtFraction}{TargetFraction}$$
 
-$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$
+$$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
 !!!note
     `rate` and `rate0` denominated in units of $10^{18}$ for precision and represent the rate per second. The interest rate is charged for every block.
 
     $\text{annualRate} = (1 + \frac{rate}{10^{18}})^{365*24*60*60} - 1$
-
-
-!!! tip
-    Useful tool by [0xreviews](https://twitter.com/0xreviews_xyz) to play around with rates: https://crvusd-rate.0xreviews.xyz/
 
 
 

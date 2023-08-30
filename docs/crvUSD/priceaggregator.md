@@ -342,7 +342,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
         ```
 
 
-#### `price_w` (todo)
+#### `price_w`
 !!! description "`PriceAggregator.price_w() -> uint256:`"
 
     Function to calculate the price. If called successfully, updates `last_tvl`, `last_price` and `last_timestamp`.
