@@ -1,85 +1,195 @@
-cryptoswap pool smart contracts
-
-pool is also lp token at the same time.
-
-very, very good article to understand curve v2: https://nagaking.substack.com/p/deep-dive-curve-v2-parameters
-
-
-what is `_domain_seperator`?
-
-
-explain what `_pack()` and `_unpack()` does so i dont need to add code in every code source
-explain the fee structure. what is mid_fee, out_fee: when creating a new contract, mid_fee, out_fee and fee_gamma gets packed into `packed_fee_params`. why are fees packed into one variable?
-what does `allow_extra_profit` do??
-
-how and when are fees charged? when can fees be claimed(enought profit?)?
-
-three classes of parameters: 
-
-- bonding curve: `A` and `gamma`  
-- price scaling: `ma_time`, `allowed_extra_profit` and `adjustment_step`  
-- [fee](#fee): `mid_fee`, `out_fee` and `fee_gamma`  
+!!!tip 
+    Good article to get a basic understanding of CurveV2: https://nagaking.substack.com/p/deep-dive-curve-v2-parameters
 
 
 
+## **Exchange Methods**
 
 
-`packed_fee_params` contains `mid_fee`, `out_fee`, `fee_gamma`.
-`packed_rebalacing_parameters` contains `allowed_extra_profit`, `adjustment_step`, and `ma_time`.
+### `exchange`
+!!! description "`CryptoSwap.exchange(i: uint256, j: uint256, dx: uint256, min_dy: uint256, receiver: address = msg.sender) -> uint256:`"
 
-when changing parameters, new fees get _pack() again into one variable.
+    Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`.
 
-??? quote "_pack()"
+    Returns: 
+    
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `i` | `uint256` | Index for input coin |
+    | `j` | `uint256` | Index for output coin |
+    | `dx` | `uint256` | Amount of input coin being swapped in |
+    | `min_dy` | `uint256` | Minimum amount of output coin to receive |
+    | `receiver` | `address` | Address to send output coin to. Deafaults to `msg.sender` |
 
-    ```python hl_lines="1 3 8 13"
-    @internal
-    @view
-    def _pack(x: uint256[3]) -> uint256:
-        """
-        @notice Packs 3 integers with values <= 10**18 into a uint256
-        @param x The uint256[3] to pack
-        @return uint256 Integer with packed values
-        """
-        return (x[0] << 128) | (x[1] << 64) | x[2]
-    ```
+    ??? quote "Source code"
+
+        ```python hl_lines="1 12"
+        event TokenExchange:
+            buyer: indexed(address)
+            sold_id: uint256
+            tokens_sold: uint256
+            bought_id: uint256
+            tokens_bought: uint256
+            fee: uint256
+            packed_price_scale: uint256
+
+        @external
+        @nonreentrant("lock")
+        def exchange(
+            i: uint256,
+            j: uint256,
+            dx: uint256,
+            min_dy: uint256,
+            receiver: address = msg.sender
+        ) -> uint256:
+            """
+            @notice Exchange using wrapped native token by default
+            @param i Index value for the input coin
+            @param j Index value for the output coin
+            @param dx Amount of input coin being swapped in
+            @param min_dy Minimum amount of output coin to receive
+            @param receiver Address to send the output coin to. Default is msg.sender
+            @return uint256 Amount of tokens at index j received by the `receiver
+            """
+            return self._exchange(
+                msg.sender,
+                i,
+                j,
+                dx,
+                min_dy,
+                receiver,
+                False,
+            )
+
+        @internal
+        def _exchange(
+            sender: address,
+            i: uint256,
+            j: uint256,
+            dx: uint256,
+            min_dy: uint256,
+            receiver: address,
+            expect_optimistic_transfer: bool,
+        ) -> uint256:
+
+            assert i != j  # dev: coin index out of range
+            assert dx > 0  # dev: do not exchange 0 coins
+
+            A_gamma: uint256[2] = self._A_gamma()
+            xp: uint256[N_COINS] = self.balances
+            dy: uint256 = 0
+
+            y: uint256 = xp[j]  # <----------------- if j > N_COINS, this will revert.
+            x0: uint256 = xp[i]  # <--------------- if i > N_COINS, this will  revert.
+            xp[i] = x0 + dx
+
+            packed_price_scale: uint256 = self.price_scale_packed
+            price_scale: uint256[N_COINS - 1] = self._unpack_prices(
+                packed_price_scale
+            )
+
+            xp[0] *= PRECISIONS[0]
+            for k in range(1, N_COINS):
+                xp[k] = unsafe_div(
+                    xp[k] * price_scale[k - 1] * PRECISIONS[k],
+                    PRECISION
+                )  # <-------- Safu to do unsafe_div here since PRECISION is not zero.
+
+            prec_i: uint256 = PRECISIONS[i]
+
+            # ----------- Update invariant if A, gamma are undergoing ramps ---------
+
+            t: uint256 = self.future_A_gamma_time
+            if t > block.timestamp:
+
+                x0 *= prec_i
+
+                if i > 0:
+                    x0 = unsafe_div(x0 * price_scale[i - 1], PRECISION)
+
+                x1: uint256 = xp[i]  # <------------------ Back up old value in xp ...
+                xp[i] = x0                                                         # |
+                self.D = MATH.newton_D(A_gamma[0], A_gamma[1], xp, 0)              # |
+                xp[i] = x1  # <-------------------------------------- ... and restore.
+
+            # ----------------------- Calculate dy and fees --------------------------
+
+            D: uint256 = self.D
+            prec_j: uint256 = PRECISIONS[j]
+            y_out: uint256[2] = MATH.get_y(A_gamma[0], A_gamma[1], xp, D, j)
+            dy = xp[j] - y_out[0]
+            xp[j] -= dy
+            dy -= 1
+
+            if j > 0:
+                dy = dy * PRECISION / price_scale[j - 1]
+            dy /= prec_j
+
+            fee: uint256 = unsafe_div(self._fee(xp) * dy, 10**10)
+
+            dy -= fee  # <--------------------- Subtract fee from the outgoing amount.
+            assert dy >= min_dy, "Slippage"
+
+            y -= dy
+
+            y *= prec_j
+            if j > 0:
+                y = unsafe_div(y * price_scale[j - 1], PRECISION)
+            xp[j] = y  # <------------------------------------------------- Update xp.
+
+            # ------ Tweak price_scale with good initial guess for newton_D ----------
+
+            packed_price_scale = self.tweak_price(A_gamma, xp, 0, y_out[1])
+
+            # ---------------------- Do Transfers in and out -------------------------
+
+            ########################## TRANSFER IN <-------
+
+            # _transfer_in updates self.balances here. Update to state occurs before
+            # external calls:
+            self._transfer_in(
+                i,
+                dx,
+                sender,
+                expect_optimistic_transfer  # <---- If True, pool expects dx tokens to
+            )  #                                                    be transferred in.
+
+            ########################## -------> TRANSFER OUT
+
+            # _transfer_out updates self.balances here. Update to state occurs before
+            # external calls:
+            self._transfer_out(j, dy, receiver)
+
+            log TokenExchange(sender, i, dx, j, dy, fee, packed_price_scale)
+
+            return dy
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> CryptoSwap.exchange("todo")
+        
+        ```
 
 
-??? quote "_unpack()"
+### `exchange_underlying`
+### `calc_token_amount`
+### `get_dy`
+### `get_dx`
+### `exchange_extended`
 
-    ```python hl_lines="1 3 8 13"
-    @internal
-    @view
-    def _unpack(_packed: uint256) -> uint256[3]:
-        """
-        @notice Unpacks a uint256 into 3 integers (values must be <= 10**18)
-        @param val The uint256 to unpack
-        @return uint256[3] A list of length 3 with unpacked integers
-        """
-        return [
-            (_packed >> 128) & 18446744073709551615,
-            (_packed >> 64) & 18446744073709551615,
-            _packed & 18446744073709551615,
-        ]
-    ```
+
+## **Add/Remove Liquidity Methods**
+### `calc_withdraw_one_coin`
+### `add_liquidity`
+### `remove_liquidity`
+### `remove_liquidity_one_coin`
+
+
 
 
 ## **Fee Methods**
-
-Fees are charged based on the balance/imbalance of the pool. Fee is low when the pool is balanced and increases the more it is imbalanced.
-
-There are three different kind of fees:  
-
-- `fee_mid`: charged fee when pool is perfectly balanced (minimum possible fee).  
-- `out_fee`: charged fee when pools is completely imbalanced (maximum possible fee).
-- `fee_gamma`: determines the speed at which the fee increases when the pool becomes imbalanced. A low value leads to a more rapid fee increase, while a high value causes the fee to rise more gradually.
-
-
-<figure markdown>
-  ![](../images/curveV2_fee.png){ width="400" }
-  <figcaption></figcaption>
-</figure>
-
-
 
 ### `fee`
 !!! description "`CryptoSwap.fee() -> uint256:`"
@@ -643,25 +753,6 @@ There are three different kind of fees:
         ```shell
         >>> CryptoSwap.claim_admin_fees()
         ```
-
-
-## **Exchange Methods**
-### `calc_token_amount`
-### `get_dy`
-### `get_dx`
-### `exchange`
-### `exchange_underlying`
-### `exchange_extended`
-
-
-## **Add/Remove Liquidity Methods**
-### `calc_withdraw_one_coin`
-### `add_liquidity`
-### `remove_liquidity`
-### `remove_liquidity_one_coin`
-
-
-
 
 
 
