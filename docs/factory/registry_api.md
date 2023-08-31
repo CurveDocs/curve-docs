@@ -39,7 +39,7 @@ The following getter methods are available for finding pools that were deployed 
 
 !!! description "`Factory.pool_count() → uint256: view`"
 
-    Returns the total number of pools that have been deployed by the factory.
+    Returns the total number of pools that the factory has deployed.
 
     ??? quote "Source code"
 
@@ -80,17 +80,17 @@ The following getter methods are available for finding pools that were deployed 
 
     !!! note
 
-        As factory-deployed pools are not killable, they also cannot be removed from the registry. For this 
+        As factory-deployed pools are not killable, they cannot be removed from the registry. For this 
         reason the ordering of pools within this array will never change.
 
 ### `find_pool_for_coins`
 
 !!! description "`Factory.find_pool_for_coins(_from: address, _to: address, i: uint256 = 0) → address: view`"
 
-    Finds a pool that allows for swaps between `_from` and `_to`. You can optionally include `i` to get the i-th pool, 
+    Finds a pool allowing swaps between `_from` and `_to`. You can optionally include `i` to get the i-th pool, 
     when multiple pools exist for the given pairing. The order of `_from` and `_to` does not affect the result.
     
-    Returns `ZERO_ADDRESS` when swaps are not possible for the pair or `i` exceeds the number of available pools.
+    Returns `ZERO_ADDRESS` when swaps are impossible for the pair or `i` exceeds the number of available pools.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -329,7 +329,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     !!! note
 
-        For pools that do not involve lending, the return value is identical to ``Registry.get_decimals``. 
+        The return value is identical to ``Registry.get_decimals``for pools that do not involve lending. 
         Non-lending coins that still involve querying a rate (e.g. renBTC) are marked as having `0` decimals.
 
 ### `get_coin_indices`
@@ -337,7 +337,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 !!! description "`Factory.get_coin_indices(pool: address, _from: address, _to: address) → (int128, int128, bool): view`"
 
     Convert coin addresses into indices for use with pool methods. Returns the index of `_from`, index of `_to`, 
-    and a `bool` indicating if the coins are considered underlying in the given pool.
+    and a `bool` indicates if the coins are underlying the given pool.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
