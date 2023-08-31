@@ -7,7 +7,7 @@ Admin controls
 
 !!! description "`Factory.add_base_pool(_base_pool: address, _fee_receiver: address, _asset_type: uint256, _implementations: address[10])`"
 
-    Add a base pool to the registry, which may be used in factory metapools. Only callable by fatory `admin`.
+    Add a base pool to the registry, which may be used in factory metapools. Only callable by factory `admin`.
 
     Emits event: `BasePoolAdded`
 
