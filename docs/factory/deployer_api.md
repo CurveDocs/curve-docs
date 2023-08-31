@@ -9,7 +9,7 @@
 
 ### `deploy_plain_pool`
 
-Limitations when deplyoing plain pools:
+Limitations when deploying plain pools:
 
 | Parameter | Limitation |
 | --------- | ---------- |
@@ -182,7 +182,7 @@ Limitations when deplyoing plain pools:
 
 ### `deploy_metapool`
 
-Limitations when deplyoing meta pools:
+Limitations when deploying meta pools:
 
 | Parameter | Limitation |
 | --------- | ---------- |
@@ -322,7 +322,7 @@ Limitations when deplyoing meta pools:
 
 ### `deploy_pool`
 
-Limitations when deplyoing plain crypto pools:
+Limitations when deploying plain crypto pools:
 
 | Parameter | Limitation |
 | --------- | ---------- |
@@ -527,7 +527,7 @@ Limitations when deplyoing plain crypto pools:
 
 ### `deploy_pool`
 
-Limitations when deplyoing tricrypto crypto pools:
+Limitations when deploying tricrypto crypto pools:
 
 | Parameter | Limitation |
 | --------- | ---------- |
