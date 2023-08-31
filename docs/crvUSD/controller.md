@@ -18,7 +18,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Function to create a loan. The user must specify the amount of `collateral` to deposit into `N`-bands and the amount of `debt` to borrow. If a user already has an existing loan, the function will revert.
 
-    Emits event: `UserState`, `Borrow` and `Deposit` (in AMM)
+    Emits: `UserState`, `Borrow` and `Deposit` (in AMM), `SetRate`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -176,7 +176,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.create_loan(collateral: uint256, debt: uint256, N: uint256)
+        >>> controller.create_loan(43957348178625209816, 60000000000000000000000, 15)
         ```
 
 
@@ -185,7 +185,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Extended function to create a loan. This function passes crvUSD to a callback first so that it can leverage up.
 
-    Emits event: `UserState`, `Borrow` and `Deposit` (in AMM)
+    Emits: `UserState`, `Borrow` and `Deposit` (in AMM)
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -362,7 +362,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Function to partially or fully repay `_d_debt` amount of debt.
 
-    Emits event: `UserState` and `Repay`
+    Emits: `UserState` and `Repay`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -564,7 +564,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Extended function to repay a loan but get a stablecoin for that from callback (to deleverage).
 
-    Emits event: `UserState` and `Repay`
+    Emits: `UserState` and `Repay`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -772,7 +772,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Function to add extra collateral to a position.
 
-    Emits event: `UserState` and `Borrow`
+    Emits: `UserState` and `Borrow`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -973,7 +973,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Function to remove collateral from a position.
 
-    Emits event: `UserState` and `RemoveCollateral`
+    Emits: `UserState` and `RemoveCollateral`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1166,7 +1166,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Function to borrow more stablecoins while adding more collateral (not necessary).
 
-    Emits event: `UserState` and `Borrow`
+    Emits: `UserState` and `Borrow`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1355,7 +1355,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Function to perform a bad liquidation (or self-liquidation) of `user` if `health` is not good.
 
-    Emits event: `Repay` and `Liquidate` 
+    Emits: `Repay` and `Liquidate` 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1596,7 +1596,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Extended function to perform a bad liquidation (or self-liquidation) of `user` if `health` is not good.
 
-    Emits event: `Repay` and `Liquidate`
+    Emits: `Repay` and `Liquidate`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2973,7 +2973,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     Function to set the monetary policy contract. Initially, the monetary policy contract is configured when a new market is added via the Factory. However, this function allows the contract address to be changed later. When setting the new address, the function calls `rate_write()` from the monetary policy contract to verify if the ABI is correct.
 
-    Emits: **SetMonetaryPolicy** event.
+    Emits: `SetMonetaryPolicy`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -3507,7 +3507,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     Returns: total redeemed (`uint256`).
 
-    Emits event: `SetBorrowingDiscount`
+    Emits: `SetBorrowingDiscount`
 
     !!!note
         This function is only callable by the admin of the contract. 
