@@ -4,8 +4,8 @@ finding deployed curve pools and gauges. It is deployed to the mainnet at the fo
 Source code for factory contracts may be viewed on [Github](https://github.com/curvefi/curve-factory).
 
 !!!tip
-    Pools can be deployed via the [Curve UI](https://curve.fi/#/ethereum/create-pool). More informations on it [here](https://resources.curve.fi/factory-pools/creating-a-factory-pool/).
-    In case of uncertainty regarding the pool paramters etc. please do not hesitate to contract curve members.
+    Pools can be deployed via the [Curve UI](https://curve.fi/#/ethereum/create-pool). More information at [resources](https://resources.curve.fi/factory-pools/creating-a-factory-pool/).
+    In case of uncertainty regarding the pool parameters or others, please do not hesitate to contact curve members.
 
 
 | Factory | Contract Address |
@@ -20,7 +20,7 @@ Source code for factory contracts may be viewed on [Github](https://github.com/c
 
 The factory has several core components:
 
-- The **factory** is the main contract used to deploy new pools and gauges. It also acts a registry for finding the 
+- The **factory** is the main contract used to deploy new pools and gauges. It also acts as registry for finding the 
   deployed pools and querying information about them.
 - **Pools** are deployed via a **proxy contract**. The implementation contract targetted by the proxy is determined 
   according to the base pool. This is the same technique used to create pools in Uniswap V1.
@@ -33,14 +33,14 @@ Source code for this contract is may be viewed on
 
 !!! warning "Limitations"
 
-    Please carefully review the limitations of the factory prior to deploying a new pool. Deploying a pool using an 
+    Please carefully review the limitations of the factory before deploying a new pool. Deploying a pool using an 
     incompatible token could result in **permanent losses to liquidity providers and/or traders**. Factory pools cannot be 
     killed and tokens cannot be rescued from them!
     
-    - The token within the new pool must expose a decimals method and use a maximum of 18 decimal places.
+    - The token within the new pool must expose a decimal method and use a maximum of 18 decimal places.
     - The token’s `transfer` and `transferFrom` methods must revert upon failure.
-    - Successful token transfers must move exactly the specified number of tokens between the sender and receiver. 
-      Tokens that take a fee upon a successful transfer may cause the pool to break or act in unexpected ways.
+    - Successful token transfers must move the specified number of tokens between the sender and receiver. 
+      Tokens that take a fee upon a successful transfer may cause the pool to break or act unexpectedly.
     - Pools deployed by the factory cannot be paused or killed.
 
 
@@ -73,7 +73,7 @@ It is possible to enable additional base pools through a DAO vote. See [`add_bas
 A metapool pairs a coin against the LP token of a base pool. Deployment via [`deploy_metapool`](../factory/deployer_api.md#deploy_metapool).
 
 ## **Plain Pool**
-A plain pool pairs a minimum of 2 and a maximum of 4 coins. These coins are not paired with another pool. However, a plain pool can only pair assets that are not included in any base pool. Deployment via [`deploy_plain_pool`](../factory/deployer_api.md#deploy_plain_pool).
+A plain pool pairs a minimum of 2 and a maximum of 4 coins. These coins are not paired with another pool. However, a plain pool can only pair assets not included in any base pool. Deployment via [`deploy_plain_pool`](../factory/deployer_api.md#deploy_plain_pool).
 
 ## **Two-Coin Crypto Pool** 
 A crypto pool with two volatile coins. Deplyment via [`deploy_pool`](../factory/deployer_api.md#deploy_pool).
@@ -86,8 +86,8 @@ A crypto pool with three volatile coins, also called "Tricrypto" pool. Deplyment
 # **Recommended Parameters**
 
 !!!warning
-    Please understand that these are just recommendations based on perfomance data of previously deployed pools.
-    For further undestanding of the parameters please refer to other parts of the documentation.
+    Please understand that these are just recommendations based on performance data of previously deployed pools.
+    For further understanding of the parameters, please take a look at other parts of the documentation.
 
 ## **StableSwap Pools**
 
