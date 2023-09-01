@@ -443,11 +443,11 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
 ## **Admin Ownership**
 ### `admin`
-!!! description "`PriceAggregator.admin() -> address:`"
+!!! description "`PriceAggregator.admin() -> address: view`"
 
     Getter for the admin of the contract.
     
-    Returns: admin (`tuple????`).
+    Returns: admin (`address`).
 
     ??? quote "Source code"
 
@@ -511,7 +511,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 ## **Contract Info Methods**
 
 ### `sigma`
-!!! description "`PriceAggregator.sigma() -> uint256:`"
+!!! description "`PriceAggregator.sigma() -> uint256: view`"
 
     Getter for the sigma value.
     
@@ -543,7 +543,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
 
 ### `stablecoin`
-!!! description "`PriceAggregator.stablecoin() -> address:`"
+!!! description "`PriceAggregator.stablecoin() -> address: view`"
 
     Getter for the stablecoin contract.
     
