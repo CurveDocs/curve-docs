@@ -1,7 +1,7 @@
 Monetary policy contracts are integrated into the crvUSD system and are responsible for the interest rate of crvUSD markets. When creating a new market via the factory contract, a monetary policy contract needs to be provided.
 
 !!! info
-    Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/mpolicies). 
+    Source code for the monetary policy contracts is available on [Github](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/mpolicies). 
 
 !!! tip
     Useful tool by [0xreviews](https://twitter.com/0xreviews_xyz) to play around with rates: https://crvusd-rate.0xreviews.xyz/
@@ -17,18 +17,8 @@ Markets have a **dynamic rate**, depending on the following components:
 * TargetFraction  
 * DebtFraction of PegKeepers  
 
-For the price of crvUSD, an aggregated oracle price of multiple Curve Stablwswap pools is used ([see here](/curve-docs/docs/crvUSD/priceaggregator%20copy.md)).
+For the price of crvUSD, an aggregated oracle price of multiple Curve Stablwswap pools is used ([see here](/curve-docs/docs/crvUSD/priceaggregator.md)).
 
-| variable      | description   | 
-| ----------- | -------|
-| `r` |  `rate` |
-| `rate0` |  `"base rate"` |
-| `price_peg` |  `desired crvUSD price: 1.00 (10^18)` |
-| `price_crvusd` |  `actual crvUSD price (aggregated from AggregatorStablePrice Contract)` |
-| `DebtFraction` |  `ratio of the PegKeeper's debt to the total outstanding debt` |
-| `TargetFraction` |  `` |
-| `PegKeeperDebt` |  `debt form PegKeepers (all the crvUSD deposited into pools?)` |
-| `TotalDebt` |  `total crvUSD debt` |
 
 $$r = rate0 * e^{power}$$
 
@@ -36,8 +26,19 @@ $$power = \frac{price_{peg} - price_{crvusd}}{sigma} - \frac{DebtFraction}{Targe
 
 $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
+| variable      | description   | 
+| ----------- | -------|
+| `r` |  rate |
+| `rate0` |  rate when pegkeepers have no debt and price of crvusd is 1 |
+| `price_peg` |  desired crvUSD price: 1.00 |
+| `price_crvusd` |  actual crvUSD price (aggregated from `PRICE_ORACLE.price()`) |
+| `DebtFraction` |  ratio of the PegKeeper's debt to the total outstanding debt |
+| `TargetFraction` |  target fraction |
+| `PegKeeperDebt` |  sum of debt of all PegKeepers |
+| `TotalDebt` |  total crvUSD debt |
+
 !!!note
-    `rate` and `rate0` denominated in units of $10^{18}$ for precision and represent the rate per second. The interest rate is charged for every block.
+    `rate` and `rate0` denominated in units of $10^{18}$ for precision and represent the rate per second.
 
     $\text{annualRate} = (1 + \frac{rate}{10^{18}})^{365*24*60*60} - 1$
 
@@ -52,7 +53,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 22 26"
+        ```python hl_lines="3 22 26 27"
         @internal
         @view
         def calculate_rate() -> uint256:
@@ -141,12 +142,14 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
     Function to set a new rate0. New rate0 has to be less than or equal to `MAX_RATE (=43959106799)`.
 
+    Emits: `SetRate`
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `rate` |  `uint256` | New Rate |
 
-    !!! warning
-        This function can only be called by the `admin` of the contract, which is the CurveOwnershipAgent. Therefor it requires a DAO vote to change this parameter.
+    !!!note
+        This function is only callable by the `admin` of the contract.
 
     ??? quote "Source code"
 
@@ -168,8 +171,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
     === "Example"
 
         ```shell
-        >>> MonetaryPolicy.set_rate("todo")
-        'todo'
+        >>> MonetaryPolicy.set_rate(3022265993)
         ```
 
 
@@ -227,12 +229,14 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
     Function to set a new sigma value.
 
+    Emits: `SetSigma`
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `sigma` |  `uint256` | New Sigma |
 
-    !!! warning
-        This function can only be called by the `admin` of the contract, the CurveOwnershipAgent. Therefor it requires a DAO vote to change this parameter.
+    !!!note
+        This function is only callable by the `admin` of the contract.
 
     ??? quote "Source code"
 
@@ -258,15 +262,14 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
     === "Example"
 
         ```shell
-        >>> MonetaryPolicy.set_sigma("todo")
-        'todo'
+        >>> MonetaryPolicy.set_sigma(30000000000000000)
         ```
 
 
 ### `target_debt_fraction`
 !!! description "`MonetaryPolicy.target_debt_fraction() -> uint256: view`"
 
-    Getter for the target debt fraction --> <= MAX_TARGET_DEBT_FRACTION ()
+    Getter for the debt fraction target.
 
     ??? quote "Source code"
 
@@ -317,8 +320,8 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
     | ----------- | -------| ----|
     | `target_debt_fraction` |  `uint256` | New Target Debt Fraction |
 
-    !!! warning
-        This function can only be called by the `admin` of the contract, the CurveOwnershipAgent. Therefore it requires a DAO vote to change this parameter.
+    !!!note
+        This function is only callable by the `admin` of the contract.
 
     ??? quote "Source code"
 
@@ -342,13 +345,13 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
     === "Example"
 
         ```shell
-        >>> MonetaryPolicy.set_target_debt_fraction("todo")
-        'todo'
+        >>> MonetaryPolicy.set_target_debt_fraction(100000000000000000)
         ```
 
 
 ## **PegKeepers**
-PegKeepers must be added to the monetary policy contract to calculate the rate as it depends on the DebtFraction. They can be added by calling `add_peg_keeper` and removed with `remove_peg_keeper`.
+PegKeepers must be added to the monetary policy contract to calculate the rate as it depends on the DebtFraction. They can be added by calling **`add_peg_keeper`** and removed with **`remove_peg_keeper`**.
+
 
 ### `peg_keepers`
 !!! description "`MonetaryPolicy.peg_keepers(arg0: uint256) -> address: view`"
@@ -405,18 +408,23 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
 ### `add_peg_keeper`
 !!! description "`MonetaryPolicy.add_peg_keeper(pk: PegKeeper):`"
 
-    Function to add a new PegKeeper.
+    Function to add an existing PegKeeper to the monetary policy contract.
+
+    Emits: `AddPegKeeper`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `pk` |  `PegKeeper` | Add New PegKeeper |
 
-    !!! warning
-        This function can only be called by the `admin` of the contract.
+    !!!note
+        This function is only callable by the `admin` of the contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4"
+        ```python hl_lines="1 4 7 15"
+        event AddPegKeeper:
+            peg_keeper: indexed(address)
+
         peg_keepers: public(PegKeeper[1001])
 
         @external
@@ -435,26 +443,30 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
     === "Example"
 
         ```shell
-        >>> MonetaryPolicy.add_peg_keepers("todo")
-        'todo'
+        >>> MonetaryPolicy.add_peg_keepers("PegKeeper address")
         ```
 
 
 ### `remove_peg_keeper`
 !!! description "`MonetaryPolicy.remove_peg_keeper(pk: PegKeeper):`"
 
-    Function to remove a PegKeeper.
+    Function to remove an existing PegKeeper from the monetary policy contract.
+
+    Emits: `RemovePegKeeper`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `pk` |  `PegKeeper` | Remove PegKeeper |
 
-    !!! warning
-        This function can only be called by the `admin` of the contract.
+    !!!note
+        This function is only callable by the `admin` of the contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4"
+        ```python hl_lines="1 4 7 14"
+        event RemovePegKeeper:
+            peg_keeper: indexed(address)
+
         peg_keepers: public(PegKeeper[1001])
 
         @external
@@ -477,10 +489,8 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
     === "Example"
 
         ```shell
-        >>> MonetaryPolicy.remove_peg_keeper("todo"):
-        'todo'
+        >>> MonetaryPolicy.remove_peg_keeper("PegKeeper address"):
         ```
-
 
 
 ## **Admin Ownership**
@@ -535,9 +545,14 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
 
     Getter for the admin of the contract. ownership agent is the admin (cruvedao).
 
+    Emits: `SetAdmin`
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `admin` |  `address` | New Admin |
+
+    !!!note
+        This function is only callable by the `admin` of the contract.
 
     ??? quote "Source code"
 
@@ -557,8 +572,7 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
     === "Example"
 
         ```shell
-        >>> MonetaryPolicy.set_admin("todo")
-        'todo'
+        >>> MonetaryPolicy.set_admin("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045")
         ```
 
 
@@ -657,7 +671,7 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
 ### `rate_write`
 !!! description "`MonetaryPolicy.rate_write() -> uint256:`"
 
-    When adding a new market via the factory contract, it calls this function to check if the MonetaryPolicy contract has the correct ABI.
+    When adding a new market via the factory contract, `rate_write` is called to check if the MonetaryPolicy contract has the correct ABI.
 
     ??? quote "Source code"
 
@@ -696,5 +710,4 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
 
         ```shell
         >>> MonetaryPolicy.rate_write():
-        'todo'
         ```
