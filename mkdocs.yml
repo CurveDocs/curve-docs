@@ -52,7 +52,6 @@ nav:
       - crvUSD Token: crvUSD/crvUSD.md
       - Controller: crvUSD/controller.md
       - LLAMMA: crvUSD/amm.md
-      - Factory: crvUSD/factory.md
       - PegKeeper: crvUSD/pegkeeper.md
       - MonetaryPolicy: crvUSD/monetarypolicy.md
       - PriceAggregator: crvUSD/priceaggregator.md
