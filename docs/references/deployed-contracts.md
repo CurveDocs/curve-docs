@@ -139,4 +139,40 @@ Here is a list of all components of the pool registry currently in use:
 | `TricryptoFactory` | [todo]() | [0xa5961898870943c68037f6848d2d866ed2016bcb](https://basescan.org/address/0xa5961898870943c68037f6848d2d866ed2016bcb#code) |
 
 
+# Polygon
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory` | [todo]() | [0x722272d36ef0da72ff51c5a65db7b870e2e8d4ee](https://polygonscan.com/address/0x722272d36ef0da72ff51c5a65db7b870e2e8d4ee#code) |
+| `CryptoFactory` | [todo]() | [0xe5de15a9c9bbedb4f5ec13b131e61245f2983a69](https://polygonscan.com/address/0xe5de15a9c9bbedb4f5ec13b131e61245f2983a69#code) |
 
+
+
+# Avalanche
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory` | [todo]() | [0xb17b674d9c5cb2e441f8e196a2f048a81355d031](https://snowtrace.io/address/0xb17b674d9c5cb2e441f8e196a2f048a81355d031#code) |
+
+
+# Gnosis
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory` | [todo]() | [0xd19baeadc667cf2015e395f2b08668ef120f41f5](https://gnosisscan.io/address/0xd19baeadc667cf2015e395f2b08668ef120f41f5#code) |
+
+
+# Fantom
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory` | [todo]() | [0x686d67265703d1f124c45e33d47d794c566889ba](https://ftmscan.com/address/0x686d67265703d1f124c45e33d47d794c566889ba#code) |
+| `CryptoFactory` | [todo]() | [0xe5de15a9c9bbedb4f5ec13b131e61245f2983a69](https://ftmscan.com/address/0xe5de15a9c9bbedb4f5ec13b131e61245f2983a69#code) |
+
+
+
+
+# Kava
+# Moonbeam
+# Aurora
+# Celo
