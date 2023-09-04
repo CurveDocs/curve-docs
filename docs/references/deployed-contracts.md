@@ -112,20 +112,31 @@ Here is a list of all components of the pool registry currently in use:
 | `TricryptoFactory` | [todo]() | [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963#code) |   
 
 ### crvUSD
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
 | `crvUSDFactory` | [ControllerFactory.vy](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/ControllerFactory.vy) | [0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC#code) |
 
 
 # Arbitrum
 ## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
 | `Factory | [todo]() | [0xb17b674d9c5cb2e441f8e196a2f048a81355d031](https://arbiscan.io/address/0xb17b674d9c5cb2e441f8e196a2f048a81355d031#code) |
 
 
 # Optimism
 ## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
 | `Factory` | [todo]() | [0x2db0e83599a91b508ac268a6197b8b14f5e72840](https://optimistic.etherscan.io/address/0x2db0e83599a91b508ac268a6197b8b14f5e72840#code) |
 
 
 # Base
 ## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
 | `Factory` | [todo]() | [0x3093f9b57a428f3eb6285a589cb35bea6e78c336](https://basescan.org/address/0x3093f9b57a428f3eb6285a589cb35bea6e78c336#code) |
 | `TricryptoFactory` | [todo]() | [0xa5961898870943c68037f6848d2d866ed2016bcb](https://basescan.org/address/0xa5961898870943c68037f6848d2d866ed2016bcb#code) |
+
+
+
