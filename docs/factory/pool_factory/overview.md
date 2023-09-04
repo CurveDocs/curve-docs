@@ -8,12 +8,14 @@ Source code for factory contracts may be viewed on [Github](https://github.com/c
     In case of uncertainty regarding the pool parameters or others, please do not hesitate to contact curve members.
 
 
-| Factory | Contract Address |
+| Mainnet Factory | Contract Address |
 | ----------- | ------- |
 | StableSwap Factory (with `plain_whitelist`): | [0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d](https://etherscan.io/address/0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d) | 
 | MetaPool Factory (meta pools): | [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4) |  
 | CryptoSwap Factory (two-coin volatile asset pools) | [0xF18056Bbd320E96A48e3Fbf8bC061322531aac99](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99) | 
 | Tricrypto Factory (three-coin volatile asset pools) | [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963) | 
+
+For a final list of all deployments, check [here](../../references/deployed-contracts.md).
 
 
 # **Organization**
@@ -27,8 +29,10 @@ The factory has several core components:
 - **Deposit contracts** (“zaps”) are used for wrapping and unwrapping underlying assets when depositing into or 
   withdrawing from pools.
 
-Source code for this contract is may be viewed on 
-[Github](https://github.com/curvefi/curve-factory/blob/master/contracts/Factory.vy).
+
+!!!info
+    Source code for this contract is may be viewed on 
+    [Github](https://github.com/curvefi/curve-factory/blob/master/contracts/Factory.vy).
 
 
 !!! warning "Limitations"

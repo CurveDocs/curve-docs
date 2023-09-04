@@ -1,7 +1,5 @@
-
-
 !!! note
-    After deploying a pool, you must also add initial liquidity before the pool can be used.
+    After deploying a pool, one must also add initial liquidity before the pool can be used.
 
 # Deploy Pools
 
@@ -792,6 +790,9 @@ Limitations when deploying tricrypto crypto pools:
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_pool` |  `address` | Factory pool address to deploy a gauge for |
+
+    !!!info
+        When deploying a gauge using the factory contract, one needs to use the same factory that deployed the pool.
 
     ??? quote "Source code"
 

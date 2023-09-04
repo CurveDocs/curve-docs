@@ -1,5 +1,7 @@
 # Factory Getters
 
+Each pool factory has a built-in registry:
+
 ### `metapool_implementations`
 
 !!! description "`Factory.metapool_implementations(_base_pool: address) -> address[10]`"
