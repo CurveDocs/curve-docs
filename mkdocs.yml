@@ -1,5 +1,5 @@
 site_name: Curve Docs
-site_url: https://curvefi.github.io/curve-mkdocs/
+site_url: https://docs.curve.fi/
 site_author: CurveFi
 
 plugins:
@@ -42,10 +42,6 @@ nav:
       - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
     - Governance and Voting: curve_dao/gov-and-vote/overview.md
 
-    - Registry:
-      - Overview: registry/overview.md
-      - MetaRegistryAPI: registry/MetaRegistryAPI.md
-
   - crvUSD:
     - Overview: crvUSD/overview.md
     - Contracts:
@@ -82,6 +78,12 @@ nav:
   - Cryptoswap Exchange:
     - Overview: cryptoswap_exchange/overview.md
 
+  - Registry:
+    - Overview: registry/overview.md
+    - MetaRegistryAPI: registry/MetaRegistryAPI.md
+    - Admin Controls: registry/admin_controls.md
+
+
   - Factory:
     - Overview: factory/overview.md
     - Deployer API: factory/deployer_api.md
@@ -90,8 +92,13 @@ nav:
 
   - References:
     - Deployment Addresses: references/deployed-contracts.md
-    - Whitepaper: references/whitepaper.md
-    - Useful Resources: references/useful-resources.md
+    - Whitepapers: 
+      - DAO: references/whitepapers/dao.md
+      - StableSwap: references/whitepapers/stableswap.md
+      - CryptoSwap: references/whitepapers/cryptoswap.md
+      - Curve Stablecoin: references/whitepapers/curve-stablecoin.md
+      - All Whitepapers: references/whitepapers/whitepaper.md
+    - Resources: https://resources.curve.fi/
 
 # extension
 markdown_extensions:
@@ -179,5 +186,5 @@ extra_javascript:
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
-repo_name: https://curvefi.github.io/curve-mkdocs/ # for example: 'lyz-code/pydo'
-repo_url: https://curvefi.github.io/curve-mkdocs/  # for example: 'https://github.com/lyz-code/pydo'
+repo_name: CurveDocs/curve-docs
+repo_url: https://github.com/CurveDocs/curve-docs
