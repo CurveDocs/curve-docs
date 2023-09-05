@@ -74,14 +74,13 @@ nav:
     - Admin Controls: factory/admin_controls.md
 
   - References:
-    - Deployment Addresses: references/deployed-contracts.md
+    - Audits: references/audits/audits_pdf.md
     - Whitepapers: 
       - DAO: references/whitepapers/dao.md
       - StableSwap: references/whitepapers/stableswap.md
       - CryptoSwap: references/whitepapers/cryptoswap.md
       - Curve Stablecoin: references/whitepapers/curve-stablecoin.md
-      - All Whitepapers: references/whitepapers/whitepaper.md
-    - Audits: references/audits/audits.md
+    - Deployment Addresses: references/deployed-contracts.md
     - Resources: https://resources.curve.fi/
 
 # extension
