@@ -179,9 +179,8 @@
 ## **Mint and Burn**
 
 - crvUSD can only be minted by the `minter` of the contract, which is the [Factory](/curve-docs/docs/LLAMMA/factory.md)
-- crvUSD is minted in accordance with the debt_ceiling, either when **adding a new market** or when **raising its debt ceiling**
-- This is accomplished by calling the `set_new_debt_ceiling` function within the Factory contract.  
-- Burning crvUSD typically occurs when a lower debt ceiling is set, or if a user decides to burn their crvUSD for any reason.
+- crvUSD is minted in accordance with the `debt_ceiling`, either when **adding a new market** or when **raising its debt ceiling**. This is accomplished by calling the `set_new_debt_ceiling` function within the FactoryContract.  
+- Burning crvUSD typically occurs when a lower debt ceiling is set, or if a user decides to burn their crvUSD for whatever reason.
 
 
 ### `minter`
@@ -341,6 +340,9 @@
     | `_from` |  `address` | Address to burn tokens for |
     | `_value` |  `uint256` | Amount of tokens to burn |
 
+    !!!note
+        Calling this function on behalf of another address requires [`allowance`](#allowance).
+
     ??? quote "Source code"
 
         ```python hl_lines="1 7 11 14"
@@ -371,9 +373,6 @@
             self._burn(_from, _value)
             return True
         ```
-
-    !!!note
-        Calling this function on behalf of another address requires [`allowance`](#allowance).
 
     === "Example"
         ```shell
@@ -460,6 +459,9 @@
     | `_spender` |  `address` | Address to increase the allowance of |
     | `_add_value` |  `uint256` | Amount to increase the allwance by |
 
+    !!!note
+        This function will never overflow, and instead will bind allowance to MAX_UINT256. This has the potential to grant infinite approval.
+
     ??? quote "Source code"
 
         ```python hl_lines="2"
@@ -486,9 +488,6 @@
             return True
         ```
 
-    !!!note
-        This function will never overflow, and instead will bound allowance to MAX_UINT256. This has the potential to grant an infinite approval.
-
     === "Example"
         ```shell
         >>> crvUSD.increaseAllowance(todo)
@@ -504,6 +503,9 @@
     | ----------- | -------| ----|
     | `_spender` |  `address` | Address to decrease the allowance of |
     | `_sub_value` |  `uint256` | Amount to decrease the allwance by |
+
+    !!!note
+        This function will never underflow, and instead will bound allowance to 0.
 
     ??? quote "Source code"
 
@@ -529,9 +531,6 @@
 
             return True
         ```
-
-    !!!note
-        This function will never underflow, and instead will bound allowance to 0.
 
     === "Example"
         ```shell

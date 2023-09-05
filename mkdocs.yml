@@ -42,21 +42,17 @@ nav:
       - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
     - Governance and Voting: curve_dao/gov-and-vote/overview.md
 
-    - Registry:
-      - Overview: registry/overview.md
-      - MetaRegistryAPI: registry/MetaRegistryAPI.md
-
   - crvUSD:
-    - Overview: LLAMMA/overview.md
-    - $crvUSD: LLAMMA/crvUSD.md
-    - Controller: LLAMMA/controller.md
-    - LLAMMA: LLAMMA/amm.md
-    - Factory: LLAMMA/factory.md
-    - PegKeeper: LLAMMA/pegkeeper.md
-    - MonetaryPolicy: LLAMMA/monetarypolicy.md
-    - PriceAggregator: LLAMMA/priceaggregator.md
-    - Oracle: LLAMMA/oracle.md
-    - Deployments: LLAMMA/deployments.md
+    - Overview: crvUSD/overview.md
+    - Contracts:
+      - crvUSD Token: crvUSD/crvUSD.md
+      - Controller: crvUSD/controller.md
+      - LLAMMA: crvUSD/amm.md
+      - PegKeeper: crvUSD/pegkeeper.md
+      - MonetaryPolicy: crvUSD/monetarypolicy.md
+      - PriceAggregator: crvUSD/priceaggregator.md
+      - Oracle: crvUSD/oracle.md
+    - Deployments: crvUSD/deployments.md
 
   - Stableswap Exchange:    
     - Overview: stableswap_exchange/overview.md 
@@ -81,6 +77,12 @@ nav:
 
   - Cryptoswap Exchange:
     - Overview: cryptoswap_exchange/overview.md
+
+  - Registry:
+    - Overview: registry/overview.md
+    - MetaRegistryAPI: registry/MetaRegistryAPI.md
+    - Admin Controls: registry/admin_controls.md
+
 
   - Factory:
     - Pool Factory:
