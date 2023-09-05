@@ -1,5 +1,5 @@
-!!!info
-    See full pdf version [here](../../pdf/CurveDAO.pdf).
+!!!example
+    PDF version: [here](../../pdf/CurveDAO.pdf)
 
 <h1 style="text-align: center;"></h1>
 <h2 style="text-align: left;">Curve DAO</h2>
