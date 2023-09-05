@@ -1,4 +1,4 @@
-The `Factory` contract allows for permissionless deployment of Curve pools and gauges. It also acts as a registry, which is useful for
+The `Factory` contract allows for permissionless deployment of Curve pools and gauges. It also acts as a registry for
 finding deployed curve pools and gauges. It is deployed to the mainnet at the following address:
 
 Source code for factory contracts may be viewed on [Github](https://github.com/curvefi/curve-factory).
@@ -22,7 +22,7 @@ For a final list of all deployments, check [here](../../references/deployed-cont
 
 The factory has several core components:
 
-- The **factory** is the main contract used to deploy new pools and gauges. It also acts as registry for finding the 
+- The **factory** is the main contract to deploy new pools and gauges. It also acts as a registry for finding the 
   deployed pools and querying information about them.
 - **Pools** are deployed via a **proxy contract**. The implementation contract targetted by the proxy is determined 
   according to the base pool. This is the same technique used to create pools in Uniswap V1.
@@ -31,7 +31,7 @@ The factory has several core components:
 
 
 !!!info
-    Source code for this contract is may be viewed on 
+    Source code for this contract may be viewed on 
     [Github](https://github.com/curvefi/curve-factory/blob/master/contracts/Factory.vy).
 
 
@@ -90,8 +90,8 @@ A crypto pool with three volatile coins, also called "Tricrypto" pool. Deplyment
 # **Recommended Parameters**
 
 !!!warning
-    Please understand that these are just recommendations based on performance data of previously deployed pools.
-    For further understanding of the parameters, please take a look at other parts of the documentation.
+    Please understand that these are just recommendations based on the performance data of previously deployed pools.
+    Please look at other parts of the documentation to further understand the parameters.
 
 ## **StableSwap Pools**
 
