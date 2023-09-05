@@ -85,11 +85,17 @@ nav:
 
 
   - Factory:
-    - Overview: factory/overview.md
-    - Deployer API: factory/deployer_api.md
-    - Registry API: factory/registry_api.md
-    - Admin Controls: factory/admin_controls.md
-
+    - Pool Factory:
+      - Overview: factory/pool_factory/overview.md
+      - Deployer API: factory/pool_factory/deployer_api.md
+      - Registry API: factory/pool_factory/registry_api.md
+      - Admin Controls: factory/pool_factory/admin_controls.md
+    - crvUSD Factory:
+      - Overview: factory/crvusd_factory/overview.md
+      - Deployer API: factory/crvusd_factory/deployer_api.md
+      - Contract Methods: factory/crvusd_factory/contract_methods.md
+      - Admin Controls: factory/crvusd_factory/admin_controls.md
+    
   - References:
     - Deployment Addresses: references/deployed-contracts.md
     - Whitepapers: 

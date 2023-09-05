@@ -1,6 +1,3 @@
-Here is a list of all current contract deployments within the Curve protocol.
-
-
 # **Ethereum**
 
 ## **Curve DAO**
@@ -111,33 +108,81 @@ Here is a list of all components of the pool registry currently in use:
 
 
 
-## **MetaPool Factory**
-The metapool factory allows for the permissionless deployment of Curve metapools. As discussed here, the metapool factory has the following core components:
+## Factory
 
 *   The factory is the main contract used to deploy new metapools. It also acts as a registry for finding the deployed pools and querying information about them.    
 *   Pools are deployed via a proxy contract. The implementation contract targetted by the proxy is determined according to the base pool.  This is the same technique used to create pools in Uniswap V1.  
 *   Deposit contracts (“zaps”) are used for wrapping and unwrapping underlying assets when depositing into or withdrawing from pools.
 
+
+### Pools
 | Name      | Source  | Address|
 | ----------- | -------|  -------| 
-| `Factory` | [Factory.vy](https://github.com/curvefi/curve-factory/blob/master/contracts/Factory.vy) | [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4#code) |
-| `Migartor` **deprecated?** | [PoolMigrator.vy](https://github.com/curvefi/curve-factory/blob/master/contracts/PoolMigrator.vy) | [0xd6930b7f661257DA36F93160149b031735237594](https://etherscan.io/address/0xd6930b7f661257DA36F93160149b031735237594#code) |
-| `todo`| - | - |
+| `Factory` | [todo]() | [0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d](https://etherscan.io/address/0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d#code) |
+| `MetapoolFactory` | [todo]() | [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4#code) |
+| `CurveFactory` | [todo]() | [0xF18056Bbd320E96A48e3Fbf8bC061322531aac99](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99#code) |
+| `TricryptoFactory` | [todo]() | [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963#code) |   
 
-
-
-## **Tricrypto Factory**
-
+### crvUSD
 | Name      | Source  | Address|
 | ----------- | -------|  -------| 
-| `Factory` | [CurveTricryptoFactory.vy](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveTricryptoFactory.vy) | [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963#code) |
-| `Math Implementation` | [CurveCryptoMathOptimized3.vy](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveTricryptoFactory.vy) | [0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE](https://etherscan.io/address/0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE#code) |
-| `Views Implementation` | [CurveCryptoViews3Optimized.vy](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveCryptoViews3Optimized.vy) | [0x064253915b8449fdEFac2c4A74aA9fdF56691a31](https://etherscan.io/address/0x064253915b8449fdEFac2c4A74aA9fdF56691a31#code) |
-| `AMM Implementation` | [todo] | [0x66442B0C5260B92cAa9c234ECf2408CBf6b19a6f](https://etherscan.io/address/0x66442B0C5260B92cAa9c234ECf2408CBf6b19a6f#code) |
-| `Gauge Implementation` | [LiquidityGauge.vy](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/LiquidityGauge.vy) | [0x5fC124a161d888893529f67580ef94C2784e9233](https://etherscan.io/address/0x5fC124a161d888893529f67580ef94C2784e9233#code) |
-| `Factory Handler` | [CurveTricryptoFactoryHandler.vy](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveTricryptoFactoryHandler.vy) | [0x5c57f810665E9aafb753bB9e38E6C467a6Bc4a25](https://etherscan.io/address/0x5c57f810665E9aafb753bB9e38E6C467a6Bc4a25#code) |
+| `crvUSDFactory` | [ControllerFactory.vy](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/ControllerFactory.vy) | [0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC#code) |
+
+
+# Arbitrum
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory | [todo]() | [0xb17b674d9c5cb2e441f8e196a2f048a81355d031](https://arbiscan.io/address/0xb17b674d9c5cb2e441f8e196a2f048a81355d031#code) |
+
+
+# Optimism
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory` | [todo]() | [0x2db0e83599a91b508ac268a6197b8b14f5e72840](https://optimistic.etherscan.io/address/0x2db0e83599a91b508ac268a6197b8b14f5e72840#code) |
+
+
+# Base
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory` | [todo]() | [0x3093f9b57a428f3eb6285a589cb35bea6e78c336](https://basescan.org/address/0x3093f9b57a428f3eb6285a589cb35bea6e78c336#code) |
+| `TricryptoFactory` | [todo]() | [0xa5961898870943c68037f6848d2d866ed2016bcb](https://basescan.org/address/0xa5961898870943c68037f6848d2d866ed2016bcb#code) |
+
+
+# Polygon
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory` | [todo]() | [0x722272d36ef0da72ff51c5a65db7b870e2e8d4ee](https://polygonscan.com/address/0x722272d36ef0da72ff51c5a65db7b870e2e8d4ee#code) |
+| `CryptoFactory` | [todo]() | [0xe5de15a9c9bbedb4f5ec13b131e61245f2983a69](https://polygonscan.com/address/0xe5de15a9c9bbedb4f5ec13b131e61245f2983a69#code) |
 
 
 
+# Avalanche
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory` | [todo]() | [0xb17b674d9c5cb2e441f8e196a2f048a81355d031](https://snowtrace.io/address/0xb17b674d9c5cb2e441f8e196a2f048a81355d031#code) |
 
 
+# Gnosis
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory` | [todo]() | [0xd19baeadc667cf2015e395f2b08668ef120f41f5](https://gnosisscan.io/address/0xd19baeadc667cf2015e395f2b08668ef120f41f5#code) |
+
+
+# Fantom
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory` | [todo]() | [0x686d67265703d1f124c45e33d47d794c566889ba](https://ftmscan.com/address/0x686d67265703d1f124c45e33d47d794c566889ba#code) |
+| `CryptoFactory` | [todo]() | [0xe5de15a9c9bbedb4f5ec13b131e61245f2983a69](https://ftmscan.com/address/0xe5de15a9c9bbedb4f5ec13b131e61245f2983a69#code) |
+
+
+# Kava
+# Moonbeam
+# Aurora
+# Celo
