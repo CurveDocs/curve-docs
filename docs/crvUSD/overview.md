@@ -17,7 +17,7 @@ The Controller is the contract the user interacts with to create a loan and furt
 LLAMMA is the market-making contract that rebalances the collateral. As the name suggests, this contract is responsible for lending and liquidating collateral. Every market has its own AMM (created from a blueprint contract) containing the collateral asset and crvUSD.
 
 ## *[Factory](../crvUSD/factory.md)*
-The use for the factory contract is to add new markets, raise or lower debt ceilings of already existing markets, set blueprint contracts for AMM and Controller, and set fee receivers.
+The factory contract is used to add new markets, raise or lower debt ceilings of already existing markets, set blueprint contracts for AMM and Controller, and set fee receivers.
 
 ## *[MonetaryPolicy](../crvUSD/monetarypolicy.md)*
 Monetary policy contracts are integrated into the crvUSD system and are responsible for the interest rate of crvUSD markets.
