@@ -1,8 +1,8 @@
 The SmartWalletChecker is an external contract which checks if certain smart contracts are approved to lock CRV tokens. Permission can be granted via `approveWallet` and revoked via `revokeWallet`.
 
 !!! info
-    The current SmartWalletChecker address is deployed at [0xca719728Ef172d0961768581fdF35CB116e0B7a4](https://etherscan.io/address/0xca719728Ef172d0961768581fdF35CB116e0B7a4). Swapping out the contract for a completely new SmartWalletChecker within the [VotingEscrow](../VotingEscrow/VotingEscrow.md) or approving/revoking smart contracts directly within the SmartWalletChecker require a successfully passed DAO vote ([`commit_smart_wallet_checker`](../VotingEscrow/admin_controls.md#commit_smart_wallet_checker)).
-
+    The current SmartWalletChecker address has been deployed at [0xca719728Ef172d0961768581fdF35CB116e0B7a4](https://etherscan.io/address/0xca719728Ef172d0961768581fdF35CB116e0B7a4). This contract can be replaced entirely with a new SmartWalletChecker through the VotingEscrow's [`commit_smart_wallet_checker`](../VotingEscrow/admin_controls.md#commit_smart_wallet_checker) function. Alternatively, new smart contracts can be approved or revoked directly within the SmartWalletChecker itself. All these actions require a successful DAO vote.
+    
 
 ## **Approve/Revoke Smart Contracts**
 
