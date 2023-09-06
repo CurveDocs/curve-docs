@@ -3,8 +3,6 @@ The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a c
 
 ## **Change SmartWalletChecker**
 
-
-
 ### `commit_smart_wallet_checker`
 !!! description "`VotingEscrow.commit_smart_wallet_checker(addr: address):`"
 
