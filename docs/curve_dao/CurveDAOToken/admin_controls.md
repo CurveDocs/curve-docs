@@ -15,7 +15,7 @@ As the *CurveOwnershipAgent* is the current admin of the contract, a vote to cha
     | ----------- | -------| ----|
     | `_admin` |  `address` | New Admin Address |
 
-    !!!note
+    !!!info
         **`set_admin`** can only be called by the **`admin`** of the contract.
 
     ??? quote "Source code"
@@ -50,7 +50,7 @@ As the *CurveOwnershipAgent* is the current admin of the contract, a vote to cha
 
     Function to change the token name symbol.
 
-    !!!note
+    !!!info
         **`set_name`** can only be called by the **`admin`** of the contract.
 
     ??? quote "Source code"

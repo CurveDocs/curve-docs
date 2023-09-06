@@ -319,7 +319,7 @@
 
     Getter for the minter contract address.
 
-    Returns: `address` of the **minter contract**.
+    Returns: minter contract (`address`).
 
     !!! note
         Minter contract can be changed by calling the `set_minter()` function.
@@ -342,6 +342,8 @@
 !!! description "`CRV.mint(_to: address, _value: uint256) -> bool:`"
 
     Function to mint `_value (uint256)` and assign them to `_to (address)`.
+
+    Returns: True (`bool`)
 
     Emits: `Transfer`
 
@@ -395,7 +397,7 @@
     
     Function to burn `_value` tokens belonging to the caller of the function.
 
-    Retruns: True or False (`bool`)
+    Retruns: True (`bool`)
 
     Emits: `Transfer`
 
