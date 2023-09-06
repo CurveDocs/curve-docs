@@ -14,7 +14,10 @@ plugins:
 nav:
   - Curve DAO:
     - Overview: curve_dao/overview.md  
-    - Curve DAO Token: curve_dao/ERC20CRV.md
+    - Curve DAO Token:
+      - Contract Methods: curve_dao/CurveDAOToken/ERC20CRV.md
+      - Admin Controls: curve_dao/CurveDAOToken/admin_controls.md
+
     - Vote-Escrowed CRV: curve_dao/VotingEscrow.md
     - Liquidity Gauges and Minting CRV:             
       - Overview: curve_dao/LiquidityGaugesAndMinting/overview.md
