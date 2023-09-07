@@ -35,7 +35,7 @@ To measure liquidity over time, the user deposits their LP tokens into the liqui
 Suppose we have the inflation rate $r$ changing with every epoch (1 year), gauge weight $w_{g}$ and gauge type weight $w_{t}$. Then, all the gauge handles the stream of inflation with the rate $r' = w_{g}w_{t}r$ which it can update every time $w_{g}$, $w_{t}$ or mining epoch changes.
 
 To calculate a user’s share of $r'$, we must calculate the integral: 
-$I_{u} = \int \frac{r'(t)b_{u}(t)}{S(t)}dt,$ where $b_{u}(t)$ is the balance supplied by the user (measured in LP tokens) and $S(t)$ is total liquidity supplied by users, depending on the time $t$; the value $I_{u}$ gives the amount of tokens which the user has to have minted to them. The user’s balance $b_{u}$ changes every time the user $u$ makes a deposit or withdrawal, and $S$ changes every time _any_ user makes a deposit or withdrawal so $S$ can change many times in between two events for the user $u''$. In the liquidity gauge contract, the vaule of I_{u} is recorded per-user in the public `integrate_fraction` mapping.
+$I_{u} = \int \frac{r'(t)b_{u}(t)}{S(t)}dt,$ where $b_{u}(t)$ is the balance supplied by the user (measured in LP tokens) and $S(t)$ is total liquidity supplied by users, depending on the time $t$; the value $I_{u}$ gives the amount of tokens which the user has to have minted to them. The user’s balance $b_{u}$ changes every time the user $u$ makes a deposit or withdrawal, and $S$ changes every time _any_ user makes a deposit or withdrawal so $S$ can change many times in between two events for the user $u''$. In the liquidity gauge contract, the vaule of $I_{u}$ is recorded per-user in the public `integrate_fraction` mapping.
 
 To avoid requiring that all users to checkpoint periodically, we keep recording values of the following integral (named `integrate_inv_supply` in the contract):
 
@@ -65,7 +65,7 @@ When a user applies a new weight vote, it gets applied at the start of the next 
 
 
 ## **The Gauge Controller**
-The **Gauge Controller** maintains a list of gauges and their types, with the weights of each gauge and [type](../LiquidityGaugesAndMintingCRV/gauges/GaugeTypes.md). In order to implement weight voting, `GaugeController` has to include parameters handling linear character of voting power each user has.
+The Gauge Controller maintains a list of gauges and their types, with the weights of each gauge and type. In order to implement weight voting, `GaugeController` has to include parameters handling linear character of voting power each user has.
 
 `GaugeController` records points (bias + slope) per gauge in `vote_points`, and _scheduled_ changes in biases and slopes for those points in `vote_bias_changes` and `vote_slope_changes`. New changes are applied at the start of each epoch week.
 
