@@ -1,3 +1,6 @@
+!!!example
+    PDF version: [here](../../pdf/crypto-pools-paper.pdf)
+
 <h1 style="text-align: center;"></h1>
 <h2 style="text-align: center;">Automatic market-making with dynamic peg</h2>
 <p style="text-align: center;">Michael Egorov, Curve Finance (Swiss Stake GmbH)</p>

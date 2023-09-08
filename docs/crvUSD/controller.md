@@ -1,6 +1,6 @@
-The Controller is the contract the user interacts with to create a loan and further mangage the position. It holds all user debt information. External liquidations are also done through it.
+The Controller is the contract the user interacts with to create a loan and further manage the position. It holds all user debt information. External liquidations are also done through it.
 
-Each market has its individual Controller, which is created from a blueprint contract.
+Each market has its own Controller, created from a blueprint contract, when a new market is successfully added via the `Factory`.
 
 
 # **Loans**
@@ -16,9 +16,9 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 ### `create_loan`
 !!! description "`controller.create_loan(collateral: uint256, debt: uint256, N: uint256):`"
 
-    Function to create a loan. The user needs to specify the amount of `collateral` to deposit into `N`-bands and the amount of `debt` to borrow. If a user already has an existing loan, the function will revert.
+    Function to create a loan. The user must specify the amount of `collateral` to deposit into `N`-bands and the amount of `debt` to borrow. If a user already has an existing loan, the function will revert.
 
-    Emits event: `UserState`, `Borrow` and `Deposit` (in AMM)
+    Emits: `UserState`, `Borrow`, `Deposit` and `SetRate`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -176,8 +176,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.create_loan(todo)
-        todo
+        >>> controller.create_loan(43957348178625209816, 60000000000000000000000, 15)
         ```
 
 
@@ -186,7 +185,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Extended function to create a loan. This function passes crvUSD to a callback first so that it can leverage up.
 
-    Emits event: `UserState`, `Borrow` and `Deposit` (in AMM)
+    Emits: `UserState`, `Borrow` and `Deposit`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -354,8 +353,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.create_loan_extended(todo)
-        todo
+        >>> controller.create_loan_extended(collateral: uint256, debt: uint256, N: uint256, callbacker: address, callback_args: DynArray[uint256,5])
         ```
 
 
@@ -364,7 +362,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Function to partially or fully repay `_d_debt` amount of debt.
 
-    Emits event: `UserState` and `Repay`
+    Emits: `UserState` and `Repay`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -557,8 +555,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.repay(todo)
-        todo
+        >>> controller.repay(_d_debt: uint256)
         ```
 
 
@@ -567,7 +564,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Extended function to repay a loan but get a stablecoin for that from callback (to deleverage).
 
-    Emits event: `UserState` and `Repay`
+    Emits: `UserState` and `Repay`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -764,8 +761,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.repay_extended(todo)
-        todo
+        >>> controller.repay_extended(callbacker: address, callback_args: DynArray[uint256,5])
         ```
 
 
@@ -776,7 +772,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Function to add extra collateral to a position.
 
-    Emits event: `UserState` and `Borrow`
+    Emits: `UserState` and `Borrow`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -849,7 +845,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
             @nonreentrant('lock')
             def add_collateral(collateral: uint256, _for: address = msg.sender):
                 """
-                @notice Add extra collateral to avoid bad liqidations
+                @notice Add extra collateral to avoid bad liquidations
                 @param collateral Amount of collateral to add
                 @param _for Address to add collateral for
                 """
@@ -968,8 +964,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.add_collateral(todo)
-        todo
+        >>> controller.add_collateral(collateral: uint256)
         ```
 
 
@@ -978,7 +973,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Function to remove collateral from a position.
 
-    Emits event: `UserState` and `RemoveCollateral`
+    Emits: `UserState` and `RemoveCollateral`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1162,8 +1157,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.remove_collateral(todo)
-        todo
+        >>> controller.remove_collateral(collateral: uint256)
         ```
 
 
@@ -1172,7 +1166,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Function to borrow more stablecoins while adding more collateral (not necessary).
 
-    Emits event: `UserState` and `Borrow`
+    Emits: `UserState` and `Borrow`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1352,8 +1346,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.borrow_more(todo)
-        todo
+        >>> controller.borrow_more(collateral: uint256, debt: uint256)
         ```
 
 
@@ -1362,7 +1355,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Function to perform a bad liquidation (or self-liquidation) of `user` if `health` is not good.
 
-    Emits event: `Repay` and `Liquidate` 
+    Emits: `Repay` and `Liquidate` 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1595,7 +1588,6 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
     === "Example"
         ```shell
         >>> controller.liquidate(todo)
-        todo
         ```
 
 
@@ -1604,7 +1596,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Extended function to perform a bad liquidation (or self-liquidation) of `user` if `health` is not good.
 
-    Emits event: `Repay` and `Liquidate`
+    Emits: `Repay` and `Liquidate`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2431,7 +2423,7 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     Getter method to calculate the upper band number for the deposit to sit in to support the give debt.
 
-    Returns: upper band n1 (`int256`) to depostit the collateral into.
+    Returns: upper band n1 (`int256`) to deposit the collateral into.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2644,7 +2636,7 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     Getter for a dynamic array of users who can be "hard-liquidated".
 
-    Returns: dymamic array (`DynArray[Position, 1000]`) with detailed info about positions of users.
+    Returns: dynamic array (`DynArray[Position, 1000]`) with detailed info about positions of users.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2981,7 +2973,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     Function to set the monetary policy contract. Initially, the monetary policy contract is configured when a new market is added via the Factory. However, this function allows the contract address to be changed later. When setting the new address, the function calls `rate_write()` from the monetary policy contract to verify if the ABI is correct.
 
-    Emits: **SetMonetaryPolicy** event.
+    Emits: `SetMonetaryPolicy`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -3506,7 +3498,8 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
         90000000000000000
         ```
 
-## **Setting parameters** 
+# **Setting parameters** 
+
 ### `set_borrowing_discounts`
 !!! description "`controller.set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256)`"
 
@@ -3514,14 +3507,18 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     Returns: total redeemed (`uint256`).
 
-    Emits event: `SetBorrowingDiscount`
+    Emits: `SetBorrowingDiscount`
 
     !!!note
         This function is only callable by the admin of the contract. 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python hl_lines="1 7 19"
+        event SetBorrowingDiscounts:
+            loan_discount: uint256
+            liquidation_discount: uint256
+
         @nonreentrant('lock')
         @external
         def set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256):
@@ -3541,9 +3538,9 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> controller.set_borrowing_discounts()
-        7731390765158807406740136
-        ```  
+        >>> controller.set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256):
+        ``` 
+
 
 ### `liquidity_mining_callback`
 !!! description "`controller.liquidity_mining_callback() -> uint256: view`"
@@ -3571,20 +3568,19 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
     Function to set a callback for liquidity mining.
 
     !!!note
-        This function is only callable by the admin of the contract. 
+        This function is only callable by the Factory `admin`.
 
     ??? quote "Source code"
 
         ```python hl_lines="3"
-        # nonreentrant decorator is in Controller which is admin
         @external
-        def set_callback(liquidity_mining_callback: LMGauge):
+        @nonreentrant('lock')
+        def set_callback(cb: address):
             """
-            @notice Set a gauge address with callbacks for liquidity mining for collateral
-            @param liquidity_mining_callback Gauge address
+            @notice Set liquidity mining callback
             """
-            assert msg.sender == self.admin
-            self.liquidity_mining_callback = liquidity_mining_callback
+            assert msg.sender == FACTORY.admin()
+            AMM.set_callback(cb)
         ```
 
     === "Example"

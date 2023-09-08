@@ -1,10 +1,7 @@
-Here is a list of all current contract deployments within the Curve protocol.
-
-
 # **Ethereum**
 
 ## **Curve DAO**
-Curve DAO consists of multiple smart contracts connected by [Aragon](https://github.com/aragon/aragonOS). Interaction with Aragon occurs through a [modified implementation](https://github.com/curvefi/curve-aragon-voting) of the [Aragon Voting App](https://github.com/aragon/aragon-apps/tree/master/apps/voting). Aragon’s standard one token, one vote method is replaced with a weighting system based on locking tokens. Curve DAO has a token (CRV) which is used for both governance and value accrual.
+Curve DAO consists of multiple smart contracts connected by [Aragon](https://github.com/aragon/aragonOS). Interaction with Aragon occurs through a [modified implementation](https://github.com/curvefi/curve-aragon-voting) of the [Aragon Voting App](https://github.com/aragon/aragon-apps/tree/master/apps/voting). Aragon’s standard one-token, one-vote method is replaced with a weighting system based on locking tokens. Curve DAO has a token (CRV) used for governance and value accrual.
 
 View the documentation for an in-depth overview of how the Curve DAO works.
 
@@ -34,7 +31,7 @@ Here is a list of contract deployments that are used in the Curve DAO:
 Main documentation: [Ownership Proxies](/docs/curve_dao/ownership-proxy/overview.md)
 
 #### **Voting App**
-Aragon [Voting App](https://wiki.aragon.org/archive/dev/apps/voting/) deployments are the main entry points used to create new votes, vote, checking the status of a vote, and execute a successful vote.
+Aragon [Voting App](https://wiki.aragon.org/archive/dev/apps/voting/) deployments are the main entry points used to create new votes, vote, check the status of a vote, and execute a successful vote.
 
 | Name      | Address  |
 | ----------- | -------| 
@@ -44,7 +41,7 @@ Aragon [Voting App](https://wiki.aragon.org/archive/dev/apps/voting/) deployment
 
 
 #### **Agent**
-Aragon [Agent](https://hack.aragon.org/docs/guides-use-agent) deployments correspond to the different owner accounts within the DAO. Contract calls made as a result of a successful vote will execute from these addresses. When deploying new contracts, these addresses should be given appropriate access to admin functionality.
+Aragon [Agent](https://hack.aragon.org/docs/guides-use-agent) deployments correspond to the different owner accounts within the DAO. Contract calls made due to a successful vote will be executed from these addresses. When deploying new contracts, these addresses should be given appropriate access to admin functionality.
 
 | Name      | Address  |
 | ----------- | -------| 
@@ -65,7 +62,7 @@ The following token addresses are used for determining voter weights within Curv
 
 
 ### **Fee Burners**
-Burners are a fundamental component of the fee payout mechanism in Curve. A burner converts collected pool fees to an asset which can be converted to USDC. Ultimately, the exchanged for USDC is deposited to the 3Pool, as fees are paid out in 3CRV to veCRV holders. Depending on which tokens a pool contains, a specific burner implementation is used.
+Burners are a crucial element of the fee payout system in Curve. They convert the collected pool fees into an asset that is later exchanged for USDC. Eventually, the USDC is deposited into the 3Pool, and the fees are distributed to veCRV holders in 3CRV. The type of burner used depends on the tokens present in the pool.
 
 Here is a list of all burner contracts currently in use:
 
@@ -87,50 +84,105 @@ Here is a list of all burner contracts currently in use:
 
 
 ## **Pool Registry**
-The pool registry serves as an on-chain information hub about the current state of Curve pools. For instance, on-chain integrators can fetch the current address of a Curve pool and query information about it.
+The pool registry acts as a central hub of information on the current status of Curve pools This means that on-chain integrators can easily retrieve the current address of a particular Curve pool and gather relevant details about it through queries.
 
 Here is a list of all components of the pool registry currently in use:
 
-| Registry    | Address   | 
+| Contract    | Address   | 
 | ----------- | -------| 
-| `base_pool_registry` |  [0xDE3eAD9B2145bBA2EB74007e58ED07308716B725](https://etherscan.io/address/0xDE3eAD9B2145bBA2EB74007e58ED07308716B725#code) | 
-| `crypto_registry` |  [0x9a32aF1A11D9c937aEa61A3790C2983257eA8Bc0](https://etherscan.io/address/0x9a32aF1A11D9c937aEa61A3790C2983257eA8Bc0#code) |
-| `stable_registry_handler` |  [0x46a8a9CF4Fc8e99EC3A14558ACABC1D93A27de68](https://etherscan.io/address/0x46a8a9CF4Fc8e99EC3A14558ACABC1D93A27de68#code)  | 
-| `stable_factory_handler` |  [0x127db66E7F0b16470Bec194d0f496F9Fa065d0A9](https://etherscan.io/address/0x127db66E7F0b16470Bec194d0f496F9Fa065d0A9#code)  |
-| `crypto_registry_handler` |  [0x22ceb131d3170f9f2FeA6b4b1dE1B45fcfC86E56](https://etherscan.io/address/0x22ceb131d3170f9f2FeA6b4b1dE1B45fcfC86E56#code) |
-| `crypto_factory_handler` |  [0xC4F389020002396143B863F6325aA6ae481D19CE](https://etherscan.io/address/0xC4F389020002396143B863F6325aA6ae481D19CE#code)  |
-| `crvusd_pool_handler` |  [0x538E984C2d5f821d51932dd9C570Dff192D3DF2D](https://etherscan.io/address/0x538e984c2d5f821d51932dd9c570dff192d3df2d#code) |
-| `CurveTricryptoFactoryHandler` |  [0x9335bf643c455478f8be40fa20b5164b90215b80](https://etherscan.io/address/0x9335bf643c455478f8be40fa20b5164b90215b80#code) |
 | `MetaRegistry` |  [0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC](https://etherscan.io/address/0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC#code) |
+| `BasePoolRegistry` |  [0xDE3eAD9B2145bBA2EB74007e58ED07308716B725](https://etherscan.io/address/0xDE3eAD9B2145bBA2EB74007e58ED07308716B725#code) | 
+| `AddressProvider` |  [0x0000000022D53366457F9d5E68Ec105046FC4383](https://etherscan.io/address/0x0000000022D53366457F9d5E68Ec105046FC4383#code) | 
+| `StableRegistry` |  [0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5](https://etherscan.io/address/0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5#code)  | 
+| `StableRegistryHandler` |  [0x46a8a9CF4Fc8e99EC3A14558ACABC1D93A27de68](https://etherscan.io/address/0x46a8a9CF4Fc8e99EC3A14558ACABC1D93A27de68#code)  | 
+| `MetaPoolFactory` |  [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4#code)  |
+| `MetaPoolFactoryHandler` |  [0x127db66E7F0b16470Bec194d0f496F9Fa065d0A9](https://etherscan.io/address/0x127db66E7F0b16470Bec194d0f496F9Fa065d0A9#code)  |
+| `CryptoSwapRegistry` |  [0x9a32aF1A11D9c937aEa61A3790C2983257eA8Bc0](https://etherscan.io/address/0x9a32aF1A11D9c937aEa61A3790C2983257eA8Bc0#code) |
+| `CryptoSwapRegistryHandler` |  [0x22ceb131d3170f9f2FeA6b4b1dE1B45fcfC86E56](https://etherscan.io/address/0x22ceb131d3170f9f2FeA6b4b1dE1B45fcfC86E56#code) |
+| `CryptoFactory` |  [0xF18056Bbd320E96A48e3Fbf8bC061322531aac99](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99#code) |
+| `CryptoFactoryHandler` |  [0xC4F389020002396143B863F6325aA6ae481D19CE](https://etherscan.io/address/0xC4F389020002396143B863F6325aA6ae481D19CE#code)  |
+| `crvUSDFactory` |  [0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d](https://etherscan.io/address/0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d#code) |
+| `crvUSDFactoryHandler` |  [0x538E984C2d5f821d51932dd9C570Dff192D3DF2D](https://etherscan.io/address/0x538e984c2d5f821d51932dd9c570dff192d3df2d#code) |
+| `CurveTricryptoFactory` |  [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963#code) |
+| `CurveTricryptoFactoryHandler` |  [0x9335bf643c455478f8be40fa20b5164b90215b80](https://etherscan.io/address/0x9335bf643c455478f8be40fa20b5164b90215b80#code) |
 
 
-## **MetaPool Factory**
-The metapool factory allows for the permissionless deployment of Curve metapools. As discussed here, the metapool factory has the following core components:
 
-*   The factory is the main contract used to deploy new metapools. It also acts a registry for finding the deployed pools and querying information about them.    
+## Factory
+
+*   The factory is the main contract used to deploy new metapools. It also acts as a registry for finding the deployed pools and querying information about them.    
 *   Pools are deployed via a proxy contract. The implementation contract targetted by the proxy is determined according to the base pool.  This is the same technique used to create pools in Uniswap V1.  
 *   Deposit contracts (“zaps”) are used for wrapping and unwrapping underlying assets when depositing into or withdrawing from pools.
 
+
+### Pools
 | Name      | Source  | Address|
 | ----------- | -------|  -------| 
-| `Factory` | [Factory.vy](https://github.com/curvefi/curve-factory/blob/master/contracts/Factory.vy) | [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4#code) |
-| `Migartor` **deprecated?** | [PoolMigrator.vy](https://github.com/curvefi/curve-factory/blob/master/contracts/PoolMigrator.vy) | [0xd6930b7f661257DA36F93160149b031735237594](https://etherscan.io/address/0xd6930b7f661257DA36F93160149b031735237594#code) |
-| `todo`| - | - |
+| `Factory` | [todo]() | [0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d](https://etherscan.io/address/0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d#code) |
+| `MetapoolFactory` | [todo]() | [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4#code) |
+| `CurveFactory` | [todo]() | [0xF18056Bbd320E96A48e3Fbf8bC061322531aac99](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99#code) |
+| `TricryptoFactory` | [todo]() | [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963#code) |   
 
-
-
-## **Tricrypto Factory**
-
+### crvUSD
 | Name      | Source  | Address|
 | ----------- | -------|  -------| 
-| `Factory` | [CurveTricryptoFactory.vy](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveTricryptoFactory.vy) | [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963#code) |
-| `Math Implementation` | [CurveCryptoMathOptimized3.vy](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveTricryptoFactory.vy) | [0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE](https://etherscan.io/address/0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE#code) |
-| `Views Implementation` | [CurveCryptoViews3Optimized.vy](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveCryptoViews3Optimized.vy) | [0x064253915b8449fdEFac2c4A74aA9fdF56691a31](https://etherscan.io/address/0x064253915b8449fdEFac2c4A74aA9fdF56691a31#code) |
-| `AMM Implementation` | [todo] | [0x66442B0C5260B92cAa9c234ECf2408CBf6b19a6f](https://etherscan.io/address/0x66442B0C5260B92cAa9c234ECf2408CBf6b19a6f#code) |
-| `Gauge Implementation` | [LiquidityGauge.vy](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/LiquidityGauge.vy) | [0x5fC124a161d888893529f67580ef94C2784e9233](https://etherscan.io/address/0x5fC124a161d888893529f67580ef94C2784e9233#code) |
-| `Factory Handler` | [CurveTricryptoFactoryHandler.vy](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveTricryptoFactoryHandler.vy) | [0x5c57f810665E9aafb753bB9e38E6C467a6Bc4a25](https://etherscan.io/address/0x5c57f810665E9aafb753bB9e38E6C467a6Bc4a25#code) |
+| `crvUSDFactory` | [ControllerFactory.vy](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/ControllerFactory.vy) | [0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC#code) |
+
+
+# Arbitrum
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory | [todo]() | [0xb17b674d9c5cb2e441f8e196a2f048a81355d031](https://arbiscan.io/address/0xb17b674d9c5cb2e441f8e196a2f048a81355d031#code) |
+
+
+# Optimism
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory` | [todo]() | [0x2db0e83599a91b508ac268a6197b8b14f5e72840](https://optimistic.etherscan.io/address/0x2db0e83599a91b508ac268a6197b8b14f5e72840#code) |
+
+
+# Base
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory` | [todo]() | [0x3093f9b57a428f3eb6285a589cb35bea6e78c336](https://basescan.org/address/0x3093f9b57a428f3eb6285a589cb35bea6e78c336#code) |
+| `TricryptoFactory` | [todo]() | [0xa5961898870943c68037f6848d2d866ed2016bcb](https://basescan.org/address/0xa5961898870943c68037f6848d2d866ed2016bcb#code) |
+
+
+# Polygon
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory` | [todo]() | [0x722272d36ef0da72ff51c5a65db7b870e2e8d4ee](https://polygonscan.com/address/0x722272d36ef0da72ff51c5a65db7b870e2e8d4ee#code) |
+| `CryptoFactory` | [todo]() | [0xe5de15a9c9bbedb4f5ec13b131e61245f2983a69](https://polygonscan.com/address/0xe5de15a9c9bbedb4f5ec13b131e61245f2983a69#code) |
 
 
 
+# Avalanche
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory` | [todo]() | [0xb17b674d9c5cb2e441f8e196a2f048a81355d031](https://snowtrace.io/address/0xb17b674d9c5cb2e441f8e196a2f048a81355d031#code) |
 
 
+# Gnosis
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory` | [todo]() | [0xd19baeadc667cf2015e395f2b08668ef120f41f5](https://gnosisscan.io/address/0xd19baeadc667cf2015e395f2b08668ef120f41f5#code) |
+
+
+# Fantom
+## Factory
+| Name      | Source  | Address|
+| ----------- | -------|  -------| 
+| `Factory` | [todo]() | [0x686d67265703d1f124c45e33d47d794c566889ba](https://ftmscan.com/address/0x686d67265703d1f124c45e33d47d794c566889ba#code) |
+| `CryptoFactory` | [todo]() | [0xe5de15a9c9bbedb4f5ec13b131e61245f2983a69](https://ftmscan.com/address/0xe5de15a9c9bbedb4f5ec13b131e61245f2983a69#code) |
+
+
+# Kava
+# Moonbeam
+# Aurora
+# Celo
