@@ -42,16 +42,15 @@ nav:
       - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
     - Governance and Voting: curve_dao/gov-and-vote/overview.md
 
-  - crvUSD:
+  - Curve Stablecoin (crvUSD):
     - Overview: crvUSD/overview.md
-    - Contracts:
-      - crvUSD Token: crvUSD/crvUSD.md
-      - Controller: crvUSD/controller.md
-      - LLAMMA: crvUSD/amm.md
-      - PegKeeper: crvUSD/pegkeeper.md
-      - MonetaryPolicy: crvUSD/monetarypolicy.md
-      - PriceAggregator: crvUSD/priceaggregator.md
-      - Oracle: crvUSD/oracle.md
+    - crvUSD Token: crvUSD/crvUSD.md
+    - Controller: crvUSD/controller.md
+    - LLAMMA: crvUSD/amm.md
+    - PegKeeper: crvUSD/pegkeeper.md
+    - MonetaryPolicy: crvUSD/monetarypolicy.md
+    - PriceAggregator: crvUSD/priceaggregator.md
+    - Oracle: crvUSD/oracle.md
     - Deployments: crvUSD/deployments.md
 
   - Stableswap Exchange:    
