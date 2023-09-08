@@ -102,8 +102,8 @@ nav:
       - StableSwap: references/whitepapers/stableswap.md
       - CryptoSwap: references/whitepapers/cryptoswap.md
       - Curve Stablecoin: references/whitepapers/curve-stablecoin.md
+    - Useful Resources: references/useful.md
     - Deployment Addresses: references/deployed-contracts.md
-    - Resources: https://resources.curve.fi/
 
 # extension
 markdown_extensions:
