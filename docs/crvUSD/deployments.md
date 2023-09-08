@@ -1,17 +1,17 @@
 ## **General Infrastructure**
 
-Due to testing-in-prod purposes, a few contract deployments took place so please ensure that you are using the correct and latest version. Latest deployment logs can be found [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
+For testing in production purposes, several contract deployments have taken place. Please ensure that you are using the correct and latest version. The latest deployment logs can be found [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
 
 | Type   | Description | Address  |
 | -------- | -------|-------|
 |`Stablecoin`|`crvUSD Token`|[0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/address/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E#code)|
-|`Factory`|`Factory to create new markets`|[0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC#code)|
-|`Controller Implementation`|`Blueprint for controller`|[0xCdb55051fC792303DdC7c1052cC5161BaeD88e2A](https://etherscan.io/address/0xCdb55051fC792303DdC7c1052cC5161BaeD88e2A#code)|
-|`AMM Implementation`|`Blueprint for amm`|[0x23208cA4F2B30d8f7D54bf2D5A822D1a2F876501](https://etherscan.io/address/0x23208cA4F2B30d8f7D54bf2D5A822D1a2F876501#code)|
-|`Swap factory`|`Factory to deploy pools`|[0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d](https://etherscan.io/address/0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d#code)|
-|`Owner proxy`|`Owner of Factory and it's deployed pools `|[0x855cC906dA8271Dd53879929bd226711247D5f17](https://etherscan.io/address/0x855cC906dA8271Dd53879929bd226711247D5f17#code)|
-|`PriceAggregator`|`aggregator of stablecoin prices for crvUSD`|[0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7](https://etherscan.io/address/0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7#code)|
-|`PriceAggregatorV2`|`aggregator of stablecoin prices for crvUSD`|[0x18672b1b0c623a30089A280Ed9256379fb0E4E62](https://etherscan.io/address/0x18672b1b0c623a30089A280Ed9256379fb0E4E62#code)|
+|`Factory`|`Factory contract for crvUSD markets`|[0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC#code)|
+|`Controller Implementation`|`Blueprint for Controller`|[0xCdb55051fC792303DdC7c1052cC5161BaeD88e2A](https://etherscan.io/address/0xCdb55051fC792303DdC7c1052cC5161BaeD88e2A#code)|
+|`AMM Implementation`|`Blueprint for AMM`|[0x23208cA4F2B30d8f7D54bf2D5A822D1a2F876501](https://etherscan.io/address/0x23208cA4F2B30d8f7D54bf2D5A822D1a2F876501#code)|
+|`Swap factory`|`Pool Factory`|[0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d](https://etherscan.io/address/0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d#code)|
+|`Owner proxy`|`Owner of Factory and it's deployed pools`|[0x855cC906dA8271Dd53879929bd226711247D5f17](https://etherscan.io/address/0x855cC906dA8271Dd53879929bd226711247D5f17#code)|
+|`PriceAggregator`|`Aggregator of stablecoin prices for crvUSD`|[0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7](https://etherscan.io/address/0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7#code)|
+|`PriceAggregatorV2`|`Aggregator of stablecoin prices for crvUSD`|[0x18672b1b0c623a30089A280Ed9256379fb0E4E62](https://etherscan.io/address/0x18672b1b0c623a30089A280Ed9256379fb0E4E62#code)|
 |`PegKeeper (USDC)`|`PegKepper for crvUSD/USDC`|[0xaA346781dDD7009caa644A4980f044C50cD2ae22](https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22#code)|
 |`PegKeeper (USDT)`|`PegKepper for crvUSD/USDT`|[0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8](https://etherscan.io/address/0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8#code)|
 |`PegKeeper (USDP)`|`PegKepper for crvUSD/USDP`|[0x6B765d07cf966c745B340AdCa67749fE75B5c345](https://etherscan.io/address/0x6B765d07cf966c745B340AdCa67749fE75B5c345#code)|
@@ -89,8 +89,8 @@ Due to testing-in-prod purposes, a few contract deployments took place so please
 
 
 
-### sfrxeth1
-!!! description "[sfrxETH1](https://crvusd.curve.fi/#/ethereum/markets/sfrxeth1/create)"
+### sfrxeth v2
+!!! description "[sfrxETH v2](https://crvusd.curve.fi/#/ethereum/markets/sfrxeth1/create)"
 
     !!! success inline end "Deployment Hash"
         https://etherscan.io/tx/0x2ede10a84f28647b5636a706ea03334399ba0ec2c77267681902e3180ae2d9b3

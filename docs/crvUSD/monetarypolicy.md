@@ -1,4 +1,4 @@
-Monetary policy contracts are integrated into the crvUSD system and are responsible for the interest rate of crvUSD markets. When creating a new market via the factory contract, a monetary policy contract needs to be provided.
+*MonetaryPolicyContracts* are integrated into the crvUSD system and are responsible for the interest rate of crvUSD markets. When creating a new market via the factory contract, a monetary policy contract needs to be provided.
 
 !!! info
     Source code for the monetary policy contracts is available on [Github](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/mpolicies). 

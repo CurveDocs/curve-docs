@@ -1,6 +1,6 @@
 The Controller is the contract the user interacts with to create a loan and further manage the position. It holds all user debt information. External liquidations are also done through it.
 
-Each market has its Controller, created from a blueprint contract.
+Each market has its own Controller, created from a blueprint contract, when a new market is successfully added via the `Factory`.
 
 
 # **Loans**
@@ -18,7 +18,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Function to create a loan. The user must specify the amount of `collateral` to deposit into `N`-bands and the amount of `debt` to borrow. If a user already has an existing loan, the function will revert.
 
-    Emits: `UserState`, `Borrow` and `Deposit` (in AMM), `SetRate`
+    Emits: `UserState`, `Borrow`, `Deposit` and `SetRate`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -185,7 +185,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Extended function to create a loan. This function passes crvUSD to a callback first so that it can leverage up.
 
-    Emits: `UserState`, `Borrow` and `Deposit` (in AMM)
+    Emits: `UserState`, `Borrow` and `Deposit`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -3514,7 +3514,11 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python hl_lines="1 7 19"
+        event SetBorrowingDiscounts:
+            loan_discount: uint256
+            liquidation_discount: uint256
+
         @nonreentrant('lock')
         @external
         def set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256):
@@ -3534,9 +3538,9 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> controller.set_borrowing_discounts()
-        7731390765158807406740136
-        ```  
+        >>> controller.set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256):
+        ``` 
+
 
 ### `liquidity_mining_callback`
 !!! description "`controller.liquidity_mining_callback() -> uint256: view`"
@@ -3564,20 +3568,19 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
     Function to set a callback for liquidity mining.
 
     !!!note
-        This function is only callable by the admin of the contract. 
+        This function is only callable by the Factory `admin`.
 
     ??? quote "Source code"
 
         ```python hl_lines="3"
-        # nonreentrant decorator is in Controller which is admin
         @external
-        def set_callback(liquidity_mining_callback: LMGauge):
+        @nonreentrant('lock')
+        def set_callback(cb: address):
             """
-            @notice Set a gauge address with callbacks for liquidity mining for collateral
-            @param liquidity_mining_callback Gauge address
+            @notice Set liquidity mining callback
             """
-            assert msg.sender == self.admin
-            self.liquidity_mining_callback = liquidity_mining_callback
+            assert msg.sender == FACTORY.admin()
+            AMM.set_callback(cb)
         ```
 
     === "Example"
