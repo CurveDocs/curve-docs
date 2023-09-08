@@ -460,7 +460,7 @@
     | `_add_value` |  `uint256` | Amount to increase the allwance by |
 
     !!!note
-        This function will never overflow, and instead will bind allowance to MAX_UINT256. This has the potential to grant infinite approval.
+        This function will never overflow, and instead will bind allowance to `MAX_UINT256`. This has the potential to grant infinite approval.
 
     ??? quote "Source code"
 
