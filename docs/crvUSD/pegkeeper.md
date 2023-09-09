@@ -43,7 +43,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
     | Balances  | Action   | 
     | ----------- | -------| 
     | $balance_{crvUSD} < balance_{pairedCoin}$ |  mint and deposit |
-    | $balance_{crvUSD} > balance_{pairedCoin}$ | withdraw and borrow |
+    | $balance_{crvUSD} > balance_{pairedCoin}$ | withdraw and burn |
 
     A share (`caller_share`) of the generated profit will be awarded to the function's caller. By default, this is set to `msg.sender`, but there is also the possibility to input a `_beneficiary` address to which the rewards will be sent. 
 
