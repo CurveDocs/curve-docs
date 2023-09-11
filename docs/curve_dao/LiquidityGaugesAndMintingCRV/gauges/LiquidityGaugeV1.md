@@ -1,5 +1,7 @@
 Each pool has a unique liquidity gauge.
-There are several versions of liquidity gauge contracts in use. Source code for these contracts is available on [Github](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges).
+
+!!!info
+    There are several versions of liquidity gauge contracts in use. Source code for these contracts is available on [Github](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges).
 
 Easiest way to obtain the gauge address of a liquidity pool is by querying `get_gauge` on the [MetaRegistry](/docs/registry/MetaRegistryAPI.md).
 
@@ -10,18 +12,201 @@ Easiest way to obtain the gauge address of a liquidity pool is by querying `get_
 
 
 
-## **Querying Gauge Information**
+# **Deposit and Withdrawals**
+### `deposit`
+!!! description "`LiquidityGauge.deposit(_value: uint256, addr: address = msg.sender):`"
+
+    Function to deposit `_value` amount of LP tokens into the gauge.
+
+    Emits: `Deposit`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_value` |  `uint256` | Amount of tokens to deposit |
+    | `addr` |  `address` | Address to deposit for. Defaults to `msg.sender` |
+
+    !!!warning
+        Prior to depositing, ensure that the gauge has been approved to transfer `amount` LP tokens on behalf of the caller (see [`set_approve_deposit`](#set_approve_deposit)).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 10 29 31"
+        event Deposit:
+            provider: indexed(address)
+            value: uint256
+
+        # caller -> recipient -> can deposit?
+        approved_to_deposit: public(HashMap[address, HashMap[address, bool]])
+
+        @external
+        @nonreentrant('lock')
+        def deposit(_value: uint256, addr: address = msg.sender):
+            """
+            @notice Deposit `_value` LP tokens
+            @param _value Number of tokens to deposit
+            @param addr Address to deposit for
+            """
+            if addr != msg.sender:
+                assert self.approved_to_deposit[msg.sender][addr], "Not approved"
+
+            self._checkpoint(addr)
+
+            if _value != 0:
+                _balance: uint256 = self.balanceOf[addr] + _value
+                _supply: uint256 = self.totalSupply + _value
+                self.balanceOf[addr] = _balance
+                self.totalSupply = _supply
+
+                self._update_liquidity_limit(addr, _balance, _supply)
+
+                assert ERC20(self.lp_token).transferFrom(msg.sender, self, _value)
+
+            log Deposit(addr, _value)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> LiquidityGauge.deposit("todo"):
+        todo
+        ```
+
+
+### `withdraw`
+!!! description "`LiquidityGauge.withdraw(_value: uint256):`"
+
+    Function to withdraw `_value` LP tokens from the gauge.
+
+    Emits: `Withdraw`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_value` |  `uint256` | Amount of tokens to withdraw |
+
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 7 23"
+        event Withdraw:
+            provider: indexed(address)
+            value: uint256
+
+        @external
+        @nonreentrant('lock')
+        def withdraw(_value: uint256):
+            """
+            @notice Withdraw `_value` LP tokens
+            @param _value Number of tokens to withdraw
+            """
+            self._checkpoint(msg.sender)
+
+            _balance: uint256 = self.balanceOf[msg.sender] - _value
+            _supply: uint256 = self.totalSupply - _value
+            self.balanceOf[msg.sender] = _balance
+            self.totalSupply = _supply
+
+            self._update_liquidity_limit(msg.sender, _balance, _supply)
+
+            assert ERC20(self.lp_token).transfer(msg.sender, _value)
+
+            log Withdraw(msg.sender, _value)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> LiquidityGauge.withdraw("todo"):
+        todo
+        ```
+
+
+### `approved_to_deposit`
+!!! description "`LiquidityGauge.approved_to_deposit(arg0: address, arg1: address) -> bool: view`"
+
+    Getter method to check if address `arg0` is approved to deposit for address `arg1`. Can be modified by calling [`set_approve_deposit`](#set_approve_deposit).
+
+    Returns: true or flase (`bool`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `arg0` |  `address` | Caller |
+    | `arg1` |  `address` | Recipient |
+
+
+    ??? quote "Source code"
+
+        ```python hl_lines="2 11"
+        # caller -> recipient -> can deposit?
+        approved_to_deposit: public(HashMap[address, HashMap[address, bool]])
+
+        @external
+        def set_approve_deposit(addr: address, can_deposit: bool):
+            """
+            @notice Set whether `addr` can deposit tokens for `msg.sender`
+            @param addr Address to set approval on
+            @param can_deposit bool - can this account deposit for `msg.sender`?
+            """
+            self.approved_to_deposit[addr][msg.sender] = can_deposit
+
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> LiquidityGauge.approved_to_deposit(todo):
+        todo
+        ```
+
+
+### `set_approve_deposit`
+!!! description "`LiquidityGauge.set_approve_deposit(addr: address, can_deposit: bool):`"
+
+    Function to approve or revoke premission for address (`arg0`) to deposit into the gauge on behalf of the caller.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ---------|
+    | `addr` |  `address` | Address to set approval for |
+    | `can_deposit` |  `bool` | true or false |
+
+
+    ??? quote "Source code"
+
+        ```python hl_lines="2 5 11"
+        # caller -> recipient -> can deposit?
+        approved_to_deposit: public(HashMap[address, HashMap[address, bool]])
+
+        @external
+        def set_approve_deposit(addr: address, can_deposit: bool):
+            """
+            @notice Set whether `addr` can deposit tokens for `msg.sender`
+            @param addr Address to set approval on
+            @param can_deposit bool - can this account deposit for `msg.sender`?
+            """
+            self.approved_to_deposit[addr][msg.sender] = can_deposit
+
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> LiquidityGauge.set_approve_deposit(todo):
+        todo
+        ```
+
+
+
+## **Contract Info Methods**
 
 ### `minter`
 !!! description "`LiquidityGauge.minter() -> address: view`"
 
     Getter for the minter contract address.
 
-    Returns: `address` of the minter contract.
+    Returns: minter contract (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 9 13 "
+        ```python hl_lines="1 6 9 20"
         interface Minter:
             def token() -> address: view
             def controller() -> address: view
@@ -59,12 +244,13 @@ Easiest way to obtain the gauge address of a liquidity pool is by querying `get_
         '0xd061D61a4d941c39E5453435B6345Dc261C2fcE0'
         ```
 
+
 ### `crv_token`
 !!! description "`LiquidityGauge.crv_token() -> address: view`"
 
     Getter for the CRV token address.
 
-    Returns: `address` of the CRV token.
+    Returns: CRV token (`address`).
 
     ??? quote "Source code"
 
@@ -100,16 +286,17 @@ Easiest way to obtain the gauge address of a liquidity pool is by querying `get_
         '0xD533a949740bb3306d119CC777fa900bA034cd52'
         ```
 
+
 ### `lp_token`
 !!! description "`LiquidityGauge.lp_token() -> address: view`"
 
     Getter for the lp token of the liquidity pool.
 
-    Returns: `address` of the lp token.
+    Returns: lp token (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 13"
+        ```python hl_lines="1 4 13"
         lp_token: public(address)
 
         @external
@@ -145,9 +332,9 @@ Easiest way to obtain the gauge address of a liquidity pool is by querying `get_
 ### `controller`
 !!! description "`LiquidityGauge.controller() -> address: view`"
 
-    Getter for the controller of the contract.
+    Getter for the gauge controller contract.
 
-    Returns: `address` of the controller.
+    Returns: gauge controller contract (`address`).
 
     ??? quote "Source code"
 
@@ -187,9 +374,9 @@ Easiest way to obtain the gauge address of a liquidity pool is by querying `get_
 ### `voting_escorw`
 !!! description "`LiquidityGauge.voting_escrow() -> address: view`"
 
-    Getter for the voting-escrow of the contract.
+    Getter for the voting-escrow token.
 
-    Returns: `address` of the voting-escrow contract.
+    Returns: voting-escorw contract (`address`).
 
     ??? quote "Source code"
 
@@ -250,15 +437,15 @@ Easiest way to obtain the gauge address of a liquidity pool is by querying `get_
 ### `future_epoch_time`
 !!! description "`LiquidityGauge.future_epoch_time() -> uint256: view`"
 
-    Getter for the future_epoch_time.
+    Getter for the future epoch time.
 
-    Returns: future epoch time (`uint256`).
+    Returns: future epoch timestamp (`uint256`).
 
     ??? quote "Source code"
 
         === "LiquidityGauge.vy"
 
-            ```python hl_lines="2 5 25"
+            ```python hl_lines="2 5 26"
             interface CRV20:
                 def future_epoch_time_write() -> uint256: nonpayable
                 def rate() -> uint256: view
@@ -289,7 +476,7 @@ Easiest way to obtain the gauge address of a liquidity pool is by querying `get_
 
         === "ERC20CRV.vy"
 
-            ```python hl_lines="2"
+            ```python hl_lines="2 11 13"
             @external
             def future_epoch_time_write() -> uint256:
                 """
@@ -321,219 +508,216 @@ Easiest way to obtain the gauge address of a liquidity pool is by querying `get_
 
     ??? quote "Source code"
 
-        ```python hl_lines="6 8"
-        event UpdateLiquidityLimit:
-            user: address
-            original_balance: uint256
-            original_supply: uint256
-            working_balance: uint256
-            working_supply: uint256
-
+        ```python hl_lines="1"
         working_supply: public(uint256)
         ```
 
     === "Example"
 
         ```shell
-        >>> LiquidityGauge.totalSupply():
-        45937414870421651974114150
+        >>> LiquidityGauge.working_supply():
+        14075488199397914414391174
         ```
 
-### `period` (fix this)
+
+### `period`
 !!! description "`LiquidityGauge.period() -> int128: view`"
 
-    Getter for the current period.
+    Getter for the current period. This variable is updated whenever `_checkpoint` function is called.
 
     Returns: period (`int128`).
 
     ??? quote "Source code"
 
-        === "LiquidityGauge.vy"
+        ```python hl_lines="2 10 68 69"
+        interface Controller:
+            def period() -> int128: view
+            def period_write() -> int128: nonpayable
+            def period_timestamp(p: int128) -> uint256: view
+            def gauge_relative_weight(addr: address, time: uint256) -> uint256: view
+            def voting_escrow() -> address: view
+            def checkpoint(): nonpayable
+            def checkpoint_gauge(addr: address): nonpayable
 
-            ```python hl_lines="2 10 68 69"
-            interface Controller:
-                def period() -> int128: view
-                def period_write() -> int128: nonpayable
-                def period_timestamp(p: int128) -> uint256: view
-                def gauge_relative_weight(addr: address, time: uint256) -> uint256: view
-                def voting_escrow() -> address: view
-                def checkpoint(): nonpayable
-                def checkpoint_gauge(addr: address): nonpayable
+        period: public(int128)
 
-            period: public(int128)
+        @internal
+        def _checkpoint(addr: address):
+            """
+            @notice Checkpoint for a user
+            @param addr User address
+            """
+            _token: address = self.crv_token
+            _controller: address = self.controller
+            _period: int128 = self.period
+            _period_time: uint256 = self.period_timestamp[_period]
+            _integrate_inv_supply: uint256 = self.integrate_inv_supply[_period]
+            rate: uint256 = self.inflation_rate
+            new_rate: uint256 = rate
+            prev_future_epoch: uint256 = self.future_epoch_time
+            if prev_future_epoch >= _period_time:
+                self.future_epoch_time = CRV20(_token).future_epoch_time_write()
+                new_rate = CRV20(_token).rate()
+                self.inflation_rate = new_rate
+            Controller(_controller).checkpoint_gauge(self)
 
-            @internal
-            def _checkpoint(addr: address):
-                """
-                @notice Checkpoint for a user
-                @param addr User address
-                """
-                _token: address = self.crv_token
-                _controller: address = self.controller
-                _period: int128 = self.period
-                _period_time: uint256 = self.period_timestamp[_period]
-                _integrate_inv_supply: uint256 = self.integrate_inv_supply[_period]
-                rate: uint256 = self.inflation_rate
-                new_rate: uint256 = rate
-                prev_future_epoch: uint256 = self.future_epoch_time
-                if prev_future_epoch >= _period_time:
-                    self.future_epoch_time = CRV20(_token).future_epoch_time_write()
-                    new_rate = CRV20(_token).rate()
-                    self.inflation_rate = new_rate
-                Controller(_controller).checkpoint_gauge(self)
+            _working_balance: uint256 = self.working_balances[addr]
+            _working_supply: uint256 = self.working_supply
 
-                _working_balance: uint256 = self.working_balances[addr]
-                _working_supply: uint256 = self.working_supply
+            # Update integral of 1/supply
+            if block.timestamp > _period_time:
+                prev_week_time: uint256 = _period_time
+                week_time: uint256 = min((_period_time + WEEK) / WEEK * WEEK, block.timestamp)
 
-                # Update integral of 1/supply
-                if block.timestamp > _period_time:
-                    prev_week_time: uint256 = _period_time
-                    week_time: uint256 = min((_period_time + WEEK) / WEEK * WEEK, block.timestamp)
+                for i in range(500):
+                    dt: uint256 = week_time - prev_week_time
+                    w: uint256 = Controller(_controller).gauge_relative_weight(self, prev_week_time / WEEK * WEEK)
 
-                    for i in range(500):
-                        dt: uint256 = week_time - prev_week_time
-                        w: uint256 = Controller(_controller).gauge_relative_weight(self, prev_week_time / WEEK * WEEK)
+                    if _working_supply > 0:
+                        if prev_future_epoch >= prev_week_time and prev_future_epoch < week_time:
+                            # If we went across one or multiple epochs, apply the rate
+                            # of the first epoch until it ends, and then the rate of
+                            # the last epoch.
+                            # If more than one epoch is crossed - the gauge gets less,
+                            # but that'd meen it wasn't called for more than 1 year
+                            _integrate_inv_supply += rate * w * (prev_future_epoch - prev_week_time) / _working_supply
+                            rate = new_rate
+                            _integrate_inv_supply += rate * w * (week_time - prev_future_epoch) / _working_supply
+                        else:
+                            _integrate_inv_supply += rate * w * dt / _working_supply
+                        # On precisions of the calculation
+                        # rate ~= 10e18
+                        # last_weight > 0.01 * 1e18 = 1e16 (if pool weight is 1%)
+                        # _working_supply ~= TVL * 1e18 ~= 1e26 ($100M for example)
+                        # The largest loss is at dt = 1
+                        # Loss is 1e-9 - acceptable
 
-                        if _working_supply > 0:
-                            if prev_future_epoch >= prev_week_time and prev_future_epoch < week_time:
-                                # If we went across one or multiple epochs, apply the rate
-                                # of the first epoch until it ends, and then the rate of
-                                # the last epoch.
-                                # If more than one epoch is crossed - the gauge gets less,
-                                # but that'd meen it wasn't called for more than 1 year
-                                _integrate_inv_supply += rate * w * (prev_future_epoch - prev_week_time) / _working_supply
-                                rate = new_rate
-                                _integrate_inv_supply += rate * w * (week_time - prev_future_epoch) / _working_supply
-                            else:
-                                _integrate_inv_supply += rate * w * dt / _working_supply
-                            # On precisions of the calculation
-                            # rate ~= 10e18
-                            # last_weight > 0.01 * 1e18 = 1e16 (if pool weight is 1%)
-                            # _working_supply ~= TVL * 1e18 ~= 1e26 ($100M for example)
-                            # The largest loss is at dt = 1
-                            # Loss is 1e-9 - acceptable
+                    if week_time == block.timestamp:
+                        break
+                    prev_week_time = week_time
+                    week_time = min(week_time + WEEK, block.timestamp)
 
-                        if week_time == block.timestamp:
-                            break
-                        prev_week_time = week_time
-                        week_time = min(week_time + WEEK, block.timestamp)
+            _period += 1
+            self.period = _period
+            self.period_timestamp[_period] = block.timestamp
+            self.integrate_inv_supply[_period] = _integrate_inv_supply
 
-                _period += 1
-                self.period = _period
-                self.period_timestamp[_period] = block.timestamp
-                self.integrate_inv_supply[_period] = _integrate_inv_supply
-
-                # Update user-specific integrals
-                self.integrate_fraction[addr] += _working_balance * (_integrate_inv_supply - self.integrate_inv_supply_of[addr]) / 10 ** 18
-                self.integrate_inv_supply_of[addr] = _integrate_inv_supply
-                self.integrate_checkpoint_of[addr] = block.timestamp
-            ```
-
-        === "Controller.vy"
-
-            ```python hl_lines="1"
-            todo
-            ```
+            # Update user-specific integrals
+            self.integrate_fraction[addr] += _working_balance * (_integrate_inv_supply - self.integrate_inv_supply_of[addr]) / 10 ** 18
+            self.integrate_inv_supply_of[addr] = _integrate_inv_supply
+            self.integrate_checkpoint_of[addr] = block.timestamp
+        ```
 
     === "Example"
         ```shell
-        >>> LiquidityGauge.future_epoch_time():
-        1691965048
+        >>> LiquidityGauge.period():
+        59149
         ```
 
-## **todo**
+
 ### `period_timestamp`
-### `integrate_inv_supply`
-### `integrate_inv_supply_of`
-### `integrate_checkpoint_of`
+!!! description "`LiquidityGauge.period_timestamp(arg0: uint256) -> uint256: view`"
+
+    Getter for timestamp of period `arg0`.
+
+    Returns: period timestamp (`uint256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `arg0` |  `uint256` | Period (`period`) |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 21"
+        period_timestamp: public(uint256[100000000000000000000000000000])
+
+        @external
+        def __init__(lp_addr: address, _minter: address):
+            """
+            @notice Contract constructor
+            @param lp_addr Liquidity Pool contract address
+            @param _minter Minter contract address
+            """
+
+            assert lp_addr != ZERO_ADDRESS
+            assert _minter != ZERO_ADDRESS
+
+            self.lp_token = lp_addr
+            self.minter = _minter
+            crv_addr: address = Minter(_minter).token()
+            self.crv_token = crv_addr
+            controller_addr: address = Minter(_minter).controller()
+            self.controller = controller_addr
+            self.voting_escrow = Controller(controller_addr).voting_escrow()
+            self.period_timestamp[0] = block.timestamp
+            self.inflation_rate = CRV20(crv_addr).rate()
+            self.future_epoch_time = CRV20(crv_addr).future_epoch_time_write()
+        ```
+
+    === "Example"
+        ```shell
+        >>> LiquidityGauge.period_timestamp(59149):
+        1694408003
+        ```
+
 
 ### `inflation_rate`
 !!! description "`LiquidityGauge.inflation_rate() -> uint256: view`"
 
     Getter for the current inflation rate.
 
-    Returns: current inflation rate (`uint256`).
+    Returns: rate (`uint256`).
 
     ??? quote "Source code"
 
-        === "LiquidityGauge.vy"
+        ```python hl_lines="3 5 25"
+        interface CRV20:
+            def future_epoch_time_write() -> uint256: nonpayable
+            def rate() -> uint256: view
 
-            ```python hl_lines="3 5 25"
-            interface CRV20:
-                def future_epoch_time_write() -> uint256: nonpayable
-                def rate() -> uint256: view
+        inflation_rate: public(uint256)
 
-            inflation_rate: public(uint256)
+        @external
+        def __init__(lp_addr: address, _minter: address):
+            """
+            @notice Contract constructor
+            @param lp_addr Liquidity Pool contract address
+            @param _minter Minter contract address
+            """
 
-            @external
-            def __init__(lp_addr: address, _minter: address):
-                """
-                @notice Contract constructor
-                @param lp_addr Liquidity Pool contract address
-                @param _minter Minter contract address
-                """
-
-                assert lp_addr != ZERO_ADDRESS
-                assert _minter != ZERO_ADDRESS
-                self.lp_token = lp_addr
-                self.minter = _minter
-                crv_addr: address = Minter(_minter).token()
-                self.crv_token = crv_addr
-                controller_addr: address = Minter(_minter).controller()
-                self.controller = controller_addr
-                self.voting_escrow = Controller(controller_addr).voting_escrow()
-                self.period_timestamp[0] = block.timestamp
-                self.inflation_rate = CRV20(crv_addr).rate()
-                self.future_epoch_time = CRV20(crv_addr).future_epoch_time_write()
-            ```
-
-        === "ERC20CRV.vy"
-
-            ```python hl_lines="1 22"
-            rate: public(uint256)
-
-            @external
-            def __init__(_name: String[64], _symbol: String[32], _decimals: uint256):
-                """
-                @notice Contract constructor
-                @param _name Token full name
-                @param _symbol Token symbol
-                @param _decimals Number of decimals for token
-                """
-                init_supply: uint256 = INITIAL_SUPPLY * 10 ** _decimals
-                self.name = _name
-                self.symbol = _symbol
-                self.decimals = _decimals
-                self.balanceOf[msg.sender] = init_supply
-                self.total_supply = init_supply
-                self.admin = msg.sender
-                log Transfer(ZERO_ADDRESS, msg.sender, init_supply)
-
-                self.start_epoch_time = block.timestamp + INFLATION_DELAY - RATE_REDUCTION_TIME
-                self.mining_epoch = -1
-                self.rate = 0
-                self.start_epoch_supply = init_supply
-            ```
+            assert lp_addr != ZERO_ADDRESS
+            assert _minter != ZERO_ADDRESS
+            self.lp_token = lp_addr
+            self.minter = _minter
+            crv_addr: address = Minter(_minter).token()
+            self.crv_token = crv_addr
+            controller_addr: address = Minter(_minter).controller()
+            self.controller = controller_addr
+            self.voting_escrow = Controller(controller_addr).voting_escrow()
+            self.period_timestamp[0] = block.timestamp
+            self.inflation_rate = CRV20(crv_addr).rate()
+            self.future_epoch_time = CRV20(crv_addr).future_epoch_time_write()
+        ```
 
     === "Example"
         ```shell
         >>> LiquidityGauge.inflation_rate():
-        6161965695807970181
+        5181574864521283150
         ```
 
 
 
-# **Querying User Information**
+# **User Info Methods**
 ### `balanceOf`
 !!! description "`LiquidityGauge.balaceOf(arg0: address) -> uint256: view`"
 
     Getter method for the current amount of LP tokens that `addr` has deposited into the gauge.
 
-    Returns: amount of LP tokens deposited into the pool (`uint256`) by `addr`.
+    Returns: amount (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `address` | Address |
+    | `arg0` |  `address` | User Address |
 
     ??? quote "Source code"
 
@@ -549,19 +733,19 @@ Easiest way to obtain the gauge address of a liquidity pool is by querying `get_
         ```
 
 
-### `working_balances`
+### `working_balances` (more on this)
 !!! description "`LiquidityGauge.working_balances(arg0: address) -> uint256: view`"
 
-    Getter for the working balance of a user. 
+    Getter for the working balance of user `arg0`. 
 
-    Returns: working balance (`uint256`) of `addr`.
+    Returns: working balance (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `address` | Address |
+    | `arg0` |  `address` | User Address |
 
-    !!!note
-        Working balance essentially is the effective balance after the [boost](todo) has been applied.
+    !!!tip
+        Working balance essentially is the effective balance after the has been applied.
 
     ??? quote "Source code"
 
@@ -577,79 +761,13 @@ Easiest way to obtain the gauge address of a liquidity pool is by querying `get_
         ```
 
 
-### `claimable_tokens`
-!!! description "`LiquidityGauge.claimable_tokens(addr: address) -> uint256:`"
-
-    Getter method for the currently mintable CRV for `addr` from this gauge.
-
-    Returns: todo.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `addr` |  `address` | Address |
-
-    !!!warning
-        Calling this function [modifies the state](https://docs.vyperlang.org/en/stable/control-structures.html#mutability). Off-chain integrators can call it as though it were a `view` function, however on-chain integrators **must** use it as `nonpayable` or the call will revert.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="2 5"
-        @external
-        def claimable_tokens(addr: address) -> uint256:
-            """
-            @notice Get the number of claimable tokens per user
-            @dev This function should be manually changed to "view" in the ABI
-            @return uint256 number of claimable tokens per user
-            """
-            self._checkpoint(addr)
-            return self.integrate_fraction[addr] - Minter(self.minter).minted(addr, self)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> LiquidityGauge.claimable_tokens("todo"):
-        todo
-        ```
-
-
-### `integrate_fraction`
-!!! description "`LiquidityGauge.integrate_fraction(arg0: address) -> uint256: view`"
-
-    Getter for the total amount of CRV, both mintable and already minted, that has been allocated to `addr` from this gauge.
-
-    Returns: total amount of CRV (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `address` | Address |
-
-    !!!warning
-        Calling this function [modifies the state](https://docs.vyperlang.org/en/stable/control-structures.html#mutability). Off-chain integrators can call it as though it were a `view` function, however on-chain integrators **must** use it as `nonpayable` or the call will revert.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="3"
-        # ∫(balance * rate(t) / totalSupply(t) dt) from 0 till checkpoint
-        # Units: rate * t = already number of coins per address to issue
-        integrate_fraction: public(HashMap[address, uint256])
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> LiquidityGauge.integrate_fraction("0x989AEb4d175e16225E39E87d0D97A3360524AD80"):
-        5072273980060388580494200
-        ```
-
-
 # **Checkpoints**
 ### `user_checkpoint`
 !!! description "`LiquidityGauge.user_checkpoint(addr: address) -> bool:`"
 
     Function to record a checkpoint for `addr` and therefore updating their boost.
 
-    Returns: todo
+    Returns: True (`bool`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -677,17 +795,17 @@ Easiest way to obtain the gauge address of a liquidity pool is by querying `get_
     === "Example"
 
         ```shell
-        >>> LiquidityGauge.user_checkpoint("todo"):
-        todo
+        >>> LiquidityGauge.user_checkpoint():
+        `True`
         ```
 
 
 ### `kick`
 !!! description "`LiquidityGauge.kick(addr: address):`"
 
-    Function to trigger a checkpoint for `addr` and therefore updating their boost.
+    Function to kick address `addr` for abusing their boost.
 
-    Returns: todo
+    Returns: True (`bool`)
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -718,192 +836,116 @@ Easiest way to obtain the gauge address of a liquidity pool is by querying `get_
             return True
         ```
 
-    !!!note 
+    !!!warning
         This function is only callable when the current boost for `addr` is greater than it should be, due to an expired veCRV lock.
 
     === "Example"
 
         ```shell
-        >>> LiquidityGauge.kick("todo"):
-        todo
+        >>> LiquidityGauge.kick("0x989AEb4d175e16225E39E87d0D97A3360524AD80"):
         ```
 
 
-# **Deposit and Withdrawals**
-### `deposit`
-!!! description "`LiquidityGauge.deposit(_value: uint256, addr: address = msg.sender):`"
+### `integrate_fraction` (todo)
+!!! description "`LiquidityGauge.integrate_fraction(arg0: address) -> uint256: view`"
 
-    Function to deposit LP tokens into the gauge.
+    Getter for the integrate fraction.
 
-    Prior to depositing, ensure that the gauge has been approved to transfer `amount` LP tokens on behalf of the caller (see [`set_approve_deposit`](#set_approve_deposit)).
+    Returns: integrate fraction (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_value` |  `uint256` | Amount of tokens to deposit |
-    | `addr` |  `address` | Address to deposit for. If no address is given, it defaults to `msg.sender` (caller) |
-
+    | `arg0` |  `address` | User Address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 10 29 31"
-        event Deposit:
-            provider: indexed(address)
-            value: uint256
-
-        # caller -> recipient -> can deposit?
-        approved_to_deposit: public(HashMap[address, HashMap[address, bool]])
-
-        @external
-        @nonreentrant('lock')
-        def deposit(_value: uint256, addr: address = msg.sender):
-            """
-            @notice Deposit `_value` LP tokens
-            @param _value Number of tokens to deposit
-            @param addr Address to deposit for
-            """
-            if addr != msg.sender:
-                assert self.approved_to_deposit[msg.sender][addr], "Not approved"
-
-            self._checkpoint(addr)
-
-            if _value != 0:
-                _balance: uint256 = self.balanceOf[addr] + _value
-                _supply: uint256 = self.totalSupply + _value
-                self.balanceOf[addr] = _balance
-                self.totalSupply = _supply
-
-                self._update_liquidity_limit(addr, _balance, _supply)
-
-                assert ERC20(self.lp_token).transferFrom(msg.sender, self, _value)
-
-            log Deposit(addr, _value)
+        ```python hl_lines="3"
+        # ∫(balance * rate(t) / totalSupply(t) dt) from 0 till checkpoint
+        # Units: rate * t = already number of coins per address to issue
+        integrate_fraction: public(HashMap[address, uint256])
         ```
 
     === "Example"
 
         ```shell
-        >>> LiquidityGauge.deposit("todo"):
-        todo
+        >>> LiquidityGauge.integrate_fraction("0x989AEb4d175e16225E39E87d0D97A3360524AD80"):
+        5072273980060388580494200
         ```
 
 
-### `withdraw`
-!!! description "`LiquidityGauge.withdraw(_value: uint256):`"
+### `integrate_inv_supply` (todo)
+!!! description "`LiquidityGauge.integrate_inv_supply(arg0: uint256) -> uint256: view`"
 
-    Function to withdraw LP tokens from the gauge.
+    Getter for the integrate inverse supply at period `arg0`.
 
-    Returns: todo
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_value` |  `uint256` | Amount of tokens to withdraw |
-
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 7 23"
-        event Withdraw:
-            provider: indexed(address)
-            value: uint256
-
-        @external
-        @nonreentrant('lock')
-        def withdraw(_value: uint256):
-            """
-            @notice Withdraw `_value` LP tokens
-            @param _value Number of tokens to withdraw
-            """
-            self._checkpoint(msg.sender)
-
-            _balance: uint256 = self.balanceOf[msg.sender] - _value
-            _supply: uint256 = self.totalSupply - _value
-            self.balanceOf[msg.sender] = _balance
-            self.totalSupply = _supply
-
-            self._update_liquidity_limit(msg.sender, _balance, _supply)
-
-            assert ERC20(self.lp_token).transfer(msg.sender, _value)
-
-            log Withdraw(msg.sender, _value)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> LiquidityGauge.withdraw("todo"):
-        todo
-        ```
-
-
-### `approved_to_deposit`
-!!! description "`LiquidityGauge.approved_to_deposit(arg0: address, arg1: address) -> bool: view`"
-
-    Getter method to check if an address is approved to deposit for another address. Can be changed by calling [`set_approve_deposit`](#set_approve_deposit).
-
-    Returns: true or flase (`bool`).
+    Returns: 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `arg0` |  `address` | Address |
-    | `arg1` |  `address` | Address |
-
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 11"
-        # caller -> recipient -> can deposit?
-        approved_to_deposit: public(HashMap[address, HashMap[address, bool]])
-
-        @external
-        def set_approve_deposit(addr: address, can_deposit: bool):
-            """
-            @notice Set whether `addr` can deposit tokens for `msg.sender`
-            @param addr Address to set approval on
-            @param can_deposit bool - can this account deposit for `msg.sender`?
-            """
-            self.approved_to_deposit[addr][msg.sender] = can_deposit
-
+        ```python hl_lines="2"
+        # 1e18 * ∫(rate(t) / totalSupply(t) dt) from 0 till checkpoint
+        integrate_inv_supply: public(uint256[100000000000000000000000000000])  # bump epoch when rate() changes
         ```
 
     === "Example"
 
         ```shell
-        >>> LiquidityGauge.approved_to_deposit(todo):
-        todo
+        >>> LiquidityGauge.integrate_inv_supply(59150):
+        263323758930625247
         ```
 
 
-### `set_approve_deposit`
-!!! description "`LiquidityGauge.set_approve_deposit(addr: address, can_deposit: bool):`"
+### `integrate_inv_supply_of` (todo)
+!!! description "`LiquidityGauge.integrate_inv_supply_of(arg0: address) -> uint256: view`"
 
-    Function to approve or revoke approval for another address to deposit into the gauge on behalf of the caller.
+    todo
+
+    Returns: 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `addr` |  `address` | Address to set approval for |
-    | `can_deposit` |  `bool` | true or false |
-
+    | `arg0` |  `address` | Address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 5 11"
-        # caller -> recipient -> can deposit?
-        approved_to_deposit: public(HashMap[address, HashMap[address, bool]])
-
-        @external
-        def set_approve_deposit(addr: address, can_deposit: bool):
-            """
-            @notice Set whether `addr` can deposit tokens for `msg.sender`
-            @param addr Address to set approval on
-            @param can_deposit bool - can this account deposit for `msg.sender`?
-            """
-            self.approved_to_deposit[addr][msg.sender] = can_deposit
-
+        ```python hl_lines="2"
+        # 1e18 * ∫(rate(t) / totalSupply(t) dt) from (last_action) till checkpoint
+        integrate_inv_supply_of: public(HashMap[address, uint256])
         ```
 
     === "Example"
 
         ```shell
-        >>> LiquidityGauge.set_approve_deposit(todo):
-        todo
+        >>> LiquidityGauge.integrate_fraction("0x989AEb4d175e16225E39E87d0D97A3360524AD80"):
+        263323758930625247
+        ```
+
+
+### `integrate_checkpoint_of` (todo)
+!!! description "`LiquidityGauge.integrate_checkpoint_of(arg0: address) -> uint256: view`"
+
+    todo
+
+    Returns:
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `arg0` |  `address` | Address |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="2"
+        # 1e18 * ∫(rate(t) / totalSupply(t) dt) from (last_action) till checkpoint
+        integrate_checkpoint_of: public(HashMap[address, uint256])
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> LiquidityGauge.integrate_checkpoint_of("0x989AEb4d175e16225E39E87d0D97A3360524AD80"):
+        1694408003
         ```
