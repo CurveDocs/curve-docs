@@ -13,3 +13,20 @@
 
 As this gauge maintains a similar API to `LiquidityGaugeV2`, the documentation only covers functions that were added or modified since the previous version.
 
+
+
+## Querying Reward Information
+
+### `rewards_receiver`
+### `last_claim`
+
+
+
+## Checking and Claiming Rewards
+Unlike LiquidityGaugeV2, rewards are not automatically claimed each time a user performs an action on the gauge.
+
+
+### `claim_rewards`
+### `claimed_rewards`
+### `claimable_rewards`
+### `claimable_reward_write`
