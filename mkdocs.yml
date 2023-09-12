@@ -31,12 +31,12 @@ nav:
         - Admin Controls: curve_dao/LiquidityGaugesAndMintingCRV/gauge_controller/admin_controls.md
       - Gauges:
         - Gauge Types: curve_dao/LiquidityGaugesAndMintingCRV/GaugeTypes.md
-        - LiquidityGaugeReward: curve_dao/LiquidityGaugesAndMintingCRV/LiquidityGaugeRewards.md
         - LiquidityGaugeV1: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV1.md
         - LiquidityGaugeV2: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV2.md
         - LiquidityGaugeV3: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV3.md
         - LiquidityGaugeV4: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV4.md
         - LiquidityGaugeV5: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV5.md
+        - LiquidityGaugeReward: curve_dao/LiquidityGaugesAndMintingCRV/LiquidityGaugeRewards.md
       - Minter: curve_dao/LiquidityGaugesAndMintingCRV/Minter.md 
     
     - Gauges for EVM Sidechains: curve_dao/evm-sidechains/overview.md
