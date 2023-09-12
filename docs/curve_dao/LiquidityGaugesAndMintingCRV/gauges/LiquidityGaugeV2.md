@@ -1,147 +1,23 @@
-The v2 liquidity gauge adds a full ERC20 interface to the gauge, tokenizing deposits so they can be directly transferred between accounts without having to withdraw and redeposit. It also improves flexibility for onward staking, allowing staking to be enabled or disabled at any time and handling up to eight reward tokens at once.
+The v2 liquidity gauge adds a full [ERC20](https://eips.ethereum.org/EIPS/eip-20) interface to the gauge, tokenizing deposits so they can be directly transferred between accounts without having to withdraw and redeposit. It also improves flexibility for onward staking, allowing staking to be enabled or disabled at any time and handling up to eight reward tokens at once.
+
+added admin ownership
+addes option to kill gauge
 
 
 !!!note
-    The following view methods and functions are using the [aave liquidity gauge](https://etherscan.io/address/0xdebf20617708857ebe4f679508e7b7863a8a8eee#readContract).  
+    The following view methods and functions are using the [AAVE liquidity gauge](https://etherscan.io/address/0xdebf20617708857ebe4f679508e7b7863a8a8eee#readContract).  
     Source code of the LiquidityGaugeV2 can be found on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/gauges/LiquidityGaugeV2.vy).
 
 
-## **Querying Gauge Information**
-
-### `decimals`
-!!! description "`LiquidityGaugeV2.decimals() -> uint256:`"
-
-    Getter for the decimals of the liquidity gauge token.
-
-    Returns: decimals (`uint256`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="3"
-        @view
-        @external
-        def decimals() -> uint256:
-            """
-            @notice Get the number of decimals for this token
-            @dev Implemented as a view method to reduce gas costs
-            @return uint256 decimal places
-            """
-            return 18
-        ```
-
-        !!!note
-            Decimals for the tokens of the LiquidityGaugeV2 are set to 18.
-
-    === "Example"
-
-        ```shell
-        >>> LiquidityGaugeV2.decimals():
-        18
-        ```
-
-
-
-### `name`
-!!! description "`LiquidityGaugeV2.name() -> String[64]: view`"
-
-    Getter for the name of the token.
-
-    Returns: name of the token (``)
-    ??? quote "Source code"
-
-        ```python hl_lines="1 13"
-        name: public(String[64])
-
-        @external
-        def __init__(_lp_token: address, _minter: address, _admin: address):
-            """
-            @notice Contract constructor
-            @param _lp_token Liquidity Pool contract address
-            @param _minter Minter contract address
-            @param _admin Admin who can kill the gauge
-            """
-
-            symbol: String[26] = ERC20Extended(_lp_token).symbol()
-            self.name = concat("Curve.fi ", symbol, " Gauge Deposit")
-            self.symbol = concat(symbol, "-gauge")
-
-            crv_token: address = Minter(_minter).token()
-            controller: address = Minter(_minter).controller()
-
-            self.lp_token = _lp_token
-            self.minter = _minter
-            self.admin = _admin
-            self.crv_token = crv_token
-            self.controller = controller
-            self.voting_escrow = Controller(controller).voting_escrow()
-
-            self.period_timestamp[0] = block.timestamp
-            self.inflation_rate = CRV20(crv_token).rate()
-            self.future_epoch_time = CRV20(crv_token).future_epoch_time_write()
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> LiquidityGaugeV2.name():
-        'Curve.fi a3CRV Gauge Deposit'
-        ```
-
-
-### `symbol`
-!!! description "`LiquidityGaugeV2.symbol() -> String[32]: view`"
-
-    Getter for the minter contract address.
-
-    Returns: `address` of the minter contract.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 12 14"
-        symbol: public(String[32])
-        
-        @external
-        def __init__(_lp_token: address, _minter: address, _admin: address):
-            """
-            @notice Contract constructor
-            @param _lp_token Liquidity Pool contract address
-            @param _minter Minter contract address
-            @param _admin Admin who can kill the gauge
-            """
-
-            symbol: String[26] = ERC20Extended(_lp_token).symbol()
-            self.name = concat("Curve.fi ", symbol, " Gauge Deposit")
-            self.symbol = concat(symbol, "-gauge")
-
-            crv_token: address = Minter(_minter).token()
-            controller: address = Minter(_minter).controller()
-
-            self.lp_token = _lp_token
-            self.minter = _minter
-            self.admin = _admin
-            self.crv_token = crv_token
-            self.controller = controller
-            self.voting_escrow = Controller(controller).voting_escrow()
-
-            self.period_timestamp[0] = block.timestamp
-            self.inflation_rate = CRV20(crv_token).rate()
-            self.future_epoch_time = CRV20(crv_token).future_epoch_time_write()
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> LiquidityGaugeV2.symbol():
-        'a3CRV-gauge'
-        ```
-
 
 ## **Admin Ownership**
+Liquidity Gauge V2 also added admin ownership. `admin` is able to kill a gauge and add a reward contract.
+
 
 ### `admin`
 !!! description "`LiquidityGaugeV2.admin() -> address: view`"
 
-    Getter for the admin of the liquidity gauge.
+    Getter for the admin of the gauge contract.
 
     Returns: admin (`address`).
 
@@ -203,12 +79,12 @@ The v2 liquidity gauge adds a full ERC20 interface to the gauge, tokenizing depo
 ### `future_admin`
 !!! description "`LiquidityGaugeV2.future_admin() -> address: view`"
 
-    Getter for the future admin of the liquidity gauge.
+    Getter for the future admin of the gauge contract.
 
     Returns: future admin (`address`).
 
     !!!note
-        Future admin can be set by calling [`commit_transfer_ownership`](#commit_transfer_ownership) and then [`accept_transfer_ownership`](#accept_transfer_ownership).
+        Future admin is set by calling [`commit_transfer_ownership`](#commit_transfer_ownership). New admin ownership then needs to be applied via [`accept_transfer_ownership`](#accept_transfer_ownership).
 
 
     ??? quote "Source code"
@@ -246,10 +122,13 @@ The v2 liquidity gauge adds a full ERC20 interface to the gauge, tokenizing depo
         '0x519AFB566c05E00cfB9af73496D00217A630e4D5'
         ```
 
+
 ### `commit_transfer_ownership`
 !!! description "`LiquidityGaugeV2.commit_transfer_ownership(addr: address):`"
 
     Function to commit transfer ownership.
+
+    Emits: `CommitOwnership`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -290,11 +169,16 @@ The v2 liquidity gauge adds a full ERC20 interface to the gauge, tokenizing depo
 ### `accept_transfer_ownership`
 !!! description "`LiquidityGaugeV2.accept_transfer_ownership(addr: address):`"
 
-    Function to commit transfer ownership.
+    Function to apply the admin changes.
+
+    Emits: `ApplyOwnership`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `addr` |  `address` | Address to accept the admin changes |
+
+    !!!note
+        This function can only be called by `future_admin`.
 
     ??? quote "Source code"
 
@@ -317,112 +201,10 @@ The v2 liquidity gauge adds a full ERC20 interface to the gauge, tokenizing depo
             log ApplyOwnership(_admin)
         ```
 
-    !!!note
-        Only callable by `future_admin`.
-
     === "Example"
 
         ```shell
         >>> LiquidityGaugeV2.accept_transfer_ownership():
-        'todo'
-        ```
-
-
-## **Querying Reward Information**
-### `reward_contract`
-!!! description "`LiquidityGaugeV2.reward_contract() -> address: view`"
-
-    Getter for the reward contract.
-
-    Returns: reward contract (`address`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1"
-        reward_contract: public(address)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> LiquidityGaugeV2.reward_contract():
-        '0x96D7BC17912e4F320c4894194564CF8425cfe8d9'
-        ```
-
-### `reward_tokens`
-!!! description "`LiquidityGaugeV2.reward_tokens(arg0: uint256) -> address: view`"
-
-    Getter for the reward contract.
-
-    Returns: reward contract (`address`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `uint256` | Index of reward token |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1"
-        reward_tokens: public(address[MAX_REWARDS])
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> LiquidityGaugeV2.reward_tokens(0):
-        '0x4da27a545c0c5B758a6BA100e3a049001de870f5'
-        ```
-
-
-### `reward_integral`
-!!! description "`LiquidityGaugeV2.reward_integral(arg0: uint256) -> uint256: view`"
-
-    Getter for the reward integral.
-
-    Returns: reward integral (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `uint256` | Index of reward token |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="2"
-        # reward token -> integral
-        reward_integral: public(HashMap[address, uint256])
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> LiquidityGaugeV2.reward_integral(todo):
-        'todo'
-        ```
-
-### `reward_integral_for` (todo)
-!!! description "`LiquidityGaugeV2.reward_integral_for(arg0: uint256, arg1: uint256) -> uint256: view`"
-
-    todo
-
-    Returns: todo
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `uint256` | todo |
-    | `arg1` |  `uint256` | todo |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="2"
-        # reward token -> integral
-        reward_integral: public(HashMap[address, uint256])
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> LiquidityGaugeV2.reward_integral(todo):
-        'todo'
         ```
 
 
@@ -433,7 +215,7 @@ The v2 liquidity gauge adds a full ERC20 interface to the gauge, tokenizing depo
 ### `claimable_rewards`
 !!! description "`LiquidityGaugeV2.claimable_reward(_addr: address, _token: address) -> uint256:`"
 
-    Getter for the number of claimable reward tokens for a user.
+    Getter for the number of claimable reward token `_token` for user `addr`.
 
     Returns: claimable reward amount (`uint256`).
 
@@ -481,6 +263,7 @@ The v2 liquidity gauge adds a full ERC20 interface to the gauge, tokenizing depo
         'todo'
         ```
 
+
 ### `claim_rewards`
 !!! description "`LiquidityGaugeV2.claim_rewards(_addr: address = msg.sender):`"
 
@@ -514,7 +297,7 @@ The v2 liquidity gauge adds a full ERC20 interface to the gauge, tokenizing depo
 ### `claim_historic_rewards`
 !!! description "`LiquidityGaugeV2.claim_historic_rewards(_reward_tokens: address[MAX_REWARDS], _addr: address = msg.sender):`"
 
-    Function to claim reward tokens available from a previously set staking contract.
+    Function to claim reward tokens available from a previously-set staking contract.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -592,7 +375,8 @@ The v2 liquidity gauge adds a full ERC20 interface to the gauge, tokenizing depo
 
     These checks are required to protect against an incorrectly designed staking contract or incorrectly structured input arguments.
 
-    It is also possible to claim from a reward contract that does not require onward staking. In this case, use `00000000` for the function selectors for both staking and withdrawing.
+    !!!note
+        It is also possible to claim from a reward contract that does not require onward staking. In this case, use `00000000` for the function selectors for both staking and withdrawing.
 
     ??? quote "Source code"
 
@@ -683,6 +467,53 @@ The v2 liquidity gauge adds a full ERC20 interface to the gauge, tokenizing depo
         ```
 
 
+### `reward_contract`
+!!! description "`LiquidityGaugeV2.reward_contract() -> address: view`"
+
+    Getter for the reward contract.
+
+    Returns: reward contract (`address`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1"
+        reward_contract: public(address)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> LiquidityGaugeV2.reward_contract():
+        '0x96D7BC17912e4F320c4894194564CF8425cfe8d9'
+        ```
+
+
+### `reward_tokens`
+!!! description "`LiquidityGaugeV2.reward_tokens(arg0: uint256) -> address: view`"
+
+    Getter for the reward contract.
+
+    Returns: reward contract (`address`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `arg0` |  `uint256` | Index of reward token |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1"
+        reward_tokens: public(address[MAX_REWARDS])
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> LiquidityGaugeV2.reward_tokens(0):
+        '0x4da27a545c0c5B758a6BA100e3a049001de870f5'
+        ```
+
+
+
 ## **Killing Gauges**
 V2 Liquidity Gauges introduced the possibility to kill gauges. Killing a gauge sets the `rate` in [`_checkpoint`](/docs/curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV1#checkpoints) to 0 and therefore stopping inflation.
 
@@ -754,3 +585,181 @@ V2 Liquidity Gauges introduced the possibility to kill gauges. Killing a gauge s
         ```
 
 
+## **Querying Gauge Information**
+
+### `decimals`
+!!! description "`LiquidityGaugeV2.decimals() -> uint256:`"
+
+    Getter for the decimals of the liquidity gauge token.
+
+    Returns: decimals (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="3"
+        @view
+        @external
+        def decimals() -> uint256:
+            """
+            @notice Get the number of decimals for this token
+            @dev Implemented as a view method to reduce gas costs
+            @return uint256 decimal places
+            """
+            return 18
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> LiquidityGaugeV2.decimals():
+        18
+        ```
+
+
+
+### `name`
+!!! description "`LiquidityGaugeV2.name() -> String[64]: view`"
+
+    Getter for the name of the lp gauge token.
+
+    Returns: token name (`String[64]`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 13"
+        name: public(String[64])
+
+        @external
+        def __init__(_lp_token: address, _minter: address, _admin: address):
+            """
+            @notice Contract constructor
+            @param _lp_token Liquidity Pool contract address
+            @param _minter Minter contract address
+            @param _admin Admin who can kill the gauge
+            """
+
+            symbol: String[26] = ERC20Extended(_lp_token).symbol()
+            self.name = concat("Curve.fi ", symbol, " Gauge Deposit")
+            self.symbol = concat(symbol, "-gauge")
+
+            crv_token: address = Minter(_minter).token()
+            controller: address = Minter(_minter).controller()
+
+            self.lp_token = _lp_token
+            self.minter = _minter
+            self.admin = _admin
+            self.crv_token = crv_token
+            self.controller = controller
+            self.voting_escrow = Controller(controller).voting_escrow()
+
+            self.period_timestamp[0] = block.timestamp
+            self.inflation_rate = CRV20(crv_token).rate()
+            self.future_epoch_time = CRV20(crv_token).future_epoch_time_write()
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> LiquidityGaugeV2.name():
+        'Curve.fi a3CRV Gauge Deposit'
+        ```
+
+
+### `symbol`
+!!! description "`LiquidityGaugeV2.symbol() -> String[32]: view`"
+
+    Getter for the symbol of the lp gauge token.
+
+    Returns: symbol (`String[32]`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 12 14"
+        symbol: public(String[32])
+        
+        @external
+        def __init__(_lp_token: address, _minter: address, _admin: address):
+            """
+            @notice Contract constructor
+            @param _lp_token Liquidity Pool contract address
+            @param _minter Minter contract address
+            @param _admin Admin who can kill the gauge
+            """
+
+            symbol: String[26] = ERC20Extended(_lp_token).symbol()
+            self.name = concat("Curve.fi ", symbol, " Gauge Deposit")
+            self.symbol = concat(symbol, "-gauge")
+
+            crv_token: address = Minter(_minter).token()
+            controller: address = Minter(_minter).controller()
+
+            self.lp_token = _lp_token
+            self.minter = _minter
+            self.admin = _admin
+            self.crv_token = crv_token
+            self.controller = controller
+            self.voting_escrow = Controller(controller).voting_escrow()
+
+            self.period_timestamp[0] = block.timestamp
+            self.inflation_rate = CRV20(crv_token).rate()
+            self.future_epoch_time = CRV20(crv_token).future_epoch_time_write()
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> LiquidityGaugeV2.symbol():
+        'a3CRV-gauge'
+        ```
+
+
+### `reward_integral`
+!!! description "`LiquidityGaugeV2.reward_integral(arg0: uint256) -> uint256: view`"
+
+    Getter for the reward integral.
+
+    Returns: reward integral (`uint256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `arg0` |  `uint256` | Index of reward token |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="2"
+        # reward token -> integral
+        reward_integral: public(HashMap[address, uint256])
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> LiquidityGaugeV2.reward_integral(todo):
+        'todo'
+        ```
+
+### `reward_integral_for` (todo)
+!!! description "`LiquidityGaugeV2.reward_integral_for(arg0: uint256, arg1: uint256) -> uint256: view`"
+
+    todo
+
+    Returns: todo
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `arg0` |  `uint256` | todo |
+    | `arg1` |  `uint256` | todo |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="2"
+        # reward token -> integral
+        reward_integral: public(HashMap[address, uint256])
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> LiquidityGaugeV2.reward_integral(todo):
+        'todo'
+        ```
