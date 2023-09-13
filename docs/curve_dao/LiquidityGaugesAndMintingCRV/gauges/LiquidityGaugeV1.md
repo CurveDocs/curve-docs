@@ -1,10 +1,4 @@
-Each pool has a unique liquidity gauge.
-
-!!!info
-    There are several versions of liquidity gauge contracts in use. Source code for these contracts is available on [Github](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges).
-
-Easiest way to obtain the gauge address of a liquidity pool is by querying `get_gauge` on the [MetaRegistry](/docs/registry/MetaRegistryAPI.md).
-
+Liquidity Gauge V1
 
 !!!note
     The following view methods and functions are using the [3pool](https://etherscan.io/address/0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7) as an example.  
