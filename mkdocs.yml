@@ -30,7 +30,7 @@ nav:
         - Contract Methods: curve_dao/LiquidityGaugesAndMintingCRV/gauge_controller/GaugeController.md
         - Admin Controls: curve_dao/LiquidityGaugesAndMintingCRV/gauge_controller/admin_controls.md
       - Gauges:
-        - Gauge Types: curve_dao/LiquidityGaugesAndMintingCRV/overview.md
+        - Overview: curve_dao/LiquidityGaugesAndMintingCRV/gauges/overview.md
         - LiquidityGaugeV1: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV1.md
         - LiquidityGaugeV2: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV2.md
         - LiquidityGaugeV3: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV3.md
