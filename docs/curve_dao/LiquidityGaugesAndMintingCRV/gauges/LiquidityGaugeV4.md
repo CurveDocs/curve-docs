@@ -3,8 +3,8 @@
 
 
 # **Permissionless Rewards**
-LiquidityGaugeV4 opens up the possibility to add permissionless rewards to a gauge by a `distributor`.
-When deploying a gauge through the [OwnershipProxy](../../ownership-proxy/overview.md), the deployer (`msg.sender`) is automatically set as the *gauge manager*. This address is able to call `add_rewards` within the OwnershipProxy to add *reward tokens* and *distributors*. 
+*LiquidityGaugeV4* opens up the possibility to add permissionless rewards to a gauge by a `distributor`.  
+When deploying a gauge through the [OwnershipProxy](../../ownership-proxy/overview.md), the deployer (`msg.sender`) is automatically set as the *gauge manager*. This address is able to call **`add_rewards`** within the OwnershipProxy contract to add *reward tokens* and *distributors*. 
 
 !!!tip
     On sidechains, permissionless rewards are directly built into the gauges. Whoever deploys the gauge can call `add_rewards` on the gauge contract itself.
