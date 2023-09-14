@@ -77,9 +77,3 @@ Admin controls
         ```shell
         >>> todo:
         ```
-
-
-
-
-
-
