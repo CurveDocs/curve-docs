@@ -1,19 +1,14 @@
-# Outline of modified functionality:
-- permissionless rewards
-
-
 !!!info
     Source code of the LiquidityGaugeV4 can be found on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/gauges/LiquidityGaugeV4.vy).
 
 
-## Permissionless Rewards
-
+## **Permissionless Rewards**
 LiquidityGaugeV4 opens up the possibility to add permissionless rewards to a gauge by a `distributor`.
 When deploying a gauge through the [OwnershipProxy](../../ownership-proxy/overview.md), the deployer (`msg.sender`) is automatically set as the *gauge manager*. This address is able to call `add_rewards` within the OwnershipProxy to add *reward tokens* and *distributors*. 
 
 If the gauge was deployed through a factory there needs to be a quick [migration](../../ownership-proxy/StableSwapOwnerProxy.md#migrate_gauge_manager) first to add permissionless rewards. 
 
-## Reward Informations
+## **Reward Informations**
 
 ### `rewards_token`
 !!! description "`LiquidityGaugeV4.rewards_token(arg0: uint256) -> address: view`"
@@ -91,7 +86,7 @@ If the gauge was deployed through a factory there needs to be a quick [migration
         ```
 
 
-### `reward_data` (check this)
+### `reward_data`
 !!! description "`LiquidityGaugeV4.reward_data(arg0: uint256) -> token: address, distributor: address, period_finish_ uint256, rate: uint256, last_update: uint256, integral: uint256`:"
 
     Getter for the reward data for reward token `arg0`.
