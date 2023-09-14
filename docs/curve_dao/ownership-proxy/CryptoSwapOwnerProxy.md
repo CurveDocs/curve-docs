@@ -1,5 +1,7 @@
+The *CryptoSwapOwnerProxy* allows DAO ownership of the [`CryptoSwapFactory`](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99) and its deployed pools. All admin-only actions, as well as non-admin actions such as deploying pools or gauges, can be performed as this contract is their owner.
+
+!!!info
+    CryptoSwapOwnerProxy contract is deployed at: [0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571](https://etherscan.io/address/0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571)
 
 
-cryptoswap gauge manager proxy: https://etherscan.io/address/0x5a8fdC979ba9b6179916404414F7BA4D8B77C8A1#code
-gauge manager proxy: https://etherscan.io/address/0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9#code
-
+The functionalities of this contract closely mirror those of the [`StableSwapOwnerProxy`](../ownership-proxy/StableSwapOwnerProxy.md).. Please refer to that documentation for further information.
