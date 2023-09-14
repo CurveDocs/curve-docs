@@ -36,10 +36,10 @@ nav:
         - LiquidityGaugeV3: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV3.md
         - LiquidityGaugeV4: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV4.md
         - LiquidityGaugeV5: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV5.md
-        - LiquidityGaugeReward: curve_dao/LiquidityGaugesAndMintingCRV/LiquidityGaugeRewards.md
       - Minter: curve_dao/LiquidityGaugesAndMintingCRV/Minter.md 
     
     - Gauges for EVM Sidechains: curve_dao/evm-sidechains/overview.md
+
     - Fee Collection and Distribution:
       - Overview: curve_dao/FeeCollection&Distribution/overview.md
       - Withdrawing and Burning Admin Fees: curve_dao/FeeCollection&Distribution/withdraw-and-burn.md
