@@ -1,21 +1,27 @@
-The StableSwapOwnerProxy allows DAO ownership of `Factory` and its deployed pools.
+The *StableSwapOwnerProxy* allows DAO ownership of the [`MetapoolFactory`](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4) and its deployed pools. All admin-only actions, as well as non-admin actions such as deploying pools or gauges, can be performed as this contract is their owner.
 
-!!!note
+
+!!!info
     StableSwapOwnerProxy contract is deployed at: [0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571](https://etherscan.io/address/0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571)
 
 
-Pools and gauges can be deployed either through this contract or through the Factory itself.
-
-Parameter changes like changing fees or ramping A is done via this contract as it is the owner of the pools.
-
+# Deploying Pools
+Pool deployment is permissionless, with the exception of base pools. Thus, the `deploy_pool` function can be directly called on the Factory contract. For more information about Factory contracts and their usage, see [here](../../factory/overview.md).
 
 
-# Permissionless Rewards
+# Deploying Gauges
+Gauges can be directly deployed through the Factory contract. However, deploying a gauge via this contract offers the benefit of automatically adding a gauge manager for the gauge. Without this, an easy [migration](#migrate_gauge_manager) is necessary.
 
-LiquidityGauges V4 and upwards open up the possibility to add permissionless rewards to a gauge by a `distributor` address.
-When deploying a gauge through the Factory, the deployer (`msg.sender`) is automatically set as the *gauge manager*. This address is able to call `add_rewards` within the OwnerProxy in order to add *reward tokens* and *distributors*. 
 
-To actually deposit reward tokens, the `distributor` needs to use the `deposit_reward_token` within the specific gauge.
+# Parameter Changes
+Pool parameters can only be modified by the admin/owner of the pools. In most instances, this is an OwnerProxy contract. While this proxy is the owner for some pools, the *StableSwapOwnerProxy* should serve as the owner for all factory-created stableswap pools (for cryptoswap pools see [CryptoSwapOwnerProxy](../ownership-proxy/CryptoSwapOwnerProxy.md)).
+For more information on parameter changes see [here](../../stableswap_exchange/pools/admin_pool_settings.md).
+
+
+# Permissionless Rewards 
+LiquidityGauges V4 and later versions introduce the capability for a `distributor` address to *add permissionless rewards* to a gauge. When a gauge is deployed via the Factory, the deployer (`msg.sender`) is automatically set as the *gauge manager*. This address can call the `add_rewards` function within the OwnerProxy to add both `reward tokens` and `distributors`.
+
+To deposit reward tokens, the `distributor` must call the `deposit_reward_token` function within the specific gauge.
 
 
 ## Setting Reward Token and Distributor
@@ -33,7 +39,7 @@ If the admin is the [old proxy](https://etherscan.io/address/0x201798B679859DDF1
     | `_distributor` |  `address` | Distributor Contract |
 
     !!!warning
-        `add_rewards` can only be called either by the `ownership_admin` or the `gauge_manger` (deployer of the gauge) *within the OwnerProxy contract*.
+        `add_rewards` can only be called either by the `ownership_admin` or the `gauge_manger` (deployer of the gauge) within the OwnerProxy contract.
 
         ??? quote "Source code"
 
@@ -75,7 +81,7 @@ If the admin is the [old proxy](https://etherscan.io/address/0x201798B679859DDF1
     === "Example"
 
         ```shell
-        >>> LiquidityGaugeV4.add_reward("todo"):
+        >>> OwnerProxy.add_reward("todo"):
         'todo'
         ```
 
@@ -83,7 +89,7 @@ If the admin is the [old proxy](https://etherscan.io/address/0x201798B679859DDF1
 ### `set_reward_distributor`
 !!! description "`LiquidityGaugeV4.set_reward_distributor(_reward_token: address, _distributor: address):`"
 
-    Function to reassign reward distributor of reward token `_reward_token` to `_distributor`.
+    Function to reassign the reward distributor of reward token `_reward_token` to `_distributor`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -120,22 +126,21 @@ If the admin is the [old proxy](https://etherscan.io/address/0x201798B679859DDF1
                 self.reward_data[_reward_token].distributor = _distributor
             ```
 
-
     === "Example"
 
         ```shell
-        >>> LiquidityGaugeV4.set_reward_distributor("todo"):
-        'todo'
+        >>> OwnerProxy.set_reward_distributor('todo')
+        
         ```
 
 
 ### `migrate_gauge_manager`
 !!! description "`OwnerProxy.migrate_gauge_manager(_gauge: address):`"
 
-    Function to migrate `_gauge` from the [old proxy] to the new one, which adds a gauge manager. 
+    Function to migrate the gauge manager from  `_gauge` to this one.
 
     !!!note
-        This needs to be done when when permissionless rewards wants to be added to a gauge.
+        This migration must be completed before gaining the capability to add permissionless rewards.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -154,7 +159,8 @@ If the admin is the [old proxy](https://etherscan.io/address/0x201798B679859DDF1
     === "Example"
 
         ```shell
-        >>> OwnerProxy.migrate_gauge_manager():
+        >>> OwnerProxy.migrate_gauge_manager('todo'):
+        todo
         ```
 
 
