@@ -29,7 +29,7 @@ To deposit reward tokens, the `distributor` must call the `deposit_reward_token`
 If the admin is the [old proxy](https://etherscan.io/address/0x201798B679859DDF129651d6B58a5C32527EA04c), there needs to be a migration to the new OwnerProxy by calling [`migrate_gauge_manager`](#migrate_gauge_manager). 
 
 ### `add_reward`
-!!! description "`LiquidityGaugeV4.add_reward(_reward_token: address, _distributor: address):`"
+!!! description "`OwnerProxy.add_reward(_reward_token: address, _distributor: address):`"
 
     Function to add reward token `_reward_token` and distributor contract `_distributor`.
 
@@ -67,7 +67,7 @@ If the admin is the [old proxy](https://etherscan.io/address/0x201798B679859DDF1
                 """
                 @notice Set the active reward contract
                 """
-                assert msg.sender == self.admin  # dev: only owner
+                assert msg.sender == self.admin  # dev: only owne
 
                 reward_count: uint256 = self.reward_count
                 assert reward_count < MAX_REWARDS
@@ -87,7 +87,7 @@ If the admin is the [old proxy](https://etherscan.io/address/0x201798B679859DDF1
 
 
 ### `set_reward_distributor`
-!!! description "`LiquidityGaugeV4.set_reward_distributor(_reward_token: address, _distributor: address):`"
+!!! description "`OwnerProxy.set_reward_distributor(_reward_token: address, _distributor: address):`"
 
     Function to reassign the reward distributor of reward token `_reward_token` to `_distributor`.
 
