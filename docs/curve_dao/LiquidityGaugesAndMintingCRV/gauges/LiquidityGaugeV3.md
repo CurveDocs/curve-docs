@@ -14,7 +14,9 @@
 As this gauge maintains a similar API to `LiquidityGaugeV2`, the documentation only covers functions that were added or modified since the previous version.
 
 
-alusd-3crv gauge: https://etherscan.io/address/0x9582c4adacb3bce56fea3e590f05c3ca2fb9c477#code
+!!!info
+    The following view methods and functions are using the [alUSD/3crv gauge](https://etherscan.io/address/0x9582c4adacb3bce56fea3e590f05c3ca2fb9c477) as an example.  
+    Source code of the LiquidityGaugeV3 can be found on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/gauges/LiquidityGaugeV3.vy).
 
 
 

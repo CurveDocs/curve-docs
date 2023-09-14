@@ -1,8 +1,9 @@
-Liquidity Gauge v4.
-
-
-## Outline of modified functionality:
+# Outline of modified functionality:
 - permissionless rewards
+
+
+!!!info
+    Source code of the LiquidityGaugeV4 can be found on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/gauges/LiquidityGaugeV4.vy).
 
 
 ## Permissionless Rewards

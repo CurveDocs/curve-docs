@@ -1,6 +1,4 @@
-Liquidity Gauge V1
-
-!!!note
+!!!info
     The following view methods and functions are using the [3pool](https://etherscan.io/address/0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7) as an example.  
     Source code of the LiquidityGaugeV1 can be found on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/gauges/LiquidityGauge.vy).
 

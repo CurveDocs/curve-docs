@@ -1,13 +1,7 @@
 The v2 liquidity gauge adds a full [ERC20](https://eips.ethereum.org/EIPS/eip-20) interface to the gauge, tokenizing deposits so they can be directly transferred between accounts without having to withdraw and redeposit. It also improves flexibility for onward staking, allowing staking to be enabled or disabled at any time and handling up to eight reward tokens at once.
 
-added admin ownership
-addes option to kill gauge
 
-v2 owner proxy: https://etherscan.io/address/0x519AFB566c05E00cfB9af73496D00217A630e4D5#code
-
-
-
-!!!note
+!!!info
     The following view methods and functions are using the [AAVE liquidity gauge](https://etherscan.io/address/0xdebf20617708857ebe4f679508e7b7863a8a8eee#readContract).  
     Source code of the LiquidityGaugeV2 can be found on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/gauges/LiquidityGaugeV2.vy).
 
