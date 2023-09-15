@@ -1,12 +1,17 @@
-**LiquidityGaugeV4** opened up the possibility to add permissionless rewards to a gauge by a `distributor`. When deploying a gauge directly through the [OwnershipProxy](../../ownership-proxy/overview.md), the deployer (`msg.sender`) is automatically set as the *gauge manager*. This address is able to call **`add_rewards`** within the OwnershipProxy contract to add *reward tokens* and *distributors*.   
+Newer LiquidityGauges open up the possibility to add permissionless rewards to a gauge by a `distributor`. When deploying a gauge directly through the [OwnershipProxy](../../ownership-proxy/overview.md), the deployer is automatically set as the *gauge manager*. This address is able to call **`add_rewards`** within the OwnershipProxy contract to add *reward tokens* and *distributors*, which can then be deposited into the gauge.   
 
-If the gauge wasn't deployed through the OwnershipProxy, a quick [migration](../../ownership-proxy/StableSwapOwnerProxy.md#migrate_gauge_manager) is required first before adding permissionless rewards.
+If the gauge wasn't deployed through the OwnershipProxy, a [migration](#migrate_gauge_manager) is required first before adding permissionless rewards. For CryptoSwap pool gauges no migration is required.
 
 !!!tip
     On sidechains, permissionless rewards are directly built into the gauges. Whoever deploys the gauge can call `add_rewards` on the gauge contract itself (no need to migrate or do it via proxy).
 
 
-## Setting Reward Token and Distributor
+- GaugeManagerProxy for StableSwap pools: [0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571](https://etherscan.io/address/0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571)  
+- GaugeManagerProxy for two-coin CryptoSwap pools: [0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9](https://etherscan.io/address/0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9)
+
+
+
+## **Setting Reward Token and Distributor**
 
 If the admin is the [old proxy](https://etherscan.io/address/0x201798B679859DDF129651d6B58a5C32527EA04c), there needs to be a migration to the new OwnerProxy by calling [`migrate_gauge_manager`](#migrate_gauge_manager). 
 
@@ -25,10 +30,7 @@ Before depositing rewards, both the reward token and the distributor need to be 
     | `_reward_token` |  `address` | Reward Token |
     | `_distributor` |  `address` | Distributor Contract |
 
-    !!!warning
-        `add_rewards` can only be called either by the `ownership_admin` or the `gauge_manger` (deployer of the gauge) within the OwnerProxy contract.
-
-        ??? quote "Source code"
+    ??? quote "Source code"
 
         === "OwnerProxy.vy"
 
@@ -188,6 +190,9 @@ Before depositing rewards, both the reward token and the distributor need to be 
 
 
 ## **Deposit Rewards**
+
+!!!note
+    These methods are queried directly from the individual gauge contracts.
 
 ### `deposit_reward_token`
 !!! description "`LiquidityGaugeV4.deposit_reward_token(_reward_token: address, _amount: uint256):`"
