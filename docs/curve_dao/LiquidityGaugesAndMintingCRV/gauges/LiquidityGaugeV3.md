@@ -1,6 +1,6 @@
 `LiquidityGaugeV3` retains a majority of `LiquidityGaugeV2’s` functionality such as tokenized deposits, and flexible onward staking with up to 8 reward tokens with some modifications.
 
-### Outline of modified functionality:
+**Outline of modified functionality:**
 
 1. Ability to redirect claimed rewards to an alternative account.  
 2. Opt-in claiming of rewards on interactions with the gauge, instead of auto-claiming.
