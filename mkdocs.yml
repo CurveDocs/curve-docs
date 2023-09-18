@@ -42,6 +42,7 @@ nav:
         - RootChainGauge: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/RootChainGauge.md
         - RootChainFactory: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/RootChainGaugeFactory.md
         - ChildGauge: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/ChildGauge.md
+        - ChildGaugeFactory: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/ChildGaugeFactory.md
       - Minter: curve_dao/LiquidityGaugesAndMintingCRV/Minter.md 
 
     - Fee Collection and Distribution:
@@ -50,6 +51,7 @@ nav:
       - Burners: curve_dao/FeeCollection&Distribution/burner.md
       - Fee Distribution: curve_dao/FeeCollection&Distribution/FeeDistributor.md
       - Deployed Contracts: curve_dao/FeeCollection&Distribution/deployed-contracts.md
+
     - Ownership Proxies:
       - Overview: curve_dao/ownership-proxy/overview.md
       - Agents: curve_dao/ownership-proxy/Agents.md
@@ -57,6 +59,7 @@ nav:
       - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
       - StableSwapOwnerProxy: curve_dao/ownership-proxy/StableSwapOwnerProxy.md
       - CryptoSwapOwnerProxy: curve_dao/ownership-proxy/CryptoSwapOwnerProxy.md
+      - RootChainGaugeProxy: curve_dao/ownership-proxy/RootChainGaugeProxy.md
     - Governance and Voting: curve_dao/gov-and-vote/overview.md
 
     - Registry:
