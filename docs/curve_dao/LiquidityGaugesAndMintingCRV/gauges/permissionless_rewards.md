@@ -1,34 +1,41 @@
-Newer LiquidityGauges open up the possibility to add permissionless rewards to a gauge by a `distributor`. When deploying a gauge directly through the [OwnershipProxy](../../ownership-proxy/overview.md), the deployer is automatically set as the *gauge manager*. This address is able to call **`add_rewards`** within the OwnershipProxy contract to add *reward tokens* and *distributors*, which can then be deposited into the gauge.   
+Newer Liquidity Gauges allow the addition of permissionless rewards to a gauge by a `distributor`. When deploying a gauge through the [OwnershipProxy](../../ownership-proxy/overview.md), the deployer is automatically designated as the *gauge manager*. This address can then call **`add_rewards`** within the OwnershipProxy contract to add *reward tokens and distributors*. These can subsequently be deposited into the gauge.
 
-If the gauge wasn't deployed through the OwnershipProxy, a [migration](#migrate_gauge_manager) is required first before adding permissionless rewards. For CryptoSwap pool gauges no migration is required.
+
+
+If the gauge wasn't deployed through the OwnershipProxy, a [migration](#migrate_gauge_manager) is required first before adding permissionless rewards.
 
 !!!tip
     On sidechains, permissionless rewards are directly built into the gauges. Whoever deploys the gauge can call `add_rewards` on the gauge contract itself (no need to migrate or do it via proxy).
 
 
-- GaugeManagerProxy for StableSwap pools: [0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571](https://etherscan.io/address/0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571)  
+- OwnerProxy (gauge and ownership proxy in one) for StableSwap pools: [0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571](https://etherscan.io/address/0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571)  
 - GaugeManagerProxy for two-coin CryptoSwap pools: [0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9](https://etherscan.io/address/0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9)
+- OldManagerProxy (need to migrate from this one): [0x201798B679859DDF129651d6B58a5C32527EA04c](https://etherscan.io/address/0x201798B679859DDF129651d6B58a5C32527EA04c)
 
 
 
 ## **Setting Reward Token and Distributor**
 
-If the admin is the [old proxy](https://etherscan.io/address/0x201798B679859DDF129651d6B58a5C32527EA04c), there needs to be a migration to the new OwnerProxy by calling [`migrate_gauge_manager`](#migrate_gauge_manager). 
+If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/address/0x201798B679859DDF129651d6B58a5C32527EA04c) or, there needs to be a migration to the new OwnerProxy by calling [`migrate_gauge_manager`](#migrate_gauge_manager). 
 
-Before depositing rewards, both the reward token and the distributor need to be set using the `add_rewards` function via the OwnershipProxy.
+Before depositing rewards, both the reward token and the distributor need to be set using the `add_rewards` function via the GaugeProxy.
 
 !!!warning
-    `add_reward` and `migrate_gauge_manager` function needs to be called from the OwnershipProxy, as these function are only callable by the admin, which is the OwnershipAgent. `set_reward_distributor` can aswell be either called from the OwnershipProxy or straight from the gauge itself.
+    `add_reward` and `migrate_gauge_manager` function needs to be called from the OwnerProxy, as these function are only callable by the admin or gauge manager. `set_reward_distributor` can also be either called from the Proxy or straight from the gauge itself.
+
 
 ### `add_reward`
 !!! description "`OwnerProxy.add_reward(_reward_token: address, _distributor: address):`"
 
-    Function to add reward token `_reward_token` and distributor contract `_distributor`.
+    Function to add reward token `_reward_token` and distributor `_distributor`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_reward_token` |  `address` | Reward Token |
-    | `_distributor` |  `address` | Distributor Contract |
+    | `_distributor` |  `address` | Distributor Address |
+
+    !!!note
+        This function can only be called by the `ownership_admin` or the `gauge_manager`.
 
     ??? quote "Source code"
 
@@ -85,6 +92,9 @@ Before depositing rewards, both the reward token and the distributor need to be 
     | `_reward_token` |  `address` | Reward Token |
     | `_distributor` |  `address` | New Distributor Address |
 
+    !!!note
+        This function can only be called by the `ownership_admin` or the `gauge_manager`.
+
     ??? quote "Source code"
 
         === "OwnerProxy.vy"
@@ -119,7 +129,6 @@ Before depositing rewards, both the reward token and the distributor need to be 
 
         ```shell
         >>> OwnerProxy.set_reward_distributor('todo')
-        
         ```
 
 
@@ -189,13 +198,14 @@ Before depositing rewards, both the reward token and the distributor need to be 
         ```
 
 
+
+
 ## **Deposit Rewards**
 
-!!!note
-    These methods are queried directly from the individual gauge contracts.
+Depositing reward tokens is done directly via the individual gauges after the reward token and distributor has been set.
 
 ### `deposit_reward_token`
-!!! description "`LiquidityGaugeV4.deposit_reward_token(_reward_token: address, _amount: uint256):`"
+!!! description "`LiquidityGauge.deposit_reward_token(_reward_token: address, _amount: uint256):`"
 
     Function to deposit `_amount` of `_reward_token` into the gauge.
 
@@ -245,15 +255,16 @@ Before depositing rewards, both the reward token and the distributor need to be 
     === "Example"
 
         ```shell
-        >>> LiquidityGaugeV4.deposit_reward_token(0):
-        '0xD533a949740bb3306d119CC777fa900bA034cd52'
+        >>> LiquidityGauge.deposit_reward_token('0xD533a949740bb3306d119CC777fa900bA034cd52', 100000000000000):
         ```
 
 
 ## **Query Reward Informations**
 
+These methods are queried directly from the individual gauge contracts.
+
 ### `rewards_token`
-!!! description "`LiquidityGaugeV4.rewards_token(arg0: uint256) -> address: view`"
+!!! description "`LiquidityGauge.rewards_token(arg0: uint256) -> address: view`"
 
     Getter for the reward tokens for the gauge.
 
@@ -287,15 +298,15 @@ Before depositing rewards, both the reward token and the distributor need to be 
     === "Example"
 
         ```shell
-        >>> LiquidityGaugeV4.rewards_token(0):
+        >>> LiquidityGauge.rewards_token(0):
         '0xD533a949740bb3306d119CC777fa900bA034cd52'
         ```
 
 
 ### `reward_count`
-!!! description "`LiquidityGaugeV4.reward_count() -> uint256: view`"
+!!! description "`LiquidityGauge.reward_count() -> uint256: view`"
 
-    Getter for how many reward tokens have been added.
+    Getter for the amount of reward tokens added.
 
     Returns: amount (`uint256`).
 
@@ -323,21 +334,21 @@ Before depositing rewards, both the reward token and the distributor need to be 
     === "Example"
 
         ```shell
-        >>> LiquidityGaugeV4.reward_count():
+        >>> LiquidityGauge.reward_count():
         1
         ```
 
 
 ### `reward_data`
-!!! description "`LiquidityGaugeV4.reward_data(arg0: uint256) -> token: address, distributor: address, period_finish_ uint256, rate: uint256, last_update: uint256, integral: uint256`:"
+!!! description "`LiquidityGauge.reward_data(arg0: uint256) -> token: address, distributor: address, period_finish_ uint256, rate: uint256, last_update: uint256, integral: uint256`:"
 
     Getter for the reward data for reward token `arg0`.
 
-    Returns: token (`address`), distributor (`address`), period_finish_ (`uint256`), rate: (`uint256`), last_update: (`uint256`) and integral (`uint256`).
+    Returns: token (`address`), distributor (`address`), period_finish_ (`uint256`), rate (`uint256`), last_update (`uint256`) and integral (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `uint256` | Reward Token Index |
+    | `arg0` |  `uint256` | Reward Data Index |
 
     ??? quote "Source code"
 
@@ -348,7 +359,7 @@ Before depositing rewards, both the reward token and the distributor need to be 
     === "Example"
 
         ```shell
-        >>> LiquidityGaugeV4.reward_data("0xD533a949740bb3306d119CC777fa900bA034cd52"):
+        >>> LiquidityGauge.reward_data("0xD533a949740bb3306d119CC777fa900bA034cd52"):
         '0x0000000000000000000000000000000000000000', '0x7a16fF8270133F063aAb6C9977183D9e72835428', 1686408827, 82671957671957671, 1686408827, 709433824539444151212
         ```
 

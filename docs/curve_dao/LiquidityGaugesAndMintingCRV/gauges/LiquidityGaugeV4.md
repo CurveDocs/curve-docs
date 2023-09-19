@@ -1,3 +1,4 @@
-todo
+**Outline of modified functionality:**
 
-moved permissionless rewards to own section. need to add changes to v3 gauge here.
+1. Ability to add permissionless rewards by a gauge manager. See [here](../gauges/permissionless_rewards.md).
+
