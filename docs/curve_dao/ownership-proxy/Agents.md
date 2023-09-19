@@ -1,5 +1,3 @@
-# **Agents**
-
 The Curve DAO has a total of three [Aragon Agent](https://legacy-docs.aragon.org/aragon/readme) ownership addresses, which are governed by two independent DAOs:
 
 ## **Community DAO**
