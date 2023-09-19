@@ -1,16 +1,8 @@
-root liquidity gauge factory
+The RootChainLiquiditiyGaugeFactory is used to deploy RootChainLiquidityGauges and ChildLiquidityGauges on sidechains/L2.
+For further implemention details pelase refer to [this](../evm-sidechains/overview.md#implementation-details).
 
-
-https://etherscan.io/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5#code
-
-
-root gauge implementation: https://etherscan.io/address/0x9336DA074c4f585a8B59A8C2B77a32b630cde5A1
-
-
-
-what is a call proxy? proxy to interacti with sidechain/l2 and used to deploy the ChildGauge on the other chain.
-
-
+!!! info
+    **`RootChainGaugeFactory`** contract is deployed on the Ethereum mainnet at: [0xabC000d88f23Bb45525E447528DBF656A9D55bf5](https://etherscan.io/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5#code).  
 
 
 ## Transmitting Emissions
@@ -371,9 +363,9 @@ Different bridgers for different chains!
 ### `call_proxy`
 !!! description "`RootChainFactory.integrate_fraction(_user: address) -> uint256:`"
 
-    Getter for the call proxy.
+    Getter for the anycall proxy.
 
-    Returns: call proxy (`address`).
+    Returns: anycall proxy (`address`).
 
     ??? quote "Source code"
 
