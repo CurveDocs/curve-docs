@@ -8,17 +8,18 @@ If the gauge wasn't deployed through the OwnershipProxy, a [migration](#migrate_
     On sidechains, permissionless rewards are directly built into the gauges. Whoever deploys the gauge can call `add_rewards` on the gauge contract itself (no need to migrate or do it via proxy).
 
 
-- OwnerProxy (gauge and ownership proxy in one) for StableSwap pools: [0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571](https://etherscan.io/address/0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571)  
+- OwnerProxy for StableSwap pools (Ownership- and GaugeProxy): [0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571](https://etherscan.io/address/0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571)  
+- OldManagerProxy (need to migrate from this to the one above): [0x201798B679859DDF129651d6B58a5C32527EA04c](https://etherscan.io/address/0x201798B679859DDF129651d6B58a5C32527EA04c)
 - GaugeManagerProxy for two-coin CryptoSwap pools: [0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9](https://etherscan.io/address/0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9)
-- OldManagerProxy (need to migrate from this one): [0x201798B679859DDF129651d6B58a5C32527EA04c](https://etherscan.io/address/0x201798B679859DDF129651d6B58a5C32527EA04c)
 
 
 
 ## **Setting Reward Token and Distributor**
 
-If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/address/0x201798B679859DDF129651d6B58a5C32527EA04c) or, there needs to be a migration to the new OwnerProxy by calling [`migrate_gauge_manager`](#migrate_gauge_manager). 
+Before being able to deposit rewards, both the reward token and the distributor need to be set using the `add_rewards` function.
 
-Before depositing rewards, both the reward token and the distributor need to be set using the `add_rewards` function via the GaugeProxy.
+If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/address/0x201798B679859DDF129651d6B58a5C32527EA04c), there needs to be a migration to the new OwnerProxy through the [`migrate_gauge_manager`](#migrate_gauge_manager) function. 
+
 
 !!!warning
     `add_reward` and `migrate_gauge_manager` function needs to be called from the OwnerProxy, as these function are only callable by the admin or gauge manager. `set_reward_distributor` can also be either called from the Proxy or straight from the gauge itself.
@@ -77,8 +78,7 @@ Before depositing rewards, both the reward token and the distributor need to be 
     === "Example"
 
         ```shell
-        >>> OwnerProxy.add_reward("todo"):
-        'todo'
+        >>> OwnerProxy.add_reward("0xD533a949740bb3306d119CC777fa900bA034cd52", "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"):
         ```
 
 
@@ -128,14 +128,14 @@ Before depositing rewards, both the reward token and the distributor need to be 
     === "Example"
 
         ```shell
-        >>> OwnerProxy.set_reward_distributor('todo')
+        >>> OwnerProxy.set_reward_distributor("0xD533a949740bb3306d119CC777fa900bA034cd52", "0x7a16ff8270133f063aab6c9977183d9e72835428")
         ```
 
 
 ### `migrate_gauge_manager`
 !!! description "`OwnerProxy.migrate_gauge_manager(_gauge: address):`"
 
-    Function to migrate the gauge manager from  `_gauge` to this one.
+    Function to migrate the gauge manager from  `_gauge` to the new proxy.
 
     !!!note
         This migration must be completed before gaining the capability to add permissionless rewards.
@@ -157,8 +157,7 @@ Before depositing rewards, both the reward token and the distributor need to be 
     === "Example"
 
         ```shell
-        >>> OwnerProxy.migrate_gauge_manager('todo'):
-        todo
+        >>> OwnerProxy.migrate_gauge_manager("0x4647aF642408AF64fD3Cd5d9C8366f56f4dF3dd2"):
         ```
 
 
@@ -196,8 +195,6 @@ Before depositing rewards, both the reward token and the distributor need to be 
         >>> OwnerProxy.OLD_MANAGER_PROXY():
         '0x201798B679859DDF129651d6B58a5C32527EA04c'
         ```
-
-
 
 
 ## **Deposit Rewards**
@@ -257,6 +254,7 @@ Depositing reward tokens is done directly via the individual gauges after the re
         ```shell
         >>> LiquidityGauge.deposit_reward_token('0xD533a949740bb3306d119CC777fa900bA034cd52', 100000000000000):
         ```
+
 
 
 ## **Query Reward Informations**

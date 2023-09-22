@@ -36,7 +36,7 @@ nav:
         - LiquidityGaugeV3: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV3.md
         - LiquidityGaugeV4: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV4.md
         - LiquidityGaugeV5: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV5.md  
-        - Permissionless Rewards: curve_dao/LiquidityGaugesAndMintingCRV/gauges/permissionless_rewards.md
+        - Permissionless Rewards: curve_dao/LiquidityGaugesAndMintingCRV/gauges/PermissionlessRewards.md
       - Gauges for EVM Sidechains: 
         - Overview: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/overview.md
         - RootChainGauge: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/RootChainGauge.md
