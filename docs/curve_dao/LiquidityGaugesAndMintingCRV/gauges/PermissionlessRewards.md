@@ -28,8 +28,6 @@ If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/addr
 ### `add_reward`
 !!! description "`OwnerProxy.add_reward(_reward_token: address, _distributor: address):`"
 
-    !!!guarded-method "Guarded Method"
-        This function can only be called by the `ownership_admin` or `gauge_manager`.
 
     Function to add a reward token  and distributor.
 
@@ -38,12 +36,14 @@ If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/addr
     | `_reward_token` |  `address` | Reward Token |
     | `_distributor` |  `address` | Distributor Address |
 
+    !!!note "Guarded Method"
+        This function can only be called by the `ownership_admin` or `gauge_manager`.
 
     ??? quote "Source code"
 
         === "OwnerProxy.vy"
 
-            ```python hl_lines="5 7"
+            ```python hl_lines="5 6 7"
             ownership_admin: public(address)
             gauge_manager: public(HashMap[address, address])
 
