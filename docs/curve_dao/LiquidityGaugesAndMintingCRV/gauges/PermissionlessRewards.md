@@ -8,9 +8,9 @@ If the gauge wasn't deployed through the OwnershipProxy, a [migration](#migrate_
     On sidechains, permissionless rewards are directly built into the gauges. Whoever deploys the gauge can call `add_rewards` on the gauge contract itself (no need to migrate or do it via proxy).
 
 
-- OwnerProxy for StableSwap pools (Ownership- and GaugeProxy): [0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571](https://etherscan.io/address/0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571)  
-- OldManagerProxy (need to migrate from this to the one above): [0x201798B679859DDF129651d6B58a5C32527EA04c](https://etherscan.io/address/0x201798B679859DDF129651d6B58a5C32527EA04c)
-- GaugeManagerProxy for two-coin CryptoSwap pools: [0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9](https://etherscan.io/address/0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9)
+- OwnerProxy for StableSwap pools (*Ownership- and GaugeProxy*): [0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571](https://etherscan.io/address/0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571)  
+- OldManagerProxy (*need to migrate from this to the one above*): [0x201798B679859DDF129651d6B58a5C32527EA04c](https://etherscan.io/address/0x201798B679859DDF129651d6B58a5C32527EA04c)
+- GaugeManagerProxy for CryptoSwap (two-coin) pools: [0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9](https://etherscan.io/address/0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9)
 
 
 
@@ -158,42 +158,6 @@ If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/addr
 
         ```shell
         >>> OwnerProxy.migrate_gauge_manager("0x4647aF642408AF64fD3Cd5d9C8366f56f4dF3dd2"):
-        ```
-
-
-### `OLD_MANAGER_PROXY`
-!!! description "`OwnerProxy.OLD_MANAGER_PROXY() -> address: view`"
-
-    Getter for the old manager proxy. 
-
-    Returns: old proxy (`address`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 4 9 12"
-        OLD_MANAGER_PROXY: public(immutable(address))
-
-        @external
-        def __init__(
-            _ownership_admin: address,
-            _parameter_admin: address,
-            _emergency_admin: address,
-            _factory: address,
-            _old_manager_proxy: address,
-        ):
-            FACTORY = _factory
-            OLD_MANAGER_PROXY = _old_manager_proxy
-
-            self.ownership_admin = _ownership_admin
-            self.parameter_admin = _parameter_admin
-            self.emergency_admin = _emergency_admin
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> OwnerProxy.OLD_MANAGER_PROXY():
-        '0x201798B679859DDF129651d6B58a5C32527EA04c'
         ```
 
 
