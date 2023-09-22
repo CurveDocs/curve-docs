@@ -28,15 +28,16 @@ If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/addr
 ### `add_reward`
 !!! description "`OwnerProxy.add_reward(_reward_token: address, _distributor: address):`"
 
-    Function to add reward token `_reward_token` and distributor `_distributor`.
+    !!!guarded-method "Guarded Method"
+        This function can only be called by the `ownership_admin` or `gauge_manager`.
+
+    Function to add a reward token  and distributor.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_reward_token` |  `address` | Reward Token |
     | `_distributor` |  `address` | Distributor Address |
 
-    !!!note
-        This function can only be called by the `ownership_admin` or the `gauge_manager`.
 
     ??? quote "Source code"
 
@@ -168,19 +169,23 @@ Depositing reward tokens is done directly via the individual gauges after the re
 ### `deposit_reward_token`
 !!! description "`LiquidityGauge.deposit_reward_token(_reward_token: address, _amount: uint256):`"
 
-    Function to deposit `_amount` of `_reward_token` into the gauge.
+    Function to deposit `_amount` of `_reward_token` into the gauge.  
+
+    Deposited tokens will be streamed over a period of **seven days**. If additional rewards from the same token are added before the previous ones have fully ran out, the remaining balance will be rolled into the new seven-day stream.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_reward_token` |  `address` | Reward Token |
-    | `_amount` |  `uint256` | Amount of Reward Token to deposit |
+    | `_amount` |  `uint256` | Amount of Reward Token |
 
     !!!note
         This function can only be called by the `distributor` of the reward token.
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python hl_lines="1 5"
+        WEEK: constant(uint256) = 604800
+
         @external
         @nonreentrant("lock")
         def deposit_reward_token(_reward_token: address, _amount: uint256):
