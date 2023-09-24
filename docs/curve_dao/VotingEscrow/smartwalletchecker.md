@@ -13,6 +13,9 @@ This contract can be replaced entirely with a new SmartWalletChecker through the
 ### `approveWallet`
 !!! description "`SmartWalletChecker.approveWallet(address _wallet) public`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `dao`.
+
     Function to approve a smart contract to lock CRV.
 
     Emits: `ApproveWallet`
@@ -20,9 +23,6 @@ This contract can be replaced entirely with a new SmartWalletChecker through the
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_wallet`     |  `address` | Smart Contract to approve |
-
-    !!!note
-        **`approveWallet`** can only be called by the **`dao`** of the contract.
 
     ??? quote "Source code"
 
@@ -46,6 +46,9 @@ This contract can be replaced entirely with a new SmartWalletChecker through the
 ### `revokeWallet`
 !!! description "`SmartWalletChecker.revokeWallet(address _wallet) external`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `dao`.
+
     Function to revoke the allowance of a smart contract to lock CRV.
 
     Emits: `RevokeWallet`
@@ -53,9 +56,6 @@ This contract can be replaced entirely with a new SmartWalletChecker through the
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_wallet`     |  `address` | Smart Contract to revoke |
-
-    !!!note
-        **`revokeWallet`** can only be called by the **`dao`** of the contract.
 
     ??? quote "Source code"
 
