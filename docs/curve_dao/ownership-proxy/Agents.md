@@ -3,9 +3,9 @@ The Curve DAO has a total of three [Aragon Agent](https://legacy-docs.aragon.org
 ## **Community DAO**
 The Community DAO (or just “the DAO”) governs the day-to-day operation of the protocol.
 
-Voting is based on a user’s holdings of “Vote Escrowed CRV” (veCRV). veCRV is obtained by locking CRV for up to 4 years, with 1 veCRV equal to 1 CRV locked for 4 years. As the lock time decreases, An account’s veCRV balance decreases linearly as the time remaining until unlock decreases. veCRV is non-transferrable.
+Voting is based on a user’s holdings of *“Vote-Escrowed CRV”* (veCRV). veCRV is obtained by locking CRV for up to 4 years, with 1 veCRV equal to 1 CRV locked for 4 years. As the lock time decreases, an account’s veCRV balance decreases linearly as the time remaining until unlock decreases. *veCRV is non-transferrable*.
 
-An account must have a minimum balance of 2500 veCRV to make a DAO vote. Each vote lasts for one week. Votes cannot be executed until the entire week has passed.  
+An account must have a *minimum balance of 2500 veCRV* to make a DAO vote. Each vote lasts for *one week*. Votes cannot be executed after the they successfully passed.
 
 1. ### *Ownership Admin*
 The ownership admin controls most functionality within the protocol. Performing an action via the ownership admin requires a 30% quorum with 51% support.  
@@ -17,33 +17,39 @@ Deployed at: [0x4EEb3bA4f221cA16ed4A0cC7254E2E32DF948c5f](https://etherscan.io/a
 
 
 ## **Emergency DAO**
-The Emergency DAO has limited authority to kill pools and gauges during extraordinary circumstances.
+The EmergencyDAO has limited authority to kill non-factory pools and gauges during extraordinary circumstances.
 
 !!!note
-    The Emergency DAO contract is deployed at: [0x467947EE34aF926cF1DCac093870f613C96B1E0c](https://etherscan.io/address/0x467947EE34aF926cF1DCac093870f613C96B1E0c)
+    The EmergencyDAO contract is deployed at: [0x467947EE34aF926cF1DCac093870f613C96B1E0c](https://etherscan.io/address/0x467947EE34aF926cF1DCac093870f613C96B1E0c)
 
-The emergency DAO consists of nine members, comprised of a mix of the Curve team and prominent figures within the DeFi community. Each member has one vote. Any member may propose a vote.
+This DAO consists of *nine members*, comprised of a mix of the Curve team and prominent figures within the DeFi community. Each member has one vote. Any member may propose a vote.
 
-All members of the emergency DAO may propose new votes. A vote lasts for 24 hours and can be executed immediately once it receives 66% support.
+All members of the EmergencyDAO may propose new votes. A vote *lasts for 24 hours* and can be *executed immediately once it receives 66% support*.
 
-| Name     | Details  | 
-| -------- | -------| 
-| **`banteg`**      |  `Yearn, @bantg` | 
-| **`Calvin`**      |  `@calchulus` | 
-| **`C2tP`**        |  `Convex, @C2tP`| 
-| **`Darly Lau`**   |  `@Daryllautk` | 
+| Name     | Details - Telegram | Twitter  | 
+| -------- | -------| ---- |
+| **`banteg`**      |  `Yearn, @banteg` |  [@banteg](https://twitter.com/bantg)  |
+| **`Calvin`**      |  `@calchulus` |  [@calchulus](https://twitter.com/calchulus) |
+| **`C2tP`**        |  `Convex, @c2tp_eth`| [@C2tP](https://twitter.com/C2tP) |
+| **`Darly Lau`**   |  `@Daryllautk` |  [@Daryllautk](https://twitter.com/Daryllautk)| 
 | **`Ga3b_node`**   | `@ga3b_node` | 
-| **`Naga King`**   | `@nagakingg` | 
+| **`Naga King`**   | `@nagakingg` | [@nagakingg](https://twitter.com/nagakingg)   |
 | **`Peter MM`**    | `@PeterMm` |
-| **`PilotVietnam`**| `@stacheisback` | 
+| **`Addison`**     | `@addisonthunderhead` | [@0xaddi](https://twitter.com/0xaddi)  |
 | **`Quentin Milne`**|   `StakeDAO, @Kii_iu`|
+
+
+!!!tip
+    To obtain the addresses of the members query `getOwners` within the [EmergencyDAO contract]((https://etherscan.io/address/0x467947EE34aF926cF1DCac093870f613C96B1E0c)).
 
 
 ### **Killing Pools**
 
-Liquidity Pools can be killed by calling the `kill_me()` function of the pool. The function can only be called within the first 2 months after deploying the pool due to `KILL_DEADLINE_DT: constant(uint256) = 2 * 30 * 86400`.
+Non-Factory liquidity pools can be killed by calling the `kill_me()` function of the pool. The function can only be called within the first 2 months after deploying the pool.
         
-Calling `kill_me()` sets the `is_killed` variable of the pool to **True**. By doing this, the contract prevents users from performing actions such as `exchange`, `add_liquidity`, `remove_liquidity_imbalance` and `remove_liquidity_one_coin`. Users can only remove funds by calling `remove_liquidity`.
+Calling `kill_me()` sets the `is_killed` variable of the pool to *True*. 
+By doing this, the contract prevents users from performing actions such as `exchange`, `add_liquidity`, `remove_liquidity_imbalance` and `remove_liquidity_one_coin`. 
+Users can only remove funds by calling `remove_liquidity`.
 
 In general, a pool can be "unkilled" again by calling the function `unkill_me()`. This reverts the changes made when it was killed."
 
@@ -70,7 +76,8 @@ In general, a pool can be "unkilled" again by calling the function `unkill_me()`
 
 
 ### **Killing Gauges**
-Gauges can be killed by calling the `set_killed()` function on the corresponding gauge, thereby setting the `is_killed` variable to **True**. By doing this, the rate of the gauge is set to 0, effectively stopping all the $CRV emissions.
+Gauges can be killed by calling the `set_killed()` function on the corresponding gauge, thereby setting the `is_killed` variable to *True*.  
+By doing this, the rate of the gauge is set to 0, effectively stopping all the $CRV emissions.
 
 ??? quote "Source code"
 

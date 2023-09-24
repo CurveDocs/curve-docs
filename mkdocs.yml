@@ -61,21 +61,16 @@ nav:
       
     - Governance and Voting: curve_dao/gov-and-vote/overview.md
 
-    - Registry:
-      - Overview: registry/overview.md
-      - MetaRegistryAPI: registry/MetaRegistryAPI.md
-
-  - crvUSD:
-    - Overview: LLAMMA/overview.md
-    - $crvUSD: LLAMMA/crvUSD.md
-    - Controller: LLAMMA/controller.md
-    - LLAMMA: LLAMMA/amm.md
-    - Factory: LLAMMA/factory.md
-    - PegKeeper: LLAMMA/pegkeeper.md
-    - MonetaryPolicy: LLAMMA/monetarypolicy.md
-    - PriceAggregator: LLAMMA/priceaggregator.md
-    - Oracle: LLAMMA/oracle.md
-    - Deployments: LLAMMA/deployments.md
+  - Curve Stablecoin (crvUSD):
+    - Overview: crvUSD/overview.md
+    - crvUSD Token: crvUSD/crvUSD.md
+    - Controller: crvUSD/controller.md
+    - LLAMMA: crvUSD/amm.md
+    - PegKeeper: crvUSD/pegkeeper.md
+    - MonetaryPolicy: crvUSD/monetarypolicy.md
+    - PriceAggregator: crvUSD/priceaggregator.md
+    - Oracle: crvUSD/oracle.md
+    - Deployments: crvUSD/deployments.md
 
   - Stableswap Exchange:    
     - Overview: stableswap_exchange/overview.md 
@@ -101,21 +96,33 @@ nav:
   - Cryptoswap Exchange:
     - Overview: cryptoswap_exchange/overview.md
 
-  - Factory:
-    - Overview: factory/overview.md
-    - Deployer API: factory/deployer_api.md
-    - Registry API: factory/registry_api.md
-    - Admin Controls: factory/admin_controls.md
+  - Registry:
+    - Overview: registry/overview.md
+    - MetaRegistryAPI: registry/MetaRegistryAPI.md
+    - Admin Controls: registry/admin_controls.md
 
+
+  - Factory:
+    - Pool Factory:
+      - Overview: factory/pool_factory/overview.md
+      - Deployer API: factory/pool_factory/deployer_api.md
+      - Registry API: factory/pool_factory/registry_api.md
+      - Admin Controls: factory/pool_factory/admin_controls.md
+    - crvUSD Factory:
+      - Overview: factory/crvusd_factory/overview.md
+      - Deployer API: factory/crvusd_factory/deployer_api.md
+      - Contract Methods: factory/crvusd_factory/contract_methods.md
+      - Admin Controls: factory/crvusd_factory/admin_controls.md
+    
   - References:
-    - Deployment Addresses: references/deployed-contracts.md
+    - Audits: references/audits/audits_pdf.md
     - Whitepapers: 
       - DAO: references/whitepapers/dao.md
       - StableSwap: references/whitepapers/stableswap.md
       - CryptoSwap: references/whitepapers/cryptoswap.md
       - Curve Stablecoin: references/whitepapers/curve-stablecoin.md
-      - All Whitepapers: references/whitepapers/whitepaper.md
-    - Resources: https://resources.curve.fi/
+    - Useful Resources: references/useful.md
+    - Deployment Addresses: references/deployed-contracts.md
 
 # extension
 markdown_extensions:
@@ -170,7 +177,6 @@ theme:
   features:
     - content.code.annotate
     - content.tabs.link
-    - navigation.expand
     - navigation.indexes
     - navigation.instant
     - navigation.sections

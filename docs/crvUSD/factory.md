@@ -11,7 +11,7 @@ The use for the factory contract is to add new markets, raise or lower debt ceil
 ### `add_market`
 !!! description "`ControllerFactory.add_market(token: address, A: uint256, fee: uint256, admin_fee: uint256, _price_oracle_contract: address, monetary_policy: address, loan_discount: uint256, liquidation_discount: uint256, debt_ceiling: uint256) -> address[2]:`"
 
-    Function to add a new market and automatically deploy an AMM-Contract and a Controller-Contract from the implemented blueprint contracts (see [Implementations](#implementations-blueprint-contracts)). Calls `rate_write()` from the used MonetaryPolicy to check if it has a correct ABI. There are some limitation values for adding new markets in regard to `fee`, `A` and `liquidation_discount`.
+    Function to add a new market and automatically deploy an AMM-Contract and a Controller-Contract from the implemented blueprint contracts (see [Implementations](#implementations-blueprint-contracts)). Calls `rate_write()` from the used MonetaryPolicy to check if it has a correct ABI. There are some limitation values for adding new markets regarding `fee`, `A` and `liquidation_discount`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -828,7 +828,7 @@ Implementations are blueprint contracts. When adding a new market by calling `ad
             """
             @notice Get AMM address for collateral
             @param collateral Address of collateral token
-            @param i Iterate over several amms for collateral if needed
+            @param i Iterate over several AMMs for collateral if needed
             """
             return self.amms[self.collaterals_index[collateral][i] - 2**128]
         ```
@@ -871,7 +871,7 @@ Implementations are blueprint contracts. When adding a new market by calling `ad
 
     Getter for the amm address at index `arg0`.
 
-    Returns: amm `address` at specific index. 
+    Returns: AMM `address` at specific index. 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
