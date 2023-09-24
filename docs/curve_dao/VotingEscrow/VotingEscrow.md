@@ -1,6 +1,6 @@
 Participating in Curve DAO governance requires that an account have a balance of vote-escrowed CRV (veCRV). veCRV is a non-standard ERC20 implementation, used within the Aragon DAO to determine each account’s voting power.
 
-!!! info
+!!!info
     **veCRV** is represented by the **`VotingEscrow`** contract, deployed to the Ethereum mainnet at:
     [0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2](https://etherscan.io/address/0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2)  
 
@@ -10,7 +10,8 @@ Participating in Curve DAO governance requires that an account have a balance of
     veCRV cannot be transferred. The only way to obtain veCRV is by locking CRV.  
     The maximum lock time is four years and the minimum lock is one week.
 
-    To calculate the obtained vecrv after locking make sure to multiply by $\frac{locktime}{4}$, with `locktime` denominated in years. 
+    To calculate the veCRV output when locking, ensure you multiply the amount of $CRV tokens by $\frac{locktime}{4}$.  
+    `locktime` is denominated in years.
 
 | CRV      | veCRV  | Locktime|
 | -------- | -------| --------|
@@ -18,6 +19,7 @@ Participating in Curve DAO governance requires that an account have a balance of
 | `1`      |  `0.75`| 3 years |
 | `1`      |  `0.5` | 2 years |
 | `1`      |  `0.25`| 1 year  |
+| $x$      |  $x * \frac{n}{4}$| $n$  |
 
 
 ## **Implemention Details**
@@ -30,12 +32,7 @@ Slopes and biases change both when a user deposits and locks governance tokens, 
 
 
 ## **Smart Wallet Whitelist**
-The Smart Wallet Checker is an external contract which checks if certain contracts are whitelisted. If yes, the contract will be able to lock CRV into the VotingEscrow.
-If a contract is not whitelisted it will not be able to lock Curve DAO Tokens.
-
-!!! info
-    The current SmartWalletChecker address is [0xca719728Ef172d0961768581fdF35CB116e0B7a4](https://etherscan.io/address/0xca719728Ef172d0961768581fdF35CB116e0B7a4).  
-    This address can be changed by a DAO vote. Please make sure you are using the current SmartWalletWhitelist.
+The Smart Wallet Checker is an external contract which checks if certain contracts are whitelisted and therefore eligible to lock CRV tokens. More [here](../VotingEscrow/smartwalletchecker.md).
 
 
 ### `check`
@@ -43,8 +40,8 @@ If a contract is not whitelisted it will not be able to lock Curve DAO Tokens.
 
     Getter method to check if `_wallet` is whitelisted.
 
-    !!!note
-        Make sure to query `check` on the SmartWalletChecker contract and not on the VotingEscrow contract!
+    !!!tip
+        Make sure to call this function on the SmartWalletChecker contract and not on the VotingEscrow contract!
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -52,28 +49,33 @@ If a contract is not whitelisted it will not be able to lock Curve DAO Tokens.
 
     ??? quote "Source code"
 
-        ```python hl_lines="5"
-        contract SmartWalletWhitelist {
-    
-            mapping(address => bool) public wallets;
-            address public dao;
-            address public checker;
-            address public future_checker;
+        ```python hl_lines="1"
+        function check(address _wallet) external view returns (bool) {
+                bool _check = wallets[_wallet];
+                if (_check) {
+                    return _check;
+                } else {
+                    if (checker != address(0)) {
+                        return SmartWalletChecker(checker).check(_wallet);
+                    }
+                }
+                return false;
+    }
         ```
 
     === "Example"
         ```shell
         >>> SmartWalletWhitelist.check("0x989AEb4d175e16225E39E87d0D97A3360524AD80")
-        'true'
+        'True'
         ```
 
 
 ### `smart_wallet_checker`
-!!! description "`vecrv.smart_wallet_checker() -> address: view`"
+!!! description "`VotingEscrow.smart_wallet_checker() -> address: view`"
 
-    Getter for the current smart wallet checker contract.
+    Getter for the current SmartWalletChecker contract.
     
-    Returns: **smart wallet checker contract** (`address`).
+    Returns: SmartWalletChecker (`address`).
 
     ??? quote "Source code"
 
@@ -83,17 +85,17 @@ If a contract is not whitelisted it will not be able to lock Curve DAO Tokens.
 
     === "Example"
         ```shell
-        >>> vecrv.smart_wallet_checker()
+        >>> VotingEscrow.smart_wallet_checker()
         '0xca719728Ef172d0961768581fdF35CB116e0B7a4'
         ```
 
 
 ### `future_smart_wallet_checker`
-!!! description "`vecrv.future_smart_wallet_checker() -> address: view`"
+!!! description "`VotingEscrow.future_smart_wallet_checker() -> address: view`"
 
-    Getter for the future smart wallet checker contract.
+    Getter for the future SmartWalletChecker contract.
 
-    Returns: **future smart wallet checker contract** (`address`).
+    Returns: future SmartWalletChecker (`address`).
 
     ??? quote "Source code"
 
@@ -103,282 +105,44 @@ If a contract is not whitelisted it will not be able to lock Curve DAO Tokens.
 
     === "Example"
         ```shell
-        >>> vecrv.future:_smart_wallet_checker()
+        >>> VotingEscrow.future:_smart_wallet_checker()
         '0xca719728Ef172d0961768581fdF35CB116e0B7a4'
         ```
 
-
-### `commit_smart_wallet_checker`
-!!! description "`vecrv.commit_smart_wallet_checker(addr: address):`"
-
-    Function to commit the the smart wallet checker contract address to `addr`. In order to apply the new contract address, [`apply_smart_contract_wallet`](#apply_smart_wallet_checker) need to be called.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `addr`     |  `address` | New SmartWalletChecker Contract Address |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="2"
-        @external
-        def commit_smart_wallet_checker(addr: address):
-            """
-            @notice Set an external contract to check for approved smart contract wallets
-            @param addr Address of Smart contract checker
-            """
-            assert msg.sender == self.admin
-            self.future_smart_wallet_checker = addr  
-        ```
-
-    !!! permission 
-        This function can only be called by the `admin`.
-
-    === "Example"
-        ```shell
-        >>> vecrv.commit_smart_wallet_checker(addr: address):
-        'new contract address'
-        ```
-
-
-### `apply_smart_wallet_checker`
-!!! description "`vecrv.apply_smart_wallet_checker():`"
-
-    Function to apply the new SmartWalletChecker address.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="2"
-        @external
-        def apply_smart_wallet_checker():
-            """
-            @notice Apply setting external contract to check approved smart contract wallets
-            """
-            assert msg.sender == self.admin
-            self.smart_wallet_checker = self.future_smart_wallet_checker
-        ```
-
-    !!! permissions 
-        This function can only be called by the `admin`.
-
-    === "Example"
-        ```shell
-        >>> vecrv.apply_smart_wallet_checker():
-        'todo'
-        ```
-
-
-
-## **Admin Ownership**
-Ownership of this contract can be transfered by the `admin` (DAO) by calling `commit_tranfer_ownership`. Calling this function sets the new address as `future_admin`. These changes need to be applied by calling `apply_transfer_ownership`. 
-
-!!! info
-    The [`commit_transfer_ownership`](#commit_transfer_ownership) and [`apply_transfer_ownership`](#apply_transfer_ownership) function can only be called by the admin of the contract, which is the DA itself.
-
-
-### `admin`
-!!! description "`vecrv.admin() -> address: view`"
-
-    Getter for the current admin of the contract.
-
-    Returns: **admin** (`address`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 17"
-        admin: public(address)  # Can and will be a smart contract
-        future_admin: public(address)
-
-        @external
-        def __init__(token_addr: address, 
-                    _name: String[64], 
-                    _symbol: String[32], 
-                    _version: String[32]
-                ):
-            """
-            @notice Contract constructor
-            @param token_addr `ERC20CRV` token address
-            @param _name Token name
-            @param _symbol Token symbol
-            @param _version Contract version - required for Aragon compatibility
-            """
-            self.admin = msg.sender
-            self.token = token_addr
-            self.point_history[0].blk = block.number
-            self.point_history[0].ts = block.timestamp
-            self.controller = msg.sender
-            self.transfersEnabled = True
-
-            _decimals: uint256 = ERC20(token_addr).decimals()
-            assert _decimals <= 255
-            self.decimals = _decimals
-
-            self.name = _name
-            self.symbol = _symbol
-            self.version = _version
-        ```
-
-    === "Example"
-        ```shell
-        >>> vecrv.admin()
-        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
-        ```
-
-
-### `future_admin`
-!!! description "`vecrv.future_admin() -> address: view`"
-
-    Getter for the future admin of the contract. This variable is changed when calling `commit_transfer_ownership` successfully.
-
-    Returns: **future admin** (`address`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="2 40"
-        admin: public(address)  # Can and will be a smart contract
-        future_admin: public(address)
-
-        @external
-        def __init__(token_addr: address, 
-                    _name: String[64], 
-                    _symbol: String[32], 
-                    _version: String[32]
-                ):
-            """
-            @notice Contract constructor
-            @param token_addr `ERC20CRV` token address
-            @param _name Token name
-            @param _symbol Token symbol
-            @param _version Contract version - required for Aragon compatibility
-            """
-            self.admin = msg.sender
-            self.token = token_addr
-            self.point_history[0].blk = block.number
-            self.point_history[0].ts = block.timestamp
-            self.controller = msg.sender
-            self.transfersEnabled = True
-
-            _decimals: uint256 = ERC20(token_addr).decimals()
-            assert _decimals <= 255
-            self.decimals = _decimals
-
-            self.name = _name
-            self.symbol = _symbol
-            self.version = _version
-        
-
-        @external
-        def commit_transfer_ownership(addr: address):
-            """
-            @notice Transfer ownership of VotingEscrow contract to `addr`
-            @param addr Address to have ownership transferred to
-            """
-            assert msg.sender == self.admin  # dev: admin only
-            self.future_admin = addr
-            log CommitOwnership(addr)   
-        ```
-
-    === "Example"  
-        ```shell
-        >>> vecrv.future_admin()
-        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
-        ```
-
-
-### `commit_transfer_ownership`
-!!! description "`vecrv.commit_transfer_ownership(addr: address):`"
-
-    Function to commit the ownership of the contract to `addr`.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `addr`       |  `address` | Address |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 8 15"
-        event CommitOwnership:
-            admin: address
-
-        admin: public(address)  # Can and will be a smart contract
-        future_admin: public(address)
-
-        @external
-        def commit_transfer_ownership(addr: address):
-            """
-            @notice Transfer ownership of VotingEscrow contract to `addr`
-            @param addr Address to have ownership transferred to
-            """
-            assert msg.sender == self.admin  # dev: admin only
-            self.future_admin = addr
-            log CommitOwnership(addr)   
-        ```
-
-    !!! permissions
-        This function can only be called by the `admin` of the contract.
-
-    === "Example"
-        ```shell
-        >>> vecrv.commit_transfer_ownership(todo):
-        'todo'
-        ```
-
-
-### `apply_transfer_ownership`
-!!! description "`vecrv.apply_transfer_ownership():`"
-
-    Function to apply the new ownership.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 8 10 16"
-        event ApplyOwnership:
-            admin: address
-
-        admin: public(address)  # Can and will be a smart contract
-        future_admin: public(address)
-
-        @external
-        def apply_transfer_ownership():
-            """
-            @notice Apply ownership transfer
-            """
-            assert msg.sender == self.admin  # dev: admin only
-            _admin: address = self.future_admin
-            assert _admin != ZERO_ADDRESS  # dev: admin not set
-            self.admin = _admin
-            log ApplyOwnership(_admin)  
-        ```
-    
-    !!! permissions
-        This function can only be called by the `admin` of the contract.
-
-    === "Example"
-        ```shell
-        >>> vecrv.apply_transfer_ownership():
-        'todo'
-        ```
 
 
 ## **Working with VoteLocks**
 
 ### `create_lock`
-!!! description "`vecrv.create_lock(_value: uint256, _unlock_time: uint256):`"
+!!! description "`VotingEscrow.create_lock(_value: uint256, _unlock_time: uint256):`"
 
-    Function to deposit CRV into the contract and create a new lock.
-     
-    Prior to calling this function, the contract must be approved to transfer at least `_value` CRV. A new lock cannot be created when an existing lock already exists. 
+    Function to deposit `_value` CRV into the contract and create a new lock until `_unlock_time`.
+
+    Emits: `Deposit`, `Supply` and `Transfer`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_value`   |  `uint256` | Amount of CRV to deposit |
-    | `_unlock_time` |  `uint256` | Epoch when tokens unlock |
-
-    !!!note
-        Epochs are rounded down to whole weeks.
+    | `_unlock_time` |  `uint256` | Unlock time |
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python hl_lines="1 8 12 13 18 24 33 36 59 64 65 68"
+        event Deposit:
+            provider: indexed(address)
+            value: uint256
+            locktime: indexed(uint256)
+            type: int128
+            ts: uint256
+
+        event Supply:
+            prevSupply: uint256
+            supply: uint256
+
+        WEEK: constant(uint256) = 7 * 86400  # all future times are rounded by week
+        MAXTIME: constant(uint256) = 4 * 365 * 86400  # 4 years
+        MULTIPLIER: constant(uint256) = 10 ** 18
+
         @external
         @nonreentrant('lock')
         def create_lock(_value: uint256, _unlock_time: uint256):
@@ -397,25 +161,73 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
             assert unlock_time <= block.timestamp + MAXTIME, "Voting lock can be 4 years max"
 
             self._deposit_for(msg.sender, _value, unlock_time, _locked, CREATE_LOCK_TYPE) 
+
+        @internal
+        def _deposit_for(_addr: address, _value: uint256, unlock_time: uint256, locked_balance: LockedBalance, type: int128):
+            """
+            @notice Deposit and lock tokens for a user
+            @param _addr User's wallet address
+            @param _value Amount to deposit
+            @param unlock_time New time when to unlock the tokens, or 0 if unchanged
+            @param locked_balance Previous locked amount / timestamp
+            """
+            _locked: LockedBalance = locked_balance
+            supply_before: uint256 = self.supply
+
+            self.supply = supply_before + _value
+            old_locked: LockedBalance = _locked
+            # Adding to existing lock, or if a lock is expired - creating a new one
+            _locked.amount += convert(_value, int128)
+            if unlock_time != 0:
+                _locked.end = unlock_time
+            self.locked[_addr] = _locked
+
+            # Possibilities:
+            # Both old_locked.end could be current or expired (>/< block.timestamp)
+            # value == 0 (extend lock) or value > 0 (add to lock or extend lock)
+            # _locked.end > block.timestamp (always)
+            self._checkpoint(_addr, old_locked, _locked)
+
+            if _value != 0:
+                assert ERC20(self.token).transferFrom(_addr, self, _value)
+
+            log Deposit(_addr, _value, _locked.end, type, block.timestamp)
+            log Supply(supply_before, supply_before + _value)
+
+        @internal
+        def assert_not_contract(addr: address):
+            """
+            @notice Check if the call is from a whitelisted smart contract, revert if not
+            @param addr Address to be checked
+            """
+            if addr != tx.origin:
+                checker: address = self.smart_wallet_checker
+                if checker != ZERO_ADDRESS:
+                    if SmartWalletChecker(checker).check(addr):
+                        return
+                raise "Smart contract depositors not allowed"
         ```
 
     === "Example"
         ```shell
-        >>> vecrv.apply_transfer_ownership():
+        >>> VotingEscrow.create_lock(100000000000000000000, 1694003759):
         ```
 
-### `increase_amount`
-!!! description "`vecrv.increase_amount(_value: uint256):`"
 
-    Deposit additional CRV into an existing lock.
+### `increase_amount`
+!!! description "`VotingEscrow.increase_amount(_value: uint256):`"
+
+    Deposit additional `_value` CRV into an existing lock.
+
+    Emits: `Deposit`, `Supply` and `Transfer`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_value`       |  `uint256` | Amount of CRV to deposit |
+    | `_value`       |  `uint256` | Amount of CRV to additionally lock |
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python hl_lines="3 16"
         @external
         @nonreentrant('lock')
         def increase_amount(_value: uint256):
@@ -436,15 +248,16 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     === "Example"
         ```shell
-        >>> vecrv.increase_amount(todo):
-        'todo'
+        >>> VotingEscrow.increase_amount(100000000000000000000):
         ```
 
 
 ### `increase_unlock_time`
-!!! description "`vecrv.increase_unlock_time(_unlock_time: uint256):`"
+!!! description "`VotingEscrow.increase_unlock_time(_unlock_time: uint256):`"
 
-    Extend the unlock time on a lock that already exists.
+    Extend the unlock time on an already existing lock.
+
+    Emits: `Deposit`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -452,7 +265,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python hl_lines="3 17"
         @external
         @nonreentrant('lock')
         def increase_unlock_time(_unlock_time: uint256):
@@ -474,14 +287,56 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     === "Example"
         ```shell
-        >>> vecrv.increase_unlock_time(todo):
+        >>> VotingEscrow.increase_unlock_time(1694003759):
+        ```
+
+
+### `deposit_for` (x)
+!!! description "`VotingEscrow.deposit_for(_addr: address, _value: uint256):`"
+
+    Function to deposit `_value` tokens for `_addr` and add to the lock.
+
+    Emits: `Deposit`, `Supply` and `Transfer`    
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_addr`       |  `address` | todo |
+    | `_value_` |  `uint256` | todo |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="3 17"
+        @external
+        @nonreentrant('lock')
+        def deposit_for(_addr: address, _value: uint256):
+            """
+            @notice Deposit `_value` tokens for `_addr` and add to the lock
+            @dev Anyone (even a smart contract) can deposit for someone else, but
+                cannot extend their locktime and deposit for a brand new user
+            @param _addr User's wallet address
+            @param _value Amount to add to user's lock
+            """
+            _locked: LockedBalance = self.locked[_addr]
+
+            assert _value > 0  # dev: need non-zero value
+            assert _locked.amount > 0, "No existing lock found"
+            assert _locked.end > block.timestamp, "Cannot add to expired lock. Withdraw"
+
+            self._deposit_for(_addr, _value, 0, self.locked[_addr], DEPOSIT_FOR_TYPE)
+        ```
+
+    === "Example"
+        ```shell
+        >>> VotingEscrow.deposit_for("todo"):
         ```
 
 
 ### `withdraw`
-!!! description "`vecrv.withdraw()`"
+!!! description "`VotingEscrow.withdraw()`"
 
     Withdraw deposited CRV tokens once a lock has expired.
+
+    Emits: `Transfer`, `Withdraw` and `Supply`
 
     ??? quote "Source code"
 
@@ -517,55 +372,14 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     === "Example"
         ```shell
-        >>> vecrv.withdraw():
-        'todo'
-        ```
-
-
-### `deposit_for`
-!!! description "`vecrv.deposit_for(_addr: address, _value: uint256):`"
-
-    todo! anyone can lock for another wallet?? i remember people said this is a bug and is fixed somehow. but how? 
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_addr`       |  `address` | todo |
-    | `_value_` |  `uint256` | todo |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="0"
-        
-        @external
-        @nonreentrant('lock')
-        def deposit_for(_addr: address, _value: uint256):
-            """
-            @notice Deposit `_value` tokens for `_addr` and add to the lock
-            @dev Anyone (even a smart contract) can deposit for someone else, but
-                cannot extend their locktime and deposit for a brand new user
-            @param _addr User's wallet address
-            @param _value Amount to add to user's lock
-            """
-            _locked: LockedBalance = self.locked[_addr]
-
-            assert _value > 0  # dev: need non-zero value
-            assert _locked.amount > 0, "No existing lock found"
-            assert _locked.end > block.timestamp, "Cannot add to expired lock. Withdraw"
-
-            self._deposit_for(_addr, _value, 0, self.locked[_addr], DEPOSIT_FOR_TYPE)
-        ```
-
-    === "Example"
-        ```shell
-        >>> vecrv.apply_transfer_ownership():
-        'todo'
+        >>> VotingEscrow.withdraw():
         ```
 
 
 ### `checkpoint`
-!!! description "`vecrv.changeController(_newController: address):`"
+!!! description "`VotingEscrow.changeController(_newController: address):`"
 
-    Simple dummy method required for Aragon compatibility.
+    Function to record global data to checkpoint
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -700,47 +514,104 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     === "Example"
         ```shell
-        >>> vecrv.checkpoint():
+        >>> VotingEscrow.checkpoint():
         'todo'
         ```
 
 
-### `change_controller`
-!!! description "`vecrv.changeController(_newController: address):`"
+## **Admin Ownership**
+Ownership of this contract can be transfered by the `admin` (DAO) by calling `commit_tranfer_ownership`. The changes need to be applied by calling `apply_transfer_ownership`. See [here](../VotingEscrow/admin_controls.md#commit_transfer_ownership)
 
-    Simple dummy method required for Aragon compatibility.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_newController` |  `address` | New Controller Address |
+### `admin`
+!!! description "`VotingEscrow.admin() -> address: view`"
+
+    Getter for the current admin of the contract.
+
+    Returns: **admin** (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="0"
+        ```python hl_lines="1 5 17"
+        admin: public(address)  # Can and will be a smart contract
+        future_admin: public(address)
 
         @external
-        def changeController(_newController: address):
+        def __init__(token_addr: address, 
+                    _name: String[64], 
+                    _symbol: String[32], 
+                    _version: String[32]
+                ):
             """
-            @dev Dummy method required for Aragon compatibility
+            @notice Contract constructor
+            @param token_addr `ERC20CRV` token address
+            @param _name Token name
+            @param _symbol Token symbol
+            @param _version Contract version - required for Aragon compatibility
             """
-            assert msg.sender == self.controller
-            self.controller = _newController
+            self.admin = msg.sender
+            self.token = token_addr
+            self.point_history[0].blk = block.number
+            self.point_history[0].ts = block.timestamp
+            self.controller = msg.sender
+            self.transfersEnabled = True
+
+            _decimals: uint256 = ERC20(token_addr).decimals()
+            assert _decimals <= 255
+            self.decimals = _decimals
+
+            self.name = _name
+            self.symbol = _symbol
+            self.version = _version
         ```
 
     === "Example"
         ```shell
-        >>> vecrv.changeController(todo):
-        'todo'
+        >>> VotingEscrow.admin()
+        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
         ```
-    
+
+
+### `future_admin`
+!!! description "`VotingEscrow.future_admin() -> address: view`"
+
+    Getter for the future admin of the contract. This variable is changed when calling `commit_transfer_ownership` successfully.
+
+    Returns: future admin (`address`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="2 11"
+        admin: public(address)  # Can and will be a smart contract
+        future_admin: public(address)
+
+        @external
+        def commit_transfer_ownership(addr: address):
+            """
+            @notice Transfer ownership of VotingEscrow contract to `addr`
+            @param addr Address to have ownership transferred to
+            """
+            assert msg.sender == self.admin  # dev: admin only
+            self.future_admin = addr
+            log CommitOwnership(addr)   
+        ```
+
+    === "Example"  
+        ```shell
+        >>> VotingEscrow.future_admin()
+        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
+        ```
+
 
 
 ## **Contract Info Methods**
 
 ### `get_last_user_slope`
-!!! description "`vecrv.get_last_user_slope(addr: address) -> int128`"
+!!! description "`VotingEscrow.get_last_user_slope(addr: address) -> int128`"
 
     Getter for the most recent recorded rate of voting power decrease for `addr`.
+
+    Returns: rate (`int128`)
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -763,15 +634,17 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     === "Example"
         ```shell
-        >>> vecrv.get_last_user_slope(0x7a16fF8270133F063aAb6C9977183D9e72835428)
+        >>> VotingEscrow.get_last_user_slope(0x7a16fF8270133F063aAb6C9977183D9e72835428)
         215557846878647453
         ```
 
 
 ### `user_point_history_ts`
-!!! description "`vecrv.user_point_history__ts(_addr: address, _idx: uint256) -> uint256`"
+!!! description "`VotingEscrow.user_point_history__ts(_addr: address, _idx: uint256) -> uint256`"
 
-    Returns the timestamp for checkpoint `_idx` for `_addr`.
+    Getter method for the timestamp for checkpoint number `_idx` for `_addr`.
+
+    Returns: timestamp of the checkpoint (`uint256`)
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -780,7 +653,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines"3"
+        ```python hl_lines"3 10"
         @external
         @view
         def user_point_history__ts(_addr: address, _idx: uint256) -> uint256:
@@ -795,15 +668,17 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     === "Example"
         ```shell
-        >>> vecrv.user_point_history__ts(0x7a16fF8270133F063aAb6C9977183D9e72835428, 1)
+        >>> VotingEscrow.user_point_history__ts(0x7a16fF8270133F063aAb6C9977183D9e72835428, 1)
         1597565455
         ```
 
 
 ### `locked_end`
-!!! description "`vecrv.locked_end(_addr: address) -> uint256:`"
+!!! description "`VotingEscrow.locked_end(_addr: address) -> uint256:`"
 
-    Returns a epoch (`uint256`) when '_addr's lock finishes
+    Getter for the timestamp when `_addr`'s lock finishes.
+
+    Returns: timestamp (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -829,27 +704,26 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     === "Example"  
         ```shell
-        >>> vecrv.locked_end(0x7a16fF8270133F063aAb6C9977183D9e72835428)
+        >>> VotingEscrow.locked_end(0x7a16fF8270133F063aAb6C9977183D9e72835428)
         1808956800
         ```
 
+
 ### `balanceOf`
-!!! description "`vecrv.balanceOf(addr: address, _t: uint256 = block.timestamp) -> uint256:`"
+!!! description "`VotingEscrow.balanceOf(addr: address, _t: uint256 = block.timestamp) -> uint256:`"
 
-    Returns the voting power (`uint256`) of an address at a certain timestamp.
+    Getter for the current veCRV balance (= voting power) of `addr`.
 
-    !!!note
-        This function can be called without setting a timestamp. It will automatically use the most recent one.
+    Returns: voting power (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_addr`       |  `address` | Address |
+    | `addr`       |  `address` | Address |
     | `_t`       |  `uint256` | Timestamp |
 
     ??? quote "Source code"
 
-        ```python
-
+        ```python hl_lines="3 13 19"
         @external
         @view
         def balanceOf(addr: address, _t: uint256 = block.timestamp) -> uint256:
@@ -874,27 +748,26 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     === "Example"
         ```shell
-        >>> vecrv.balanceOf(0x7a16fF8270133F063aAb6C9977183D9e72835428, 1683742945)
-        26990828983175164776061315
+        >>> VotingEscrow.balanceOf("0x7a16fF8270133F063aAb6C9977183D9e72835428")
+        25298857242406003682652005
         ```
 
 
 ### `balanceOfAt`
-!!! description "`vecrv.balanceOf(addr: address, _t: uint256 = block.timestamp) -> uint256:`"
+!!! description "`VotingEscrow.balanceOf(addr: address, _t: uint256 = block.timestamp) -> uint256:`"
 
-    Measure the voting power of an address at a historic block height.
+    Getter for the veCRV balance (= voting power) of `addr` at timestamp `_t`.
 
-    This function is taken from the [Minime](https://github.com/Giveth/minime) ERC20 implementation and is required for compatibility with Aragon.
+    Returns: voting power (`uint256`) at a specific timestamp.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_addr`    |  `address` | Address |
+    | `addr`    |  `address` | Address |
     | `_t`       |  `uint256` | Block |
 
     ??? quote "Source code"
 
-        ```python
-
+        ```python hl_lines="3 47 49"
         @external
         @view
         def balanceOfAt(addr: address, _block: uint256) -> uint256:
@@ -948,17 +821,17 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     === "Example"
         ```shell
-        >>> vecrv.balanceOfAt(todo)
-        'todo'
+        >>> VotingEscrow.balanceOf("0x7a16fF8270133F063aAb6C9977183D9e72835428", 1683742945)
+        26990828983175164776061315
         ```
 
-### `totalSupply`
-!!! description "`vecrv.totalSupply(t: uint256 = block.timestamp) -> uint256:`"
 
-    Returns the total supply (`uint256`) of vecrv at a certain timestamp.  
+### `totalSupply`
+!!! description "`VotingEscrow.totalSupply(t: uint256 = block.timestamp) -> uint256:`"
+
+    Getter for the current total supply of veCRV (= total voting power) at timestamp `t`.
     
-    !!!note
-        This function can be called without setting a timestamp. It will automatically use the most recent one.
+    Returns: veCRV supply (uint256) at a specific block height.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -966,8 +839,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines="5"
-
+        ```python hl_lines="3 11"
         @external
         @view
         def totalSupply(t: uint256 = block.timestamp) -> uint256:
@@ -979,18 +851,19 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
             _epoch: uint256 = self.epoch
             last_point: Point = self.point_history[_epoch]
             return self.supply_at(last_point, t)
-
         ```
 
     === "Example"
         ```shell
-        >>> vecrv.totalSupply(1683742945)
-        586046376093059723137909505
+        >>> VotingEscrow.totalSupply(18078089)
+        627628632729421346293548458
         ```
 
 
 ### `totalSupplyAt`
-!!! description "`vecrv.totalSupplyAt(_block: uint256) -> uint256:`"
+!!! description "`VotingEscrow.totalSupplyAt(_block: uint256) -> uint256`"
+
+    Getter for the current total supply of veCRV (= total voting power) at block `_block`.
 
     Returns the total supply (`uint256`) of vecrv at a certain block.  
 
@@ -1000,8 +873,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python
-
+        ```python hl_lines="3 24"
         @external
         @view
         def totalSupplyAt(_block: uint256) -> uint256:
@@ -1026,24 +898,21 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
             # Now dt contains info on how far are we beyond point
 
             return self.supply_at(point, point.ts + dt)
-
         ```
 
     === "Example"
         ```shell
-        >>> vecrv.totalSupply(1683742945)
+        >>> VotingEscrow.totalSupplyAt(1683742945)
         586046376093059723137909505
         ```
 
 
-
-
 ### `token`
-!!! description "`vecrv.token() -> address: view `"
+!!! description "`VotingEscrow.token() -> address: view `"
 
-    Getter for the token address of the contract.
+    Getter for the veCRV token address.
 
-    Returns: **token address** (`address`) of the vecrv token.
+    Returns: token address (`address`).
 
 
     ??? quote "Source code"
@@ -1082,41 +951,37 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     === "Example"
         ```shell
-        >>> vecrv.token()
+        >>> VotingEscrow.token()
         '0xD533a949740bb3306d119CC777fa900bA034cd52'
         ```
 
 
 ### `supply`
-!!! description "`vecrv.supply() -> uint256`"
+!!! description "`VotingEscrow.supply() -> uint256: view`"
 
-    Getter for the supply of crv tokens locked into the contract.
+    Getter for the amount of CRV tokens locked into the contract.
 
-    Returns: amount (`uint256`) of crv tokens locked.
+    Returns: amount of CRV (`uint256`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5"
-        event Supply:
-            prevSupply: uint256
-            supply: uint256
-
+        ```python hl_lines="1"
         supply: public(uint256)
         ```
 
     === "Example"
         ```shell
-        >>> vecrv.supply()
+        >>> VotingEscrow.supply()
         656407031422810196416981172
         ```
 
 
 ### `locked`
-!!! description "`vecrv.locked(arg0: address) -> amount: int128, end: uint256`"
+!!! description "`VotingEscrow.locked(arg0: address) -> amount: int128, end: uint256: view`"
 
-    Method to check the unlock time of crv for an address.
+    Method to check the unlock time of CRV for address `arg0`.
 
-    Returns: amount (`int128`) and end of lock (`uint256`).
+    Returns: amount (`int128`) and unlock time (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1130,13 +995,13 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     === "Example"
         ```shell
-        >>> vecrv.locked(0x7a16fF8270133F063aAb6C9977183D9e72835428)
+        >>> VotingEscrow.locked(0x7a16fF8270133F063aAb6C9977183D9e72835428)
         27191329036660104386777000, 1808956800
         ```
 
 
 ### `epoch`
-!!! description "`vecrv.epoch() -> String[64]: view `"
+!!! description "`VotingEscrow.epoch() -> String[64]: view `"
 
     Getter for the current epoch.
 
@@ -1150,16 +1015,21 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     === "Example"
         ```shell
-        >>> vecrv.epoch()
+        >>> VotingEscrow.epoch()
         48610
         ```
 
 
 ### `point_history`
-!!! description "`vecrv.point_history(arg0: uint256) -> bias: int128, slope: int128, ts: uint256, blk: uint256   `"
+!!! description "`VotingEscrow.point_history(arg0: uint256) -> bias: int128, slope: int128, ts: uint256, blk: uint256: view`"
 
-    todo
+    Getter for the point history of point `arg0`.
 
+    Returns: bias (`int128`), slope (`int128`), ts (`uint256`) and blk (`uint256`).
+
+    | Input      | Type   | Description |
+    | ---------- | -------| ----|
+    | `arg0`     |  `uint256` | Point |
 
     ??? quote "Source code"
 
@@ -1193,119 +1063,17 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     === "Example"
         ```shell
-        >>> vecrv.point_history()
-        'todo'
-        ```
-
-### `controller`
-!!! description "`vecrv.controller():`"
-
-    Getter for the controller address of the contract.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1"
-        controller: public(address)
-
-        @external
-        def changeController(_newController: address):
-            """
-            @dev Dummy method required for Aragon compatibility
-            """
-            assert msg.sender == self.controller
-            self.controller = _newController
-        ```
-    === "Example"
-        ```shell
-        >>> vecrv.controller()
-        '0xc4AD0Ef33A0A4ddA3461c479ccb6c36d1e4B7Be4'
-        ```
-
-
-### `change_controller`
-!!! description "`vecrv.changeController(_newController: address):`"
-
-    Function to change the controller address.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_newController` |  `address` | New Controller Address |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 4"
-        controller: public(address)
-
-        @external
-        def changeController(_newController: address):
-            """
-            @dev Dummy method required for Aragon compatibility
-            """
-            assert msg.sender == self.controller
-            self.controller = _newController
-        ```
-
-    === "Example"
-        ```shell
-        >>> vecrv.changeController(todo)
-        todo
-        ```
-
-### `transfersEnabled`
-!!! description "`vecrv.transfersEnabled() -> boolean: view`"
-
-    Getter method to check the transfership of vecrv token. Is needed for compatibility with Aragon's view methods.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 3 21"
-        # Aragon's view methods for compatibility
-        controller: public(address)
-        transfersEnabled: public(bool)
-
-        @external
-        def __init__(token_addr: address, 
-                    _name: String[64], 
-                    _symbol: String[32], 
-                    _version: String[32]
-                ):
-            """
-            @notice Contract constructor
-            @param token_addr `ERC20CRV` token address
-            @param _name Token name
-            @param _symbol Token symbol
-            @param _version Contract version - required for Aragon compatibility
-            """
-            self.admin = msg.sender
-            self.token = token_addr
-            self.point_history[0].blk = block.number
-            self.point_history[0].ts = block.timestamp
-            self.controller = msg.sender
-            self.transfersEnabled = True
-
-            _decimals: uint256 = ERC20(token_addr).decimals()
-            assert _decimals <= 255
-            self.decimals = _decimals
-
-            self.name = _name
-            self.symbol = _symbol
-            self.version = _version
-
-        ```
-
-    === "Example"
-        ```shell
-        >>> vecrv.transfersEnabeled()
-        'True'
+        >>> VotingEscrow.point_history(3)
+        127357905207521710167, 4570173769659, 1597370987, 10655341
         ```
 
 
 ### `name`
-!!! description "`vecrv.name() -> String[64]: view `"
+!!! description "`VotingEscrow.name() -> String[64]: view `"
 
-    Getter for the name of the VotingEscrow Token.
+    Getter for the name of the token.
 
-    Returns: **name** (`String[64]`).
+    Returns:*name (`String[64]`).
 
     ??? quote "Source code"
 
@@ -1343,20 +1111,21 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     === "Example"
         ```shell
-        >>> vecrv.name()
+        >>> VotingEscrow.name()
         'Vote-escrowed CRV'
         ```
 
+
 ### `symbol`
-!!! description "`vecrv.symbol() -> String[32]: view `"
+!!! description "`VotingEscrow.symbol() -> String[32]: view `"
 
-    Getter for the symbol of the VotingEscrow token.
+    Getter for the symbol of the token.
 
-    Returns: symbol (`String[32]`) of the token.
+    Returns: symbol (`String[32]`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 13 28"
+        ```python hl_lines="1 4 6 13 28"
         symbol: public(String[32])
 
         @external
@@ -1390,14 +1159,17 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     === "Example"
         ```shell
-        >>> vecrv.symbol()
+        >>> VotingEscrow.symbol()
         'veCRV'
         ```
 
-### `version`
-!!! description "`vecrv.version() -> String[32]: view`"
 
-    enabels transfership of vecrv token. is needed for compatibility with Aragon's view methods.
+### `version`
+!!! description "`VotingEscrow.version() -> String[32]: view`"
+
+    Getter for the version of the contract.
+
+    Returns: version (`String[32]`).
 
     ??? quote "Source code"
 
@@ -1431,23 +1203,21 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
             self.name = _name
             self.symbol = _symbol
             self.version = _version
-
         ```
 
     === "Example"
         ```shell
-        >>> vecrv.version()
+        >>> VotingEscrow.version()
         'veCRV_1.0.0'
         ```
 
-    !!! note
-        `transfersEnabled` is set to `true` and can't be changed!
-
 
 ### `decimals`
-!!! description "`vecrv.decimals() -> uint256: view`"
+!!! description "`VotingEscrow.decimals() -> uint256: view`"
 
-    Returns the total supply (`uint256`) of vecrv (= total voting power) at a certain block.  
+    Getter for the decimals of the token.
+    
+    Returns: decimals (`uint256`).
 
 
     ??? quote "Source code"
@@ -1486,7 +1256,96 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     === "Example"
         ```shell
-        >>> vecrv.decimals()
+        >>> VotingEscrow.decimals()
         18
         ```
 
+
+### `controller`
+!!! description "`VotingEscrow.controller() -> address: view`"
+
+    Getter for the controller address of the contract.
+
+    Returns: controller contract (`address`).
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1"
+        controller: public(address)
+
+        @external
+        def changeController(_newController: address):
+            """
+            @dev Dummy method required for Aragon compatibility
+            """
+            assert msg.sender == self.controller
+            self.controller = _newController
+        ```
+
+    === "Example"
+        ```shell
+        >>> VotingEscrow.controller()
+        '0xc4AD0Ef33A0A4ddA3461c479ccb6c36d1e4B7Be4'
+        ```
+
+
+### `changeController`
+!!! description "`VotingEscrow.changeController(_newController: address):`"
+
+    Simple dummy method required for Aragon compatibility.
+
+    ??? quote "Source code"
+
+        ```python hl_lines="0"
+        @external
+        def changeController(_newController: address):
+            """
+            @dev Dummy method required for Aragon compatibility
+            """
+            assert msg.sender == self.controller
+            self.controller = _newController
+        ```
+    
+
+
+### `transfersEnabled`
+!!! description "`VotingEscrow.transfersEnabled() -> boolean: view`"
+
+    View method which is required for the compatibility with Aragon.
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 3 6 21"
+        # Aragon's view methods for compatibility
+        controller: public(address)
+        transfersEnabled: public(bool)
+
+        @external
+        def __init__(token_addr: address, 
+                    _name: String[64], 
+                    _symbol: String[32], 
+                    _version: String[32]
+                ):
+            """
+            @notice Contract constructor
+            @param token_addr `ERC20CRV` token address
+            @param _name Token name
+            @param _symbol Token symbol
+            @param _version Contract version - required for Aragon compatibility
+            """
+            self.admin = msg.sender
+            self.token = token_addr
+            self.point_history[0].blk = block.number
+            self.point_history[0].ts = block.timestamp
+            self.controller = msg.sender
+            self.transfersEnabled = True
+
+            _decimals: uint256 = ERC20(token_addr).decimals()
+            assert _decimals <= 255
+            self.decimals = _decimals
+
+            self.name = _name
+            self.symbol = _symbol
+            self.version = _version
+
+        ```

@@ -13,33 +13,52 @@ plugins:
 
 nav:
   - Curve DAO:
-    - Overview: curve_dao/overview.md  
-    - Curve DAO Token: curve_dao/ERC20CRV.md
-    - Vote-Escrowed CRV: curve_dao/VotingEscrow.md
-    - Liquidity Gauges and Minting CRV:             
-      - Overview: curve_dao/LiquidityGaugesAndMinting/overview.md
-      - Gauge Controller: curve_dao/LiquidityGaugesAndMinting/GaugeController.md
+    
+    - Curve DAO Token:
+      - Contract Methods: curve_dao/CurveDAOToken/ERC20CRV.md
+      - Admin Controls: curve_dao/CurveDAOToken/admin_controls.md
+    
+    - Vote-Escrowed CRV:
+      - VotingEscrow:
+        - VotingEscrow: curve_dao/VotingEscrow/VotingEscrow.md
+        - Admin Controls: curve_dao/VotingEscrow/admin_controls.md
+      - SmartWalletChecker: curve_dao/VotingEscrow/smartwalletchecker.md
+
+    - Liquidity Gauges and Minting CRV:
+      - Overview: curve_dao/LiquidityGaugesAndMintingCRV/overview.md
+      - GaugeController:
+        - Contract Methods: curve_dao/LiquidityGaugesAndMintingCRV/gauge_controller/GaugeController.md
+        - Admin Controls: curve_dao/LiquidityGaugesAndMintingCRV/gauge_controller/admin_controls.md
       - Gauges:
-        - Gauge Types: curve_dao/LiquidityGaugesAndMinting/GaugeTypes.md
-        - LiquidityGaugeReward: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeRewards.md
-        - LiquidityGaugeV1: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV1.md
-        - LiquidityGaugeV2: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV2.md
-        - LiquidityGaugeV3: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV3.md
-        - LiquidityGaugeV4: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV4.md
-        - LiquidityGaugeV5: curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV5.md
-      - Minter: curve_dao/LiquidityGaugesAndMinting/Minter.md 
-    - Gauges for EVM Sidechains: curve_dao/evm-sidechains/overview.md
+        - Overview: curve_dao/LiquidityGaugesAndMintingCRV/gauges/overview.md
+        - LiquidityGaugeV1: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV1.md
+        - LiquidityGaugeV2: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV2.md
+        - LiquidityGaugeV3: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV3.md
+        - LiquidityGaugeV4: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV4.md
+        - LiquidityGaugeV5: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV5.md  
+        - Permissionless Rewards: curve_dao/LiquidityGaugesAndMintingCRV/gauges/PermissionlessRewards.md
+      - Gauges for EVM Sidechains: 
+        - Overview: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/overview.md
+        - RootChainGauge: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/RootChainGauge.md
+        - RootChainFactory: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/RootChainGaugeFactory.md
+        - ChildGauge: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/ChildGauge.md
+        - ChildGaugeFactory: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/ChildGaugeFactory.md
+      - Minter: curve_dao/LiquidityGaugesAndMintingCRV/Minter.md 
+
     - Fee Collection and Distribution:
       - Overview: curve_dao/FeeCollection&Distribution/overview.md
       - Withdrawing and Burning Admin Fees: curve_dao/FeeCollection&Distribution/withdraw-and-burn.md
       - Burners: curve_dao/FeeCollection&Distribution/burner.md
       - Fee Distribution: curve_dao/FeeCollection&Distribution/FeeDistributor.md
       - Deployed Contracts: curve_dao/FeeCollection&Distribution/deployed-contracts.md
+
     - Ownership Proxies:
       - Overview: curve_dao/ownership-proxy/overview.md
       - Agents: curve_dao/ownership-proxy/Agents.md
       - PoolProxy: curve_dao/ownership-proxy/PoolProxy.md
       - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
+      - RootChainGaugeProxy: curve_dao/ownership-proxy/RootChainGaugeProxy.md
+      
     - Governance and Voting: curve_dao/gov-and-vote/overview.md
 
   - Curve Stablecoin (crvUSD):

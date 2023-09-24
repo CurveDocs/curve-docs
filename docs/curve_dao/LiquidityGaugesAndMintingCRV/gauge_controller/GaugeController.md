@@ -1,159 +1,25 @@
-The Gauge Controller in Curve Finance is responsible for managing and coordinating the distribution of rewards to liquidity providers in various liquidity pools. It determines the allocation of CRV (Curve's governance token) rewards based on the liquidity provided by users. By analyzing the gauges, which are parameters that define how rewards are distributed across different pools, the Gauge Controller ensures a fair and balanced distribution of incentives, encouraging liquidity provision and participation in Curve's ecosystem. This helps to maintain the stability and efficiency of Curve's decentralized exchange.
+The **GaugeController** in Curve Finance is responsible for managing and coordinating the distribution of rewards to liquidity providers in various liquidity pools. It determines the allocation of CRV rewards based on the liquidity provided by users. By analyzing the gauges, which are parameters that define how rewards are distributed across different pools, the Gauge Controller ensures a fair and balanced distribution of incentives, encouraging liquidity provision and participation in Curve's ecosystem. This helps to maintain the stability and efficiency of Curve's decentralized exchange.
 
 
 !!! info
-    **`GaugeController`** contract is deployed on the Ethereum mainnet at: [0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB](https://etherscan.io/address/0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB#code)   
-    Source code of the VotingEscrow contract can be found on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/GaugeController.vy).
-
-
-
-# **Admin Ownership** 
-
-## `admin`
-!!! description "`GaugeController.admin() -> address: view`"
-
-    Getter for the admin of the contract.
-
-    Returns: **admin** (`address`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 13"
-        admin: public(address)  # Can and will be a smart contract
-
-        @external
-        def __init__(_token: address, _voting_escrow: address):
-            """
-            @notice Contract constructor
-            @param _token `ERC20CRV` contract address
-            @param _voting_escrow `VotingEscrow` contract address
-            """
-            assert _token != ZERO_ADDRESS
-            assert _voting_escrow != ZERO_ADDRESS
-
-            self.admin = msg.sender
-            self.token = _token
-            self.voting_escrow = _voting_escrow
-            self.time_total = block.timestamp / WEEK * WEEK
-        ```
-
-    === "Example"
-        ```shell
-        >>> GaugeController.admin()
-        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
-        ```
-
-
-## `future_admin`
-!!! description "`GaugeController.future_admin() -> address: view`"
-
-    Getter for the future admin of the contract. This variable is changed when calling `commit_transfer_ownership` successfully.
-
-    Returns: **future admin** (`address`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 10"
-        future_admin: public(address)  # Can and will be a smart contract
-
-        @external
-        def commit_transfer_ownership(addr: address):
-            """
-            @notice Transfer ownership of GaugeController to `addr`
-            @param addr Address to have ownership transferred to
-            """
-            assert msg.sender == self.admin  # dev: admin only
-            self.future_admin = addr
-            log CommitOwnership(addr)
-        ```
-
-    === "Example"
-        ```shell
-        >>> GaugeController.future_admin()
-        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
-        ```
-
-
-## `commit_transfer_ownership`
-!!! description "`GaugeController.commit_transfer_ownership(addr: address)`"
-
-    Function to commit the ownership of the contract to `addr`.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `addr` |  `address` | New Admin Address |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 10"
-        future_admin: public(address)  # Can and will be a smart contract
-
-        @external
-        def commit_transfer_ownership(addr: address):
-            """
-            @notice Transfer ownership of GaugeController to `addr`
-            @param addr Address to have ownership transferred to
-            """
-            assert msg.sender == self.admin  # dev: admin only
-            self.future_admin = addr
-            log CommitOwnership(addr)
-        ```
-
-    !!! permissions
-        This function can only be called by the `admin` of the contract.
-
-    === "Example"
-        
-        ```shell
-        >>> GaugeController.commit_transfer_ownership(todo)
-        todo
-        ```
-
-
-## `apply_transfer_ownership`
-
-!!! description "`GaugeController.apply_transfer_ownership() -> address: view`"
-
-    Function to apply the new ownership.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 5"
-        event ApplyOwnership:
-            admin: address
-
-        @external
-        def apply_transfer_ownership():
-            """
-            @notice Apply pending ownership transfer
-            """
-            assert msg.sender == self.admin  # dev: admin only
-            _admin: address = self.future_admin
-            assert _admin != ZERO_ADDRESS  # dev: admin not set
-            self.admin = _admin
-            log ApplyOwnership(_admin)
-        ```
-
-    !!! permissions
-        This function can only be called by the `admin` of the contract.
-
-    === "Example"
-        
-        ```shell
-        >>> GaugeController.apply_transfer_ownership()
-        ```
+    `GaugeController` contract is deployed on the Ethereum mainnet at [0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB](https://etherscan.io/address/0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB#code)   
+    Source code of the GaugeController can be found on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/GaugeController.vy).
 
 
 # **Gauge Types and Weights**
 
+
 ## **Types**
+
+More on gauge types see [here](../gauges/GaugeTypes.md).
+
 
 ### `gauge_types`
 !!! description "`GaugeController.gauge_types(_addr: address) -> int128`"
 
-    Getter for the gauge type of a gauge address. 
+    Getter for the gauge type of gauge `_addr`. 
 
-    Returns: **gauge type** (`int128`) of `_addr`.
+    Returns: gauge type (`int128`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -180,16 +46,17 @@ The Gauge Controller in Curve Finance is responsible for managing and coordinati
 
     === "Example"
         ```shell
-        >>> GaugeController.gauge_types(0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A)
+        >>> GaugeController.gauge_types("0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A")
         0
         ```
+
 
 ### `n_gauge_types`
 !!! description "`GaugeController.n_gauge_types() -> int128: view`"
 
-    Getter for the total amount of gauge types.
+    Getter for the total number of gauge types.
 
-    Returns: **amount of gauge types** (`int128`).
+    Returns: number of gauge types (`int128`).
 
     ??? quote "Source code"
 
@@ -222,9 +89,9 @@ The Gauge Controller in Curve Finance is responsible for managing and coordinati
 ### `gauge_type_names`
 !!! description "`GaugeController.gauge_type_names(arg0: int128) -> string: view`"
 
-    Getter for the name of a gauge type.
+    Getter for the name of gauge type `arg0`.
 
-    Returns: **gauge type name** (`string`) of gauge `arg0`.
+    Returns: type name (`string`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -261,14 +128,13 @@ The Gauge Controller in Curve Finance is responsible for managing and coordinati
 ### `get_type_weight`
 !!! description "`GaugeController.get_type_weight(type_id: int128) -> uint256`"
 
-    Getter for the type weight of a gauge type.
+    Getter for the type weight of `type_id`.
 
-    Returns: **type weight** (`uint256`) of `type_id`.
-
+    Returns: type weight (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `type_id` |  `int128` | Gauge Type |
+    | `type_id` |  `int128` | Gauge Type ID |
 
     ??? quote "Source code"
 
@@ -314,15 +180,16 @@ The Gauge Controller in Curve Finance is responsible for managing and coordinati
         ```
 
 
-
 ## **Gauges**
+
+
 
 ### `n_gauges`
 !!! description "`GaugeController.n_gauges -> int128: view`"
 
-    Getter for the total amount of gauges. 
+    Getter for the total amount of individual gauges. 
 
-    Returns: **amount of gauges** (`int128`).
+    Returns: amount of gauges (`int128`).
 
     ??? quote "Source code"
 
@@ -373,21 +240,25 @@ The Gauge Controller in Curve Finance is responsible for managing and coordinati
         264
         ```
 
+
 ### `gauge_relative_weight`
 !!! description "`GaugeController.gauge_relative_weight(addr: address, time: uint256 = block.timestamp) -> uint256`"
 
-    Getter for the relative weight of a specific gauge. 
+    Getter for the relative weight of gauge `addr` at timestamp `time`. 
 
-    Returns: **relative weight** (`uint256`) of `addr` at `time`.
+    Returns: relative gauge weight (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `addr` |  `address` | Gauge Addresses |
-    | `time` |  `uint256` | Timestamp |
+    | `time` |  `uint256` | Timestamp, defaults to `block.timestamp` |
+
+    !!! note
+        The value of relative weight is normalized to 1e18.
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 27"
+        ```python hl_lines="3 19 22 26 35"
         @internal
         @view
         def _gauge_relative_weight(addr: address, time: uint256) -> uint256:
@@ -411,7 +282,6 @@ The Gauge Controller in Curve Finance is responsible for managing and coordinati
             else:
                 return 0
 
-
         @external
         @view
         def gauge_relative_weight(addr: address, time: uint256 = block.timestamp) -> uint256:
@@ -428,20 +298,17 @@ The Gauge Controller in Curve Finance is responsible for managing and coordinati
 
     === "Example"
         ```shell
-        >>> GaugeController.gauge_relative_weight(0x555766f3da968ecbefa690ffd49a2ac02f47aa5f)
+        >>> GaugeController.gauge_relative_weight("0x555766f3da968ecbefa690ffd49a2ac02f47aa5f")
         27557442674450559
         ```
-    !!! note
-        Function can also be called without the `time` input -> will return the **current** relative gauge weight.  
-        The value of relative weight is normalized to 1e18.
 
 
 ### `get_gauge_weight`
 !!! description "GaugeController.get_gauge_weight(addr: address) -> uint256`"
 
-    Getter for the current gauge weight of an address.
+    Getter for the current gauge weight of gauge `addr`.
 
-    Returns: **gauge weight** (`uint256`) of `addr`.
+    Returns: gauge weight (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -449,7 +316,7 @@ The Gauge Controller in Curve Finance is responsible for managing and coordinati
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python hl_lines="3 9"
         @external
         @view
         def get_gauge_weight(addr: address) -> uint256:
@@ -463,7 +330,7 @@ The Gauge Controller in Curve Finance is responsible for managing and coordinati
 
     === "Example"
         ```shell
-        >>> GaugeController.get_gauge_weight(0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A)
+        >>> GaugeController.get_gauge_weight("0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A")
         1987873524145187062272000
         ```
 
@@ -473,11 +340,11 @@ The Gauge Controller in Curve Finance is responsible for managing and coordinati
 
     Getter for the current total (type-weighted) weight.
 
-    Returns: **total weight** (`uint256`).
+    Returns: total weight (`uint256`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5"
+        ```python hl_lines="1 5 10"
         points_total: public(HashMap[uint256, uint256])  # time -> total weight
 
         @external
@@ -501,17 +368,17 @@ The Gauge Controller in Curve Finance is responsible for managing and coordinati
 ### `get_weights_sum_per_type`
 !!! description "`GaugeController.get_weights_sum_per_type(type_id: int128) -> uint256`"
 
-    Getter for the sum of gauge weights per type.
+    Getter for the summed weight of gauge type `type_id`.
 
-    Returns: **sum of weight per type** (`uint256`).
+    Returns: summed weight (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `type_id` |  `int128` | Gauge Type |
+    | `type_id` |  `int128` | Gauge Type ID |
 
     ??? quote "Source code"
 
-        ```python hl_lines=5"
+        ```python hl_lines=1 5 11"
         points_sum: public(HashMap[int128, HashMap[uint256, Point]])  # type_id -> time -> Point
 
         @external
@@ -535,9 +402,9 @@ The Gauge Controller in Curve Finance is responsible for managing and coordinati
 ### `gauges`
 !!! description "`GaugeController.gauges(arg0: uint256) -> address: view`"
 
-    Getter for the address of a gauge regarding to it's index id.
+    Getter for the gauge address at index `arg0`.
 
-    Returns: `address` of a gauge at index `arg0`.
+    Returns: gauge (`address`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -575,14 +442,124 @@ The Gauge Controller in Curve Finance is responsible for managing and coordinati
         ```
 
 
+
 # **Vote-Weighting**
 Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` is equivalent to a 100% vote weight.
+
+
+
+## `vote_for_gauge_weights`
+!!! description "`GaugeController.vote_for_gauge_weights(_gauge_addr: address, _user_weight: uint256):`"
+
+    Function to allocate `_user_weight` voting power to gauge `_gauge_addr`.
+
+    Emits: `VoteForGauge`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_gauge_addr` |  `address` | Gauge Address |
+    | `_user_weight` |  `address` | Weight |
+
+    !!!note
+        Weight for a gauge is measured in bps (uints of 0.01%). Minimal weight is 0.01%.
+
+    !!! warning
+        A gauge weight vote may only be modified once every 10 days.
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 8 68"
+        event VoteForGauge:
+            time: uint256
+            user: address
+            gauge_addr: address
+            weight: uint256
+
+        @external
+        def vote_for_gauge_weights(_gauge_addr: address, _user_weight: uint256):
+            """
+            @notice Allocate voting power for changing pool weights
+            @param _gauge_addr Gauge which `msg.sender` votes for
+            @param _user_weight Weight for a gauge in bps (units of 0.01%). Minimal is 0.01%. Ignored if 0
+            """
+            escrow: address = self.voting_escrow
+            slope: uint256 = convert(VotingEscrow(escrow).get_last_user_slope(msg.sender), uint256)
+            lock_end: uint256 = VotingEscrow(escrow).locked__end(msg.sender)
+            _n_gauges: int128 = self.n_gauges
+            next_time: uint256 = (block.timestamp + WEEK) / WEEK * WEEK
+            assert lock_end > next_time, "Your token lock expires too soon"
+            assert (_user_weight >= 0) and (_user_weight <= 10000), "You used all your voting power"
+            assert block.timestamp >= self.last_user_vote[msg.sender][_gauge_addr] + WEIGHT_VOTE_DELAY, "Cannot vote so often"
+
+            gauge_type: int128 = self.gauge_types_[_gauge_addr] - 1
+            assert gauge_type >= 0, "Gauge not added"
+            # Prepare slopes and biases in memory
+            old_slope: VotedSlope = self.vote_user_slopes[msg.sender][_gauge_addr]
+            old_dt: uint256 = 0
+            if old_slope.end > next_time:
+                old_dt = old_slope.end - next_time
+            old_bias: uint256 = old_slope.slope * old_dt
+            new_slope: VotedSlope = VotedSlope({
+                slope: slope * _user_weight / 10000,
+                end: lock_end,
+                power: _user_weight
+            })
+            new_dt: uint256 = lock_end - next_time  # dev: raises when expired
+            new_bias: uint256 = new_slope.slope * new_dt
+
+            # Check and update powers (weights) used
+            power_used: uint256 = self.vote_user_power[msg.sender]
+            power_used = power_used + new_slope.power - old_slope.power
+            self.vote_user_power[msg.sender] = power_used
+            assert (power_used >= 0) and (power_used <= 10000), 'Used too much power'
+
+            ## Remove old and schedule new slope changes
+            # Remove slope changes for old slopes
+            # Schedule recording of initial slope for next_time
+            old_weight_bias: uint256 = self._get_weight(_gauge_addr)
+            old_weight_slope: uint256 = self.points_weight[_gauge_addr][next_time].slope
+            old_sum_bias: uint256 = self._get_sum(gauge_type)
+            old_sum_slope: uint256 = self.points_sum[gauge_type][next_time].slope
+
+            self.points_weight[_gauge_addr][next_time].bias = max(old_weight_bias + new_bias, old_bias) - old_bias
+            self.points_sum[gauge_type][next_time].bias = max(old_sum_bias + new_bias, old_bias) - old_bias
+            if old_slope.end > next_time:
+                self.points_weight[_gauge_addr][next_time].slope = max(old_weight_slope + new_slope.slope, old_slope.slope) - old_slope.slope
+                self.points_sum[gauge_type][next_time].slope = max(old_sum_slope + new_slope.slope, old_slope.slope) - old_slope.slope
+            else:
+                self.points_weight[_gauge_addr][next_time].slope += new_slope.slope
+                self.points_sum[gauge_type][next_time].slope += new_slope.slope
+            if old_slope.end > block.timestamp:
+                # Cancel old slope changes if they still didn't happen
+                self.changes_weight[_gauge_addr][old_slope.end] -= old_slope.slope
+                self.changes_sum[gauge_type][old_slope.end] -= old_slope.slope
+            # Add slope changes for new slopes
+            self.changes_weight[_gauge_addr][new_slope.end] += new_slope.slope
+            self.changes_sum[gauge_type][new_slope.end] += new_slope.slope
+
+            self._get_total()
+
+            self.vote_user_slopes[msg.sender][_gauge_addr] = new_slope
+
+            # Record last action time
+            self.last_user_vote[msg.sender][_gauge_addr] = block.timestamp
+
+            log VoteForGauge(block.timestamp, msg.sender, _gauge_addr, _user_weight)
+        ```
+
+    === "Example"
+        ```shell
+        >>> GaugeController.vote_for_gauge("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7", 10000)
+        todo
+        ```
 
 
 ## `vote_user_power`
 !!! description "`GaugeController.vote_user_power(arg0: address) -> uint256: view`"
 
-    Getter method for the total weight power allocated by an address.
+    Getter method for the total voting power used by address `arg0`.
+
+    Returns: used voting power (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -671,13 +648,13 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
         10000
         ```
 
+
 ## `last_user_vote`
 !!! description "`GaugeController.last_user_vote(arg0: address, arg1: address) -> uint256: view`"
 
-    Epoch time of the last vote by `user` for `gauge`.
+    Getter for the last timestamp user `arg0` voted for gauge `arg1`.
 
-    !!! warning
-        A gauge weight vote may only be modified once every 10 days.
+    Returns: timestamp (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -771,9 +748,9 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 ## `vote_user_slopes`
 !!! description "`GaugeController.vote_user_slopes(arg0: address, arg1: address) -> slope: uint256, power: uint256, end: uint256`"
 
-    Getter method for informations about `users`'s current vote weight for `gauge`
+    Getter method for informations about users's `arg0` current vote weight for gauge `arg1`.
 
-    Returns: **current slope** (`uint256`), **allocated voting-power** (`uint256`) and **veCRV locktime end** (`uint256`)
+    Returns: slope (`uint256`), allocated voting-power (`uint256`) and veCRV lock end (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -864,336 +841,70 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
         ```
 
 
-## `vote_for_gauge`
-!!! description "`GaugeController.vote_for_gauge_weights(_gauge_addr: address, _user_weight: uint256):`"
+## **Admin Ownership** 
 
-    Function to allocate voting power for changing pool weights.
+### `admin`
+!!! description "`GaugeController.admin() -> address: view`"
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_gauge_addr` |  `address` | Gauge Address |
-    | `_user_weight` |  `address` | Weight |
+    Getter for the admin of the contract.
 
-    !!!note
-        Weight for a gauge is measured in bps (uints of 0.01%). Minimal weight is 0.01%.
+    Returns: **admin** (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8"
-        event VoteForGauge:
-            time: uint256
-            user: address
-            gauge_addr: address
-            weight: uint256
+        ```python hl_lines="1 13"
+        admin: public(address)  # Can and will be a smart contract
 
         @external
-        def vote_for_gauge_weights(_gauge_addr: address, _user_weight: uint256):
+        def __init__(_token: address, _voting_escrow: address):
             """
-            @notice Allocate voting power for changing pool weights
-            @param _gauge_addr Gauge which `msg.sender` votes for
-            @param _user_weight Weight for a gauge in bps (units of 0.01%). Minimal is 0.01%. Ignored if 0
+            @notice Contract constructor
+            @param _token `ERC20CRV` contract address
+            @param _voting_escrow `VotingEscrow` contract address
             """
-            escrow: address = self.voting_escrow
-            slope: uint256 = convert(VotingEscrow(escrow).get_last_user_slope(msg.sender), uint256)
-            lock_end: uint256 = VotingEscrow(escrow).locked__end(msg.sender)
-            _n_gauges: int128 = self.n_gauges
-            next_time: uint256 = (block.timestamp + WEEK) / WEEK * WEEK
-            assert lock_end > next_time, "Your token lock expires too soon"
-            assert (_user_weight >= 0) and (_user_weight <= 10000), "You used all your voting power"
-            assert block.timestamp >= self.last_user_vote[msg.sender][_gauge_addr] + WEIGHT_VOTE_DELAY, "Cannot vote so often"
+            assert _token != ZERO_ADDRESS
+            assert _voting_escrow != ZERO_ADDRESS
 
-            gauge_type: int128 = self.gauge_types_[_gauge_addr] - 1
-            assert gauge_type >= 0, "Gauge not added"
-            # Prepare slopes and biases in memory
-            old_slope: VotedSlope = self.vote_user_slopes[msg.sender][_gauge_addr]
-            old_dt: uint256 = 0
-            if old_slope.end > next_time:
-                old_dt = old_slope.end - next_time
-            old_bias: uint256 = old_slope.slope * old_dt
-            new_slope: VotedSlope = VotedSlope({
-                slope: slope * _user_weight / 10000,
-                end: lock_end,
-                power: _user_weight
-            })
-            new_dt: uint256 = lock_end - next_time  # dev: raises when expired
-            new_bias: uint256 = new_slope.slope * new_dt
-
-            # Check and update powers (weights) used
-            power_used: uint256 = self.vote_user_power[msg.sender]
-            power_used = power_used + new_slope.power - old_slope.power
-            self.vote_user_power[msg.sender] = power_used
-            assert (power_used >= 0) and (power_used <= 10000), 'Used too much power'
-
-            ## Remove old and schedule new slope changes
-            # Remove slope changes for old slopes
-            # Schedule recording of initial slope for next_time
-            old_weight_bias: uint256 = self._get_weight(_gauge_addr)
-            old_weight_slope: uint256 = self.points_weight[_gauge_addr][next_time].slope
-            old_sum_bias: uint256 = self._get_sum(gauge_type)
-            old_sum_slope: uint256 = self.points_sum[gauge_type][next_time].slope
-
-            self.points_weight[_gauge_addr][next_time].bias = max(old_weight_bias + new_bias, old_bias) - old_bias
-            self.points_sum[gauge_type][next_time].bias = max(old_sum_bias + new_bias, old_bias) - old_bias
-            if old_slope.end > next_time:
-                self.points_weight[_gauge_addr][next_time].slope = max(old_weight_slope + new_slope.slope, old_slope.slope) - old_slope.slope
-                self.points_sum[gauge_type][next_time].slope = max(old_sum_slope + new_slope.slope, old_slope.slope) - old_slope.slope
-            else:
-                self.points_weight[_gauge_addr][next_time].slope += new_slope.slope
-                self.points_sum[gauge_type][next_time].slope += new_slope.slope
-            if old_slope.end > block.timestamp:
-                # Cancel old slope changes if they still didn't happen
-                self.changes_weight[_gauge_addr][old_slope.end] -= old_slope.slope
-                self.changes_sum[gauge_type][old_slope.end] -= old_slope.slope
-            # Add slope changes for new slopes
-            self.changes_weight[_gauge_addr][new_slope.end] += new_slope.slope
-            self.changes_sum[gauge_type][new_slope.end] += new_slope.slope
-
-            self._get_total()
-
-            self.vote_user_slopes[msg.sender][_gauge_addr] = new_slope
-
-            # Record last action time
-            self.last_user_vote[msg.sender][_gauge_addr] = block.timestamp
-
-            log VoteForGauge(block.timestamp, msg.sender, _gauge_addr, _user_weight)
+            self.admin = msg.sender
+            self.token = _token
+            self.voting_escrow = _voting_escrow
+            self.time_total = block.timestamp / WEEK * WEEK
         ```
 
     === "Example"
         ```shell
-        >>> GaugeController.vote_user_slopes(todo)
-        todo
+        >>> GaugeController.admin()
+        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
         ```
 
 
-# **Adding New Gauges and Types**
-All of the following methods are only callable by the DAO [ownership admin](/docs/curve_dao/ownership-proxy/Agents.md) as the result of a successful [vote](/docs/curve_dao/gov-and-vote/overview.md).
+### `future_admin`
+!!! description "`GaugeController.future_admin() -> address: view`"
 
-## `add_gauge`
-!!! description "`GaugeController.add_gauge(addr: address, gauge_type: int128, weight: uint256 = 0):`"
+    Getter for the future admin of the contract. This variable is changed when calling `commit_transfer_ownership` successfully.
 
-    Function to add a new gauge.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `addr` |  `address` | Gauge Address |
-    | `gauge_type` |  `int128` | Gauge Type |
-    | `weight` |  `uint256` | Gauge weight | 
-
-    !!!warning
-        Once a gauge has been added it cannot be removed. New gauges should be very carefully verified prior to adding them to the gauge controller.
+    Returns: **future admin** (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 41"
-        event NewGauge:
-            addr: address
-            gauge_type: int128
-            weight: uint256
+        ```python hl_lines="1 10"
+        future_admin: public(address)  # Can and will be a smart contract
 
         @external
-        def add_gauge(addr: address, gauge_type: int128, weight: uint256 = 0):
+        def commit_transfer_ownership(addr: address):
             """
-            @notice Add gauge `addr` of type `gauge_type` with weight `weight`
-            @param addr Gauge address
-            @param gauge_type Gauge type
-            @param weight Gauge weight
+            @notice Transfer ownership of GaugeController to `addr`
+            @param addr Address to have ownership transferred to
             """
-            assert msg.sender == self.admin
-            assert (gauge_type >= 0) and (gauge_type < self.n_gauge_types)
-            assert self.gauge_types_[addr] == 0  # dev: cannot add the same gauge twice
-
-            n: int128 = self.n_gauges
-            self.n_gauges = n + 1
-            self.gauges[n] = addr
-
-            self.gauge_types_[addr] = gauge_type + 1
-            next_time: uint256 = (block.timestamp + WEEK) / WEEK * WEEK
-
-            if weight > 0:
-                _type_weight: uint256 = self._get_type_weight(gauge_type)
-                _old_sum: uint256 = self._get_sum(gauge_type)
-                _old_total: uint256 = self._get_total()
-
-                self.points_sum[gauge_type][next_time].bias = weight + _old_sum
-                self.time_sum[gauge_type] = next_time
-                self.points_total[next_time] = _old_total + _type_weight * weight
-                self.time_total = next_time
-
-                self.points_weight[addr][next_time].bias = weight
-
-            if self.time_sum[gauge_type] == 0:
-                self.time_sum[gauge_type] = next_time
-            self.time_weight[addr] = next_time
-
-            log NewGauge(addr, gauge_type, weight)
+            assert msg.sender == self.admin  # dev: admin only
+            self.future_admin = addr
+            log CommitOwnership(addr)
         ```
 
     === "Example"
-        
         ```shell
-        >>> GaugeController.add_gauge(todo)
-        todo
-        ```
-
-
-## `gauge_relative_weight` (!)
-!!! description "`GaugeController.gauge_relative_weight(addr: address, time: uint256 = block.timestamp) -> uint256:`"
-
-    Getter for the relative weight of a gauge normalized to 1e18 (e.g. 1.0 == 1e18).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `addr` |  `address` | Gauge Address |
-    | `gauge_type` |  `int128` | Gauge Type |
-    | `weight` |  `uint256` | Gauge weight | 
-
-    ??? quote "Source code"
-
-        ```python hl_lines="3 26"
-        @internal
-        @view
-        def _gauge_relative_weight(addr: address, time: uint256) -> uint256:
-            """
-            @notice Get Gauge relative weight (not more than 1.0) normalized to 1e18
-                    (e.g. 1.0 == 1e18). Inflation which will be received by it is
-                    inflation_rate * relative_weight / 1e18
-            @param addr Gauge address
-            @param time Relative weight at the specified timestamp in the past or present
-            @return Value of relative weight normalized to 1e18
-            """
-            t: uint256 = time / WEEK * WEEK
-            _total_weight: uint256 = self.points_total[t]
-
-            if _total_weight > 0:
-                gauge_type: int128 = self.gauge_types_[addr] - 1
-                _type_weight: uint256 = self.points_type_weight[gauge_type][t]
-                _gauge_weight: uint256 = self.points_weight[addr][t].bias
-                return MULTIPLIER * _type_weight * _gauge_weight / _total_weight
-
-            else:
-                return 0
-
-        @external
-        @view
-        def gauge_relative_weight(addr: address, time: uint256 = block.timestamp) -> uint256:
-            """
-            @notice Get Gauge relative weight (not more than 1.0) normalized to 1e18
-                    (e.g. 1.0 == 1e18). Inflation which will be received by it is
-                    inflation_rate * relative_weight / 1e18
-            @param addr Gauge address
-            @param time Relative weight at the specified timestamp in the past or present
-            @return Value of relative weight normalized to 1e18
-            """
-            return self._gauge_relative_weight(addr, time)
-        ```
-
-    === "Example"
-        
-        ```shell
-        >>> GaugeController.gauge_relative_weight(todo)
-        todo
-        ```
-
-
-## `add_type`
-!!! description "`GaugeController.add_type(_name: String[64], weight: uint256 = 0):`"
-
-    Function to add a new gauge type.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `addr` |  `address` | Gauge Address |
-    | `gauge_type` |  `int128` | Gauge Type |
-    | `weight` |  `uint256` | Gauge weight | 
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 6 18"
-        event AddType:
-            name: String[64]
-            type_id: int128
-
-        @external
-        def add_type(_name: String[64], weight: uint256 = 0):
-            """
-            @notice Add gauge type with name `_name` and weight `weight`
-            @param _name Name of gauge type
-            @param weight Weight of gauge type
-            """
-            assert msg.sender == self.admin
-            type_id: int128 = self.n_gauge_types
-            self.gauge_type_names[type_id] = _name
-            self.n_gauge_types = type_id + 1
-            if weight != 0:
-                self._change_type_weight(type_id, weight)
-                log AddType(_name, type_id)
-        ```
-
-    === "Example"
-        
-        ```shell
-        >>> GaugeController.add_type(todo):
-        todo
-        ```
-
-### `change_type_weight`
-!!! description "`GaugeController.change_type_weight(type_id: int128, weight: uint256):`"
-
-    Function to change the weight for a give gauge.
-
-    !!!note
-        This function is only callable by the DAO [ownership admin](/docs/curve_dao/ownership-proxy/Agents.md).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `type_id` |  `int128` | Gauge Type ID |
-    | `weight` |  `uint256` | New Gauge Type weight |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 8 28"
-        event NewTypeWeight:
-            type_id: int128
-            time: uint256
-            weight: uint256
-            total_weight: uint256
-
-        @internal
-        def _change_type_weight(type_id: int128, weight: uint256):
-            """
-            @notice Change type weight
-            @param type_id Type id
-            @param weight New type weight
-            """
-            old_weight: uint256 = self._get_type_weight(type_id)
-            old_sum: uint256 = self._get_sum(type_id)
-            _total_weight: uint256 = self._get_total()
-            next_time: uint256 = (block.timestamp + WEEK) / WEEK * WEEK
-
-            _total_weight = _total_weight + old_sum * weight - old_sum * old_weight
-            self.points_total[next_time] = _total_weight
-            self.points_type_weight[type_id][next_time] = weight
-            self.time_total = next_time
-            self.time_type_weight[type_id] = next_time
-
-            log NewTypeWeight(type_id, next_time, weight, _total_weight)
-
-        @external
-        def change_type_weight(type_id: int128, weight: uint256):
-            """
-            @notice Change gauge type `type_id` weight to `weight`
-            @param type_id Gauge type id
-            @param weight New Gauge weight
-            """
-            assert msg.sender == self.admin
-            self._change_type_weight(type_id, weight)
-        ```
-
-    === "Example"
-        
-        ```shell
-        >>> GaugeController.change_type_weight(todo)
-        todo
+        >>> GaugeController.future_admin()
+        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
         ```
 
 

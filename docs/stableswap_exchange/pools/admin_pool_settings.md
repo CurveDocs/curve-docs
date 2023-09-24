@@ -214,8 +214,8 @@ todo: hyperlink to fee collection and distribution
 Curve pools charge fees on token swaps, where the fee may differ between pools. An admin fee is charged on the pool fee. 
 For an overview of how fees are distributed, please refer to Fee Collection and Distribution.
 
-### `StableSwap.commit_new_fee`
 
+### `StableSwap.commit_new_fee`
 !!! description "`StableSwap.commit_new_fee(_new_fee: uint256, _new_admin_fee: uint256)`"
 
     The method commits new fee params: these fees do not take immediate effect.
@@ -233,8 +233,6 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
         MAX_ADMIN_FEE: constant(uint256) = 10 * 10 ** 9
         MAX_FEE: constant(uint256) = 5 * 10 ** 9
         ADMIN_ACTIONS_DELAY: constant(uint256) = 3 * 86400
-        
-        ...
 
         @external
         def commit_new_fee(new_fee: uint256, new_admin_fee: uint256):

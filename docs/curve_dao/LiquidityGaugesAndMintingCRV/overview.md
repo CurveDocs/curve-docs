@@ -1,21 +1,26 @@
-# *`The Curve DAO: Liquidity Gauges and Minting CRV`**
+<h1> </h1>
+
+# **`The Curve DAO: Liquidity Gauges and Minting CRV`**
 
 Curve incentivizes liquidity providers with the CRV, the protocol governance token. Allocation, distribution and minting of CRV are managed via several related DAO contracts:
 
-`LiquidityGauge:` Measures liquidity provided by users over time, in order to distribute CRV and other rewards
+- **`LiquidityGauge:`** Measures liquidity provided by users over time, in order to distribute CRV and other rewards
 
-`GaugeController:` Central controller that maintains a list of gauges, weights and type weights, and coordinates the rate of CRV production for each gauge
+- **`GaugeController:`** Central controller that maintains a list of gauges, weights and type weights, and coordinates the rate of CRV production for each gauge
 
-`Minter:` CRV minting contract, generates new CRV according to liquidity gauges
+- **`Minter:`** CRV minting contract, generates new CRV according to liquidity gauges
 
 
 # **Implementation Details**
 
-## **CRV INFLATION**
-CRV follows a piecewise linear inflation schedule. The inflation is reduced by $2^{1/4}$ each year. Each time the inflation reduces, a new mining epoch starts.
+## **CRV Inflation**
+CRV follows a piecewise linear inflation schedule. The inflation is reduced by around 15.9% each year. Each time the inflation reduces, a new mining epoch starts.
 
+<figure markdown>
+  ![](https://curve.readthedocs.io/_images/inflation.svg){ width="500" }
+  <figcaption></figcaption>
+</figure>
 
-![Image title](https://curve.readthedocs.io/_images/inflation.svg){align=center}  
 
 
 The initial supply of CRV is 1.273 billion tokens, which is 42% of the eventual t -> $\infty$ supply of $\approx$ 3.03 billion tokens. All of these initial tokens are gradually vested (with every block). The initial inflation rate which supports the above inflation schedule is $r = 22.0$% (279.6 millions per year).   
@@ -30,7 +35,7 @@ To measure liquidity over time, the user deposits their LP tokens into the liqui
 Suppose we have the inflation rate $r$ changing with every epoch (1 year), gauge weight $w_{g}$ and gauge type weight $w_{t}$. Then, all the gauge handles the stream of inflation with the rate $r' = w_{g}w_{t}r$ which it can update every time $w_{g}$, $w_{t}$ or mining epoch changes.
 
 To calculate a user’s share of $r'$, we must calculate the integral: 
-$I_{u} = \int \frac{r'(t)b_{u}(t)}{S(t)}dt,$ where $b_{u}(t)$ is the balance supplied by the user (measured in LP tokens) and $S(t)$ is total liquidity supplied by users, depending on the time $t$; the value $I_{u}$ gives the amount of tokens which the user has to have minted to them. The user’s balance $b_{u}$ changes every time the user $u$ makes a deposit or withdrawal, and $S$ changes every time _any_ user makes a deposit or withdrawal so $S$ can change many times in between two events for the user $u''$. In the liquidity gauge contract, the vaule of I_{u} is recorded per-user in the public `integrate_fraction` mapping.
+$I_{u} = \int \frac{r'(t)b_{u}(t)}{S(t)}dt,$ where $b_{u}(t)$ is the balance supplied by the user (measured in LP tokens) and $S(t)$ is total liquidity supplied by users, depending on the time $t$; the value $I_{u}$ gives the amount of tokens which the user has to have minted to them. The user’s balance $b_{u}$ changes every time the user $u$ makes a deposit or withdrawal, and $S$ changes every time _any_ user makes a deposit or withdrawal so $S$ can change many times in between two events for the user $u''$. In the liquidity gauge contract, the vaule of $I_{u}$ is recorded per-user in the public `integrate_fraction` mapping.
 
 To avoid requiring that all users to checkpoint periodically, we keep recording values of the following integral (named `integrate_inv_supply` in the contract):
 
@@ -60,7 +65,7 @@ When a user applies a new weight vote, it gets applied at the start of the next 
 
 
 ## **The Gauge Controller**
-The **Gauge Controller** maintains a list of gauges and their types, with the weights of each gauge and [type](/docs/curve_dao/liq-gauges%26minting-crv/GaugeTypes.md). In order to implement weight voting, `GaugeController` has to include parameters handling linear character of voting power each user has.
+The Gauge Controller maintains a list of gauges and their types, with the weights of each gauge and type. In order to implement weight voting, `GaugeController` has to include parameters handling linear character of voting power each user has.
 
 `GaugeController` records points (bias + slope) per gauge in `vote_points`, and _scheduled_ changes in biases and slopes for those points in `vote_bias_changes` and `vote_slope_changes`. New changes are applied at the start of each epoch week.
 

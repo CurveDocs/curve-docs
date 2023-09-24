@@ -1,15 +1,15 @@
+<h1> </h1>
+
 **Curve DAO Token (CRV)** is based on the ERC-20 token standard as defined at https://eips.ethereum.org/EIPS/eip-20.
 
-!!! info
-    **Curve DAO Token** contract is deployed to the Ethereum mainnet at: [0xD533a949740bb3306d119CC777fa900bA034cd52](https://etherscan.io/address/0xD533a949740bb3306d119CC777fa900bA034cd52#code).
-
-    Source code of the VotingEscrow contract can be found on [Github](https://etherscan.io/token/0xD533a949740bb3306d119CC777fa900bA034cd52).
-
-
-The main purposes of the Curve DAO token are to incentivise liquidity providers on the Curve Finance platform as well as getting as many users involved in the governance of the protocol as possible.
+!!!deploy "Contract Source & Deployment"
+    **Curve DAO Token** contract is deployed to the Ethereum mainnet at: [0xD533a949740bb3306d119CC777fa900bA034cd52](https://etherscan.io/address/0xD533a949740bb3306d119CC777fa900bA034cd52#code).  
+    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/567927551903f71ce5a73049e077be87111963cc/contracts/ERC20CRV.vy).  
+    Deployment hash: [0x5dc4a688b63cea09bf4d73a695175b77572792a2e2b3656297809ad3596d4bfe](https://etherscan.io/tx/0x5dc4a688b63cea09bf4d73a695175b77572792a2e2b3656297809ad3596d4bfe)
 
 
-| Allocation | More about the release schedule [here](https://dao.curve.fi/releaseschedule). |
+
+| Allocation | More about the release schedule [here](https://dao.curve.fi/releaseschedule) |
 | ------| --------------------------|
 | `57%` |`Inflation`                | 
 | `30%` |`Shareholder (team and investors)` | 
@@ -18,7 +18,7 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 | `3%`  |`Employees`                | 
 
 
-## **Admin Ownership**
+## **Contract Info Methods** 
 
 ### `admin`
 !!! description "`CRV.admin() -> address: view`"
@@ -60,56 +60,17 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
         >>> CRV.admin()
         '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
         ```
-
-### `set_admin`
-!!! description "`CRV.set_admin(_admin: address):`"
-
-    Function to set/change the admin of the contract.
-
-    Emits event: `SetAdmin`
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_admin` |  `address` | New Admin Address |
-
-    !!!note
-        This function can only be called by the `admin` of the contract.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 2 4 7"
-        event SetAdmin:
-            admin: address
         
-        admin: public(address)
-
-        @external
-        def set_admin(_admin: address):
-            """
-            @notice Set the new admin.
-            @dev After all is set up, admin only can change the token name
-            @param _admin New admin address
-            """
-            assert msg.sender == self.admin  # dev: admin only
-            self.admin = _admin
-            log SetAdmin(_admin)
-        ```
-
-    === "Example"
-        ```shell
-        >>> CRV.set_admin(todo)
-        todo
-        ```
-
-
-## **Name and Symbol**
 
 ### `name`
 !!! description "`CRV.name() -> String[64]`"
 
     Getter for the name of the token.
 
-    Returns: name (`String[64]`).
+    Returns: token name (`String[64]`).
+
+    !!! note
+        Token name be changed by calling the `set_name()` function.
 
     ??? quote "Source code"
 
@@ -151,8 +112,11 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
     Getter of the token symbol.
 
-    Returns: symbol (`String[32]`).
+    Returns: token symbol (`String[32]`).
     
+    !!! note
+        Token symbol be changed by calling the `set_name()` function.
+
     ??? quote "Source code"
 
         ```python hl_lines="1 4 8 13"
@@ -187,46 +151,6 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
         'CRV'
         ```
 
-    !!! note
-        Symbol be changed by calling the `set_name()` function (see below).
-
-
-### `set_name`
-!!! description "`CRV.set_name(_name: String[64], _symbol: String[32]):`"
-
-    Function to change token name to `_name` and token symbol to `_symbol`.
-
-    !!!note
-        This function can only be called by the `admin` of the contract.
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 2 5"
-        name: public(String[64])
-        symbol: public(String[32])
-
-        @external
-        def set_name(_name: String[64], _symbol: String[32]):
-            """
-            @notice Change the token name and symbol to `_name` and `_symbol`
-            @dev Only callable by the admin account
-            @param _name New token name
-            @param _symbol New token symbol
-            """
-            assert msg.sender == self.admin, "Only admin is allowed to change name"
-            self.name = _name
-            self.symbol = _symbol
-        ```
-
-    === "Example"
-        ```shell
-        >>> CRV.set_name('todo)
-        'todo'
-        ```
-
-
-
-## **Contract Info Methods** 
 
 ### `avaliable_supply`
 !!! description "`CRV.avaliably_supply() -> uint256`"
@@ -256,77 +180,6 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
         >>> CRV.avaliable_supply()
         1953676805157446496269106603
         ```
-
-
-### `mintable_in_timeframe`
-!!! description "`CRV.mintable_in_timeframe(start: uint256, end: uint256) -> uint256`"
-
-    Getter for mintable supply from start timestamp till end timestamp.
-
-    Returns: amount of mintable tokens (`uint256`) within two timestamps.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `start` |  `uint256` | Start (timestamp) |
-    | `end` |  `uint256` | End (timestamp)  |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="3"
-        @external
-        @view
-        def mintable_in_timeframe(start: uint256, end: uint256) -> uint256:
-            """
-            @notice How much supply is mintable from start timestamp till end timestamp
-            @param start Start of the time interval (timestamp)
-            @param end End of the time interval (timestamp)
-            @return Tokens mintable from `start` till `end`
-            """
-            assert start <= end  # dev: start > end
-            to_mint: uint256 = 0
-            current_epoch_time: uint256 = self.start_epoch_time
-            current_rate: uint256 = self.rate
-
-            # Special case if end is in future (not yet minted) epoch
-            if end > current_epoch_time + RATE_REDUCTION_TIME:
-                current_epoch_time += RATE_REDUCTION_TIME
-                current_rate = current_rate * RATE_DENOMINATOR / RATE_REDUCTION_COEFFICIENT
-
-            assert end <= current_epoch_time + RATE_REDUCTION_TIME  # dev: too far in future
-
-            for i in range(999):  # Curve will not work in 1000 years. Darn!
-                if end >= current_epoch_time:
-                    current_end: uint256 = end
-                    if current_end > current_epoch_time + RATE_REDUCTION_TIME:
-                        current_end = current_epoch_time + RATE_REDUCTION_TIME
-
-                    current_start: uint256 = start
-                    if current_start >= current_epoch_time + RATE_REDUCTION_TIME:
-                        break  # We should never get here but what if...
-                    elif current_start < current_epoch_time:
-                        current_start = current_epoch_time
-
-                    to_mint += current_rate * (current_end - current_start)
-
-                    if start >= current_epoch_time:
-                        break
-
-                current_epoch_time -= RATE_REDUCTION_TIME
-                current_rate = current_rate * RATE_REDUCTION_COEFFICIENT / RATE_DENOMINATOR  # double-division with rounding made rate a bit less => good
-                assert current_rate <= INITIAL_RATE  # This should never happen
-
-            return to_mint
-        ```
-
-    === "Example"
-        ```shell
-        >>> CRV.mintable_in_timeframe(1682892000, 1683496800)
-        3726756852824660365468800
-        ```
-
-    !!! note
-        For clarification: When using timestamps with a difference of 1, the mintable CRV tokens will equal to the current `rate`.
-
 
 ### `totalSupply`
 !!! description "`CRV.totalSupply() -> uint256`"
@@ -388,6 +241,7 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
         >>> CRV.allowance(0x7a16fF8270133F063aAb6C9977183D9e72835428 ,0x68BEDE1d0bc6BE6d215f8f8Ee4ee8F9faB97fE7a)
         0
         ```
+
 
 ### `decimals`
 !!! description "`CRV.decimals() -> uint256: view`"
@@ -456,12 +310,17 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
         ```
 
 
+## **Minting and Burning**
+
 ### `minter`
 !!! description "`CRV.minter() -> address: view`"
 
     Getter for the minter contract address.
 
-    Returns: `address` of the **minter contract**.
+    Returns: minter contract (`address`).
+
+    !!! note
+        Minter contract can be changed by calling the `set_minter()` function.
 
     ??? quote "Source code"
 
@@ -476,12 +335,15 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
         ```
 
 
-## **Minting and Burning**
 
 ### `mint`
 !!! description "`CRV.mint(_to: address, _value: uint256) -> bool:`"
 
     Function to mint `_value (uint256)` and assign them to `_to (address)`.
+
+    Returns: True (`bool`)
+
+    Emits: `Transfer`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -523,46 +385,19 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
     === "Example"
         ```shell
-        >>> CRV.mint()
-        todo
+        >>> CRV.mint("0x0000000000000000000000000000000000000000", 1000000000000000000)
+        False
         ```
-
-### `set_minter`
-!!! description "`CRV.set_minter(_minter: address):`"
-
-    Function to set the minter address of the contract. 
-
-    Emits event: `SetMinter`
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 2 4 7"
-        event SetMinter:
-            minter: address
-        
-        minter: public(address)
-
-        @external
-        def set_minter(_minter: address):
-            """
-            @notice Set the minter address
-            @dev Only callable once, when minter has not yet been set
-            @param _minter Address of the minter
-            """
-            assert msg.sender == self.admin  # dev: admin only
-            assert self.minter == ZERO_ADDRESS  # dev: can set the minter only once, at creation
-            self.minter = _minter
-            log SetMinter(_minter)
-        ```
-
-    !!! note
-        The minter of the token can only be set once by calling `set_minter`. This occured in this [transaction](https://etherscan.io/tx/0x98578e36a43c16bce03585bb42d4abb25d497b3e593f9fca56c591c5d0ec8de6).
 
 
 ### `burn`
 !!! description "`CRV.burn(_value: uint256) -> bool`"
     
     Function to burn `_value` tokens belonging to the caller of the function.
+
+    Retruns: True (`bool`)
+
+    Emits: `Transfer`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -588,29 +423,95 @@ The main purposes of the Curve DAO token are to incentivise liquidity providers 
 
     === "Example"   
         ```shell
-        >>> CRV.burn()
-        todo
+        >>> CRV.burn(1000000000000000000)
+        True
         ```
+
+### `mintable_in_timeframe`
+!!! description "`CRV.mintable_in_timeframe(start: uint256, end: uint256) -> uint256`"
+
+    Getter for mintable supply from start timestamp till end timestamp.
+
+    Returns: amount of mintable tokens (`uint256`) within two timestamps.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `start` |  `uint256` | Start (timestamp) |
+    | `end` |  `uint256` | End (timestamp)  |
+
+    ??? quote "Source code"
+
+        ```python hl_lines="3"
+        @external
+        @view
+        def mintable_in_timeframe(start: uint256, end: uint256) -> uint256:
+            """
+            @notice How much supply is mintable from start timestamp till end timestamp
+            @param start Start of the time interval (timestamp)
+            @param end End of the time interval (timestamp)
+            @return Tokens mintable from `start` till `end`
+            """
+            assert start <= end  # dev: start > end
+            to_mint: uint256 = 0
+            current_epoch_time: uint256 = self.start_epoch_time
+            current_rate: uint256 = self.rate
+
+            # Special case if end is in future (not yet minted) epoch
+            if end > current_epoch_time + RATE_REDUCTION_TIME:
+                current_epoch_time += RATE_REDUCTION_TIME
+                current_rate = current_rate * RATE_DENOMINATOR / RATE_REDUCTION_COEFFICIENT
+
+            assert end <= current_epoch_time + RATE_REDUCTION_TIME  # dev: too far in future
+
+            for i in range(999):  # Curve will not work in 1000 years. Darn!
+                if end >= current_epoch_time:
+                    current_end: uint256 = end
+                    if current_end > current_epoch_time + RATE_REDUCTION_TIME:
+                        current_end = current_epoch_time + RATE_REDUCTION_TIME
+
+                    current_start: uint256 = start
+                    if current_start >= current_epoch_time + RATE_REDUCTION_TIME:
+                        break  # We should never get here but what if...
+                    elif current_start < current_epoch_time:
+                        current_start = current_epoch_time
+
+                    to_mint += current_rate * (current_end - current_start)
+
+                    if start >= current_epoch_time:
+                        break
+
+                current_epoch_time -= RATE_REDUCTION_TIME
+                current_rate = current_rate * RATE_REDUCTION_COEFFICIENT / RATE_DENOMINATOR  # double-division with rounding made rate a bit less => good
+                assert current_rate <= INITIAL_RATE  # This should never happen
+
+            return to_mint
+        ```
+
+    === "Example"
+        ```shell
+        >>> CRV.mintable_in_timeframe(1682892000, 1683496800)
+        3726756852824660365468800
+        ```
+
+    !!!info
+        For clarification: When using timestamps with a difference of 1, the mintable CRV tokens will equal to the current `rate`.
+
 
 
 ## **$CRV Emissions**
 
-Mining parameters are used to determin the tokens emissions. The emissions are based on epochs (one year). With every epoch passing, the `rate` will reduce and therefore reduce the entire $CRV emissions.
+Mining parameters are used to determine the token emissions. The emissions are based on epochs (one year). With every passing epoch, the `rate` will be reduced, thereby reducing the entire $CRV emissions.
 
-The rate is reduced by updating the mining parameters using the `update_mining_parameters()` function. While anyone can call this function, the call will revert if a year hasn't elapsed. Each time it's successfully called, the `mining_epoch` increments by 1 and the `start_epoch_time` is set to the timestamp of the function call. The `update_mining_parameters()` function is automatically triggered when someone attempts to mint CRV before the rate reduction.
+The rate can be reduced by invoking the `update_mining_parameters()` function. While this function is accessible to anyone, an attempt to call it will be reverted if a year hasn't elapsed since the last update. When the function is successfully executed, the `mining_epoch` increments by 1, and the `start_epoch_time` is updated to the timestamp of that function call. Moreover, the `update_mining_parameters()` function will be automatically triggered if someone tries to mint CRV before the scheduled rate reduction.
 
 $$rate_{future} = rate_{current} * \frac{\text{RATE_DENOMINATOR}}{\text{RATE_REDUCTION_COEFFICIENT}}$$
 
 *with*:
 
-$\text{RATE_DENOMINATOR} =  10^{18} = 1000000000000000000$  
-$\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18} = 1189207115002721024$
+$\text{RATE_DENOMINATOR} =  10^{18}$
+$\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
 
-Effectively, every rate reduction decreases the $CRV inflation by around 15.9%.
-
-!!!note
-    Transaction of Curve DAO Token deployment: https://etherscan.io/tx/0x5dc4a688b63cea09bf4d73a695175b77572792a2e2b3656297809ad3596d4bfe
-
+*Effectively, every rate reduction decreases the $CRV inflation by around 15.9%.*
 
 
 ### `mining_epoch`
@@ -727,6 +628,10 @@ Effectively, every rate reduction decreases the $CRV inflation by around 15.9%.
 
     Returns: current rate (`uint256`).
 
+    !!!tip
+        Rate is denominated in emissions per second.   
+        Emissions per day: 6.161965695807970181 * 86400 = 532393.8361178086
+
     ??? quote "Source code"
 
         ```python hl_lines="1 22"
@@ -760,10 +665,7 @@ Effectively, every rate reduction decreases the $CRV inflation by around 15.9%.
         >>> rate()
         6161965695807970181
         ```
-    
-    !!! note
-        Rate is denominated in emissions per second.   
-        Emissions per day: 6.161965695807970181 * 86400 = 532393.8361178086
+
 
 
 ### `update_mining_parameters` 
@@ -771,7 +673,7 @@ Effectively, every rate reduction decreases the $CRV inflation by around 15.9%.
 
     Function to update the mining parameters for the Curve DAO Token ($CRV).  
 
-    Emits event: `UpdateMiningParameters`
+    Emits: `UpdateMiningParameters`
 
     !!!note
         This function can be called by anyone. However, the call will revert if `block.timestamp` is less than or equal to `start_epoch_time` + `RATE_REDUCTION_TIME`, indicating that one year has not yet passed.
@@ -837,7 +739,6 @@ Effectively, every rate reduction decreases the $CRV inflation by around 15.9%.
     === "Example"
         ```shell
         >>> update_mining_parameters()
-        todo
         ```
 
 
@@ -871,7 +772,6 @@ Effectively, every rate reduction decreases the $CRV inflation by around 15.9%.
     === "Example"
         ```shell
         >>> CRV.start_epoch_time_write()
-        todo
         ```
 
 
@@ -880,7 +780,7 @@ Effectively, every rate reduction decreases the $CRV inflation by around 15.9%.
 
     Function to get the next mining epoch start while simultaneously updating mining parameters (if possible).
 
-    Returns: timestamp(`uint256`).
+    Returns: timestamp (`uint256`).
 
     ??? quote "Source code"
 
@@ -903,5 +803,4 @@ Effectively, every rate reduction decreases the $CRV inflation by around 15.9%.
     === "Example"
         ```shell
         >>> CRV.future_epoch_time_write()
-        todo
         ```
