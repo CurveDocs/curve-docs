@@ -1,9 +1,9 @@
 The **GaugeController** in Curve Finance is responsible for managing and coordinating the distribution of rewards to liquidity providers in various liquidity pools. It determines the allocation of CRV rewards based on the liquidity provided by users. By analyzing the gauges, which are parameters that define how rewards are distributed across different pools, the Gauge Controller ensures a fair and balanced distribution of incentives, encouraging liquidity provision and participation in Curve's ecosystem. This helps to maintain the stability and efficiency of Curve's decentralized exchange.
 
 
-!!! info
-    `GaugeController` contract is deployed on the Ethereum mainnet at [0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB](https://etherscan.io/address/0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB#code)   
-    Source code of the GaugeController can be found on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/GaugeController.vy).
+!!!deploy "Contract Source & Deployment"
+    **GaugeController** contract is deployed to the Ethereum mainnet at: [0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB](https://etherscan.io/address/0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB#code).  
+    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/GaugeController.vy).
 
 
 # **Gauge Types and Weights**
@@ -848,7 +848,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     Getter for the admin of the contract.
 
-    Returns: **admin** (`address`).
+    Returns: admin (`address`).
 
     ??? quote "Source code"
 
@@ -883,7 +883,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     Getter for the future admin of the contract. This variable is changed when calling `commit_transfer_ownership` successfully.
 
-    Returns: **future admin** (`address`).
+    Returns: future admin (`address`).
 
     ??? quote "Source code"
 
@@ -915,7 +915,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     Getter for the token address of the Curve DAO Token.
 
-    Returns: `address` of the **Curve DAO Token**
+    Returns: crv token (`address`).
 
     ??? quote "Source code"
 
@@ -950,7 +950,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     Getter for the token address of the VotingEscrow.
 
-    Returns: `address` of the **VotingEscrow**
+    Returns: voting escorw (`address`).
 
     ??? quote "Source code"
 

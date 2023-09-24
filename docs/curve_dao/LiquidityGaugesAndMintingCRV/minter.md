@@ -1,8 +1,10 @@
 The Minter contract in Curve Finance is responsible for the issuance and distribution of the CRV (Curve's governance token) to liquidity providers. It acts as a mechanism to reward users who provide liquidity to Curve's pools. The Minter contract calculates the amount of CRV tokens to be allocated based on various factors such as the duration and amount of liquidity provided. By incentivizing liquidity provision, the Minter contract promotes the growth and sustainability of the Curve ecosystem.
 
-!!! info
-    **`Minter`** contract is deployed to the Ethereum mainnet at: [0xd061D61a4d941c39E5453435B6345Dc261C2fcE0](https://etherscan.io/address/0xd061D61a4d941c39E5453435B6345Dc261C2fcE0#code)  
-    Source code of the VotingEscrow contract can be found on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/Minter.vy).
+
+!!!deploy "Contract Source & Deployment"
+    **Minter** contract is deployed to the Ethereum mainnet at: [0xd061D61a4d941c39E5453435B6345Dc261C2fcE0](https://etherscan.io/address/0xd061D61a4d941c39E5453435B6345Dc261C2fcE0#code).  
+    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/Minter.vy).
+
 
 !!!warning
     This is a fixed address. The contract cannot be swapped out or upgraded.
@@ -13,6 +15,8 @@ The Minter contract in Curve Finance is responsible for the issuance and distrib
 !!! description "`Minter.mint(gauge_addr: address)`"
 
     Function to mint allocated tokens for the caller based on a single gauge.
+
+    Emits: `Minted`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -63,11 +67,13 @@ The Minter contract in Curve Finance is responsible for the issuance and distrib
 
     Function to mint CRV for the caller from multiple gauges.
 
+    Emits: `Minted`
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `gauge_addrs` |  `address` | List of Gauge Addresses to mint from|
 
-    !!!note
+    !!!tip
         If you wish to mint from less than eight gauges, leave the remaining array entries as `ZERO_ADDRESS`.
 
     ??? quote "Source code"
@@ -117,6 +123,8 @@ The Minter contract in Curve Finance is responsible for the issuance and distrib
 
     Function to mint tokens from a different address.
     
+    Emits: `Minted`
+
     !!!note
         In order to call this function, the caller must have been previously approved by `for` using [`toggle_approve_mint`](#toggle_approve_mint).
 
@@ -203,7 +211,6 @@ The Minter contract in Curve Finance is responsible for the issuance and distrib
 
     Returns: `bool`.
 
-
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `arg0` |  `address` | Address |
@@ -231,14 +238,14 @@ The Minter contract in Curve Finance is responsible for the issuance and distrib
 
 
 
-## **Querying Basic Data**
+## **Contract Info Methods**
 
 ### `token`
 !!! description "`Minter.token() -> address: view`"
 
     Getter for the token address of Curve DAO Token.
 
-    Returns: `address` of the **Curve DAO Token**.
+    Returns: crv token (`address`).
 
     ??? quote "Source code"
 
@@ -263,7 +270,7 @@ The Minter contract in Curve Finance is responsible for the issuance and distrib
 
     Getter for the address of the Controller.
 
-    Returns: `address` of the **Controller**.
+    Returns: controller (`address`)
 
     ??? quote "Source code"
 
@@ -288,7 +295,7 @@ The Minter contract in Curve Finance is responsible for the issuance and distrib
 
     Getter for the total amount of CRV minted from a specific gauge address by an address.
 
-    Returns: **amount of CRV minted** (`uint256`).
+    Returns: amount of CRV minted (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
