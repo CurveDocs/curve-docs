@@ -13,6 +13,7 @@ plugins:
 
 nav:
   - Curve DAO:
+    - test: curve_dao/test.md
     - Overview: curve_dao/overview.md  
     - Curve DAO Token: curve_dao/ERC20CRV.md
     - Vote-Escrowed CRV: curve_dao/VotingEscrow.md
