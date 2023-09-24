@@ -1,19 +1,10 @@
 !!!guard "Guarded Method"
     This function is only callable by the `admin` of the contract.
 
-!!!guard1 "Guarded Method"
-    This function is only callable by the `admin` of the contract.
 
-!!!guard2 "Guarded Method"
-    This function is only callable by the `admin` of the contract.
-
-!!!guard3 "Guarded Method"
-    This function is only callable by the `admin` of the contract.
-
-!!!warning "Guarded Method"
-    This function is only callable by the `admin` of the contract.
-
-
+!!!deploy "Contract Source & Deployment"
+    **Curve DAO Token** contract is deployed to the Ethereum mainnet at: [0xD533a949740bb3306d119CC777fa900bA034cd52](https://etherscan.io/address/0xD533a949740bb3306d119CC777fa900bA034cd52#code).
+    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/567927551903f71ce5a73049e077be87111963cc/contracts/ERC20CRV.vy).
 
 
 
@@ -23,10 +14,10 @@
 ### `set_name`
 !!! description "`CRV.set_name(_name: String[64], _symbol: String[32]):`"
 
-    Function to change token name to `_name` and token symbol to `_symbol`.
-
-    !!!guard3 "Guarded Methods"
+    !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
+
+    Function to change token name to `_name` and token symbol to `_symbol`.
 
     ??? quote "Source code"
 
