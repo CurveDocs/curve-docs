@@ -19,8 +19,8 @@ Deployed at: [0x4EEb3bA4f221cA16ed4A0cC7254E2E32DF948c5f](https://etherscan.io/a
 ## **Emergency DAO**
 The EmergencyDAO has limited authority to kill non-factory pools and gauges during extraordinary circumstances.
 
-!!!note
-    The EmergencyDAO contract is deployed at: [0x467947EE34aF926cF1DCac093870f613C96B1E0c](https://etherscan.io/address/0x467947EE34aF926cF1DCac093870f613C96B1E0c)
+!!!deploy "Contract Source & Deployment"
+    The **EmergencyDAO** contract is deployed at: [0x467947EE34aF926cF1DCac093870f613C96B1E0c](https://etherscan.io/address/0x467947EE34aF926cF1DCac093870f613C96B1E0c)
 
 This DAO consists of *nine members*, comprised of a mix of the Curve team and prominent figures within the DeFi community. Each member has one vote. Any member may propose a vote.
 
@@ -46,6 +46,9 @@ All members of the EmergencyDAO may propose new votes. A vote *lasts for 24 hour
 ### **Killing Pools**
 
 Non-Factory liquidity pools can be killed by calling the `kill_me()` function of the pool. The function can only be called within the first 2 months after deploying the pool.
+
+!!!guard "Guarded Method"
+    This function is only callable by the `owner`/`admin` of the pools.
         
 Calling `kill_me()` sets the `is_killed` variable of the pool to *True*. 
 By doing this, the contract prevents users from performing actions such as `exchange`, `add_liquidity`, `remove_liquidity_imbalance` and `remove_liquidity_one_coin`. 

@@ -1,10 +1,9 @@
 Participating in Curve DAO governance requires that an account have a balance of vote-escrowed CRV (veCRV). veCRV is a non-standard ERC20 implementation, used within the Aragon DAO to determine each account’s voting power.
 
-!!!info
+!!!deploy "Contract Source & Deployment"
     **veCRV** is represented by the **`VotingEscrow`** contract, deployed to the Ethereum mainnet at:
-    [0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2](https://etherscan.io/address/0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2)  
-
-    Source code of the **`VotingEscrow`** contract can be found on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/VotingEscrow.vy).
+    [0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2](https://etherscan.io/address/0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2).  
+    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/VotingEscrow.vy). 
 
 !!!warning
     veCRV cannot be transferred. The only way to obtain veCRV is by locking CRV.  
