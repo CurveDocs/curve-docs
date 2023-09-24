@@ -21,13 +21,6 @@ At a high level, the process of CRV distribution on sidechain gauges is as follo
 
 1.  **On the sidechain, CRV is received into a `ChildLiquidityGauge` contract and then transfered to the `ChildGaugeFactory` from  which the tokens then can be claimed.**
 
-    The bridge automatically transfers CRV into a streamer contract, deployed at the same address on the sidechain as the gauge is on Ethereum. Once the CRV has arrived, a call is made to `notify_reward_amount`. This call updates the local accounting and streams the balance out linearly over the next seven days.
-
-
-1.  **Liquidity providers who have staked their LP tokens in the `RewardsOnlyGauge` may claim their CRV.**
-
-    The sidechain gauge is a simplified version of the gauges used on Ethereum. It handles CRV as though it were any other 3rd-party reward token, evenly distributing between stakers based on the deposited balances as the time the token is received.
-
 
 
 ## **RootChainGauge**
@@ -35,9 +28,9 @@ At a high level, the process of CRV distribution on sidechain gauges is as follo
 
 
 ## **ChildChainGauge**
-`ChildChainStreamer` is a simple reward streaming contract. The logic is similar to that of the [Synthetix staking rewards contract](https://github.com/Synthetixio/synthetix/blob/master/contracts/StakingRewards.sol).
+`ChildChainGauge` is a simple reward streaming contract. The logic is similar to that of the [Synthetix staking rewards contract](https://github.com/Synthetixio/synthetix/blob/master/contracts/StakingRewards.sol).
 
-For each `RootChainGauge` deployed on Ethereum, a `ChildGauge` is deployed at the same address on the related sidechain. CRV tokens that are sent over the bridge are transferred into the streamer. From there they are released linearly over seven days, to the gauge where LPs ultimately stake and claim them.
+For each `RootChainGauge` deployed on Ethereum, a `ChildGauge` is deployed at the same address on the related sidechain.
 
 
 ## **RewardsOnlyGauge**

@@ -4,13 +4,13 @@ Newer Liquidity Gauges allow the addition of permissionless rewards to a gauge b
 
 If the gauge wasn't deployed through the OwnershipProxy, a [migration](#migrate_gauge_manager) is required first before adding permissionless rewards.
 
-!!!tip
+!!!info
     On sidechains, permissionless rewards are directly built into the gauges. Whoever deploys the gauge can call `add_rewards` on the gauge contract itself (no need to migrate or do it via proxy).
 
-
-- OwnerProxy for StableSwap pools (*Ownership- and GaugeProxy*): [0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571](https://etherscan.io/address/0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571)  
-- OldManagerProxy (*need to migrate from this to the one above*): [0x201798B679859DDF129651d6B58a5C32527EA04c](https://etherscan.io/address/0x201798B679859DDF129651d6B58a5C32527EA04c)
-- GaugeManagerProxy for CryptoSwap (two-coin) pools: [0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9](https://etherscan.io/address/0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9)
+!!!deploy "Contract Source & Deployment"
+    - OwnerProxy for StableSwap pools (*Ownership- and GaugeProxy*): [0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571](https://etherscan.io/address/0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571)  
+    - OldManagerProxy (*need to migrate from this to the one above*): [0x201798B679859DDF129651d6B58a5C32527EA04c](https://etherscan.io/address/0x201798B679859DDF129651d6B58a5C32527EA04c)
+    - GaugeManagerProxy for CryptoSwap (two-coin) pools: [0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9](https://etherscan.io/address/0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9)
 
 
 
@@ -28,6 +28,11 @@ If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/addr
 ### `add_reward`
 !!! description "`OwnerProxy.add_reward(_reward_token: address, _distributor: address):`"
 
+    !!!guard
+        This function can only be called by the `ownership_admin` or `gauge_manager`.
+
+    !!!guarded-method
+        test
 
     Function to add a reward token  and distributor.
 
@@ -36,8 +41,6 @@ If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/addr
     | `_reward_token` |  `address` | Reward Token |
     | `_distributor` |  `address` | Distributor Address |
 
-    !!!note "Guarded Method"
-        This function can only be called by the `ownership_admin` or `gauge_manager`.
 
     ??? quote "Source code"
 

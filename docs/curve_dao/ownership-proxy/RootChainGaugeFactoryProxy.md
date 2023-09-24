@@ -5,11 +5,11 @@ ProxyOwnership contracct for the [RootChainGaugeFactory](https://etherscan.io/ad
     Source code for this contract is available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/GaugeProxy.vy).
 
 
-Admin functions of the RootChainFactory or RootChainGauges need to be called via the RootChainGaugeFactoryProxy and therefore require a successfully passed DAO vote.
+Admin functions for the RootChainFactory or RootChainGauges must be invoked through the RootChainGaugeFactoryProxy, necessitating a successful DAO vote.
 
-Additionally, there is a contract `manager` who is able to call functions such as `set_bridger`, `set_implementation` or `set_call_proxy`. *The manager CAN NOT kill gauges or change the admins of this contract*!
+Additionally, there is a contract `manager` who can call functions like `set_bridger`, `set_implementation`, and `set_call_proxy`. *The manager CANNOT kill gauges or alter the admins of this contract*!
 
-For further documentation on what those function do please refer to [`RootChainGaugeFactory`](../LiquidityGaugesAndMintingCRV/evm-sidechains/RootChainGaugeFactory.md)
+For more details on what the admin functions do, please refer to the [`RootChainGaugeFactory`](../LiquidityGaugesAndMintingCRV/evm-sidechains/RootChainGaugeFactory.md) documentation.
 
 
 

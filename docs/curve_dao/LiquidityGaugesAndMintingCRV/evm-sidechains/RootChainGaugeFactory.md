@@ -1,5 +1,5 @@
-The RootChainLiquiditiyGaugeFactory is used to deploy RootChainLiquidityGauges and ChildLiquidityGauges on sidechains/L2.
-For further implemention details pelase refer to [this](../evm-sidechains/overview.md#implementation-details).
+The RootChainLiquiditiyGaugeFactory is used to deploy *RootChainGauges and ChildGauges* on sidechains.
+For further implementation details pelase refer to [this](../evm-sidechains/overview.md#implementation-details).
 
 !!! info
     **`RootChainGaugeFactory`** contract is deployed on the Ethereum mainnet at: [0xabC000d88f23Bb45525E447528DBF656A9D55bf5](https://etherscan.io/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5#code).  
