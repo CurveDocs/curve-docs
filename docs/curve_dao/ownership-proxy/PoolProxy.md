@@ -22,9 +22,8 @@ For more information on parameter changes see [here](../../stableswap_exchange/p
 
     Function to pause the liquidity pool `_pool`.
 
-    !!!warning
-        This function can only be called by the emergency admin.  
-        While the pool is killed, only `remove_liquidity` is callable.
+    !!!guard "Guarded Method"
+        This function is only callable by the `emergency_admin` and only if the deadline for killing pools has not passed yet.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|

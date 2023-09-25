@@ -1,7 +1,7 @@
-The SmartWalletChecker is an external contract which checks if certain smart contracts are approved to lock CRV tokens. Permission can be granted via `approveWallet` and revoked via `revokeWallet`.
+The SmartWalletChecker is an external contract which checks if certain smart contracts are approved to lock CRV tokens into the VotingEscrow.    Permission can be granted via **`approveWallet`** and revoked via **`revokeWallet`**.
 
 
-This contract can be replaced entirely with a new SmartWalletChecker through the VotingEscrow's [`commit_smart_wallet_checker`](../VotingEscrow/admin_controls.md#commit_smart_wallet_checker) function. Alternatively, new smart contracts can be approved or revoked directly within the SmartWalletChecker itself. All these actions require a successful DAO vote.
+This contract can be replaced in its entirety with a new SmartWalletChecker through the VotingEscrow's [`commit_smart_wallet_checker`](../VotingEscrow/admin_controls.md#commit_smart_wallet_checker) function. Alternatively, new smart contracts can be approved or revoked directly within the SmartWalletChecker itself. *All these actions require a successful DAO vote.*
     
 
 !!!deploy "Contract Source & Deployment"
@@ -14,7 +14,7 @@ This contract can be replaced entirely with a new SmartWalletChecker through the
 !!! description "`SmartWalletChecker.approveWallet(address _wallet) public`"
 
     !!!guard "Guarded Method"
-        This function is only callable by the `dao`.
+        This function is only callable by the `dao`, which is the CurveOwnershipAdmin.
 
     Function to approve a smart contract to lock CRV.
 
@@ -47,7 +47,7 @@ This contract can be replaced entirely with a new SmartWalletChecker through the
 !!! description "`SmartWalletChecker.revokeWallet(address _wallet) external`"
 
     !!!guard "Guarded Method"
-        This function is only callable by the `dao`.
+        This function is only callable by the `dao`, which is the CurveOwnershipAdmin.
 
     Function to revoke the allowance of a smart contract to lock CRV.
 
@@ -115,7 +115,7 @@ This contract can be replaced entirely with a new SmartWalletChecker through the
 ### `dao`
 !!! description "`SmartWalletChecker.commit_smart_wallet_checker(addr: address):`"
 
-    Getter for the DAO (can be seen as admin) of the contract.
+    Getter for the dao of the contract. `dao` in this context is pretty much the admin/owner of the contract.
 
     Returns: CurveOwnershipAgent (`address`).
 

@@ -69,8 +69,8 @@
 
     Returns: token name (`String[64]`).
 
-    !!! note
-        Token name be changed by calling the `set_name()` function.
+    !!!tip
+        Name of the token can be changed by calling the `set_name` function.
 
     ??? quote "Source code"
 
@@ -114,8 +114,8 @@
 
     Returns: token symbol (`String[32]`).
     
-    !!! note
-        Token symbol be changed by calling the `set_name()` function.
+    !!!tip
+        Symbol of the token can be changed by calling the `set_name` function.
 
     ??? quote "Source code"
 
@@ -212,7 +212,7 @@
 
     Getter method to check the amount of tokens that an owner allowed to a spender.
 
-    Returns: amount of tokens (`uint256`) the `_owner` allowed to `_spender`.
+    Returns: amount of tokens (`uint256`) `_owner` is allowed to `_spender`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -288,9 +288,9 @@
 ### `balanceOf`
 !!! description "`CRV.balanceOf(arg0: address) -> address: view`"
 
-    Getter for the $CRV balance of a specific address.
+    Getter for the crv token balance of a specific address.
 
-    Returns: $CRV balance (`uint256`).
+    Returns: balance (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -352,7 +352,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="7 9"
+        ```python hl_lines="1 7 9"
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
@@ -395,7 +395,7 @@
     
     Function to burn `_value` tokens belonging to the caller of the function.
 
-    Retruns: True (`bool`)
+    Retruns: True (`bool`).
 
     Emits: `Transfer`
 
@@ -405,7 +405,12 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 4"
+        ```python hl_lines="1 7 17 18"
+        event Transfer:
+            _from: indexed(address)
+            _to: indexed(address)
+            _value: uint256
+
         @external
         def burn(_value: uint256) -> bool:
             """
@@ -493,12 +498,9 @@
         3726756852824660365468800
         ```
 
-    !!!info
-        For clarification: When using timestamps with a difference of 1, the mintable CRV tokens will equal to the current `rate`.
 
 
-
-## **$CRV Emissions**
+## **CRV Emissions**
 
 Mining parameters are used to determine the token emissions. The emissions are based on epochs (one year). With every passing epoch, the `rate` will be reduced, thereby reducing the entire $CRV emissions.
 
@@ -629,8 +631,7 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
     Returns: current rate (`uint256`).
 
     !!!tip
-        Rate is denominated in emissions per second.   
-        Emissions per day: 6.161965695807970181 * 86400 = 532393.8361178086
+        `rate` is denominated in emissions per second. Emissions per day: 6.161965695807970181 * 86400 = 532393.8361178086
 
     ??? quote "Source code"
 
@@ -675,7 +676,7 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
 
     Emits: `UpdateMiningParameters`
 
-    !!!note
+    !!!tip
         This function can be called by anyone. However, the call will revert if `block.timestamp` is less than or equal to `start_epoch_time` + `RATE_REDUCTION_TIME`, indicating that one year has not yet passed.
 
 

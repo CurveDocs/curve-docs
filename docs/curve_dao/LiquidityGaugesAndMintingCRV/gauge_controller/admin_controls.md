@@ -3,7 +3,7 @@ Admin controls of the GaugeController.
 
 # **Adding New Gauges and Types**
 
-## `add_gauge`
+### `add_gauge`
 !!! description "`GaugeController.add_gauge(addr: address, gauge_type: int128, weight: uint256 = 0):`"
 
     !!!guard "Guarded Method"
@@ -74,7 +74,7 @@ Admin controls of the GaugeController.
         ```
 
 
-## `add_type`
+### `add_type`
 !!! description "`GaugeController.add_type(_name: String[64], weight: uint256 = 0):`"
 
     !!!guard "Guarded Method"
@@ -179,7 +179,7 @@ Admin controls of the GaugeController.
         ```
 
 
-## **Transfer Ownership**
+# **Transfer Ownership**
 
 ### `commit_transfer_ownership`
 !!! description "`GaugeController.commit_transfer_ownership(addr: address)`"

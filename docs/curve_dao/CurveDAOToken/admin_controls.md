@@ -1,6 +1,4 @@
-The controls within the ERC-20 Curve DAO Token are very limited. The **`admin`** of the contract can only change the `name`, `admin` or `minter` of the contract.  
-As the *CurveOwnershipAgent* is the current admin of the contract, a vote to change these parameters would require a successfully passed DAO vote.
-
+The controls within the ERC-20 Curve DAO Token are limited. The **admin** of the contract can only modify the *`name`, `admin`, or `minter`*. Since the [**CurveOwnershipAgent**](../ownership-proxy/Agents.md#community-dao) is the current admin of the contract, any changes to these parameters would require a successfully passed DAO vote.
 
 ## **Set Admin**
 
@@ -80,7 +78,7 @@ As the *CurveOwnershipAgent* is the current admin of the contract, a vote to cha
 
 ## **Set Minter**
 
-`set_minter` is technically an admin-only function. However, there's *no actual way to change the minter* of the contract using this function. This is because it checks if the current minter is set to `ZERO_ADDRESS`, which was only true when the contract was initially deployed.
+**`set_minter`** is technically an admin-only function. However, there's *no actual way to change the minter* of the contract using this function. This is because the code checks if the current minter is set to `ZERO_ADDRESS`, which was only true when the contract was initially deployed.
 
 ### `set_minter`
 !!! description "`CRV.set_minter(_minter: address):`"

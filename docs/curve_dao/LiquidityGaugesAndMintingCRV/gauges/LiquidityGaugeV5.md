@@ -1,6 +1,6 @@
 LiquidityGauge V5 adds support for EIP-20 approvals via EIP-712 secp256k1 signatures as per [EIP-2612](https://eips.ethereum.org/EIPS/eip-2612).
 
-!!!info
+!!!deploy "Source Code"
     Source code of the LiquidityGaugeV5 can be found on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/gauges/LiquidityGaugeV5.vy).
 
 

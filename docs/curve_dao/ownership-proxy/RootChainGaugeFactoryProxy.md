@@ -1,8 +1,8 @@
 ProxyOwnership contracct for the [RootChainGaugeFactory](https://etherscan.io/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5#code).
 
-!!! info
+!!!deploy "Contract Source & Deployment"
     **`RootChainGaugeFactoryProxy`** contract is deployed on the Ethereum mainnet at: [0x017dB2B92233018973902858B31269Ed071E1D39](https://etherscan.io/address/0x017dB2B92233018973902858B31269Ed071E1D39#code).  
-    Source code for this contract is available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/GaugeProxy.vy).
+    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/GaugeProxy.vy).
 
 
 Admin functions for the RootChainFactory or RootChainGauges must be invoked through the RootChainGaugeFactoryProxy, necessitating a successful DAO vote.
@@ -23,6 +23,9 @@ The Proxy has the usual ownersip and emergency admins and the usual functions to
 
 ### `commit_set_admins`
 !!! description "`RootChainFactory.commit_set_admins(_o_admin: address, _e_admin: address):`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `ownership_admin`.
 
     Function to commit a new ownership and emergency admins.
 
@@ -70,6 +73,9 @@ The Proxy has the usual ownersip and emergency admins and the usual functions to
 
 ### `accept_set_admin`
 !!! description "`RootChainFactory.accept_set_admins():`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `future_ownership_admin`.
 
     Function to accept the ownership and emergency admin changes.
 
@@ -136,6 +142,9 @@ The Proxy has the usual ownersip and emergency admins and the usual functions to
 
 ### `set_manager`
 !!! description "`RootChainFactory.set_manager(_new_manager: address):`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by either the `ownership_admin`, `emergency_admin` or `manager`.
 
     Function to accept the ownership and emergency admin changes.
 
