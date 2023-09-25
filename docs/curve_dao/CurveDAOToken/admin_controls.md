@@ -78,7 +78,7 @@ The controls within the ERC-20 Curve DAO Token are limited. The **admin** of the
 
 ## **Set Minter**
 
-`set_minter` is technically an admin-only function. However, there's *no actual way to change the minter* of the contract using this function. This is because it checks if the current minter is set to `ZERO_ADDRESS`, which was only true when the contract was initially deployed.
+**`set_minter`** is technically an admin-only function. However, there's *no actual way to change the minter* of the contract using this function. This is because the code checks if the current minter is set to `ZERO_ADDRESS`, which was only true when the contract was initially deployed.
 
 ### `set_minter`
 !!! description "`CRV.set_minter(_minter: address):`"
