@@ -20,7 +20,7 @@ nav:
     
     - Vote-Escrowed CRV:
       - VotingEscrow:
-        - VotingEscrow: curve_dao/VotingEscrow/VotingEscrow.md
+        - Contract Methods: curve_dao/VotingEscrow/VotingEscrow.md
         - Admin Controls: curve_dao/VotingEscrow/admin_controls.md
       - SmartWalletChecker: curve_dao/VotingEscrow/smartwalletchecker.md
 
