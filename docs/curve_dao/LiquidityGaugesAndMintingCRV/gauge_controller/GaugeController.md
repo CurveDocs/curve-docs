@@ -1,4 +1,5 @@
-The **GaugeController** in Curve Finance is responsible for managing and coordinating the distribution of rewards to liquidity providers in various liquidity pools. It determines the allocation of CRV rewards based on the liquidity provided by users. By analyzing the gauges, which are parameters that define how rewards are distributed across different pools, the Gauge Controller ensures a fair and balanced distribution of incentives, encouraging liquidity provision and participation in Curve's ecosystem. This helps to maintain the stability and efficiency of Curve's decentralized exchange.
+The **GaugeController** in Curve Finance is responsible for managing and coordinating the distribution of rewards to liquidity providers in various liquidity pools.   
+It *determines the allocation of CRV rewards based on the liquidity provided* by users. By analyzing the gauges, which are parameters that define how rewards are distributed across different pools, the GaugeController ensures a fair and balanced distribution of incentives, encouraging liquidity provision and participation in Curve's ecosystem. This helps to maintain the stability and efficiency of Curve's decentralized exchange.
 
 
 !!!deploy "Contract Source & Deployment"
@@ -11,7 +12,7 @@ The **GaugeController** in Curve Finance is responsible for managing and coordin
 
 ## **Types**
 
-More on gauge types see [here](../gauges/GaugeTypes.md).
+More on gauge types see [here](../gauges/overview.md).
 
 
 ### `gauge_types`
@@ -182,8 +183,6 @@ More on gauge types see [here](../gauges/GaugeTypes.md).
 
 ## **Gauges**
 
-
-
 ### `n_gauges`
 !!! description "`GaugeController.n_gauges -> int128: view`"
 
@@ -253,7 +252,7 @@ More on gauge types see [here](../gauges/GaugeTypes.md).
     | `addr` |  `address` | Gauge Addresses |
     | `time` |  `uint256` | Timestamp, defaults to `block.timestamp` |
 
-    !!! note
+    !!!tip
         The value of relative weight is normalized to 1e18.
 
     ??? quote "Source code"
@@ -447,11 +446,10 @@ More on gauge types see [here](../gauges/GaugeTypes.md).
 Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` is equivalent to a 100% vote weight.
 
 
-
 ## `vote_for_gauge_weights`
 !!! description "`GaugeController.vote_for_gauge_weights(_gauge_addr: address, _user_weight: uint256):`"
 
-    Function to allocate `_user_weight` voting power to gauge `_gauge_addr`.
+    Function to allocate `_user_weight` voting power to gauge `_gauge_addr`. Weight for a gauge is measured in bps (uints of 0.01%). Minimal weight is 0.01%.
 
     Emits: `VoteForGauge`
 
@@ -459,9 +457,6 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
     | ----------- | -------| ----|
     | `_gauge_addr` |  `address` | Gauge Address |
     | `_user_weight` |  `address` | Weight |
-
-    !!!note
-        Weight for a gauge is measured in bps (uints of 0.01%). Minimal weight is 0.01%.
 
     !!! warning
         A gauge weight vote may only be modified once every 10 days.
@@ -841,9 +836,9 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
         ```
 
 
-## **Admin Ownership** 
+# **Admin Ownership** 
 
-### `admin`
+## `admin`
 !!! description "`GaugeController.admin() -> address: view`"
 
     Getter for the admin of the contract.
@@ -878,7 +873,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
         ```
 
 
-### `future_admin`
+## `future_admin`
 !!! description "`GaugeController.future_admin() -> address: view`"
 
     Getter for the future admin of the contract. This variable is changed when calling `commit_transfer_ownership` successfully.
@@ -913,7 +908,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 ## `token`
 !!! description "`GaugeController.token() -> address: view`"
 
-    Getter for the token address of the Curve DAO Token.
+    Getter for the Curve DAO Token.
 
     Returns: crv token (`address`).
 
@@ -948,9 +943,9 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 ## `voting_escrow`
 !!! description "`GaugeController.voting_escrow() -> address: view`"
 
-    Getter for the token address of the VotingEscrow.
+    Getter for the VotingEscrow contract.
 
-    Returns: voting escorw (`address`).
+    Returns: voting escrow (`address`).
 
     ??? quote "Source code"
 

@@ -1,11 +1,12 @@
 The RootChainLiquiditiyGaugeFactory is used to deploy *RootChainGauges and ChildGauges* on sidechains.
 For further implementation details pelase refer to [this](../evm-sidechains/overview.md#implementation-details).
 
-!!! info
+!!!deploy "Contract Source & Deployment"
     **`RootChainGaugeFactory`** contract is deployed on the Ethereum mainnet at: [0xabC000d88f23Bb45525E447528DBF656A9D55bf5](https://etherscan.io/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5#code).  
 
 
 ## Transmitting Emissions
+
 ### `transmit_emissions`
 !!! description "`RootChainFactory.transmit_emissions(_gauge: address):`"
 
@@ -15,7 +16,7 @@ For further implementation details pelase refer to [this](../evm-sidechains/over
     | ----------- | -------| ----|
     | `_gauge` |  `address` | RootChainGauge Address |
 
-    !!!note
+    !!!info
         `transmit_emissions` can also be called on the RootGauge itself.
 
     ??? quote "Source code"
@@ -82,6 +83,9 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
 ### `set_implementation`
 !!! description "`RootChainFactory.set_implementation(_implementation: address):`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the contract.
 
     Function to set the RootGauge implementation.
 
@@ -253,7 +257,7 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
         ```
 
 
-### `deploy_gauge` (todo: salt)
+### `deploy_gauge`
 !!! description "`RootChainFactory.deploy_gauge(_chain_id: uint256, _salt: bytes32) -> address:`"
 
     Function to deploy a RootLiquidityGauge.
@@ -354,10 +358,9 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
 
 
-
 ## Call Proxy and Bridgers
 
-Different bridgers for different chains!
+Different `bridgers` for different chains!
 
 
 ### `call_proxy`
@@ -417,6 +420,9 @@ Different bridgers for different chains!
 ### `set_call_proxy`
 !!! description "`RootChainFactory.set_call_proxy(_new_call_proxy: address):`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the contract.
+
     Function to set a new call proxy contract.
 
     Emits: `UpdateCallProxy`
@@ -455,6 +461,9 @@ Different bridgers for different chains!
 ### `set_bridger`
 !!! description "`RootChainFactory.set_bridger(_chain_id: uint256, _bridger: address):`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the contract.
+
     Function to set new bridger contract `_bridger` for `_chain_id`.
 
     Emits: `BridgerUpdated`
@@ -463,9 +472,6 @@ Different bridgers for different chains!
     | ----------- | -------| ----|
     | `_chain_id` |  `uint256` | Chain ID |
     | `_bridger` |  `address` | New Bridger Contract |
-
-    !!!note
-        This function is only callable by the `owner` of the RootChainGaugeFactory.
 
     ??? quote "Source code"
 
@@ -543,14 +549,14 @@ Different bridgers for different chains!
 ### `commit_transfer_ownership`
 !!! description "`RootChainFactory.commit_transfer_ownership(_future_owner: address):`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the contract.
+
     Function to commit the transfer of contract ownership to `_future_owner`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_future_owner` |  `address` | Future Owner |
-
-    !!!note
-        This function is only callable by the `owner` of the RootChainGaugeFactory.
 
     ??? quote "Source code"
 
@@ -579,12 +585,12 @@ Different bridgers for different chains!
 ### `accept_transfer_ownership`
 !!! description "`RootChainFactory.accept_transfer_ownership():`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `future_owner` of the contract.
+
     Function to accept the transfer of ownership.
 
     Emits: `TransferOwnership`
-
-    !!!note
-        This function is only callable by the `future_owner` of the RootChainGaugeFactory.
 
     ??? quote "Source code"
 
@@ -609,4 +615,3 @@ Different bridgers for different chains!
         ```shell
         >>> RootChainFactory.accept_transfer_ownership():        
         ```
-

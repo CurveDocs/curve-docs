@@ -16,10 +16,8 @@ examples of the shell are from the arbitrum childgaugefactory.
 
 
 
-!!! info
+!!!deploy "Contract Source & Deployment"
     **`ChildGaugeFactory`** contract is deployed on the Arbitrum mainnet at: [0xabC000d88f23Bb45525E447528DBF656A9D55bf5](https://arbiscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5#code).  
-
-
 
 
 

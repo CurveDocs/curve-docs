@@ -2,6 +2,7 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
 
 
 ## Transmitting Emissions
+
 ### `transmit_emissions`
 !!! description "`RootChainGauge.transmit_emissions():`"
 
@@ -235,6 +236,9 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
 ## Killing the Gauge
 ### `set_killed`
 !!! description "`RootChainGauge.set_killed(_is_killed: bool):`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the RootChainGaugeFactory.
 
     Function to kill the gauge.
 
