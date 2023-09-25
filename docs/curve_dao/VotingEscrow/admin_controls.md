@@ -1,7 +1,7 @@
 The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a change to these parameters would require a successfully passed DAO vote.
 
 
-## **Change SmartWalletChecker**
+## **Changing SmartWalletChecker**
 
 ### `commit_smart_wallet_checker`
 !!! description "`VotingEscrow.commit_smart_wallet_checker(addr: address):`"
@@ -9,7 +9,7 @@ The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a c
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to commit a new smart wallet checker contract address to `addr`. Changes can be applied via [`apply_smart_contract_wallet`](#apply_smart_wallet_checker).
+    Function to commit a new smart wallet checker contract address to `addr`. Changes need to be applied via [`apply_smart_contract_wallet`](#apply_smart_wallet_checker).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|

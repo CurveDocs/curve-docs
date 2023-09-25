@@ -7,18 +7,18 @@ Participating in Curve DAO governance requires that an account have a balance of
 
 !!!warning
     veCRV cannot be transferred. The only way to obtain veCRV is by locking CRV.  
-    The maximum lock time is four years and the minimum lock is one week.
+    The maximum lock duration is four years and the minimum lock is one week.
 
-    To calculate the veCRV output when locking, ensure you multiply the amount of $CRV tokens by $\frac{locktime}{4}$.  
+    To calculate the veCRV output when locking, ensure to multiply the amount of CRV tokens by $\frac{locktime}{4}$.  
     `locktime` is denominated in years.
 
-| CRV      | veCRV  | Locktime|
-| -------- | -------| --------|
-| `1`      |  `1`   | 4 years |
-| `1`      |  `0.75`| 3 years |
-| `1`      |  `0.5` | 2 years |
-| `1`      |  `0.25`| 1 year  |
-| $x$      |  $x * \frac{n}{4}$| $n$  |
+    | CRV      | veCRV  | Locktime|
+    | -------- | -------| --------|
+    | `1`      |  `1`   | 4 years |
+    | `1`      |  `0.75`| 3 years |
+    | `1`      |  `0.5` | 2 years |
+    | `1`      |  `0.25`| 1 year  |
+    | $x$      |  $x * \frac{n}{4}$| $n$  |
 
 
 ## **Implemention Details**
@@ -39,12 +39,13 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
     Getter method to check if `_wallet` is whitelisted.
 
-    !!!tip
-        Make sure to call this function on the SmartWalletChecker contract and not on the VotingEscrow contract!
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_wallet`   |  `address` | Address to check whitelist for |
+
+    !!!tip
+        Make sure to call `check(_wallet: address)` directly on the SmartWalletContract itself.
 
     ??? quote "Source code"
 
@@ -59,7 +60,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
                     }
                 }
                 return false;
-    }
+        }
         ```
 
     === "Example"
@@ -115,7 +116,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 ### `create_lock`
 !!! description "`VotingEscrow.create_lock(_value: uint256, _unlock_time: uint256):`"
 
-    Function to deposit `_value` CRV into the contract and create a new lock until `_unlock_time`.
+    Function to deposit `_value` CRV into the VotingEscrow and create a new lock until `_unlock_time`.
 
     Emits: `Deposit`, `Supply` and `Transfer`
 
@@ -216,7 +217,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 ### `increase_amount`
 !!! description "`VotingEscrow.increase_amount(_value: uint256):`"
 
-    Deposit additional `_value` CRV into an existing lock.
+    Deposit additional `_value` CRV tokens into an existing lock.
 
     Emits: `Deposit`, `Supply` and `Transfer`
 
@@ -243,6 +244,38 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
             assert _locked.end > block.timestamp, "Cannot add to expired lock. Withdraw"
 
             self._deposit_for(msg.sender, _value, 0, _locked, INCREASE_LOCK_AMOUNT)
+
+        @internal
+        def _deposit_for(_addr: address, _value: uint256, unlock_time: uint256, locked_balance: LockedBalance, type: int128):
+            """
+            @notice Deposit and lock tokens for a user
+            @param _addr User's wallet address
+            @param _value Amount to deposit
+            @param unlock_time New time when to unlock the tokens, or 0 if unchanged
+            @param locked_balance Previous locked amount / timestamp
+            """
+            _locked: LockedBalance = locked_balance
+            supply_before: uint256 = self.supply
+
+            self.supply = supply_before + _value
+            old_locked: LockedBalance = _locked
+            # Adding to existing lock, or if a lock is expired - creating a new one
+            _locked.amount += convert(_value, int128)
+            if unlock_time != 0:
+                _locked.end = unlock_time
+            self.locked[_addr] = _locked
+
+            # Possibilities:
+            # Both old_locked.end could be current or expired (>/< block.timestamp)
+            # value == 0 (extend lock) or value > 0 (add to lock or extend lock)
+            # _locked.end > block.timestamp (always)
+            self._checkpoint(_addr, old_locked, _locked)
+
+            if _value != 0:
+                assert ERC20(self.token).transferFrom(_addr, self, _value)
+
+            log Deposit(_addr, _value, _locked.end, type, block.timestamp)
+            log Supply(supply_before, supply_before + _value)
         ```
 
     === "Example"
@@ -254,9 +287,9 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 ### `increase_unlock_time`
 !!! description "`VotingEscrow.increase_unlock_time(_unlock_time: uint256):`"
 
-    Extend the unlock time on an already existing lock.
+    Extend the unlock time on an already existing lock until `_unlock_time`.
 
-    Emits: `Deposit`
+    Emits: `Deposit`, `Supply` and `Transfer`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -282,6 +315,38 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
             assert unlock_time <= block.timestamp + MAXTIME, "Voting lock can be 4 years max"
 
             self._deposit_for(msg.sender, 0, unlock_time, _locked, INCREASE_UNLOCK_TIME)
+
+        @internal
+        def _deposit_for(_addr: address, _value: uint256, unlock_time: uint256, locked_balance: LockedBalance, type: int128):
+            """
+            @notice Deposit and lock tokens for a user
+            @param _addr User's wallet address
+            @param _value Amount to deposit
+            @param unlock_time New time when to unlock the tokens, or 0 if unchanged
+            @param locked_balance Previous locked amount / timestamp
+            """
+            _locked: LockedBalance = locked_balance
+            supply_before: uint256 = self.supply
+
+            self.supply = supply_before + _value
+            old_locked: LockedBalance = _locked
+            # Adding to existing lock, or if a lock is expired - creating a new one
+            _locked.amount += convert(_value, int128)
+            if unlock_time != 0:
+                _locked.end = unlock_time
+            self.locked[_addr] = _locked
+
+            # Possibilities:
+            # Both old_locked.end could be current or expired (>/< block.timestamp)
+            # value == 0 (extend lock) or value > 0 (add to lock or extend lock)
+            # _locked.end > block.timestamp (always)
+            self._checkpoint(_addr, old_locked, _locked)
+
+            if _value != 0:
+                assert ERC20(self.token).transferFrom(_addr, self, _value)
+
+            log Deposit(_addr, _value, _locked.end, type, block.timestamp)
+            log Supply(supply_before, supply_before + _value)
         ```
 
     === "Example"
@@ -290,10 +355,10 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
         ```
 
 
-### `deposit_for` (x)
+### `deposit_for`
 !!! description "`VotingEscrow.deposit_for(_addr: address, _value: uint256):`"
 
-    Function to deposit `_value` tokens for `_addr` and add to the lock.
+    Function to deposit `_value` tokens for `_addr` and add them to the lock.
 
     Emits: `Deposit`, `Supply` and `Transfer`    
 
@@ -322,6 +387,38 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
             assert _locked.end > block.timestamp, "Cannot add to expired lock. Withdraw"
 
             self._deposit_for(_addr, _value, 0, self.locked[_addr], DEPOSIT_FOR_TYPE)
+
+        @internal
+        def _deposit_for(_addr: address, _value: uint256, unlock_time: uint256, locked_balance: LockedBalance, type: int128):
+            """
+            @notice Deposit and lock tokens for a user
+            @param _addr User's wallet address
+            @param _value Amount to deposit
+            @param unlock_time New time when to unlock the tokens, or 0 if unchanged
+            @param locked_balance Previous locked amount / timestamp
+            """
+            _locked: LockedBalance = locked_balance
+            supply_before: uint256 = self.supply
+
+            self.supply = supply_before + _value
+            old_locked: LockedBalance = _locked
+            # Adding to existing lock, or if a lock is expired - creating a new one
+            _locked.amount += convert(_value, int128)
+            if unlock_time != 0:
+                _locked.end = unlock_time
+            self.locked[_addr] = _locked
+
+            # Possibilities:
+            # Both old_locked.end could be current or expired (>/< block.timestamp)
+            # value == 0 (extend lock) or value > 0 (add to lock or extend lock)
+            # _locked.end > block.timestamp (always)
+            self._checkpoint(_addr, old_locked, _locked)
+
+            if _value != 0:
+                assert ERC20(self.token).transferFrom(_addr, self, _value)
+
+            log Deposit(_addr, _value, _locked.end, type, block.timestamp)
+            log Supply(supply_before, supply_before + _value)
         ```
 
     === "Example"
@@ -376,13 +473,9 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
 
 ### `checkpoint`
-!!! description "`VotingEscrow.changeController(_newController: address):`"
+!!! description "`VotingEscrow.checkpoint():`"
 
-    Function to record global data to checkpoint
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_newController` |  `address` | New Controller Address |
+    Function to record global data to a checkpoint.
 
     ??? quote "Source code"
 
@@ -514,7 +607,6 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
     === "Example"
         ```shell
         >>> VotingEscrow.checkpoint():
-        'todo'
         ```
 
 
@@ -527,7 +619,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     Getter for the current admin of the contract.
 
-    Returns: **admin** (`address`).
+    Returns: admin (`address`).
 
     ??? quote "Source code"
 
@@ -643,7 +735,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     Getter method for the timestamp for checkpoint number `_idx` for `_addr`.
 
-    Returns: timestamp of the checkpoint (`uint256`)
+    Returns: timestamp (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -830,7 +922,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     Getter for the current total supply of veCRV (= total voting power) at timestamp `t`.
     
-    Returns: veCRV supply (uint256) at a specific block height.
+    Returns: supply (uint256) at a specific block height.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -864,7 +956,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     Getter for the current total supply of veCRV (= total voting power) at block `_block`.
 
-    Returns the total supply (`uint256`) of vecrv at a certain block.  
+    Returns: total supply (`uint256`) at a certain block.  
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -911,8 +1003,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     Getter for the veCRV token address.
 
-    Returns: token address (`address`).
-
+    Returns: token (`address`).
 
     ??? quote "Source code"
 
@@ -960,7 +1051,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     Getter for the amount of CRV tokens locked into the contract.
 
-    Returns: amount of CRV (`uint256`).
+    Returns: amount of locked CRV (`uint256`).
 
     ??? quote "Source code"
 
@@ -1000,11 +1091,11 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
 
 ### `epoch`
-!!! description "`VotingEscrow.epoch() -> String[64]: view `"
+!!! description "`VotingEscrow.epoch() -> uint256: view `"
 
     Getter for the current epoch.
 
-    Returns: current epoch (`String[64]`).
+    Returns: current epoch (`uint256`).
 
     ??? quote "Source code"
 
@@ -1072,7 +1163,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     Getter for the name of the token.
 
-    Returns:*name (`String[64]`).
+    Returns: name (`String[64]`).
 
     ??? quote "Source code"
 
@@ -1263,9 +1354,9 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 ### `controller`
 !!! description "`VotingEscrow.controller() -> address: view`"
 
-    Getter for the controller address of the contract.
+    Getter for the Controller of the contract.
 
-    Returns: controller contract (`address`).
+    Returns: Controller (`address`).
 
     ??? quote "Source code"
 
@@ -1346,5 +1437,4 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
             self.name = _name
             self.symbol = _symbol
             self.version = _version
-
         ```
