@@ -1,9 +1,8 @@
 `GaugeProxy` is used for indirect ownership of [liquidity gauges](/docs/curve_dao/liq-gauges%26minting-crv/overview.md).
 
-!!! info
+!!!deploy "Contract Source & Deployment"
     **`GaugeProxy`** contract is deployed on the Ethereum mainnet at: [0x519AFB566c05E00cfB9af73496D00217A630e4D5](https://etherscan.io/address/0x519AFB566c05E00cfB9af73496D00217A630e4D5#code).  
-    Source code for this contract is available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/GaugeProxy.vy).
-
+    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/GaugeProxy.vy).
 
 
 # Deploying Gauges
