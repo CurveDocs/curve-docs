@@ -6,7 +6,7 @@ Each `burn` action typically performs one conversion into another asset; either 
 
 `HBTC -> WBTC -> sBTC -> sUSD -> USDC -> 3CRV`  
 
-Simplified  burn pattern:  
+**Simplified  burn pattern:**  
 
 ```mermaid
 graph LR
@@ -22,7 +22,8 @@ graph LR
   UnderlyingBurner{UnderlyingBurner} --> |convert to 3crv| FeeDistributor[FeeDistributor]
 ```
 
-Efficiency within the intermediate conversions is the reason it is important to run the burn process in a specific order. If you burn sBTC prior to burning HBTC, you will have to burn sBTC a second time!
+!!!tip
+    Efficiency within the intermediate conversions is the reason it is important to run the burn process in a specific order. If you burn sBTC prior to burning HBTC, you will have to burn sBTC a second time!
 
 There are multiple burner contracts, each of which handles a different category of fee coin. The following list also outlines the rough sequence in which burners should be executed:  
 
@@ -53,7 +54,7 @@ There are multiple burner contracts, each of which handles a different category 
 ### **ABurner / CBurner / YBurner**
 `ABurner`, `CBurner` and `YBurner` are collectively known as “lending burners”. They unwrap lending tokens into the underlying asset and transfer those assets onward into the underlying burner.
 
-<mark style="background-color: #FFD580; color: black">There is no configuration required for this burner.</mark>
+*There is no configuration required for this burner.*
 
 ### **CryptoLPBurner** `deprecated`
 The CryptoLPBurner converts tokens to a single asset and forwards to another burner.
@@ -189,7 +190,7 @@ LP burner calls to `StableSwap.remove_liquidity_one_coin` to unwrap the LP token
 ### **MetaBurner**
 The meta-burner is used for assets within metapools that can be directly swapped for 3CRV. It uses the registry’s `exchange_with_best_rate` and transfers 3CRV directly to the fee distributor.
 
-<mark style="background-color: #FFD580; color: black">There is no configuration required for this burner.</mark>
+*There is no configuration required for this burner.*
 
 ### **SynthBurner** 
 Swaps non-USD denominated assets for synths, converts synths to sUSD and transfers to `UnderlyingBurner`.
@@ -212,8 +213,6 @@ The burner is configurable via the following functions:
     Set target coins that the burner will swap into.
 
     For assets that can be directly swapped for a synth, the target should be set as that synth. For assets that cannot be directly swapped, the target must be an asset that has already had it’s own target registered (e.g. can be swapped for a synth).
-
-    <mark style="background-color: #FFD580; color: black">This function is unguarded. All targets are validated using the registry.</mark>
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -263,9 +262,7 @@ The burner is configurable via the following functions:
 #### `add_synths`
 !!! description "`SynthBurner.add_synths(_synths: address[10]) -> bool:`"
 
-    Register synthetic assets within the burner.  
-
-    <mark style="background-color: #FFD580; color: black">This function is unguarded.</mark> For each synth to be added, a call is made to Synth.currencyKey to validate the addresss and obtain the synth currency key.
+    Register synthetic assets within the burner. This function is unguarded. For each synth to be added, a call is made to Synth.currencyKey to validate the addresss and obtain the synth currency key.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -310,14 +307,14 @@ The burn process consists of:
 2. The burner calls to donate_admin_fees, creditting the returned USDN to LPs
 3. The remaining USDN is swapped for 3CRV and transferred directly to the fee distributor.
 
-<mark style="background-color: #FFD580; color: black">There is no configuration required for this burner.</mark>
+*There is no configuration required for this burner.*
 
 ### **UniswapBurner**
 UniswapBurner is used for burning assets that are not supported by Curve, such as SNX recieved by the DAO via the [Synthetix trading incentives](https://sips.synthetix.io/sips/sip-63/) program.
 
 The burner works by querying swap rates on both Uniswap and Sushiswap using a path of `initial asset -> wETH -> USDC`. It then performs the swap on whichever exchange offers a better rate. The received USDC is sent into the underlying burner.
 
-<mark style="background-color: #FFD580; color: black">There is no configuration required for this burner.</mark>
+*There is no configuration required for this burner.*
 
 
 ### **Wrapped stETH Burner** (todo)
@@ -378,7 +375,7 @@ Once the entire burn process has been completed you must call `execute` as the f
 
     Getter for the burner contract address for `coin`.
 
-    Returns: `address` of the burner for the coin.
+    Returns: burner of a coin (`address`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -400,10 +397,12 @@ Once the entire burn process has been completed you must call `execute` as the f
 ### `set_burner`
 !!! description "`PoolProxy.set_burner(_coin: address, _burner: address):`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `ownership_admin` of the contract.
+
     Function to set burner of `_coin` to `_burner` address.
 
-    !!!note
-        This function is only callable by the ownership admin.
+    Emits: `AddBurner`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -412,9 +411,21 @@ Once the entire burn process has been completed you must call `execute` as the f
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 38 42"
+        ```python hl_lines="1 6 12 14 17"
         event AddBurner:
             burner: address
+
+        @external
+        @nonreentrant('lock')
+        def set_burner(_coin: address, _burner: address):
+            """
+            @notice Set burner of `_coin` to `_burner` address
+            @param _coin Token address
+            @param _burner Burner contract address
+            """
+            assert msg.sender == self.ownership_admin, "Access denied"
+
+            self._set_burner(_coin, _burner)
 
         @internal
         def _set_burner(_coin: address, _burner: address):
@@ -452,17 +463,6 @@ Once the entire burn process has been completed you must call `execute` as the f
 
             log AddBurner(_burner)
 
-        @external
-        @nonreentrant('lock')
-        def set_burner(_coin: address, _burner: address):
-            """
-            @notice Set burner of `_coin` to `_burner` address
-            @param _coin Token address
-            @param _burner Burner contract address
-            """
-            assert msg.sender == self.ownership_admin, "Access denied"
-
-            self._set_burner(_coin, _burner)
         ```
 
     === "Example"
@@ -475,17 +475,17 @@ Once the entire burn process has been completed you must call `execute` as the f
 ### `set_many_burners`
 !!! description "`PoolProxy.set_many_burners(_coins: address[20], _burners: address[20]):`"
 
-    Set burner contracts for many coins at once.  
-    :   **`coins`**: Array of coin addresses. If you wish to set less than 20 burners, fill the remaining array slots with `ZERO_ADDRESS`.  
-    :   **`burners`**: Array of burner addresses. The address as index `n` within this list corresponds to the address at index `n` within `coins`.  
-    
-    !!!note 
-        This function is only callable by the ownership admin.
+    !!!guard "Guarded Method"
+        This function is only callable by the `ownership_admin` of the contract.
+
+    Function to set many burner for multiple coins at once. 
+
+    Emits: `AddBurner`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_coins` |  `address` | Token Addresses |
-    | `_burners` |  `address` | Burner Addresses |
+    | `_coins` |  `address[20]` | Token Addresses. The address at index `n` within this list corresponds to the address at index `n` within `coins` |
+    | `_burners` |  `address[20]` | Burner Addresses. If less than 20 burners are set, the remaining array slots need to be filled with `ZERO_ADDRESS`. |
 
     ??? quote "Source code"
 
@@ -556,10 +556,10 @@ Once the entire burn process has been completed you must call `execute` as the f
 ### `set_kill_burner`
 !!! description "`PoolProxy.set_burner_kill(_is_killed: bool):`"
 
-    Disable or enable the process of fee burning.
+    !!!guard "Guarded Method"
+        This function is only callable by the `ownership_admin` or `emergency_admin` of the contract.
 
-    !!!note
-        This function is only callable by the emergency or ownership admin.
+    Disable or enable the process of fee burning.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -569,7 +569,7 @@ Once the entire burn process has been completed you must call `execute` as the f
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 2 5"
+        ```python hl_lines="1 2 5 10 11"
         ownership_admin: public(address)
         emergency_admin: public(address)
 
@@ -582,8 +582,6 @@ Once the entire burn process has been completed you must call `execute` as the f
             assert msg.sender == self.emergency_admin or msg.sender == self.ownership_admin, "Access denied"
             self.burner_kill = _is_killed
         ```
-        !!!note
-            This function can only be called by the <mark style="background-color: #FFD580; color: black">DAO itself or the Emergency Admin.</mark>
 
     === "Example"
         ```shell

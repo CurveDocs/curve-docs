@@ -1,11 +1,11 @@
-Fees are distributed to veCRV holders via the `FeeDistributor` contract. 
+Fees are distributed to veCRV holders via the **`FeeDistributor`** contract. 
 
 Fees are distributed weekly. The porportional amount of fees that each user is to receive is calculated based on their veCRV balance relative to the total veCRV supply.    
 This amount is calculated at the start of the week. The actual distribution occurs at the end of the week based on the fees that were collected. As such, a user that creates a new vote-lock should expect to receive their first fee payout at the end of the following epoch week.
-
-!!! info
-    The contract is deployed to the Ethereum mainnet at: [0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc](https://etherscan.io/address/0xa464e6dcda8ac41e03616f95f4bc98a13b8922dc).  
-    Source code for this contract is available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/FeeDistributor.vy).  
+ 
+!!!deploy "Contract Source & Deployment"
+    **FeeDistributor** contract is deployed to the Ethereum mainnet at: [0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc](https://etherscan.io/address/0xa464e6dcda8ac41e03616f95f4bc98a13b8922dc).  
+    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/FeeDistributor.vy).  
 
 The available 3CRV balance to distribute is tracked via the “**token checkpoint**”. This is updated at minimum every 24 hours. Fees that are received between the last checkpoint of the previous week and first checkpoint of the new week will be split evenly between the weeks.
 
@@ -285,7 +285,6 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     Returns: true (`boolean`).
 
-
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_recievers` |  `address` | Addresss to claim for |
@@ -478,14 +477,15 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
 
 ### `kill_me`
-!!! description "`FeeDistributor.kill_me() -> bool: view`"
+!!! description "`FeeDistributor.kill_me()`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
 
     Function to kill the fee distributor contract.
 
-    Returns: true or flase (`bool`).
-
     !!!warning
-        Killing transfers the entire 3CRV balance to the [emergency return address](#emergency_return) and blocks the ability to claim or burn. The contract cannot be unkilled.
+        Killing transfers the entire 3CRV balance to the [`emergency_return` address](#emergency_return) and blocks the ability to claim or burn. The contract cannot be unkilled.
 
 
     ??? quote "Source code"
@@ -518,7 +518,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 ### `emergency_return`
 !!! description "`FeeDistributor.kill_me() -> bool: view`"
 
-    Getter for the [emergency return address](https://etherscan.io/address/0x00669DF67E4827FCc0E48A1838a8d5AB79281909). See more [here](../ownership-proxy/Agents.md).
+    Getter for the [emergency return address](https://etherscan.io/address/0x00669DF67E4827FCc0E48A1838a8d5AB79281909).
 
     Returns: emergency return (`address`).
 
@@ -539,7 +539,6 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 !!! description "`FeeDistributor.recover_balance(_coin: address) -> bool:`"
 
     Function to return ERC20 tokens from this contract. `_coin` is sent to the [emergency return address](#emergency_return).
-
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -631,6 +630,9 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 ### `commit_admin`
 !!! description "`FeeDistributor.commit_admin(_addr: address):`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
     Function to commit transfer of the ownership.
 
     | Input      | Type   | Description |
@@ -666,6 +668,9 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
 ### `apply_admin`
 !!! description "`FeeDistributor.apply_admin():`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
 
     Function to apply transfer of the ownership.
 
@@ -741,6 +746,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
         290896146145001156884162140
         ```
 
+
 ### `start_time`
 !!! description "`FeeDistributor.start_time() -> uint256: view`"
 
@@ -789,75 +795,6 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
         ```shell
         >>> GaugeController.start_time()
         1600300800
-        ```
-
-### `time_cursor (todo)`
-!!! description "`FeeDistributor.time_cursor(arg0: address) -> uint256: view`"
-
-    todo
-
-    Returns: todo
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 23"
-        time_cursor: public(uint256)
-
-        @external
-        def __init__(
-            _voting_escrow: address,
-            _start_time: uint256,
-            _token: address,
-            _admin: address,
-            _emergency_return: address
-        ):
-            """
-            @notice Contract constructor
-            @param _voting_escrow VotingEscrow contract address
-            @param _start_time Epoch time for fee distribution to start
-            @param _token Fee token address (3CRV)
-            @param _admin Admin address
-            @param _emergency_return Address to transfer `_token` balance to
-                                    if this contract is killed
-            """
-            t: uint256 = _start_time / WEEK * WEEK
-            self.start_time = t
-            self.last_token_time = t
-            self.time_cursor = t
-            self.token = _token
-            self.voting_escrow = _voting_escrow
-            self.admin = _admin
-            self.emergency_return = _emergency_return
-        ```
-
-    === "Example"
-        ```shell
-        >>> GaugeController.time_cursor()
-        1687392000
-        ```
-
-
-### `time_cursor_of (todo)`
-!!! description "`FeeDistributor.time_cursor_of(arg0: address) -> uint256: view`"
-
-    todo
-
-    Returns: todo
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `address` | Address |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1"
-        time_cursor_of: public(HashMap[address, uint256])
-        ```
-
-    === "Example"
-        ```shell
-        >>> GaugeController.time_cursor("todo")
-        todo
         ```
 
 
@@ -972,30 +909,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
         >>> GaugeController.token()
         '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490'
         ```
-
-### `ve_supply` (todo)
-!!! description "`FeeDistributor.ve_supply(arg0: address) -> uint256: view`"
-
-    todo
-
-    Returns: todo
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `address` | Address |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1"
-        ve_supply: public(uint256[1000000000000000])  # VE total supply at week bounds
-        ```
-
-    === "Example"
-        ```shell
-        >>> GaugeController.ve_supply("todo")
-        todo
-        ```
-
+        
         
 ### `can_checkpoint_token`
 !!! description "`FeeDistributor.can_checkpoint_token() -> bool: view`"
@@ -1104,55 +1018,3 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
         4576710126386983907488318
         ```
 
-
-### `last_token_time` (todo)
-
-
-### `tokens_per_week` (what is this)
-!!! description "`FeeDistributor.tokens_per_week(arg0: uint256) -> uint256: view`"
-
-    todo
-
-    Returns: todo
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 19 21 25 27"
-        tokens_per_week: public(uint256[1000000000000000])
-
-        @internal
-        def _checkpoint_token():
-            token_balance: uint256 = ERC20(self.token).balanceOf(self)
-            to_distribute: uint256 = token_balance - self.token_last_balance
-            self.token_last_balance = token_balance
-
-            t: uint256 = self.last_token_time
-            since_last: uint256 = block.timestamp - t
-            self.last_token_time = block.timestamp
-            this_week: uint256 = t / WEEK * WEEK
-            next_week: uint256 = 0
-
-            for i in range(20):
-                next_week = this_week + WEEK
-                if block.timestamp < next_week:
-                    if since_last == 0 and block.timestamp == t:
-                        self.tokens_per_week[this_week] += to_distribute
-                    else:
-                        self.tokens_per_week[this_week] += to_distribute * (block.timestamp - t) / since_last
-                    break
-                else:
-                    if since_last == 0 and next_week == t:
-                        self.tokens_per_week[this_week] += to_distribute
-                    else:
-                        self.tokens_per_week[this_week] += to_distribute * (next_week - t) / since_last
-                t = next_week
-                this_week = next_week
-
-            log CheckpointToken(block.timestamp, to_distribute)
-        ```
-
-    === "Example"
-        ```shell
-        >>> GaugeController.tokens_per_week(todo)
-        todo
-        ``` 
