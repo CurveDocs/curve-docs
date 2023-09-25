@@ -5,6 +5,9 @@ The controls within the ERC-20 Curve DAO Token are limited. The **admin** of the
 ### `set_admin`
 !!! description "`CRV.set_admin(_admin: address):`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
     Function to set/change the admin of the contract.
 
     Emits: `SetAdmin`
@@ -12,9 +15,6 @@ The controls within the ERC-20 Curve DAO Token are limited. The **admin** of the
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_admin` |  `address` | New Admin Address |
-
-    !!!info
-        **`set_admin`** can only be called by the **`admin`** of the contract.
 
     ??? quote "Source code"
 
@@ -46,10 +46,10 @@ The controls within the ERC-20 Curve DAO Token are limited. The **admin** of the
 ### `set_name`
 !!! description "`CRV.set_name(_name: String[64], _symbol: String[32]):`"
 
-    Function to change the token name symbol.
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
 
-    !!!info
-        **`set_name`** can only be called by the **`admin`** of the contract.
+    Function to change the token name symbol.
 
     ??? quote "Source code"
 
@@ -82,6 +82,9 @@ The controls within the ERC-20 Curve DAO Token are limited. The **admin** of the
 
 ### `set_minter`
 !!! description "`CRV.set_minter(_minter: address):`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
 
     Function to set the minter contract for the token.
 

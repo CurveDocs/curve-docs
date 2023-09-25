@@ -1,10 +1,13 @@
-admin controls from the gauge controller contraxct.
+Admin controls of the GaugeController.
 
 
 # **Adding New Gauges and Types**
 
 ## `add_gauge`
 !!! description "`GaugeController.add_gauge(addr: address, gauge_type: int128, weight: uint256 = 0):`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
 
     Function to add a new gauge to the GaugeController.
 
@@ -74,6 +77,9 @@ admin controls from the gauge controller contraxct.
 ## `add_type`
 !!! description "`GaugeController.add_type(_name: String[64], weight: uint256 = 0):`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
     Function to add a new gauge type.
 
     | Input      | Type   | Description |
@@ -115,10 +121,10 @@ admin controls from the gauge controller contraxct.
 ### `change_type_weight`
 !!! description "`GaugeController.change_type_weight(type_id: int128, weight: uint256):`"
 
-    Function to change the weight for a give gauge.
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
 
-    !!!note
-        This function is only callable by the DAO [ownership admin](/docs/curve_dao/ownership-proxy/Agents.md).
+    Function to change the weight for a give gauge.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -173,13 +179,13 @@ admin controls from the gauge controller contraxct.
         ```
 
 
-
-
-
-## transfer ownership
+## **Transfer Ownership**
 
 ### `commit_transfer_ownership`
 !!! description "`GaugeController.commit_transfer_ownership(addr: address)`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
 
     Function to commit the ownership of the contract to `addr`.
 
@@ -203,9 +209,6 @@ admin controls from the gauge controller contraxct.
             log CommitOwnership(addr)
         ```
 
-    !!! permissions
-        This function can only be called by the `admin` of the contract.
-
     === "Example"
         
         ```shell
@@ -217,6 +220,9 @@ admin controls from the gauge controller contraxct.
 ### `apply_transfer_ownership`
 
 !!! description "`GaugeController.apply_transfer_ownership() -> address: view`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
 
     Function to apply the new ownership.
 
@@ -237,9 +243,6 @@ admin controls from the gauge controller contraxct.
             self.admin = _admin
             log ApplyOwnership(_admin)
         ```
-
-    !!! permissions
-        This function can only be called by the `admin` of the contract.
 
     === "Example"
         

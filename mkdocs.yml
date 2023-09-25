@@ -43,7 +43,7 @@ nav:
         - RootChainFactory: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/RootChainGaugeFactory.md
         - ChildGauge: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/ChildGauge.md
         - ChildGaugeFactory: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/ChildGaugeFactory.md
-      - Minter: curve_dao/LiquidityGaugesAndMintingCRV/Minter.md 
+      - Minter: curve_dao/LiquidityGaugesAndMintingCRV/minter.md 
 
     - Fee Collection and Distribution:
       - Overview: curve_dao/FeeCollection&Distribution/overview.md

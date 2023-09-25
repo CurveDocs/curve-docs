@@ -1,13 +1,20 @@
 The SmartWalletChecker is an external contract which checks if certain smart contracts are approved to lock CRV tokens. Permission can be granted via `approveWallet` and revoked via `revokeWallet`.
 
-!!! info
-    The current SmartWalletChecker address has been deployed at [0xca719728Ef172d0961768581fdF35CB116e0B7a4](https://etherscan.io/address/0xca719728Ef172d0961768581fdF35CB116e0B7a4). This contract can be replaced entirely with a new SmartWalletChecker through the VotingEscrow's [`commit_smart_wallet_checker`](../VotingEscrow/admin_controls.md#commit_smart_wallet_checker) function. Alternatively, new smart contracts can be approved or revoked directly within the SmartWalletChecker itself. All these actions require a successful DAO vote.
+
+This contract can be replaced entirely with a new SmartWalletChecker through the VotingEscrow's [`commit_smart_wallet_checker`](../VotingEscrow/admin_controls.md#commit_smart_wallet_checker) function. Alternatively, new smart contracts can be approved or revoked directly within the SmartWalletChecker itself. All these actions require a successful DAO vote.
     
 
-## **Approve/Revoke Smart Contracts**
+!!!deploy "Contract Source & Deployment"
+    **SmartWalletChecker** contract is deployed to the Ethereum mainnet at: [0xca719728Ef172d0961768581fdF35CB116e0B7a4](https://etherscan.io/address/0xca719728Ef172d0961768581fdF35CB116e0B7a4). 
+
+
+## **Approve/Revoke SmartContracts**
 
 ### `approveWallet`
 !!! description "`SmartWalletChecker.approveWallet(address _wallet) public`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `dao`.
 
     Function to approve a smart contract to lock CRV.
 
@@ -16,9 +23,6 @@ The SmartWalletChecker is an external contract which checks if certain smart con
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_wallet`     |  `address` | Smart Contract to approve |
-
-    !!!note
-        **`approveWallet`** can only be called by the **`dao`** of the contract.
 
     ??? quote "Source code"
 
@@ -42,6 +46,9 @@ The SmartWalletChecker is an external contract which checks if certain smart con
 ### `revokeWallet`
 !!! description "`SmartWalletChecker.revokeWallet(address _wallet) external`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `dao`.
+
     Function to revoke the allowance of a smart contract to lock CRV.
 
     Emits: `RevokeWallet`
@@ -49,9 +56,6 @@ The SmartWalletChecker is an external contract which checks if certain smart con
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_wallet`     |  `address` | Smart Contract to revoke |
-
-    !!!note
-        **`revokeWallet`** can only be called by the **`dao`** of the contract.
 
     ??? quote "Source code"
 

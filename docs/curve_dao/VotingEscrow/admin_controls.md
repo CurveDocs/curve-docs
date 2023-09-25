@@ -6,14 +6,14 @@ The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a c
 ### `commit_smart_wallet_checker`
 !!! description "`VotingEscrow.commit_smart_wallet_checker(addr: address):`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
     Function to commit a new smart wallet checker contract address to `addr`. Changes can be applied via [`apply_smart_contract_wallet`](#apply_smart_wallet_checker).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `addr`     |  `address` | New SmartWalletChecker Contract Address |
-
-    !!!info
-        **`commit_smart_wallet_checker`** can only be called by the **`admin`** of the contract.
 
     ??? quote "Source code"
 
@@ -37,10 +37,10 @@ The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a c
 ### `apply_smart_wallet_checker`
 !!! description "`VotingEscrow.apply_smart_wallet_checker():`"
 
-    Function to apply the new SmartWalletChecker address.
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
 
-    !!!info
-        **`apply_smart_wallet_checker`** can only be called by the **`admin`** of the contract.
+    Function to apply the new SmartWalletChecker address.
 
     ??? quote "Source code"
 
@@ -66,6 +66,9 @@ The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a c
 ### `commit_transfer_ownership`
 !!! description "`VotingEscrow.commit_transfer_ownership(addr: address):`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
     Function to commit the ownership of the contract to `addr`. Changes need to be applied via [`apply_transfer_ownership`](#apply_transfer_ownership)
 
     Emits: `CommitOwnership`
@@ -73,9 +76,6 @@ The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a c
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `addr`       |  `address` | Address |
-
-    !!!info
-        **`commit_transfer_ownership`** can only be called by the **`admin`** of the contract.
 
     ??? quote "Source code"
 
@@ -106,12 +106,12 @@ The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a c
 ### `apply_transfer_ownership`
 !!! description "`VotingEscrow.apply_transfer_ownership():`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
     Function to apply the new ownership.
 
     Emits: `ApplyOwnership`
-
-    !!!info
-        **`apply_transfer_ownership`** can only be called by the **`admin`** of the contract.
 
     ??? quote "Source code"
 
