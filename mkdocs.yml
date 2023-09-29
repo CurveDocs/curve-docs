@@ -124,6 +124,9 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      options:
+        custom_icons:
+          - overrides/.icons
   - pymdownx.inlinehilite
   - pymdownx.magiclink
   - pymdownx.mark
@@ -149,6 +152,7 @@ markdown_extensions:
 
 theme:
   name: material
+  custom_dir: overrides
   include_search_page: false
   search_index_only: true
   font:

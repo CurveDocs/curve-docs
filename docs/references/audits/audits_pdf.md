@@ -1,3 +1,11 @@
+:audit-mixbytes:
+
+:audit-mixbytes:
+
+:audit-tob:
+
+
+
 | Audits      | Description  |  Date  | -  |
 | --------- | -------- | -------- | ------ |
 | `CurveDAO` | **TrailOfBits**: Curve DAO Audit  | 10 July, 2020 | [pdf](../../pdf/curve-dao-ToB-final.pdf) |
@@ -11,3 +19,47 @@
 | `Curve Stablecoin (crvUSD)` | **MixBytes**: Audit report on Curve Stablecoin Smart Contracts | 5 June, 2023  | [pdf](../../pdf/Curve%20Stablecoin%20(crvUSD)%20Security%20Audit%20Report.pdf)  |
 | `Tricrypto-NG` | **ChainSecurity**: Tricrypto New Generation Audit | 23 June, 2023 |  [pdf](../../pdf/ChainSecurity_Curve_tricrypto-ng_audit.pdf) |
 
+
+
+
+:audit-mixbytes:
+
+:audit-mixbytesbig:
+
+
+<div class="grid cards" markdown>
+
+-   :audit-mixbytes:{ .lg .middle } __Set up in 5 minutes__
+
+    ---
+
+    Install [`mkdocs-material`](#) with [`pip`](#) and get up
+    and running in minutes
+
+    [:octicons-arrow-right-24: Getting started](#)
+
+-   :audit-mixbytesbig:{ .lg .middle } __It's just Markdown__
+
+    ---
+
+    Focus on your content and generate a responsive and searchable static site
+
+    [:octicons-arrow-right-24: Reference](#)
+
+-   :material-format-font:{ .lg .middle } __Made to measure__
+
+    ---
+
+    Change the colors, fonts, language, icons, logo and more with a few lines
+
+    [:octicons-arrow-right-24: Customization](#)
+
+-   :material-scale-balance:{ .lg .middle } __Open Source, MIT__
+
+    ---
+
+    Material for MkDocs is licensed under MIT and available on [GitHub]
+
+    [:octicons-arrow-right-24: License](#)
+
+</div>
