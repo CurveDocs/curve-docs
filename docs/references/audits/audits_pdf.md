@@ -2,7 +2,7 @@
 
 :audit-mixbytes:
 
-:audit-tob:
+:tob-tob:
 
 
 
@@ -29,7 +29,7 @@
 
 <div class="grid cards" markdown>
 
--   :audit-mixbytes:{ .lg .middle } __Set up in 5 minutes__
+-   :audit-mixbytes:{ .lg .middle } _Set up in 5 minutes_
 
     ---
 
@@ -38,7 +38,7 @@
 
     [:octicons-arrow-right-24: Getting started](#)
 
--   :audit-mixbytesbig:{ .lg .middle } __It's just Markdown__
+-   :tob-tob:{ .lg .middle } __It's just Markdown__
 
     ---
 
