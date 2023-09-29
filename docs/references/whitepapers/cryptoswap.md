@@ -1,4 +1,4 @@
-!!!example
+!!!pdf "PDF"
     PDF version: [here](../../pdf/crypto-pools-paper.pdf)
 
 <h1 style="text-align: center;"></h1>
