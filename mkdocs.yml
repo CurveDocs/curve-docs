@@ -11,6 +11,21 @@ plugins:
       minify_html: true
 
 nav:
+  - Cryptoswap Exchange:
+    - Overview: cryptoswap_exchange/overview.md
+    - Pools:
+      - CryptoSwap Pool: cryptoswap_exchange/pool.md
+      - Admin Controls: cryptoswap_exchange/admin_controls_pool.md
+    - Liquidity Pool Token:  
+      - Overview: cryptoswap_exchange/lp_token_overview.md
+      - LP Token: cryptoswap_exchange/lp_token.md
+    - Utility Contracts: 
+      - Math: cryptoswap_exchange/utility_contracts/math.md
+      - ViewMethodContract: cryptoswap_exchange/utility_contracts/ViewMethodContract.md
+    - Factory: 
+      - Overview: cryptoswap_exchange/factory/factory.md
+      - Implementations: cryptoswap_exchange/factory/implementations.md
+
   - Curve DAO:
     - Overview: curve_dao/overview.md  
     - Curve DAO Token: curve_dao/ERC20CRV.md
@@ -63,19 +78,6 @@ nav:
     - Cross Asset Swaps:
       - Overview: stableswap_exchange/cross_asset_swaps/overview.md
       - SynthSwap: stableswap_exchange/cross_asset_swaps/synthswap_exchange.md
-
-  - Cryptoswap Exchange:
-    - Overview: cryptoswap_exchange/overview.md
-    - Pools:
-      - CryptoSwap Pool: cryptoswap_exchange/pool.md
-      - Admin Controls: cryptoswap_exchange/admin_controls_pool.md
-    - Liquidity Pool Token:  
-      - Overview: cryptoswap_exchange/lp_token_overview.md
-      - LP Token: cryptoswap_exchange/lp_token.md
-    - Utility Contracts: 
-      - Math: cryptoswap_exchange/math.md
-      - ViewMethodContract: cryptoswap_exchange/ViewMethodContract.md
-    - Factory: cryptoswap_exchange/factory.md
 
   - Factory:
     - Overview: factory/overview.md
