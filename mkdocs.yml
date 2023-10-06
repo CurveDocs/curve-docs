@@ -15,7 +15,8 @@ nav:
     - Overview: cryptoswap_exchange/overview.md
     - Pools:
       - Overview: cryptoswap_exchange/pools/overview.md
-      - Tricrypto Pool: cryptoswap_exchange/pools/tricrypto_pool.md
+      - TwoCrypto Pool: cryptoswap_exchange/pools/twocrypto_pool.md
+      - TriCrypto Pool: cryptoswap_exchange/pools/tricrypto_pool.md
       - Admin Controls: cryptoswap_exchange/pools/admin_controls.md
     - Liquidity Pool Token:  
       - Overview: cryptoswap_exchange/lp_tokens/lp_token_overview.md
