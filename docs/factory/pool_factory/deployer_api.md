@@ -3,7 +3,7 @@
 
 # Deploy Pools
 
-## **StableSwap Factory**
+## **MetaPool Factory** 
 
 ### `deploy_plain_pool`
 
