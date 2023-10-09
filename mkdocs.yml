@@ -59,7 +59,9 @@ nav:
       - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
       - RootChainGaugeProxy: curve_dao/ownership-proxy/RootChainGaugeProxy.md
       
-    - Governance and Voting: curve_dao/gov-and-vote/overview.md
+    - Governance and Voting: 
+      - Overview: curve_dao/governance/overview.md
+      
 
   - Curve Stablecoin (crvUSD):
     - Overview: crvUSD/overview.md
