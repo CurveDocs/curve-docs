@@ -1,18 +1,19 @@
 Implementations are used to deploy pool contracts whenever a new pool is deployed through a Factory.
 
-*There are two deploy pools:*
+*There are two ways to deploy pools:*
 
 - Utilizing blueprint contract as per [https://eips.ethereum.org/EIPS/eip-5202](https://eips.ethereum.org/EIPS/eip-5202)
 - regular implementation contract with a `initialize` function
 
 !!!info
-    Newer Factory versions will only used the deployment via **Blueprint contracts**. At the time the CryptoSwapFactory was deployed, the option to create contracts from a blueprint did not exist yet.
+    Newer Factory versions will only used the deployment via **Blueprint-Contracts**. At the time the CryptoSwapFactory was deployed, the option to create contracts from a blueprint did not exist yet.
 
 
 # **Cryptoswap Implementations**
 
 !!!deploy "Contract Source & Deployment"
     **CryptoswapFactory** contract is deployed to the Ethereum mainnet at: [0xF18056Bbd320E96A48e3Fbf8bC061322531aac99](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99).
+
 
 ??? quote "CryptoswapFactory.deploy_pool()"
 

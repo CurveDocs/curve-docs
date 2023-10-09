@@ -6,41 +6,7 @@
 - *Fees:* `mid_fee`, `out_fee` and `fee_gamma` 
 
 !!!tip
-    Price Scaling and Fee parameters are bundled and stored as a single unsigned integer. This consolidation reduces storage read and write operations, leading to more cost-efficient calls. When these parameters are accessed, they are subsequently unpacked.
-
-
-    ??? quote "_pack()"
-
-        ```python hl_lines="1 3 8 13"
-        @internal
-        @view
-        def _pack(x: uint256[3]) -> uint256:
-            """
-            @notice Packs 3 integers with values <= 10**18 into a uint256
-            @param x The uint256[3] to pack
-            @return uint256 Integer with packed values
-            """
-            return (x[0] << 128) | (x[1] << 64) | x[2]
-        ```
-
-
-    ??? quote "_unpack()"
-
-        ```python hl_lines="1 3 8 13"
-        @internal
-        @view
-        def _unpack(_packed: uint256) -> uint256[3]:
-            """
-            @notice Unpacks a uint256 into 3 integers (values must be <= 10**18)
-            @param val The uint256 to unpack
-            @return uint256[3] A list of length 3 with unpacked integers
-            """
-            return [
-                (_packed >> 128) & 18446744073709551615,
-                (_packed >> 64) & 18446744073709551615,
-                _packed & 18446744073709551615,
-            ]
-        ```
+    An excellent deep-dive artilce on the parameters: [https://nagaking.substack.com/p/deep-dive-curve-v2-parameters](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).
 
 
 ## **Bonding Curve Parameters**
