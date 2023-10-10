@@ -5,6 +5,11 @@
 
 ## **MetaPool Factory** 
 
+MetaPool Factory allows the permissionless deployment of 
+
+can not deploy a plain pool with coins that contain a asset out of a basepool -> need to create a metapool paired against that basepool!!!
+
+
 ### `deploy_plain_pool`
 
 Limitations when deploying plain pools:
@@ -29,7 +34,7 @@ Limitations when deploying plain pools:
 
     Returns: deployed pool (`address`).
 
-    Emits event: `PlainPoolDeployed`
+    Emits: `PlainPoolDeployed`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -171,12 +176,6 @@ Limitations when deploying plain pools:
         >>> 'returns address of deployed pool'
         ```
 
-    !!!note
-        `_asset_type` and `_implementation_idx` values are defaulted to 0 if no other inputs are given.     
-        Asset types: 0 = USD, 1 = ETH, 2 = BTC, 3 = Other.  
-        Implementation ID: check `plain_implementations(N_COINS)`.
-
-
 
 ### `deploy_metapool`
 
@@ -198,7 +197,7 @@ Limitations when deploying meta pools:
 
     Returns: deployed pool (`address`).
 
-    Emits event: `MetaPoolDeployed`
+    Emits: `MetaPoolDeployed`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -305,7 +304,7 @@ Limitations when deploying meta pools:
             _base_pool: '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7',
             _name: "llama/3CRV",
             _symbol: "l3CRV",
-            _coin: '0x...llama1',
+            _coin: 'coin1',
             _A: 200,
             _fee: 4000000,
             _implementation_idx: uint256 = 0,
@@ -315,8 +314,118 @@ Limitations when deploying meta pools:
         ```
 
 
+### `add_base_pool`
+!!! description "`Factory.add_base_pool(_base_pool: address, _fee_receiver: address, _asset_type: uint256, _implementations: address[10])`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
+    Function to add a base pool to the registry, which may be used in factory metapools.
+
+    Emits: `BasePoolAdded`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_base_pool` |  `address` | Pool address to add |
+    | `_fee_receiver` |  `address` | Admin fee receiver address for metapools using this base pool |
+    | `_asset_type` |  `uint256` | Asset type for pool, as an integer  `0` = USD, `1` = ETH, `2` = BTC, `3` = Other |
+    | `implementations` | `address` | List of implementation addresses that can be used with this base pool |
+
+    ??? quote "Source code"
+
+        ```python
+        event BasePoolAdded:
+            base_pool: address
+
+        @external
+        def add_base_pool(
+            _base_pool: address,
+            _fee_receiver: address,
+            _asset_type: uint256,
+            _implementations: address[10],
+        ):
+            """
+            @notice Add a base pool to the registry, which may be used in factory metapools
+            @dev Only callable by admin
+            @param _base_pool Pool address to add
+            @param _fee_receiver Admin fee receiver address for metapools using this base pool
+            @param _asset_type Asset type for pool, as an integer  0 = USD, 1 = ETH, 2 = BTC, 3 = Other
+            @param _implementations List of implementation addresses that can be used with this base pool
+            """
+            assert msg.sender == self.admin  # dev: admin-only function
+            assert self.base_pool_data[_base_pool].coins[0] == ZERO_ADDRESS  # dev: pool exists
+        
+            registry: address = AddressProvider(ADDRESS_PROVIDER).get_registry()
+            n_coins: uint256 = Registry(registry).get_n_coins(_base_pool)
+        
+            # add pool to pool_list
+            length: uint256 = self.base_pool_count
+            self.base_pool_list[length] = _base_pool
+            self.base_pool_count = length + 1
+            self.base_pool_data[_base_pool].lp_token = Registry(registry).get_lp_token(_base_pool)
+            self.base_pool_data[_base_pool].n_coins = n_coins
+            self.base_pool_data[_base_pool].fee_receiver = _fee_receiver
+            if _asset_type != 0:
+                self.base_pool_data[_base_pool].asset_type = _asset_type
+        
+            for i in range(10):
+                implementation: address = _implementations[i]
+                if implementation == ZERO_ADDRESS:
+                    break
+                self.base_pool_data[_base_pool].implementations[i] = implementation
+        
+            decimals: uint256 = 0
+            coins: address[MAX_COINS] = Registry(registry).get_coins(_base_pool)
+            for i in range(MAX_COINS):
+                if i == n_coins:
+                    break
+                coin: address = coins[i]
+                self.base_pool_data[_base_pool].coins[i] = coin
+                self.base_pool_assets[coin] = True
+                decimals += shift(ERC20(coin).decimals(), convert(i*8, int128))
+            self.base_pool_data[_base_pool].decimals = decimals
+        
+            log BasePoolAdded(_base_pool)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> Factory.add_base_pool(
+            _base_pool: address,
+            _fee_receiver: address,
+            _asset_type: uint256,
+            _implementations: address[10],
+        ):
+        ```
+
+
+## **crvUSD Pool Factory**
+
+The crvUSD Pool Factory is a new factory primarily used to deploy pools paired with crvUSD. Just like the metapool factory, it can be used to deploy both plain pools and metapools or to add new base pools. This factory was created because the metapool does not allow for the deployment of plain pools paired with tokens that are included in base pools. For this reason, pools like crvUSD<>USDT or crvUSD<>USDC would not be feasible.
+
+Additionally, the new factory features a `plain_whitelist`. Plain pools can only be created if one of the coins is listed on this whitelist. Tokens can be added to the whitelist by invoking the `add_token_to_whitelist()` function. This function can only be called by the factory's admin. The proxy, whose owner is the curve ownership agent, serves as the admin.
+
+
+Differences compared to the MetapoolFactory:
+
+- when deploying plain pools, the factory doesn't verify if the paired tokens are part of a base pool. Instead, the contract checks if one of the tokens is listed on the `plain_whitelist`.
+- fee for deployed plain pools must be > 1%; in contrast, the metapool factory requires a fee ranging between 0.04% and 1%.
+- no option to modify the fee parameters of deployed pools.
+
+
+To check if a coin is whitelisted, query its address using the `plain_whitelist()` function:
+
+```shell
+>>> Factory.plain_whitelist("0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E"):
+'true'
+```
+
+
 
 ## **CryptoSwap Factory**
+
+CryptoSwap Factory allows the permissionless deployment of two-coin pools including volatile assets.
 
 ### `deploy_pool`
 
@@ -362,7 +471,7 @@ Limitations when deploying plain crypto pools:
 
     Returns: deployed pool (`address`).
 
-    Emits event: `CryptoPoolDeployed`
+    Emits: `CryptoPoolDeployed`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -523,7 +632,7 @@ Limitations when deploying plain crypto pools:
 
 ## **Tricrypto Factory**
 
-### `deploy_pool`
+### `deploy_pool
 
 Limitations when deploying tricrypto crypto pools:
 
@@ -565,7 +674,7 @@ Limitations when deploying tricrypto crypto pools:
 
     Returns: deployed pool (`address`).
 
-    Emits event: `TricryptoPoolDeployed`
+    Emits: `TricryptoPoolDeployed`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
