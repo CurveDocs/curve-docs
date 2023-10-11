@@ -164,13 +164,13 @@ Limitations when deploying plain pools:
 
         ```shell
         >>> Factory.deploy_plain_pool(
-            _name: "llama threepool",
-            _symbol: "l3pool",
-            _coins: ['0x...llama1', '0x...llama2', '0x...llama3'],
+            _name: "alUSD-crvUSD",
+            _symbol: "alcrvUSD",
+            _coins: ['0xbc6da0fe9ad5f3b0d58160288917aa56653660e9', '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'],
             _A: 200,
             _fee: 4000000,
-            _asset_type: uint256 = 0,
-            _implementation_idx: uint256 = 0,
+            _asset_type: 0,
+            _implementation_idx: 0,
             )    
 
         >>> 'returns address of deployed pool'
@@ -187,6 +187,23 @@ Limitations when deploying meta pools:
 
 - valid `_implementation_idx` (can not be `ZERO_ADDRESS`)
 - maximum of 18 decimals for the coins
+
+
+To obtain the viable implementations for metapools, query the basepool address within `metapool_implementations()`:
+
+```shell
+>>> Factory.metapool_implementations("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7"):
+[[0x213be373FDff327658139C7df330817DAD2d5bBE]
+[0x55Aa9BF126bCABF0bDC17Fa9E39Ec9239e1ce7A9]
+[0x0000000000000000000000000000000000000000]
+[0x0000000000000000000000000000000000000000]
+[0x0000000000000000000000000000000000000000]
+[0x0000000000000000000000000000000000000000]
+[0x0000000000000000000000000000000000000000]
+[0x0000000000000000000000000000000000000000]
+[0x0000000000000000000000000000000000000000]
+[0x0000000000000000000000000000000000000000]]
+```
 
 !!!warning
     Transaction will fail when the requirements are not met.
@@ -302,9 +319,9 @@ Limitations when deploying meta pools:
         ```shell
         >>> Factory.deploy_metapool(
             _base_pool: '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7',
-            _name: "llama/3CRV",
-            _symbol: "l3CRV",
-            _coin: 'coin1',
+            _name: "crvUSD/3CRV",
+            _symbol: "crvUSD3CRV",
+            _coin: '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E',
             _A: 200,
             _fee: 4000000,
             _implementation_idx: uint256 = 0,
@@ -370,7 +387,7 @@ Limitations when deploying meta pools:
         
             for i in range(10):
                 implementation: address = _implementations[i]
-                if implementation == ZERO_ADDRESS:
+                if implementation == ZERO_ADDRESS:  
                     break
                 self.base_pool_data[_base_pool].implementations[i] = implementation
         
@@ -392,11 +409,11 @@ Limitations when deploying meta pools:
 
         ```shell
         >>> Factory.add_base_pool(
-            _base_pool: address,
-            _fee_receiver: address,
-            _asset_type: uint256,
-            _implementations: address[10],
-        ):
+            _base_pool: '0x390f3595bca2df7d23783dfd126427cceb997bf4',
+            _fee_receiver: '0xeCb456EA5365865EbAb8a2661B0c503410e9B347',
+            _asset_type: 0,
+            _implementations: ['0x213be373FDff327658139C7df330817DAD2d5bBE', '0x55Aa9BF126bCABF0bDC17Fa9E39Ec9239e1ce7A9'],
+            ):
         ```
 
 
