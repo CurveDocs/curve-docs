@@ -5,7 +5,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 ### `get_dx`
 !!! description "`StableSwap.get_dx(i: int128, j: int128, dy: uint256, pool: address) -> uint256:`"
 
-    Function to calucalte the predicted input amount `i` to receive `dy` of coin `j`.
+    Function to calculate the predicted input amount `i` to receive `dy` of coin `j`.
 
     Returns: predicted amount of `i` (`uint256`).
 
@@ -18,7 +18,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python
         @view
         @external
         def get_dx(i: int128, j: int128, dy: uint256, pool: address) -> uint256:
@@ -90,7 +90,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python
         @view
         @external
         def get_dy(i: int128, j: int128, dx: uint256, pool: address) -> uint256:
@@ -268,7 +268,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python
         @view
         @external
         def get_dx_underlying(
@@ -366,7 +366,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python
         @view
         @external
         def get_dy_underlying(
@@ -465,7 +465,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 ### `calc_token_amount`
 !!! description "`StableSwap.calc_token_amount(_amounts: DynArray[uint256, MAX_COINS], _is_deposit: bool, pool: address) -> uint256:`"
 
-    Function to calculate the addition or decution on token supply from a deposit (add liquidity) or withdrawl (remove liquidity) including fees.
+    Function to calculate the addition or reduction of token supply from a deposit (add liquidity) or withdrawl (remove liquidity) including fees.
 
     Returns: expected amount of LP tokens received (`uint256`)
 
