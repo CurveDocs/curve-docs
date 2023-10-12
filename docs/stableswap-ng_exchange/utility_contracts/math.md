@@ -1,30 +1,30 @@
-**The Math Contract provides AMM Math for StableSwap-NG Pools.**
+The Math Contract provides AMM Math for StableSwap-NG Pools.
 
 !!!deploy "Contract Source & Deployment"
-    The **Math** contract is deployed to the Ethereum mainnet at: [todo]().
+    The **Math** contract is deployed to the Ethereum mainnet at: [tbd]().  
     Source code for this contract is available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNGMath.vy). 
 
 
 ### `get_y`
 !!! description "`Math.get_y(i: int128, j: int128, x: uint256, xp: DynArray[uint256, MAX_COINS], _amp: uint256, _D: uint256, _n_coins: uint256) -> uint256:`"
 
-    Function to calculate x[i] if one makes x[i] = x. This is done by solving quadratic equations iteratively.
+    Function to calculate how much coins `j` a user receives when providing `x` amount of coin `i`. This is done by solving quadratic equations iteratively.
 
-    Returns: 
+    Returns: amount of output coins to receive (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `i` |  `in128` |  |
-    | `j` |  `int128` |  |
-    | `x` |  `uint256` |  |
-    | `xp` |  `[uint256, MAX_COINS]` |  |
-    | `_amp` |  `uint256` |  |
-    | `_D` |  `uint256` |  |
-    | `_n_coins` |  `uint256` |  |
+    | `i` |  `in128` | index value of input coin |
+    | `j` |  `int128` | index value of output coin |
+    | `x` |  `uint256` | amount of input coin |
+    | `xp` |  `DynArray[uint256, MAX_COINS]` | current balances of the coins in the pool |
+    | `_amp` |  `uint256` | amplification coefficient |
+    | `_D` |  `uint256` | D invariant |
+    | `_n_coins` |  `uint256` | number of coins |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         MAX_COINS: constant(uint256) = 8
         MAX_COINS_128: constant(int128) = 8
         A_PRECISION: constant(uint256) = 100
@@ -119,13 +119,13 @@
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `xp` |  `[uint256, MAX_COINS]` |  |
-    | `_amp` |  `uint256` |  |
-    | `_n_coins` |  `uint256` |  |
+    | `xp` |  `DynArray[uint256, MAX_COINS]` | current balances of the coins in the pool |
+    | `_amp` |  `uint256` | amplification coefficient |
+    | `_n_coins` |  `uint256` | number of coins |
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python 
         @external
         @pure
         def get_D(
@@ -183,7 +183,7 @@
     === "Example"
 
         ```shell
-        >>> Math.get_y('todo')
+        >>> Math.get_D('todo')
         'todo'
         ```
 
@@ -191,21 +191,21 @@
 ### `get_y_D`
 !!! description "`Math.get_y_D(A: uint256, i: int128, xp: DynArray[uint256, MAX_COINS], D: uint256, _n_coins: uint256) -> uint256:`"
 
-    Function to calculate x[i] if one reduces D from being calculated for xp to D.
+    Function to calculate how much of coin `i` will be in the pool when invariant `D` decreases.
 
-    Returns: 
+    Returns: balance of coin `i` (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `A` |  `uint256` |  |
-    | `i` |  `int128` |  |
-    | `xp` |  `[uint256, MAX_COINS]` |  |
-    | `D` |  `uint256` |  |
-    | `_n_coins` |  `uint256` |  |
+    | `A` |  `uint256` | amplification coefficient |
+    | `i` |  `int128` | index value of coin |
+    | `xp` |  `DynArray[uint256, MAX_COINS]` | current balances of the coins in the pool |
+    | `_D` |  `uint256` | D invariant |
+    | `_n_coins` |  `uint256` | number of coins |
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python
         @external
         @pure
         def get_y_D(
@@ -269,7 +269,7 @@
     === "Example"
 
         ```shell
-        >>> Math.get_y('todo')
+        >>> Math.get_y_D('todo')
         'todo'
         ```
 
@@ -288,7 +288,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python 
         @external
         @pure
         def exp(x: int256) -> uint256:
@@ -363,6 +363,6 @@
     === "Example"
 
         ```shell
-        >>> Math.get_y('todo')
+        >>> Math.exp('todo')
         'todo'
         ```
