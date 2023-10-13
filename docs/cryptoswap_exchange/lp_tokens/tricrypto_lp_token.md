@@ -441,7 +441,7 @@ The TriCrypto AMM contract doubles as the LP Token. Older TriCrypto Pools (befor
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `arg0` |  `address` | Address of the spender |
-    | `arg0` |  `address` | Address to the token owner |
+    | `arg1` |  `address` | Address to the token owner |
 
 
     ??? quote "Source code"
@@ -558,7 +558,7 @@ The TriCrypto AMM contract doubles as the LP Token. Older TriCrypto Pools (befor
 
     Function to permit `spender` to spend up to `_value` amount of `_owner`'s tokens via a signature.
 
-    Returns: True or False (`bool`).
+    Returns: True (`bool`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|

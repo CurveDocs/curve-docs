@@ -15,6 +15,7 @@ nav:
   - Stableswap-ng:
     - Overview: stableswap-ng_exchange/overview.md
     - Pools:
+      - Overview: stableswap-ng_exchange/pools/overview.md
       - Plain Pools: stableswap-ng_exchange/pools/plainpool.md
       - Metapools: stableswap-ng_exchange/pools/metapool.md
       - Admin Controls: stableswap-ng_exchange/pools/admin_controls.md
