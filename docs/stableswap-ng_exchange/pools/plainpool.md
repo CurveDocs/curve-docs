@@ -1,10 +1,51 @@
 questions: 
 - stored rates (stored_rates)
 
-TODO:
-- add info on _balances, when rebasing tokens. amm behaves differently then
+todo:
+- add overview of pools with basic info
 
-regular stableswap pool NOT paired against a base pool
+
+Plain pools are curve liquidity exchange contracts which contain at least 2 and up to 8 coins.
+
+
+
+Balances of the pool are calculated via the internal `_balances()` function. It is important to note that pools behave a bit differently when `POOLS_IS_REBASING_IMPLEMENTATION` is `True` and therefor contains a rebasing token. The function makes sure that LP's keep all rebases.
+
+
+??? quote "`_balances`"
+
+    ```python
+    @view
+    @internal
+    def _balances() -> DynArray[uint256, MAX_COINS]:
+        """
+        @notice Calculates the pool's balances _excluding_ the admin's balances.
+        @dev If the pool contains rebasing tokens, this method ensures LPs keep all
+                rebases and admin only claims swap fees. This also means that, since
+                admin's balances are stored in an array and not inferred from read balances,
+                the fees in the rebasing token that the admin collects is immune to
+                slashing events.
+        """
+        result: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+        balances_i: uint256 = 0
+
+        for i in range(MAX_COINS_128):
+
+            if i == N_COINS_128:
+                break
+
+            if POOL_IS_REBASING_IMPLEMENTATION:
+                balances_i = ERC20(coins[i]).balanceOf(self) - self.admin_balances[i]
+            else:
+                balances_i = self.stored_balances[i] - self.admin_balances[i]
+
+            result.append(balances_i)
+
+        return result
+    ```
+
+
+
 
 
 
