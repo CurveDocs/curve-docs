@@ -1,5 +1,11 @@
 This contract contains view-only external methods which can be gas-inefficient when called from smart contracts.
 
+
+!!!deploy "Contract Source & Deployment"
+    **Views** contract is deployed to the Ethereum mainnet at: [tbd]().  
+    Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNGViews.vy).  
+
+
 ## **Token Exchange Methods**
 
 ### `get_dx`

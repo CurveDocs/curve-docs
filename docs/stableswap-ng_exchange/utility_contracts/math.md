@@ -1,8 +1,8 @@
 The Math Contract provides AMM Math for StableSwap-NG Pools.
 
 !!!deploy "Contract Source & Deployment"
-    The **Math** contract is deployed to the Ethereum mainnet at: [tbd]().  
-    Source code for this contract is available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNGMath.vy). 
+    **Math** contract is deployed to the Ethereum mainnet at: [tbd]().  
+    Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNGMath.vy).    
 
 
 ### `get_y`
