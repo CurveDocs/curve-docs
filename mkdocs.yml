@@ -12,6 +12,19 @@ plugins:
 
 
 nav:
+  - Stableswap-ng:
+    - Overview: stableswap-ng_exchange/overview.md
+    - Pools:
+      - Plain Pools: stableswap-ng_exchange/pools/plainpool.md
+      - Admin Controls: stableswap-ng_exchange/pools/admin_controls.md
+    - Liquidity Pool Token:  
+      - StableSwap-NG LP Token: stableswap-ng_exchange/lp_tokens/lp_token.md
+    - Utility Contracts: 
+      - Tricrypto:
+        - Math: stableswap-ng_exchange/utility_contracts/math.md
+        - ViewMethodContract: stableswap-ng_exchange/utility_contracts/ViewMethodContract.md
+
+        
   - Curve DAO:
     
     - Curve DAO Token:
@@ -105,9 +118,8 @@ nav:
       - Overview: cryptoswap_exchange/lp_tokens/lp_token_overview.md
       - TriCrypto LP Token: cryptoswap_exchange/lp_tokens/tricrypto_lp_token.md
     - Utility Contracts: 
-      - Tricrypto:
-        - Math: cryptoswap_exchange/utility_contracts/math.md
-        - ViewMethodContract: cryptoswap_exchange/utility_contracts/ViewMethodContract.md
+      - Math: cryptoswap_exchange/utility_contracts/math.md
+      - ViewMethodContract: cryptoswap_exchange/utility_contracts/ViewMethodContract.md
 
   - Registry:
     - Overview: registry/overview.md
