@@ -1,52 +1,12 @@
-questions: 
-- stored rates (stored_rates)
-
-todo:
-- add overview of pools with basic info
+QUESTIONS:
+- what is the state price of an AMM?
+- `last_price` and `ema_price` only returns the stored values whereas `price_oracle` and `get_p` calculates the up-to-date prices
 
 
 Plain pools are curve liquidity exchange contracts which contain at least 2 and up to 8 coins.
 
-
-
-Balances of the pool are calculated via the internal `_balances()` function. It is important to note that pools behave a bit differently when `POOLS_IS_REBASING_IMPLEMENTATION` is `True` and therefor contains a rebasing token. The function makes sure that LP's keep all rebases.
-
-
-??? quote "`_balances`"
-
-    ```python
-    @view
-    @internal
-    def _balances() -> DynArray[uint256, MAX_COINS]:
-        """
-        @notice Calculates the pool's balances _excluding_ the admin's balances.
-        @dev If the pool contains rebasing tokens, this method ensures LPs keep all
-                rebases and admin only claims swap fees. This also means that, since
-                admin's balances are stored in an array and not inferred from read balances,
-                the fees in the rebasing token that the admin collects is immune to
-                slashing events.
-        """
-        result: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
-        balances_i: uint256 = 0
-
-        for i in range(MAX_COINS_128):
-
-            if i == N_COINS_128:
-                break
-
-            if POOL_IS_REBASING_IMPLEMENTATION:
-                balances_i = ERC20(coins[i]).balanceOf(self) - self.admin_balances[i]
-            else:
-                balances_i = self.stored_balances[i] - self.admin_balances[i]
-
-            result.append(balances_i)
-
-        return result
-    ```
-
-
-
-
+!!!deploy "Contract Source & Deployment"
+    Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNG.vy).  
 
 
 ## **Exchange Methods** (need final check)
@@ -177,7 +137,7 @@ then update stored_balances by deducting the amount transfered out
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         event TokenExchange:
             buyer: indexed(address)
             sold_id: int128
@@ -300,8 +260,8 @@ then update stored_balances by deducting the amount transfered out
 ### `exchange_received`
 !!! description "`StableSwap.exchange_received(i: int128, j: int128, _dx: uint256, _min_dy: uint256, _receiver: address) -> uint256:`"
 
-    !!!warning
-        `exchange_received` is only possible for exchanging non-rebasing tokens.
+    !!!danger
+        `exchange_received` will revert if the pool contains a rebasing asset. A pool that contains a rebasing token should have an asset_type of 2. If this is not the case, the pool is using an incorrect implementation, and rebases can be stolen.
 
     Function to exchange `_dx` amount of coin `i` for coin `j`, receiving a minimum amount of `_min_dy`. This is done **without actually transferring the coins into the pool**. The exchange is based on the change in the balance of coin `i`, eliminating the need to grant approval to the contract.
 
@@ -319,7 +279,7 @@ then update stored_balances by deducting the amount transfered out
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python
         event TokenExchange:
             buyer: indexed(address)
             sold_id: int128
@@ -643,7 +603,7 @@ then update stored_balances by deducting the amount transfered out
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 15"
+        ```python
         event Transfer:
             sender: indexed(address)
             receiver: indexed(address)
@@ -796,7 +756,7 @@ then update stored_balances by deducting the amount transfered out
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         event RemoveLiquidityOne:
             provider: indexed(address)
             token_id: int128
@@ -928,7 +888,7 @@ then update stored_balances by deducting the amount transfered out
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         event RemoveLiquidityImbalance:
             provider: indexed(address)
             token_amounts: DynArray[uint256, MAX_COINS]
@@ -1040,7 +1000,7 @@ then update stored_balances by deducting the amount transfered out
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         event RemoveLiquidity:
             provider: indexed(address)
             token_amounts: DynArray[uint256, MAX_COINS]
@@ -1358,7 +1318,7 @@ then update stored_balances by deducting the amount transfered out
 
 
 
-## **FEES** (need final check)
+## **Fee Methods** (need final check)
 
 Stableswap-ng introduces a dynamic fee based on the imbalance of the coins within the pool:
 
@@ -1392,7 +1352,7 @@ Stableswap-ng introduces a dynamic fee based on the imbalance of the coins withi
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         fee: public(uint256)  # fee * 1e10
 
         @external
@@ -1519,7 +1479,7 @@ Stableswap-ng introduces a dynamic fee based on the imbalance of the coins withi
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python
         @view
         @external
         def dynamic_fee(i: int128, j: int128) -> uint256:
@@ -1549,7 +1509,7 @@ Stableswap-ng introduces a dynamic fee based on the imbalance of the coins withi
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         admin_fee: public(constant(uint256)) = 5000000000
         ```
 
@@ -1570,7 +1530,7 @@ Stableswap-ng introduces a dynamic fee based on the imbalance of the coins withi
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         offpeg_fee_multiplier: public(uint256)  # * 1e10
 
         @external
@@ -1696,7 +1656,7 @@ Stableswap-ng introduces a dynamic fee based on the imbalance of the coins withi
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         admin_balances: public(DynArray[uint256, MAX_COINS])
         ```
 
@@ -1756,11 +1716,11 @@ Stableswap-ng introduces a dynamic fee based on the imbalance of the coins withi
         ```
 
 
-## **Price Methods** (needs lots of fixes!!! + basic explainer what it does)
+## **Oracle Methods** (need final check + fiddy)
 
-Prices within the AMM are updated whenever `upkeep_oracles()` was called. This occurrs when calling `add_liquidity`, `remove_liquidity_one_coin`, `remove_liquidity_imbalanced`, `exchange` or `exchanged_received`.
+Oracles are updated whenever `upkeep_oracles()` was called. This occurrs when calling `add_liquidity`, `remove_liquidity_one_coin`, `remove_liquidity_imbalanced`, `exchange` or `exchanged_received`.
 
-When removing liquidity in a balanced portion (`remove_liquidity`), oracles are not updated as it does not tweak the balances within the AMM.
+When removing liquidity in a balanced portion (`remove_liquidity`), oracles are not updated as it does not change the price within the AMM, as it does not mess with the coin balance ratio of the pool.
 
 ??? quote "`upkeep_oracles`"
 
@@ -1818,13 +1778,14 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
     ```
 
 
-
 ### `last_price`
 !!! description "`StableSwap.last_price(i: uint256) -> uint256:`"
 
-    Getter method for the last price of coin at index value `i`. The last prices are packed in `last_prices_packed` and is updated whenever `upkeep_oracles()` is called - this happens when adding liquidity, removing liquidity in an inbalanced portion or single sided or when coins are exchanged.
+    Getter method for the last price (often referred to as the spot price) for the coin at index value `i` stored in `last_prices_packed`. The spot price is retrieved from the lower 128 bits of the packed value in `last_prices_packed`.
 
-    Returns: last price (`uint256`).
+    The last prices are updated whenever the internal `upkeep_oracles()` function is called.
+
+    Returns: last price of token `i` (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1832,7 +1793,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         last_prices_packed: DynArray[uint256, MAX_COINS]  #  packing: last_price, ma_price
 
         @view
@@ -1852,9 +1813,11 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 ### `ema_price`
 !!! description "`StableSwap.ema_price(i: uint256) -> uint256:`"
 
-    Getter method for the EMA (exponential moving average) price for the coin at index value `i`. The EMA prices are packed in `last_prices_packed` and whenever `upkeep_oracles()` is called - this happens when adding liquidity, removing liquidity in an inbalanced portion or single sided or when coins are exchanged.
+    Getter method for the EMA (exponential moving average) price for the coin at index value `i` stored in `last_prices_packed`. The EMA price is extracted by shifting the packed value in `last_prices_packed` to the right by 128 bits.
 
-    Returns: ema price (`uint256`).
+    The EMA price is updated whenever the internal `upkeep_oracles()` function is called. 
+
+    Returns: ema price of coin `i` (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1882,7 +1845,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 ### `get_p`
 !!! description "`StableSwap.get_p(i: uint256) -> uint256:`"
 
-    Getter for the AMM state price of the token `i`.
+    Function to calculate the AMM state price for the coin at index value `i`.
 
     Returns: state price (`uint256`).
 
@@ -1949,10 +1912,10 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
         ```
 
 
-### `price_oracle` (of the lp token?? return last_ema_value)
+### `price_oracle`
 !!! description "`StableSwap.price_oracle(i: uint256) -> uint256:`"
 
-    Getter for the price oracle for coin at index value `i`.
+    Function to calculate the exponential moving average (ema) price for the coin at index value `i`.
 
     Returns: price oracle (`uint256`).
 
@@ -1963,6 +1926,14 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
     ??? quote "Source code"
 
         ```python
+        last_prices_packed: DynArray[uint256, MAX_COINS]  #  packing: last_price, ma_price
+        last_D_packed: uint256                            #  packing: last_D, ma_D
+        ma_exp_time: public(uint256)
+        D_ma_time: public(uint256)
+        ma_last_time: public(uint256)                     # packing: ma_last_time_p, ma_last_time_D
+        # ma_last_time has a distinction for p and D because p is _not_ updated if
+        # users remove_liquidity, but D is.
+
         @external
         @view
         @nonreentrant('lock')
@@ -2005,7 +1976,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 ### `ma_exp_time`
 !!! description "`StableSwap.ma_exp_time() -> uint256: view`"
 
-    Getter for the EMA (exponential moving average) time. This value can be adjusted via `set_ma_exp_time()`, see [admin controls](../pools/admin_controls.md).
+    Getter for the exponential moving average time. This value can be adjusted via `set_ma_exp_time()`, see [admin controls](../pools/admin_controls.md#set_ma_exp_time).
 
     Returns: EMA time (`uint256`). 
 
@@ -2023,16 +1994,24 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
         ```
 
 
-### `D_oracle` (todo)
+### `D_oracle`
 !!! description "`StableSwap.D_oracle() -> uint256:`"
 
-    Getter for the oracle for D.
+    Getter for the current ema oracle value for D.
 
-    Returns: D ema value (`uint256`).
+    Returns: ema of D (`uint256`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
+        last_prices_packed: DynArray[uint256, MAX_COINS]  #  packing: last_price, ma_price
+        last_D_packed: uint256                            #  packing: last_D, ma_D
+        ma_exp_time: public(uint256)
+        D_ma_time: public(uint256)
+        ma_last_time: public(uint256)                     # packing: ma_last_time_p, ma_last_time_D
+        # ma_last_time has a distinction for p and D because p is _not_ updated if
+        # users remove_liquidity, but D is.
+
         @external
         @view
         @nonreentrant('lock')
@@ -2073,10 +2052,10 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
         ```
 
 ### `D_ma_time`
-!!! description "`StableSwap.ma_exp_time() -> uint256: view`"
+!!! description "`StableSwap.D_ma_time() -> uint256: view`"
 
-    Getter for the EMA (exponential moving average) time for D. This value can be adjusted via `set_ma_exp_time()`, see [admin controls](../pools/admin_controls.md).
-
+    Getter for the exponential moving average time for D. This value can be adjusted via `set_ma_exp_time()`, see [admin controls](../pools/admin_controls.md#set_ma_exp_time).
+    
     Returns: D EMA time (`uint256`). 
 
     ??? quote "Source code"
@@ -2093,19 +2072,12 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
         ```
 
 
+### `ma_last_time`
+!!! description "`StableSwap.ma_last_time() -> uint256: view`"
 
-### `ma_last_time` (todo)
-!!! description "`StableSwap.`"
+    Getter for the last time the moving average (MA) was updated. This variable contains two packed values: *ma_last_time_p* and *ma_last_time_D*, as they are not always updated simultaneously. For instance, when users remove_liquidity, ma_last_time of p is not updated, but D is. Other than that, both values should be updated simultaneously. 
 
-    Function to ..
-
-    Returns: 
-
-    Emits: 
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `` |  `` |  |
+    Returns: last ma time (`uint256`).
 
     ??? quote "Source code"
 
@@ -2118,16 +2090,17 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
     === "Example"
 
         ```shell
-        >>> StableSwap.get_y('todo')
+        >>> StableSwap.ma_last_time('todo')
         'todo'
         ```
+
 
 
 ### `get_virtual_price`
 !!! description "`StableSwap.get_virtual_price() -> uint256:`"
 
     !!!danger
-        The method may be vulnerable to donation-style attacks if implementation contains rebasing tokens. For integrators, caution is advised.
+        This method may be vulnerable to donation-style attacks if the implementation contains rebasing tokens. For integrators, caution is advised.
 
     Getter for the current virtual price of the LP token.
 
@@ -2163,9 +2136,6 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
         >>> StableSwap.get_virtual_price('todo')
         'todo'
         ```
-
-
-
 
 
 
@@ -2963,4 +2933,4 @@ When a ramping of A has been initialized, the process can be stopped by calling 
         ```
 
 
-## .
+
