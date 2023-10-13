@@ -16,11 +16,11 @@ nav:
     - Overview: stableswap-ng_exchange/overview.md
     - Pools:
       - Plain Pools: stableswap-ng_exchange/pools/plainpool.md
+      - Metapools: stableswap-ng_exchange/pools/metapool.md
       - Admin Controls: stableswap-ng_exchange/pools/admin_controls.md
     - Liquidity Pool Token:  
       - StableSwap-NG LP Token: stableswap-ng_exchange/lp_tokens/lp_token.md
     - Utility Contracts: 
-      - Tricrypto:
         - Math: stableswap-ng_exchange/utility_contracts/math.md
         - ViewMethodContract: stableswap-ng_exchange/utility_contracts/ViewMethodContract.md
 
