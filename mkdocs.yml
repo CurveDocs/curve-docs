@@ -20,7 +20,7 @@ nav:
       - Metapools: stableswap-ng_exchange/pools/metapool.md
       - Admin Controls: stableswap-ng_exchange/pools/admin_controls.md
     - Liquidity Pool Token:  
-      - StableSwap-NG LP Token: stableswap-ng_exchange/lp_token/lp_token.md
+      - Curve LP Token V7: stableswap-ng_exchange/lp_token/lp_token.md
     - Utility Contracts: 
         - Math: stableswap-ng_exchange/utility_contracts/math.md
         - ViewMethodContract: stableswap-ng_exchange/utility_contracts/ViewMethodContract.md
