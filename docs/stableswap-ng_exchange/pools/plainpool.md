@@ -1,8 +1,3 @@
-QUESTIONS:
-- what is the state price of an AMM?
-- `last_price` and `ema_price` only returns the stored values whereas `price_oracle` and `get_p` calculates the up-to-date prices
-
-
 Plain pools are curve liquidity exchange contracts which contain at least 2 and up to 8 coins.
 
 !!!deploy "Contract Source & Deployment"
@@ -738,6 +733,112 @@ then update stored_balances by deducting the amount transfered out
         ```
 
 
+### `remove_liquidity`
+!!! description "`StableSwap.remove_liquidity(_burn_amount: uint256, _min_amounts: DynArray[uint256, MAX_COINS], _receiver: address = msg.sender, _claim_admin_fees: bool = True) -> DynArray[uint256, MAX_COINS]:`"
+
+    Function to remove coins from the liquidity pool in a balanced ratio. Admin fees might be claimed after liquidity was removed.
+
+    Returns: amount of coins withdrawn (`DynArray[uint256, MAX_COINS]`)
+
+    Emits: `RemoveLiquidity`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_burn_amount` |  `uint256` | amount of LP tokens to be burned |
+    | `_min_amounts` |  `DynArray[uint256, MAX_COINS]` | minimum amounts of coins to receive |
+    | `_receiver` |  `address` | receiver of the coins; defaults to msg.sender |
+    | `_claim_admin_fees` |  `bool` | if admin fees should be claimed; defaults to `true` |
+
+    !!!info
+        When removing liquidity in a balanced ratio, there is no need to update the price oracles, as this function does not alter the balance ratio within the pool. When calling this function, only the `D` oracle is updated.
+
+    ??? quote "Source code"
+
+        ```python
+        event RemoveLiquidity:
+            provider: indexed(address)
+            token_amounts: DynArray[uint256, MAX_COINS]
+            fees: DynArray[uint256, MAX_COINS]
+            token_supply: uint256
+
+        @external
+        @nonreentrant('lock')
+        def remove_liquidity(
+            _burn_amount: uint256,
+            _min_amounts: DynArray[uint256, MAX_COINS],
+            _receiver: address = msg.sender,
+            _claim_admin_fees: bool = True,
+        ) -> DynArray[uint256, MAX_COINS]:
+            """
+            @notice Withdraw coins from the pool
+            @dev Withdrawal amounts are based on current deposit ratios
+            @param _burn_amount Quantity of LP tokens to burn in the withdrawal
+            @param _min_amounts Minimum amounts of underlying coins to receive
+            @param _receiver Address that receives the withdrawn coins
+            @return List of amounts of coins that were withdrawn
+            """
+            total_supply: uint256 = self.total_supply
+            assert _burn_amount > 0  # dev: invalid burn amount
+
+            amounts: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+            balances: DynArray[uint256, MAX_COINS] = self._balances()
+
+            value: uint256 = 0
+            for i in range(MAX_COINS_128):
+
+                if i == N_COINS_128:
+                    break
+
+                value = balances[i] * _burn_amount / total_supply
+                assert value >= _min_amounts[i], "Withdrawal resulted in fewer coins than expected"
+                amounts.append(value)
+                self._transfer_out(i, value, _receiver)
+
+            self._burnFrom(msg.sender, _burn_amount)  # <---- Updates self.total_supply
+
+            # --------------------------- Upkeep D_oracle ----------------------------
+
+            ma_last_time_unpacked: uint256[2] = self.unpack_2(self.ma_last_time)
+            last_D_packed_current: uint256 = self.last_D_packed
+            old_D: uint256 = last_D_packed_current & (2**128 - 1)
+
+            self.last_D_packed = self.pack_2(
+                old_D - unsafe_div(old_D * _burn_amount, total_supply),  # new_D = proportionally reduce D.
+                self._calc_moving_average(
+                    last_D_packed_current,
+                    self.D_ma_time,
+                    ma_last_time_unpacked[1]
+                )
+            )
+
+            if ma_last_time_unpacked[1] < block.timestamp:
+                ma_last_time_unpacked[1] = block.timestamp
+
+            self.ma_last_time = self.pack_2(ma_last_time_unpacked[0], ma_last_time_unpacked[1])
+
+            # ------------------------------- Log event ------------------------------
+
+            log RemoveLiquidity(
+                msg.sender,
+                amounts,
+                empty(DynArray[uint256, MAX_COINS]),
+                total_supply - _burn_amount
+            )
+
+            # ------- Withdraw admin fees if _claim_admin_fees is set to True --------
+            if _claim_admin_fees:
+                self._withdraw_admin_fees()
+
+            return amounts
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> StableSwap.remove_liquidity('todo')
+        'todo'
+        ```
+
 ### `remove_liquidity_one_coin`
 !!! description "`StableSwap.remove_liquidity_one_coin(_burn_amount: uint256, i: int128, _min_received: uint256, _receiver: address = msg.sender) -> uint256:`"
 
@@ -982,109 +1083,6 @@ then update stored_balances by deducting the amount transfered out
         ```
 
 
-### `remove_liquidity`
-!!! description "`StableSwap.remove_liquidity(_burn_amount: uint256, _min_amounts: DynArray[uint256, MAX_COINS], _receiver: address = msg.sender, _claim_admin_fees: bool = True) -> DynArray[uint256, MAX_COINS]:`"
-
-    Function to remove coins from the liquidity pool in a balanced amount. Admin fees might be claimed after liquidity was removed.
-
-    Returns: amount of coins withdrawn (`DynArray[uint256, MAX_COINS]`)
-
-    Emits: `RemoveLiquidity`
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_burn_amount` |  `uint256` | amount of LP tokens to be burned |
-    | `_min_amounts` |  `DynArray[uint256, MAX_COINS]` | minimum amounts of coins to receive |
-    | `_receiver` |  `address` | receiver of the coins; defaults to msg.sender |
-    | `_claim_admin_fees` |  `bool` | if admin fees should be claimed; defaults to `true` |
-
-    ??? quote "Source code"
-
-        ```python
-        event RemoveLiquidity:
-            provider: indexed(address)
-            token_amounts: DynArray[uint256, MAX_COINS]
-            fees: DynArray[uint256, MAX_COINS]
-            token_supply: uint256
-
-        @external
-        @nonreentrant('lock')
-        def remove_liquidity(
-            _burn_amount: uint256,
-            _min_amounts: DynArray[uint256, MAX_COINS],
-            _receiver: address = msg.sender,
-            _claim_admin_fees: bool = True,
-        ) -> DynArray[uint256, MAX_COINS]:
-            """
-            @notice Withdraw coins from the pool
-            @dev Withdrawal amounts are based on current deposit ratios
-            @param _burn_amount Quantity of LP tokens to burn in the withdrawal
-            @param _min_amounts Minimum amounts of underlying coins to receive
-            @param _receiver Address that receives the withdrawn coins
-            @return List of amounts of coins that were withdrawn
-            """
-            total_supply: uint256 = self.total_supply
-            assert _burn_amount > 0  # dev: invalid burn amount
-
-            amounts: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
-            balances: DynArray[uint256, MAX_COINS] = self._balances()
-
-            value: uint256 = 0
-            for i in range(MAX_COINS_128):
-
-                if i == N_COINS_128:
-                    break
-
-                value = balances[i] * _burn_amount / total_supply
-                assert value >= _min_amounts[i], "Withdrawal resulted in fewer coins than expected"
-                amounts.append(value)
-                self._transfer_out(i, value, _receiver)
-
-            self._burnFrom(msg.sender, _burn_amount)  # <---- Updates self.total_supply
-
-            # --------------------------- Upkeep D_oracle ----------------------------
-
-            ma_last_time_unpacked: uint256[2] = self.unpack_2(self.ma_last_time)
-            last_D_packed_current: uint256 = self.last_D_packed
-            old_D: uint256 = last_D_packed_current & (2**128 - 1)
-
-            self.last_D_packed = self.pack_2(
-                old_D - unsafe_div(old_D * _burn_amount, total_supply),  # new_D = proportionally reduce D.
-                self._calc_moving_average(
-                    last_D_packed_current,
-                    self.D_ma_time,
-                    ma_last_time_unpacked[1]
-                )
-            )
-
-            if ma_last_time_unpacked[1] < block.timestamp:
-                ma_last_time_unpacked[1] = block.timestamp
-
-            self.ma_last_time = self.pack_2(ma_last_time_unpacked[0], ma_last_time_unpacked[1])
-
-            # ------------------------------- Log event ------------------------------
-
-            log RemoveLiquidity(
-                msg.sender,
-                amounts,
-                empty(DynArray[uint256, MAX_COINS]),
-                total_supply - _burn_amount
-            )
-
-            # ------- Withdraw admin fees if _claim_admin_fees is set to True --------
-            if _claim_admin_fees:
-                self._withdraw_admin_fees()
-
-            return amounts
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> StableSwap.remove_liquidity('todo')
-        'todo'
-        ```
-
 
 ### `calc_withdraw_one_coin`
 !!! description "`StableSwap.calc_withdraw_one_coin(_burn_amount: uint256, i: int128) -> uint256:`"
@@ -1318,9 +1316,9 @@ then update stored_balances by deducting the amount transfered out
 
 
 
-## **Fee Methods** (need final check)
+## **Fee Methods**
 
-Stableswap-ng introduces a dynamic fee based on the imbalance of the coins within the pool:
+Stableswap-ng introduces a dynamic fee based on the imbalance of the coins within the pool and their pegs:
 
 ??? quote "`_dynamic_fee`"
 
@@ -1342,11 +1340,13 @@ Stableswap-ng introduces a dynamic fee based on the imbalance of the coins withi
         )
     ```
 
+More on dynamic fees [here](../pools/overview.md#dynamic-fees).
+
 
 ### `fee`
 !!! description "`StableSwap.fee() -> uint256: view`"
 
-    Getter method for the fee of the pool.
+    Getter method for the fee of the pool. This is the value set when initializing the contract and can be changed via [`set_new_fee`](../pools/admin_controls.md#set_new_fee).
 
     Returns: fee (`uint256`).
 
@@ -1479,18 +1479,75 @@ Stableswap-ng introduces a dynamic fee based on the imbalance of the coins withi
 
     ??? quote "Source code"
 
-        ```python
-        @view
-        @external
-        def dynamic_fee(i: int128, j: int128) -> uint256:
-            """
-            @notice Return the fee for swapping between `i` and `j`
-            @param i Index value for the coin to send
-            @param j Index value of the coin to recieve
-            @return Swap fee expressed as an integer with 1e10 precision
-            """
-            return StableSwapViews(factory.views_implementation()).dynamic_fee(i, j, self)
-        ```
+        === "CurveStableSwapNG.vy"
+
+            ```python
+            @view
+            @external
+            def dynamic_fee(i: int128, j: int128) -> uint256:
+                """
+                @notice Return the fee for swapping between `i` and `j`
+                @param i Index value for the coin to send
+                @param j Index value of the coin to recieve
+                @return Swap fee expressed as an integer with 1e10 precision
+                """
+                return StableSwapViews(factory.views_implementation()).dynamic_fee(i, j, self)
+            ```
+
+        === "CurveStableSwapNGViews.vy"
+
+            ```python
+            @view
+            @external
+            def dynamic_fee(i: int128, j: int128, pool:address) -> uint256:
+                """
+                @notice Return the fee for swapping between `i` and `j`
+                @param i Index value for the coin to send
+                @param j Index value of the coin to recieve
+                @return Swap fee expressed as an integer with 1e10 precision
+                """
+                N_COINS: uint256 = StableSwapNG(pool).N_COINS()
+                fee: uint256 = StableSwapNG(pool).fee()
+                fee_multiplier: uint256 = StableSwapNG(pool).offpeg_fee_multiplier()
+
+                rates: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+                balances: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+                xp: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+                rates, balances, xp = self._get_rates_balances_xp(pool, N_COINS)
+
+                return self._dynamic_fee(xp[i], xp[j], fee, fee_multiplier)
+
+            @view
+            @internal
+            def _dynamic_fee(xpi: uint256, xpj: uint256, _fee: uint256, _fee_multiplier: uint256) -> uint256:
+
+                if _fee_multiplier <= FEE_DENOMINATOR:
+                    return _fee
+
+                xps2: uint256 = (xpi + xpj) ** 2
+                return (
+                    (_fee_multiplier * _fee) /
+                    ((_fee_multiplier - FEE_DENOMINATOR) * 4 * xpi * xpj / xps2 + FEE_DENOMINATOR)
+                )
+
+            @view
+            @internal
+            def _get_rates_balances_xp(pool: address, N_COINS: uint256) -> (
+                DynArray[uint256, MAX_COINS],
+                DynArray[uint256, MAX_COINS],
+                DynArray[uint256, MAX_COINS],
+            ):
+
+                rates: DynArray[uint256, MAX_COINS] = StableSwapNG(pool).stored_rates()
+                balances: DynArray[uint256, MAX_COINS] = StableSwapNG(pool).get_balances()
+                xp: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+                for idx in range(MAX_COINS):
+                    if idx == N_COINS:
+                        break
+                    xp.append(rates[idx] * balances[idx] / PRECISION)
+
+                return rates, balances, xp
+            ```
 
     === "Example"
 
@@ -1503,9 +1560,12 @@ Stableswap-ng introduces a dynamic fee based on the imbalance of the coins withi
 ### `admin_fee`
 !!! description "`StableSwap.admin_fee() -> uint256: view`"
 
-    Getter method for the admin fee. This value is set at 50% (5000000000) and is a constantant, meaning it cannot be changed.
+    Getter for the admin fee.
 
     Returns: admin fee (`uint256`).
+
+    !!!info
+        This value is set at 50% (5000000000) and is a constantant, meaning it cannot be changed.
 
     ??? quote "Source code"
 
@@ -1524,7 +1584,7 @@ Stableswap-ng introduces a dynamic fee based on the imbalance of the coins withi
 ### `offpeg_fee_multiplier`
 !!! description "`StableSwap.offpeg_fee_multiplier() -> uint256: view`"
 
-    Getter method for the off-peg fee multiplier. This value determines how much the fee increases when assets within the AMM depeg.
+    Getter method for the off-peg fee multiplier. This value determines how much the fee increases when assets within the AMM depeg. This value can be changed via [`set_new_fee`](../pools/admin_controls.md#set_new_fee).
 
     Returns: offpeg fee multiplier (`uint256`)
 
@@ -1646,7 +1706,7 @@ Stableswap-ng introduces a dynamic fee based on the imbalance of the coins withi
 ### `admin_balances`
 !!! description "`StableSwap.admin_balances(arg0: uint256) -> uint256: view`"
 
-    Getter for the admin balance of the pool for a coin. These values essentially represent the claimable admin fee.
+    Getter for the accumulated admin balance of the pool for a coin. These values essentially represent the claimable admin fee.
 
     Returns: admin balances (`uint256`).
 
@@ -1851,7 +1911,10 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `i` |  `uint256` | index of state price; 0 = coin[1], 1 = coin [2], ... |
+    | `i` |  `uint256` | index of state price |
+
+    !!!info
+        `i = 0` will return the state price of `coin[1]`.
 
     ??? quote "Source code"
 
@@ -2075,7 +2138,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 ### `ma_last_time`
 !!! description "`StableSwap.ma_last_time() -> uint256: view`"
 
-    Getter for the last time the moving average (MA) was updated. This variable contains two packed values: *ma_last_time_p* and *ma_last_time_D*, as they are not always updated simultaneously. For instance, when users remove_liquidity, ma_last_time of p is not updated, but D is. Other than that, both values should be updated simultaneously. 
+    Getter for the last time the moving average (MA) was updated. This variable contains two packed values: *ma_last_time_p* and *ma_last_time_D*, as they are not always updated simultaneously. For instance, when users `remove_liquidity`, ma_last_time of p is not updated, but D is. Other than that, both values are updated simultaneously. 
 
     Returns: last ma time (`uint256`).
 
@@ -2140,13 +2203,13 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
 
 
-## **Amplification Coefficient** (need final check)
+## **Amplification Coefficient**
 
 The amplification coefficient **`A`** determines a pool’s tolerance for imbalance between the assets within it. A higher value means that trades will incur slippage sooner as the assets within the pool become imbalanced.
 
 The appropriate value for A is dependent upon the type of coin being used within the pool, and is subject to optimisation and pool-parameter update based on the market history of the trading pair. It is possible to modify the amplification coefficient for a pool after it has been deployed. This can be done via the `ramp_A` function. See [admin controls](../pools/admin_controls.md#ramp_a).
 
-When a ramping of A has been initialized, the process can be stopped by calling the function [`stop_ramp_A`](../pools/admin_controls.md#stop_ramp_a).
+When a ramping of A has been initialized, the process can be stopped by calling the function [`stop_ramp_A()`](../pools/admin_controls.md#stop_ramp_a).
 
 ### `A`
 !!! description "`StableSwap.A() -> uint256:`"
@@ -2262,10 +2325,6 @@ When a ramping of A has been initialized, the process can be stopped by calling 
     Getter for the initial A value.
 
     Returns: initial A (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `` |  `` |  |
 
     ??? quote "Source code"
 
@@ -2461,7 +2520,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
 
 
-## **Contract Info Methods** (need final check)
+## **Contract Info Methods** (pool rebasing thingy, other than that issa good)
 
 ### `coins`
 !!! description "`StableSwap.coins(arg0: uint256) -> addresss: view`"
@@ -2474,6 +2533,107 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
         ```python
         coins: public(immutable(DynArray[address, MAX_COINS]))
+
+        @external
+        def __init__(
+            _name: String[32],
+            _symbol: String[10],
+            _A: uint256,
+            _fee: uint256,
+            _offpeg_fee_multiplier: uint256,
+            _ma_exp_time: uint256,
+            _coins: DynArray[address, MAX_COINS],
+            _rate_multipliers: DynArray[uint256, MAX_COINS],
+            _asset_types: DynArray[uint8, MAX_COINS],
+            _method_ids: DynArray[bytes4, MAX_COINS],
+            _oracles: DynArray[address, MAX_COINS],
+        ):
+            """
+            @notice Initialize the pool contract
+            @param _name Name of the new plain pool.
+            @param _symbol Symbol for the new plain pool.
+            @param _A Amplification co-efficient - a lower value here means
+                    less tolerance for imbalance within the pool's assets.
+                    Suggested values include:
+                    * Uncollateralized algorithmic stablecoins: 5-10
+                    * Non-redeemable, collateralized assets: 100
+                    * Redeemable assets: 200-400
+            @param _fee Trade fee, given as an integer with 1e10 precision. The
+                        the maximum is 1% (100000000).
+                        50% of the fee is distributed to veCRV holders.
+            @param _offpeg_fee_multiplier A multiplier that determines how much to increase
+                                        Fees by when assets in the AMM depeg. Example value: 20000000000
+            @param _ma_exp_time Averaging window of oracle. Set as time_in_seconds / ln(2)
+                                Example: for 10 minute EMA, _ma_exp_time is 600 / ln(2) ~= 866
+            @param _coins List of addresses of the coins being used in the pool.
+            @param _rate_multipliers An array of: [10 ** (36 - _coins[n].decimals()), ... for n in range(N_COINS)]
+            @param _asset_types Array of uint8 representing tokens in pool
+            @param _method_ids Array of first four bytes of the Keccak-256 hash of the function signatures
+                            of the oracle addresses that gives rate oracles.
+                            Calculated as: keccak(text=event_signature.replace(" ", ""))[:4]
+            @param _oracles Array of rate oracle addresses.
+            """
+
+            coins = _coins
+            __n_coins: uint256 = len(_coins)
+            N_COINS = __n_coins
+            N_COINS_128 = convert(__n_coins, int128)
+
+            for i in range(MAX_COINS):
+                if i == __n_coins - 1:
+                    break
+                self.last_prices_packed.append(self.pack_2(10**18, 10**18))
+
+            rate_multipliers = _rate_multipliers
+            POOL_IS_REBASING_IMPLEMENTATION = 2 in _asset_types
+
+            factory = Factory(msg.sender)
+
+            A: uint256 = _A * A_PRECISION
+            self.initial_A = A
+            self.future_A = A
+            self.fee = _fee
+            self.offpeg_fee_multiplier = _offpeg_fee_multiplier
+
+            assert _ma_exp_time != 0
+            self.ma_exp_time = _ma_exp_time
+            self.D_ma_time = 62324  # <--------- 12 hours default on contract start.
+            self.ma_last_time = self.pack_2(block.timestamp, block.timestamp)
+
+            for i in range(MAX_COINS_128):
+
+                if i == N_COINS_128:
+                    break
+
+                self.oracles.append(convert(_method_ids[i], uint256) * 2**224 | convert(_oracles[i], uint256))
+
+                #  --------------------------- initialize storage ---------------------------
+                self.stored_balances.append(0)
+                self.admin_balances.append(0)
+
+            # --------------------------- ERC20 stuff ----------------------------
+
+            name = _name
+            symbol = _symbol
+
+            # EIP712 related params -----------------
+            NAME_HASH = keccak256(name)
+            salt = block.prevhash
+            CACHED_CHAIN_ID = chain.id
+            CACHED_DOMAIN_SEPARATOR = keccak256(
+                _abi_encode(
+                    EIP712_TYPEHASH,
+                    NAME_HASH,
+                    VERSION_HASH,
+                    chain.id,
+                    self,
+                    salt,
+                )
+            )
+
+            # ------------------------ Fire a transfer event -------------------------
+
+            log Transfer(empty(address), msg.sender, 0)
         ```
 
     === "Example"
@@ -2548,9 +2708,12 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 ### `get_balances`
 !!! description "`StableSwap.get_balances() -> DynArray[uint256, MAX_COINS]:`"
 
-    Getter for all coin balances in the pool (not accounting for admin fees).
+    Getter for an array with all coin balances in the pool.
 
     Returns: coin balances (`DynArray[uint256, MAX_COINS]`).
+
+    !!!info
+        This getter method does not account for admin fees. 
 
     ??? quote "Source code"
 
@@ -2604,12 +2767,16 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     Returns: stored rates (`DynArray[uint256, MAX_COINS]`).
 
-    !!!tip
+    !!!info
         If the coin has a rate oracle that has been properly initialized, this method queries that rate by static-calling an external contract.
 
     ??? quote "Source code"
 
         ```python
+        rate_multipliers: immutable(DynArray[uint256, MAX_COINS])
+        # [bytes4 method_id][bytes8 <empty>][bytes20 oracle]
+        oracles: DynArray[uint256, MAX_COINS]
+
         @view
         @external
         def stored_rates() -> DynArray[uint256, MAX_COINS]:
@@ -2658,9 +2825,12 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 ### `N_COINS`
 !!! description "`StableSwap.N_COINS() -> uint256: view`"
 
-    Getter for the number of coins in the pool. `MAX_COINS` is 8.
+    Getter for the total number of coins in the pool.
 
     Returns: number of coins (`uint256`).
+
+    !!!info
+        There can be a maximum of 8 coins per pool due to `MAX_COINS = 8`.
 
     ??? quote "Source code"
 
@@ -2811,7 +2981,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
         ```
 
 
-### `POOL_IS_REBASING_IMPLEMENTATION`
+### `POOL_IS_REBASING_IMPLEMENTATION` (got removed. need to check more accurate github commit version)
 !!! description "`StableSwap.POOL_IS_REBASING_IMPLEMENTATION() -> bool: view`"
 
     Getter method to check if the pool is a rebasing implementation.

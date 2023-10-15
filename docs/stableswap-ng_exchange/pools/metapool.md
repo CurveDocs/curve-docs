@@ -1,5 +1,8 @@
 metapool: pool paired against a base pool.
 
+!!!deploy "Contract Source & Deployment"
+    Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapMetaNG.vy).
+
 
 ## **Contract Info Methods** (need final cleanup and check)
 
@@ -576,8 +579,8 @@ metapool: pool paired against a base pool.
 ### `exchange_underlying_received`
 !!! description "`StableSwap.exchange_underlying_received(i: int128, j: int128, _dx: uint256, _min_dy: uint256, _receiver: address) -> uint256:`"
 
-    !!!warning
-        `exchange_received` is only possible for exchanging non-rebasing tokens.
+    !!!danger
+        `exchange_received` will revert if the pool contains a rebasing asset. A pool that contains a rebasing token should have an asset_type of 2. If this is not the case, the pool is using an incorrect implementation, and rebases can be stolen.
 
     Function to exchange `_dx` amount of the the underlying coin `i` for the underlying coin `j` and receive a minimum amount of `_min_dy`. This is done **without actually transferring the coins into the pool**. The exchange is based on the change in the balance of coin `i`, eliminating the need to grant approval to the contract.
 
