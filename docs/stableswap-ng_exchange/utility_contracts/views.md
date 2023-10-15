@@ -705,6 +705,24 @@ This contract contains view-only external methods which can be gas-inefficient w
                 (_fee_multiplier * _fee) /
                 ((_fee_multiplier - FEE_DENOMINATOR) * 4 * xpi * xpj / xps2 + FEE_DENOMINATOR)
             )
+
+        @view
+        @internal
+        def _get_rates_balances_xp(pool: address, N_COINS: uint256) -> (
+            DynArray[uint256, MAX_COINS],
+            DynArray[uint256, MAX_COINS],
+            DynArray[uint256, MAX_COINS],
+        ):
+
+            rates: DynArray[uint256, MAX_COINS] = StableSwapNG(pool).stored_rates()
+            balances: DynArray[uint256, MAX_COINS] = StableSwapNG(pool).get_balances()
+            xp: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+            for idx in range(MAX_COINS):
+                if idx == N_COINS:
+                    break
+                xp.append(rates[idx] * balances[idx] / PRECISION)
+
+            return rates, balances, xp
         ```
 
     === "Example"
