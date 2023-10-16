@@ -1,4 +1,4 @@
-Plain pools are curve liquidity exchange contracts which contain at least 2 and up to 8 coins.
+Plain pools are curve liquidity exchange contracts which contain at least 2 and up to 8 coins. 
 
 !!!deploy "Contract Source & Deployment"
     Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNG.vy).  
@@ -25,7 +25,7 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `coin_idx` |  `in128` | index value of the token to transfer in |
+    | `coin_idx` |  `int128` | index value of the token to transfer in |
     | `dx` |  `uint256` | amount to transfer in |
     | `sender` |  `address` | address to tranfer coins from |
     | `expect_optimistic_transfer` |  `bool` | `True` if the contract expect an optimistic coin transfer |
@@ -84,7 +84,7 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `coin_idx` |  `in128` | index value of the token to transfer out |
+    | `coin_idx` |  `int128` | index value of the token to transfer out |
     | `_amount` |  `uint256` | amount to transfer out |
     | `receiver` |  `address` | address to send the tokens to |
 
@@ -133,7 +133,7 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
     | `j` |  `in128` | index value of output coin |
     | `_dx` |  `uint256` | amount of coin `i` being exchanged |
     | `_min_dy` |  `uint256` | minumum amount of coin `j` to receive |
-    | `receiver` |  `address` | receiver of the output tokens; defaults to msg.sender |
+    | `_receiver` |  `address` | receiver of the output tokens; defaults to msg.sender |
 
     ??? quote "Source code"
 
@@ -425,10 +425,15 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
         === "CurveStableSwapNG.vy"
 
             ```python
-            interface Factory:
-                def fee_receiver() -> address: view
-                def admin() -> address: view
-                def views_implementation() -> address: view
+            interface StableSwapViews:
+                def get_dx(i: int128, j: int128, dy: uint256, pool: address) -> uint256: view
+                def get_dy(i: int128, j: int128, dx: uint256, pool: address) -> uint256: view
+                def dynamic_fee(i: int128, j: int128, pool: address) -> uint256: view
+                def calc_token_amount(
+                    _amounts: DynArray[uint256, MAX_COINS],
+                    _is_deposit: bool,
+                    _pool: address
+                ) -> uint256: view
 
             @view
             @external
@@ -2164,50 +2169,6 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
 
 
-### `get_virtual_price`
-!!! description "`StableSwap.get_virtual_price() -> uint256:`"
-
-    !!!danger
-        This method may be vulnerable to donation-style attacks if the implementation contains rebasing tokens. For integrators, caution is advised.
-
-    Getter for the current virtual price of the LP token.
-
-    Returns: virtual price (`uint256`).
-
-    ??? quote "Source code"
-
-        ```python
-        @view
-        @external
-        @nonreentrant('lock')
-        def get_virtual_price() -> uint256:
-            """
-            @notice The current virtual price of the pool LP token
-            @dev Useful for calculating profits.
-                The method may be vulnerable to donation-style attacks if implementation
-                contains rebasing tokens. For integrators, caution is advised.
-            @return LP token virtual price normalized to 1e18
-            """
-            amp: uint256 = self._A()
-            xp: DynArray[uint256, MAX_COINS] = self._xp_mem(
-                self._stored_rates(), self._balances()
-            )
-            D: uint256 = self.get_D(xp, amp)
-            # D is in the units similar to DAI (e.g. converted to precision 1e18)
-            # When balanced, D = n * x_u - total virtual value of the portfolio
-            return D * PRECISION / self.total_supply
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> StableSwap.get_virtual_price('todo')
-        'todo'
-        ```
-
-
-
-
 ## **Amplification Coefficient**
 
 The amplification coefficient **`A`** determines a pool’s tolerance for imbalance between the assets within it. A higher value means that trades will incur slippage sooner as the assets within the pool become imbalanced.
@@ -2479,7 +2440,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     Getter for the future A time. This is the timestamp when ramping A should be finished.
 
-    Returns: initial A time (`uint256`).
+    Returns: future A time (`uint256`).
 
     ??? quote "Source code"
 
@@ -2692,7 +2653,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
                 if i == N_COINS_128:
                     break
 
-                if POOL_IS_REBASING_IMPLEMENTATION:
+                if 2 in asset_types:
                     balances_i = ERC20(coins[i]).balanceOf(self) - self.admin_balances[i]
                 else:
                     balances_i = self.stored_balances[i] - self.admin_balances[i]
@@ -2804,17 +2765,30 @@ When a ramping of A has been initialized, the process can be stopped by calling 
                 if i == N_COINS_128:
                     break
 
-                if oracles[i] == 0:
-                    continue
+                if asset_types[i] == 1 and not oracles[i] == 0:
 
-                # NOTE: assumed that response is of precision 10**18
-                response: Bytes[32] = raw_call(
-                    convert(oracles[i] % 2**160, address),
-                    _abi_encode(oracles[i] & ORACLE_BIT_MASK),
-                    max_outsize=32,
-                    is_static_call=True,
-                )
-                rates[i] = rates[i] * convert(response, uint256) / PRECISION
+                    # NOTE: fetched_rate is assumed to be 10**18 precision
+                    fetched_rate: uint256 = convert(
+                        raw_call(
+                            convert(oracles[i] % 2**160, address),
+                            _abi_encode(oracles[i] & ORACLE_BIT_MASK),
+                            max_outsize=32,
+                            is_static_call=True,
+                        ),
+                        uint256
+                    )
+
+                    rates[i] = unsafe_div(rates[i] * fetched_rate, PRECISION)
+
+                elif asset_types[i] == 3:  # ERC4626
+
+                    # fetched_rate: uint256 = ERC4626(coins[i]).convertToAssets(call_amount[i]) * scale_factor[i]
+                    # here: call_amount has ERC4626 precision, but the returned value is scaled up to 18
+                    # using scale_factor which is (18 - n) if underlying asset has n decimals.
+                    rates[i] = unsafe_div(
+                        rates[i] * ERC4626(coins[i]).convertToAssets(call_amount[i]) * scale_factor[i],
+                        PRECISION
+                    )  # 1e18 precision
 
             return rates
         ```
@@ -2982,5 +2956,46 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
         ```shell
         >>> StableSwap.totalSupply()
+        'todo'
+        ```
+
+### `get_virtual_price`
+!!! description "`StableSwap.get_virtual_price() -> uint256:`"
+
+    !!!danger
+        This method may be vulnerable to donation-style attacks if the implementation contains rebasing tokens. For integrators, caution is advised.
+
+    Getter for the current virtual price of the LP token.
+
+    Returns: virtual price (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python
+        @view
+        @external
+        @nonreentrant('lock')
+        def get_virtual_price() -> uint256:
+            """
+            @notice The current virtual price of the pool LP token
+            @dev Useful for calculating profits.
+                The method may be vulnerable to donation-style attacks if implementation
+                contains rebasing tokens. For integrators, caution is advised.
+            @return LP token virtual price normalized to 1e18
+            """
+            amp: uint256 = self._A()
+            xp: DynArray[uint256, MAX_COINS] = self._xp_mem(
+                self._stored_rates(), self._balances()
+            )
+            D: uint256 = self.get_D(xp, amp)
+            # D is in the units similar to DAI (e.g. converted to precision 1e18)
+            # When balanced, D = n * x_u - total virtual value of the portfolio
+            return D * PRECISION / self.total_supply
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> StableSwap.get_virtual_price('todo')
         'todo'
         ```
