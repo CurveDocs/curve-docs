@@ -12,7 +12,7 @@ In its simplest form, a Curve pool is an implementation of the StableSwap invari
 - [`get_dx`](../pools/plainpool.md#get_dx)
 
 
-## **Supported Assets** (check final way of implementing ERC4626, `POOL_IS_REBASING_IMPLEMENTATION` removed?).
+## **Supported Assets**
 
 Stableswap-NG pools supports the following asset types:
 
