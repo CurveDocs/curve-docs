@@ -1,3 +1,9 @@
+CHECK:
+- removed `POOL_IS_REBASING_IMEPLEMENTATION` and changed corresponding code (exchange_received). need to mention this somehow as it is not included in the cutoff commit?
+- 
+
+
+
 Plain pools are curve liquidity exchange contracts which contain at least 2 and up to 8 coins.
 
 !!!deploy "Contract Source & Deployment"
@@ -6,34 +12,30 @@ Plain pools are curve liquidity exchange contracts which contain at least 2 and 
 
 ## **Exchange Methods** (need final check)
 
-The AMM contract uses two function to transfer tokens/coins in and out of the AMM:
+The AMM contract utilizes two internal functions to transfer tokens/coins in and out of the pool and then accordingly update `stored_balances`:
 
-- `_transfer_in`
-- `_transfer_out`
-
-
-
-**transfer in:**
-first queries balanceOf the coin thats being sent to the pool
-
-if expect_optimistic_transfer:
-deducts stored_balances from the balanceOf, to get rid of admin_fees and donations
-then checks if that amount is >= dx (dx = amount of coin sent), to check if the balance of the coin sent is covered when swapping
-
-if normal transfer (no expect_optimistic_transfer):
-checks if dx > 0 and sends dx coins to the pool;
-then balanceOf (queried in the beginging, which is the balance before the transfer) is deducted by the balance after the transfer,
-the result of that is then accounted for and added in stored_balances!
+- `_transfer_in()`
+- `_transfer_out()`
 
 
-
-**transfer out:**
-queries coin balance with balanceOf(coin) for the coin which is being removed;
-then actually transfer coins out
-then update stored_balances by deducting the amount transfered out
+These functions contain the basic ERC-20 token transfer logic.
 
 
-??? quote "`_tranfer_in`"
+### **Transfer Token In**
+
+Transfering tokens to the pool occurs via the internal `_transfer_in()` function. The function takes the index value of the coin (`coin_idx`), amount (`dx`), sender address (`sender`) and if a optimistic transfer is expected (`expect_optimistic_transfer`) as input.
+
+`expect_optimistic_transfer` is relevant when using the [`exchange_received`](#exchange_received) function.
+
+
+??? quote "`_transfer_in(coin_idx: int128, dx: uint256, sender: address, expect_optimistic_transfer: bool) -> uint256:`"
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `coin_idx` |  `in128` | index value of the token to transfer in |
+    | `dx` |  `uint256` | amount to transfer in |
+    | `sender` |  `address` | address to tranfer coins from |
+    | `expect_optimistic_transfer` |  `bool` | `True` if the contract expect an optimistic coin transfer |
 
     ```python
     stored_balances: DynArray[uint256, MAX_COINS]
@@ -80,8 +82,18 @@ then update stored_balances by deducting the amount transfered out
     ```
 
 
+### **Transfer Token Out**
 
-??? quote "`_tranfer_out`"
+`_transfer_out()` is used to transfer tokens out of the pool. This function is called by `remove_liquidity` and`remove_liquidity_one`, `_exchange` and `_withdraw_admin_fees` methods.
+
+
+??? quote "`_transfer_out(_coin_idx: int128, _amount: uint256, receiver: address):`"
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `coin_idx` |  `in128` | index value of the token to transfer out |
+    | `_amount` |  `uint256` | amount to transfer out |
+    | `receiver` |  `address` | address to send the tokens to |
 
     ```python hl_lines="2"
     stored_balances: DynArray[uint256, MAX_COINS]
@@ -291,7 +303,7 @@ then update stored_balances by deducting the amount transfered out
             j: int128,
             _dx: uint256,
             _min_dy: uint256,
-            _receiver: address,
+            _receiver: address = msg.sender,
         ) -> uint256:
             """
             @notice Perform an exchange between two coins without transferring token in
@@ -307,7 +319,7 @@ then update stored_balances by deducting the amount transfered out
             @param _min_dy Minimum amount of `j` to receive
             @return Actual amount of `j` received
             """
-            assert not POOL_IS_REBASING_IMPLEMENTATION  # dev: exchange_received not supported if pool contains rebasing tokens
+            assert not 2 in asset_types  # dev: exchange_received not supported if pool contains rebasing tokens
             return self._exchange(
                 msg.sender,
                 i,
@@ -2979,128 +2991,3 @@ When a ramping of A has been initialized, the process can be stopped by calling 
         >>> StableSwap.totalSupply()
         'todo'
         ```
-
-
-### `POOL_IS_REBASING_IMPLEMENTATION` (got removed. need to check more accurate github commit version)
-!!! description "`StableSwap.POOL_IS_REBASING_IMPLEMENTATION() -> bool: view`"
-
-    Getter method to check if the pool is a rebasing implementation.
-
-    Returns: true or false (`bool`).
-
-    ??? quote "Source code"
-
-        ```python
-        POOL_IS_REBASING_IMPLEMENTATION: public(immutable(bool))
-
-        @external
-        def __init__(
-            _name: String[32],
-            _symbol: String[10],
-            _A: uint256,
-            _fee: uint256,
-            _offpeg_fee_multiplier: uint256,
-            _ma_exp_time: uint256,
-            _coins: DynArray[address, MAX_COINS],
-            _rate_multipliers: DynArray[uint256, MAX_COINS],
-            _asset_types: DynArray[uint8, MAX_COINS],
-            _method_ids: DynArray[bytes4, MAX_COINS],
-            _oracles: DynArray[address, MAX_COINS],
-        ):
-            """
-            @notice Initialize the pool contract
-            @param _name Name of the new plain pool.
-            @param _symbol Symbol for the new plain pool.
-            @param _A Amplification co-efficient - a lower value here means
-                    less tolerance for imbalance within the pool's assets.
-                    Suggested values include:
-                    * Uncollateralized algorithmic stablecoins: 5-10
-                    * Non-redeemable, collateralized assets: 100
-                    * Redeemable assets: 200-400
-            @param _fee Trade fee, given as an integer with 1e10 precision. The
-                        the maximum is 1% (100000000).
-                        50% of the fee is distributed to veCRV holders.
-            @param _offpeg_fee_multiplier A multiplier that determines how much to increase
-                                        Fees by when assets in the AMM depeg. Example value: 20000000000
-            @param _ma_exp_time Averaging window of oracle. Set as time_in_seconds / ln(2)
-                                Example: for 10 minute EMA, _ma_exp_time is 600 / ln(2) ~= 866
-            @param _coins List of addresses of the coins being used in the pool.
-            @param _rate_multipliers An array of: [10 ** (36 - _coins[n].decimals()), ... for n in range(N_COINS)]
-            @param _asset_types Array of uint8 representing tokens in pool
-            @param _method_ids Array of first four bytes of the Keccak-256 hash of the function signatures
-                            of the oracle addresses that gives rate oracles.
-                            Calculated as: keccak(text=event_signature.replace(" ", ""))[:4]
-            @param _oracles Array of rate oracle addresses.
-            """
-
-            coins = _coins
-            __n_coins: uint256 = len(_coins)
-            N_COINS = __n_coins
-            N_COINS_128 = convert(__n_coins, int128)
-
-            for i in range(MAX_COINS):
-                if i == __n_coins - 1:
-                    break
-                self.last_prices_packed.append(self.pack_2(10**18, 10**18))
-
-            rate_multipliers = _rate_multipliers
-            POOL_IS_REBASING_IMPLEMENTATION = 2 in _asset_types
-
-            factory = Factory(msg.sender)
-
-            A: uint256 = _A * A_PRECISION
-            self.initial_A = A
-            self.future_A = A
-            self.fee = _fee
-            self.offpeg_fee_multiplier = _offpeg_fee_multiplier
-
-            assert _ma_exp_time != 0
-            self.ma_exp_time = _ma_exp_time
-            self.D_ma_time = 62324  # <--------- 12 hours default on contract start.
-            self.ma_last_time = self.pack_2(block.timestamp, block.timestamp)
-
-            for i in range(MAX_COINS_128):
-
-                if i == N_COINS_128:
-                    break
-
-                self.oracles.append(convert(_method_ids[i], uint256) * 2**224 | convert(_oracles[i], uint256))
-
-                #  --------------------------- initialize storage ---------------------------
-                self.stored_balances.append(0)
-                self.admin_balances.append(0)
-
-            # --------------------------- ERC20 stuff ----------------------------
-
-            name = _name
-            symbol = _symbol
-
-            # EIP712 related params -----------------
-            NAME_HASH = keccak256(name)
-            salt = block.prevhash
-            CACHED_CHAIN_ID = chain.id
-            CACHED_DOMAIN_SEPARATOR = keccak256(
-                _abi_encode(
-                    EIP712_TYPEHASH,
-                    NAME_HASH,
-                    VERSION_HASH,
-                    chain.id,
-                    self,
-                    salt,
-                )
-            )
-
-            # ------------------------ Fire a transfer event -------------------------
-
-            log Transfer(empty(address), msg.sender, 0)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> StableSwap.POOL_IS_REBASING_IMPLEMENTATION('todo')
-        'todo'
-        ```
-
-
-
