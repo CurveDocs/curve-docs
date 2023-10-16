@@ -5,7 +5,7 @@ In its simplest form, a Curve pool is an implementation of the StableSwap invari
 
 **New features:**   
 
-- price oracles based on the AMM State Price
+- price oracles
 - TVL oracle based on `D`
 - dynamic fees
 - [`exchange_received`](../pools/plainpool.md#exchange_received)
@@ -21,16 +21,16 @@ Stableswap-NG pools supports the following asset types:
 | `0`         | **standard ERC20** token with no additional features |
 | `1`         | **oracle** - token with rate oracle (e.g. wstETH) |
 | `2`         | **rebasing** - token with rebase (e.g. stETH) |
-| `3`         | **ERC4626** - token with `convertToAssets` method (e.g. sDAI) |
+| `3`         | **ERC4626** - token with *`convertToAssets`* method (e.g. sDAI) |
 
 
 *Consequently, supported tokens include:*
 
 - ERC20 support for return True/revert, return True/False, return None  
-- ERC20 tokens can have arbitrary decimals (<= 18)  
+- ERC20 tokens can have arbitrary decimals (<=18)  
 - ERC20 tokens that rebase (either positive or fee on transfer)  
 - ERC20 tokens that have a rate oracle (e.g. wstETH, cbETH, sDAI, etc.) Oracle precision *must* be $10^{18}$  
-- ERC4626 tokens with arbitrary percision (<= 18) of Vault token and underlying asset
+- ERC4626 tokens with arbitrary percision (<=18) of Vault token and underlying asset
 
 
 ### **Rebasing Tokens**
@@ -104,7 +104,7 @@ $xps2 = (xp_{i} + xp_{j})^2$
 $$\text{dynamic fee} = \frac{{fee_{m} \times fee}}{{\frac{{(fee_{m} - 10^{18}) \times 4 \times xp_{i} \times xp_{j}}}{{xps2 + 10^{18}}}}}$$
 
 
-??? quote "`_dynamic_fee()`"
+??? quote "`Dynamic Fee`"
 
     ```python
     A_PRECISION: constant(uint256) = 100
@@ -170,9 +170,12 @@ $$\text{dynamic fee} = \frac{{fee_{m} \times fee}}{{\frac{{(fee_{m} - 10^{18}) \
 The new generation (NG) of stableswap introduces oracles based on AMM State Prices and the invariant D. The Pool contract records exponential moving averages for coins 1, 2 and 3 relative to coin 0.  
 
 - price oracle (spot and ema price)
-- D oracle (ema)
+- moving average D oracle
 
 Oracles are updated when users perform a swap or when liquidity is added or removed from the pool. Most updates are carried out by the internal `upkeep_oracles()` function, which is called in those instances. In some cases, such as when removing liquidity in a balanced ratio, the `D` oracle is updated directly within the `remove_liquidity()` function, as there is no need to update the price oracles (removing balanced does not have a price impact).
+
+!!!danger
+    The spot price cannot immediately be used for the calculation of the moving average, as this would allow for single block oracle manipulation. Consequently, `_calc_moving_average` uses `last_prices_packed`, which retains prices from previous actions.
 
 ??? quote "`upkeep_oracles`"
 
@@ -227,4 +230,25 @@ Oracles are updated when users perform a swap or when liquidity is added or remo
                 ma_last_time_unpacked[i] = block.timestamp
 
         self.ma_last_time = self.pack_2(ma_last_time_unpacked[0], ma_last_time_unpacked[1])
+
+        @internal
+        @view
+        def _calc_moving_average(
+            packed_value: uint256,
+            averaging_window: uint256,
+            ma_last_time: uint256
+        ) -> uint256:
+
+            last_spot_value: uint256 = packed_value & (2**128 - 1)
+            last_ema_value: uint256 = (packed_value >> 128)
+
+            if ma_last_time < block.timestamp:  # calculate new_ema_value and return that.
+                alpha: uint256 = self.exp(
+                    -convert(
+                        (block.timestamp - ma_last_time) * 10**18 / averaging_window, int256
+                    )
+                )
+                return (last_spot_value * (10**18 - alpha) + last_ema_value * alpha) / 10**18
+
+            return last_ema_value
     ```

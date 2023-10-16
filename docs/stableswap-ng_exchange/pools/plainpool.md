@@ -1,9 +1,3 @@
-CHECK:
-- removed `POOL_IS_REBASING_IMEPLEMENTATION` and changed corresponding code (exchange_received). need to mention this somehow as it is not included in the cutoff commit?
-- 
-
-
-
 Plain pools are curve liquidity exchange contracts which contain at least 2 and up to 8 coins.
 
 !!!deploy "Contract Source & Deployment"
@@ -16,7 +10,6 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
 
 - `_transfer_in()`
 - `_transfer_out()`
-
 
 These functions contain the basic ERC-20 token transfer logic.
 
