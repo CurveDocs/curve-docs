@@ -5,8 +5,7 @@ In its simplest form, a Curve pool is an implementation of the StableSwap invari
 
 **New features:**   
 
-- price oracles
-- TVL oracle based on `D`
+- price and D oracles
 - dynamic fees
 - [`exchange_received`](../pools/plainpool.md#exchange_received)
 - [`get_dx`](../pools/plainpool.md#get_dx)
