@@ -3,7 +3,7 @@ A Curve pool is essentially a smart contract that implements the StableSwap inva
 In its simplest form, a Curve pool is an implementation of the StableSwap invariant involving two or more tokens, often referred to as a 'plain pool.' Alternatively, Curve offers more complex pool variants, including pools with rebasing tokens and metapools. Metapools, for instance, facilitate the exchange of one or more tokens with those from one or more underlying base pools.
 
 
-New features: 
+**New features:**   
 
 - price oracles based on the AMM State Price
 - TVL oracle based on `D`
@@ -12,29 +12,30 @@ New features:
 - [`get_dx`](../pools/plainpool.md#get_dx)
 
 
-## **Supported Assets**
+## **Supported Assets** (check final way of implementing ERC4626, `POOL_IS_REBASING_IMPLEMENTATION` removed?).
 
-Stableswap-NG pools support three different asset types:
+Stableswap-NG pools supports the following asset types:
 
 | Asset Type  | Description            |
 | ----------- | ---------------------- |
 | `0`         | **standard ERC20** token with no additional features |
 | `1`         | **oracle** - token with rate oracle (e.g. wstETH) |
 | `2`         | **rebasing** - token with rebase (e.g. stETH) |
+| `3`         | **ERC4626** - token with `convertToAssets` method (e.g. sDAI) |
 
 
 *Consequently, supported tokens include:*
 
 - ERC20 support for return True/revert, return True/False, return None  
-- ERC20 tokens can have arbitrary decimals (<=18)  
+- ERC20 tokens can have arbitrary decimals (<= 18)  
 - ERC20 tokens that rebase (either positive or fee on transfer)  
-- ERC20 tokens that have a rate oracle (e.g. wstETH, cbETH, sDAI, etc.) Oracle precision *must* be 10**18  
-
+- ERC20 tokens that have a rate oracle (e.g. wstETH, cbETH, sDAI, etc.) Oracle precision *must* be $10^{18}$  
+- ERC4626 tokens with arbitrary percision (<= 18) of Vault token and underlying asset
 
 
 ### **Rebasing Tokens**
 
-Implementation for pools containing rebasing tokens.
+When liquidity pools include a rebasing token, the pool behaves differently than usual.
 
 !!!warning "Rebasing Tokens"
     Pools including rebasing tokens work a bit differently compared to others. 
@@ -62,7 +63,7 @@ Implementation for pools containing rebasing tokens.
             if i == N_COINS_128:
                 break
 
-            if POOL_IS_REBASING_IMPLEMENTATION:
+            if 2 in asset_types:
                 balances_i = ERC20(coins[i]).balanceOf(self) - self.admin_balances[i]
             else:
                 balances_i = self.stored_balances[i] - self.admin_balances[i]
@@ -81,13 +82,55 @@ The internal `_dynamic_fee()` function calculates a fee based on the average bal
 
 The use of the `offpeg_fee_multiplier` allows the system to dynamically adjust fees based on the pool's state. For example, if the pool is off-peg, the fees are adjusted to incentivize or disincentivize certain trades. This mechanism helps maintain pool stability.
 
+**Let's define the terms and variables for clarity:**
+
+- Let $fee$ represent the fee, as retrieved by the method `StableSwap.fee()`
+- Let $fee_m$ denote the off-peg fee multiplier, sourced from `StableSwap.offpeg_fee_multiplier()`
+- The terms $rate_{i}$ and $balance{i}$ refer to the specific rate and balance for coin $i$, respectively, and similarly, $rate_j$ and $balance_j$ for coin $j$ 
+- $PRECISION_{i}$ and $PRECISION_{j}$ are the precision constants for the respective coins
+
+*Given these, we define:*
+
+$xp_{i} = \frac{{rate_{i} \times balance_{i}}}{{PRECISION_{i}}}$
+
+$xp_{j} = \frac{{rate_{j} \times balance_{j}}}{{PRECISION_{j}}}$
+
+*And we also have:*
+
+$xps2 = (xp_{i} + xp_{j})^2$
+
+*The dynamic fee is calculated by the following formula:*
+
+$$\text{dynamic fee} = \frac{{fee_{m} \times fee}}{{\frac{{(fee_{m} - 10^{18}) \times 4 \times xp_{i} \times xp_{j}}}{{xps2 + 10^{18}}}}}$$
+
 
 ??? quote "`_dynamic_fee()`"
 
     ```python
+    A_PRECISION: constant(uint256) = 100
+    MAX_COINS: constant(uint256) = 8
+    PRECISION: constant(uint256) = 10 ** 18
     FEE_DENOMINATOR: constant(uint256) = 10 ** 10
-    fee: public(uint256)  # fee * 1e10
-    offpeg_fee_multiplier: public(uint256)  # * 1e10
+
+    @view
+    @external
+    def dynamic_fee(i: int128, j: int128, pool:address) -> uint256:
+        """
+        @notice Return the fee for swapping between `i` and `j`
+        @param i Index value for the coin to send
+        @param j Index value of the coin to recieve
+        @return Swap fee expressed as an integer with 1e10 precision
+        """
+        N_COINS: uint256 = StableSwapNG(pool).N_COINS()
+        fee: uint256 = StableSwapNG(pool).fee()
+        fee_multiplier: uint256 = StableSwapNG(pool).offpeg_fee_multiplier()
+
+        rates: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+        balances: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+        xp: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+        rates, balances, xp = self._get_rates_balances_xp(pool, N_COINS)
+
+        return self._dynamic_fee(xp[i], xp[j], fee, fee_multiplier)
 
     @view
     @internal
@@ -102,16 +145,32 @@ The use of the `offpeg_fee_multiplier` allows the system to dynamically adjust f
             (_offpeg_fee_multiplier * _fee) /
             ((_offpeg_fee_multiplier - FEE_DENOMINATOR) * 4 * xpi * xpj / xps2 + FEE_DENOMINATOR)
         )
-    ```
 
+    @view
+    @internal
+    def _get_rates_balances_xp(pool: address, N_COINS: uint256) -> (
+        DynArray[uint256, MAX_COINS],
+        DynArray[uint256, MAX_COINS],
+        DynArray[uint256, MAX_COINS],
+    ):
+
+        rates: DynArray[uint256, MAX_COINS] = StableSwapNG(pool).stored_rates()
+        balances: DynArray[uint256, MAX_COINS] = StableSwapNG(pool).get_balances()
+        xp: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+        for idx in range(MAX_COINS):
+            if idx == N_COINS:
+                break
+            xp.append(rates[idx] * balances[idx] / PRECISION)
+
+        return rates, balances, xp
+    ```
 
 ## **Oracles**
 
-The new generation (NG) of stableswap introduces oracles based on AMM State Prices. The Pool contract records exponential moving averages for coins 1, 2 and 3 relative to coin 0. 
+The new generation (NG) of stableswap introduces oracles based on AMM State Prices and the invariant D. The Pool contract records exponential moving averages for coins 1, 2 and 3 relative to coin 0.  
 
-There are two kind of oracles:
 - price oracle (spot and ema price)
-- D oracle
+- D oracle (ema)
 
 Oracles are updated when users perform a swap or when liquidity is added or removed from the pool. Most updates are carried out by the internal `upkeep_oracles()` function, which is called in those instances. In some cases, such as when removing liquidity in a balanced ratio, the `D` oracle is updated directly within the `remove_liquidity()` function, as there is no need to update the price oracles (removing balanced does not have a price impact).
 
