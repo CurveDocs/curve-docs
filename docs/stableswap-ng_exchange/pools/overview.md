@@ -166,14 +166,14 @@ $$\text{dynamic fee} = \frac{{fee_{m} \times fee}}{{\frac{{(fee_{m} - 10^{18}) \
 
 ## **Oracles**
 
-The new generation (NG) of stableswap introduces oracles based on AMM State Prices and the invariant D. The Pool contract records exponential moving averages for coins 1, 2 and 3 relative to coin 0.  
+The new generation (NG) of stableswap introduces oracles based on AMM State Prices and the invariant D.
 
 - price oracle (spot and ema price)
 - moving average D oracle
 
 Oracles are updated when users perform a swap or when liquidity is added or removed from the pool. Most updates are carried out by the internal `upkeep_oracles()` function, which is called in those instances. In some cases, such as when removing liquidity in a balanced ratio, the `D` oracle is updated directly within the `remove_liquidity()` function, as there is no need to update the price oracles (removing balanced does not have a price impact).
 
-!!!danger
+!!!danger "Oracle Manipulation"
     The spot price cannot immediately be used for the calculation of the moving average, as this would allow for single block oracle manipulation. Consequently, `_calc_moving_average` uses `last_prices_packed`, which retains prices from previous actions.
 
 ??? quote "`upkeep_oracles`"
