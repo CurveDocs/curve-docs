@@ -10,7 +10,7 @@ All exchange functionality that Curve supports, as well as noteworthy implementa
 
 ## **TriCrypto**
 
-Two-Crypto pools consist of three volatile coins.
+TriCrypto pools consist of three volatile coins.
 
 The AMM (automatic market maker) infrastructure involves the following parts:
 
