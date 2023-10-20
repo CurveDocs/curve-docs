@@ -1,20 +1,14 @@
-metapool: pool paired against a base pool.
-
-metapool token always coin at index 0.
-
-if min(j,i) > 0: --> means metapool token is not included in the exchange -> need to swap only in the basepool!!
-
-
-
-
+A metapool is a pool where a stablecoin is paired against the LP token from another pool, a so-called base pool.
 
 !!!deploy "Contract Source & Deployment"
     Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapMetaNG.vy).
 
+The deployment of metapools is permissionless and can be done via the `deploy_metapool` function within the StableSwap-NG Factory.
 
-## **Exchange Methods**(need final cleanup and check)
 
-The AMM metapool contract implementation utilizes two internal functions to transfer tokens/coins in and out of the pool and then accordingly update `stored_balances`:
+## **Exchange Methods**
+
+The AMM metapool contract implementation utilizes two internal functions to transfer tokens/coins in and out of the pool and then accordingly update `stored_balances`. These function differ to the ones from plain pools, as there needs to be some additional logic because of the basepools:
 
 - `_transfer_in()`
 - `_transfer_out()`
@@ -24,7 +18,7 @@ These functions contain the basic ERC-20 token transfer logic.
 
 ### **Transfer Token In**
 
-Transfering tokens to the pool occurs via the internal `_transfer_in()` function. The function takes the index value of the coin (`coin_idx`), amount (`dx`), sender address (`sender`) and if a optimistic transfer is expected (`expect_optimistic_transfer`) as input.
+Transfering tokens to the pool occurs via the internal `_transfer_in()` function. The function takes the coin and metapool index value (`coin_metapool_idx` and `coin_basepool_idx`) of the input coins, amount (`dx`), sender address (`sender`), if a optimistic transfer (`expect_optimistic_transfer`) and/or a basepool swap is expected as input.
 
 `expect_optimistic_transfer` is relevant when using the [`exchange_received`](#exchange_received) or [`exchange_underlying_received`](#exchange_underlying_received) function.
 
@@ -38,7 +32,7 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
     | `dx` |  `uint256` | amount to transfer in |
     | `sender` |  `address` | address to tranfer coins from |
     | `expect_optimistic_transfer` |  `bool` | `True` if the contract expect an optimistic coin transfer |
-    | `is_base_pool_swap` |  `bool` | defaulted to `False` |
+    | `is_base_pool_swap` |  `bool` | if the exchange is a basepool swap (if `i and i > 0`); defaulted to `False` |
 
     ```python
     @internal
@@ -108,12 +102,32 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
         self.stored_balances[coin_metapool_idx] += _dx
 
         return _dx
+
+    @internal
+    def _meta_add_liquidity(dx: uint256, base_i: int128) -> uint256:
+
+        coin_i: address = coins[MAX_METAPOOL_COIN_INDEX]
+        x: uint256 = ERC20(coin_i).balanceOf(self)
+
+        if BASE_N_COINS == 2:
+
+            base_inputs: uint256[2] = empty(uint256[2])
+            base_inputs[base_i] = dx
+            StableSwap2(BASE_POOL).add_liquidity(base_inputs, 0)
+
+        if BASE_N_COINS == 3:
+
+            base_inputs: uint256[3] = empty(uint256[3])
+            base_inputs[base_i] = dx
+            StableSwap3(BASE_POOL).add_liquidity(base_inputs, 0)
+
+        return ERC20(coin_i).balanceOf(self) - x
     ```
 
 
 ### **Transfer Token Out**
 
-`_transfer_out()` is used to transfer tokens out of the pool. This function is called by `remove_liquidity` and`remove_liquidity_one`, `_exchange` and `_withdraw_admin_fees` methods.
+`_transfer_out()` is used to transfer tokens out of the pool. This function is called by `remove_liquidity` and`remove_liquidity_one_coin`, `remove_liquidity_imbalance`,  `_exchange` and `_withdraw_admin_fees` methods.
 
 
 ??? quote "`_transfer_out(_coin_idx: int128, _amount: uint256, receiver: address):`"
@@ -156,11 +170,14 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
 ### `exchange`
 !!! description "`StableSwap.exchange(i: int128, j: int128, _dx: uint256, _min_dy: uint256, _receiver: address = msg.sender) -> uint256:`"
 
-    Function to exchange `_dx` amount of coin `i` for coin `j` and receive a minimum amount of `_min_dy`.
+    Function to exchange `_dx` amount of coin `i` for coin `j` and receive a minimum amount of `_min_dy`. 
 
     Returns: amount of output coin received (`uint256`).
 
     Emits: `TokenExchange`
+
+    !!!info
+        This exchange swaps between the metapool token and the basepool LP token. coin[0] is always the metapool token and coin[1] is the basepool lp token. 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -299,9 +316,9 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
 !!! description "`StableSwap.exchange_received(i: int128, j: int128, _dx: uint256, _min_dy: uint256, _receiver: address) -> uint256:`"
 
     !!!danger
-        `exchange_received` will revert if the pool contains a rebasing asset. A pool that contains a rebasing token should have an asset_type of 2. If this is not the case, the pool is using an incorrect implementation, and rebases can be stolen.
+        The `exchange_received` function will revert if the pool contains a rebasing asset. A pool that holds a rebasing token must have an asset_type of 2. If this is not the case, the pool is operating with an incorrect implementation, **potentially allowing rebases to be stolen**!
 
-    Function to exchange `_dx` amount of coin `i` for coin `j`, receiving a minimum amount of `_min_dy`. This is done **without actually transferring the coins into the pool**. The exchange is based on the change in the balance of coin `i`, eliminating the need to grant approval to the contract.
+    Function to exchange `_dx` amount of coin `i` for coin `j`, receiving a minimum amount of `_min_dy`. This is done **without actually transferring the coins into the pool yourself**. The exchange is based on the change in the balance of coin `i`, eliminating the need to grant approval to the contract. See [more](../pools/overview.md#exchange_received).
 
     Returns: amount of output coin received (`uint256`).
 
@@ -449,11 +466,16 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
 ### `exchange_underlying`
 !!! description "`StableSwap.exchange_underlying(i: int128, j: int128, _dx: uint256, _min_dy: uint256, _receiver: address = msg.sender) -> uint256:`"
 
-    Function to exchange `_dx` amount of the the underlying coin `i` for the underlying coin `j` and receive a minimum amount of `_min_dy`.
+    Function to exchange `_dx` amount of the the underlying coin `i` for the underlying coin `j` and receive a minimum amount of `_min_dy`. Index values are the `coins` followed by the `base_coins`, where the base pool LP token is not included as a value.
 
     Returns: amount of output coin received (`uint256`).
 
     Emits: `TokenExchangeUnderlying`
+
+    !!!info
+        Lets say there is a metapool with [LUSD](https://etherscan.io/address/0x5f98805a4e8be255a32880fdec7f6728c6568ba0)<>[3crv](https://etherscan.io/address/0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7).   
+        Index values: coin[0] = LUSD, coin[1]=BASE_COIN[0] (DAI), coin[2]=BASE_COIN[1] (USDC), coin[3]=BASE_COIN[2] (USDT).
+
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -640,209 +662,10 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
         ```
 
 
-### `exchange_underlying_received`
-!!! description "`StableSwap.exchange_underlying_received(i: int128, j: int128, _dx: uint256, _min_dy: uint256, _receiver: address) -> uint256:`"
-
-    !!!danger
-        `exchange_underlying_received` will revert if the pool contains a rebasing asset. A pool that contains a rebasing token should have an asset_type of 2. If this is not the case, the pool is using an incorrect implementation, and rebases can be stolen.
-
-    Function to exchange `_dx` amount of the the underlying coin `i` for the underlying coin `j` and receive a minimum amount of `_min_dy`. This is done **without actually transferring the coins into the pool**. The exchange is based on the change in the balance of coin `i`, eliminating the need to grant approval to the contract.
-
-    Returns: amount of output coin received (`uint256`).
-
-    Emits: `TokenExchangeUnderlying`
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `in128` | index value of underlying input coin |
-    | `j` |  `in128` | index value of underlying output coin |
-    | `_dx` |  `uint256` | amount of coin `i` being exchanged |
-    | `_min_dy` |  `uint256` | minumum amount of coin `j` to receive |
-    | `receiver` |  `address` | receiver of the output tokens; defaults to msg.sender |
-
-    ??? quote "Source code"
-
-        ```python
-        event TokenExchangeUnderlying:
-            buyer: indexed(address)
-            sold_id: int128
-            tokens_sold: uint256
-            bought_id: int128
-            tokens_bought: uint256
-
-        @external
-        @nonreentrant('lock')
-        def exchange_underlying_received(
-            i: int128,
-            j: int128,
-            _dx: uint256,
-            _min_dy: uint256,
-            _receiver: address,
-        ) -> uint256:
-            """
-            @notice Perform an exchange between two underlying coins
-            @dev This is disabled if pool contains rebasing tokens.
-            @param i Index value for the underlying coin to send
-            @param j Index value of the underlying coin to receive
-            @param _dx Amount of `i` being exchanged
-            @param _min_dy Minimum amount of `j` to receive
-            @param _receiver Address that receives `j`
-            @return Actual amount of `j` received
-            """
-            assert not POOL_IS_REBASING_IMPLEMENTATION  # dev: exchange_received not supported if pool contains rebasing tokens
-            return self._exchange_underlying(
-                msg.sender,
-                i,
-                j,
-                _dx,
-                _min_dy,
-                _receiver,
-                True
-            )
-
-        @internal
-        def _exchange_underlying(
-            sender: address,
-            i: int128,
-            j: int128,
-            _dx: uint256,
-            _min_dy: uint256,
-            receiver: address,
-            expect_optimistic_transfer: bool = False
-        ) -> uint256:
-
-            rates: DynArray[uint256, MAX_COINS] = self._stored_rates()
-            old_balances: DynArray[uint256, MAX_COINS] = self._balances()
-            xp: DynArray[uint256, MAX_COINS]  = self._xp_mem(rates, old_balances)
-
-            dy: uint256 = 0
-            base_i: int128 = 0
-            base_j: int128 = 0
-            meta_i: int128 = 0
-            meta_j: int128 = 0
-            x: uint256 = 0
-            output_coin: address = empty(address)
-
-            # ------------------------ Determine coin indices ------------------------
-
-            # Get input coin indices:
-            if i > 0:
-                base_i = i - MAX_METAPOOL_COIN_INDEX
-                meta_i = 1
-
-            # Get output coin and indices:
-            if j == 0:
-                output_coin = coins[0]
-            else:
-                base_j = j - MAX_METAPOOL_COIN_INDEX
-                meta_j = 1
-                output_coin = BASE_COINS[base_j]
-
-            # --------------------------- Do Transfer in -----------------------------
-
-            # If incoming coin is supposed to go to the base pool, the _transfer_in
-            # method will add_liquidity in the base pool and return dx_w_fee LP tokens
-            dx_w_fee: uint256 =  self._transfer_in(
-                meta_i,
-                base_i,
-                _dx,
-                sender,
-                expect_optimistic_transfer,
-                (i > 0 and j > 0),  # <--- if True: do not add liquidity to base pool.
-            )
-
-            # ------------------------------- Exchange -------------------------------
-
-            if i == 0 or j == 0:  # meta swap
-
-                if i == 0:
-
-                    # xp[i] + dx_w_fee * rates[i] / PRECISION
-                    x = xp[i] + unsafe_div(dx_w_fee * rates[i], PRECISION)
-
-                else:
-
-                    # dx_w_fee is the number of base_pool LP tokens minted after
-                    # base_pool.add_liquidity in self._transfer_in
-
-                    # dx_w_fee * rates[MAX_METAPOOL_COIN_INDEX] / PRECISION
-                    x = unsafe_div(dx_w_fee * rates[MAX_METAPOOL_COIN_INDEX], PRECISION)
-                    x += xp[MAX_METAPOOL_COIN_INDEX]
-
-                dy = self.__exchange(x, xp, rates, meta_i, meta_j)
-
-                # Adjust stored balances of meta-level tokens:
-                self.stored_balances[meta_j] -= dy
-
-                # Withdraw from the base pool if needed
-                if j > 0:
-                    out_amount: uint256 = ERC20(output_coin).balanceOf(self)
-                    StableSwap(BASE_POOL).remove_liquidity_one_coin(dy, base_j, 0)
-                    dy = ERC20(output_coin).balanceOf(self) - out_amount
-
-                assert dy >= _min_dy
-
-            else:  # base pool swap (user should swap at base pool for better gas)
-
-                dy = ERC20(output_coin).balanceOf(self)
-                StableSwap(BASE_POOL).exchange(base_i, base_j, dx_w_fee, _min_dy)
-                dy = ERC20(output_coin).balanceOf(self) - dy
-
-            # --------------------------- Do Transfer out ----------------------------
-
-            assert ERC20(output_coin).transfer(receiver, dy, default_return_value=True)
-
-            # ------------------------------------------------------------------------
-
-            log TokenExchangeUnderlying(sender, i, _dx, j, dy)
-
-            return dy
-
-        @internal
-        def __exchange(
-            x: uint256,
-            _xp: DynArray[uint256, MAX_COINS],
-            rates: DynArray[uint256, MAX_COINS],
-            i: int128,
-            j: int128,
-        ) -> uint256:
-
-            amp: uint256 = self._A()
-            D: uint256 = math.get_D(_xp, amp, N_COINS)
-            y: uint256 = math.get_y(i, j, x, _xp, amp, D, N_COINS)
-
-            dy: uint256 = _xp[j] - y - 1  # -1 just in case there were some rounding errors
-            dy_fee: uint256 = dy * self._dynamic_fee((_xp[i] + x) / 2, (_xp[j] + y) / 2, self.fee) / FEE_DENOMINATOR
-
-            # Convert all to real units
-            dy = (dy - dy_fee) * PRECISION / rates[j]
-
-            self.admin_balances[j] += (
-                unsafe_div(dy_fee * admin_fee, FEE_DENOMINATOR)  # dy_fee * admin_fee / FEE_DENOMINATOR
-            ) * PRECISION / rates[j]
-
-            # Calculate and store state prices:
-            xp: DynArray[uint256, MAX_COINS] = _xp
-            xp[i] = x
-            xp[j] = y
-            # D is not changed because we did not apply a fee
-            self.upkeep_oracles(xp, amp, D)
-
-            return dy
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> StableSwap.exchange_underlying_received('todo')
-        'todo'
-        ```
-
-
 ### `get_dx`
 !!! description "`StableSwap.get_dx(i: int128, j: int128, dy: uint256) -> uint256:`"
 
-    Function to calculate the predicted input amount `i` to receive `dy` of coin `j`. This is just a getter method, the calculation logic is within the CurveStableSwapNGViews contract. See [here](../utility_contracts/views.md#get_dx).
+    Function to calculate the predicted input amount `i` to receive `dy` of coin `j`.
 
     Returns: predicted amount of `i` (`uint256`).
 
@@ -938,10 +761,10 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
         ```
 
 
-### `get_dx_underlying` (todo: desc)
+### `get_dx_underlying`
 !!! description "`StableSwap.get_dx_underlying(i: int128, j: int128, dy: uint256) -> uint256:`"
 
-    Function to calculate the predicted input amount `i` to receive `dy` of coin `j`. This is a simple getter method, the calculation logic is within the CurveStableSwapNGViews contract. See [here](../utility_contracts/views.md#get_dx_underlying).
+    Function to calculate the predicted input amount `i` to receive `dy` of coin `j`, including underlying coins. Index values are the `coins` followed by the `base_coins`, where the base pool LP token is not included as a value.
 
     Returns: predicted amount of `i` (`uint256`).
 
@@ -1114,9 +937,9 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
 
 
 ### `get_dy`
-!!! description "`StableSwap.get_dx(i: int128, j: int128, dy: uint256) -> uint256:`"
+!!! description "`StableSwap.get_dy(i: int128, j: int128, dx: uint256) -> uint256`"
 
-    Function to calculate the predicted input amount `j` to receive `dy` of coin `i`. This is just a getter method, the calculation logic is within the CurveStableSwapNGViews contract. See [here](../utility_contracts/views.md#get_dy).
+    Function to calculate the predicted output amount `j` to receive given a input of `dx` amount coin `i`.
 
     Returns: predicted amount of `j` (`uint256`).
 
@@ -1200,10 +1023,10 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
         ```
 
 
-### `get_dy_underlying` (todo: desc)
+### `get_dy_underlying`
 !!! description "`StableSwap.get_dy_underlying(i: int128, j: int128, dx: uint256) -> uint256:`"
 
-    Function to calculate the predicted input amount `j` to receive `dy` of coin `i`. This is just a getter method, the calculation logic is within the CurveStableSwapNGViews contract. See [here](../utility_contracts/views.md#get_dy).
+    Function to calculate the predicted output amount `j` to receive given a input of `dx` amount coin `i`, including underlying coins. Index values are the `coins` followed by the `base_coins`, where the base pool LP token is not included as a value.
 
     Returns: predicted amount of `j` (`uint256`).
 
@@ -1336,16 +1159,16 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
 
  
 
-## **Adding / Removing Liquidity**(need final cleanup and check)
+## **Adding / Removing Liquidity**
 
 ### `add_liquidity`
 !!! description "`StableSwap.add_liquidity(_amounts: DynArray[uint256, MAX_COINS], _min_mint_amount: uint256, _receiver: address = msg.sender) -> uint256:`"
 
-    Function to add liquidity into the pool and mint the corresponding LP tokens.
+    Function to add liquidity to the pool and mint the corresponding LP tokens.
 
     Returns: amount of LP tokens received (`uint256`).
 
-    Emits: `Transfer` and `AddLiquidity`
+    Emits: `AddLiquidity` and `Transfer`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2081,7 +1904,8 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
 
 
 
-## **Fee Methods**(need final cleanup and check)
+## **Fee Methods**
+
 Stableswap-ng introduces a dynamic fee based on the imbalance of the coins within the pool and their pegs:
 
 ??? quote "`_dynamic_fee`"
@@ -2105,12 +1929,12 @@ Stableswap-ng introduces a dynamic fee based on the imbalance of the coins withi
     ```
 
 More on dynamic fees [here](../pools/overview.md#dynamic-fees).
-
+For an overview of how fees are distributed, please refer to [Fee Collection and Distribution](../../curve_dao/FeeCollection%26Distribution/overview.md).
 
 ### `fee`
 !!! description "`StableSwap.fee() -> uint256: view`"
 
-    Getter method for the fee of the pool. This is the value set when initializing the contract and can be changed via [`set_new_fee`](../pools/admin_controls.md#set_new_fee).
+    Getter method for the fee of the pool. The fee is expressed as an integer with a 1e10 precision. This is the value set when initializing the contract and can be changed via [`set_new_fee`](../pools/admin_controls.md#set_new_fee).
 
     Returns: fee (`uint256`).
 
@@ -2348,7 +2172,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
     Returns: admin fee (`uint256`).
 
     !!!info
-        This value is set at 50% (5000000000) and is a constantant, meaning it cannot be changed.
+        The admin fee is expressed as an integer with a 1e10 precision and is set to 50% (5000000000). This varaiable is a **constantant**.
 
     ??? quote "Source code"
 
@@ -2367,7 +2191,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 ### `offpeg_fee_multiplier`
 !!! description "`StableSwap.offpeg_fee_multiplier() -> uint256: view`"
 
-    Getter method for the off-peg fee multiplier. This value determines how much the fee increases when assets within the AMM depeg. This value can be changed via [`set_new_fee`](../pools/admin_controls.md#set_new_fee).
+    Getter method for the off-peg fee multiplier. This value determines how much the fee increases when assets within the AMM depeg. The off-peg fee multiplicator is expressed as an integer with a 1e10 precision and can be changed via [`set_new_fee`](../pools/admin_controls.md#set_new_fee).
 
     Returns: offpeg fee multiplier (`uint256`)
 
@@ -2533,7 +2357,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 ### `withdraw_admin_fees`
 !!! description "`StableSwap.withdraw_admin_fees():`"
 
-    Function to withdraw accumulated admin fees from the pool and send them to the `fee_receiver` set in the Factory.
+    Function to withdraw accumulated admin fees from the pool and send them to the `fee_receiver` set within the Factory.
 
     ??? quote "Source code"
 
@@ -2575,11 +2399,11 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
         >>> StableSwap.withdraw_admin_fees()
         ```
 
-## **Oracle Methods**(need final cleanup and check)
+## **Oracle Methods**
 
-Oracles are updated whenever `upkeep_oracles()` was called. This occurrs when calling `add_liquidity`, `remove_liquidity_one_coin`, `remove_liquidity_imbalanced`, `exchange` or `exchanged_received`.
+Oracles are updated whenever the `upkeep_oracles()` function is called. This update is triggered by any of the following functions: `add_liquidity()`, `remove_liquidity_one_coin()`, `remove_liquidity_imbalanced()`, `exchange()` or `exchanged_received()`.
 
-When removing liquidity in a balanced portion (`remove_liquidity`), oracles are not updated as it does not change the price within the AMM, as it does not mess with the coin balance ratio of the pool.
+When removing liquidity in a balanced portion (`remove_liquidity()`), oracles are not updated as it does not change the price within the AMM, as it does not mess with the coin balance ratio of the pool.
 
 ??? quote "`upkeep_oracles`"
 
@@ -2634,9 +2458,9 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
 
 ### `last_price`
-!!! description "`StableSwap.last_price(i: uint256) -> uint256:`"
+!!! description "`StableSwap.last_price(i: uint256) -> uint256: view`"
 
-    Getter method for the last price (often referred to as the spot price) for the coin at index value `i` stored in `last_prices_packed`. The spot price is retrieved from the lower 128 bits of the packed value in `last_prices_packed`.
+    Getter method for the last price for the coin at index value `i` stored in `last_prices_packed`. The spot price is retrieved from the lower 128 bits of the packed value in `last_prices_packed`.
 
     The last prices are updated whenever the internal `upkeep_oracles()` function is called.
 
@@ -2666,7 +2490,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
 
 ### `ema_price`
-!!! description "`StableSwap.ema_price(i: uint256) -> uint256:`"
+!!! description "`StableSwap.ema_price(i: uint256) -> uint256: view`"
 
     Getter method for the EMA (exponential moving average) price for the coin at index value `i` stored in `last_prices_packed`. The EMA price is extracted by shifting the packed value in `last_prices_packed` to the right by 128 bits.
 
@@ -2698,7 +2522,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
 
 ### `get_p`
-!!! description "`StableSwap.get_p(i: uint256) -> uint256:`"
+!!! description "`StableSwap.get_p(i: uint256) -> uint256: view`"
 
     Function to calculate the AMM state price for the coin at index value `i`.
 
@@ -2766,7 +2590,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
 
 ### `price_oracle`
-!!! description "`StableSwap.price_oracle(i: uint256) -> uint256:`"
+!!! description "`StableSwap.price_oracle(i: uint256) -> uint256: view`"
 
     Function to calculate the exponential moving average (ema) price for the coin at index value `i`.
 
@@ -2828,7 +2652,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 ### `ma_exp_time`
 !!! description "`StableSwap.ma_exp_time() -> uint256: view`"
 
-    Getter for the exponential moving average time. This value can be adjusted via `set_ma_exp_time()`, see [admin controls](../pools/admin_controls.md#set_ma_exp_time).
+    Getter for the exponential moving average window. This value can be adjusted via `set_ma_exp_time()`, see [admin controls](../pools/admin_controls.md#set_ma_exp_time).
 
     Returns: EMA time (`uint256`). 
 
@@ -2847,7 +2671,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
 
 ### `D_oracle`
-!!! description "`StableSwap.D_oracle() -> uint256:`"
+!!! description "`StableSwap.D_oracle() -> uint256: view`"
 
     Getter for the current ema oracle value for D.
 
@@ -2943,16 +2767,16 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
         'todo'
         ```
 
-## **Amplification Coefficient** (need final cleanup and check)
+## **Amplification Coefficient**
 
 The amplification coefficient **`A`** determines a pool’s tolerance for imbalance between the assets within it. A higher value means that trades will incur slippage sooner as the assets within the pool become imbalanced.
 
-The appropriate value for A is dependent upon the type of coin being used within the pool, and is subject to optimisation and pool-parameter update based on the market history of the trading pair. It is possible to modify the amplification coefficient for a pool after it has been deployed. This can be done via the `ramp_A` function. See [admin controls](../pools/admin_controls.md#ramp_a).
+The appropriate value for A is dependent upon the type of coin being used within the pool, and is subject to optimisation. It is possible to modify the amplification coefficient for a pool via the `ramp_A` function. See [admin controls](../pools/admin_controls.md#ramp_a).
 
 When a ramping of A has been initialized, the process can be stopped by calling the function [`stop_ramp_A()`](../pools/admin_controls.md#stop_ramp_a).
 
 ### `A`
-!!! description "`StableSwap.A() -> uint256:`"
+!!! description "`StableSwap.A() -> uint256: view`"
 
     Getter for the amplification coefficient A.
 
@@ -3006,7 +2830,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
 
 ### `A_precise`
-!!! description "`StableSwap.A_precise() -> uint256:`"
+!!! description "`StableSwap.A_precise() -> uint256: view`"
 
     Getter for the precise A value, which is not divided by `A_PRECISION` unlike `A()`.
 
@@ -3062,7 +2886,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 ### `initial_A`
 !!! description "`StableSwap.initial_A() -> uint256: view`"
 
-    Getter for the initial A value.
+    Getter for the initial A value. This is the A value when the ramping was initialized.
 
     Returns: initial A (`uint256`).
 
@@ -3260,7 +3084,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
 
 
-## **Contract Info Methods** (need final cleanup and check)
+## **Contract Info Methods** 
 
 ### `BASE_POOL`
 !!! description "`StableSwap.BASE_POOL() -> address: view`"
@@ -3694,7 +3518,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 ### `coins`
 !!! description "`StableSwap.coins(arg0: uint256) -> addresss: view`"
 
-    Getter for the coin at index `arg0` within the pool.
+    Getter for the coin at index `arg0` within the metapool. coins[0] always return the coin paired against the basepool.
 
     Returns: coin (`address`).
 
@@ -3833,7 +3657,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
 
 ### `balances`
-!!! description "`StableSwap.balances(i: uint256) -> uint256:`"
+!!! description "`StableSwap.balances(i: uint256) -> uint256: view`"
 
     Getter for the current balance of coin `i` within the pool. This getter does not include accrued admin fees.
 
@@ -3892,7 +3716,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
 
 ### `get_balances`
-!!! description "`StableSwap.get_balances() -> DynArray[uint256, MAX_COINS]:`"
+!!! description "`StableSwap.get_balances() -> DynArray[uint256, MAX_COINS]: view`"
 
     Getter for an array with all coin balances in the pool.
 
@@ -3944,7 +3768,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
 
 ### `stored_rates`
-!!! description "`StableSwap.stored_rates() -> DynArray[uint256, MAX_COINS]:`"
+!!! description "`StableSwap.stored_rates() -> DynArray[uint256, MAX_COINS]:`view"
 
     Getter for the rate multiplier of each coin.
 
@@ -4160,7 +3984,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
 
 ### `totalSupply`
-!!! description "`StableSwap.totalSupply() -> uint256:`"
+!!! description "`StableSwap.totalSupply() -> uint256: view`"
 
     Getter for the total supply of the LP token.
 
@@ -4191,7 +4015,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
 
 ### `get_virtual_price`
-!!! description "`StableSwap.get_virtual_price() -> uint256:`"
+!!! description "`StableSwap.get_virtual_price() -> uint256: view`"
 
     !!!danger "Attack Vector"
         This method may be vulnerable to donation-style attacks if the implementation contains rebasing tokens. For integrators, caution is advised.
