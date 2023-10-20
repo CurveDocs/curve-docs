@@ -17,9 +17,9 @@ Stableswap-NG pools supports the following asset types:
 
 | Asset Type  | Description            |
 | ----------- | ---------------------- |
-| `0`         | **standard ERC20** token with no additional features |
-| `1`         | **oracle** - token with rate oracle (e.g. wstETH) |
-| `2`         | **rebasing** - token with rebase (e.g. stETH) |
+| `0`         | **Standard ERC20** token with no additional features |
+| `1`         | **Oracle** - token with rate oracle (e.g. wstETH) |
+| `2`         | **Rebasing** - token with rebase (e.g. stETH) |
 | `3`         | **ERC4626** - token with *`convertToAssets`* method (e.g. sDAI) |
 
 
@@ -33,8 +33,6 @@ Stableswap-NG pools supports the following asset types:
 
 
 ### **Rebasing Tokens**
-
-When liquidity pools include a rebasing token, the pool behaves differently than usual.
 
 !!!warning "Rebasing Tokens"
     Pools including rebasing tokens work a bit differently compared to others. 
@@ -75,13 +73,13 @@ When liquidity pools include a rebasing token, the pool behaves differently than
 
 ## **Dynamic Fees**
 
-Stableswap-NG introduces dynamic fees. This dynamic fee system ensures that fees are not static but adjust based on the relative balances of the tokens in the pool.
+Stableswap-NG introduces dynamic fees. The use of the `offpeg_fee_multiplier` allows the system to dynamically adjust fees based on the pool's state. 
 
-The internal `_dynamic_fee()` function calculates a fee based on the average balances of the tokens being exchanged. If the balances of the tokens being exchanged are highly imbalanced or significantly differ from its expected "peg," the fee may be adjusted using the `offpeg_fee_multiplier`.
+The internal `_dynamic_fee()` function calculates the fee *based on the balances and rates* of the tokens being exchanged. If the balances of the tokens being exchanged are highly imbalanced or significantly differ from its peg, the fee is adjusted using the `offpeg_fee_multiplier`.
 
-The use of the `offpeg_fee_multiplier` allows the system to dynamically adjust fees based on the pool's state. For example, if the pool is off-peg, the fees are adjusted to incentivize or disincentivize certain trades. This mechanism helps maintain pool stability.
+### **Dynamic Fee Formula**
 
-**Let's define the terms and variables for clarity:**
+**Let's define some terms and variables for clarity:**
 
 - Let $fee$ represent the fee, as retrieved by the method `StableSwap.fee()`
 - Let $fee_m$ denote the off-peg fee multiplier, sourced from `StableSwap.offpeg_fee_multiplier()`
@@ -168,8 +166,8 @@ $$\text{dynamic fee} = \frac{{fee_{m} \times fee}}{{\frac{{(fee_{m} - 10^{18}) \
 
 The new generation (NG) of stableswap introduces oracles based on AMM State Prices and the invariant D.
 
-- price oracle (spot and ema price)
-- moving average D oracle
+- **price oracle** (spot and ema price)
+- moving average **D oracle**
 
 Oracles are updated when users perform a swap or when liquidity is added or removed from the pool. Most updates are carried out by the internal `upkeep_oracles()` function, which is called in those instances. In some cases, such as when removing liquidity in a balanced ratio, the `D` oracle is updated directly within the `remove_liquidity()` function, as there is no need to update the price oracles (removing balanced does not have a price impact).
 
