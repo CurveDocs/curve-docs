@@ -77,7 +77,7 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
 
 ### **Transfer Token Out**
 
-`_transfer_out()` is used to transfer tokens out of the pool. This function is called by `remove_liquidity` and`remove_liquidity_one`, `_exchange` and `_withdraw_admin_fees` methods.
+`_transfer_out()` is used to transfer tokens out of the pool. This function is called by `remove_liquidity` and`remove_liquidity_one_coin`, `remove_liquidity_imbalance`,  `_exchange` and `_withdraw_admin_fees` methods.
 
 
 ??? quote "`_transfer_out(_coin_idx: int128, _amount: uint256, receiver: address):`"
