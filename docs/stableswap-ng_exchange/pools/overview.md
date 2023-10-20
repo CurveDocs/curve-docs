@@ -98,7 +98,7 @@ $xp_{j} = \frac{{rate_{j} \times balance_{j}}}{{PRECISION_{j}}}$
 
 $xps2 = (xp_{i} + xp_{j})^2$
 
-*The dynamic fee is calculated by the following formula:*
+**The dynamic fee is calculated by the following formula:**
 
 $$\text{dynamic fee} = \frac{{fee_{m} \times fee}}{{\frac{{(fee_{m} - 10^{18}) \times 4 \times xp_{i} \times xp_{j}}}{{xps2 + 10^{18}}}}}$$
 
@@ -251,3 +251,38 @@ Oracles are updated when users perform a swap or when liquidity is added or remo
 
             return last_ema_value
     ```
+
+
+## **`exchange_received`**
+
+This new function allows the exchange to tokens without actually transfering tokens into the pool, as the exchange is based on the balances of the coins within the pool. This does not only remove one redundant ERC-20 transactions, but also removes the need to give approval to the contract.
+Users of this method are dex aggregators, arbitrageurs, or other users who do not wish to grant approvals to the contract. They can instead send tokens directly to the contract and call `exchange_received`.
+
+!!!warning
+    This function will revert if called on pools that contain rebasing tokens.
+
+
+
+*Example: Lets say the user wants to swap GOV-TOKEN<>USDC. For simplicity we assume, GOV-TOKEN<>USDT is done via a uniswap pool, USDT<>USDC via a curve pool:*
+
+``` mermaid
+graph LR
+    u([USER]) --- p1[(UNISWAP)]
+    p1 -->|"3. transfer out/in"| p2[(CURVE)]
+    u -..-> |1. approve and transfer| a([AGGREGATOR CONTRACT])
+    a ==> |"2. exchange"| p1
+    a -.-|"4. exchange_received"| p2
+    p2 --> |5. transfer dy out| u
+    linkStyle 0 stroke-width:0, fill:none;
+```
+
+1. User approves the *AGGREGATOR CONTRACT*, which then transfers tokens into the contract 
+2. Aggregator exchanges GOV-TOKEN for USDT using Uniswap 
+3. Transfers the USDT directly from Uniswap into the Curve pool
+4. Perform a swap on the Curve pool (USDT<>USDC) via `exchange_received`
+5. Transfer USDC to the user
+
+
+!!!info 
+    This method saves aggregators one redundant ERC-20 transfer. Without this function, the aggregator would have to conduct an additional transaction, transferring USDT from the Uniswap pool to their aggregator contract after the exchange, and then sending it to the Curve pool for another exchange (USDT<>USDC).
+    However, with this method in place, the aggregator can transfer the output tokens directly into the next pool and perform an exchange (`exchange_received`).
