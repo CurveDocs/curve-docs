@@ -8,7 +8,7 @@ Currently, the following versions of Curve StableSwap LP tokens exist:
 
 - [CurveTokenV1](https://github.com/curvefi/curve-contract/blob/master/contracts/tokens/CurveTokenV1.vy): LP token targetting Vyper [^0.1.0-beta.16](https://vyper.readthedocs.io/en/stable/release-notes.html#v0-1-0-beta-16)
 - [CurveTokenV2](https://github.com/curvefi/curve-contract/blob/master/contracts/tokens/CurveTokenV2.vy): LP token targetting Vyper [^0.2.0](https://vyper.readthedocs.io/en/stable/release-notes.html#v0-2-1)
-- [CurveTokenV2](https://github.com/curvefi/curve-contract/blob/master/contracts/tokens/CurveTokenV3.vy): LP token targetting Vyper [^0.2.0](https://vyper.readthedocs.io/en/stable/release-notes.html#v0-2-1)
+- [CurveTokenV3](https://github.com/curvefi/curve-contract/blob/master/contracts/tokens/CurveTokenV3.vy): LP token targetting Vyper [^0.2.0](https://vyper.readthedocs.io/en/stable/release-notes.html#v0-2-1)
 
 todo: add hyperlink to deployment addresses
 
