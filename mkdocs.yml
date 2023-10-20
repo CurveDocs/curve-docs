@@ -24,6 +24,10 @@ nav:
     - Utility Contracts: 
         - Math: stableswap-ng_exchange/utility_contracts/math.md
         - ViewMethodContract: stableswap-ng_exchange/utility_contracts/ViewMethodContract.md
+    - Factory:
+      - Overview: stableswap-ng_exchange/factory/overview.md
+      - Deployer API: stableswap-ng_exchange/factory/deploy.md
+      - Admin Controls: stableswap-ng_exchange/factory/admin_controls.md
 
         
   - Curve DAO:
