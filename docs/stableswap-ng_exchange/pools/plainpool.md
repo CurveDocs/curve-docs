@@ -4,7 +4,7 @@ Plain pools are curve liquidity exchange contracts which contain at least 2 and 
     Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNG.vy).  
 
 
-## **Exchange Methods** (need final check)
+## **Exchange Methods**
 
 The AMM contract utilizes two internal functions to transfer tokens/coins in and out of the pool and then accordingly update `stored_balances`:
 
@@ -16,12 +16,13 @@ These functions contain the basic ERC-20 token transfer logic.
 
 ### **Transfer Token In**
 
-Transfering tokens to the pool occurs via the internal `_transfer_in()` function. The function takes the index value of the coin (`coin_idx`), amount (`dx`), sender address (`sender`) and if a optimistic transfer is expected (`expect_optimistic_transfer`) as input.
+Transfering tokens to the pool occurs via the internal `_transfer_in()` function.   
+The function takes the index value of the coin (`coin_idx`), amount (`dx`), sender address (`sender`) and if a optimistic transfer is expected (`expect_optimistic_transfer`) as input.
 
 `expect_optimistic_transfer` is relevant when using the [`exchange_received`](#exchange_received) function.
 
 
-??? quote "`_transfer_in(coin_idx: int128, dx: uint256, sender: address, expect_optimistic_transfer: bool) -> uint256:`"
+??? quote "`_transfer_in`"
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -77,10 +78,9 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
 
 ### **Transfer Token Out**
 
-`_transfer_out()` is used to transfer tokens out of the pool. This function is called by `remove_liquidity` and`remove_liquidity_one_coin`, `remove_liquidity_imbalance`,  `_exchange` and `_withdraw_admin_fees` methods.
+`_transfer_out()` is used to transfer tokens out of the pool.
 
-
-??? quote "`_transfer_out(_coin_idx: int128, _amount: uint256, receiver: address):`"
+??? quote "`_transfer_out`"
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -589,7 +589,7 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
 
 
 
-## **Adding / Removing Liquidity** (need final check)
+## **Adding / Removing Liquidity**
 
 ### `add_liquidity`
 !!! description "`StableSwap.add_liquidity(_amounts: DynArray[uint256, MAX_COINS], _min_mint_amount: uint256, _receiver: address = msg.sender) -> uint256:`"
@@ -1786,7 +1786,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
         ```
 
 
-## **Oracle Methods** (need final check + fiddy)
+## **Oracle Methods**
 
 Oracles are updated whenever `upkeep_oracles()` was called. This occurrs when calling `add_liquidity`, `remove_liquidity_one_coin`, `remove_liquidity_imbalanced`, `exchange` or `exchanged_received`.
 
@@ -2486,7 +2486,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
 
 
-## **Contract Info Methods** (pool rebasing thingy, other than that issa good)
+## **Contract Info Methods** 
 
 ### `coins`
 !!! description "`StableSwap.coins(arg0: uint256) -> addresss: view`"

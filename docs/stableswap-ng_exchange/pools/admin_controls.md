@@ -7,7 +7,7 @@ The following methods are guarded and may only be called by the `admin` of the S
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the factory through which the pool was created.
 
-    Function to ramp A.
+    Function to ramp amplification coefficient A.
 
     *Limitations when ramping A:*
 
@@ -75,7 +75,7 @@ The following methods are guarded and may only be called by the `admin` of the S
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the factory through which the pool was created.
 
-    Function to immediately stop the ramping of the amplification coefficient. The current value during the ramping process will be finalized as `A`.
+    Function to immediately stop the ramping A. The current value during the ramping process will be finalized as `A`.
 
     Emits: `StopRampA`
 
@@ -113,9 +113,9 @@ The following methods are guarded and may only be called by the `admin` of the S
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the factory through which the pool was created.
     
-    Function to set a new `fee` and `offpeg_fee_multiplier`.
+    Function to set new values for `fee` and `offpeg_fee_multiplier`.
 
-    *Limitations when setting new fee parameters:*  
+    *Limitations when setting new parameters:*  
 
     - `_new_fee` <= `MAX_FEE` (5000000000)  
     - `_new_offpeg_fee_multiplier` * `_new_fee` <= `MAX_FEE` * `FEE_DENOMINATOR`  
@@ -167,7 +167,7 @@ The following methods are guarded and may only be called by the `admin` of the S
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the factory through which the pool was created.
 
-    Function to set the moving average time for `ma_exp_time` and `D_ma_time`.
+    Function to set the moving average window for `ma_exp_time` and `D_ma_time`.
 
     *Limitations when setting new fee parameters:*  
 

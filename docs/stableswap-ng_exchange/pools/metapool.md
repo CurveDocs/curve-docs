@@ -18,12 +18,13 @@ These functions contain the basic ERC-20 token transfer logic.
 
 ### **Transfer Token In**
 
-Transfering tokens to the pool occurs via the internal `_transfer_in()` function. The function takes the coin and metapool index value (`coin_metapool_idx` and `coin_basepool_idx`) of the input coins, amount (`dx`), sender address (`sender`), if a optimistic transfer (`expect_optimistic_transfer`) and/or a basepool swap is expected as input.
+Transfering tokens to the pool occurs via the internal `_transfer_in()` function.  
+The function takes the coin and metapool index value (`coin_metapool_idx` and `coin_basepool_idx`) of the input coins, amount (`dx`), sender address (`sender`), if a optimistic transfer (`expect_optimistic_transfer`) and/or a basepool swap is expected as input.
 
 `expect_optimistic_transfer` is relevant when using the [`exchange_received`](#exchange_received) or [`exchange_underlying_received`](#exchange_underlying_received) function.
 
 
-??? quote "`_transfer_in(coin_metapool_idx: int128, coin_basepool_idx: int128, dx: uint256, sender: address, expect_optimistic_transfer: bool, is_base_pool_swap: bool = False) -> uint256:`"
+??? quote "`_transfer_in:`"
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -127,10 +128,9 @@ Transfering tokens to the pool occurs via the internal `_transfer_in()` function
 
 ### **Transfer Token Out**
 
-`_transfer_out()` is used to transfer tokens out of the pool. This function is called by `remove_liquidity` and`remove_liquidity_one_coin`, `remove_liquidity_imbalance`,  `_exchange` and `_withdraw_admin_fees` methods.
+`_transfer_out()` is used to transfer tokens out of the pool. 
 
-
-??? quote "`_transfer_out(_coin_idx: int128, _amount: uint256, receiver: address):`"
+??? quote "`_transfer_out`"
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|

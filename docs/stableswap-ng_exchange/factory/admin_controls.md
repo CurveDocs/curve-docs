@@ -1,112 +1,8 @@
-## **Set Fee Receiver**
-
-### `set_fee_receiver`
-!!! description "`Factory.set_fee_receiver(_pool: address, _fee_receiver: address)`"
-
-    !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the contract.
-
-    Function to set a new fee receiver.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | this variable has no use; insert a random address, otherwise the tx will fail. |
-    | `_fee_receiver` |  `address` | address of the new fee receiver |
-
-
-    ??? quote "Source code"
-
-        ```python
-        # fee receiver for all pools
-        fee_receiver: public(address)
-
-        @external
-        def set_fee_receiver(_pool: address, _fee_receiver: address):
-            """
-            @notice Set fee receiver for all pools
-            @param _pool Address of  pool to set fee receiver for.
-            @param _fee_receiver Address that fees are sent to
-            """
-            assert msg.sender == self.admin  # dev: admin only
-            self.fee_receiver = _fee_receiver
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> Factory.set_fee_receiver('0x0000000000000000000000000000000000000000')    
-        ```
-
-
-## **Asset Types**
-
-### `asset_types`
-!!! description "`Factory.asset_types(arg0: uint8) -> String[20]`"
-
-    !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the contract.
-
-    Getter for the asset type.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `uint8` | index value of the asset type |
-
-
-    ??? quote "Source code"
-
-        ```python
-        asset_types: public(HashMap[uint8, String[20]])
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> Factory.asset_types(2)
-        'Rebasing'    
-        ```
-
-
-### `add_asset_type`
-!!! description "`Factory.add_asset_type(_id: uint8, _name: String[10])`"
-
-    !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the contract.
-
-    Function to add a new asset type.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_id` |  `uint8` | this variable has no use; insert a random address, otherwise the tx will fail. |
-    | `_name` |  `String[10]` | address of the new fee receiver |
-
-
-    ??? quote "Source code"
-
-        ```python
-        asset_types: public(HashMap[uint8, String[20]])
-
-        @external
-        def add_asset_type(_id: uint8, _name: String[10]):
-            """
-            @notice Admin only method that adds a new asset type.
-            @param _id asset type id.
-            @param _name Name of the asset type.
-            """
-            assert msg.sender == self.admin  # dev: admin only
-            self.asset_types[_id] = _name
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> Factory.add_asset_type(4, "whatever")
-        ```
-
+<h1> </h1>
 
 ## **Implementations**
 
-Current implementations can be queried using the corresponding getter methods. 
+Current implementations can be queried using the corresponding getter methods:
 
 
 ### `set_pool_implementations`
@@ -316,6 +212,85 @@ Current implementations can be queried using the corresponding getter methods.
 
         ```shell
         >>> Factory.set_views_implementations('todo')
+        ```
+
+
+## **Set Fee Receiver**
+
+### `set_fee_receiver`
+!!! description "`Factory.set_fee_receiver(_pool: address, _fee_receiver: address)`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
+    Function to set a new fee receiver.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_pool` |  `address` | this variable has no use; insert a random address, otherwise the tx will fail. |
+    | `_fee_receiver` |  `address` | address of the new fee receiver |
+
+
+    ??? quote "Source code"
+
+        ```python
+        # fee receiver for all pools
+        fee_receiver: public(address)
+
+        @external
+        def set_fee_receiver(_pool: address, _fee_receiver: address):
+            """
+            @notice Set fee receiver for all pools
+            @param _pool Address of  pool to set fee receiver for.
+            @param _fee_receiver Address that fees are sent to
+            """
+            assert msg.sender == self.admin  # dev: admin only
+            self.fee_receiver = _fee_receiver
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> Factory.set_fee_receiver('0x0000000000000000000000000000000000000000')    
+        ```
+
+
+## **Asset Types**
+
+### `add_asset_type`
+!!! description "`Factory.add_asset_type(_id: uint8, _name: String[10])`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
+    Function to add a new asset type.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_id` |  `uint8` | this variable has no use; insert a random address, otherwise the tx will fail. |
+    | `_name` |  `String[10]` | address of the new fee receiver |
+
+
+    ??? quote "Source code"
+
+        ```python
+        asset_types: public(HashMap[uint8, String[20]])
+
+        @external
+        def add_asset_type(_id: uint8, _name: String[10]):
+            """
+            @notice Admin only method that adds a new asset type.
+            @param _id asset type id.
+            @param _name Name of the asset type.
+            """
+            assert msg.sender == self.admin  # dev: admin only
+            self.asset_types[_id] = _name
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> Factory.add_asset_type(4, "whatever")
         ```
 
 

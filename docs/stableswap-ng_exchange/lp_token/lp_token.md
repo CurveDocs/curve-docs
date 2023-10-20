@@ -1,6 +1,6 @@
-When you deposit coins into a Curve pool, you're given pool LP (liquidity pool) tokens in return. Each Curve pool has its unique ERC20 contract, which represents these LP tokens, making them transferable. If you possess these LP tokens, you can deposit and stake them in the pool's liquidity gauge to earn CRV token rewards. Additionally, if a metapool supports the LP token, you can deposit it there to receive the metapool's own LP token.
+When coins are deposited into a Curve pool, the depositor receives pool LP (liquidity provider) tokens in return. Each Curve pool has its unique ERC20 contract representing these LP tokens, making them transferable. Holding these LP tokens allows for their deposit and staking in the pool's liquidity gauge, earning CRV token rewards.Additionally, if a metapool supports the LP token, it can be deposited there to receive the metapool's distinct LP tokens.
 
-Pool and LP tokens are the same smart contract.
+*Pool and LP tokens are the same smart contract.*
 
 ## **Transfer Methods**
 

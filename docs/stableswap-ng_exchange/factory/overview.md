@@ -1,4 +1,4 @@
-The StableSwapNG-Factory serves as a permissionless pool deployer and registry. For further information regarding the registry, please refer to this [section](../../registry/overview.md)
+The StableSwapNG-Factory serves as a permissionless pool deployer and registry. For further information regarding the registry, please refer to this [section](../../registry/overview.md).
 
 
 ## **Fee Receiver**
@@ -26,11 +26,40 @@ All deployed pools share the same fee receiver. A new address can be designated 
         '0xecb456EA5365865EbAb8a2661B0c503410e9B347'
         ```
 
-## **Implemetations**
+
+## **Asset Types**
+
+A pool can contain different asset types. All avalaible types can be queried with the following getter method: 
+
+### `asset_types`
+!!! description "`Factory.asset_types(arg0: uint8) -> String[20]`"
+
+    Getter for the asset types.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `arg0` |  `uint8` | index value of the asset type |
+
+
+    ??? quote "Source code"
+
+        ```python
+        asset_types: public(HashMap[uint8, String[20]])
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> Factory.asset_types(2)
+        'Rebasing'    
+        ```
+
+
+## **Implementations**
 
 Pools and gauges are created through blueprint contracts based on the implementation chosen during deployment.
 
-Additionally, there are utility contracts for Math  (`math_implementations`) and Views (`views_implementation`).
+Additionally, there are utility contracts for Math  (`math_implementation`) and Views (`views_implementation`).
 
 
 ### `pool_implementations`
@@ -149,7 +178,7 @@ Additionally, there are utility contracts for Math  (`math_implementations`) and
 
 ## **Ownership**
 
-Ownership of the contract can be transfered - see [here](../factory/admin_controls.md#commit_transfer_ownership)
+`Admin` is the owner of the contract and has exclusive possibility to call admin-only functions. Ownership can be transferred; for details, see [here](../factory/admin_controls.md#commit_transfer_ownership).
 
 ### `admin`
 !!! description "`Factory.admin() -> address: view`"

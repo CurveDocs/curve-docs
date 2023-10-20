@@ -12,7 +12,7 @@ plugins:
 
 
 nav:
-  - Stableswap-ng:
+  - Stableswap-NG:
     - Overview: stableswap-ng_exchange/overview.md
     - Pools:
       - Overview: stableswap-ng_exchange/pools/overview.md
@@ -23,8 +23,8 @@ nav:
       - Curve LP Token V7: stableswap-ng_exchange/lp_token/lp_token.md
     - Utility Contracts: 
         - Math: stableswap-ng_exchange/utility_contracts/math.md
-        - ViewMethodContract: stableswap-ng_exchange/utility_contracts/ViewMethodContract.md
-    - Factory:
+        - ViewMethodContract: stableswap-ng_exchange/utility_contracts/views.md
+    - Pool Factory:
       - Overview: stableswap-ng_exchange/factory/overview.md
       - Deployer API: stableswap-ng_exchange/factory/deploy.md
       - Admin Controls: stableswap-ng_exchange/factory/admin_controls.md

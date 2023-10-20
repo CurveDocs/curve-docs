@@ -1,11 +1,6 @@
 <h1> </h1>
 
-Curve achieves highly efficient stablecoin trading by implementing the StableSwap invariant. This innovative approach significantly reduces slippage in stablecoin trades compared to other widely-used invariants like the constant-product model. It's important to note that, in this context, 'stablecoins' refer to tokens representing stable values in relation to each other. This category encompasses USD-pegged stablecoins (such as DAI and USDC), as well as tokens like ETH and stETH (stakedETH), and various versions of wrapped BTC.
-
 For an in-depth understanding of the StableSwap invariant design, please refer to the official [StableSwap whitepaper](../pdf/stableswap-paper.pdf).
-
-All exchange functionality that Curve supports, as well as noteworthy implementation details, are explained in technical depth in this section.
-
 
 **The Stableswap-NG AMM infrastructure represents a technically enhanced iteration of the previous 'stableswap' infrastructure. It comprises the following key components:**
 
