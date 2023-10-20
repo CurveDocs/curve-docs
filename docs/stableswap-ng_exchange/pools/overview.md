@@ -255,31 +255,79 @@ Oracles are updated when users perform a swap or when liquidity is added or remo
 
 ## **`exchange_received`**
 
-This new function allows the exchange to tokens without actually transfering tokens into the pool, as the exchange is based on the balances of the coins within the pool. This does not only remove one redundant ERC-20 transactions, but also removes the need to give approval to the contract.
+This new function **allows the exchange of tokens without actually transfering tokens in**, as the exchange is based on the change of the coins balances  within the pool.  
 Users of this method are dex aggregators, arbitrageurs, or other users who do not wish to grant approvals to the contract. They can instead send tokens directly to the contract and call `exchange_received`.
+
+??? quote "Logic of transfers when using `exchange_received`"
+
+    ```python
+    @internal
+    def _transfer_in(
+        coin_idx: int128,
+        dx: uint256,
+        sender: address,
+        expect_optimistic_transfer: bool,
+    ) -> uint256:
+        """
+        @notice Contains all logic to handle ERC20 token transfers.
+        @param coin_idx Index of the coin to transfer in.
+        @param dx amount of `_coin` to transfer into the pool.
+        @param dy amount of `_coin` to transfer out of the pool.
+        @param sender address to transfer `_coin` from.
+        @param receiver address to transfer `_coin` to.
+        @param expect_optimistic_transfer True if contract expects an optimistic coin transfer
+        """
+        _dx: uint256 = ERC20(coins[coin_idx]).balanceOf(self)
+
+        # ------------------------- Handle Transfers -----------------------------
+
+        if expect_optimistic_transfer:
+
+            _dx = _dx - self.stored_balances[coin_idx]
+            assert _dx >= dx
+
+        else:
+
+            assert dx > 0  # dev : do not transferFrom 0 tokens into the pool
+            assert ERC20(coins[coin_idx]).transferFrom(
+                sender, self, dx, default_return_value=True
+            )
+
+            _dx = ERC20(coins[coin_idx]).balanceOf(self) - _dx
+
+        # --------------------------- Store transferred in amount ---------------------------
+
+        self.stored_balances[coin_idx] += _dx
+
+        return _dx
+    ```
+
 
 !!!warning
     This function will revert if called on pools that contain rebasing tokens.
 
 
 
-*Example: Lets say the user wants to swap GOV-TOKEN<>USDC. For simplicity we assume, GOV-TOKEN<>USDT is done via a uniswap pool, USDT<>USDC via a curve pool:*
+### **Example** 
+
+!!!note
+    Lets say the user wants to swap GOV-TOKEN<>USDC. For simplicity we assume, GOV-TOKEN<>USDT exchange is done via a uniswap pool, USDT<>USDC via a curve pool. 
 
 ``` mermaid
 graph LR
     u([USER]) --- p1[(UNISWAP)]
     p1 -->|"3. transfer out/in"| p2[(CURVE)]
-    u -..-> |1. approve and transfer| a([AGGREGATOR CONTRACT])
+    u -..-> |1. approve and transfer| a([AGGREGATOR])
     a ==> |"2. exchange"| p1
     a -.-|"4. exchange_received"| p2
     p2 --> |5. transfer dy out| u
     linkStyle 0 stroke-width:0, fill:none;
 ```
 
-1. User approves the *AGGREGATOR CONTRACT*, which then transfers tokens into the contract 
-2. Aggregator exchanges GOV-TOKEN for USDT using Uniswap 
-3. Transfers the USDT directly from Uniswap into the Curve pool
-4. Perform a swap on the Curve pool (USDT<>USDC) via `exchange_received`
+1. User approves the *AGGREGATOR*, which then transfers tokens into the aggregator contract 
+2. Aggregator exchanges GOV-TOKEN for USDT using *Uniswap* 
+3. Transfers the USDT directly from Uniswap into the *Curve* pool
+4. Perform a swap on the Curve pool (USDT<>USDC) via **`exchange_received`**
 5. Transfer USDC to the user
 
 
