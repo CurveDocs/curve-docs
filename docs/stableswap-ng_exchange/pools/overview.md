@@ -255,12 +255,15 @@ Oracles are updated when users perform a swap or when liquidity is added or remo
 
 ## **`exchange_received`**
 
-This new function **allows the exchange of tokens without actually transfering tokens in**, as the exchange is based on the change of the coins balances  within the pool.  
+This new function **allows the exchange of tokens without actually transfering tokens in**, as the exchange is based on the change of the coins balances within the pool (see code below).    
 Users of this method are dex aggregators, arbitrageurs, or other users who do not wish to grant approvals to the contract. They can instead send tokens directly to the contract and call `exchange_received`.
+
+!!!warning
+    This function will revert if called on pools that contain rebasing tokens.
 
 ??? quote "Logic of transfers when using `exchange_received`"
 
-    ```python
+    ```python hl_lines="6 15 21 22 23 24"
     @internal
     def _transfer_in(
         coin_idx: int128,
@@ -301,11 +304,6 @@ Users of this method are dex aggregators, arbitrageurs, or other users who do no
 
         return _dx
     ```
-
-
-!!!warning
-    This function will revert if called on pools that contain rebasing tokens.
-
 
 
 ### **Example** 
