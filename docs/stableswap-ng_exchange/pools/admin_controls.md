@@ -5,9 +5,9 @@ The following methods are guarded and may only be called by the `admin` of the S
 !!! description "`StableSwap.ramp_A(_future_A: uint256, _future_time: uint256):`"
 
     !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the factory through which the pool was created.
+        This function is only callable by the `admin` of the Factory.
 
-    Function to ramp amplification coefficient A.
+    Function to ramp amplification coefficient A. Minimum ramp time is 86400 (24h).
 
     *Limitations when ramping A:*
 
@@ -73,7 +73,7 @@ The following methods are guarded and may only be called by the `admin` of the S
 !!! description "`StableSwap.stop_ramp_A():`"
 
     !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the factory through which the pool was created.
+        This function is only callable by the `admin` of the Factory.
 
     Function to immediately stop the ramping A. The current value during the ramping process will be finalized as `A`.
 
@@ -111,7 +111,7 @@ The following methods are guarded and may only be called by the `admin` of the S
 !!! description "`StableSwap.set_new_fee(_new_fee: uint256, _new_offpeg_fee_multiplier: uint256):`"
 
     !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the factory through which the pool was created.
+        This function is only callable by the `admin` of the Factory.
     
     Function to set new values for `fee` and `offpeg_fee_multiplier`.
 
@@ -165,7 +165,7 @@ The following methods are guarded and may only be called by the `admin` of the S
 !!! description "`StableSwap.set_ma_exp_time(_ma_exp_time: uint256, _D_ma_time: uint256):`"
 
     !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the factory through which the pool was created.
+        This function is only callable by the `admin` of the Factory.
 
     Function to set the moving average window for `ma_exp_time` and `D_ma_time`.
 

@@ -466,7 +466,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
 
 
-## **Deposit / Withdraw Methods**
+## **Deposit / Withdrawl Methods**
 
 ### `calc_token_amount`
 !!! description "`StableSwap.calc_token_amount(_amounts: DynArray[uint256, MAX_COINS], _is_deposit: bool, pool: address) -> uint256:`"

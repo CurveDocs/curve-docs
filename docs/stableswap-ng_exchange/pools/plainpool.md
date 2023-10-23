@@ -2962,7 +2962,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 ### `get_virtual_price`
 !!! description "`StableSwap.get_virtual_price() -> uint256:`"
 
-    !!!danger
+    !!!danger "Attack Vector"
         This method may be vulnerable to donation-style attacks if the implementation contains rebasing tokens. For integrators, caution is advised.
 
     Getter for the current virtual price of the LP token.

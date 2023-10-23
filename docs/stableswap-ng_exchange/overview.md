@@ -2,13 +2,13 @@
 
 For an in-depth understanding of the StableSwap invariant design, please refer to the official [StableSwap whitepaper](../pdf/stableswap-paper.pdf).
 
-**The Stableswap-NG AMM infrastructure represents a technically enhanced iteration of the previous 'stableswap' infrastructure. It comprises the following key components:**
+**The Stableswap-NG AMM infrastructure represents a technically enhanced iteration of the previous stableswap implementation. It comprises the following key components:**
 
 - Pool Factory
-- AMM blueprint contracts
-- Liquidity Gauge blueprint contract
 - Math Contract
 - Views Contract
+- AMM blueprint contracts
+- LiquidityGauge blueprint contract
 
 
 !!!deploy "Contract Source"
@@ -17,10 +17,8 @@ For an in-depth understanding of the StableSwap invariant design, please refer t
 
 ## **Pool Factory and Blueprint Contracts**
 
-The Factory is the main contract used to deploy new plain and meta-pools, as well as liquidity gauges. It also acts a registry for finding the deployed pools and querying information about them.
-New pools are deployed via blueprints ([EIP-5202](https://eips.ethereum.org/EIPS/eip-5202)). 
-
-For further documentation about the Factory please refer to [here](../factory/pool_factory/overview.md).
+The Pool Factory is the contract used to deploy new plain and meta-pools, as well as liquidity gauges. It also acts a registry for finding the deployed pools and querying information about them.
+Pools and gauges are deployed via blueprints contracts ([EIP-5202](https://eips.ethereum.org/EIPS/eip-5202)). 
 
 
 ## **Math and View Contracts**

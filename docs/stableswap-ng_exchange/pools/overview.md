@@ -1,6 +1,6 @@
 A Curve pool is essentially a smart contract that implements the StableSwap invariant, housing the logic for exchanging stable tokens. While all Curve pools share this core implementation, they come in various pool flavors.
 
-In its simplest form, a Curve pool is an implementation of the StableSwap invariant involving two or more tokens, often referred to as a 'plain pool.' Alternatively, Curve offers more complex pool variants, including pools with rebasing tokens and metapools. Metapools, for instance, facilitate the exchange of one or more tokens with those from one or more underlying base pools.
+In its simplest form, a Curve pool is an implementation of the StableSwap invariant involving two or more tokens, often referred to as a 'plain pool.' Alternatively, Curve offers more complex pool variants, including pools with rebasing tokens and metapools. Metapools facilitate the exchange of one or more tokens with those from one or more underlying tokens.
 
 
 **New features:**   
@@ -75,11 +75,11 @@ Stableswap-NG pools supports the following asset types:
 
 Stableswap-NG introduces dynamic fees. The use of the `offpeg_fee_multiplier` allows the system to dynamically adjust fees based on the pool's state. 
 
-The internal `_dynamic_fee()` function calculates the fee *based on the balances and rates* of the tokens being exchanged. If the balances of the tokens being exchanged are highly imbalanced or significantly differ from its peg, the fee is adjusted using the `offpeg_fee_multiplier`.
+The internal `_dynamic_fee()` function calculates the fee **based on the balances and rates** of the tokens being exchanged. If the balances of the tokens being exchanged are highly imbalanced or significantly differ from its peg, the fee is adjusted using the `offpeg_fee_multiplier`.
 
 ### **Dynamic Fee Formula**
 
-**Let's define some terms and variables for clarity:**
+*Let's define some terms and variables for clarity:*
 
 - Let $fee$ represent the fee, as retrieved by the method `StableSwap.fee()`
 - Let $fee_m$ denote the off-peg fee multiplier, sourced from `StableSwap.offpeg_fee_multiplier()`
@@ -307,7 +307,7 @@ Users of this method are dex aggregators, arbitrageurs, or other users who do no
 ### **Example** 
 
 !!!note
-    Lets say the user wants to swap GOV-TOKEN<>USDC. For simplicity we assume, GOV-TOKEN<>USDT exchange is done via a uniswap pool, USDT<>USDC via a curve pool. 
+    Lets say the user wants to swap **`GOV-TOKEN<>USDC`** through an aggregator. For simplicity we assume, **`GOV-TOKEN<>USDT`** exchange is done via a uniswap pool, **`USDT<>USDC`** via a curve pool.
 
 ``` mermaid
 graph LR
@@ -320,7 +320,7 @@ graph LR
     linkStyle 0 stroke-width:0, fill:none;
 ```
 
-1. User approves the *AGGREGATOR*, which then transfers tokens into the aggregator contract 
+1. User approves the *AGGREGATOR*, which then transfers tokens into the aggregator contract
 2. Aggregator exchanges GOV-TOKEN for USDT using *Uniswap* 
 3. Transfers the USDT directly from Uniswap into the *Curve* pool
 4. Perform a swap on the Curve pool (USDT<>USDC) via **`exchange_received`**
