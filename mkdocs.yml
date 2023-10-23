@@ -193,7 +193,9 @@ theme:
     - content.tabs.link
     - navigation.indexes
     - navigation.instant
+    - navigation.instant.prefetch
     - navigation.sections
+    - navigation.path
     - navigation.top
     - navigation.tracking
     - search.highlight
