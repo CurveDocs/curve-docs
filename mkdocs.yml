@@ -11,25 +11,7 @@ plugins:
       minify_html: true
 
 
-nav:
-  - Stableswap-NG:
-    - Overview: stableswap-ng_exchange/overview.md
-    - Pools:
-      - Overview: stableswap-ng_exchange/pools/overview.md
-      - Plain Pools: stableswap-ng_exchange/pools/plainpool.md
-      - Metapools: stableswap-ng_exchange/pools/metapool.md
-      - Admin Controls: stableswap-ng_exchange/pools/admin_controls.md
-    - Liquidity Pool Token:  
-      - Curve LP Token V7: stableswap-ng_exchange/lp_token/lp_token.md
-    - Utility Contracts: 
-        - Math: stableswap-ng_exchange/utility_contracts/math.md
-        - ViewMethodContract: stableswap-ng_exchange/utility_contracts/views.md
-    - Pool Factory:
-      - Overview: stableswap-ng_exchange/factory/overview.md
-      - Deployer API: stableswap-ng_exchange/factory/deploy.md
-      - Admin Controls: stableswap-ng_exchange/factory/admin_controls.md
-
-        
+nav:    
   - Curve DAO:
     
     - Curve DAO Token:
@@ -62,25 +44,21 @@ nav:
         - ChildGauge: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/ChildGauge.md
         - ChildGaugeFactory: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/ChildGaugeFactory.md
       - Minter: curve_dao/LiquidityGaugesAndMintingCRV/minter.md 
-
     - Fee Collection and Distribution:
       - Overview: curve_dao/FeeCollection&Distribution/overview.md
       - Withdrawing and Burning Admin Fees: curve_dao/FeeCollection&Distribution/withdraw-and-burn.md
       - Burners: curve_dao/FeeCollection&Distribution/burner.md
       - Fee Distribution: curve_dao/FeeCollection&Distribution/FeeDistributor.md
       - Deployed Contracts: curve_dao/FeeCollection&Distribution/deployed-contracts.md
-
     - Ownership Proxies:
       - Overview: curve_dao/ownership-proxy/overview.md
       - Agents: curve_dao/ownership-proxy/Agents.md
       - PoolProxy: curve_dao/ownership-proxy/PoolProxy.md
       - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
       - RootChainGaugeProxy: curve_dao/ownership-proxy/RootChainGaugeProxy.md
-      
     - Governance and Voting: 
       - Overview: curve_dao/governance/overview.md
       
-
   - Curve Stablecoin (crvUSD):
     - Overview: crvUSD/overview.md
     - crvUSD Token: crvUSD/crvUSD.md
@@ -91,6 +69,23 @@ nav:
     - PriceAggregator: crvUSD/priceaggregator.md
     - Oracle: crvUSD/oracle.md
     - Deployments: crvUSD/deployments.md
+
+  - Stableswap-NG:
+    - Overview: stableswap-ng_exchange/overview.md
+    - Pools:
+      - Overview: stableswap-ng_exchange/pools/overview.md
+      - Plain Pools: stableswap-ng_exchange/pools/plainpool.md
+      - Metapools: stableswap-ng_exchange/pools/metapool.md
+      - Admin Controls: stableswap-ng_exchange/pools/admin_controls.md
+    - Liquidity Pool Token:  
+      - Curve LP Token V7: stableswap-ng_exchange/lp_token/lp_token.md
+    - Utility Contracts: 
+        - Math: stableswap-ng_exchange/utility_contracts/math.md
+        - ViewMethodContract: stableswap-ng_exchange/utility_contracts/views.md
+    - Pool Factory:
+      - Overview: stableswap-ng_exchange/factory/overview.md
+      - Deployer API: stableswap-ng_exchange/factory/deploy.md
+      - Admin Controls: stableswap-ng_exchange/factory/admin_controls.md
 
   - Stableswap Exchange:    
     - Overview: stableswap_exchange/overview.md 
