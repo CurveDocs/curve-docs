@@ -4,7 +4,6 @@ site_author: CurveFi
 
 plugins:
   - search
-  - optimize
   - autolinks
   - git-revision-date-localized:
       type: timeago
