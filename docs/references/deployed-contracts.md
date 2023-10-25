@@ -1,5 +1,3 @@
-# **Ethereum**
-
 ## **Curve DAO**
 Curve DAO consists of multiple smart contracts connected by [Aragon](https://github.com/aragon/aragonOS). Interaction with Aragon occurs through a [modified implementation](https://github.com/curvefi/curve-aragon-voting) of the [Aragon Voting App](https://github.com/aragon/aragon-apps/tree/master/apps/voting). Aragon’s standard one-token, one-vote method is replaced with a weighting system based on locking tokens. Curve DAO has a token (CRV) used for governance and value accrual.
 
@@ -30,7 +28,6 @@ Here is a list of contract deployments that are used in the Curve DAO:
 
 Main documentation: [Ownership Proxies](/docs/curve_dao/ownership-proxy/overview.md)
 
-#### **Voting App**
 Aragon [Voting App](https://wiki.aragon.org/archive/dev/apps/voting/) deployments are the main entry points used to create new votes, vote, check the status of a vote, and execute a successful vote.
 
 | Name      | Address  |
@@ -40,7 +37,6 @@ Aragon [Voting App](https://wiki.aragon.org/archive/dev/apps/voting/) deployment
 | `Emergency` |  [0x1115c9b3168563354137cdc60efb66552dd50678](https://etherscan.io/address/0x1115c9b3168563354137cdc60efb66552dd50678)|
 
 
-#### **Agent**
 Aragon [Agent](https://hack.aragon.org/docs/guides-use-agent) deployments correspond to the different owner accounts within the DAO. Contract calls made due to a successful vote will be executed from these addresses. When deploying new contracts, these addresses should be given appropriate access to admin functionality.
 
 | Name      | Address  |
@@ -50,7 +46,6 @@ Aragon [Agent](https://hack.aragon.org/docs/guides-use-agent) deployments corres
 | `Emergency` |  [0x00669DF67E4827FCc0E48A1838a8d5AB79281909](https://etherscan.io/address/0x00669DF67E4827FCc0E48A1838a8d5AB79281909)|
 
 
-#### **Tokens**
 The following token addresses are used for determining voter weights within Curve’s Aragon DAOs.
 
 | Name      | Address  |
