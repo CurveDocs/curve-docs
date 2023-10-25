@@ -79,6 +79,9 @@ The internal `_dynamic_fee()` function calculates the fee **based on the balance
 
 ### **Dynamic Fee Formula**
 
+!!!bug
+    If the formulas below do not render, please make sure to refresh the site. A solution is being worked on.
+
 *Let's define some terms and variables for clarity:*
 
 - Let $fee$ represent the fee, as retrieved by the method `StableSwap.fee()`
