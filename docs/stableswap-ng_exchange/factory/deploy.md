@@ -1,9 +1,11 @@
 <h1> </h1>
 
-**Plain- and Metapool deployment is permissionless - everyone can create a pool. Adding a new basepool needs to be approved by the DAO.**
+Plain- and Metapool **deployment is permissionless** - everyone can create a pool. *Adding a new basepool needs to be approved by the DAO.*
 
 !!!info
     When deploying pools that include coins not requiring a rate oracle, the `_methods_id` array can be empty, and the `_oracles` array can use the `ZERO_ADDRESS`.
+
+## **Plain Pools**
 
 ### `deploy_plain_pool`
 Limitations when deploying stableswap-ng pools:
@@ -176,6 +178,7 @@ Limitations when deploying stableswap-ng pools:
         ```
 
 
+## **Metapools**
 
 ### `deploy_metapool`
 Limitations when deploying meta pools:
@@ -358,6 +361,8 @@ Limitations when deploying meta pools:
         >>> Factory.deploy_metapool("todo")
         ```
 
+
+## **Gauges**
 
 ### `deploy_gauge`
 !!! description "`Factory.deploy_gauge(_pool: address) -> address:`"
