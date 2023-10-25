@@ -76,9 +76,8 @@ nav:
       - Overview: stableswap-ng_exchange/pools/overview.md
       - Plain Pools: stableswap-ng_exchange/pools/plainpool.md
       - Metapools: stableswap-ng_exchange/pools/metapool.md
+      - LP Token Methods: stableswap-ng_exchange/pools/lp_token.md
       - Admin Controls: stableswap-ng_exchange/pools/admin_controls.md
-    - Liquidity Pool Token:  
-      - Curve LP Token V7: stableswap-ng_exchange/lp_token/lp_token.md
     - Utility Contracts: 
         - Math: stableswap-ng_exchange/utility_contracts/math.md
         - Views: stableswap-ng_exchange/utility_contracts/views.md
