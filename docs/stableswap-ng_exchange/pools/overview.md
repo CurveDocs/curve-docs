@@ -309,7 +309,7 @@ Users of this method are dex aggregators, arbitrageurs, or other users who do no
 
 ### **Example** 
 
-!!!note
+!!!example
     Lets say the user wants to swap **`GOV-TOKEN<>USDC`** through an aggregator. For simplicity we assume, **`GOV-TOKEN<>USDT`** exchange is done via a uniswap pool, **`USDT<>USDC`** via a curve pool.
 
 ``` mermaid
