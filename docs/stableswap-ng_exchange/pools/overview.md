@@ -257,7 +257,7 @@ Oracles are updated when users perform a swap or when liquidity is added or remo
 ## **`exchange_received`**
 
 This new function **allows the exchange of tokens without actually transfering tokens in**, as the exchange is based on the change of the coins balances within the pool (see code below).    
-Users of this method are dex aggregators, arbitrageurs, or other users who do not wish to grant approvals to the contract. They can instead send tokens directly to the contract and call `exchange_received`.
+Users of this method are dex aggregators, arbitrageurs, or other users who **do not wish to grant approvals to the contract**. They can instead send tokens directly to the contract and call `exchange_received`.
 
 !!!warning
     This function will revert if called on pools that contain rebasing tokens.
