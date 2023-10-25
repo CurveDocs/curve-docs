@@ -294,92 +294,11 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
             _method_ids: DynArray[bytes4, MAX_COINS],
             _oracles: DynArray[address, MAX_COINS],
         ):
-            """
-            @notice Initialize the pool contract
-            @param _name Name of the new plain pool.
-            @param _symbol Symbol for the new plain pool.
-            @param _A Amplification co-efficient - a lower value here means
-                    less tolerance for imbalance within the pool's assets.
-                    Suggested values include:
-                    * Uncollateralized algorithmic stablecoins: 5-10
-                    * Non-redeemable, collateralized assets: 100
-                    * Redeemable assets: 200-400
-            @param _fee Trade fee, given as an integer with 1e10 precision. The
-                        the maximum is 1% (100000000).
-                        50% of the fee is distributed to veCRV holders.
-            @param _offpeg_fee_multiplier A multiplier that determines how much to increase
-                                        Fees by when assets in the AMM depeg. Example value: 20000000000
-            @param _ma_exp_time Averaging window of oracle. Set as time_in_seconds / ln(2)
-                                Example: for 10 minute EMA, _ma_exp_time is 600 / ln(2) ~= 866
-            @param _coins List of addresses of the coins being used in the pool.
-            @param _rate_multipliers An array of: [10 ** (36 - _coins[n].decimals()), ... for n in range(N_COINS)]
-            @param _asset_types Array of uint8 representing tokens in pool
-            @param _method_ids Array of first four bytes of the Keccak-256 hash of the function signatures
-                            of the oracle addresses that gives rate oracles.
-                            Calculated as: keccak(text=event_signature.replace(" ", ""))[:4]
-            @param _oracles Array of rate oracle addresses.
-            """
-
-            coins = _coins
-            __n_coins: uint256 = len(_coins)
-            N_COINS = __n_coins
-            N_COINS_128 = convert(__n_coins, int128)
-
-            for i in range(MAX_COINS):
-                if i == __n_coins - 1:
-                    break
-                self.last_prices_packed.append(self.pack_2(10**18, 10**18))
-
-            rate_multipliers = _rate_multipliers
-            POOL_IS_REBASING_IMPLEMENTATION = 2 in _asset_types
-
-            factory = Factory(msg.sender)
-
-            A: uint256 = _A * A_PRECISION
-            self.initial_A = A
-            self.future_A = A
-            self.fee = _fee
-            self.offpeg_fee_multiplier = _offpeg_fee_multiplier
-
-            assert _ma_exp_time != 0
-            self.ma_exp_time = _ma_exp_time
-            self.D_ma_time = 62324  # <--------- 12 hours default on contract start.
-            self.ma_last_time = self.pack_2(block.timestamp, block.timestamp)
-
-            for i in range(MAX_COINS_128):
-
-                if i == N_COINS_128:
-                    break
-
-                self.oracles.append(convert(_method_ids[i], uint256) * 2**224 | convert(_oracles[i], uint256))
-
-                #  --------------------------- initialize storage ---------------------------
-                self.stored_balances.append(0)
-                self.admin_balances.append(0)
-
-            # --------------------------- ERC20 stuff ----------------------------
+            ...
 
             name = _name
-            symbol = _symbol
 
-            # EIP712 related params -----------------
-            NAME_HASH = keccak256(name)
-            salt = block.prevhash
-            CACHED_CHAIN_ID = chain.id
-            CACHED_DOMAIN_SEPARATOR = keccak256(
-                _abi_encode(
-                    EIP712_TYPEHASH,
-                    NAME_HASH,
-                    VERSION_HASH,
-                    chain.id,
-                    self,
-                    salt,
-                )
-            )
-
-            # ------------------------ Fire a transfer event -------------------------
-
-            log Transfer(empty(address), msg.sender, 0)
+            ...
         ```
 
     === "Example"
@@ -416,92 +335,11 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
             _method_ids: DynArray[bytes4, MAX_COINS],
             _oracles: DynArray[address, MAX_COINS],
         ):
-            """
-            @notice Initialize the pool contract
-            @param _name Name of the new plain pool.
-            @param _symbol Symbol for the new plain pool.
-            @param _A Amplification co-efficient - a lower value here means
-                    less tolerance for imbalance within the pool's assets.
-                    Suggested values include:
-                    * Uncollateralized algorithmic stablecoins: 5-10
-                    * Non-redeemable, collateralized assets: 100
-                    * Redeemable assets: 200-400
-            @param _fee Trade fee, given as an integer with 1e10 precision. The
-                        the maximum is 1% (100000000).
-                        50% of the fee is distributed to veCRV holders.
-            @param _offpeg_fee_multiplier A multiplier that determines how much to increase
-                                        Fees by when assets in the AMM depeg. Example value: 20000000000
-            @param _ma_exp_time Averaging window of oracle. Set as time_in_seconds / ln(2)
-                                Example: for 10 minute EMA, _ma_exp_time is 600 / ln(2) ~= 866
-            @param _coins List of addresses of the coins being used in the pool.
-            @param _rate_multipliers An array of: [10 ** (36 - _coins[n].decimals()), ... for n in range(N_COINS)]
-            @param _asset_types Array of uint8 representing tokens in pool
-            @param _method_ids Array of first four bytes of the Keccak-256 hash of the function signatures
-                            of the oracle addresses that gives rate oracles.
-                            Calculated as: keccak(text=event_signature.replace(" ", ""))[:4]
-            @param _oracles Array of rate oracle addresses.
-            """
+            ...
 
-            coins = _coins
-            __n_coins: uint256 = len(_coins)
-            N_COINS = __n_coins
-            N_COINS_128 = convert(__n_coins, int128)
-
-            for i in range(MAX_COINS):
-                if i == __n_coins - 1:
-                    break
-                self.last_prices_packed.append(self.pack_2(10**18, 10**18))
-
-            rate_multipliers = _rate_multipliers
-            POOL_IS_REBASING_IMPLEMENTATION = 2 in _asset_types
-
-            factory = Factory(msg.sender)
-
-            A: uint256 = _A * A_PRECISION
-            self.initial_A = A
-            self.future_A = A
-            self.fee = _fee
-            self.offpeg_fee_multiplier = _offpeg_fee_multiplier
-
-            assert _ma_exp_time != 0
-            self.ma_exp_time = _ma_exp_time
-            self.D_ma_time = 62324  # <--------- 12 hours default on contract start.
-            self.ma_last_time = self.pack_2(block.timestamp, block.timestamp)
-
-            for i in range(MAX_COINS_128):
-
-                if i == N_COINS_128:
-                    break
-
-                self.oracles.append(convert(_method_ids[i], uint256) * 2**224 | convert(_oracles[i], uint256))
-
-                #  --------------------------- initialize storage ---------------------------
-                self.stored_balances.append(0)
-                self.admin_balances.append(0)
-
-            # --------------------------- ERC20 stuff ----------------------------
-
-            name = _name
             symbol = _symbol
 
-            # EIP712 related params -----------------
-            NAME_HASH = keccak256(name)
-            salt = block.prevhash
-            CACHED_CHAIN_ID = chain.id
-            CACHED_DOMAIN_SEPARATOR = keccak256(
-                _abi_encode(
-                    EIP712_TYPEHASH,
-                    NAME_HASH,
-                    VERSION_HASH,
-                    chain.id,
-                    self,
-                    salt,
-                )
-            )
-
-            # ------------------------ Fire a transfer event -------------------------
-
-            log Transfer(empty(address), msg.sender, 0)
+            ...
         ```
 
     === "Example"
@@ -523,107 +361,6 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
         ```python
         decimals: public(constant(uint8)) = 18
-
-        @external
-        def __init__(
-            _name: String[32],
-            _symbol: String[10],
-            _A: uint256,
-            _fee: uint256,
-            _offpeg_fee_multiplier: uint256,
-            _ma_exp_time: uint256,
-            _coins: DynArray[address, MAX_COINS],
-            _rate_multipliers: DynArray[uint256, MAX_COINS],
-            _asset_types: DynArray[uint8, MAX_COINS],
-            _method_ids: DynArray[bytes4, MAX_COINS],
-            _oracles: DynArray[address, MAX_COINS],
-        ):
-            """
-            @notice Initialize the pool contract
-            @param _name Name of the new plain pool.
-            @param _symbol Symbol for the new plain pool.
-            @param _A Amplification co-efficient - a lower value here means
-                    less tolerance for imbalance within the pool's assets.
-                    Suggested values include:
-                    * Uncollateralized algorithmic stablecoins: 5-10
-                    * Non-redeemable, collateralized assets: 100
-                    * Redeemable assets: 200-400
-            @param _fee Trade fee, given as an integer with 1e10 precision. The
-                        the maximum is 1% (100000000).
-                        50% of the fee is distributed to veCRV holders.
-            @param _offpeg_fee_multiplier A multiplier that determines how much to increase
-                                        Fees by when assets in the AMM depeg. Example value: 20000000000
-            @param _ma_exp_time Averaging window of oracle. Set as time_in_seconds / ln(2)
-                                Example: for 10 minute EMA, _ma_exp_time is 600 / ln(2) ~= 866
-            @param _coins List of addresses of the coins being used in the pool.
-            @param _rate_multipliers An array of: [10 ** (36 - _coins[n].decimals()), ... for n in range(N_COINS)]
-            @param _asset_types Array of uint8 representing tokens in pool
-            @param _method_ids Array of first four bytes of the Keccak-256 hash of the function signatures
-                            of the oracle addresses that gives rate oracles.
-                            Calculated as: keccak(text=event_signature.replace(" ", ""))[:4]
-            @param _oracles Array of rate oracle addresses.
-            """
-
-            coins = _coins
-            __n_coins: uint256 = len(_coins)
-            N_COINS = __n_coins
-            N_COINS_128 = convert(__n_coins, int128)
-
-            for i in range(MAX_COINS):
-                if i == __n_coins - 1:
-                    break
-                self.last_prices_packed.append(self.pack_2(10**18, 10**18))
-
-            rate_multipliers = _rate_multipliers
-            POOL_IS_REBASING_IMPLEMENTATION = 2 in _asset_types
-
-            factory = Factory(msg.sender)
-
-            A: uint256 = _A * A_PRECISION
-            self.initial_A = A
-            self.future_A = A
-            self.fee = _fee
-            self.offpeg_fee_multiplier = _offpeg_fee_multiplier
-
-            assert _ma_exp_time != 0
-            self.ma_exp_time = _ma_exp_time
-            self.D_ma_time = 62324  # <--------- 12 hours default on contract start.
-            self.ma_last_time = self.pack_2(block.timestamp, block.timestamp)
-
-            for i in range(MAX_COINS_128):
-
-                if i == N_COINS_128:
-                    break
-
-                self.oracles.append(convert(_method_ids[i], uint256) * 2**224 | convert(_oracles[i], uint256))
-
-                #  --------------------------- initialize storage ---------------------------
-                self.stored_balances.append(0)
-                self.admin_balances.append(0)
-
-            # --------------------------- ERC20 stuff ----------------------------
-
-            name = _name
-            symbol = _symbol
-
-            # EIP712 related params -----------------
-            NAME_HASH = keccak256(name)
-            salt = block.prevhash
-            CACHED_CHAIN_ID = chain.id
-            CACHED_DOMAIN_SEPARATOR = keccak256(
-                _abi_encode(
-                    EIP712_TYPEHASH,
-                    NAME_HASH,
-                    VERSION_HASH,
-                    chain.id,
-                    self,
-                    salt,
-                )
-            )
-
-            # ------------------------ Fire a transfer event -------------------------
-
-            log Transfer(empty(address), msg.sender, 0)
         ```
 
     === "Example"
@@ -731,73 +468,7 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
             _method_ids: DynArray[bytes4, MAX_COINS],
             _oracles: DynArray[address, MAX_COINS],
         ):
-            """
-            @notice Initialize the pool contract
-            @param _name Name of the new plain pool.
-            @param _symbol Symbol for the new plain pool.
-            @param _A Amplification co-efficient - a lower value here means
-                    less tolerance for imbalance within the pool's assets.
-                    Suggested values include:
-                    * Uncollateralized algorithmic stablecoins: 5-10
-                    * Non-redeemable, collateralized assets: 100
-                    * Redeemable assets: 200-400
-            @param _fee Trade fee, given as an integer with 1e10 precision. The
-                        the maximum is 1% (100000000).
-                        50% of the fee is distributed to veCRV holders.
-            @param _offpeg_fee_multiplier A multiplier that determines how much to increase
-                                        Fees by when assets in the AMM depeg. Example value: 20000000000
-            @param _ma_exp_time Averaging window of oracle. Set as time_in_seconds / ln(2)
-                                Example: for 10 minute EMA, _ma_exp_time is 600 / ln(2) ~= 866
-            @param _coins List of addresses of the coins being used in the pool.
-            @param _rate_multipliers An array of: [10 ** (36 - _coins[n].decimals()), ... for n in range(N_COINS)]
-            @param _asset_types Array of uint8 representing tokens in pool
-            @param _method_ids Array of first four bytes of the Keccak-256 hash of the function signatures
-                            of the oracle addresses that gives rate oracles.
-                            Calculated as: keccak(text=event_signature.replace(" ", ""))[:4]
-            @param _oracles Array of rate oracle addresses.
-            """
-
-            coins = _coins
-            __n_coins: uint256 = len(_coins)
-            N_COINS = __n_coins
-            N_COINS_128 = convert(__n_coins, int128)
-
-            for i in range(MAX_COINS):
-                if i == __n_coins - 1:
-                    break
-                self.last_prices_packed.append(self.pack_2(10**18, 10**18))
-
-            rate_multipliers = _rate_multipliers
-            POOL_IS_REBASING_IMPLEMENTATION = 2 in _asset_types
-
-            factory = Factory(msg.sender)
-
-            A: uint256 = _A * A_PRECISION
-            self.initial_A = A
-            self.future_A = A
-            self.fee = _fee
-            self.offpeg_fee_multiplier = _offpeg_fee_multiplier
-
-            assert _ma_exp_time != 0
-            self.ma_exp_time = _ma_exp_time
-            self.D_ma_time = 62324  # <--------- 12 hours default on contract start.
-            self.ma_last_time = self.pack_2(block.timestamp, block.timestamp)
-
-            for i in range(MAX_COINS_128):
-
-                if i == N_COINS_128:
-                    break
-
-                self.oracles.append(convert(_method_ids[i], uint256) * 2**224 | convert(_oracles[i], uint256))
-
-                #  --------------------------- initialize storage ---------------------------
-                self.stored_balances.append(0)
-                self.admin_balances.append(0)
-
-            # --------------------------- ERC20 stuff ----------------------------
-
-            name = _name
-            symbol = _symbol
+            ...
 
             # EIP712 related params -----------------
             NAME_HASH = keccak256(name)
@@ -814,9 +485,7 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
                 )
             )
 
-            # ------------------------ Fire a transfer event -------------------------
-
-            log Transfer(empty(address), msg.sender, 0)
+            ...
         ```
 
     === "Example"
