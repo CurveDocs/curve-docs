@@ -760,7 +760,7 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
     | `_claim_admin_fees` |  `bool` | if admin fees should be claimed; defaults to `true` |
 
     !!!info
-        When removing liquidity in a balanced ratio, there is no need to update the price oracles, as this function does not alter the balance ratio within the pool. When calling this function, only the `D` oracle is updated.
+        When removing liquidity in a balanced ratio, there is no need to update the price oracles, as this function does not alter the balance ratio within the pool. Calling this function only updates the `D` oracle. The calculation of `D` does not use Newton methods, ensuring that `remove_liquidity` should always work, even if the pool gets borked.
 
     ??? quote "Source code"
 
@@ -1405,66 +1405,11 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
             @param _oracles Array of rate oracle addresses.
             """
 
-            coins = _coins
-            __n_coins: uint256 = len(_coins)
-            N_COINS = __n_coins
-            N_COINS_128 = convert(__n_coins, int128)
+            ...
 
-            for i in range(MAX_COINS):
-                if i == __n_coins - 1:
-                    break
-                self.last_prices_packed.append(self.pack_2(10**18, 10**18))
-
-            rate_multipliers = _rate_multipliers
-            POOL_IS_REBASING_IMPLEMENTATION = 2 in _asset_types
-
-            factory = Factory(msg.sender)
-
-            A: uint256 = _A * A_PRECISION
-            self.initial_A = A
-            self.future_A = A
             self.fee = _fee
-            self.offpeg_fee_multiplier = _offpeg_fee_multiplier
 
-            assert _ma_exp_time != 0
-            self.ma_exp_time = _ma_exp_time
-            self.D_ma_time = 62324  # <--------- 12 hours default on contract start.
-            self.ma_last_time = self.pack_2(block.timestamp, block.timestamp)
-
-            for i in range(MAX_COINS_128):
-
-                if i == N_COINS_128:
-                    break
-
-                self.oracles.append(convert(_method_ids[i], uint256) * 2**224 | convert(_oracles[i], uint256))
-
-                #  --------------------------- initialize storage ---------------------------
-                self.stored_balances.append(0)
-                self.admin_balances.append(0)
-
-            # --------------------------- ERC20 stuff ----------------------------
-
-            name = _name
-            symbol = _symbol
-
-            # EIP712 related params -----------------
-            NAME_HASH = keccak256(name)
-            salt = block.prevhash
-            CACHED_CHAIN_ID = chain.id
-            CACHED_DOMAIN_SEPARATOR = keccak256(
-                _abi_encode(
-                    EIP712_TYPEHASH,
-                    NAME_HASH,
-                    VERSION_HASH,
-                    chain.id,
-                    self,
-                    salt,
-                )
-            )
-
-            # ------------------------ Fire a transfer event -------------------------
-
-            log Transfer(empty(address), msg.sender, 0)
+            ...
         ```
 
     === "Example"
@@ -1575,7 +1520,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
     Returns: admin fee (`uint256`).
 
     !!!info
-        This value is set at 50% (5000000000) and is a constantant, meaning it cannot be changed.
+        This value is set at 50% (5000000000) and is a constant, meaning it cannot be changed.
 
     ??? quote "Source code"
 
@@ -1643,66 +1588,11 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
             @param _oracles Array of rate oracle addresses.
             """
 
-            coins = _coins
-            __n_coins: uint256 = len(_coins)
-            N_COINS = __n_coins
-            N_COINS_128 = convert(__n_coins, int128)
+            ...
 
-            for i in range(MAX_COINS):
-                if i == __n_coins - 1:
-                    break
-                self.last_prices_packed.append(self.pack_2(10**18, 10**18))
-
-            rate_multipliers = _rate_multipliers
-            POOL_IS_REBASING_IMPLEMENTATION = 2 in _asset_types
-
-            factory = Factory(msg.sender)
-
-            A: uint256 = _A * A_PRECISION
-            self.initial_A = A
-            self.future_A = A
-            self.fee = _fee
             self.offpeg_fee_multiplier = _offpeg_fee_multiplier
 
-            assert _ma_exp_time != 0
-            self.ma_exp_time = _ma_exp_time
-            self.D_ma_time = 62324  # <--------- 12 hours default on contract start.
-            self.ma_last_time = self.pack_2(block.timestamp, block.timestamp)
-
-            for i in range(MAX_COINS_128):
-
-                if i == N_COINS_128:
-                    break
-
-                self.oracles.append(convert(_method_ids[i], uint256) * 2**224 | convert(_oracles[i], uint256))
-
-                #  --------------------------- initialize storage ---------------------------
-                self.stored_balances.append(0)
-                self.admin_balances.append(0)
-
-            # --------------------------- ERC20 stuff ----------------------------
-
-            name = _name
-            symbol = _symbol
-
-            # EIP712 related params -----------------
-            NAME_HASH = keccak256(name)
-            salt = block.prevhash
-            CACHED_CHAIN_ID = chain.id
-            CACHED_DOMAIN_SEPARATOR = keccak256(
-                _abi_encode(
-                    EIP712_TYPEHASH,
-                    NAME_HASH,
-                    VERSION_HASH,
-                    chain.id,
-                    self,
-                    salt,
-                )
-            )
-
-            # ------------------------ Fire a transfer event -------------------------
-
-            log Transfer(empty(address), msg.sender, 0)
+            ...
         ```
 
     === "Example"
@@ -1860,6 +1750,9 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `i` |  `uint256` | index value of coin |
+
+    !!!warning "Revert"
+        This function reverts if `i >= MAX_COINS`.
 
     ??? quote "Source code"
 
@@ -2123,6 +2016,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
         >>> StableSwap.D_oracle('todo')
         'todo'
         ```
+
 
 ### `D_ma_time`
 !!! description "`StableSwap.D_ma_time() -> uint256: view`"
@@ -2545,61 +2439,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
             N_COINS = __n_coins
             N_COINS_128 = convert(__n_coins, int128)
 
-            for i in range(MAX_COINS):
-                if i == __n_coins - 1:
-                    break
-                self.last_prices_packed.append(self.pack_2(10**18, 10**18))
-
-            rate_multipliers = _rate_multipliers
-            POOL_IS_REBASING_IMPLEMENTATION = 2 in _asset_types
-
-            factory = Factory(msg.sender)
-
-            A: uint256 = _A * A_PRECISION
-            self.initial_A = A
-            self.future_A = A
-            self.fee = _fee
-            self.offpeg_fee_multiplier = _offpeg_fee_multiplier
-
-            assert _ma_exp_time != 0
-            self.ma_exp_time = _ma_exp_time
-            self.D_ma_time = 62324  # <--------- 12 hours default on contract start.
-            self.ma_last_time = self.pack_2(block.timestamp, block.timestamp)
-
-            for i in range(MAX_COINS_128):
-
-                if i == N_COINS_128:
-                    break
-
-                self.oracles.append(convert(_method_ids[i], uint256) * 2**224 | convert(_oracles[i], uint256))
-
-                #  --------------------------- initialize storage ---------------------------
-                self.stored_balances.append(0)
-                self.admin_balances.append(0)
-
-            # --------------------------- ERC20 stuff ----------------------------
-
-            name = _name
-            symbol = _symbol
-
-            # EIP712 related params -----------------
-            NAME_HASH = keccak256(name)
-            salt = block.prevhash
-            CACHED_CHAIN_ID = chain.id
-            CACHED_DOMAIN_SEPARATOR = keccak256(
-                _abi_encode(
-                    EIP712_TYPEHASH,
-                    NAME_HASH,
-                    VERSION_HASH,
-                    chain.id,
-                    self,
-                    salt,
-                )
-            )
-
-            # ------------------------ Fire a transfer event -------------------------
-
-            log Transfer(empty(address), msg.sender, 0)
+            ...
         ```
 
     === "Example"
@@ -2863,61 +2703,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
             N_COINS = __n_coins
             N_COINS_128 = convert(__n_coins, int128)
 
-            for i in range(MAX_COINS):
-                if i == __n_coins - 1:
-                    break
-                self.last_prices_packed.append(self.pack_2(10**18, 10**18))
-
-            rate_multipliers = _rate_multipliers
-            POOL_IS_REBASING_IMPLEMENTATION = 2 in _asset_types
-
-            factory = Factory(msg.sender)
-
-            A: uint256 = _A * A_PRECISION
-            self.initial_A = A
-            self.future_A = A
-            self.fee = _fee
-            self.offpeg_fee_multiplier = _offpeg_fee_multiplier
-
-            assert _ma_exp_time != 0
-            self.ma_exp_time = _ma_exp_time
-            self.D_ma_time = 62324  # <--------- 12 hours default on contract start.
-            self.ma_last_time = self.pack_2(block.timestamp, block.timestamp)
-
-            for i in range(MAX_COINS_128):
-
-                if i == N_COINS_128:
-                    break
-
-                self.oracles.append(convert(_method_ids[i], uint256) * 2**224 | convert(_oracles[i], uint256))
-
-                #  --------------------------- initialize storage ---------------------------
-                self.stored_balances.append(0)
-                self.admin_balances.append(0)
-
-            # --------------------------- ERC20 stuff ----------------------------
-
-            name = _name
-            symbol = _symbol
-
-            # EIP712 related params -----------------
-            NAME_HASH = keccak256(name)
-            salt = block.prevhash
-            CACHED_CHAIN_ID = chain.id
-            CACHED_DOMAIN_SEPARATOR = keccak256(
-                _abi_encode(
-                    EIP712_TYPEHASH,
-                    NAME_HASH,
-                    VERSION_HASH,
-                    chain.id,
-                    self,
-                    salt,
-                )
-            )
-
-            # ------------------------ Fire a transfer event -------------------------
-
-            log Transfer(empty(address), msg.sender, 0)
+            ...
         ```
 
     === "Example"

@@ -8,7 +8,7 @@ For an in-depth understanding of the StableSwap invariant design, please refer t
 - Math Contract
 - Views Contract
 - AMM blueprint contracts
-- LiquidityGauge blueprint contract
+- LiquidityGauge blueprint contract (ethereum only!)
 
 
 !!!deploy "Contract Source"

@@ -21,7 +21,7 @@ These functions contain the basic ERC-20 token transfer logic.
 Transfering tokens to the pool occurs via the internal `_transfer_in()` function.  
 The function takes the coin and metapool index value (`coin_metapool_idx` and `coin_basepool_idx`) of the input coins, amount (`dx`), sender address (`sender`), if a optimistic transfer (`expect_optimistic_transfer`) and/or a basepool swap is expected as input.
 
-`expect_optimistic_transfer` is relevant when using the [`exchange_received`](#exchange_received) or [`exchange_underlying_received`](#exchange_underlying_received) function.
+`expect_optimistic_transfer` is relevant when using the [`exchange_received`](#exchange_received) function.
 
 
 ??? quote "`_transfer_in:`"
@@ -1334,7 +1334,7 @@ The function takes the coin and metapool index value (`coin_metapool_idx` and `c
     | `_claim_admin_fees` |  `bool` | if admin fees should be claimed; defaults to `true` |
 
     !!!info
-        When removing liquidity in a balanced ratio, there is no need to update the price oracles, as this function does not alter the balance ratio within the pool. When calling this function, only the `D` oracle is updated.
+        When removing liquidity in a balanced ratio, there is no need to update the price oracles, as this function does not alter the balance ratio within the pool. Calling this function only updates the `D` oracle. The calculation of `D` does not use Newton methods, ensuring that `remove_liquidity` should always work, even if the pool gets borked.
 
     ??? quote "Source code"
 
@@ -1990,78 +1990,11 @@ For an overview of how fees are distributed, please refer to [Fee Collection and
                             Calculated as: keccak(text=event_signature.replace(" ", ""))[:4]
             @param _oracles Array of rate oracle addresses.
             """
-            assert len(_base_coins) <= 3  # dev: implementation does not support base pool with more than 3 coins
+            ...
 
-            math = Math(_math_implementation)
-            BASE_POOL = _base_pool
-            BASE_COINS = _base_coins
-            BASE_N_COINS = len(_base_coins)
-            coins = _coins  # <---------------- coins[1] is always base pool LP token.
-            asset_types = _asset_types
-            rate_multipliers = _rate_multipliers
-
-            for i in range(MAX_COINS):
-                if i < BASE_N_COINS:
-                    # Approval needed for add_liquidity operation on base pool in
-                    # _exchange_underlying:
-                    ERC20(_base_coins[i]).approve(BASE_POOL, max_value(uint256))
-
-            # For ERC4626 tokens:
-            if asset_types[0] == 3:
-                # In Vyper 0.3.10, if immutables are not set, because of an if-statement,
-                # it is by default set to 0; this is fine in the case of these two
-                # immutables, since they are only used if asset_types[0] == 3.
-                call_amount = 10**convert(ERC20Detailed(_coins[0]).decimals(), uint256)
-                _underlying_asset: address = ERC4626(_coins[0]).asset()
-                scale_factor = 10**(18 - convert(ERC20Detailed(_underlying_asset).decimals(), uint256))
-
-            # ----------------- Parameters independent of pool type ------------------
-
-            factory = Factory(msg.sender)
-
-            A: uint256 = unsafe_mul(_A, A_PRECISION)
-            self.initial_A = A
-            self.future_A = A
             self.fee = _fee
-            self.offpeg_fee_multiplier = _offpeg_fee_multiplier
-
-            assert _ma_exp_time != 0
-            self.ma_exp_time = _ma_exp_time
-            self.D_ma_time = 62324  # <--------- 12 hours default on contract start.
-            self.ma_last_time = self.pack_2(block.timestamp, block.timestamp)
-
-            #  ------------------- initialize storage for DynArrays ------------------
-
-            self.last_prices_packed.append(self.pack_2(10**18, 10**18))
-            for i in range(N_COINS_128):
-
-                self.oracles.append(convert(_method_ids[i], uint256) * 2**224 | convert(_oracles[i], uint256))
-                self.admin_balances.append(0)  # <--- this initialises storage for admin balances
-                self.stored_balances.append(0)
-
-            # --------------------------- ERC20 stuff ----------------------------
-
-            name = _name
-            symbol = _symbol
-
-            # EIP712 related params -----------------
-            NAME_HASH = keccak256(name)
-            salt = block.prevhash
-            CACHED_CHAIN_ID = chain.id
-            CACHED_DOMAIN_SEPARATOR = keccak256(
-                _abi_encode(
-                    EIP712_TYPEHASH,
-                    NAME_HASH,
-                    VERSION_HASH,
-                    chain.id,
-                    self,
-                    salt,
-                )
-            )
-
-            # ------------------------ Fire a transfer event -------------------------
-
-            log Transfer(empty(address), msg.sender, 0)
+            
+            ...
         ```
 
     === "Example"
@@ -2247,78 +2180,11 @@ For an overview of how fees are distributed, please refer to [Fee Collection and
                             Calculated as: keccak(text=event_signature.replace(" ", ""))[:4]
             @param _oracles Array of rate oracle addresses.
             """
-            assert len(_base_coins) <= 3  # dev: implementation does not support base pool with more than 3 coins
+            ...
 
-            math = Math(_math_implementation)
-            BASE_POOL = _base_pool
-            BASE_COINS = _base_coins
-            BASE_N_COINS = len(_base_coins)
-            coins = _coins  # <---------------- coins[1] is always base pool LP token.
-            asset_types = _asset_types
-            rate_multipliers = _rate_multipliers
-
-            for i in range(MAX_COINS):
-                if i < BASE_N_COINS:
-                    # Approval needed for add_liquidity operation on base pool in
-                    # _exchange_underlying:
-                    ERC20(_base_coins[i]).approve(BASE_POOL, max_value(uint256))
-
-            # For ERC4626 tokens:
-            if asset_types[0] == 3:
-                # In Vyper 0.3.10, if immutables are not set, because of an if-statement,
-                # it is by default set to 0; this is fine in the case of these two
-                # immutables, since they are only used if asset_types[0] == 3.
-                call_amount = 10**convert(ERC20Detailed(_coins[0]).decimals(), uint256)
-                _underlying_asset: address = ERC4626(_coins[0]).asset()
-                scale_factor = 10**(18 - convert(ERC20Detailed(_underlying_asset).decimals(), uint256))
-
-            # ----------------- Parameters independent of pool type ------------------
-
-            factory = Factory(msg.sender)
-
-            A: uint256 = unsafe_mul(_A, A_PRECISION)
-            self.initial_A = A
-            self.future_A = A
-            self.fee = _fee
             self.offpeg_fee_multiplier = _offpeg_fee_multiplier
 
-            assert _ma_exp_time != 0
-            self.ma_exp_time = _ma_exp_time
-            self.D_ma_time = 62324  # <--------- 12 hours default on contract start.
-            self.ma_last_time = self.pack_2(block.timestamp, block.timestamp)
-
-            #  ------------------- initialize storage for DynArrays ------------------
-
-            self.last_prices_packed.append(self.pack_2(10**18, 10**18))
-            for i in range(N_COINS_128):
-
-                self.oracles.append(convert(_method_ids[i], uint256) * 2**224 | convert(_oracles[i], uint256))
-                self.admin_balances.append(0)  # <--- this initialises storage for admin balances
-                self.stored_balances.append(0)
-
-            # --------------------------- ERC20 stuff ----------------------------
-
-            name = _name
-            symbol = _symbol
-
-            # EIP712 related params -----------------
-            NAME_HASH = keccak256(name)
-            salt = block.prevhash
-            CACHED_CHAIN_ID = chain.id
-            CACHED_DOMAIN_SEPARATOR = keccak256(
-                _abi_encode(
-                    EIP712_TYPEHASH,
-                    NAME_HASH,
-                    VERSION_HASH,
-                    chain.id,
-                    self,
-                    salt,
-                )
-            )
-
-            # ------------------------ Fire a transfer event -------------------------
-
-            log Transfer(empty(address), msg.sender, 0)
+            ...
         ```
 
     === "Example"
@@ -2469,6 +2335,9 @@ When removing liquidity in a balanced portion (`remove_liquidity()`), oracles ar
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `i` |  `uint256` | index value of coin |
+
+    !!!warning "Revert"
+        This function reverts if `i >= MAX_COINS`.
 
     ??? quote "Source code"
 
@@ -3145,78 +3014,11 @@ When a ramping of A has been initialized, the process can be stopped by calling 
                             Calculated as: keccak(text=event_signature.replace(" ", ""))[:4]
             @param _oracles Array of rate oracle addresses.
             """
-            assert len(_base_coins) <= 3  # dev: implementation does not support base pool with more than 3 coins
+            ...
 
-            math = Math(_math_implementation)
             BASE_POOL = _base_pool
-            BASE_COINS = _base_coins
-            BASE_N_COINS = len(_base_coins)
-            coins = _coins  # <---------------- coins[1] is always base pool LP token.
-            asset_types = _asset_types
-            rate_multipliers = _rate_multipliers
-
-            for i in range(MAX_COINS):
-                if i < BASE_N_COINS:
-                    # Approval needed for add_liquidity operation on base pool in
-                    # _exchange_underlying:
-                    ERC20(_base_coins[i]).approve(BASE_POOL, max_value(uint256))
-
-            # For ERC4626 tokens:
-            if asset_types[0] == 3:
-                # In Vyper 0.3.10, if immutables are not set, because of an if-statement,
-                # it is by default set to 0; this is fine in the case of these two
-                # immutables, since they are only used if asset_types[0] == 3.
-                call_amount = 10**convert(ERC20Detailed(_coins[0]).decimals(), uint256)
-                _underlying_asset: address = ERC4626(_coins[0]).asset()
-                scale_factor = 10**(18 - convert(ERC20Detailed(_underlying_asset).decimals(), uint256))
-
-            # ----------------- Parameters independent of pool type ------------------
-
-            factory = Factory(msg.sender)
-
-            A: uint256 = unsafe_mul(_A, A_PRECISION)
-            self.initial_A = A
-            self.future_A = A
-            self.fee = _fee
-            self.offpeg_fee_multiplier = _offpeg_fee_multiplier
-
-            assert _ma_exp_time != 0
-            self.ma_exp_time = _ma_exp_time
-            self.D_ma_time = 62324  # <--------- 12 hours default on contract start.
-            self.ma_last_time = self.pack_2(block.timestamp, block.timestamp)
-
-            #  ------------------- initialize storage for DynArrays ------------------
-
-            self.last_prices_packed.append(self.pack_2(10**18, 10**18))
-            for i in range(N_COINS_128):
-
-                self.oracles.append(convert(_method_ids[i], uint256) * 2**224 | convert(_oracles[i], uint256))
-                self.admin_balances.append(0)  # <--- this initialises storage for admin balances
-                self.stored_balances.append(0)
-
-            # --------------------------- ERC20 stuff ----------------------------
-
-            name = _name
-            symbol = _symbol
-
-            # EIP712 related params -----------------
-            NAME_HASH = keccak256(name)
-            salt = block.prevhash
-            CACHED_CHAIN_ID = chain.id
-            CACHED_DOMAIN_SEPARATOR = keccak256(
-                _abi_encode(
-                    EIP712_TYPEHASH,
-                    NAME_HASH,
-                    VERSION_HASH,
-                    chain.id,
-                    self,
-                    salt,
-                )
-            )
-
-            # ------------------------ Fire a transfer event -------------------------
-
-            log Transfer(empty(address), msg.sender, 0)
+            
+            ...
         ```
 
     === "Example"
@@ -3288,78 +3090,11 @@ When a ramping of A has been initialized, the process can be stopped by calling 
                             Calculated as: keccak(text=event_signature.replace(" ", ""))[:4]
             @param _oracles Array of rate oracle addresses.
             """
-            assert len(_base_coins) <= 3  # dev: implementation does not support base pool with more than 3 coins
+            ...
 
-            math = Math(_math_implementation)
-            BASE_POOL = _base_pool
-            BASE_COINS = _base_coins
             BASE_N_COINS = len(_base_coins)
-            coins = _coins  # <---------------- coins[1] is always base pool LP token.
-            asset_types = _asset_types
-            rate_multipliers = _rate_multipliers
-
-            for i in range(MAX_COINS):
-                if i < BASE_N_COINS:
-                    # Approval needed for add_liquidity operation on base pool in
-                    # _exchange_underlying:
-                    ERC20(_base_coins[i]).approve(BASE_POOL, max_value(uint256))
-
-            # For ERC4626 tokens:
-            if asset_types[0] == 3:
-                # In Vyper 0.3.10, if immutables are not set, because of an if-statement,
-                # it is by default set to 0; this is fine in the case of these two
-                # immutables, since they are only used if asset_types[0] == 3.
-                call_amount = 10**convert(ERC20Detailed(_coins[0]).decimals(), uint256)
-                _underlying_asset: address = ERC4626(_coins[0]).asset()
-                scale_factor = 10**(18 - convert(ERC20Detailed(_underlying_asset).decimals(), uint256))
-
-            # ----------------- Parameters independent of pool type ------------------
-
-            factory = Factory(msg.sender)
-
-            A: uint256 = unsafe_mul(_A, A_PRECISION)
-            self.initial_A = A
-            self.future_A = A
-            self.fee = _fee
-            self.offpeg_fee_multiplier = _offpeg_fee_multiplier
-
-            assert _ma_exp_time != 0
-            self.ma_exp_time = _ma_exp_time
-            self.D_ma_time = 62324  # <--------- 12 hours default on contract start.
-            self.ma_last_time = self.pack_2(block.timestamp, block.timestamp)
-
-            #  ------------------- initialize storage for DynArrays ------------------
-
-            self.last_prices_packed.append(self.pack_2(10**18, 10**18))
-            for i in range(N_COINS_128):
-
-                self.oracles.append(convert(_method_ids[i], uint256) * 2**224 | convert(_oracles[i], uint256))
-                self.admin_balances.append(0)  # <--- this initialises storage for admin balances
-                self.stored_balances.append(0)
-
-            # --------------------------- ERC20 stuff ----------------------------
-
-            name = _name
-            symbol = _symbol
-
-            # EIP712 related params -----------------
-            NAME_HASH = keccak256(name)
-            salt = block.prevhash
-            CACHED_CHAIN_ID = chain.id
-            CACHED_DOMAIN_SEPARATOR = keccak256(
-                _abi_encode(
-                    EIP712_TYPEHASH,
-                    NAME_HASH,
-                    VERSION_HASH,
-                    chain.id,
-                    self,
-                    salt,
-                )
-            )
-
-            # ------------------------ Fire a transfer event -------------------------
-
-            log Transfer(empty(address), msg.sender, 0)
+            
+            ...
         ```
 
     === "Example"
@@ -3433,78 +3168,11 @@ When a ramping of A has been initialized, the process can be stopped by calling 
                             Calculated as: keccak(text=event_signature.replace(" ", ""))[:4]
             @param _oracles Array of rate oracle addresses.
             """
-            assert len(_base_coins) <= 3  # dev: implementation does not support base pool with more than 3 coins
+            ...
 
-            math = Math(_math_implementation)
-            BASE_POOL = _base_pool
             BASE_COINS = _base_coins
-            BASE_N_COINS = len(_base_coins)
-            coins = _coins  # <---------------- coins[1] is always base pool LP token.
-            asset_types = _asset_types
-            rate_multipliers = _rate_multipliers
-
-            for i in range(MAX_COINS):
-                if i < BASE_N_COINS:
-                    # Approval needed for add_liquidity operation on base pool in
-                    # _exchange_underlying:
-                    ERC20(_base_coins[i]).approve(BASE_POOL, max_value(uint256))
-
-            # For ERC4626 tokens:
-            if asset_types[0] == 3:
-                # In Vyper 0.3.10, if immutables are not set, because of an if-statement,
-                # it is by default set to 0; this is fine in the case of these two
-                # immutables, since they are only used if asset_types[0] == 3.
-                call_amount = 10**convert(ERC20Detailed(_coins[0]).decimals(), uint256)
-                _underlying_asset: address = ERC4626(_coins[0]).asset()
-                scale_factor = 10**(18 - convert(ERC20Detailed(_underlying_asset).decimals(), uint256))
-
-            # ----------------- Parameters independent of pool type ------------------
-
-            factory = Factory(msg.sender)
-
-            A: uint256 = unsafe_mul(_A, A_PRECISION)
-            self.initial_A = A
-            self.future_A = A
-            self.fee = _fee
-            self.offpeg_fee_multiplier = _offpeg_fee_multiplier
-
-            assert _ma_exp_time != 0
-            self.ma_exp_time = _ma_exp_time
-            self.D_ma_time = 62324  # <--------- 12 hours default on contract start.
-            self.ma_last_time = self.pack_2(block.timestamp, block.timestamp)
-
-            #  ------------------- initialize storage for DynArrays ------------------
-
-            self.last_prices_packed.append(self.pack_2(10**18, 10**18))
-            for i in range(N_COINS_128):
-
-                self.oracles.append(convert(_method_ids[i], uint256) * 2**224 | convert(_oracles[i], uint256))
-                self.admin_balances.append(0)  # <--- this initialises storage for admin balances
-                self.stored_balances.append(0)
-
-            # --------------------------- ERC20 stuff ----------------------------
-
-            name = _name
-            symbol = _symbol
-
-            # EIP712 related params -----------------
-            NAME_HASH = keccak256(name)
-            salt = block.prevhash
-            CACHED_CHAIN_ID = chain.id
-            CACHED_DOMAIN_SEPARATOR = keccak256(
-                _abi_encode(
-                    EIP712_TYPEHASH,
-                    NAME_HASH,
-                    VERSION_HASH,
-                    chain.id,
-                    self,
-                    salt,
-                )
-            )
-
-            # ------------------------ Fire a transfer event -------------------------
-
-            log Transfer(empty(address), msg.sender, 0)
+            
+            ...
         ```
 
     === "Example"
@@ -3574,78 +3242,11 @@ When a ramping of A has been initialized, the process can be stopped by calling 
                             Calculated as: keccak(text=event_signature.replace(" ", ""))[:4]
             @param _oracles Array of rate oracle addresses.
             """
-            assert len(_base_coins) <= 3  # dev: implementation does not support base pool with more than 3 coins
+            ...
 
-            math = Math(_math_implementation)
-            BASE_POOL = _base_pool
-            BASE_COINS = _base_coins
-            BASE_N_COINS = len(_base_coins)
             coins = _coins  # <---------------- coins[1] is always base pool LP token.
-            asset_types = _asset_types
-            rate_multipliers = _rate_multipliers
-
-            for i in range(MAX_COINS):
-                if i < BASE_N_COINS:
-                    # Approval needed for add_liquidity operation on base pool in
-                    # _exchange_underlying:
-                    ERC20(_base_coins[i]).approve(BASE_POOL, max_value(uint256))
-
-            # For ERC4626 tokens:
-            if asset_types[0] == 3:
-                # In Vyper 0.3.10, if immutables are not set, because of an if-statement,
-                # it is by default set to 0; this is fine in the case of these two
-                # immutables, since they are only used if asset_types[0] == 3.
-                call_amount = 10**convert(ERC20Detailed(_coins[0]).decimals(), uint256)
-                _underlying_asset: address = ERC4626(_coins[0]).asset()
-                scale_factor = 10**(18 - convert(ERC20Detailed(_underlying_asset).decimals(), uint256))
-
-            # ----------------- Parameters independent of pool type ------------------
-
-            factory = Factory(msg.sender)
-
-            A: uint256 = unsafe_mul(_A, A_PRECISION)
-            self.initial_A = A
-            self.future_A = A
-            self.fee = _fee
-            self.offpeg_fee_multiplier = _offpeg_fee_multiplier
-
-            assert _ma_exp_time != 0
-            self.ma_exp_time = _ma_exp_time
-            self.D_ma_time = 62324  # <--------- 12 hours default on contract start.
-            self.ma_last_time = self.pack_2(block.timestamp, block.timestamp)
-
-            #  ------------------- initialize storage for DynArrays ------------------
-
-            self.last_prices_packed.append(self.pack_2(10**18, 10**18))
-            for i in range(N_COINS_128):
-
-                self.oracles.append(convert(_method_ids[i], uint256) * 2**224 | convert(_oracles[i], uint256))
-                self.admin_balances.append(0)  # <--- this initialises storage for admin balances
-                self.stored_balances.append(0)
-
-            # --------------------------- ERC20 stuff ----------------------------
-
-            name = _name
-            symbol = _symbol
-
-            # EIP712 related params -----------------
-            NAME_HASH = keccak256(name)
-            salt = block.prevhash
-            CACHED_CHAIN_ID = chain.id
-            CACHED_DOMAIN_SEPARATOR = keccak256(
-                _abi_encode(
-                    EIP712_TYPEHASH,
-                    NAME_HASH,
-                    VERSION_HASH,
-                    chain.id,
-                    self,
-                    salt,
-                )
-            )
-
-            # ------------------------ Fire a transfer event -------------------------
-
-            log Transfer(empty(address), msg.sender, 0)
+            
+            ...
         ```
 
     === "Example"
@@ -3853,126 +3454,6 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
         ```python
         N_COINS: public(constant(uint256)) = 2
-
-        @external
-        def __init__(
-            _name: String[32],
-            _symbol: String[10],
-            _A: uint256,
-            _fee: uint256,
-            _offpeg_fee_multiplier: uint256,
-            _ma_exp_time: uint256,
-            _math_implementation: address,
-            _base_pool: address,
-            _coins: DynArray[address, MAX_COINS],
-            _base_coins: DynArray[address, MAX_COINS],
-            _rate_multipliers: DynArray[uint256, MAX_COINS],
-            _asset_types: DynArray[uint8, MAX_COINS],
-            _method_ids: DynArray[bytes4, MAX_COINS],
-            _oracles: DynArray[address, MAX_COINS],
-        ):
-            """
-            @notice Initialize the pool contract
-            @param _name Name of the new plain pool.
-            @param _symbol Symbol for the new plain pool.
-            @param _A Amplification co-efficient - a lower value here means
-                    less tolerance for imbalance within the pool's assets.
-                    Suggested values include:
-                    * Uncollateralized algorithmic stablecoins: 5-10
-                    * Non-redeemable, collateralized assets: 100
-                    * Redeemable assets: 200-400
-            @param _fee Trade fee, given as an integer with 1e10 precision. The
-                        the maximum is 1% (100000000).
-                        50% of the fee is distributed to veCRV holders.
-            @param _offpeg_fee_multiplier A multiplier that determines how much to increase
-                                        Fees by when assets in the AMM depeg. Example: 20000000000
-            @param _ma_exp_time Averaging window of oracle. Set as time_in_seconds / ln(2)
-                                Example: for 10 minute EMA, _ma_exp_time is 600 / ln(2) ~= 866
-            @param _math_implementation Contract containing Math methods
-            @param _base_pool The underlying AMM of the LP token _coins[0] is paired against
-            @param _coins List of addresses of the coins being used in the pool. For metapool this is
-                        the coin (say LUSD) vs (say) 3crv as: [LUSD, 3CRV]. Length is always 2.
-            @param _base_coins coins in the underlying base pool.
-            @param _rate_multipliers Rate multipliers of the individual coins. For Metapools it is:
-                                    [10 ** (36 - _coins[0].decimals()), 10 ** 18].
-            @param _asset_types Array of uint8 representing tokens in pool
-            @param _method_ids Array of first four bytes of the Keccak-256 hash of the function signatures
-                            of the oracle addresses that gives rate oracles.
-                            Calculated as: keccak(text=event_signature.replace(" ", ""))[:4]
-            @param _oracles Array of rate oracle addresses.
-            """
-            assert len(_base_coins) <= 3  # dev: implementation does not support base pool with more than 3 coins
-
-            math = Math(_math_implementation)
-            BASE_POOL = _base_pool
-            BASE_COINS = _base_coins
-            BASE_N_COINS = len(_base_coins)
-            coins = _coins  # <---------------- coins[1] is always base pool LP token.
-            asset_types = _asset_types
-            rate_multipliers = _rate_multipliers
-
-            for i in range(MAX_COINS):
-                if i < BASE_N_COINS:
-                    # Approval needed for add_liquidity operation on base pool in
-                    # _exchange_underlying:
-                    ERC20(_base_coins[i]).approve(BASE_POOL, max_value(uint256))
-
-            # For ERC4626 tokens:
-            if asset_types[0] == 3:
-                # In Vyper 0.3.10, if immutables are not set, because of an if-statement,
-                # it is by default set to 0; this is fine in the case of these two
-                # immutables, since they are only used if asset_types[0] == 3.
-                call_amount = 10**convert(ERC20Detailed(_coins[0]).decimals(), uint256)
-                _underlying_asset: address = ERC4626(_coins[0]).asset()
-                scale_factor = 10**(18 - convert(ERC20Detailed(_underlying_asset).decimals(), uint256))
-
-            # ----------------- Parameters independent of pool type ------------------
-
-            factory = Factory(msg.sender)
-
-            A: uint256 = unsafe_mul(_A, A_PRECISION)
-            self.initial_A = A
-            self.future_A = A
-            self.fee = _fee
-            self.offpeg_fee_multiplier = _offpeg_fee_multiplier
-
-            assert _ma_exp_time != 0
-            self.ma_exp_time = _ma_exp_time
-            self.D_ma_time = 62324  # <--------- 12 hours default on contract start.
-            self.ma_last_time = self.pack_2(block.timestamp, block.timestamp)
-
-            #  ------------------- initialize storage for DynArrays ------------------
-
-            self.last_prices_packed.append(self.pack_2(10**18, 10**18))
-            for i in range(N_COINS_128):
-
-                self.oracles.append(convert(_method_ids[i], uint256) * 2**224 | convert(_oracles[i], uint256))
-                self.admin_balances.append(0)  # <--- this initialises storage for admin balances
-                self.stored_balances.append(0)
-
-            # --------------------------- ERC20 stuff ----------------------------
-
-            name = _name
-            symbol = _symbol
-
-            # EIP712 related params -----------------
-            NAME_HASH = keccak256(name)
-            salt = block.prevhash
-            CACHED_CHAIN_ID = chain.id
-            CACHED_DOMAIN_SEPARATOR = keccak256(
-                _abi_encode(
-                    EIP712_TYPEHASH,
-                    NAME_HASH,
-                    VERSION_HASH,
-                    chain.id,
-                    self,
-                    salt,
-                )
-            )
-
-            # ------------------------ Fire a transfer event -------------------------
-
-            log Transfer(empty(address), msg.sender, 0)
         ```
 
     === "Example"
