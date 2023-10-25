@@ -331,5 +331,5 @@ graph LR
 
 
 !!!info 
-    This method saves aggregators one redundant ERC-20 transfer. Without this function, the aggregator would have to conduct an additional transaction, transferring USDT from the Uniswap pool to their aggregator contract after the exchange, and then sending it to the Curve pool for another exchange (USDT<>USDC).
+    This method saves aggregators one redundant ERC-20 transfer and eliminates the need to grant approval to a curve pool. Without this function, the aggregator would have to conduct an additional transaction, transferring USDT from the Uniswap pool to their aggregator contract after the exchange, and then sending it to the Curve pool for another exchange (USDT<>USDC).
     However, with this method in place, the aggregator can transfer the output tokens directly into the next pool and perform an exchange (`exchange_received`).
