@@ -112,6 +112,7 @@ Here is a list of all components of the pool registry currently in use:
 
 
 Ethereum Mainnet:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | [0x20D1c021525C85D9617Ccc64D8f547d5f730118A](https://etherscan.io/address/0x20D1c021525C85D9617Ccc64D8f547d5f730118A#code) |
@@ -123,6 +124,7 @@ Ethereum Mainnet:
 
 
 Ethereum Sepolia:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | [0xbc7654d2dd901aaaa3be4cb5bc0f10dea9f96443](https://sepolia.etherscan.io/address/0xbc7654d2dd901aaaa3be4cb5bc0f10dea9f96443#code) |
@@ -134,6 +136,7 @@ Ethereum Sepolia:
 
 
 Arbitrum:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://arbiscan.io/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a#code) |
@@ -144,6 +147,7 @@ Arbitrum:
 
 
 Optimism:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://optimistic.etherscan.io/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6#code) |
@@ -154,6 +158,7 @@ Optimism:
 
 
 Base:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | [0x506F594ceb4E33F5161139bAe3Ee911014df9f7f](https://basescan.org/address/0x506F594ceb4E33F5161139bAe3Ee911014df9f7f#code) |
@@ -164,6 +169,7 @@ Base:
 
 
 Linea:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://lineascan.build/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6#code) |
@@ -174,6 +180,7 @@ Linea:
 
 
 Scroll:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://scroll.l2scan.co/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6) |
@@ -184,6 +191,7 @@ Scroll:
 
 
 ZK-Sync:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | []() |
@@ -195,6 +203,7 @@ ZK-Sync:
 
 
 Polygon-ZK EVM:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | [0x506F594ceb4E33F5161139bAe3Ee911014df9f7f](https://zkevm.polygonscan.com/address/0x506F594ceb4E33F5161139bAe3Ee911014df9f7f#code) |
@@ -205,6 +214,7 @@ Polygon-ZK EVM:
 
 
 Gnosis:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | [0x87FE17697D0f14A222e8bEf386a0860eCffDD617](https://gnosisscan.io/address/0x87FE17697D0f14A222e8bEf386a0860eCffDD617#code) |
@@ -215,6 +225,7 @@ Gnosis:
 
 
 Polygon:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://polygonscan.com//address/0xf3A431008396df8A8b2DF492C913706BDB0874ef#code) |
@@ -225,6 +236,7 @@ Polygon:
 
 
 Avalanche:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://snowtrace.io/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef#code) |
@@ -235,6 +247,7 @@ Avalanche:
 
 
 Fantom:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://ftmscan.com/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6#code) |
@@ -245,6 +258,7 @@ Fantom:
 
 
 Binance Smart Chain:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | [0x506F594ceb4E33F5161139bAe3Ee911014df9f7f](https://bscscan.com/address/0x506F594ceb4E33F5161139bAe3Ee911014df9f7f#code) |
@@ -255,6 +269,7 @@ Binance Smart Chain:
 
 
 Celo:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://celoscan.io/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef#code) |
@@ -265,6 +280,7 @@ Celo:
 
 
 Kava:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://kavascan.com/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef#contracts) |
@@ -275,6 +291,7 @@ Kava:
 
 
 Aurora:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://explorer.aurora.dev/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6/contracts) |
@@ -285,6 +302,7 @@ Aurora:
 
 
 Tron:
+
 | Contract    | Address   | 
 | ----------- | -------| 
 | Math        | []() |
