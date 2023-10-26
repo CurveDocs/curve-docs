@@ -1,9 +1,8 @@
 <h1> </h1>
 
-Plain- and Metapool **deployment is permissionless** - everyone can create a pool. *Adding a new basepool needs to be approved by the DAO.*
 
 !!!info
-    When deploying pools that include coins not requiring a rate oracle, the `_methods_id` array can be empty, and the `_oracles` array can use the `ZERO_ADDRESS`.
+    When deploying pools that include coins not requiring a rate oracle, the `_methods_id` array can be empty, and the `_oracles` array can use `ZERO_ADDRESS`.
 
 ## **Plain Pools**
 
