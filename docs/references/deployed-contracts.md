@@ -111,7 +111,7 @@ Here is a list of all components of the pool registry currently in use:
     Source code available on [Github](https://github.com/curvefi/stableswap-ng).
 
 
-Ethereum Mainnet:
+**Ethereum Mainnet**
 
 | Contract    | Address   | 
 | ----------- | -------| 
@@ -123,7 +123,7 @@ Ethereum Mainnet:
 | Gauge       | [0xF5617D4f7514bE35fce829a1C19AE7f6c9106979](https://etherscan.io/address/0xF5617D4f7514bE35fce829a1C19AE7f6c9106979#code) |
 
 
-Ethereum Sepolia:
+**Ethereum Sepolia**
 
 | Contract    | Address   | 
 | ----------- | -------| 
@@ -135,7 +135,7 @@ Ethereum Sepolia:
 | Gauge       | [0x64891ab20392a029c0f231656ff13c5ee64b730c](https://sepolia.etherscan.io/address/0x64891ab20392a029c0f231656ff13c5ee64b730c#code) |
 
 
-Arbitrum:
+**Arbitrum**
 
 | Contract    | Address   | 
 | ----------- | -------| 
@@ -146,7 +146,7 @@ Arbitrum:
 | Factory     | [0x9AF14D26075f142eb3F292D5065EB3faa646167b](https://arbiscan.io/address/0x9AF14D26075f142eb3F292D5065EB3faa646167b#code) |
 
 
-Optimism:
+**Optimism**
 
 | Contract    | Address   | 
 | ----------- | -------| 
@@ -157,7 +157,7 @@ Optimism:
 | Factory     | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://optimistic.etherscan.io/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
 
 
-Base:
+**Base**
 
 | Contract    | Address   | 
 | ----------- | -------| 
@@ -168,7 +168,7 @@ Base:
 | Factory     | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://basescan.org/address/0xd2002373543Ce3527023C75e7518C274A51ce712#code) |
 
 
-Linea:
+**Linea**
 
 | Contract    | Address   | 
 | ----------- | -------| 
@@ -179,7 +179,7 @@ Linea:
 | Factory     | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://lineascan.build/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
 
 
-Scroll:
+**Scroll**
 
 | Contract    | Address   | 
 | ----------- | -------| 
@@ -190,7 +190,7 @@ Scroll:
 | Factory     | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://scroll.l2scan.co/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
 
 
-ZK-Sync:
+**ZK-Sync**
 
 | Contract    | Address   | 
 | ----------- | -------| 
@@ -202,7 +202,7 @@ ZK-Sync:
 
 
 
-Polygon-ZK EVM:
+**Polygon-ZK EVM**
 
 | Contract    | Address   | 
 | ----------- | -------| 
@@ -213,7 +213,7 @@ Polygon-ZK EVM:
 | Factory     | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://zkevm.polygonscan.com/address/0xd2002373543Ce3527023C75e7518C274A51ce712#code) |
 
 
-Gnosis:
+**Gnosis**
 
 | Contract    | Address   | 
 | ----------- | -------| 
@@ -224,7 +224,7 @@ Gnosis:
 | Factory     | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://gnosisscan.io/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
 
 
-Polygon:
+**Polygon**
 
 | Contract    | Address   | 
 | ----------- | -------| 
@@ -235,7 +235,7 @@ Polygon:
 | Factory     | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://polygonscan.com/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#code) |
 
 
-Avalanche:
+**Avalanche**
 
 | Contract    | Address   | 
 | ----------- | -------| 
@@ -246,7 +246,7 @@ Avalanche:
 | Factory     | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://snowtrace.io/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#code) |
 
 
-Fantom:
+**Fantom**
 
 | Contract    | Address   | 
 | ----------- | -------| 
@@ -257,7 +257,7 @@ Fantom:
 | Factory     | [0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b](https://ftmscan.com/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b#code) |
 
 
-Binance Smart Chain:
+**Binance Smart Chain**
 
 | Contract    | Address   | 
 | ----------- | -------| 
@@ -268,7 +268,7 @@ Binance Smart Chain:
 | Factory     | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://bscscan.com/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B#code) |
 
 
-Celo:
+**Celo**
 
 | Contract    | Address   | 
 | ----------- | -------| 
@@ -279,7 +279,7 @@ Celo:
 | Factory     | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://celoscan.io/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#code) |
 
 
-Kava:
+**Kava**
 
 | Contract    | Address   | 
 | ----------- | -------| 
@@ -290,7 +290,7 @@ Kava:
 | Factory     | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://kavascan.com/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#contracts) |
 
 
-Aurora:
+**Aurora**
 
 | Contract    | Address   | 
 | ----------- | -------| 
@@ -301,7 +301,7 @@ Aurora:
 | Factory     | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://explorer.aurora.dev/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E/contracts) |
 
 
-Tron:
+**Tron**
 
 | Contract    | Address   | 
 | ----------- | -------| 
