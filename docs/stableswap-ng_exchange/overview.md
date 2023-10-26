@@ -1,5 +1,8 @@
 <h1> </h1>
 
+!!!deploy "Contract Source"
+    This documentation is anchored to the [stableswap-ng repository](https://github.com/curvefi/stableswap-ng) repository at a specific commit hash [bff1522b30819b7b240af17ccfb72b0effbf6c47](https://github.com/curvefi/stableswap-ng/tree/bff1522b30819b7b240af17ccfb72b0effbf6c47), and it does not reflect any modifications made after this commit.
+
 For an in-depth understanding of the StableSwap invariant design, please refer to the official [StableSwap whitepaper](../pdf/stableswap-paper.pdf).
 
 **The Stableswap-NG AMM infrastructure represents a technically enhanced iteration of the previous stableswap implementation. It comprises the following key components:**
@@ -8,11 +11,10 @@ For an in-depth understanding of the StableSwap invariant design, please refer t
 - Math Contract
 - Views Contract
 - AMM blueprint contracts
-- LiquidityGauge blueprint contract (ethereum only!)
+- LiquidityGauge blueprint contract
 
-
-!!!deploy "Contract Source"
-    This documentation is anchored to the [stableswap-ng repository](https://github.com/curvefi/stableswap-ng) repository at a specific commit hash [bff1522b30819b7b240af17ccfb72b0effbf6c47](https://github.com/curvefi/stableswap-ng/tree/bff1522b30819b7b240af17ccfb72b0effbf6c47), and it does not reflect any modifications made after this commit.
+!!!info
+    The LiquidityGauge blueprint contract is only implemented on Ethereum.
 
 
 ## **Pool Factory and Blueprint Contracts**

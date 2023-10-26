@@ -760,7 +760,8 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
     | `_claim_admin_fees` |  `bool` | if admin fees should be claimed; defaults to `true` |
 
     !!!info
-        When removing liquidity in a balanced ratio, there is no need to update the price oracles, as this function does not alter the balance ratio within the pool. Calling this function only updates the `D` oracle. The calculation of `D` does not use Newton methods, ensuring that `remove_liquidity` should always work, even if the pool gets borked.
+        When removing liquidity in a balanced ratio, there is no need to update the price oracles, as this function does not alter the balance ratio within the pool. Calling this function only updates the `D` oracle.  
+        The calculation of `D` does not use Newton methods, ensuring that `remove_liquidity` should always work, even if the pool gets borked.
 
     ??? quote "Source code"
 

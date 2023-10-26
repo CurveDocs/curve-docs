@@ -23,7 +23,7 @@ All deployed pools share the same fee receiver. A new address can be designated 
 
         ```shell
         >>> Factory.fee_receiver()
-        '0xecb456EA5365865EbAb8a2661B0c503410e9B347'
+        '0xeCb456EA5365865EbAb8a2661B0c503410e9B347'
         ```
 
 
@@ -83,7 +83,8 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
     === "Example"
 
         ```shell
-        >>> Factory.pool_implementation("todo")
+        >>> Factory.pool_implementation(0)
+        '0x3E3B5F27bbf5CC967E074b70E9f4046e31663181'
         ```
 
 
@@ -108,7 +109,8 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
     === "Example"
 
         ```shell
-        >>> Factory.metapool_implementation("todo")
+        >>> Factory.metapool_implementation(0)
+        '0x19bd1AB34d6ABB584b9C1D5519093bfAA7f6c7d2'
         ```
 
 
@@ -130,6 +132,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
         ```shell
         >>> Factory.math_implementation()
+        '0x20D1c021525C85D9617Ccc64D8f547d5f730118A'
         ```
 
 
@@ -151,6 +154,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
         ```shell
         >>> Factory.gauge_implementation()
+        '0xF5617D4f7514bE35fce829a1C19AE7f6c9106979'
         ```
 
 
@@ -172,6 +176,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
         ```shell
         >>> Factory.views_implementation()
+       '0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD' 
         ```
 
 
