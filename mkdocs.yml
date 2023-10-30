@@ -131,8 +131,7 @@ nav:
       - Overview: factory/pool_factory/overview.md
       - Deployer API: factory/pool_factory/deployer_api.md
       - Registry API: factory/pool_factory/registry_api.md
-      - Admin Controls: factory/pool_factory/admin_controls.md
-    - crvUSD Factory:
+    - crvUSD Market Factory:
       - Overview: factory/crvusd_factory/overview.md
       - Deployer API: factory/crvusd_factory/deployer_api.md
       - Contract Methods: factory/crvusd_factory/contract_methods.md
