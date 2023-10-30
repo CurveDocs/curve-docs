@@ -660,7 +660,7 @@ Limitations when deploying plain crypto pools:
 
 ## **Tricrypto Factory**
 
-### `deploy_pool
+### `deploy_pool`
 
 Limitations when deploying tricrypto crypto pools:
 
