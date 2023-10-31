@@ -192,7 +192,7 @@ Limitations when deploying stableswap-ng pools:
             ["0x0000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000"] # _oracles
         )
 
-        'returns address of the deployed pool'  
+        'returns address of the deployed plain pool'  
         ```
 
 
@@ -393,7 +393,7 @@ Limitations when deploying meta pools:
             "0x0000000000000000000000000000000000000000" # _oracle
         )
 
-        'returns address of the deployed pool'   
+        'returns address of the deployed metapool'   
         ```
 
 
@@ -445,5 +445,5 @@ Limitations when deploying meta pools:
 
         ```shell
         >>> Factory.deploy_gauge("0x36DfE783603522566C046Ba1Fa403C8c6F569220")
-        'return address of the deployed gauge'
+        'returns address of the deployed gauge'
         ```
