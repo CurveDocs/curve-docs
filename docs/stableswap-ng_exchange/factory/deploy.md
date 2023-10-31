@@ -219,8 +219,8 @@ Limitations when deploying meta pools:
     | `_oracle` |  `address` | rate oracle address |
 
 !!!info
-        There might be multiple metapool implementations. To query all available ones, see [here](../factory/overview.md#metapool_implementations).  
-        If it's not clear which one to use, please don't hesitate to reach out.
+    There might be multiple metapool implementations. To query all available ones, see [here](../factory/overview.md#metapool_implementations).  
+    If it's not clear which one to use, please don't hesitate to reach out.
 
     ??? quote "Source code"
 
