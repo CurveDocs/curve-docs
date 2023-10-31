@@ -43,8 +43,7 @@ Limitations when deploying stableswap-ng pools:
     | `_oracles` |  `DynArray[address, MAX_COINS]` | array of rate oracle addresses |
 
     !!!info
-        There might be multiple pool implementations. To query all available ones, see [here](../factory/overview.md#pool_implementations).  
-        If it's not clear which one to use, please don't hesitate to reach out.
+        There might be multiple pool implementations. To query all available ones, see [here](../factory/overview.md#pool_implementations). As of the current date (31.10.2023), there is only one pool implementation available. Since the `_implementation_idx` starts at 0, users need to input "0" when deploying a pool.
 
     ??? quote "Source code"
 
@@ -219,8 +218,7 @@ Limitations when deploying meta pools:
     | `_oracle` |  `address` | rate oracle address |
 
     !!!info
-        There might be multiple metapool implementations. To query all available ones, see [here](../factory/overview.md#metapool_implementations).  
-        If it's not clear which one to use, please don't hesitate to reach out.
+        There might be multiple metapool implementations. To query all available ones, see [here](../factory/overview.md#metapool_implementations). As of the current date (31.10.2023), there is only one metapool implementation available. Since the `_implementation_idx` starts at 0, users need to input "0" when deploying a pool.
 
     ??? quote "Source code"
 
