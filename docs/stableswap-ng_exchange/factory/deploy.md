@@ -218,9 +218,9 @@ Limitations when deploying meta pools:
     | `_method_id` |  `bytes4` | first four bytes of the Keccak-256 hash of the function signatures of the oracle addresses that give rate oracles |
     | `_oracle` |  `address` | rate oracle address |
 
-!!!info
-    There might be multiple metapool implementations. To query all available ones, see [here](../factory/overview.md#metapool_implementations).  
-    If it's not clear which one to use, please don't hesitate to reach out.
+    !!!info
+        There might be multiple metapool implementations. To query all available ones, see [here](../factory/overview.md#metapool_implementations).  
+        If it's not clear which one to use, please don't hesitate to reach out.
 
     ??? quote "Source code"
 
