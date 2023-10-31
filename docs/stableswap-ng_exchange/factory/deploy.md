@@ -42,7 +42,7 @@ Limitations when deploying stableswap-ng pools:
     | `_methods_id` |  `DynArray[bytes4, MAX_COINS]` | array of first four bytes of the Keccak-256 hash of the function signatures of the oracle addresses that give rate oracles |
     | `_oracles` |  `DynArray[address, MAX_COINS]` | array of rate oracle addresses |
 
-    !!!info
+    !!!info "Implementation ID"
         There might be multiple pool implementations. To query all available ones, see [here](../factory/overview.md#pool_implementations). As of the current date (31.10.2023), there is only one pool implementation available. Since the `_implementation_idx` starts at 0, users need to input "0" when deploying a pool.
 
     ??? quote "Source code"
@@ -217,7 +217,7 @@ Limitations when deploying meta pools:
     | `_method_id` |  `bytes4` | first four bytes of the Keccak-256 hash of the function signatures of the oracle addresses that give rate oracles |
     | `_oracle` |  `address` | rate oracle address |
 
-    !!!info
+    !!!info "Implementation ID"
         There might be multiple metapool implementations. To query all available ones, see [here](../factory/overview.md#metapool_implementations). As of the current date (31.10.2023), there is only one metapool implementation available. Since the `_implementation_idx` starts at 0, users need to input "0" when deploying a pool.
 
     ??? quote "Source code"
