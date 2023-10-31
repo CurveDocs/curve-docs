@@ -42,9 +42,8 @@ Limitations when deploying stableswap-ng pools:
     | `_methods_id` |  `DynArray[bytes4, MAX_COINS]` | array of first four bytes of the Keccak-256 hash of the function signatures of the oracle addresses that give rate oracles |
     | `_oracles` |  `DynArray[address, MAX_COINS]` | array of rate oracle addresses |
 
-    !!!info
-        There might be multiple pool implementations. To query all available ones, see [here](../factory/overview.md#pool_implementations).  
-        If it's not clear which one to use, please don't hesitate to reach out.
+    !!!info "Implementation ID"
+        There might be multiple pool implementations. To query all available ones, see [here](../factory/overview.md#pool_implementations). As of the current date (31.10.2023), there is only one pool implementation available. Since the `_implementation_idx` starts at 0, users need to input "0" when deploying a pool.
 
     ??? quote "Source code"
 
@@ -176,7 +175,24 @@ Limitations when deploying stableswap-ng pools:
     === "Example"
 
         ```shell
-        >>> Factory.deploy_plain_pool("todo")
+        >>> Factory.deploy_plain_pool(
+            "crvUSD/USDT",  # _name
+            "crvusd-usdt",  # _symbol
+            [ # coins:
+                "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E", # crvusd 
+                "0xdAC17F958D2ee523a2206206994597C13D831ec7" # usdt
+            ],
+            1500 # _A
+            1000000, # _fee
+            20000000000, # _offpeg_fee_multiplier
+            865, # _ma_exp_time
+            0, # _implementation_idx
+            [0, 0], # _asset_types
+            [], # _method_ids
+            ["0x0000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000"] # _oracles
+        )
+
+        'returns address of the deployed plain pool'  
         ```
 
 
@@ -218,9 +234,8 @@ Limitations when deploying meta pools:
     | `_method_id` |  `bytes4` | first four bytes of the Keccak-256 hash of the function signatures of the oracle addresses that give rate oracles |
     | `_oracle` |  `address` | rate oracle address |
 
-    !!!info
-        There might be multiple metapool implementations. To query all available ones, see [here](../factory/overview.md#metapool_implementations).  
-        If it's not clear which one to use, please don't hesitate to reach out.
+    !!!info "Implementation ID"
+        There might be multiple metapool implementations. To query all available ones, see [here](../factory/overview.md#metapool_implementations). As of the current date (31.10.2023), there is only one metapool implementation available. Since the `_implementation_idx` starts at 0, users need to input "0" when deploying a pool.
 
     ??? quote "Source code"
 
@@ -363,7 +378,22 @@ Limitations when deploying meta pools:
     === "Example"
 
         ```shell
-        >>> Factory.deploy_metapool("todo")
+        >>> Factory.deploy_metapool(
+            "0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7", # _base_pool
+            "crvUSD/3CRV", # _name
+            "crvusd-3crv" # _symbol
+            "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E", # _coin
+            1500 # _A
+            1000000, # _fee
+            20000000000, # _offpeg_fee_multiplier
+            865, # _ma_exp_time
+            0, # _implementation_idx
+            0, # _asset_type
+            "", # _method_id
+            "0x0000000000000000000000000000000000000000" # _oracle
+        )
+
+        'returns address of the deployed metapool'   
         ```
 
 
@@ -414,5 +444,6 @@ Limitations when deploying meta pools:
     === "Example"
 
         ```shell
-        >>> Factory.deploy_gauge("todo")
+        >>> Factory.deploy_gauge("0x36DfE783603522566C046Ba1Fa403C8c6F569220")
+        'returns address of the deployed gauge'
         ```
