@@ -37,11 +37,14 @@ Limitations when deploying stableswap-ng pools:
     | `_fee` |  `uint256` | trade fee, given as an integer with `1e10` precision |
     | `_offpeg_fee_multiplier` |  `uint256` | off-peg multiplier |
     | `_ma_exp_time` |  `uint256` | ma time; set as time_in_seconds / ln(2) |
-    | `_implementation_idx` |  `uint256` | index of the implementation to use |
+    | `_implementation_idx` |  `uint256` | index of the implementation to use; more [here](../factory/overview.md#implementations) |
     | `_asset_type` |  `DynArray[uint8, MAX_COINS]` | asset type of the pool as an integer |
     | `_methods_id` |  `DynArray[bytes4, MAX_COINS]` | array of first four bytes of the Keccak-256 hash of the function signatures of the oracle addresses that give rate oracles |
     | `_oracles` |  `DynArray[address, MAX_COINS]` | array of rate oracle addresses |
 
+    !!!info
+        There might be multiple pool implementations. To query all available ones, see [here](../factory/overview.md#pool_implementations).  
+        If it's not clear which one to use, please don't hesitate to reach out.
 
     ??? quote "Source code"
 
@@ -210,11 +213,14 @@ Limitations when deploying meta pools:
     | `_fee` |  `uint256` | trade fee, given as an integer with `1e10` precision |
     | `_offpeg_fee_multiplier` |  `uint256` | off-peg multiplier |
     | `_ma_exp_time` |  `uint256` | ma time; set as time_in_seconds / ln(2) |
-    | `_implementation_idx` |  `uint256` | index of the implementation to use |
+    | `_implementation_idx` |  `uint256` | index of the implementation to use; more [here](../factory/overview.md#implementations) |
     | `_asset_type` |  `uint8` | asset type for the token |
     | `_method_id` |  `bytes4` | first four bytes of the Keccak-256 hash of the function signatures of the oracle addresses that give rate oracles |
     | `_oracle` |  `address` | rate oracle address |
 
+    !!!info
+        There might be multiple metapool implementations. To query all available ones, see [here](../factory/overview.md#metapool_implementations).  
+        If it's not clear which one to use, please don't hesitate to reach out.
 
     ??? quote "Source code"
 
