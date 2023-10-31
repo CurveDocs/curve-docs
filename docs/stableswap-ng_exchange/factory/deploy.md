@@ -175,7 +175,24 @@ Limitations when deploying stableswap-ng pools:
     === "Example"
 
         ```shell
-        >>> Factory.deploy_plain_pool("todo")
+        >>> Factory.deploy_plain_pool(
+            "crvUSD/USDT",  # _name
+            "crvusd-usdt",  # _symbol
+            [ # coins:
+                "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E", # crvusd 
+                "0xdAC17F958D2ee523a2206206994597C13D831ec7" # usdt
+            ],
+            1500 # _A
+            1000000, # _fee
+            20000000000, # _offpeg_fee_multiplier
+            865, # _ma_exp_time
+            0, # _implementation_idx
+            [0, 0], # _asset_types
+            [], # _method_ids
+            ["0x0000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000"] # _oracles
+        )
+
+        'returns address of the deployed pool'  
         ```
 
 
@@ -361,7 +378,22 @@ Limitations when deploying meta pools:
     === "Example"
 
         ```shell
-        >>> Factory.deploy_metapool("todo")
+        >>> Factory.deploy_metapool(
+            "0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7", # _base_pool
+            "crvUSD/3CRV", # _name
+            "crvusd-3crv" # _symbol
+            "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E", # _coin
+            1500 # _A
+            1000000, # _fee
+            20000000000, # _offpeg_fee_multiplier
+            865, # _ma_exp_time
+            0, # _implementation_idx
+            0, # _asset_type
+            "", # _method_id
+            "0x0000000000000000000000000000000000000000" # _oracle
+        )
+
+        'returns address of the deployed pool'   
         ```
 
 
@@ -412,5 +444,6 @@ Limitations when deploying meta pools:
     === "Example"
 
         ```shell
-        >>> Factory.deploy_gauge("todo")
+        >>> Factory.deploy_gauge("0x36DfE783603522566C046Ba1Fa403C8c6F569220")
+        'return address of the deployed gauge'
         ```
