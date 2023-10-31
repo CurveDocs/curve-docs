@@ -65,7 +65,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 ### `pool_implementations`
 !!! description "`Factory.pool_implementations(arg0: uint256) -> address: view`"
 
-    Getter for the pool implementations.
+    Getter for the pool implementations. There might be multiple pool implementations base on various circumstances. 
 
     Returns: implementation (`address`).
 
@@ -91,7 +91,8 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 ### `metapool_implementations`
 !!! description "`Factory.metapool_implementations(arg0: uint256) -> address: view`"
 
-    Getter for the pool implementations.
+    Getter for the pool implementations. There might be multiple metapool implementations base on various circumstances. 
+
 
     Returns: implementation (`address`).
 
