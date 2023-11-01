@@ -107,18 +107,17 @@ nav:
       - Overview: stableswap_exchange/cross_asset_swaps/overview.md
       - SynthSwap: stableswap_exchange/cross_asset_swaps/synthswap_exchange.md
 
-  - Cryptoswap Exchange:
-    - Overview: cryptoswap_exchange/overview.md
+  - Tricrypto-NG:
+    - Overview: cryptoswap-ng_exchange/overview.md
     - Pools:
-      - Overview: cryptoswap_exchange/pools/overview.md
-      - TriCrypto Pool: cryptoswap_exchange/pools/tricrypto_pool.md
-      - Admin Controls: cryptoswap_exchange/pools/admin_controls.md
+      - Overview: cryptoswap-ng_exchange/pools/overview.md
+      - TriCrypto Pool: cryptoswap-ng_exchange/pools/tricrypto_pool.md
+      - Admin Controls: cryptoswap-ng_exchange/pools/admin_controls.md
     - Liquidity Pool Token:  
-      - Overview: cryptoswap_exchange/lp_tokens/lp_token_overview.md
-      - TriCrypto LP Token: cryptoswap_exchange/lp_tokens/tricrypto_lp_token.md
+      - Curve Token V2: cryptoswap-ng_exchange/lp_tokens/tricrypto_lp_token.md
     - Utility Contracts: 
-      - Math: cryptoswap_exchange/utility_contracts/math.md
-      - ViewMethodContract: cryptoswap_exchange/utility_contracts/ViewMethodContract.md
+      - Math: cryptoswap-ng_exchange/utility_contracts/math.md
+      - ViewMethodContract: cryptoswap-ng_exchange/utility_contracts/ViewMethodContract.md
 
   - Registry:
     - Overview: registry/overview.md
