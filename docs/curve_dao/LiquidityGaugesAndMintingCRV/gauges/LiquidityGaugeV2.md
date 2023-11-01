@@ -512,7 +512,7 @@ Liquidity Gauge V2 also added admin ownership. `admin` is able to kill a gauge a
 
 
 ## **Killing Gauges**
-V2 Liquidity Gauges introduced the possibility to kill gauges. Killing a gauge sets the `rate` in [`_checkpoint`](/docs/curve_dao/LiquidityGaugesAndMinting/LiquidityGaugeV1#checkpoints) to 0 and therefore stopping inflation.
+V2 Liquidity Gauges introduced the possibility to kill gauges. Killing a gauge sets the `rate` in [`_checkpoint`](../gauges/LiquidityGaugeV1.md#checkpoints) to 0 and therefore stopping inflation.
 
 ### `is_killed`
 !!! description "`LiquidityGaugeV2.is_killed(addr: address):`"

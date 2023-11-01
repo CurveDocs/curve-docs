@@ -6,7 +6,7 @@ The *StableSwapOwnerProxy* allows DAO ownership of the [`MetapoolFactory`](https
 
 
 # Deploying Pools
-Pool deployment is permissionless, with the exception of base pools. Thus, the `deploy_pool` function can be directly called on the Factory contract. For more information about Factory contracts and their usage, see [here](../../factory/overview.md). 
+Pool deployment is permissionless, with the exception of base pools. Thus, the `deploy_pool` function can be directly called on the Factory contract. For more information about Factory contracts and their usage, see [here](../../factory/pool_factory/overview.md). 
 
 
 # Deploying Gauges
@@ -23,4 +23,4 @@ LiquidityGauges V4 and later versions introduce the capability for a `distributo
 
 To deposit reward tokens, the `distributor` must call the `deposit_reward_token` function within the specific gauge.
 
-For more technical details, please refere to [this](../LiquidityGaugesAndMintingCRV/gauges/permissionless_rewards.md).
+For more technical details, please refere to [this](../LiquidityGaugesAndMintingCRV/gauges/PermissionlessRewards.md).

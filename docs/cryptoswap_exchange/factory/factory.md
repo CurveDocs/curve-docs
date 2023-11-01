@@ -1,4 +1,4 @@
-Every FactoryContract from Curve comes with built-in functions designed to feed the [MetaRegistry](../registry/MetaRegistryAPI.md) with informations about the created pools. These functions will not be documented in this section. For more information, please read [here](../registry/overview.md).
+Every FactoryContract from Curve comes with built-in functions designed to feed the [MetaRegistry](../../registry/MetaRegistryAPI.md) with informations about the created pools. These functions will not be documented in this section. For more information, please read [here](../../registry/overview.md).
 
 !!! note
     The TricryptoFactory contract is deployed to the Ethereum mainnet at: [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963).

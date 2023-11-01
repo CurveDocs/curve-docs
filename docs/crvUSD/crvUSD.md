@@ -178,7 +178,7 @@
 
 ## **Mint and Burn**
 
-- crvUSD can only be minted by the `minter` of the contract, which is the [Factory](/curve-docs/docs/LLAMMA/factory.md)
+- crvUSD can only be minted by the `minter` of the contract, which is the [Factory](../crvUSD/factory.md)
 - crvUSD is minted in accordance with the `debt_ceiling`, either when **adding a new market** or when **raising its debt ceiling**. This is accomplished by calling the `set_new_debt_ceiling` function within the FactoryContract.  
 - Burning crvUSD typically occurs when a lower debt ceiling is set, or if a user decides to burn their crvUSD for whatever reason.
 

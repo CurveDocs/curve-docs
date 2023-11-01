@@ -1,4 +1,4 @@
-`GaugeProxy` is used for indirect ownership of [liquidity gauges](/docs/curve_dao/liq-gauges%26minting-crv/overview.md).
+`GaugeProxy` is used for indirect ownership of [liquidity gauges](../LiquidityGaugesAndMintingCRV/overview.md).
 
 !!!deploy "Contract Source & Deployment"
     **`GaugeProxy`** contract is deployed on the Ethereum mainnet at: [0x519AFB566c05E00cfB9af73496D00217A630e4D5](https://etherscan.io/address/0x519AFB566c05E00cfB9af73496D00217A630e4D5#code).  
@@ -13,4 +13,4 @@ LiquidityGauges V4 and later versions introduce the capability for a `distributo
 
 To deposit reward tokens, the `distributor` must call the `deposit_reward_token` function within the specific gauge.
 
-For more technical details, please refere to [this](../LiquidityGaugesAndMintingCRV/gauges/permissionless_rewards.md).
+For more technical details, please refere to [this](../LiquidityGaugesAndMintingCRV/gauges/PermissionlessRewards.md).
