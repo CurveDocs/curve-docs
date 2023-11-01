@@ -35,6 +35,6 @@ Fees are charged based on the balance/imbalance of the pool. Fee is low when the
 
 
 <figure markdown>
-  ![](../images/curveV2_fee.png){ width="400" }
+  ![](../../images/curveV2_fee.png){ width="400" }
   <figcaption></figcaption>
 </figure>

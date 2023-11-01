@@ -3,7 +3,7 @@ Inflation is directed to users who provide liquidity within the protocol. This u
 !!!deploy "Contract Source & Deployment"
     There are several versions of liquidity gauge contracts in use. Source code for these contracts is available on [Github](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges).
 
-Easiest way to obtain the gauge address of a liquidity pool is by querying `get_gauge` on the [MetaRegistry](/docs/registry/MetaRegistryAPI.md).
+Easiest way to obtain the gauge address of a liquidity pool is by querying `get_gauge` on the [MetaRegistry](../../../registry/MetaRegistryAPI.md#get_gauge).
 
 
 ## **Gauge Types**

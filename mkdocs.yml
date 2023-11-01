@@ -45,17 +45,17 @@ nav:
         - ChildGaugeFactory: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/ChildGaugeFactory.md
       - Minter: curve_dao/LiquidityGaugesAndMintingCRV/minter.md 
     - Fee Collection and Distribution:
-      - Overview: curve_dao/FeeCollection&Distribution/overview.md
-      - Withdrawing and Burning Admin Fees: curve_dao/FeeCollection&Distribution/withdraw-and-burn.md
-      - Burners: curve_dao/FeeCollection&Distribution/burner.md
-      - Fee Distribution: curve_dao/FeeCollection&Distribution/FeeDistributor.md
-      - Deployed Contracts: curve_dao/FeeCollection&Distribution/deployed-contracts.md
+      - Overview: curve_dao/FeeCollection-Distribution/overview.md
+      - Withdrawing and Burning Admin Fees: curve_dao/FeeCollection-Distribution/withdraw-and-burn.md
+      - Burners: curve_dao/FeeCollection-Distribution/burner.md
+      - Fee Distribution: curve_dao/FeeCollection-Distribution/FeeDistributor.md
+      - Deployed Contracts: curve_dao/FeeCollection-Distribution/deployed-contracts.md
     - Ownership Proxies:
       - Overview: curve_dao/ownership-proxy/overview.md
       - Agents: curve_dao/ownership-proxy/Agents.md
       - PoolProxy: curve_dao/ownership-proxy/PoolProxy.md
       - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
-      - RootChainGaugeProxy: curve_dao/ownership-proxy/RootChainGaugeProxy.md
+      - RootChainGaugeProxy: curve_dao/ownership-proxy/RootChainGaugeFactoryProxy.md
     - Governance and Voting: 
       - Overview: curve_dao/governance/overview.md
       
