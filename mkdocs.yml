@@ -112,9 +112,8 @@ nav:
     - Pools:
       - Overview: cryptoswap-ng_exchange/pools/overview.md
       - TriCrypto Pool: cryptoswap-ng_exchange/pools/tricrypto_pool.md
+      - LP Token Method: cryptoswap-ng_exchange/lp_tokens/tricrypto_lp_token.md
       - Admin Controls: cryptoswap-ng_exchange/pools/admin_controls.md
-    - Liquidity Pool Token:  
-      - Curve Token V2: cryptoswap-ng_exchange/lp_tokens/tricrypto_lp_token.md
     - Utility Contracts: 
       - Math: cryptoswap-ng_exchange/utility_contracts/math.md
       - ViewMethodContract: cryptoswap-ng_exchange/utility_contracts/ViewMethodContract.md

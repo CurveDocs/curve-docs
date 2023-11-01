@@ -1,4 +1,4 @@
-The TriCrypto AMM contract doubles as the LP Token. Older TriCrypto Pools (before tricrypto-ng) may have had a distinct pool and LP token, akin to TwoCrypto.
+**LP Token and liquidity pool is the same smart contract.**
 
 !!!deploy "Contract Source"
     Source code available on [Github](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveTricryptoOptimizedWETH.vy).
