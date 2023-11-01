@@ -456,6 +456,8 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
 ## Killing The Fee Distributor
 
+The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV balance to the `emergency_return` address and blocks the ability to claim or burn. The contract cannot be unkilled.
+
 ### `is_killed`
 !!! description "`FeeDistributor.is_killed() -> bool: view`"
 
@@ -484,7 +486,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     Function to kill the fee distributor contract.
 
-    !!!warning
+    !!!danger
         Killing transfers the entire 3CRV balance to the [`emergency_return` address](#emergency_return) and blocks the ability to claim or burn. The contract cannot be unkilled.
 
 
@@ -516,7 +518,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
 
 ### `emergency_return`
-!!! description "`FeeDistributor.kill_me() -> bool: view`"
+!!! description "`FeeDistributor.emergency_return() -> address: view`"
 
     Getter for the [emergency return address](https://etherscan.io/address/0x00669DF67E4827FCc0E48A1838a8d5AB79281909).
 
@@ -539,6 +541,8 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 !!! description "`FeeDistributor.recover_balance(_coin: address) -> bool:`"
 
     Function to return ERC20 tokens from this contract. `_coin` is sent to the [emergency return address](#emergency_return).
+
+    Returns: true (`bool`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -577,7 +581,6 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
     === "Example"
         ```shell
         >>> GaugeController.recover_balance("0xd533a949740bb3306d119cc777fa900ba034cd52")
-        'todo'
         ```
 
 
