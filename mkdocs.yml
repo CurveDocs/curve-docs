@@ -13,16 +13,16 @@ plugins:
 
 nav:    
   - Curve DAO:
-    
+
     - Curve DAO Token:
-      - Contract Methods: curve_dao/CurveDAOToken/ERC20CRV.md
-      - Admin Controls: curve_dao/CurveDAOToken/admin_controls.md
-    
+      - CRV Token: curve_dao/curve-dao-token/crv-token.md
+      - Admin Controls: curve_dao/curve-dao-token/admin-controls.md
+
     - Vote-Escrowed CRV:
       - VotingEscrow:
-        - Contract Methods: curve_dao/VotingEscrow/VotingEscrow.md
-        - Admin Controls: curve_dao/VotingEscrow/admin_controls.md
-      - SmartWalletChecker: curve_dao/VotingEscrow/smartwalletchecker.md
+        - Contract Methods: curve_dao/voting-escrow/voting-escrow.md
+        - Admin Controls: curve_dao/voting-escrow/admin-controls.md
+      - SmartWalletChecker: curve_dao/voting-escrow/smartwalletchecker.md
 
     - Liquidity Gauges and Minting CRV:
       - Overview: curve_dao/LiquidityGaugesAndMintingCRV/overview.md
