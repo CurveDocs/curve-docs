@@ -1,7 +1,8 @@
 The SmartWalletChecker is an external contract which checks if certain smart contracts are approved to lock CRV tokens into the VotingEscrow.    Permission can be granted via **`approveWallet`** and revoked via **`revokeWallet`**.
 
 
-This contract can be replaced in its entirety with a new SmartWalletChecker through the VotingEscrow's [`commit_smart_wallet_checker`](../VotingEscrow/admin_controls.md#commit_smart_wallet_checker) function. Alternatively, new smart contracts can be approved or revoked directly within the SmartWalletChecker itself. *All these actions require a successful DAO vote.*
+This contract can be replaced in its entirety with a new SmartWalletChecker through the VotingEscrow's [`commit_smart_wallet_checker`](../voting-escrow/admin-controls.md#commit_smart_wallet_checker) function. Alternatively, new smart contracts can be approved or revoked directly within the SmartWalletChecker itself.   
+*All these actions require a successful DAO vote.*
     
 
 !!!deploy "Contract Source & Deployment"
@@ -26,7 +27,7 @@ This contract can be replaced in its entirety with a new SmartWalletChecker thro
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 3 7"
+        ```solidity
         event ApproveWallet(address)
 
         function approveWallet(address _wallet) public {
@@ -59,7 +60,7 @@ This contract can be replaced in its entirety with a new SmartWalletChecker thro
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 3 7"
+        ```solidity
         event RevokeWallet(address)
 
         function revokeWallet(address _wallet) external {
@@ -87,11 +88,11 @@ This contract can be replaced in its entirety with a new SmartWalletChecker thro
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_wallet`     |  `address` | Smart Contract Address |
+    | `_wallet`     |  `address` | smart contract address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```solidity
         function check(address _wallet) external view returns (bool) {
             bool _check = wallets[_wallet];
             if (_check) {
@@ -121,7 +122,7 @@ This contract can be replaced in its entirety with a new SmartWalletChecker thro
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 3 4"
+        ```solidity
         address public dao
         
         constructor(address _dao) public {

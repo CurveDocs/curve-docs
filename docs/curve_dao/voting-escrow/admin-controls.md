@@ -17,7 +17,9 @@ The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a c
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```python
+        future_smart_wallet_checker: public(address)
+
         @external
         def commit_smart_wallet_checker(addr: address):
             """
@@ -44,7 +46,10 @@ The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a c
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```python
+        future_smart_wallet_checker: public(address)
+        smart_wallet_checker: public(address)
+
         @external
         def apply_smart_wallet_checker():
             """
@@ -75,11 +80,11 @@ The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a c
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `addr`       |  `address` | Address |
+    | `addr`       |  `address` | address commit the transfer of ownership to |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8 15"
+        ```python 
         event CommitOwnership:
             admin: address
 
@@ -115,7 +120,7 @@ The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a c
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8 10 16"
+        ```python
         event ApplyOwnership:
             admin: address
 
