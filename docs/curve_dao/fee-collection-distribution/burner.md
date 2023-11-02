@@ -20,11 +20,11 @@ flowchart LR
   p -->|burn| b2([Burner2]);
   p -->|burn| b3([Burner3]);
 
-  b1 --> UnderlyingBurner[UnderlyingBurner]
+  b1 --> ub{{UnderlyingBurner}}
   b1 --> |if burned directly for 3CRV| fd(((FeeDistributor)))
-  b2 --> UnderlyingBurner[UnderlyingBurner]
-  b3 --> UnderlyingBurner[UnderlyingBurner]
-  UnderlyingBurner{UnderlyingBurner} --> |convert to 3crv| fd
+  b2 --> ub
+  b3 --> ub
+  ub --> |convert to 3CRV| fd
 ```
 
 !!!tip
