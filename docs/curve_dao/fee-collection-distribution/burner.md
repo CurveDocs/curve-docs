@@ -16,9 +16,9 @@ flowchart LR
   v2(CryptoSwap) ..-> |claim admin fees| p;
   crvUSD(crvUSD Markets) ..-> |collect fees| p;
 
-  p --->|burn| b1([Burner1]);
-  p -->|burn| b2([Burner2]);
-  p -->|burn| b3([Burner3]);
+  p --->|burn| b1([Burner 1]);
+  p -->|burn| b2([Burner 2]);
+  p -->|burn| b3([Burner 3]);
 
   b1 --> ub{{UnderlyingBurner}}
   b1 --> |if burned directly for 3CRV| fd(((FeeDistributor)))
@@ -28,9 +28,9 @@ flowchart LR
 ```
 
 !!!tip
-    Efficiency within the intermediate conversions is the reason it is important to run the burn process in a specific order. If you burn sBTC prior to burning HBTC, you will have to burn sBTC a second time!
+    Efficiency within the intermediate conversions is the reason it is important to run the burn process in a specific order. For example, if you burn sBTC prior to burning HBTC, you will have to burn sBTC a second time!
 
-There are multiple burner contracts, each of which handles a different category of fee coin. The following list also outlines the rough sequence in which burners should be executed:  
+**There are multiple burner contracts, each of which handles a different category of fee coin. The following list also outlines the rough sequence in which burners should be executed:** 
 
 ## **Deployed Burner Contracts**
 
@@ -42,13 +42,15 @@ There are multiple burner contracts, each of which handles a different category 
 |`CBurner`|`Compound lending tokens`|[0xdd0e10857d952c73b2fa39ce86308299df8774b8](https://etherscan.io/address/0xdd0e10857d952c73b2fa39ce86308299df8774b8#code)|
 |`LPBurner`|`Burner for LP Tokens`|[0xaa42C0CD9645A58dfeB699cCAeFBD30f19B1ff81](https://etherscan.io/address/0xaa42C0CD9645A58dfeB699cCAeFBD30f19B1ff81#code)|
 |`MetaBurner`|`USD denominated assets that are directly swappable for 3CRV`|[0xE4b65889469ad896e866331f0AB5652C1EcfB3E6](https://etherscan.io/address/0xE4b65889469ad896e866331f0AB5652C1EcfB3E6#code)|
-|`SwapStableBurner`|` todo`|[0x90B4508e8F91523e5c8854eA73AFD8c22d8c27b7](https://etherscan.io/address/0x90B4508e8F91523e5c8854eA73AFD8c22d8c27b7#code)|
+|`SwapStableBurner`|` Swaps into another asset using a stable pool`|[0x90B4508e8F91523e5c8854eA73AFD8c22d8c27b7](https://etherscan.io/address/0x90B4508e8F91523e5c8854eA73AFD8c22d8c27b7#code)|
 |`SynthBurner`|`non-USD denominated assets that are synths or can be swapped into synths`|[0x67a0213310202dbc2cbe788f4349b72fba90f9fa](https://etherscan.io/address/0x67a0213310202dbc2cbe788f4349b72fba90f9fa#code)|
 |`USDNBurner`|`USDN`|[0x06534b0BF7Ff378F162d4F348390BDA53b15fA35](https://etherscan.io/address/0x06534b0BF7Ff378F162d4F348390BDA53b15fA35#code)|
 |`UniswapBurner`|`Assets that must be swapped on Uniswap/Sushiswap`|[0xf3b64840b39121b40d8685f1576b64c157ce2e24](https://etherscan.io/address/0xf3b64840b39121b40d8685f1576b64c157ce2e24#code)|
 |`YBurner`|`Yearn lending tokens`|[0xd16ea3e5681234da84419512eb597362135cd8c9](https://etherscan.io/address/0xd16ea3e5681234da84419512eb597362135cd8c9#code)|
 |`UnderlyingBurner`|`Assets that can be directly deposited into 3pool, or swapped for an asset that is deposited into 3pool`|[0x786b374b5eef874279f4b7b4de16940e57301a58](https://etherscan.io/address/0x786b374b5eef874279f4b7b4de16940e57301a58#code)|
-|`Wrapped stETH Burner`|`Withdraws stETH from Wrapped stETH` **under voting (remove this once passed)**|[0x072C93f12dC274300c79E92Eb61a0feCFa8E8918](https://etherscan.io/address/0x072C93f12dC274300c79E92Eb61a0feCFa8E8918#code)|
+|`Wrapped stETH Burner`|`Withdraws stETH from Wrapped stETH` |[0x072C93f12dC274300c79E92Eb61a0feCFa8E8918](https://etherscan.io/address/0x072C93f12dC274300c79E92Eb61a0feCFa8E8918#code)|
+|`Stable Deposit Burner`| `Deposits stables into Threepool`|[0x1D56495c76d99435d10ecd5b0C3bd6a8EE7cC3bb](https://etherscan.io/address/0x1D56495c76d99435d10ecd5b0C3bd6a8EE7cC3bb#code)|
+
 
 !!! info
     Source code for burners is available on [Github](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/burners).  
@@ -106,6 +108,7 @@ LP burner calls to `StableSwap.remove_liquidity_one_coin` to unwrap the LP token
         burner: '0x786B374B5eef874279f4B7b4de16940e57301A58'
         i: 1
         ```
+
 
 #### `set_swap_data`
 !!! description "`LPBurner.set_swap_data(_lp_token: address, _coin: address, _burner: address) -> bool:`"
@@ -370,6 +373,99 @@ Once the entire burn process has been completed you must call `execute` as the f
 
     !!!note
         This is the final function to be called in the burn process, after all other steps are completed. Calling this function does not do anything if the burner has a balance of zero for DAI, USDC and USDT.
+
+
+### `Metapool Burner`
+This is not a burner contract in itself. Some metapools transfer 'coin 0' of the admin fees to the Factory, where it is swapped for 'coin 1' (e.g., 3CRV), which is then sent directly to the FeeDistributor.
+
+
+??? quote "Source code"
+
+    ```python
+    @external
+    def withdraw_admin_fees():
+        # transfer coin 0 to Factory and call `convert_fees` to swap it for coin 1
+        factory: address = self.factory
+        coin: address = self.coins[0]
+        amount: uint256 = ERC20(coin).balanceOf(self) - self.balances[0]
+        if amount > 0:
+            response: Bytes[32] = raw_call(
+                coin,
+                concat(
+                    method_id("transfer(address,uint256)"),
+                    convert(factory, bytes32),
+                    convert(amount, bytes32),
+                ),
+                max_outsize=32,
+            )
+            if len(response) > 0:
+                assert convert(response, bool)
+            Factory(factory).convert_metapool_fees()
+
+        # transfer coin 1 to the receiver
+        coin = self.coins[1]
+        amount = ERC20(coin).balanceOf(self) - self.balances[1]
+        if amount > 0:
+            receiver: address = Factory(factory).get_fee_receiver(self)
+            response: Bytes[32] = raw_call(
+                coin,
+                concat(
+                    method_id("transfer(address,uint256)"),
+                    convert(receiver, bytes32),
+                    convert(amount, bytes32),
+                ),
+                max_outsize=32,
+            )
+            if len(response) > 0:
+                assert convert(response, bool)
+    ```
+
+
+### `Stable Deposit Burner`
+This burner converts DAI, USDC and USDT into 3CRV by adding liquidity to the 3pool and then transfers them to the FeeDistributor.
+
+!!! description "`StableDepositBurner.burn(_coin: ERC20) -> bool:`"
+
+    Function to add the entire burner's balance of `_coin` to the 3pool.
+
+    ??? quote "Source code"
+
+        ```python 
+        @external
+        def burn(_coin: ERC20) -> bool:
+            """
+            @notice Convert `_coin` by depositing
+            @param _coin Address of the coin being converted
+            @return bool success
+            """
+            assert not self.is_killed  # dev: is killed
+            assert _coin in COINS
+
+            amount: uint256 = _coin.balanceOf(msg.sender)
+            assert _coin.transferFrom(msg.sender, self, amount, default_return_value=True)  # safe transfer
+
+            if _coin == COINS[N_COINS - 1]:  # Do it once
+                amounts: uint256[N_COINS] = empty(uint256[N_COINS])
+                for i in range(N_COINS):
+                    amounts[i] = COINS[i].balanceOf(self)
+                self._burn(amounts)
+
+            return True
+
+        @internal
+        def _burn(_amounts: uint256[N_COINS]):
+            amount: uint256 = 0
+            for i in range(N_COINS):
+                amount += _amounts[i] * DEC[i]
+
+            min_amount: uint256 = amount * ONE / POOL.get_virtual_price()
+            min_amount -= min_amount * self.slippage / BPS
+
+            POOL.add_liquidity(_amounts, min_amount)
+
+            amount = LP.balanceOf(self)
+            LP.transfer(FEE_DISTRIBUTER, amount)
+        ```
 
 
 
