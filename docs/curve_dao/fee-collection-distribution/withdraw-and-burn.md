@@ -368,8 +368,8 @@ These functions need to be called from the 0xECB contract.
 ### `donate_admin_fees`
 !!! description "`0xECB.donate_admin_fees(_pool: address):`"
 
-    !!!info
-        Most pools **do not** have this donation function implemented!
+    !!!warning
+        **Most pools do not have this donation function implemented!**
 
     !!!guard "Guarded Method"
         This function is only callable by the `ownership_admin` or its prior approved wallets.
@@ -409,8 +409,8 @@ These functions need to be called from the 0xECB contract.
 ### `donate_admin_fees`
 !!! description "`0xECB.set_donate_approval(_pool: address, _caller: address, _is_approved: bool):`"
 
-    !!!info
-        Most pools **do not** have this donation function implemented!
+    !!!warning
+        **Most pools do not have this donation function implemented!**
 
     !!!guard "Guarded Method"
         This function is only callable by the `ownership_admin` of the contract.
