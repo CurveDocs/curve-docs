@@ -1,8 +1,14 @@
+<h1> </h1>
+
 # **Curve DAO: Fee Collection and Distribution**
 
 Curve exchange contracts have the capability to charge an **admin fee**, claimable by the contract owner. The admin fee is represented as a percentage of the total fee collected on a swap.
 
-For exchanges the fee is taken in the output currency and calculated against the final amount received. For example, if swapping from USDT to USDC, the fee is taken in USDC.
+**There are multiple ways on how fees are obtained:**
+
+- For **stableswap exchanges** the *fee is taken in the output currency* and calculated against the final amount received. For example, if swapping from USDT to USDC, the fee is taken in USDC.  
+- For **cryptoswap exchanges** (volatile assets) the *fee is taken in the LP token of the pool*. For these kind of pools additional mechanisms like auto-rebalancing parameters need to be taken into consideration.  
+- **Curve Stablecoin** borrow *fee is taken in crvUSD*. All of crvUSD borrow rate fees are "admin fees".
 
 Liquidity providers also incur fees when adding or removing liquidity. The fee is applied such that, for example, a swap between USDC and USDT would pay roughly the same amount of fees as depositing USDC into the pool and then withdrawing USDT. The only case where a fee is not applied on withdrawal is when removing liquidity via `remove_liquidity`, as this method does not change the imbalance of the pool in any way.
 
