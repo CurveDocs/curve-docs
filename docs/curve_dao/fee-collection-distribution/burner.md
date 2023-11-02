@@ -9,17 +9,22 @@ Each `burn` action typically performs one conversion into another asset; either 
 **Simplified  burn pattern:**  
 
 ```mermaid
-graph LR
-  A[StableSwap] -->|withdraw admin fees| PoolProxy[PoolProxy];
-  v2[CryptoSwap] --> |claim admin fees| PoolProxy[PoolProxy];
-  PoolProxy{PoolProxy} -->|burn| Burner1[Burner1];
-  PoolProxy -->|burn| Burner2[Burner2];
-  PoolProxy -->|burn| Burner3[Burner3];
-  Burner1[Burner1] --> UnderlyingBurner[UnderlyingBurner]
-  Burner1[Burner1] --> |if burned directly for 3crv| FeeDistributor[FeeDistributor]
-  Burner2[Burner2] --> UnderlyingBurner[UnderlyingBurner]
-  Burner3[Burner3] --> UnderlyingBurner[UnderlyingBurner]
-  UnderlyingBurner{UnderlyingBurner} --> |convert to 3crv| FeeDistributor[FeeDistributor]
+flowchart LR
+
+  p[(0xECB)]
+  v1(StableSwap) ..->|withdraw admin fees| p;
+  v2(CryptoSwap) ..-> |claim admin fees| p;
+  crvUSD(crvUSD Markets) ..-> |collect fees| p;
+
+  p --->|burn| b1([Burner1]);
+  p -->|burn| b2([Burner2]);
+  p -->|burn| b3([Burner3]);
+
+  b1 --> UnderlyingBurner[UnderlyingBurner]
+  b1 --> |if burned directly for 3CRV| fd(((FeeDistributor)))
+  b2 --> UnderlyingBurner[UnderlyingBurner]
+  b3 --> UnderlyingBurner[UnderlyingBurner]
+  UnderlyingBurner{UnderlyingBurner} --> |convert to 3crv| fd
 ```
 
 !!!tip
