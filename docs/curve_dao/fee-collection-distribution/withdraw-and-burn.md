@@ -67,7 +67,7 @@ Fees are initially claimed via `PoolProxy.withdraw_many`. This withdraws fees fr
 
     === "Example"
         ```shell
-        >>> GaugeController.withdraw_admin_fees("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7")
+        >>> PoolProxy.withdraw_admin_fees("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7")
         'whatever amount of admin fees sit in the contract'
         ```
 
@@ -102,7 +102,7 @@ Fees are initially claimed via `PoolProxy.withdraw_many`. This withdraws fees fr
 
     === "Example"
         ```shell
-        >>> GaugeController.withdraw_many("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7", "0xA5407eAE9Ba41422680e2e00537571bcC53efBfD")
+        >>> PoolProxy.withdraw_many("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7", "0xA5407eAE9Ba41422680e2e00537571bcC53efBfD")
         'whatever amount of admin fees sit in the contract'
         ```
 
@@ -111,9 +111,11 @@ Fees are initially claimed via `PoolProxy.withdraw_many`. This withdraws fees fr
 ## **CryptoSwap Pools**
 Admin fees of crypto pools are a bit different from stableswap pools. These pools have an auto-rebalancing mechanism which uses parts of the admin fees for rebalancing purposes. After taking this into consideration, fees are claimed by minting the admin's share (which essentially is the admin fee) of the pool as LP tokens.
 
+Fees are mostly claimed directly from the pool.
+
 
 ### `claim_admin_fees`
-!!! description "`CryptoSwapPool.claim_admin_fees():`"
+!!! description "`Pool.claim_admin_fees():`"
 
     Function to claim admin fees from a crypto pool.
 
@@ -208,7 +210,7 @@ Admin fees of crypto pools are a bit different from stableswap pools. These pool
 
     === "Example"
         ```shell
-        >>> GaugeController.claim_admin_fees()
+        >>> Pool.claim_admin_fees()
         ```
 
 
@@ -270,15 +272,16 @@ crvUSD fees are based on the borrow rate of the corresponding markets. Fees are 
 
 # **Burning Admin Fees**
 
-All admin fees are accumulated in the [0xECB](https://etherscan.io/address/0xeCb456EA5365865EbAb8a2661B0c503410e9B347) :material-information-outline:{ title="shhhh!! don't tell Christine Lagarde" } contract and are burned according to the fee-burner settings designated for each specific coin. 
+All admin fees are accumulated in the [0xECB](https://etherscan.io/address/0xeCb456EA5365865EbAb8a2661B0c503410e9B347) :material-information-outline:{ title="shhhh!! don't tell Christine Lagarde" } contract and are burned according to the fee-burner settings designated for each specific coin.   
+These functions need to be called from the 0xECB contract.
 
 ### `burn`
-!!! description "`PoolProxy.burn(_coin: address):`"
+!!! description "`0xECB.burn(_coin: address):`"
 
     !!!guard "Guarded Method"
         This function is only callable by EOA to prevent flashloan exploits.
 
-    Transfer the contract’s balance of `coin` into the preset burner and execute the burn process.  
+    Transfer the contract’s balance of `coin` into the according burner and execute the burn process.  
     
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -286,7 +289,7 @@ All admin fees are accumulated in the [0xECB](https://etherscan.io/address/0xeCb
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 6"
+        ```python 
         interface Burner:
             def burn(_coin: address) -> bool: payable
 
@@ -310,18 +313,21 @@ All admin fees are accumulated in the [0xECB](https://etherscan.io/address/0xeCb
 
     === "Example"
         ```shell
-        >>> GaugeController.burn("todo")
+        >>> 0xECB.burn("todo")
         todo
         ```
 
 
 ### `burn_many`
-!!! description "`PoolProxy.burn_many(_coins: address[20]):`"
+!!! description "`0xECB.burn_many(_coins: address[20]):`"
 
     !!!guard "Guarded Method"
         This function is only callable by EOA to prevent flashloan exploits.
 
-    Executes the burn process on many coins at once. Note that burning can be very gas intensive. In some cases burning 20 coins at once is not possible due to the block gas limit.
+    Executes the burn process on many coins at once. 
+    
+    !!!note
+    Burning can be very gas intensive. In some cases burning 20 coins at once is not possible due to the block gas limit.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -329,7 +335,7 @@ All admin fees are accumulated in the [0xECB](https://etherscan.io/address/0xeCb
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python
         @external
         @nonreentrant('burn')
         def burn_many(_coins: address[20]):
@@ -354,32 +360,32 @@ All admin fees are accumulated in the [0xECB](https://etherscan.io/address/0xeCb
 
     === "Example"
         ```shell
-        >>> GaugeController.burn_many("todo")
+        >>> 0xECB.burn_many("todo")
         todo
         ```
 
 
 ### `donate_admin_fees`
-!!! description "`PoolProxy.donate_admin_fees(_pool: address):`"
+!!! description "`0xECB.donate_admin_fees(_pool: address):`"
+
+    !!!info
+        Most pools **do not** have this donation function implemented!
 
     !!!guard "Guarded Method"
-        This function is only callable by the `ownership_admin` of the contract.
+        This function is only callable by the `ownership_admin` or its prior approved wallets.
 
-    Donate a pool’s current admin fees to the pool LPs.
-    
-    !!!note
-        Callable by the ownership admin, or any address given explicit permission to do so via `set_donate_approval`.
+    Function donate a pool’s current admin fees to the pool LPs.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` | Pool Addresses |
+    | `_pool` |  `address` | pool addresses |
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 6"
+        ```python
         interface Curve:
-        def donate_admin_fees(): nonpayable
-        
+            def donate_admin_fees(): nonpayable
+
         @external
         @nonreentrant('lock')
         def donate_admin_fees(_pool: address):
@@ -395,8 +401,49 @@ All admin fees are accumulated in the [0xECB](https://etherscan.io/address/0xeCb
 
     === "Example"
         ```shell
-        >>> GaugeController.donate_admin_fees("todo")
+        >>> 0xECB.donate_admin_fees("todo")
         todo
         ```
 
-        
+
+### `donate_admin_fees`
+!!! description "`0xECB.set_donate_approval(_pool: address, _caller: address, _is_approved: bool):`"
+
+    !!!info
+        Most pools **do not** have this donation function implemented!
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `ownership_admin` of the contract.
+
+    Function to set donation approval for `_pool` to `_caller`.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_pool` |  `address` | pool address |
+    | `_caller` |  `address` | address to set approval for |
+    | `_is_approved` |  `bool` | approval status |
+
+    ??? quote "Source code"
+
+        ```python
+        # pool -> caller -> can call `donate_admin_fees`
+        donate_approval: public(HashMap[address, HashMap[address, bool]])
+
+        @external
+        def set_donate_approval(_pool: address, _caller: address, _is_approved: bool):
+            """
+            @notice Set approval of `_caller` to donate admin fees for `_pool`
+            @param _pool Pool address
+            @param _caller Adddress to set approval for
+            @param _is_approved Approval status
+            """
+            assert msg.sender == self.ownership_admin, "Access denied"
+
+            self.donate_approval[_pool][_caller] = _is_approved
+        ```
+
+    === "Example"
+        ```shell
+        >>> 0xECB.set_donate_approval("todo")
+        todo
+        ```
