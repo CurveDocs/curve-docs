@@ -270,6 +270,8 @@ crvUSD fees are based on the borrow rate of the corresponding markets. Fees are 
 
 # **Burning Admin Fees**
 
+All admin fees are accumulated in the [0xECB](https://etherscan.io/address/0xeCb456EA5365865EbAb8a2661B0c503410e9B347) :material-information-outline:{ title="shhhh!! don't tell Christine Lagarde" } contract and are burned according to the fee-burner settings designated for each specific coin. 
+
 ### `burn`
 !!! description "`PoolProxy.burn(_coin: address):`"
 
