@@ -7,8 +7,9 @@ Participating in Curve DAO governance requires that an account have a balance of
     [0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2](https://etherscan.io/address/0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2).  
     Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/VotingEscrow.vy). 
 
-To calculate the veCRV output when locking, ensure to multiply the amount of CRV tokens by $\frac{locktime}{4}$.  
-`locktime` is denominated in years. The maximum lock duration is four years and the minimum lock is one week.
+To calculate the veCRV output when locking, ensure to multiply the amount of CRV tokens by $\frac{locktime}{4}$.
+
+`locktime (n)` is denominated in years. The *maximum lock duration is four years* and the *minimum lock is one week*.
 
 | CRV      | veCRV  | Locktime|
 | -------- | -------| --------|
@@ -44,7 +45,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         smart_wallet_checker: public(address)
         ```
 
@@ -64,7 +65,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         future_smart_wallet_checker: public(address)
         ```
 
@@ -91,7 +92,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8 12 13 18 24 33 36 59 64 65 68"
+        ```python 
         event Deposit:
             provider: indexed(address)
             value: uint256
@@ -191,7 +192,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 16"
+        ```python 
         @external
         @nonreentrant('lock')
         def increase_amount(_value: uint256):
@@ -261,7 +262,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 17"
+        ```python 
         @external
         @nonreentrant('lock')
         def increase_unlock_time(_unlock_time: uint256):
@@ -333,7 +334,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 17"
+        ```python 
         @external
         @nonreentrant('lock')
         def deposit_for(_addr: address, _value: uint256):
@@ -575,7 +576,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
 
 ## **Admin Ownership**
-Ownership of this contract can be transfered by the `admin` (DAO) by calling `commit_tranfer_ownership`. The changes need to be applied by calling `apply_transfer_ownership`. See [here](../VotingEscrow/admin_controls.md#commit_transfer_ownership)
+Ownership of this contract can be transfered by the **`admin`** via the **`commit_tranfer_ownership()`** and **`apply_transfer_ownership()`** functions. See [here](../voting-escrow/admin-controls.md#admin-ownership).
 
 
 ### `admin`
@@ -625,7 +626,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 11"
+        ```python
         admin: public(address)  # Can and will be a smart contract
         future_admin: public(address)
 
@@ -663,7 +664,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines"3"
+        ```python
         @external
         @view
         def get_last_user_slope(addr: address) -> int128:
@@ -697,7 +698,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines"3 10"
+        ```python 
         @external
         @view
         def user_point_history__ts(_addr: address, _idx: uint256) -> uint256:
@@ -766,7 +767,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 13 19"
+        ```python 
         @external
         @view
         def balanceOf(addr: address, _t: uint256 = block.timestamp) -> uint256:
@@ -959,7 +960,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 11 17"
+        ```python 
         token: public(address)
 
         @external
@@ -975,7 +976,8 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
             @param _symbol Token symbol
             @param _version Contract version - required for Aragon compatibility
             """
-            self.admin = msg.sender
+            ...
+
             self.token = token_addr
 
             ...
@@ -997,7 +999,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         supply: public(uint256)
         ```
 
@@ -1024,7 +1026,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         struct LockedBalance:
             amount: int128
             end: uint256
@@ -1048,7 +1050,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         epoch: public(uint256)
         ```
 
@@ -1072,7 +1074,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 14 15"
+        ```python 
         point_history: public(Point[100000000000000000000000000000])  # epoch -> unsigned point
 
         @external
@@ -1108,7 +1110,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 12 27"
+        ```python 
         name: public(String[64])
 
         @external
@@ -1147,7 +1149,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 6 13 28"
+        ```python 
         symbol: public(String[32])
 
         @external
@@ -1186,7 +1188,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 29"
+        ```python 
         version: public(String[32])
 
         @external
@@ -1224,7 +1226,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 15 23 24 25"
+        ```python 
         decimals: public(uint256)
 
         @external
@@ -1263,7 +1265,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         controller: public(address)
 
         @external
@@ -1289,7 +1291,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines="0"
+        ```python 
         @external
         def changeController(_newController: address):
             """
@@ -1308,7 +1310,7 @@ Ownership of this contract can be transfered by the `admin` (DAO) by calling `co
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 3 6 21"
+        ```python 
         # Aragon's view methods for compatibility
         controller: public(address)
         transfersEnabled: public(bool)

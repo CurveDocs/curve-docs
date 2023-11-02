@@ -23,7 +23,7 @@ This contract can be replaced in its entirety with a new SmartWalletChecker thro
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_wallet`     |  `address` | Smart Contract to approve |
+    | `_wallet`     |  `address` | smart contract to approve |
 
     ??? quote "Source code"
 
@@ -56,7 +56,7 @@ This contract can be replaced in its entirety with a new SmartWalletChecker thro
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_wallet`     |  `address` | Smart Contract to revoke |
+    | `_wallet`     |  `address` | smart contract to revoke |
 
     ??? quote "Source code"
 
@@ -109,7 +109,7 @@ This contract can be replaced in its entirety with a new SmartWalletChecker thro
     === "Example"
         ```shell
         >>> SmartWalletChecker.check("0x989AEb4d175e16225E39E87d0D97A3360524AD80")
-        'True'
+        'true'
         ```
 
 

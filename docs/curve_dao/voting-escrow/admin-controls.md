@@ -13,7 +13,7 @@ The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a c
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `addr`     |  `address` | New SmartWalletChecker Contract Address |
+    | `addr`     |  `address` | new SmartWalletChecker contract address |
 
     ??? quote "Source code"
 
