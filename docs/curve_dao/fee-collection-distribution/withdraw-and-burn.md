@@ -215,7 +215,36 @@ Fees are mostly claimed directly from the pool.
 
 
 ## **Curve Stablecoin**
-crvUSD fees are based on the borrow rate of the corresponding markets. Fees are accurred in crvUSD token.
+crvUSD fees are based on the borrow rate of the corresponding markets. Fees are accurred in crvUSD token. They can be claimed from the according Controller contract.
+
+### `admin_fees`
+!!! description "`Controller.admin_fees() -> uint256:`"
+
+    Getter for the currently claimable admin fees form a Controller. These fees can be collected via the `collect_fees()` function (see below).
+
+    ??? quote "Source code"
+
+        ```python 
+        @external
+        @view
+        def admin_fees() -> uint256:
+            """
+            @notice Calculate the amount of fees obtained from the interest
+            """
+            rate_mul: uint256 = AMM.get_rate_mul()
+            loan: Loan = self._total_debt
+            loan.initial_debt = loan.initial_debt * rate_mul / loan.rate_mul
+            loan.initial_debt += self.redeemed
+            minted: uint256 = self.minted
+            return unsafe_sub(max(loan.initial_debt, minted), minted)
+        ```
+
+    === "Example"
+        ```shell
+        >>> Controller.admin_fees()
+        14630333074120584376402
+        ```
+
 
 ### `collect_fees`
 !!! description "`Controller.collect_fees():`"
