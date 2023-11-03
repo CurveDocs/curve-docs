@@ -24,6 +24,13 @@ nav:
         - Admin Controls: curve_dao/voting-escrow/admin-controls.md
       - SmartWalletChecker: curve_dao/voting-escrow/smartwalletchecker.md
 
+    - Fee Collection and Distribution:
+      - Overview: curve_dao/fee-collection-distribution/overview.md
+      - Withdraw and Burn: curve_dao/fee-collection-distribution/withdraw-and-burn.md
+      - Burners: curve_dao/fee-collection-distribution/burner.md
+      - Fee Distribution: curve_dao/fee-collection-distribution/distributor.md
+      - Deployed Contracts: curve_dao/fee-collection-distribution/deployed-contracts.md
+
     - Liquidity Gauges and Minting CRV:
       - Overview: curve_dao/LiquidityGaugesAndMintingCRV/overview.md
       - GaugeController:
@@ -44,12 +51,7 @@ nav:
         - ChildGauge: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/ChildGauge.md
         - ChildGaugeFactory: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/ChildGaugeFactory.md
       - Minter: curve_dao/LiquidityGaugesAndMintingCRV/minter.md 
-    - Fee Collection and Distribution:
-      - Overview: curve_dao/fee-collection-distribution/overview.md
-      - Withdraw and Burn: curve_dao/fee-collection-distribution/withdraw-and-burn.md
-      - Burners: curve_dao/fee-collection-distribution/burner.md
-      - Fee Distribution: curve_dao/fee-collection-distribution/distributor.md
-      - Deployed Contracts: curve_dao/fee-collection-distribution/deployed-contracts.md
+      
     - Ownership Proxies:
       - Overview: curve_dao/ownership-proxy/overview.md
       - Agents: curve_dao/ownership-proxy/Agents.md
