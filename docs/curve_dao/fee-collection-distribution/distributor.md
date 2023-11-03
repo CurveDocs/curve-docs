@@ -1,4 +1,4 @@
-Fees are distributed to veCRV holders via the **`FeeDistributor`** contract. 
+Fees are distributed to veCRV holders through the FeeDistributor contract in the form of 3CRV tokens. 
 
 Fees are distributed weekly. The porportional amount of fees that each user is to receive is calculated based on their veCRV balance relative to the total veCRV supply.    
 This amount is calculated at the start of the week. The actual distribution occurs at the end of the week based on the fees that were collected. As such, a user that creates a new vote-lock should expect to receive their first fee payout at the end of the following epoch week.
@@ -10,7 +10,7 @@ This amount is calculated at the start of the week. The actual distribution occu
 The available 3CRV balance to distribute is tracked via the “**token checkpoint**”. This is updated at minimum every 24 hours. Fees that are received between the last checkpoint of the previous week and first checkpoint of the new week will be split evenly between the weeks.
 
 
-## Claiming Fees
+## **Claiming Fees**
 
 ### `checkpoint_token`
 !!! description "`FeeDistributor.checkpoint_token()`"
@@ -25,7 +25,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8 35 38"
+        ```python 
         event CheckpointToken:
             time: uint256
             tokens: uint256
@@ -78,9 +78,10 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     === "Example"
         ```shell
-        >>> GaugeController.checkpoint_token()
+        >>> FeeDistributor.checkpoint_token()
         todo
         ```
+
 
 ### `checkpoint_total_supply`
 !!! description "`FeeDistributor.checkpoint_total_supply():`"
@@ -91,14 +92,13 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     Returns: true (`boolean`).
 
-
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_recievers` |  `address` | Addresss to claim for |
+    | `_recievers` |  `address` | receiver address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 25"
+        ```python 
         @internal
         def _checkpoint_total_supply():
             ve: address = self.voting_escrow
@@ -135,7 +135,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     === "Example"
         ```shell
-        >>> GaugeController.checkpoint_total_supply():
+        >>> FeeDistributor.checkpoint_total_supply():
         'todo'
         ```
 
@@ -155,11 +155,11 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_addr` |  `address` | Address to claim fees for |
+    | `_addr` |  `address` | receiver address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8 71 77"
+        ```python
         event Claimed:
             recipient: indexed(address)
             amount: uint256
@@ -271,7 +271,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     === "Example"
         ```shell
-        >>> GaugeController.claim()
+        >>> FeeDistributor.claim()
         todo
         ```
 
@@ -287,11 +287,11 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_recievers` |  `address` | Addresss to claim for |
+    | `_recievers` |  `address` | receiver address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8 71 77"
+        ```python 
         event Claimed:
             recipient: indexed(address)
             amount: uint256
@@ -411,7 +411,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     === "Example"
         ```shell
-        >>> GaugeController.claim_many()
+        >>> FeeDistributor.claim_many()
         'True'
         ```
 
@@ -423,11 +423,11 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_recievers` |  `address` | Addresss to claim for |
+    | `_recievers` |  `address` | receiver address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```python 
         @external
         def burn(_coin: address) -> bool:
             """
@@ -449,14 +449,15 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     === "Example"
         ```shell
-        >>> GaugeController.burn('todo')
+        >>> FeeDistributor.burn('todo')
         'todo'
         ```
 
 
-## Killing The Fee Distributor
+## **Killing The Fee Distributor**
 
-The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV balance to the `emergency_return` address and blocks the ability to claim or burn. The contract cannot be unkilled.
+!!!danger "Consequences"
+    The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV balance to the `emergency_return` address and blocks the ability to claim or burn. The contract cannot be unkilled.
 
 ### `is_killed`
 !!! description "`FeeDistributor.is_killed() -> bool: view`"
@@ -467,13 +468,13 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         is_killed: public(bool)
         ```
 
     === "Example"
         ```shell
-        >>> GaugeController.is_killed()
+        >>> FeeDistributor.is_killed()
         'false'
         ```
 
@@ -481,18 +482,18 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 ### `kill_me`
 !!! description "`FeeDistributor.kill_me()`"
 
-    !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the contract.
-
-    Function to kill the fee distributor contract.
-
     !!!danger
         Killing transfers the entire 3CRV balance to the [`emergency_return` address](#emergency_return) and blocks the ability to claim or burn. The contract cannot be unkilled.
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
+
+    Function to kill the fee distributor contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="4"
+        ```python 
         is_killed: public(bool)
 
         @external
@@ -512,7 +513,7 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     === "Example"
         ```shell
-        >>> GaugeController.kill_me()
+        >>> FeeDistributor.kill_me()
         ```
 
 
@@ -520,19 +521,19 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 ### `emergency_return`
 !!! description "`FeeDistributor.emergency_return() -> address: view`"
 
-    Getter for the [emergency return address](https://etherscan.io/address/0x00669DF67E4827FCc0E48A1838a8d5AB79281909).
+    Getter for the emergency return address.
 
     Returns: emergency return (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         emergency_return: public(address)
         ```
 
     === "Example"
         ```shell
-        >>> GaugeController.emergency_return()
+        >>> FeeDistributor.emergency_return()
         '0x00669DF67E4827FCc0E48A1838a8d5AB79281909'
         ```
 
@@ -540,7 +541,7 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 ### `recover_balance`
 !!! description "`FeeDistributor.recover_balance(_coin: address) -> bool:`"
 
-    Function to return ERC20 tokens from this contract. `_coin` is sent to the [emergency return address](#emergency_return).
+    Function to recover ERC20 tokens from the contract. Tokens are sent to the emergency return address.
 
     Returns: true (`bool`).
 
@@ -550,7 +551,7 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```python 
         @external
         def recover_balance(_coin: address) -> bool:
             """
@@ -580,9 +581,8 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     === "Example"
         ```shell
-        >>> GaugeController.recover_balance("0xd533a949740bb3306d119cc777fa900ba034cd52")
+        >>> FeeDistributor.recover_balance("0xd533a949740bb3306d119cc777fa900ba034cd52")
         ```
-
 
 
 ## **Admin Ownership**
@@ -592,22 +592,19 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     Getter for the admin of the contract.
 
-    Returns: `address` of the admin of the contract.
+    Returns: admin (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         admin: public(address)
         ```
 
     === "Example"
         ```shell
-        >>> GaugeController.admin()
+        >>> FeeDistributor.admin()
         '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
         ```
-
-    !!!note
-        Admin address can be changed by the current admin by calling [commit_admin](#commit_admin) and [apply_admin](#apply_admin).
 
 
 ### `future_admin`
@@ -615,17 +612,17 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     Getter for the future admin of the contract.
 
-    Returns: `address` of the admin of the contract.
+    Returns: future admin (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         future_admin: public(address)
         ```
 
     === "Example"
         ```shell
-        >>> GaugeController.future_admin()
+        >>> FeeDistributor.future_admin()
         '0x0000000000000000000000000000000000000000'
         ```
 
@@ -644,7 +641,7 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8"
+        ```python 
         event CommitAdmin:
             admin: address
 
@@ -664,7 +661,7 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     === "Example"
         ```shell
-        >>> GaugeController.commit_admin("todo")
+        >>> FeeDistributor.commit_admin("todo")
         'todo'
         ```
 
@@ -683,7 +680,7 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8"
+        ```python 
         event ApplyAdmin:
             admin: address
 
@@ -704,9 +701,10 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     === "Example"
         ```shell
-        >>> GaugeController.apply_admin()
+        >>> FeeDistributor.apply_admin()
         'todo'
         ```
+
 
 
 ## **Query Contract Informations**
@@ -718,15 +716,14 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     Returns: veCRV balance (`uint256`).
 
-
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_user` |  `address` | Address to query balance for|
-    | `_timestamp` |  `uint256` | Epoch time |
+    | `_user` |  `address` | address to query balance for|
+    | `_timestamp` |  `uint256` | epoch time |
 
     ??? quote "Source code"
 
-        ```python hl_lines="0"
+        ```python 
         @view
         @external
         def ve_for_at(_user: address, _timestamp: uint256) -> uint256:
@@ -745,7 +742,7 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     === "Example"
         ```shell
-        >>> GaugeController.ve_for_at("0x989AEb4d175e16225E39E87d0D97A3360524AD80", 1685972555)
+        >>> FeeDistributor.ve_for_at("0x989AEb4d175e16225E39E87d0D97A3360524AD80", 1685972555)
         290896146145001156884162140
         ```
 
@@ -759,12 +756,12 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_user` |  `address` | Address to query balance for|
-    | `_timestamp` |  `uint256` | Epoch time |
+    | `_user` |  `address` | address to query balance for|
+    | `_timestamp` |  `uint256` | epoch time |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 14 20 21"
+        ```python 
         start_time: public(uint256)
 
         @external
@@ -796,7 +793,7 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     === "Example"
         ```shell
-        >>> GaugeController.start_time()
+        >>> FeeDistributor.start_time()
         1600300800
         ```
 
@@ -808,17 +805,17 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `address` | Address |
+    | `arg0` |  `address` | address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         user_epoch_of: public(HashMap[address, uint256])
         ```
 
     === "Example"
         ```shell
-        >>> GaugeController.user_epoch_of("0x989AEb4d175e16225E39E87d0D97A3360524AD80")
+        >>> FeeDistributor.user_epoch_of("0x989AEb4d175e16225E39E87d0D97A3360524AD80")
         7739
         ```
 
@@ -832,7 +829,7 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 13 25"
+        ```python 
         voting_escrow: public(address)
 
         @external
@@ -864,9 +861,10 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     === "Example"
         ```shell
-        >>> GaugeController.voting_escrow()
+        >>> FeeDistributor.voting_escrow()
         '0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2'
         ```
+
 
 ### `token`
 !!! description "`FeeDistributor.token() -> address: view`"
@@ -877,7 +875,7 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 15 24"
+        ```python 
         token: public(address)
 
         @external
@@ -909,7 +907,7 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     === "Example"
         ```shell
-        >>> GaugeController.token()
+        >>> FeeDistributor.token()
         '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490'
         ```
         
@@ -923,24 +921,28 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         can_checkpoint_token: public(bool)
         ```
 
     === "Example"
         ```shell
-        >>> GaugeController.can_checkpoint_token()
+        >>> FeeDistributor.can_checkpoint_token()
         'true'
         ```
 
+
 ### `toggle_allow_checkpoint_token`
 !!! description "`FeeDistributor.toggle_allow_checkpoint_token():`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
 
     Funtion to toggle permission for checkpointing by an account.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4"
+        ```python 
         event ToggleAllowCheckpointToken:
             toggle_flag: bool
 
@@ -955,12 +957,9 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
             log ToggleAllowCheckpointToken(flag)
         ```
 
-    !!!note
-        This function is only callable by `admin`.
-
     === "Example"
         ```shell
-        >>> GaugeController.toggle_allow_checkpoint_token()
+        >>> FeeDistributor.toggle_allow_checkpoint_token()
         'true'
         ```
 
@@ -970,54 +969,16 @@ The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV 
 
     Getter for the token balance of `token`.
 
-    Returns: amount of `token` (`uint256`) in the fee distributor.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `address` | Address |
+    Returns: last token balance (`uint256`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 7"
+        ```python 
         token_last_balance: public(uint256)
-
-        @internal
-        def _checkpoint_token():
-            token_balance: uint256 = ERC20(self.token).balanceOf(self)
-            to_distribute: uint256 = token_balance - self.token_last_balance
-            self.token_last_balance = token_balance
-
-            t: uint256 = self.last_token_time
-            since_last: uint256 = block.timestamp - t
-            self.last_token_time = block.timestamp
-            this_week: uint256 = t / WEEK * WEEK
-            next_week: uint256 = 0
-
-            for i in range(20):
-                next_week = this_week + WEEK
-                if block.timestamp < next_week:
-                    if since_last == 0 and block.timestamp == t:
-                        self.tokens_per_week[this_week] += to_distribute
-                    else:
-                        self.tokens_per_week[this_week] += to_distribute * (block.timestamp - t) / since_last
-                    break
-                else:
-                    if since_last == 0 and next_week == t:
-                        self.tokens_per_week[this_week] += to_distribute
-                    else:
-                        self.tokens_per_week[this_week] += to_distribute * (next_week - t) / since_last
-                t = next_week
-                this_week = next_week
-
-            log CheckpointToken(block.timestamp, to_distribute)
         ```
-
-    !!!note
-        `token_last_balance` get adjusted whenever [`claim`](#claim) or [`claim_many`](#claim_many) is called.
 
     === "Example"
         ```shell
-        >>> GaugeController.token_last_balance()
+        >>> FeeDistributor.token_last_balance()
         4576710126386983907488318
         ```
-
