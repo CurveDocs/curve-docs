@@ -1,13 +1,13 @@
 <h1> </h1>
 
-**Curve DAO Token (CRV)** is based on the ERC-20 token standard as defined at https://eips.ethereum.org/EIPS/eip-20.
+**Curve DAO Token (CRV)** is based on the ERC-20 token standard as defined at [EIP-20](https://eips.ethereum.org/EIPS/eip-20).
 
 !!!deploy "Contract Source & Deployment"
     **Curve DAO Token** contract is deployed to the Ethereum mainnet at: [0xD533a949740bb3306d119CC777fa900bA034cd52](https://etherscan.io/address/0xD533a949740bb3306d119CC777fa900bA034cd52#code).  
     Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/567927551903f71ce5a73049e077be87111963cc/contracts/ERC20CRV.vy).  
     Deployment hash: [0x5dc4a688b63cea09bf4d73a695175b77572792a2e2b3656297809ad3596d4bfe](https://etherscan.io/tx/0x5dc4a688b63cea09bf4d73a695175b77572792a2e2b3656297809ad3596d4bfe)
 
-
+For a broader understanding of the use case of the CRV token, check out [Understanding CRV](https://resources.curve.fi/crv-token/understanding-crv/).
 
 | Allocation | More about the release schedule [here](https://dao.curve.fi/releaseschedule) |
 | ------| --------------------------|
@@ -40,19 +40,11 @@
             @param _symbol Token symbol
             @param _decimals Number of decimals for token
             """
-            init_supply: uint256 = INITIAL_SUPPLY * 10 ** _decimals
-            self.name = _name
-            self.symbol = _symbol
-            self.decimals = _decimals
-            self.balanceOf[msg.sender] = init_supply
-            self.total_supply = init_supply
-            self.admin = msg.sender
-            log Transfer(ZERO_ADDRESS, msg.sender, init_supply)
+            ...
 
-            self.start_epoch_time = block.timestamp + INFLATION_DELAY - RATE_REDUCTION_TIME
-            self.mining_epoch = -1
-            self.rate = 0
-            self.start_epoch_supply = init_supply
+            self.admin = msg.sender
+            
+            ... 
         ```
 
     === "Example" 
@@ -65,12 +57,9 @@
 ### `name`
 !!! description "`CRV.name() -> String[64]`"
 
-    Getter for the name of the token.
+    Getter for the name of the token. Name of the token can be changed by calling the **`set_name`** function.
 
     Returns: token name (`String[64]`).
-
-    !!!tip
-        Name of the token can be changed by calling the `set_name` function.
 
     ??? quote "Source code"
 
@@ -87,17 +76,8 @@
             """
             init_supply: uint256 = INITIAL_SUPPLY * 10 ** _decimals
             self.name = _name
-            self.symbol = _symbol
-            self.decimals = _decimals
-            self.balanceOf[msg.sender] = init_supply
-            self.total_supply = init_supply
-            self.admin = msg.sender
-            log Transfer(ZERO_ADDRESS, msg.sender, init_supply)
-
-            self.start_epoch_time = block.timestamp + INFLATION_DELAY - RATE_REDUCTION_TIME
-            self.mining_epoch = -1
-            self.rate = 0
-            self.start_epoch_supply = init_supply
+            
+            ...
         ```
 
     === "Example"
@@ -110,13 +90,10 @@
 ### `symbol`
 !!! description "`CRV.symbol() -> String[32]`"
 
-    Getter of the token symbol.
+    Getter of the token symbol. Symbol of the token can be changed by calling the **`set_name`** function.
 
     Returns: token symbol (`String[32]`).
     
-    !!!tip
-        Symbol of the token can be changed by calling the `set_name` function.
-
     ??? quote "Source code"
 
         ```python hl_lines="1 4 8 13"
@@ -130,19 +107,11 @@
             @param _symbol Token symbol
             @param _decimals Number of decimals for token
             """
-            init_supply: uint256 = INITIAL_SUPPLY * 10 ** _decimals
-            self.name = _name
-            self.symbol = _symbol
-            self.decimals = _decimals
-            self.balanceOf[msg.sender] = init_supply
-            self.total_supply = init_supply
-            self.admin = msg.sender
-            log Transfer(ZERO_ADDRESS, msg.sender, init_supply)
+            ... 
 
-            self.start_epoch_time = block.timestamp + INFLATION_DELAY - RATE_REDUCTION_TIME
-            self.mining_epoch = -1
-            self.rate = 0
-            self.start_epoch_supply = init_supply
+            self.symbol = _symbol
+            
+            ...
         ```
 
     === "Example"
@@ -155,9 +124,9 @@
 ### `avaliable_supply`
 !!! description "`CRV.avaliably_supply() -> uint256`"
 
-    Getter for the current number of CRV tokens in existence (claimed or unclaimed).
+    Getter for the current number of CRV tokens - claimed of unclaimed - in existence.
 
-    Returns: number of tokens (`uint256`).
+    Returns: currently existing tokens (`uint256`).
 
     ??? quote "Source code"
 
@@ -180,6 +149,7 @@
         >>> CRV.avaliable_supply()
         1953676805157446496269106603
         ```
+
 
 ### `totalSupply`
 !!! description "`CRV.totalSupply() -> uint256`"
@@ -207,6 +177,171 @@
         ```
 
 
+### `decimals`
+!!! description "`CRV.decimals() -> uint256: view`"
+
+    Getter of the decimals of the token.
+
+    Returns: decimals (`uint256`).    
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1 4 9 14"
+        decimals: public(uint256)
+
+        @external
+        def __init__(_name: String[64], _symbol: String[32], _decimals: uint256):
+            """
+            @notice Contract constructor
+            @param _name Token full name
+            @param _symbol Token symbol
+            @param _decimals Number of decimals for token
+            """
+            ...
+
+            self.decimals = _decimals
+
+            ...
+        ```
+
+    === "Example"  
+        ```shell
+        >>> CRV.decimals()
+        18
+        ```
+
+
+### `balanceOf`
+!!! description "`CRV.balanceOf(arg0: address) -> address: view`"
+
+    Getter for the crv token balance of a specific address.
+
+    Returns: balance (`uint256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `arg0` |  `address` | wallet to check CRV balance for |
+
+
+    ??? quote "Source code"
+
+        ```python hl_lines="1"
+        balanceOf: public(HashMap[address, uint256])
+        ```
+
+    === "Example"
+        ```shell
+        >>> CRV.balanceOf('0xd061D61a4d941c39E5453435B6345Dc261C2fcE0')
+        2187980063734121847368
+        ```
+
+
+## **Transfer Methods**
+
+### `transfer`
+!!! description "`CRV.transfer(_to: address, _value: uint256) -> bool:`"
+
+    Function to transfer `_value` tokens from `msg.sender` to `_to`. Transfers to `ZERO_ADDRESS` are not allowed.
+
+    Returns: true (`bool`).
+
+    Emits: `Transfer`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_to` |  `address` | receiver address |
+    | `_value` |  `uint256` | amount of tokens to send|
+
+    !!!warning
+         Vyper does not allow underflows, so the subtraction in this function will revert on an insufficient balance.
+
+    ??? quote "Source code"
+
+        ```python 
+        event Transfer:
+            _from: indexed(address)
+            _to: indexed(address)
+            _value: uint256
+
+        @external
+        def transfer(_to : address, _value : uint256) -> bool:
+            """
+            @notice Transfer `_value` tokens from `msg.sender` to `_to`
+            @dev Vyper does not allow underflows, so the subtraction in
+                this function will revert on an insufficient balance
+            @param _to The address to transfer to
+            @param _value The amount to be transferred
+            @return bool success
+            """
+            assert _to != ZERO_ADDRESS  # dev: transfers to 0x0 are not allowed
+            self.balanceOf[msg.sender] -= _value
+            self.balanceOf[_to] += _value
+            log Transfer(msg.sender, _to, _value)
+            return True
+        ```
+
+    === "Example"
+        ```shell
+        >>> CRV.transfer('0x7a16fF8270133F063aAb6C9977183D9e72835428', 1)
+        'true'
+        ```
+
+
+### `transferFrom`
+!!! description "`CRV.transferFrom(_from: address, _to: address, _value: uint256) -> bool:`"
+
+    Function to transfer `_value` tokens from `_from_` to `_to`. Transfers to `ZERO_ADDRESS` are not allowed.
+
+    Returns: true (`bool`).
+
+    Emits: `Transfer`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_from` |  `address` | address to send tokens from |
+    | `_to` |  `address` | receiver address |
+    | `_value` |  `uint256` | amount of tokens to send|
+
+    !!!warning
+         Vyper does not allow underflows, so the subtraction in this function will revert on an insufficient balance.
+
+    ??? quote "Source code"
+
+        ```python 
+        event Transfer:
+            _from: indexed(address)
+            _to: indexed(address)
+            _value: uint256
+
+        @external
+        def transferFrom(_from : address, _to : address, _value : uint256) -> bool:
+            """
+            @notice Transfer `_value` tokens from `_from` to `_to`
+            @param _from address The address which you want to send tokens from
+            @param _to address The address which you want to transfer to
+            @param _value uint256 the amount of tokens to be transferred
+            @return bool success
+            """
+            assert _to != ZERO_ADDRESS  # dev: transfers to 0x0 are not allowed
+            # NOTE: vyper does not allow underflows
+            #       so the following subtraction would revert on insufficient balance
+            self.balanceOf[_from] -= _value
+            self.balanceOf[_to] += _value
+            self.allowances[_from][msg.sender] -= _value
+            log Transfer(_from, _to, _value)
+            return True
+        ```
+
+    === "Example"
+        ```shell
+        >>> CRV.transferFrom('0x7a16fF8270133F063aAb6C9977183D9e72835428', '0x68BEDE1d0bc6BE6d215f8f8Ee4ee8F9faB97fE7a', 1)
+        'true'
+        ```
+
+
+
+## **Allowances**
+
 ### `allowance`
 !!! description "`CRV.allowance(_owner: address, _spender: address) -> uint256`"
 
@@ -216,8 +351,8 @@
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_owner` |  `address` | Owner Address |
-    | `_spender` |  `address` | Spender Address  |
+    | `_owner` |  `address` | owner address |
+    | `_spender` |  `address` | spender address  |
 
     ??? quote "Source code"
 
@@ -243,70 +378,50 @@
         ```
 
 
-### `decimals`
-!!! description "`CRV.decimals() -> uint256: view`"
+### `approve`
+!!! description "`CRV.approve(_spender: address, _value: uint256) -> bool:`"
 
-    Getter of the decimals of the token.
+    Function to approve `_spender` to transfer `_value` tokens on behalf of `msg.sender`.
 
-    Returns: decimals (`uint256`).    
+    Returns: true (`bool`).
 
-    ??? quote "Source code"
-
-        ```python hl_lines="1 4 9 14"
-        decimals: public(uint256)
-
-        @external
-        def __init__(_name: String[64], _symbol: String[32], _decimals: uint256):
-            """
-            @notice Contract constructor
-            @param _name Token full name
-            @param _symbol Token symbol
-            @param _decimals Number of decimals for token
-            """
-            init_supply: uint256 = INITIAL_SUPPLY * 10 ** _decimals
-            self.name = _name
-            self.symbol = _symbol
-            self.decimals = _decimals
-            self.balanceOf[msg.sender] = init_supply
-            self.total_supply = init_supply
-            self.admin = msg.sender
-            log Transfer(ZERO_ADDRESS, msg.sender, init_supply)
-
-            self.start_epoch_time = block.timestamp + INFLATION_DELAY - RATE_REDUCTION_TIME
-            self.mining_epoch = -1
-            self.rate = 0
-            self.start_epoch_supply = init_supply
-        ```
-
-    === "Example"  
-        ```shell
-        >>> CRV.decimals()
-        18
-        ```
-
-
-### `balanceOf`
-!!! description "`CRV.balanceOf(arg0: address) -> address: view`"
-
-    Getter for the crv token balance of a specific address.
-
-    Returns: balance (`uint256`).
+    Emits: `Approval`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `address` | Wallet to check $CRV balance for |
-
+    | `_spender` |  `address` | spender address  |
+    | `_value` |  `uint256` | amount to approce |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
-        balanceOf: public(HashMap[address, uint256])
+        ```python 
+        event Approval:
+            _owner: indexed(address)
+            _spender: indexed(address)
+            _value: uint256
+
+        allowances: HashMap[address, HashMap[address, uint256]]
+
+        @external
+        def approve(_spender : address, _value : uint256) -> bool:
+            """
+            @notice Approve `_spender` to transfer `_value` tokens on behalf of `msg.sender`
+            @dev Approval may only be from zero -> nonzero or from nonzero -> zero in order
+                to mitigate the potential race condition described here:
+                https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
+            @param _spender The address which will spend the funds
+            @param _value The amount of tokens to be spent
+            @return bool success
+            """
+            assert _value == 0 or self.allowances[msg.sender][_spender] == 0
+            self.allowances[msg.sender][_spender] = _value
+            log Approval(msg.sender, _spender, _value)
+            return True
         ```
 
     === "Example"
         ```shell
-        >>> CRV.balanceOf('0xd061D61a4d941c39E5453435B6345Dc261C2fcE0')
-        2187980063734121847368
+        >>> CRV.approve(todo)
         ```
 
 
@@ -347,8 +462,8 @@
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_to` |  `address` | Assigned Wallet |
-    | `_value` |  `uint256` | Value To Mint  |
+    | `_to` |  `address` | receiver of the minted tokens |
+    | `_value` |  `uint256` | amount to mint  |
 
     ??? quote "Source code"
 
@@ -401,7 +516,7 @@
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_value` |  `uint256` | Value To Burn |
+    | `_value` |  `uint256` | amount to burn |
 
     ??? quote "Source code"
 
@@ -432,17 +547,18 @@
         True
         ```
 
+
 ### `mintable_in_timeframe`
 !!! description "`CRV.mintable_in_timeframe(start: uint256, end: uint256) -> uint256`"
 
     Getter for mintable supply from start timestamp till end timestamp.
 
-    Returns: amount of mintable tokens (`uint256`) within two timestamps.
+    Returns: amount of mintable tokens (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `start` |  `uint256` | Start (timestamp) |
-    | `end` |  `uint256` | End (timestamp)  |
+    | `start` |  `uint256` | start timestamp |
+    | `end` |  `uint256` | end timestamp  |
 
     ??? quote "Source code"
 
@@ -536,19 +652,11 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
             @param _symbol Token symbol
             @param _decimals Number of decimals for token
             """
-            init_supply: uint256 = INITIAL_SUPPLY * 10 ** _decimals
-            self.name = _name
-            self.symbol = _symbol
-            self.decimals = _decimals
-            self.balanceOf[msg.sender] = init_supply
-            self.total_supply = init_supply
-            self.admin = msg.sender
-            log Transfer(ZERO_ADDRESS, msg.sender, init_supply)
+            ...
 
-            self.start_epoch_time = block.timestamp + INFLATION_DELAY - RATE_REDUCTION_TIME
             self.mining_epoch = -1
-            self.rate = 0
-            self.start_epoch_supply = init_supply
+
+            ...
 
         @internal
         def _update_mining_parameters():
@@ -601,19 +709,11 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
             @param _symbol Token symbol
             @param _decimals Number of decimals for token
             """
-            init_supply: uint256 = INITIAL_SUPPLY * 10 ** _decimals
-            self.name = _name
-            self.symbol = _symbol
-            self.decimals = _decimals
-            self.balanceOf[msg.sender] = init_supply
-            self.total_supply = init_supply
-            self.admin = msg.sender
-            log Transfer(ZERO_ADDRESS, msg.sender, init_supply)
+            ...
 
             self.start_epoch_time = block.timestamp + INFLATION_DELAY - RATE_REDUCTION_TIME
-            self.mining_epoch = -1
-            self.rate = 0
-            self.start_epoch_supply = init_supply
+
+            ...
         ```
 
     === "Example"
@@ -646,24 +746,16 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
             @param _symbol Token symbol
             @param _decimals Number of decimals for token
             """
-            init_supply: uint256 = INITIAL_SUPPLY * 10 ** _decimals
-            self.name = _name
-            self.symbol = _symbol
-            self.decimals = _decimals
-            self.balanceOf[msg.sender] = init_supply
-            self.total_supply = init_supply
-            self.admin = msg.sender
-            log Transfer(ZERO_ADDRESS, msg.sender, init_supply)
+            ...
 
-            self.start_epoch_time = block.timestamp + INFLATION_DELAY - RATE_REDUCTION_TIME
-            self.mining_epoch = -1
             self.rate = 0
-            self.start_epoch_supply = init_supply
+
+            ...
         ```
 
     === "Example"
         ```shell
-        >>> rate()
+        >>> CRV.rate()
         6161965695807970181
         ```
 
@@ -739,7 +831,7 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
 
     === "Example"
         ```shell
-        >>> update_mining_parameters()
+        >>> CRV.update_mining_parameters()
         ```
 
 
