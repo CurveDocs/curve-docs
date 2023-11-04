@@ -1,8 +1,8 @@
 <h1> </h1>
 
 
-!!!info
-    When deploying pools that include coins not requiring a rate oracle, the `_methods_id` array can be empty, and the `_oracles` array can use `ZERO_ADDRESS`.
+!!!info 
+    When deploying pools that include coins not requiring a rate oracle, `**b""**` should be included in the `_methods_id` array and the `**ZERO_ADDRESS**` should be used in the `_oracles` array as placeholders for each coin.
 
 ## **Plain Pools**
 
@@ -188,7 +188,7 @@ Limitations when deploying stableswap-ng pools:
             865, # _ma_exp_time
             0, # _implementation_idx
             [0, 0], # _asset_types
-            [], # _method_ids
+            [b"", b""], # _method_ids
             ["0x0000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000"] # _oracles
         )
 
@@ -389,7 +389,7 @@ Limitations when deploying meta pools:
             865, # _ma_exp_time
             0, # _implementation_idx
             0, # _asset_type
-            "", # _method_id
+            "b""", # _method_id
             "0x0000000000000000000000000000000000000000" # _oracle
         )
 
