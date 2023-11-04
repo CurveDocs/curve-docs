@@ -77,8 +77,6 @@ Stableswap-NG introduces dynamic fees. The use of the `offpeg_fee_multiplier` al
 
 The internal `_dynamic_fee()` function calculates the fee **based on the balances and rates** of the tokens being exchanged. If the balances of the tokens being exchanged are highly imbalanced or significantly differ from its peg, the fee is adjusted using the `offpeg_fee_multiplier`.
 
-<iframe src="https://www.desmos.com/calculator/saffybwmru?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
-
 
 ### **Dynamic Fee Formula**
 
@@ -167,6 +165,11 @@ $$\text{dynamic fee} = \frac{{fee_{m} \times fee}}{{\frac{{(fee_{m} - 10^{18}) \
 
         return rates, balances, xp
     ```
+
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <iframe src="https://www.desmos.com/calculator/saffybwmru?embed" width="400" height="400" style="border: 1px solid #ccc" frameborder="0"></iframe>
+</div>
+
 
 ## **Oracles**
 
