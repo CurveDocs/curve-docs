@@ -166,7 +166,10 @@ $$\text{dynamic fee} = \frac{{fee_{m} \times fee}}{{\frac{{(fee_{m} - 10^{18}) \
         return rates, balances, xp
     ```
 
-<iframe src="https://www.desmos.com/calculator/saffybwmru?embed" width="400" height="400" style="border: 1px solid #ccc" frameborder="0"></iframe>
+<div style="text-align: center;">
+    <iframe src="https://www.desmos.com/calculator/saffybwmru?embed" width="500" height="500" style="border: 1px solid #ccc; display: inline-block;" frameborder="0"><iframe>
+</div>
+
 
 
 ## **Oracles**
