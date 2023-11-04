@@ -166,6 +166,11 @@ $$\text{dynamic fee} = \frac{{fee_{m} \times fee}}{(fee_{m} - 10^{18}) \times 4 
         return rates, balances, xp
     ```
 
+### **Interactive Graph**
+
+The embedded graph has limited features, such as the inability to modify the axis. However, by clicking the *"edit graph on desmos"* button at the bottom right, one is redirected to the main Desmos site. There, a wider range of functionalities is available, allowing for further adjustments and detailed exploration of the graph.
+
+
 <div style="text-align: center;">
     <iframe src="https://www.desmos.com/calculator/bzxmwlxpfy?embed" width="500" height="500" style="border: 3px solid #ccc; display: inline-block;" frameborder=0></iframe>
 </div>
