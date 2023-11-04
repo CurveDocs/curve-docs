@@ -1,6 +1,3 @@
-<h1> </h1>
-
-
 !!!info 
     When deploying pools that include coins not requiring a rate oracle, **`b""`** should be included in the `_methods_id` array and the **`ZERO_ADDRESS`** should be used in the `_oracles` array as placeholders for each coin.
 
