@@ -167,7 +167,7 @@ $$\text{dynamic fee} = \frac{{fee_{m} \times fee}}{(fee_{m} - 10^{18}) \times 4 
     ```
 
 <div style="text-align: center;">
-    <iframe src="https://www.desmos.com/calculator/bzxmwlxpfy?embed" width="500" height="500" style="border: 1px solid #ccc; display: inline-block;" frameborder=0></iframe>
+    <iframe src="https://www.desmos.com/calculator/bzxmwlxpfy?embed" width="500" height="500" style="border: 3px solid #ccc; display: inline-block;" frameborder=0></iframe>
 </div>
 
 
