@@ -1,6 +1,6 @@
 # **Collecting and Burning Fees on Sidechains**
 
-Fee collection on sidechains works similarly to that on the Ethereum mainnet. Collected fees are sent to a proxy contract and then burned. On most sidechains, tokens are burnt for [MIM](https://etherscan.io/address/0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3), as it's a favorable asset to bridge back to the mainnet. These proxy contracts have a `bridge()` function to bridge the tokens to the Ethereum mainnet.
+Fee collection on sidechains works similarly to that on the Ethereum mainnet. Collected fees are sent to a proxy contract and then burned. On most sidechains, tokens are burnt for [MIM](https://etherscan.io/address/0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3), as it's a favorable asset to bridge back to the mainnet. These proxy contracts have a `bridge()` function to bridge the tokens to the Ethereum mainnet. MIM is then burnt for 3crv and sent to the FeeDistributor.
 
 !!!note
     The contract owner can bridge any token in any quantity, other accounts can only bridge approved tokens, where the balance exceeds a minimum amount defined by the owner. This prevents bridging tokens when the amount is so small that claiming on the root chain becomes economically unfeasible.
@@ -243,3 +243,4 @@ Receiver of the bridged funds is the 0xECB contract on Ethereum Mainnet.
         ```shell
         >>> Bridge.set_root_receiver('0x0000000000000000000000000000000000000000')
         ```
+

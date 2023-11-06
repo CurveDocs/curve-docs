@@ -28,8 +28,8 @@ nav:
       - Overview: curve_dao/fee-collection-distribution/overview.md
       - Withdraw and Burn: curve_dao/fee-collection-distribution/withdraw-and-burn.md
       - Burners: curve_dao/fee-collection-distribution/burner.md
-      - Sidechains: curve_dao/fee-collection-distibution/sidechains.md
       - Fee Distribution: curve_dao/fee-collection-distribution/distributor.md
+      - Sidechains: curve_dao/fee-collection-distribution/sidechains.md
       - Deployed Contracts: curve_dao/fee-collection-distribution/deployed-contracts.md
 
     - Liquidity Gauges and Minting CRV:
