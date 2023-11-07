@@ -1,9 +1,9 @@
 !!!deploy "Contract Source & Deployment"
-    **crvUSD Token** contract is deployed to the Ethereum mainnet at: [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/address/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E#code).
+    **crvUSD Token** contract is deployed to the Ethereum mainnet at: [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/address/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E#code).  
     Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/Stablecoin.vy).
 
 
-!!! warning
+!!!warning
     Due to some testing in production, there have been several deployments for the stablecoin and its components. Please always make sure you are using the latest deployment. See [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
 
 
@@ -212,7 +212,9 @@
 
     Function to mint `_value` amount of tokens to `_to`.
 
-    Returns: true or flase (`bool`).
+    Returns: true (`bool`).
+
+    Emits: `Transfer`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -259,6 +261,8 @@
         This function is only callable by the `admin` of the contract.
 
     Function to set the minter address of the token.
+
+    Emits: `SetMinter`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -389,6 +393,8 @@
 !!! description "`crvUSD.allowance(arg0: address, arg1: address) -> uint256`"
 
     Getter method to check the allowance.
+
+    Returns: allowed tokens (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
