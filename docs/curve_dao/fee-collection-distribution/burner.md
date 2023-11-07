@@ -30,7 +30,7 @@ flowchart LR
   b1 --> |if burned directly for 3CRV| fd(((FeeDistributor)))
   b2 --> ub
   b3 --> ub
-  ub --> |convert to 3CRV| fd
+  ub --> |burn for 3CRV| fd
 ```
 
 !!!success
