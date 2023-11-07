@@ -14,13 +14,12 @@ The underlying actions of the PegKeepers can be divided into two actions, which 
 !!!deploy "Contract Source & Deployment"
     Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/stabilizer/PegKeeper.vy). 
 
-
-| Deployed PegKeepers | Address  |
-| -------|-------|
-|`PegKepper for crvUSD/USDC`|[0xaA346781dDD7009caa644A4980f044C50cD2ae22](https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22#code)|
-|`PegKepper for crvUSD/USDT`|[0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8](https://etherscan.io/address/0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8#code)|
-|`PegKepper for crvUSD/USDP`|[0x6B765d07cf966c745B340AdCa67749fE75B5c345](https://etherscan.io/address/0x6B765d07cf966c745B340AdCa67749fE75B5c345#code)|
-|`PegKepper for crvUSD/TUSD`|[0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae](https://etherscan.io/address/0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae#code)|
+    | Deployed PegKeepers | Address  |
+    | -------|-------|
+    |`PegKepper for crvUSD/USDC`|[0xaA346781dDD7009caa644A4980f044C50cD2ae22](https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22#code)|
+    |`PegKepper for crvUSD/USDT`|[0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8](https://etherscan.io/address/0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8#code)|
+    |`PegKepper for crvUSD/USDP`|[0x6B765d07cf966c745B340AdCa67749fE75B5c345](https://etherscan.io/address/0x6B765d07cf966c745B340AdCa67749fE75B5c345#code)|
+    |`PegKepper for crvUSD/TUSD`|[0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae](https://etherscan.io/address/0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae#code)|
 
 
 ## **Stabilisation Method** 
@@ -832,7 +831,7 @@ PegKeepers have a `admin` and `receiver` address. Committing a new `admin` or `r
 
 
 ### `factory`
-!!! description "`PegKeeper.factory() -> address: view`"
+!!! description "`PegKeeper.FACTORY() -> address: view`"
 
     Getter for the address of the factory contract.
 
@@ -865,7 +864,7 @@ PegKeepers have a `admin` and `receiver` address. Committing a new `admin` or `r
     === "Example"
 
         ```shell
-        >>> PegKepper.factory()
+        >>> PegKepper.FACTORY()
         '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
         ```
 
@@ -951,8 +950,8 @@ PegKeepers have a `admin` and `receiver` address. Committing a new `admin` or `r
         ```
 
 
-### `aggregator`
-!!! description "`PegKeeper.aggregator() -> address: view`"
+### `AGGREGATOR`
+!!! description "`PegKeeper.AGGREGATOR() -> address: view`"
 
     Getter for the price aggregator contract for crvUSD. This contract is used to determine the value of crvUSD.
 
@@ -985,7 +984,7 @@ PegKeepers have a `admin` and `receiver` address. Committing a new `admin` or `r
     === "Example"
 
         ```shell
-        >>> PegKepper.aggregator()
+        >>> PegKepper.AGGREGATOR()
         '0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7'
         ```
 
