@@ -187,8 +187,8 @@ More on gauge types see [here](../gauges/overview.md).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `addr` |  `address` | Gauge Addresses |
-    | `time` |  `uint256` | Timestamp, defaults to `block.timestamp` |
+    | `addr` |  `address` | gauge address |
+    | `time` |  `uint256` | timestamp; defaults to `block.timestamp` |
 
     !!!tip
         The value of relative weight is normalized to 1e18.
@@ -249,7 +249,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `addr` |  `address` | Gauge Addresses |
+    | `addr` |  `address` | gauge address |
 
     ??? quote "Source code"
 
@@ -311,7 +311,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `type_id` |  `int128` | Gauge Type ID |
+    | `type_id` |  `int128` | gauge type id |
 
     ??? quote "Source code"
 
@@ -403,7 +403,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `uint256` | Gauge Index  |
+    | `arg0` |  `uint256` | gauge index  |
 
     ??? quote "Source code"
 
@@ -444,17 +444,17 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 ## `vote_for_gauge_weights`
 !!! description "`GaugeController.vote_for_gauge_weights(_gauge_addr: address, _user_weight: uint256):`"
 
+    !!! warning
+        A gauge weight vote may only be modified once every 10 days.
+
     Function to allocate `_user_weight` voting power to gauge `_gauge_addr`. Weight for a gauge is measured in bps (uints of 0.01%). Minimal weight is 0.01%.
 
     Emits: `VoteForGauge`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_gauge_addr` |  `address` | Gauge Address |
-    | `_user_weight` |  `address` | Weight |
-
-    !!! warning
-        A gauge weight vote may only be modified once every 10 days.
+    | `_gauge_addr` |  `address` | gauge address |
+    | `_user_weight` |  `address` | user weight |
 
     ??? quote "Source code"
 
@@ -553,7 +553,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `address` | User Address |
+    | `arg0` |  `address` | user address |
 
     ??? quote "Source code"
 
@@ -648,8 +648,8 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `address` | User Address |
-    | `arg1` |  `address` | Gauge Address |
+    | `arg0` |  `address` | user address |
+    | `arg1` |  `address` | gauge address |
 
     ??? quote "Source code"
 
@@ -744,8 +744,8 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `address` | User Address |
-    | `arg1` |  `address` | Gauge Address |
+    | `arg0` |  `address` | user address |
+    | `arg1` |  `address` | gauge address |
 
     ??? quote "Source code"
 
@@ -950,7 +950,7 @@ Admin ownership can be commited by calling [`commit_transfer_ownership`](../gaug
             assert _voting_escrow != ZERO_ADDRESS
             
             ...
-            
+
             self.voting_escrow = _voting_escrow
         ```
 
