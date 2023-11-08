@@ -103,13 +103,12 @@ Here is a list of all components of the pool registry currently in use:
 
 
 ## **Curve Stablecoin**
-
-### **General Infrastructure** 
-
 For testing in production purposes, several contract deployments have taken place. Please ensure that you are using the correct and latest version. The latest deployment logs can be found [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
 
 !!!deploy "Contract Source & Deployment"
     Source code available on [Github](https://github.com/curvefi/curve-stablecoin).
+
+### **General Infrastructure** 
 
 | Type   | Description | Address  |
 | -------- | -------|-------|
