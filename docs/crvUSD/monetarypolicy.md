@@ -1,7 +1,14 @@
-*MonetaryPolicyContracts* are integrated into the crvUSD system and are responsible for the interest rate of crvUSD markets. When creating a new market via the factory contract, a monetary policy contract needs to be provided.
+MonetaryPolicyContracts are integrated into the crvUSD system and are responsible for the interest rate of crvUSD markets. When creating a new market via the factory contract, a monetary policy contract needs to be provided.
 
-!!! info
-    Source code for the monetary policy contracts is available on [Github](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/mpolicies). 
+!!!deploy "Contract Source & Deployment"
+    Source code available on [Github](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/mpolicies). 
+    | MonetaryPolicy | Deployment Address |
+    | -------------- | ------------------ |
+    | wstETH, sfrxETH2 | [0x1e7d3bf98d3f8d8ce193236c3e0ec4b00e32daae](https://etherscan.io/address/0x1e7d3bf98d3f8d8ce193236c3e0ec4b00e32daae) |
+    | sfrxETH | [0xc684432fd6322c6d58b6bc5d28b18569aa0ad0a1](https://etherscan.io/address/0xc684432fd6322c6d58b6bc5d28b18569aa0ad0a1) |
+    | ETH | [0xBB3fda661149f6E45D829D5dd54a1608577c5Fa1](https://etherscan.io/address/0xBB3fda661149f6E45D829D5dd54a1608577c5Fa1) |
+    | wBTC, tBTC | [0xb8687d7dc9d8fa32fabde63E19b2dBC9bB8B2138](https://etherscan.io/address/0xb8687d7dc9d8fa32fabde63E19b2dBC9bB8B2138) |
+    
 
 !!! tip
     Useful tool by [0xreviews](https://twitter.com/0xreviews_xyz) to play around with rates: https://crvusd-rate.0xreviews.xyz/
