@@ -8,7 +8,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 ## **Adding Markets and Adjusting Debt Ceilings**
 
 ### `add_market`
-!!! description "`ControllerFactory.add_market(token: address, A: uint256, fee: uint256, admin_fee: uint256, _price_oracle_contract: address, monetary_policy: address, loan_discount: uint256, liquidation_discount: uint256, debt_ceiling: uint256) -> address[2]:`"
+!!! description "`Factory.add_market(token: address, A: uint256, fee: uint256, admin_fee: uint256, _price_oracle_contract: address, monetary_policy: address, loan_discount: uint256, liquidation_discount: uint256, debt_ceiling: uint256) -> address[2]:`"
 
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract.
@@ -35,7 +35,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
         === "ControllerFactory.vy"
 
-            ```python hl_lines="12 44 51 70"
+            ```python
             # Limits
             MIN_A: constant(uint256) = 2
             MAX_A: constant(uint256) = 10000
@@ -110,7 +110,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
         === "MonetaryPolicy.vy"
 
-            ```python hl_lines="25 28"
+            ```python
             @internal
             @view
             def calculate_rate() -> uint256:
@@ -144,7 +144,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
         === "PriceOracle.vy"
 
-            ```python hl_lines="3"
+            ```python
             @external
             @view
             def price() -> uint256:
@@ -191,7 +191,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
         === "AMM.vy"
 
-            ```python hl_lines="2"
+            ```python
             @external
             def set_admin(_admin: address):
                 """
@@ -206,7 +206,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
     === "Example"
         ```shell
-        >>> ControllerFactory.add_market(
+        >>> Factory.add_market(
             '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', # collateral token
             100, # A
             6000000000000000, # fee
@@ -222,7 +222,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
 
 ### `debt_ceiling`
-!!! description "`ControllerFactory.debt_ceiling(agr0: address) -> uint256: view`"
+!!! description "`Factory.debt_ceiling(agr0: address) -> uint256: view`"
 
     Getter for the current debt ceiling of a market.
 
@@ -230,66 +230,64 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `address` | Address of the controller |
+    | `arg0` |  `address` | controller address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         debt_ceiling: public(HashMap[address, uint256])
         ```
 
     === "Example"
         ```shell
-        >>> ControllerFactory.debt_ceiling("0x8472A9A7632b173c8Cf3a86D3afec50c35548e76")
+        >>> Factory.debt_ceiling("0x8472A9A7632b173c8Cf3a86D3afec50c35548e76")
         10000000000000000000000000
         ```
 
 
 ### `debt_ceiling_residual`
-!!! description "`ControllerFactory.debt_ceiling_residual(arg0: address) -> uint256: view`"
+!!! description "`Factory.debt_ceiling_residual(arg0: address) -> uint256: view`"
 
     Getter for the residual debt ceiling for a market.
 
-    Returns: debt ceiling residual (`uint256`).
+    Returns: residual debt ceiling (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `address` | Address of the controller |
+    | `arg0` |  `address` | controller address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         debt_ceiling: public(HashMap[address, uint256])
         ```
 
     === "Example"
         ```shell
-        >>> ControllerFactory.debt_ceiling("0x8472A9A7632b173c8Cf3a86D3afec50c35548e76")
+        >>> Factory.debt_ceiling("0x8472A9A7632b173c8Cf3a86D3afec50c35548e76")
         10000000000000000000000000
         ```
 
 
 ### `set_debt_ceiling`
-!!! description "`ControllerFactory.set_debt_ceiling(_to: address, debt_ceiling: uint256):`"
+!!! description "`Factory.set_debt_ceiling(_to: address, debt_ceiling: uint256):`"
 
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract.
 
     Function to set the debt ceiling of a market and mint the token amount given for it.
 
-    Returns: debt ceiling (`uint256`).
+    Emits: `MintForMarket` or `RemoveFromMarket` and `SetDebtCeiling` (this event is not emitted when only residuals are burned)
 
-    Emits: `MintForMarket` or `RemoveFromMarket` or `SetDebtCeiling`
-
-    There are two possibilities on how to set the debt ceiling: 
+    **There are two possibilities on how to set the debt ceiling:**   
 
     1. When raising the debt ceiling, the difference between `debt_ceiling` and `debt_ceiling_residual` will be minted to the controller. 
     2. When reducing the debt ceiling, the minimum value of either the difference between `debt_ceiling_residual` and `debt_ceiling` or the crvUSD balance of the controller itself will get burnt.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_to` |  `address` | Address to set debt ceiling for |
-    | `debt_ceiling` |  `uint256` | Maximum to be allowed to mint |
+    | `_to` |  `address` | address to set debt ceiling for |
+    | `debt_ceiling` |  `uint256` | maximum to be allowed to mint |
 
     ??? quote "Source code"
 
@@ -307,6 +305,17 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
             event RemoveFromMarket:
                 addr: indexed(address)
                 amount: uint256
+
+            @external
+            @nonreentrant('lock')
+            def set_debt_ceiling(_to: address, debt_ceiling: uint256):
+                """
+                @notice Set debt ceiling of the address - mint the token amount given for it
+                @param _to Address to allow borrowing for
+                @param debt_ceiling Maximum allowed to be allowed to mint for it
+                """
+                assert msg.sender == self.admin
+                self._set_debt_ceiling(_to, debt_ceiling, True)
 
             @internal
             def _set_debt_ceiling(addr: address, debt_ceiling: uint256, update: bool):
@@ -333,22 +342,11 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
                 if update:
                     self.debt_ceiling[addr] = debt_ceiling
                     log SetDebtCeiling(addr, debt_ceiling)
-
-            @external
-            @nonreentrant('lock')
-            def set_debt_ceiling(_to: address, debt_ceiling: uint256):
-                """
-                @notice Set debt ceiling of the address - mint the token amount given for it
-                @param _to Address to allow borrowing for
-                @param debt_ceiling Maximum allowed to be allowed to mint for it
-                """
-                assert msg.sender == self.admin
-                self._set_debt_ceiling(_to, debt_ceiling, True)
             ```
 
         === "Stablecoin.vy"
 
-            ```python hl_lines="2 19"
+            ```python
             @external
             def mint(_to: address, _value: uint256) -> bool:
                 """
@@ -378,23 +376,25 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
     === "Example"
         ```shell
-        >>> ControllerFactory.set_debt_ceiling("todo")
+        >>> Factory.set_debt_ceiling("todo")
         'todo'
         ```
 
 
 ### `rug_debt_ceiling`
-!!! description "`ControllerFactory.rug_debt_ceiling(_to: address):`"
+!!! description "`Factory.rug_debt_ceiling(_to: address):`"
 
     Function to remove stablecoins above the debt seiling from a controller and burn them.
 
+    Emits: `MintForMarket` or `RemoveFromMarket` and `SetDebtCeiling` (this event is not emitted when only residuals are burned)
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_to` |  `address` | Address of the controller to remove stablecoins from |
+    | `_to` |  `address` | address of the controller to remove stablecoins from |
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python
         @external
         @nonreentrant('lock')
         def rug_debt_ceiling(_to: address):
@@ -403,26 +403,52 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
             @param _to Address to remove stablecoins from
             """
             self._set_debt_ceiling(_to, self.debt_ceiling[_to], False)
+
+        @internal
+        def _set_debt_ceiling(addr: address, debt_ceiling: uint256, update: bool):
+            """
+            @notice Set debt ceiling for a market
+            @param addr Controller address
+            @param debt_ceiling Value for stablecoin debt ceiling
+            @param update Whether to actually update the debt ceiling (False is used for burning the residuals)
+            """
+            old_debt_residual: uint256 = self.debt_ceiling_residual[addr]
+
+            if debt_ceiling > old_debt_residual:
+                to_mint: uint256 = debt_ceiling - old_debt_residual
+                STABLECOIN.mint(addr, to_mint)
+                self.debt_ceiling_residual[addr] = debt_ceiling
+                log MintForMarket(addr, to_mint)
+
+            if debt_ceiling < old_debt_residual:
+                diff: uint256 = min(old_debt_residual - debt_ceiling, STABLECOIN.balanceOf(addr))
+                STABLECOIN.burnFrom(addr, diff)
+                self.debt_ceiling_residual[addr] = old_debt_residual - diff
+                log RemoveFromMarket(addr, diff)
+
+            if update:
+                self.debt_ceiling[addr] = debt_ceiling
+                log SetDebtCeiling(addr, debt_ceiling)
         ```
 
     === "Example"
         ```shell
-        >>> ControllerFactory.rug_debt_ceiling("todo")
+        >>> Factory.rug_debt_ceiling("todo")
         'todo'
         ```
 
 
 ## **Admin Ownership**
 ### `admin`
-!!! description "`ControllerFactory.admin() -> address: view`"
+!!! description "`Factory.admin() -> address: view`"
 
     Getter for the admin of the contract.
 
-    Returns: admin `address`.
+    Returns: admin (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 16"
+        ```python 
         admin: public(address)
 
         @external
@@ -437,21 +463,22 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
             @param fee_receiver Receiver of interest and admin fees
             @param weth Address of WETH contract address
             """
-            STABLECOIN = stablecoin
+            ...
+
             self.admin = admin
-            self.fee_receiver = fee_receiver
-            WETH = weth
+
+            ...
         ```
 
     === "Example"
         ```shell
-        >>> ControllerFactory.admin()
+        >>> Factory.admin()
         '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
         ```
 
 
 ### `set_admin`
-!!! description "`ControllerFactory.set_admin(admin: address):`"
+!!! description "`Factory.set_admin(admin: address):`"
 
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract.
@@ -462,11 +489,11 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `admin` |  `address` | Address of the admin |
+    | `admin` |  `address` | new admin address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8"
+        ```python 
         event SetAdmin:
             admin: address
 
@@ -486,7 +513,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
     === "Example"
         ```shell
-        >>> ControllerFactory.set_admin("todo")
+        >>> Factory.set_admin("todo")
         'todo'
         ```
 
@@ -496,15 +523,15 @@ The fee receiver is the address that receives the claimed fees when calling `col
 A new receiver can be set by the `admin` of the contract (which is the DAO).
 
 ### `fee_receiver`
-!!! description "`ControllerFactory.fee_receiver() -> address: view`"
+!!! description "`Factory.fee_receiver() -> address: view`"
 
     Getter for the fee receiver address.
 
-    Returns: `address` of fee receiver.
+    Returns: fee receiver (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 17"
+        ```python 
         fee_receiver: public(address)
 
         @external
@@ -519,34 +546,37 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
             @param fee_receiver Receiver of interest and admin fees
             @param weth Address of WETH contract address
             """
-            STABLECOIN = stablecoin
-            self.admin = admin
+            ...
+
             self.fee_receiver = fee_receiver
-            WETH = weth
+
+            ...
         ```
 
     === "Example"
         ```shell
-        >>> ControllerFactory.fee_receiver()
+        >>> Factory.fee_receiver()
         '0xeCb456EA5365865EbAb8a2661B0c503410e9B347'
         ```
 
 
 ### `set_fee_receiver`
-!!! description "`ControllerFactory.set_fee_receiver(fee_receiver: address):`"
+!!! description "`Factory.set_fee_receiver(fee_receiver: address):`"
 
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract.
 
     Function to set the fee receiver address.
 
+    Emits: `SetFeeReceiver`
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `fee_receiver` |  `address` | Address of the receiver | 
+    | `fee_receiver` |  `address` | new fee receiver address | 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8 16"
+        ```python 
         event SetFeeReceiver:
             fee_receiver: address
 
@@ -567,13 +597,13 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     === "Example"
         ```shell
-        >>> ControllerFactory.set_fee_receiver("todo")
+        >>> Factory.set_fee_receiver("todo")
         'todo'
         ```
 
 
 ### `collect_fees_above_ceiling`
-!!! description "`ControllerFactory.collect_fees_above_ceiling(_to: address):`"
+!!! description "`Factory.collect_fees_above_ceiling(_to: address):`"
 
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract.
@@ -582,88 +612,129 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_to` |  `address` | Address of the controller |
+    | `_to` |  `address` | controller address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 18"
-        @external
-        @nonreentrant('lock')
-        def collect_fees_above_ceiling(_to: address):
-            """
-            @notice If the receiver is the controller - increase the debt ceiling if it's not enough to claim admin fees
-                    and claim them
-            @param _to Address of the controller
-            """
-            assert msg.sender == self.admin
-            old_debt_residual: uint256 = self.debt_ceiling_residual[_to]
-            assert self.debt_ceiling[_to] > 0 or old_debt_residual > 0
+        === "Factory.vy"
 
-            admin_fees: uint256 = Controller(_to).total_debt() + Controller(_to).redeemed() - Controller(_to).minted()
-            b: uint256 = STABLECOIN.balanceOf(_to)
-            if admin_fees > b:
-                to_mint: uint256 = admin_fees - b
-                STABLECOIN.mint(_to, to_mint)
-                self.debt_ceiling_residual[_to] = old_debt_residual + to_mint
-            Controller(_to).collect_fees()
-        ```
+            ```python 
+            @external
+            @nonreentrant('lock')
+            def collect_fees_above_ceiling(_to: address):
+                """
+                @notice If the receiver is the controller - increase the debt ceiling if it's not enough to claim admin fees
+                        and claim them
+                @param _to Address of the controller
+                """
+                assert msg.sender == self.admin
+                old_debt_residual: uint256 = self.debt_ceiling_residual[_to]
+                assert self.debt_ceiling[_to] > 0 or old_debt_residual > 0
+
+                admin_fees: uint256 = Controller(_to).total_debt() + Controller(_to).redeemed() - Controller(_to).minted()
+                b: uint256 = STABLECOIN.balanceOf(_to)
+                if admin_fees > b:
+                    to_mint: uint256 = admin_fees - b
+                    STABLECOIN.mint(_to, to_mint)
+                    self.debt_ceiling_residual[_to] = old_debt_residual + to_mint
+                Controller(_to).collect_fees()
+            ```
+
+        === "Controller.vy"
+
+            ```python
+            @external
+            @nonreentrant('lock')
+            def collect_fees() -> uint256:
+                """
+                @notice Collect the fees charged as interest
+                """
+                _to: address = FACTORY.fee_receiver()
+                # AMM-based fees
+                borrowed_fees: uint256 = AMM.admin_fees_x()
+                collateral_fees: uint256 = AMM.admin_fees_y()
+                if borrowed_fees > 0:
+                    STABLECOIN.transferFrom(AMM.address, _to, borrowed_fees)
+                if collateral_fees > 0:
+                    assert COLLATERAL_TOKEN.transferFrom(AMM.address, _to, collateral_fees, default_return_value=True)
+                AMM.reset_admin_fees()
+
+                # Borrowing-based fees
+                rate_mul: uint256 = self._rate_mul_w()
+                loan: Loan = self._total_debt
+                loan.initial_debt = loan.initial_debt * rate_mul / loan.rate_mul
+                loan.rate_mul = rate_mul
+                self._total_debt = loan
+
+                # Amount which would have been redeemed if all the debt was repaid now
+                to_be_redeemed: uint256 = loan.initial_debt + self.redeemed
+                # Amount which was minted when borrowing + all previously claimed admin fees
+                minted: uint256 = self.minted
+                # Difference between to_be_redeemed and minted amount is exactly due to interest charged
+                if to_be_redeemed > minted:
+                    self.minted = to_be_redeemed
+                    to_be_redeemed = unsafe_sub(to_be_redeemed, minted)  # Now this is the fees to charge
+                    STABLECOIN.transfer(_to, to_be_redeemed)
+                    log CollectFees(to_be_redeemed, loan.initial_debt)
+                    return to_be_redeemed
+                else:
+                    log CollectFees(0, loan.initial_debt)
+                    return 0
+            ```
 
     === "Example"
         ```shell
-        >>> ControllerFactory.collect_fees_above_ceiling()
+        >>> Factory.collect_fees_above_ceiling()
         '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
         ```
 
 
 
-## **Implementations (Blueprint Contracts)**
-The implementations are based on blueprint contracts. When adding a new market by calling `add_market()` a AMM and a Controller contract are created in the form of these implementations. New implementation contracts can be set by the `admin` of the factory (which is the DAO).
+## **Implementations**
+The implementations are based on blueprint contracts specified in [EIP-5202](https://eips.ethereum.org/EIPS/eip-5202). When a new market is added, an AMM (Automated Market Maker) and a Controller contract are created from the corresponding blueprints. New implementations can be set by the `admin` of the factory.
 
 ### `controller_implementation`
-!!! description "`ControllerFactory.controller_implementation() -> address: view`"
+!!! description "`Factory.controller_implementation() -> address: view`"
 
     Getter for controller implementation address.
 
-    Returns: `address` of the controller implementation.
+    Returns: controller implementation (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         collaterals: public(address[MAX_CONTROLLERS])
         ```
 
     === "Example"
         ```shell
-        >>> ControllerFactory.controller_implementation()
-        '0x9DFbf2b2aF574cA8Ba6dD3fD397287944269f720'
+        >>> Factory.controller_implementation()
+        '0x80333bd8791Fee04C4C3e1CA8a524CEfA7C94737'
         ```
 
 
 ### `amm_implementation`
-!!! description "`ControllerFactory.amm_implementation() -> address: view`"
+!!! description "`Factory.amm_implementation() -> address: view`"
 
     Getter for amm implementation address.
 
-    Returns: `address` of the amm implementation.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `uint256` | Index |
+    Returns: amm implementation (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         amm_implementation: public(address)
         ```
 
     === "Example"
         ```shell
-        >>> ControllerFactory.amm_implementation()
-        '0x23208cA4F2B30d8f7D54bf2D5A822D1a2F876501'
+        >>> Factory.amm_implementation()
+        '0x7624C0DD4f5D06d650DDFF25fFEC45D032501260'
         ```
 
+
 ### `set_implementations`
-!!! description "`ControllerFactory.set_implementations(controller: address, amm: address):`"
+!!! description "`Factory.set_implementations(controller: address, amm: address):`"
 
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract.
@@ -705,14 +776,14 @@ The implementations are based on blueprint contracts. When adding a new market b
 
     === "Example"
         ```shell
-        >>> ControllerFactory.set_implementation("todo")
+        >>> Factory.set_implementation("todo")
         'todo'
         ``` 
 
 
 ## **Contract Info Methods**
-### `stablecoin`
-!!! description "`ControllerFactory.stablecoin() -> address: view`"
+### `STABLECOIN`
+!!! description "`Factory.STABLECOIN() -> address: view`"
 
     Getter for the stablecoin address.
 
@@ -720,7 +791,7 @@ The implementations are based on blueprint contracts. When adding a new market b
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 15"
+        ```python
         STABLECOIN: immutable(ERC20)
 
         @external
@@ -736,28 +807,27 @@ The implementations are based on blueprint contracts. When adding a new market b
             @param weth Address of WETH contract address
             """
             STABLECOIN = stablecoin
-            self.admin = admin
-            self.fee_receiver = fee_receiver
-            WETH = weth
+
+            ...
         ```
 
     === "Example"
         ```shell
-        >>> ControllerFactory.stablecoin()
+        >>> Factory.STABLECOIN()
         '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
         ```
 
 
 ### `total_debt`
-!!! description "`ControllerFactory.total_debt() -> uint256: view`"
+!!! description "`Factory.total_debt() -> uint256: view`"
 
-    Getter for the sum of all debts across the controllers.
+    Getter for the sum of all debts across all controllers.
 
-    Returns: total amount of debt (`uint256`). 
+    Returns: total debt (`uint256`). 
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python
         @external
         @view
         def total_debt() -> uint256:
@@ -775,27 +845,27 @@ The implementations are based on blueprint contracts. When adding a new market b
 
     === "Example"
         ```shell
-        >>> ControllerFactory.total_debt()
+        >>> Factory.total_debt()
         37565735180665889485176526
         ```
 
 
 ### `get_controller`
-!!! description "`ControllerFactory.get_controller(collateral: address, i: uint256 = 0) -> address:`"
+!!! description "`Factory.get_controller(collateral: address, i: uint256 = 0) -> address:`"
 
     Getter for the controller address for `collateral`.
 
-    Returns: controller `address`. 
+    Returns: controller (`address`). 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `collateral` |  `address` | Address of collateral token |
-    | `i` |  `uint256` | Index to iterate over several controller for the same collateral if needed |
+    | `collateral` |  `address` | collateral token address |
+    | `i` |  `uint256` | index to iterate over several controller for the same collateral if needed; defaults to 0  |
 
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python
         @external
         @view
         def get_controller(collateral: address, i: uint256 = 0) -> address:
@@ -809,27 +879,27 @@ The implementations are based on blueprint contracts. When adding a new market b
 
     === "Example"
         ```shell
-        >>> ControllerFactory.get_controller("0xac3E018457B222d93114458476f3E3416Abbe38F", 0)
+        >>> Factory.get_controller("0xac3E018457B222d93114458476f3E3416Abbe38F", 0)
         '0x8472A9A7632b173c8Cf3a86D3afec50c35548e76'
         ```
 
 
 ### `get_amm`
-!!! description "`ControllerFactory.get_amm(collateral: address, i: uint256 = 0) -> address:`"
+!!! description "`Factory.get_amm(collateral: address, i: uint256 = 0) -> address:`"
 
     Getter for the amm address for `collateral`.
 
-    Returns: amm `address`. 
+    Returns: amm (`address`). 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `collateral` |  `address` | Address of collateral token |
-    | `i` |  `uint256` | Index to iterate over several amms for the same collateral if needed |
+    | `collateral` |  `address` | collateral token address |
+    | `i` |  `uint256` | index to iterate over several amms for the same collateral if needed; defaults to 0 |
 
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python
         @external
         @view
         def get_amm(collateral: address, i: uint256 = 0) -> address:
@@ -843,43 +913,43 @@ The implementations are based on blueprint contracts. When adding a new market b
 
     === "Example"
         ```shell
-        >>> ControllerFactory.get_amm("0xac3E018457B222d93114458476f3E3416Abbe38F", 0)
+        >>> Factory.get_amm("0xac3E018457B222d93114458476f3E3416Abbe38F", 0)
         '0x136e783846ef68C8Bd00a3369F787dF8d683a696'
         ```
 
 
 ### `controllers`
-!!! description "`ControllerFactory.controllers(arg0: uint256) -> address:`"
+!!! description "`Factory.controllers(arg0: uint256) -> address:`"
 
     Getter for the controller address at index `arg0`.
 
-    Returns: controller `address` at specific index. 
+    Returns: controller (`address`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `uint256` | Index |
+    | `arg0` |  `uint256` | index |
 
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```python
         MAX_CONTROLLERS: constant(uint256) = 50000
         controllers: public(address[MAX_CONTROLLERS])
         ```
 
     === "Example"
         ```shell
-        >>> ControllerFactory.controllers(0)
+        >>> Factory.controllers(0)
         '0x8472A9A7632b173c8Cf3a86D3afec50c35548e76'
         ```
 
 
 ### `amms`
-!!! description "`ControllerFactory.amms(arg0: uint256) -> address:`"
+!!! description "`Factory.amms(arg0: uint256) -> address:`"
 
     Getter for the amm address at index `arg0`.
 
-    Returns: AMM `address` at specific index. 
+    Returns: amm (`address`). 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -888,18 +958,19 @@ The implementations are based on blueprint contracts. When adding a new market b
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         amms: public(address[MAX_CONTROLLERS])
         ```
 
     === "Example"
         ```shell
-        >>> ControllerFactory.amms(0)
+        >>> Factory.amms(0)
         '0x136e783846ef68C8Bd00a3369F787dF8d683a696'
         ```
 
+
 ### `n_collaterals`
-!!! description "`ControllerFactory.n_collaterals() -> uint256: view`"
+!!! description "`Factory.n_collaterals() -> uint256: view`"
 
     Getter for the number of collaterals.
 
@@ -907,43 +978,43 @@ The implementations are based on blueprint contracts. When adding a new market b
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         n_collaterals: public(uint256)
         ```
 
     === "Example"
         ```shell
-        >>> ControllerFactory.n_collaterals()
+        >>> Factory.n_collaterals()
         2
         ```
 
 
 ### `collaterals`
-!!! description "`ControllerFactory.collaterals(arg0: uint256) -> address: view`"
+!!! description "`Factory.collaterals(arg0: uint256) -> address: view`"
 
     Getter for the collateral addresses at index `arg0`.
 
-    Returns: `address` of collateral.
+    Returns: collateral token (`address`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `uint256` | Index |
+    | `arg0` |  `uint256` | index |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         collaterals: public(address[MAX_CONTROLLERS])
         ```
 
     === "Example"
         ```shell
-        >>> ControllerFactory.collaterals(0)
+        >>> Factory.collaterals(0)
         '0xac3E018457B222d93114458476f3E3416Abbe38F'
         ```
 
 
 ### `collaterals_index`
-!!! description "`ControllerFactory.collaterals(arg0: address, arg1: uint256) -> uint256: view`"
+!!! description "`Factory.collaterals_index(arg0: address, arg1: uint256) -> uint256: view`"
 
     Getter for the index of a controller for `arg0`.
 
@@ -954,31 +1025,32 @@ The implementations are based on blueprint contracts. When adding a new market b
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `address` | Address of collateral |
-    | `arg0` |  `uint256` | Index |
+    | `arg0` |  `address` | collateral token address |
+    | `arg0` |  `uint256` | index |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         collaterals_index: public(HashMap[address, uint256[1000]])
         ```
 
     === "Example"
         ```shell
-        >>> ControllerFactory.collaterals(0xac3E018457B222d93114458476f3E3416Abbe38F, 0)
+        >>> Factory.collaterals_index(0xac3E018457B222d93114458476f3E3416Abbe38F, 0)
         340282366920938463463374607431768211456
         ```
 
+
 ### `WETH`
-!!! description "`ControllerFactory.WETH() -> address: view`"
+!!! description "`Factory.WETH() -> address: view`"
 
     Getter for WETH address.
 
-    Returns: `address` of WETH.
+    Returns: weth (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 18"
+        ```python
         WETH: public(immutable(address))
 
         @external
@@ -993,14 +1065,13 @@ The implementations are based on blueprint contracts. When adding a new market b
             @param fee_receiver Receiver of interest and admin fees
             @param weth Address of WETH contract address
             """
-            STABLECOIN = stablecoin
-            self.admin = admin
-            self.fee_receiver = fee_receiver
+            ...
+
             WETH = weth
         ```
 
     === "Example"
         ```shell
-        >>> ControllerFactory.WETH()
+        >>> Factory.WETH()
         '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
         ```
