@@ -80,12 +80,12 @@ Collateral is put into bands by calling `deposit_range()` whenever someone creat
 ### `deposit_range`
 !!! description "`AMM.deposit_range(user: address, amount: uint256, n1: int256, n2: int256):`"
 
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
+
     Function to deposit collateral `amount` for `user` in the range of bands between `n1` and `n2`. This function can only be called by the admin of the AMM, which is the controller.
 
-    Emits event: `Deposit`
-
-    !!!note
-        This function is only callable by the admin of the contract. 
+    Emits: `Deposit`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -96,7 +96,7 @@ Collateral is put into bands by calling `deposit_range()` whenever someone creat
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 9 84"
+        ```python 
         event Deposit:
             provider: indexed(address)
             amount: uint256
@@ -197,12 +197,12 @@ Collateral is put into bands by calling `deposit_range()` whenever someone creat
 ### `withdraw`
 !!! description "`AMM.withdraw(user: address, frac: uint256) -> uint256[2]:`"
 
-    Function to withdraw liquidity for `user`. This function can only be called by the admin of the AMM, which is the controller. 
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
 
-    Emit event: `Withdraw`
+    Function to withdraw liquidity for `user`.
 
-    !!!note
-        This function is only callable by the admin of the contract. 
+    Emits: `Withdraw`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -211,7 +211,7 @@ Collateral is put into bands by calling `deposit_range()` whenever someone creat
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 9 85"
+        ```python 
         event Withdraw:
             provider: indexed(address)
             amount_borrowed: uint256
@@ -326,7 +326,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     Returns: amount of coins given in and out (`uint256`).
 
-    Emits event: `TokenExchange`
+    Emits: `TokenExchange`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -336,11 +336,9 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
     | `min_amount` |  `uint256` | Minimum amount of output coin to get |
     | `_for` |  `address` | Address to send coins to (defaulted to msg.sender) |
 
-    Emits: <mark style="background-color: #FFD580; color: black">TokenExchange log</mark>
-
     ??? quote "Source code"
 
-        ```python hl_lines="2 89"
+        ```python 
         @internal
         def _exchange(i: uint256, j: uint256, amount: uint256, minmax_amount: uint256, _for: address, use_in_amount: bool) -> uint256[2]:
             """
@@ -452,13 +450,14 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
         ```
 
 
-
 ### `exchange_dy`
 !!! description "`AMM.exchange_dy(i: uint256, j: uint256, out_amount: uint256, max_amount: uint256, _for: address = msg.sender) -> uint256[2]:`"
 
     Function to exchange two tokens to obtain the desired amount of output token using the minimum amount of input token.
 
     Returns: amount of coins given in and out (`uint256`).
+
+    Emits: `TokenExchange`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -468,11 +467,9 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
     | `min_amount` |  `uint256` | Minimum amount of output coin to get |
     | `_for` |  `address` | Address to send coins to (defaulted to msg.sender) |
 
-    Emits: <mark style="background-color: #FFD580; color: black">TokenExchange log</mark>
-
     ??? quote "Source code"
 
-        ```python hl_lines="2 89"
+        ```python
         @internal
         def _exchange(i: uint256, j: uint256, amount: uint256, minmax_amount: uint256, _for: address, use_in_amount: bool) -> uint256[2]:
             """
@@ -599,7 +596,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 3 12 44 52"
+        ```python 
         struct DetailedTrade:
             in_amount: uint256
             out_amount: uint256
@@ -677,7 +674,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 3 12 44 53"
+        ```python 
         struct DetailedTrade:
             in_amount: uint256
             out_amount: uint256
@@ -756,7 +753,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 3 12 44 54"
+        ```python 
         struct DetailedTrade:
             in_amount: uint256
             out_amount: uint256
@@ -836,7 +833,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 3 12 44 55"
+        ```python 
         struct DetailedTrade:
             in_amount: uint256
             out_amount: uint256
@@ -909,17 +906,18 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     Returns: necessary amount to exchange (`uint256`) and true or false (`bool`).
 
+    !!!note
+        `bool = true` -> need to exchange crvUSD for collateral (to get the price of the collateral **UP**)      
+        `bool = false` -> need to exchange collateral for crvUSD (to get the price of the collateral **DOWN**)
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `p` |  `uint256` | Price of the AMM |
 
-    !!!info
-        `bool = true` -> need to exchange crvUSD for collateral (to get the price of the collateral **UP**)      
-        `bool = false` -> need to exchange collateral for crvUSD (to get the price of the collateral **DOWN**)
 
     ??? quote "Source code"
 
-        ```python hl_lines="4"
+        ```python
         @external
         @view
         @nonreentrant('lock')
@@ -1031,9 +1029,9 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 ### `coins`
 !!! description "`AMM.coins(i: uint256) -> address: pure`"
 
-    Getter for the coins in the AMM.
+    Getter for the coins in the AMM, with `i = 0` as borrowed token and `i = 1` as collateral token.
 
-    Returns: coins at index `i`.
+    Returns: coin at index `i`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1041,7 +1039,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python
         @external
         @pure
         def coins(i: uint256) -> address:
@@ -1055,10 +1053,6 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
         '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
         ```
 
-    !!! tip
-        `i = 0` -> BORROWED_TOKEN  
-        `i = 1` -> COLLATERAL_TOKEN
-
 
 ### `price_oracle` 
 !!! description "`AMM.price_oracle() -> uint256: view`"
@@ -1067,10 +1061,9 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     Returns: oracle price (`uint256`).
 
-
     ??? quote "Source code"
 
-        ```python hl_lines="3 51 56"
+        ```python 
         @internal
         @view
         def limit_p_o(p: uint256) -> uint256[2]:
@@ -1154,7 +1147,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python hl_lines="4 8"
+        ```python
         @external
         @view
         @nonreentrant('lock')
@@ -1173,18 +1166,17 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
         ```
 
 
-
 ## **Admin Ownership**
 ### `admin`
 !!! description "`AMM.admin() -> address: view`"
 
-    Getter for the admin of the contract, which is the controller.
+    Getter for the admin of the contract, which is the corresponding controller.
 
     Returns: admin (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         admin: public(address)
         ```
 
@@ -1203,11 +1195,11 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_admin` |  `address` | Admin address |
+    | `_admin` |  `address` | admin address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 10 16 17 18"
+        ```python 
         @internal
         def approve_max(token: ERC20, _admin: address):
             """
@@ -1231,14 +1223,12 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
     === "Example"
 
         ```shell
-        >>> AMM.set_admin("0x....")
+        >>> AMM.set_admin(todo)
         ''
         ```
 
 
 ## **Fees**
-
-
 As with all the curve pools, there are two different kinds of fees: **regular swap fees** and **admin fees**. Regular fees are charged when tokens within the AMM are exchanged. The admin fee determines the percentage of the "total fees", which are ultimately distributed to veCRV holders.
 
 Currently, the admin fees of the AMMs are set to 0 to incentivize borrowers, as all the fees are given to liquidity providers who are the borrowers.
@@ -1255,7 +1245,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 13 26 42"
+        ```python
         fee: public(uint256)
 
         @external
@@ -1325,12 +1315,12 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 ### `set_fee`
 !!! description "`AMM.set_fee(fee: uint256):`"
 
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
+
     Function to set the AMM fee. 
 
-    Emits event: `SetFee`
-
-    !!!note
-        This function is only callable by the admin of the contract. 
+    Emits: `SetFee`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1338,7 +1328,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 9 15 17"
+        ```python 
         event SetFee:
             fee: uint256
 
@@ -1356,9 +1346,6 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
             log SetFee(fee)
         ```
 
-    !!! tip
-        This function can only be called by the `admin` of the AMM.
-
     === "Example"
 
         ```shell
@@ -1375,7 +1362,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 14 27 43"
+        ```python 
         admin_fee: public(uint256)
 
         @external
@@ -1451,7 +1438,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         admin_fees_x: public(uint256)
         ```
 
@@ -1472,7 +1459,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         admin_fees_y: public(uint256)
         ```
 
@@ -1487,12 +1474,12 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 ### `set_admin_fee`
 !!! description "`AMM.set_admin_fee(fee: uint256):`"
 
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
+
     Function to set the admin fee of the AMM.
 
-    Emits event: `SetAdminFee`
-
-    !!!note
-        This function is only callable by the admin of the contract. 
+    Emits: `SetAdminFee`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1500,7 +1487,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 8 13 14 15"
+        ```python 
         event SetAdminFee:
             fee: uint256
 
@@ -1529,10 +1516,10 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 ### `reset_admin_fee`
 !!! description "`AMM.set_admin_fee(fee: uint256):`"
 
-    Function to reset the accumulated admin fees (admin_fees_x and admin_fees_y) to zero. This function is automatically called when `collect_fees()` via the controller contract is called.
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
 
-    !!!note
-        This function is only callable by the admin of the contract. 
+    Function to reset the accumulated admin fees (admin_fees_x and admin_fees_y) to zero. This function is automatically called when `collect_fees()` via the controller contract is called.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1540,7 +1527,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 7 8 9"
+        ```python 
         @external
         @nonreentrant('lock')
         def reset_admin_fees():
@@ -1561,8 +1548,6 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
 
 
-
-
 ## **Parameters**
 
 ### `A`
@@ -1574,7 +1559,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 9 22"
+        ```python
         A: public(immutable(uint256))
 
         @external
@@ -1644,13 +1629,13 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 ### `rate`
 !!! description "`AMM.rate() -> uint256: view`"
 
-    Getter for the interest rate.
+    Getter for the interest rate. More information [here](../crvUSD/monetarypolicy.md).
 
     Returns: interest rate (`uint256`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         rate: public(uint256)
         ```
 
@@ -1672,7 +1657,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 7 16"
+        ```python
         rate: public(uint256)
         rate_time: uint256
         rate_mul: uint256
@@ -1708,6 +1693,9 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 ### `set_rate`
 !!! description "`AMM.set_rate(rate: uint256) -> uint256:`"
 
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
+
     Function to set the interest rate for the AMM.
 
     Returns: rate multiplier (`uint256`).
@@ -1718,7 +1706,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python
         @external
         @nonreentrant('lock')
         def set_rate(rate: uint256) -> uint256:
@@ -1735,9 +1723,6 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
             log SetRate(rate, rate_mul, block.timestamp)
             return rate_mul
         ```
-
-    !!! tip
-        This function can only be called by the `admin` of the AMM.
 
     === "Example"
 
@@ -1758,7 +1743,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         active_band: public(int256)
         ```
 
@@ -1779,7 +1764,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         min_band: public(int256)
         ```
 
@@ -1800,7 +1785,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         max_band: public(int256)
         ```
 
@@ -1825,7 +1810,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         bands_x: public(HashMap[int256, uint256])
         ```
 
@@ -1850,7 +1835,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         bands_y: public(HashMap[int256, uint256])
         ```
 
@@ -1874,7 +1859,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 22 28"
+        ```python
         user_shares: HashMap[address, UserTicks]
     
         @internal
@@ -1926,7 +1911,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 133"
+        ```python
         @internal
         @view
         def get_xy_up(user: address, use_y: bool) -> uint256:
@@ -2081,7 +2066,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     Function to measure the amount of x (stablecoin) in band n for `user` if we adiabatically trade near p_oracle on the way down.
 
-    Returns: todo
+    Returns: amount of coins (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2089,7 +2074,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 133"
+        ```python 
         @internal
         @view
         def get_xy_up(user: address, use_y: bool) -> uint256:
@@ -2251,7 +2236,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="4"
+        ```python 
         @external
         @view
         @nonreentrant('lock')
@@ -2300,7 +2285,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="4"
+        ```python 
         @external
         @view
         @nonreentrant('lock')
@@ -2337,7 +2322,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="17 26"
+        ```python
         BASE_PRICE: immutable(uint256)
         rate: public(uint256)
         rate_time: uint256
@@ -2392,7 +2377,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         @internal
         @view
         def _p_current_band(n: int256) -> uint256:
@@ -2428,7 +2413,6 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
             ```
 
 
-
 ### `p_current_down` 
 !!! description "`AMM.p_current_down(n: int256) -> uint256:`"
 
@@ -2442,7 +2426,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         @internal
         @view
         def _p_current_band(n: int256) -> uint256:
@@ -2491,7 +2475,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 50 56"
+        ```python 
         @internal
         @view
         def _p_oracle_up(n: int256) -> uint256:
@@ -2571,7 +2555,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 50 56"
+        ```python 
         @internal
         @view
         def _p_oracle_up(n: int256) -> uint256:
@@ -2647,7 +2631,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 37 43"
+        ```python
         @internal
         @view
         def _get_p(n: int256, x: uint256, y: uint256) -> uint256:
@@ -2714,7 +2698,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 15 28 44"
+        ```python 
         price_oracle_contract: public(PriceOracle)
 
         @external
@@ -2745,32 +2729,11 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
             @param _price_oracle_contract External price oracle which has price() and price_w() methods
                 which both return current price of collateral multiplied by 1e18
             """
-            BORROWED_TOKEN = ERC20(_borrowed_token)
-            BORROWED_PRECISION = _borrowed_precision
-            COLLATERAL_TOKEN = ERC20(_collateral_token)
-            COLLATERAL_PRECISION = _collateral_precision
-            A = _A
-            BASE_PRICE = _base_price
+            ...
 
-            Aminus1 = unsafe_sub(A, 1)
-            A2 = pow_mod256(A, 2)
-            Aminus12 = pow_mod256(unsafe_sub(A, 1), 2)
-
-            self.fee = fee
-            self.admin_fee = admin_fee
             self.price_oracle_contract = PriceOracle(_price_oracle_contract)
-            self.prev_p_o_time = block.timestamp
-            self.old_p_o = self.price_oracle_contract.price()
-
-            self.rate_mul = 10**18
-
-            # sqrt(A / (A - 1)) - needs to be pre-calculated externally
-            SQRT_BAND_RATIO = _sqrt_band_ratio
-            # log(A / (A - 1)) - needs to be pre-calculated externally
-            LOG_A_RATIO = _log_A_ratio
-
-            # (A / (A - 1)) ** 50
-            MAX_ORACLE_DN_POW = unsafe_div(pow_mod256(unsafe_div(A**25 * 10**18, pow_mod256(Aminus1, 25)), 2), 10**18)
+            
+            ...
         ```
 
     === "Example"
@@ -2790,7 +2753,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         @internal
         @view
         def limit_p_o(p: uint256) -> uint256[2]:
@@ -2874,7 +2837,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 41 47"
+        ```python
         @internal
         @view
         def _get_xy(user: address, is_sum: bool) -> DynArray[uint256, MAX_TICKS_UINT][2]:
@@ -2941,7 +2904,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         liquidity_mining_callback: public(LMGauge)
         ```
 
@@ -2956,10 +2919,10 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 ### `set_callback`
 !!! description "`AMM.set_callback(liquidity_mining_callback: LMGauge):`"
 
-    Function to set the liquidity mining callback.
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
 
-    !!!note
-        This function is only callable by the admin of the contract. 
+    Function to set the liquidity mining callback.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2968,7 +2931,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 9 15"
+        ```python
         interface LMGauge:
             def callback_collateral_shares(n: int256, collateral_per_share: DynArray[uint256, MAX_TICKS_UINT]): nonpayable
             def callback_user_shares(user: address, n: int256, user_shares: DynArray[uint256, MAX_TICKS_UINT]): nonpayable
