@@ -2,6 +2,11 @@ Curve Stablecoin ([crvUSD](../crvUSD/crvUSD.md)) infrastructure enables users to
 
 crvUSD is designed to provide a more capital-efficient stablecoin mechanism and smoother liquidations, while maintaining a decentralized design which the Curve DAO governs.
 
+!!!deploy "Contract Source & Deployment"
+    crvUSD related deployments can be found [here](../references/deployed-contracts.md#curve-stablecoin).
+    Source code available on [Github](https://github.com/curvefi/curve-stablecoin).
+
+
 <figure markdown>
   ![](../images/figure1_crvusdx.png){ width="300" }
   <figcaption></figcaption>
