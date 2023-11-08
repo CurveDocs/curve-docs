@@ -1,20 +1,23 @@
 ## **Concept of PegKeepers**  
 
-PegKeepers are contracts that help stabilize the peg of crvUSD. They are allocated a specific amount of crvUSD to secure the peg. 
+PegKeepers are contracts that help stabilize the peg of crvUSD. Each Keeper is allocated a specific amount of crvUSD to secure the peg. 
 The DAO decides this balance and can be **raised or lowered** by calling `set_debt_ceiling` in the [Factory](../crvUSD/factory.md).
 
 
 The underlying actions of the PegKeepers can be divided into two actions, which get executed when calling [`update`](#update):
 
-- **crvUSD price > 1**: The PegKeeper mints and deposits crvUSD single-sidedly into the pool to which it is linked, and receives LP tokens in exchange. This increases the supply of crvUSD in the pool and therefore decreases the price. It is important to note that the LP tokens are not staked in the gauge (if there is one). Thus, the PegKeeper does not receive CRV emissions.
+- **crvUSD price > 1**: The PegKeeper mints and deposits crvUSD single-sidedly into the pool to which it is "linked", and receives LP tokens in exchange. This increases the balance of crvUSD in the pool and therefore decreases the price. It is important to note that the LP tokens are not staked in the gauge (if there is one). Thus, the PegKeeper does not receive CRV emissions.
 
-- **crvUSD price < 1**: If PegKeepers hold a balance of the corresponding LP token, they can withdraw crvUSD from the liquidity pool and burn it. This action reduces the supply of crvUSD in the pool and should subsequently increase its price.
+- **crvUSD price < 1**: If PegKeepers hold a balance of the corresponding LP token, they can single-sidedly withdraw crvUSD from the liquidity pool and burn it. This action reduces the supply of crvUSD in the pool and should subsequently increase its price.
+
+!!!note
+    PegKeepers do not actually *mint or burn* crvUSD tokens. They have a defined allocated balance of crvUSD tokens they can use for deposits. It is important to note that **PegKeepers cannot do anything else apart from depositing and withdrawing**; therefore, crvUSD token balances of the PegKeepers that are not deposited into a pool should not be counted as circulating supply, although technically they are.
 
 
 !!!deploy "Contract Source & Deployment"
     Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/stabilizer/PegKeeper.vy). 
 
-    | Deployed PegKeepers | Address  |
+    | PegKeepers | Deployment Address  |
     | -------|-------|
     |`PegKepper for crvUSD/USDC`|[0xaA346781dDD7009caa644A4980f044C50cD2ae22](https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22#code)|
     |`PegKepper for crvUSD/USDT`|[0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8](https://etherscan.io/address/0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8#code)|
