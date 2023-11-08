@@ -37,7 +37,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 | `PegKeeperDebt` |  sum of debt of all PegKeepers |
 | `TotalDebt` |  total crvUSD debt |
 
-!!!note
+!!!tip
     `rate` and `rate0` denominated in units of $10^{18}$ for precision and represent the rate per second.
 
     $\text{annualRate} = (1 + \frac{rate}{10^{18}})^{365*24*60*60} - 1$
@@ -53,7 +53,12 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 22 26 27"
+        ```python 
+        @view
+        @external
+        def rate() -> uint256:
+            return self.calculate_rate()
+
         @internal
         @view
         def calculate_rate() -> uint256:
@@ -76,11 +81,6 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
                     power -= convert(pk_debt * 10**18 / total_debt * 10**18 / target_debt_fraction, int256)
 
             return self.rate0 * min(self.exp(power), MAX_EXP) / 10**18
-
-        @view
-        @external
-        def rate() -> uint256:
-            return self.calculate_rate()
         ```
 
     === "Example"
@@ -94,13 +94,13 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 ### `rate0`
 !!! description "`MonetaryPolicy.rate0() -> uint256: view`"
 
-    Getter for the rate0 of the monetary policy contract. `rate0` has to be less than or equal to `MAX_RATE` (400% APY).
+    Getter for the `rate0` of the monetary policy contract. `rate0` has to be less than or equal to `MAX_RATE` (400% APY).
 
     Returns: rate0 (`uint256`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 2 9 23 24"
+        ```python
         MAX_RATE: constant(uint256) = 43959106799  # 400% APY
         rate0: public(uint256)
 
@@ -112,21 +112,12 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
                     rate: uint256,
                     sigma: uint256,
                     target_debt_fraction: uint256):
-            self.admin = admin
-            PRICE_ORACLE = price_oracle
-            CONTROLLER_FACTORY = controller_factory
-            for i in range(5):
-                if peg_keepers[i].address == empty(address):
-                    break
-                self.peg_keepers[i] = peg_keepers[i]
+            ...
 
-            assert sigma >= MIN_SIGMA
-            assert sigma <= MAX_SIGMA
-            assert target_debt_fraction <= MAX_TARGET_DEBT_FRACTION
             assert rate <= MAX_RATE
             self.rate0 = rate
-            self.sigma = convert(sigma, int256)
-            self.target_debt_fraction = target_debt_fraction
+
+            ...
         ```
 
     === "Example"
@@ -140,20 +131,20 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 ### `set_rate`
 !!! description "`MonetaryPolicy.set_rate(rate: uint256):`"
 
-    Function to set a new rate0. New rate0 has to be less than or equal to `MAX_RATE (=43959106799)`.
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
+
+    Function to set a new rate0. New `rate0` has to be less than or equal to `MAX_RATE (=43959106799)`.
 
     Emits: `SetRate`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `rate` |  `uint256` | New Rate |
-
-    !!!note
-        This function is only callable by the `admin` of the contract.
+    | `rate` |  `uint256` | new rate0 value |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 8 12"
+        ```python
         event SetRate:
             rate: uint256
 
@@ -176,15 +167,15 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
 
 ### `sigma`
-!!! description "`MonetaryPolicy.sigma() -> int256: view`"
+!!! description "`MonetaryPolicy.sigma() -> uint256: view`"
 
     Getter for the sigma value: $10^{14} <= sigma <= 10^{18}$.
 
-    Returns: sigma (`int256`).
+    Returns: sigma (`uint256`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 3 4 12 22 23 27"
+        ```python
         sigma: public(int256)  # 2 * 10**16 for example
 
         MAX_SIGMA: constant(uint256) = 10**18
@@ -198,21 +189,12 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
                     rate: uint256,
                     sigma: uint256,
                     target_debt_fraction: uint256):
-            self.admin = admin
-            PRICE_ORACLE = price_oracle
-            CONTROLLER_FACTORY = controller_factory
-            for i in range(5):
-                if peg_keepers[i].address == empty(address):
-                    break
-                self.peg_keepers[i] = peg_keepers[i]
+            ...
 
             assert sigma >= MIN_SIGMA
             assert sigma <= MAX_SIGMA
-            assert target_debt_fraction <= MAX_TARGET_DEBT_FRACTION
-            assert rate <= MAX_RATE
-            self.rate0 = rate
-            self.sigma = convert(sigma, int256)
-            self.target_debt_fraction = target_debt_fraction
+            
+            ...
         ```
 
     === "Example"
@@ -223,24 +205,23 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
         ```
 
 
-
 ### `set_sigma`
 !!! description "`MonetaryPolicy.set_sigma(sigma: uint256):`"
 
-    Function to set a new sigma value.
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
+
+    Function to set a new sigma value. New value must be inbetween `MIN_SIGMA` and `MAX_SIGMA`.
 
     Emits: `SetSigma`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `sigma` |  `uint256` | New Sigma |
-
-    !!!note
-        This function is only callable by the `admin` of the contract.
+    | `sigma` |  `uint256` | new sigma value |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 6 7 10 16"
+        ```python
         event SetSigma:
             sigma: uint256
 
@@ -273,7 +254,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 3 12 23 27"
+        ```python
         MAX_TARGET_DEBT_FRACTION: constant(uint256) = 10**18
 
         target_debt_fraction: public(uint256)
@@ -286,20 +267,8 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
                     rate: uint256,
                     sigma: uint256,
                     target_debt_fraction: uint256):
-            self.admin = admin
-            PRICE_ORACLE = price_oracle
-            CONTROLLER_FACTORY = controller_factory
-            for i in range(5):
-                if peg_keepers[i].address == empty(address):
-                    break
-                self.peg_keepers[i] = peg_keepers[i]
-
-            assert sigma >= MIN_SIGMA
-            assert sigma <= MAX_SIGMA
-            assert target_debt_fraction <= MAX_TARGET_DEBT_FRACTION
-            assert rate <= MAX_RATE
-            self.rate0 = rate
-            self.sigma = convert(sigma, int256)
+            ...
+            
             self.target_debt_fraction = target_debt_fraction
         ```
 
@@ -313,19 +282,21 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
 ### `set_target_debt_fraction`
 !!! description "`MonetaryPolicy.set_target_debt_fraction(target_debt_fraction: uint256):`"
+    
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
 
-    Function to set a new target debt fraction. New value needs to be less than or equal to `MAX_TARGET_DEBT_FRACTION`.
+    Function to set a new value for the debt fraction target. New value needs to be less than or equal to `MAX_TARGET_DEBT_FRACTION`.
+
+    Emits: `SetTargetDebtFraction`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `target_debt_fraction` |  `uint256` | New Target Debt Fraction |
-
-    !!!note
-        This function is only callable by the `admin` of the contract.
+    | `target_debt_fraction` |  `uint256` | new debt fraction target value |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 9 14"
+        ```python
         event SetTargetDebtFraction:
             target_debt_fraction: uint256
 
@@ -350,7 +321,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
 
 ## **PegKeepers**
-PegKeepers must be added to the monetary policy contract to calculate the rate as it depends on the DebtFraction. They can be added by calling **`add_peg_keeper`** and removed with **`remove_peg_keeper`**.
+PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as it depends on the *DebtFraction*. They can be added by calling **`add_peg_keeper`** and removed with **`remove_peg_keeper`**.
 
 
 ### `peg_keepers`
@@ -362,11 +333,11 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `uint256` | Index of the PegKeeper |
+    | `arg0` |  `uint256` | index of the PegKeeper |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 10 17 18 19 20"
+        ```python
         interface PegKeeper:
             def debt() -> uint256: view
 
@@ -380,21 +351,14 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
                     rate: uint256,
                     sigma: uint256,
                     target_debt_fraction: uint256):
-            self.admin = admin
-            PRICE_ORACLE = price_oracle
-            CONTROLLER_FACTORY = controller_factory
+            ...
+
             for i in range(5):
                 if peg_keepers[i].address == empty(address):
                     break
                 self.peg_keepers[i] = peg_keepers[i]
 
-            assert sigma >= MIN_SIGMA
-            assert sigma <= MAX_SIGMA
-            assert target_debt_fraction <= MAX_TARGET_DEBT_FRACTION
-            assert rate <= MAX_RATE
-            self.rate0 = rate
-            self.sigma = convert(sigma, int256)
-            self.target_debt_fraction = target_debt_fraction
+            ...
         ```
 
     === "Example"
@@ -408,20 +372,20 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
 ### `add_peg_keeper`
 !!! description "`MonetaryPolicy.add_peg_keeper(pk: PegKeeper):`"
 
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
+
     Function to add an existing PegKeeper to the monetary policy contract.
 
     Emits: `AddPegKeeper`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `pk` |  `PegKeeper` | Add New PegKeeper |
-
-    !!!note
-        This function is only callable by the `admin` of the contract.
+    | `pk` |  `PegKeeper` | PegKeeper address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 7 15"
+        ```python
         event AddPegKeeper:
             peg_keeper: indexed(address)
 
@@ -450,20 +414,20 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
 ### `remove_peg_keeper`
 !!! description "`MonetaryPolicy.remove_peg_keeper(pk: PegKeeper):`"
 
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
+
     Function to remove an existing PegKeeper from the monetary policy contract.
 
     Emits: `RemovePegKeeper`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `pk` |  `PegKeeper` | Remove PegKeeper |
-
-    !!!note
-        This function is only callable by the `admin` of the contract.
+    | `pk` |  `PegKeeper` | PegKeeper address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 7 14"
+        ```python
         event RemovePegKeeper:
             peg_keeper: indexed(address)
 
@@ -504,7 +468,7 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 11"
+        ```python
         admin: public(address)
 
         @external
@@ -516,20 +480,8 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
                     sigma: uint256,
                     target_debt_fraction: uint256):
             self.admin = admin
-            PRICE_ORACLE = price_oracle
-            CONTROLLER_FACTORY = controller_factory
-            for i in range(5):
-                if peg_keepers[i].address == empty(address):
-                    break
-                self.peg_keepers[i] = peg_keepers[i]
 
-            assert sigma >= MIN_SIGMA
-            assert sigma <= MAX_SIGMA
-            assert target_debt_fraction <= MAX_TARGET_DEBT_FRACTION
-            assert rate <= MAX_RATE
-            self.rate0 = rate
-            self.sigma = convert(sigma, int256)
-            self.target_debt_fraction = target_debt_fraction
+            ...
         ```
 
     === "Example"
@@ -543,20 +495,20 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
 ### `set_admin`
 !!! description "`MonetaryPolicy.set_admin(admin: address):`"
 
-    Getter for the admin of the contract. ownership agent is the admin (cruvedao).
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
+
+    Function to set a new admin.
 
     Emits: `SetAdmin`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `admin` |  `address` | New Admin |
-
-    !!!note
-        This function is only callable by the `admin` of the contract.
+    | `admin` |  `address` | new admin address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 7 10"
+        ```python
         event SetAdmin:
             admin: address
 
@@ -581,13 +533,13 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
 ### `PRICE_ORACLE`
 !!! description "`MonetaryPolicy.PRICE_ORACLE() -> address: view`"
 
-    Getter for the price oracle contract. immutable variable (check format of how i documented other immutable variables)
+    Getter for the price oracle contract.
 
     Returns: price oracle contract (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 12"
+        ```python
         PRICE_ORACLE: public(immutable(PriceOracle))
 
         @external
@@ -598,21 +550,11 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
                     rate: uint256,
                     sigma: uint256,
                     target_debt_fraction: uint256):
-            self.admin = admin
-            PRICE_ORACLE = price_oracle
-            CONTROLLER_FACTORY = controller_factory
-            for i in range(5):
-                if peg_keepers[i].address == empty(address):
-                    break
-                self.peg_keepers[i] = peg_keepers[i]
+            ...
 
-            assert sigma >= MIN_SIGMA
-            assert sigma <= MAX_SIGMA
-            assert target_debt_fraction <= MAX_TARGET_DEBT_FRACTION
-            assert rate <= MAX_RATE
-            self.rate0 = rate
-            self.sigma = convert(sigma, int256)
-            self.target_debt_fraction = target_debt_fraction
+            PRICE_ORACLE = price_oracle
+
+            ...
         ```
 
     === "Example"
@@ -632,7 +574,7 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 13"
+        ```python
         CONTROLLER_FACTORY: public(immutable(ControllerFactory))
 
         @external
@@ -643,21 +585,11 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
                     rate: uint256,
                     sigma: uint256,
                     target_debt_fraction: uint256):
-            self.admin = admin
-            PRICE_ORACLE = price_oracle
-            CONTROLLER_FACTORY = controller_factory
-            for i in range(5):
-                if peg_keepers[i].address == empty(address):
-                    break
-                self.peg_keepers[i] = peg_keepers[i]
+            ...
 
-            assert sigma >= MIN_SIGMA
-            assert sigma <= MAX_SIGMA
-            assert target_debt_fraction <= MAX_TARGET_DEBT_FRACTION
-            assert rate <= MAX_RATE
-            self.rate0 = rate
-            self.sigma = convert(sigma, int256)
-            self.target_debt_fraction = target_debt_fraction
+            CONTROLLER_FACTORY = controller_factory
+
+            ...
         ```
 
     === "Example"
@@ -675,7 +607,13 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 22 25 28"
+        ```python
+        @external
+        def rate_write() -> uint256:
+            # Not needed here but useful for more automated policies
+            # which change rate0 - for example rate0 targeting some fraction pl_debt/total_debt
+            return self.calculate_rate()
+
         @internal
         @view
         def calculate_rate() -> uint256:
@@ -698,12 +636,6 @@ PegKeepers must be added to the monetary policy contract to calculate the rate a
                     power -= convert(pk_debt * 10**18 / total_debt * 10**18 / target_debt_fraction, int256)
 
             return self.rate0 * min(self.exp(power), MAX_EXP) / 10**18
-            
-        @external
-        def rate_write() -> uint256:
-            # Not needed here but useful for more automated policies
-            # which change rate0 - for example rate0 targeting some fraction pl_debt/total_debt
-            return self.calculate_rate()
         ```
 
     === "Example"
