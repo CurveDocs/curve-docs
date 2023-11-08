@@ -1,7 +1,6 @@
-Admin guarded function of the GaugeController.
+**Admin guarded functions of the GaugeController.**
 
-
-# **Adding New Gauges and Types**
+## **Adding New Gauges and Types**
 
 In order for a liquidity gauge to be elegible to receive CRV emission, its address needs to be added to the GaugeController.
 
@@ -188,7 +187,8 @@ In order for a liquidity gauge to be elegible to receive CRV emission, its addre
 
 
 
-# **Transfer Ownership**
+## **Transfer Ownership**
+
 ### `commit_transfer_ownership`
 !!! description "`GaugeController.commit_transfer_ownership(addr: address)`"
 
@@ -225,8 +225,7 @@ In order for a liquidity gauge to be elegible to receive CRV emission, its addre
     === "Example"
         
         ```shell
-        >>> GaugeController.commit_transfer_ownership(todo)
-        todo
+        >>> GaugeController.commit_transfer_ownership("0xd8da6bf26964af9d7eed9e03e53415d37aa96045")
         ```
 
 
