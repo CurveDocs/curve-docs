@@ -32,25 +32,25 @@ nav:
       - Sidechains: curve_dao/fee-collection-distribution/sidechains.md
 
     - Liquidity Gauges and Minting CRV:
-      - Overview: curve_dao/LiquidityGaugesAndMintingCRV/overview.md
+      - Overview: curve_dao/liquidity-gauge-and-minting-crv/overview.md
       - GaugeController:
-        - Contract Methods: curve_dao/LiquidityGaugesAndMintingCRV/gauge_controller/GaugeController.md
-        - Admin Controls: curve_dao/LiquidityGaugesAndMintingCRV/gauge_controller/admin_controls.md
+        - Contract Methods: curve_dao/liquidity-gauge-and-minting-crv/gauge_controller/GaugeController.md
+        - Admin Controls: curve_dao/liquidity-gauge-and-minting-crv/gauge_controller/admin_controls.md
       - Gauges:
-        - Overview: curve_dao/LiquidityGaugesAndMintingCRV/gauges/overview.md
-        - LiquidityGaugeV1: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV1.md
-        - LiquidityGaugeV2: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV2.md
-        - LiquidityGaugeV3: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV3.md
-        - LiquidityGaugeV4: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV4.md
-        - LiquidityGaugeV5: curve_dao/LiquidityGaugesAndMintingCRV/gauges/LiquidityGaugeV5.md  
-        - Permissionless Rewards: curve_dao/LiquidityGaugesAndMintingCRV/gauges/PermissionlessRewards.md
+        - Overview: curve_dao/liquidity-gauge-and-minting-crv/gauges/overview.md
+        - LiquidityGaugeV1: curve_dao/liquidity-gauge-and-minting-crv/gauges/LiquidityGaugeV1.md
+        - LiquidityGaugeV2: curve_dao/liquidity-gauge-and-minting-crv/gauges/LiquidityGaugeV2.md
+        - LiquidityGaugeV3: curve_dao/liquidity-gauge-and-minting-crv/gauges/LiquidityGaugeV3.md
+        - LiquidityGaugeV4: curve_dao/liquidity-gauge-and-minting-crv/gauges/LiquidityGaugeV4.md
+        - LiquidityGaugeV5: curve_dao/liquidity-gauge-and-minting-crv/gauges/LiquidityGaugeV5.md  
+        - Permissionless Rewards: curve_dao/liquidity-gauge-and-minting-crv/gauges/PermissionlessRewards.md
       - Gauges for EVM Sidechains: 
-        - Overview: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/overview.md
-        - RootChainGauge: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/RootChainGauge.md
-        - RootChainFactory: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/RootChainGaugeFactory.md
-        - ChildGauge: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/ChildGauge.md
-        - ChildGaugeFactory: curve_dao/LiquidityGaugesAndMintingCRV/evm-sidechains/ChildGaugeFactory.md
-      - Minter: curve_dao/LiquidityGaugesAndMintingCRV/minter.md 
+        - Overview: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/overview.md
+        - RootChainGauge: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGauge.md
+        - RootChainFactory: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md
+        - ChildGauge: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/ChildGauge.md
+        - ChildGaugeFactory: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/ChildGaugeFactory.md
+      - Minter: curve_dao/liquidity-gauge-and-minting-crv/minter.md 
       
     - Ownership Proxies:
       - Overview: curve_dao/ownership-proxy/overview.md
@@ -58,7 +58,7 @@ nav:
       - PoolProxy: curve_dao/ownership-proxy/PoolProxy.md
       - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
       - RootChainGaugeProxy: curve_dao/ownership-proxy/RootChainGaugeFactoryProxy.md
-    - Governance and Voting: 
+    - Governance and Voting:  
       - Overview: curve_dao/governance/overview.md
       
   - Curve Stablecoin (crvUSD):
