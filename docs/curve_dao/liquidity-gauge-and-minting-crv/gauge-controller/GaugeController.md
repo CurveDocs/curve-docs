@@ -1,5 +1,4 @@
-The **GaugeController** in Curve Finance is responsible for managing and coordinating the distribution of rewards to liquidity providers in various liquidity pools.   
-It *determines the allocation of CRV rewards based on the liquidity provided* by users. By analyzing the gauges, which are parameters that define how rewards are distributed across different pools, the GaugeController ensures a fair and balanced distribution of incentives, encouraging liquidity provision and participation in Curve's ecosystem. This helps to maintain the stability and efficiency of Curve's decentralized exchange.
+The **GaugeController** is responsible for managing and coordinating the distribution of rewards to liquidity providers in various liquidity pools. It *determines the allocation of CRV rewards based on the liquidity provided* by users. By analyzing the gauges, which are parameters that define how rewards are distributed across different pools, the GaugeController ensures a fair and balanced distribution of incentives, encouraging liquidity provision and participation in Curve's ecosystem.
 
 
 !!!deploy "Contract Source & Deployment"
@@ -7,13 +6,9 @@ It *determines the allocation of CRV rewards based on the liquidity provided* by
     Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/GaugeController.vy).
 
 
-# **Gauge Types and Weights**
 
-
-## **Types**
-
+# **Gauge Types**
 More on gauge types see [here](../gauges/overview.md).
-
 
 ### `gauge_types`
 !!! description "`GaugeController.gauge_types(_addr: address) -> int128`"
@@ -24,11 +19,11 @@ More on gauge types see [here](../gauges/overview.md).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_addr` |  `address` | Gauge Addresses |
+    | `_addr` |  `address` | gauge address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5"
+        ```python
         gauge_types_: HashMap[address, int128]
 
         @external
@@ -61,7 +56,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 13"
+        ```python
         n_gauge_types: public(int128)
 
         @external
@@ -90,17 +85,17 @@ More on gauge types see [here](../gauges/overview.md).
 ### `gauge_type_names`
 !!! description "`GaugeController.gauge_type_names(arg0: int128) -> string: view`"
 
-    Getter for the name of gauge type `arg0`.
+    Getter for the name of gauge type at index `arg0`.
 
     Returns: type name (`string`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `int128` | Gauge Type Name |
+    | `arg0` |  `int128` | index |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 7 12"
+        ```python
         gauge_type_names: public(HashMap[int128, String[64]])
 
         @external
@@ -135,11 +130,21 @@ More on gauge types see [here](../gauges/overview.md).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `type_id` |  `int128` | Gauge Type ID |
+    | `type_id` |  `int128` | gauge type id |
 
     ??? quote "Source code"
 
-        ```python hl_lines="0"
+        ```python
+        @external
+        @view
+        def get_type_weight(type_id: int128) -> uint256:
+            """
+            @notice Get current type weight
+            @param type_id Type id
+            @return Type weight
+            """
+            return self.points_type_weight[type_id][self.time_type_weight[type_id]]
+
         @internal
         def _get_type_weight(gauge_type: int128) -> uint256:
             """
@@ -161,17 +166,6 @@ More on gauge types see [here](../gauges/overview.md).
                 return w
             else:
                 return 0
-
-
-        @external
-        @view
-        def get_type_weight(type_id: int128) -> uint256:
-            """
-            @notice Get current type weight
-            @param type_id Type id
-            @return Type weight
-            """
-            return self.points_type_weight[type_id][self.time_type_weight[type_id]]
         ```
 
     === "Example"
@@ -181,63 +175,7 @@ More on gauge types see [here](../gauges/overview.md).
         ```
 
 
-## **Gauges**
-
-### `n_gauges`
-!!! description "`GaugeController.n_gauges -> int128: view`"
-
-    Getter for the total amount of individual gauges. 
-
-    Returns: amount of gauges (`int128`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 16"
-        n_gauges: public(int128)
-
-        @external
-        def add_gauge(addr: address, gauge_type: int128, weight: uint256 = 0):
-            """
-            @notice Add gauge `addr` of type `gauge_type` with weight `weight`
-            @param addr Gauge address
-            @param gauge_type Gauge type
-            @param weight Gauge weight
-            """
-            assert msg.sender == self.admin
-            assert (gauge_type >= 0) and (gauge_type < self.n_gauge_types)
-            assert self.gauge_types_[addr] == 0  # dev: cannot add the same gauge twice
-
-            n: int128 = self.n_gauges
-            self.n_gauges = n + 1
-            self.gauges[n] = addr
-
-            self.gauge_types_[addr] = gauge_type + 1
-            next_time: uint256 = (block.timestamp + WEEK) / WEEK * WEEK
-
-            if weight > 0:
-                _type_weight: uint256 = self._get_type_weight(gauge_type)
-                _old_sum: uint256 = self._get_sum(gauge_type)
-                _old_total: uint256 = self._get_total()
-
-                self.points_sum[gauge_type][next_time].bias = weight + _old_sum
-                self.time_sum[gauge_type] = next_time
-                self.points_total[next_time] = _old_total + _type_weight * weight
-                self.time_total = next_time
-
-                self.points_weight[addr][next_time].bias = weight
-
-            if self.time_sum[gauge_type] == 0:
-                self.time_sum[gauge_type] = next_time
-            self.time_weight[addr] = next_time
-
-            log NewGauge(addr, gauge_type, weight)
-        ```
-
-    === "Example"
-        ```shell
-        >>> GaugeController.n_gauges()
-        264
-        ```
+# **Gauges Weights**
 
 
 ### `gauge_relative_weight`
@@ -257,7 +195,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 19 22 26 35"
+        ```python
         @internal
         @view
         def _gauge_relative_weight(addr: address, time: uint256) -> uint256:
@@ -315,7 +253,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 9"
+        ```python
         @external
         @view
         def get_gauge_weight(addr: address) -> uint256:
@@ -343,7 +281,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 10"
+        ```python
         points_total: public(HashMap[uint256, uint256])  # time -> total weight
 
         @external
@@ -377,7 +315,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     ??? quote "Source code"
 
-        ```python hl_lines=1 5 11"
+        ```python
         points_sum: public(HashMap[int128, HashMap[uint256, Point]])  # type_id -> time -> Point
 
         @external
@@ -398,6 +336,64 @@ More on gauge types see [here](../gauges/overview.md).
         ```
 
 
+# **Gauge Info**
+
+### `n_gauges`
+!!! description "`GaugeController.n_gauges -> int128: view`"
+
+    Getter for the total amount of individual gauges. 
+
+    Returns: amount of gauges (`int128`).
+
+    ??? quote "Source code"
+
+        ```python
+        n_gauges: public(int128)
+
+        @external
+        def add_gauge(addr: address, gauge_type: int128, weight: uint256 = 0):
+            """
+            @notice Add gauge `addr` of type `gauge_type` with weight `weight`
+            @param addr Gauge address
+            @param gauge_type Gauge type
+            @param weight Gauge weight
+            """
+            assert msg.sender == self.admin
+            assert (gauge_type >= 0) and (gauge_type < self.n_gauge_types)
+            assert self.gauge_types_[addr] == 0  # dev: cannot add the same gauge twice
+
+            n: int128 = self.n_gauges
+            self.n_gauges = n + 1
+            self.gauges[n] = addr
+
+            self.gauge_types_[addr] = gauge_type + 1
+            next_time: uint256 = (block.timestamp + WEEK) / WEEK * WEEK
+
+            if weight > 0:
+                _type_weight: uint256 = self._get_type_weight(gauge_type)
+                _old_sum: uint256 = self._get_sum(gauge_type)
+                _old_total: uint256 = self._get_total()
+
+                self.points_sum[gauge_type][next_time].bias = weight + _old_sum
+                self.time_sum[gauge_type] = next_time
+                self.points_total[next_time] = _old_total + _type_weight * weight
+                self.time_total = next_time
+
+                self.points_weight[addr][next_time].bias = weight
+
+            if self.time_sum[gauge_type] == 0:
+                self.time_sum[gauge_type] = next_time
+            self.time_weight[addr] = next_time
+
+            log NewGauge(addr, gauge_type, weight)
+        ```
+
+    === "Example"
+        ```shell
+        >>> GaugeController.n_gauges()
+        264
+        ```
+
 ### `gauges`
 !!! description "`GaugeController.gauges(arg0: uint256) -> address: view`"
 
@@ -411,7 +407,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 17"
+        ```python
         gauges: public(address[1000000000])
 
         @external
@@ -441,7 +437,6 @@ More on gauge types see [here](../gauges/overview.md).
         ```
 
 
-
 # **Vote-Weighting**
 Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` is equivalent to a 100% vote weight.
 
@@ -463,7 +458,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8 68"
+        ```python
         event VoteForGauge:
             time: uint256
             user: address
@@ -562,7 +557,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 36 38"
+        ```python
         vote_user_power: public(HashMap[address, uint256])  # Total vote power used by user
         
         @external
@@ -658,7 +653,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 17 70"
+        ```python
         last_user_vote: public(HashMap[address, HashMap[address, uint256]])  # Last user vote's timestamp for each gauge address
         
         @external
@@ -754,7 +749,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 22 67"
+        ```python
         vote_user_slopes: public(HashMap[address, HashMap[address, VotedSlope]])  # user -> gauge_addr -> VotedSlope
 
         @external
@@ -836,7 +831,10 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
         ```
 
 
+
 # **Admin Ownership** 
+
+Admin ownership can be commited by calling [`commit_transfer_ownership`](../gauge-controller/admin-controls.md#commit_transfer_ownership). Changes then need to be [applied](../gauge-controller/admin-controls.md#apply_transfer_ownership). The current `admin` is the OwnershipAgent, which would require a DAO vote to change it.
 
 ## `admin`
 !!! description "`GaugeController.admin() -> address: view`"
@@ -847,7 +845,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 13"
+        ```python
         admin: public(address)  # Can and will be a smart contract
 
         @external
@@ -857,13 +855,11 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
             @param _token `ERC20CRV` contract address
             @param _voting_escrow `VotingEscrow` contract address
             """
-            assert _token != ZERO_ADDRESS
-            assert _voting_escrow != ZERO_ADDRESS
+            ...
 
             self.admin = msg.sender
-            self.token = _token
-            self.voting_escrow = _voting_escrow
-            self.time_total = block.timestamp / WEEK * WEEK
+
+            ...
         ```
 
     === "Example"
@@ -876,24 +872,14 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 ## `future_admin`
 !!! description "`GaugeController.future_admin() -> address: view`"
 
-    Getter for the future admin of the contract. This variable is changed when calling `commit_transfer_ownership` successfully.
+    Getter for the future admin of the contract. 
 
     Returns: future admin (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 10"
+        ```python
         future_admin: public(address)  # Can and will be a smart contract
-
-        @external
-        def commit_transfer_ownership(addr: address):
-            """
-            @notice Transfer ownership of GaugeController to `addr`
-            @param addr Address to have ownership transferred to
-            """
-            assert msg.sender == self.admin  # dev: admin only
-            self.future_admin = addr
-            log CommitOwnership(addr)
         ```
 
     === "Example"
@@ -914,7 +900,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 7 10 14"
+        ```python
         token: public(address)  # CRV token
 
         @external
@@ -925,12 +911,12 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
             @param _voting_escrow `VotingEscrow` contract address
             """
             assert _token != ZERO_ADDRESS
-            assert _voting_escrow != ZERO_ADDRESS
 
-            self.admin = msg.sender
+            ...
+
             self.token = _token
-            self.voting_escrow = _voting_escrow
-            self.time_total = block.timestamp / WEEK * WEEK
+
+            ...
         ```
 
     === "Example"
@@ -949,7 +935,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 8 11 15"
+        ```python
         voting_escrow: public(address)  # Voting escrow
 
         @external
@@ -959,13 +945,13 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
             @param _token `ERC20CRV` contract address
             @param _voting_escrow `VotingEscrow` contract address
             """
-            assert _token != ZERO_ADDRESS
-            assert _voting_escrow != ZERO_ADDRESS
+            ...
 
-            self.admin = msg.sender
-            self.token = _token
+            assert _voting_escrow != ZERO_ADDRESS
+            
+            ...
+            
             self.voting_escrow = _voting_escrow
-            self.time_total = block.timestamp / WEEK * WEEK
         ```
 
     === "Example"

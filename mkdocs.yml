@@ -34,8 +34,8 @@ nav:
     - Liquidity Gauges and Minting CRV:
       - Overview: curve_dao/liquidity-gauge-and-minting-crv/overview.md
       - GaugeController:
-        - Contract Methods: curve_dao/liquidity-gauge-and-minting-crv/gauge_controller/GaugeController.md
-        - Admin Controls: curve_dao/liquidity-gauge-and-minting-crv/gauge_controller/admin_controls.md
+        - Gauge Controller: curve_dao/liquidity-gauge-and-minting-crv/gauge-controller/GaugeController.md
+        - Admin Controls: curve_dao/liquidity-gauge-and-minting-crv/gauge-controller/admin-controls.md
       - Gauges:
         - Overview: curve_dao/liquidity-gauge-and-minting-crv/gauges/overview.md
         - LiquidityGaugeV1: curve_dao/liquidity-gauge-and-minting-crv/gauges/LiquidityGaugeV1.md
