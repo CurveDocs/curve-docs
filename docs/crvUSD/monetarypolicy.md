@@ -2,7 +2,7 @@
 
 !!!deploy "Contract Source & Deployment"
     Source code available on [Github](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/mpolicies).
-    
+
     | MonetaryPolicy | Deployment Address |
     | -------------- | ------------------ |
     | wstETH, sfrxETH2 | [0x1e7d3bf98d3f8d8ce193236c3e0ec4b00e32daae](https://etherscan.io/address/0x1e7d3bf98d3f8d8ce193236c3e0ec4b00e32daae) |
@@ -10,9 +10,6 @@
     | ETH | [0xBB3fda661149f6E45D829D5dd54a1608577c5Fa1](https://etherscan.io/address/0xBB3fda661149f6E45D829D5dd54a1608577c5Fa1) |
     | wBTC, tBTC | [0xb8687d7dc9d8fa32fabde63E19b2dBC9bB8B2138](https://etherscan.io/address/0xb8687d7dc9d8fa32fabde63E19b2dBC9bB8B2138) |
 
-
-!!! tip
-    Useful tool by [0xreviews](https://twitter.com/0xreviews_xyz) to play around with rates: https://crvusd-rate.0xreviews.xyz/
 
 
 ## **Interest Rates**
@@ -26,6 +23,9 @@ Markets have a **dynamic rate**, depending on the following components:
 * DebtFraction of PegKeepers  
 
 For the price of crvUSD, an aggregated oracle price of multiple Curve Stablwswap pools is used ([see here](../crvUSD/priceaggregator.md)).
+
+!!! tip
+    Useful tool by [0xreviews](https://twitter.com/0xreviews_xyz) to play around with rates: https://crvusd-rate.0xreviews.xyz/
 
 
 $$r = rate0 * e^{power}$$
