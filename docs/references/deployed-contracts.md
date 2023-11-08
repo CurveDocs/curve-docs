@@ -85,6 +85,7 @@ Burners are a crucial element of the fee payout system in Curve. They convert th
 Here is a list of all burner contracts currently in use:
 
 **Ethereum** 
+
 | Burner Type   | Description | Address  |
 | -------- | -------|-------|
 |`ABurner`|converts aToken lending tokens to USDC and trasfers to UnderlyingBurner|[0x12220a63a2013133D54558C9d03c35288eAC9B34](https://etherscan.io/address/0x12220a63a2013133d54558c9d03c35288eac9b34#code)|
@@ -108,6 +109,7 @@ Here is a list of all burner contracts currently in use:
 
 
 **Arbitrum** 
+
 | Burner Type   | Description | Address  |
 | -------- | -------|-------|
 |`LPBurner`| burns lp tokens for usdt/usdc|[0x2Ac51A7bC5E41cc35a1ce107E39847Ce00c20161](https://arbiscan.io/address/0x2Ac51A7bC5E41cc35a1ce107E39847Ce00c20161#code)|
@@ -125,6 +127,7 @@ Here is a list of all burner contracts currently in use:
 
 
 **Optimism**
+
 | Burner Type   | Description | Address  |
 | -------- | -------|-------|
 |`StableBurner`| deposits coins into 3pool |[0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69](https://optimistic.etherscan.io/address/0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69#code)|
@@ -139,6 +142,7 @@ Here is a list of all burner contracts currently in use:
 
 
 **Polygon**
+
 | Burner Type   | Description | Address  |
 | -------- | -------|-------|
 |`amToken Burner`| converts am-Tokens lending coin to usdc and transfers them to the pool proxy |[0x7b7b5f87c7357133c93dba8d61fb397f33c99a6b](https://polygonscan.com/address/0x7b7b5f87c7357133c93dba8d61fb397f33c99a6b#code)|
@@ -157,6 +161,7 @@ Here is a list of all burner contracts currently in use:
 
 
 **Avalanche**
+
 | Burner Type   | Description | Address  |
 | -------- | -------|-------|
 |`LPBurner`|burns lp-tokens for av-Tokens and sends them to the pool proxy|[0x2c2fc48c3404a70f2d33290d5820edf49cbf74a5](https://snowtrace.io/address/0x2c2fc48c3404a70f2d33290d5820edf49cbf74a5#code)|
@@ -176,6 +181,7 @@ Here is a list of all burner contracts currently in use:
 
 
 **Fantom**
+
 | Burner Type   | Description | Address  |
 | -------- | -------|-------|
 |`UnderlyingBurner`|swaps usdc/dai tokens into usdt|[0x423f26eb44d4be89072eecfc81b95065ce43bf4b](https://ftmscan.com/address/0x423f26eb44d4be89072eecfc81b95065ce43bf4b#code)|
@@ -193,6 +199,7 @@ Here is a list of all burner contracts currently in use:
 
 
 **Celo**
+
 | Burner Type   | Description | Address  |
 | -------- | -------|-------|
 | - | - | - |
@@ -203,7 +210,8 @@ Here is a list of all burner contracts currently in use:
 |`Factory`|`Curve Pool Factory`|[0x5277a0226d10392295e8d383e9724d6e416d6e6c](https://celoscan.io/address/0x5277a0226d10392295e8d383e9724d6e416d6e6c#code)| 
 
 
-**KAVA**
+**Kava**
+
 | Burner Type   | Description | Address  |
 | -------- | -------|-------|
 | - | - | - |
@@ -215,6 +223,7 @@ Here is a list of all burner contracts currently in use:
 
 
 **Moonbeam**
+
 | Burner Type   | Description | Address  |
 | -------- | -------|-------|
 | - | - | - |
@@ -226,6 +235,7 @@ Here is a list of all burner contracts currently in use:
 
 
 **Gnosis**
+
 | Burner Type   | Description | Address  |
 | -------- | -------|-------|
 | - | - | - |
@@ -234,6 +244,7 @@ Here is a list of all burner contracts currently in use:
 | -------- | -------|-------|
 |`ProxyAdmin`|pool proxy|[0x6f8eef407b974dff82c53ff939cc1ebb699383fb](https://gnosisscan.io/address/0x6f8eef407b974dff82c53ff939cc1ebb699383fb#code)| 
 |`Factory`|Curve Pool Factory|[0xd19baeadc667cf2015e395f2b08668ef120f41f5](https://gnosisscan.io/address/0xd19baeadc667cf2015e395f2b08668ef120f41f5#code)| 
+
 
 
 ## **Curve Stablecoin**
