@@ -7,7 +7,7 @@ The **GaugeController** is responsible for managing and coordinating the distrib
 
 
 
-# **Gauge Types**
+## **Gauge Types**
 More on gauge types see [here](../gauges/overview.md).
 
 ### `gauge_types`
@@ -175,7 +175,7 @@ More on gauge types see [here](../gauges/overview.md).
         ```
 
 
-# **Gauges Weights**
+## **Gauges Weights**
 
 
 ### `gauge_relative_weight`
@@ -336,7 +336,7 @@ More on gauge types see [here](../gauges/overview.md).
         ```
 
 
-# **Gauge Info**
+## **Gauge Info**
 
 ### `n_gauges`
 !!! description "`GaugeController.n_gauges -> int128: view`"
@@ -437,11 +437,11 @@ More on gauge types see [here](../gauges/overview.md).
         ```
 
 
-# **Vote-Weighting**
+## **Vote-Weighting**
 Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` is equivalent to a 100% vote weight.
 
 
-## `vote_for_gauge_weights`
+### `vote_for_gauge_weights`
 !!! description "`GaugeController.vote_for_gauge_weights(_gauge_addr: address, _user_weight: uint256):`"
 
     !!! warning
@@ -544,7 +544,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
         ```
 
 
-## `vote_user_power`
+### `vote_user_power`
 !!! description "`GaugeController.vote_user_power(arg0: address) -> uint256: view`"
 
     Getter method for the total voting power used by address `arg0`.
@@ -639,7 +639,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
         ```
 
 
-## `last_user_vote`
+### `last_user_vote`
 !!! description "`GaugeController.last_user_vote(arg0: address, arg1: address) -> uint256: view`"
 
     Getter for the last timestamp user `arg0` voted for gauge `arg1`.
@@ -735,7 +735,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
         ```
 
 
-## `vote_user_slopes`
+### `vote_user_slopes`
 !!! description "`GaugeController.vote_user_slopes(arg0: address, arg1: address) -> slope: uint256, power: uint256, end: uint256`"
 
     Getter method for informations about users's `arg0` current vote weight for gauge `arg1`.
@@ -832,11 +832,11 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
 
 
-# **Admin Ownership** 
+## **Admin Ownership** 
 
 Admin ownership can be commited by calling [`commit_transfer_ownership`](../gauge-controller/admin-controls.md#commit_transfer_ownership). Changes then need to be [applied](../gauge-controller/admin-controls.md#apply_transfer_ownership). The current `admin` is the OwnershipAgent, which would require a DAO vote to change it.
 
-## `admin`
+### `admin`
 !!! description "`GaugeController.admin() -> address: view`"
 
     Getter for the admin of the contract.
@@ -869,7 +869,7 @@ Admin ownership can be commited by calling [`commit_transfer_ownership`](../gaug
         ```
 
 
-## `future_admin`
+### `future_admin`
 !!! description "`GaugeController.future_admin() -> address: view`"
 
     Getter for the future admin of the contract. 
@@ -889,9 +889,9 @@ Admin ownership can be commited by calling [`commit_transfer_ownership`](../gaug
         ```
 
 
-# **Contract Info Methods**
+## **Contract Info Methods**
 
-## `token`
+### `token`
 !!! description "`GaugeController.token() -> address: view`"
 
     Getter for the Curve DAO Token.
@@ -926,7 +926,7 @@ Admin ownership can be commited by calling [`commit_transfer_ownership`](../gaug
         ```
 
 
-## `voting_escrow`
+### `voting_escrow`
 !!! description "`GaugeController.voting_escrow() -> address: view`"
 
     Getter for the VotingEscrow contract.
