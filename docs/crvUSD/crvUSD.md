@@ -1,8 +1,9 @@
-!!! info
-    The crvUSD contract is deployed to the Ethereum mainnet at: [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/address/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E).  
-    Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/Stablecoin.vy). 
+!!!deploy "Contract Source & Deployment"
+    **crvUSD Token** contract is deployed to the Ethereum mainnet at: [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/address/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E#code).  
+    Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/Stablecoin.vy).
 
-!!! warning
+
+!!!warning
     Due to some testing in production, there have been several deployments for the stablecoin and its components. Please always make sure you are using the latest deployment. See [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
 
 
@@ -17,7 +18,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         decimals: public(constant(uint8)) = 18
         ```
 
@@ -31,9 +32,9 @@
 ### `version`
 !!! description "`crvUSD.version() -> String[8]: view`"
 
-    Getter of the version of the contract.
+    Getter for the version of the contract.
 
-    Returns: **version** (`uint256`) of the token. 
+    Returns: version (`String[8]`).
 
     ??? quote "Source code"
 
@@ -53,11 +54,11 @@
 
     Getter for the name of the token.
 
-    Returns: name (`String[64]`) of the token.
+    Returns: name (`String[64]`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 5"
+        ```python 
         name: public(immutable(String[64]))
         
         @external
@@ -95,11 +96,11 @@
 
     Getter for the symbol of the token.
 
-    Returns: symbol (`String[32]`) of the token.
+    Returns: symbol (`String[32]`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 6"
+        ```python 
         symbol: public(immutable(String[32]))
         
         @external
@@ -135,17 +136,17 @@
 ### `balanceOf`
 !!! description "`crvUSD.balanceOf(arg0: address) -> uint256: view`"
 
-    Getter for the balance of crvUSD for an address.
+    Getter for the crvUSD balance of address `arg0`.
 
-    Returns: amount (`uint256`).
+    Returns: balance (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `address` | Address to check balance for |
+    | `arg0` |  `address` | address to check balance for |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         balanceOf: public(HashMap[address, uint256])
         ```
 
@@ -165,7 +166,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python 
         totalSupply: public(uint256)
         ```
 
@@ -186,16 +187,13 @@
 ### `minter`
 !!! description "`crvUSD.minter() -> address: view`"
 
-    Getter for the minter contract of crvUSD.
+    Getter for the minter contract.
 
-    Returns: minter `address`.
+    Returns: minter (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 4"
-        event SetMinter:
-            minter: indexed(address)
-
+        ```python
         minter: public(address)
         ```
 
@@ -209,14 +207,19 @@
 ### `mint`
 !!! description "`crvUSD.mint(_to: address, _value: uint256) -> bool:`"
 
+    !!!guard "Guarded Method" 
+        This function is only callable by the `minter` of the contract.
+
     Function to mint `_value` amount of tokens to `_to`.
 
-    Returns: true or flase (`boolean`).
+    Returns: true (`bool`).
+
+    Emits: `Transfer`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_to` |  `address` | Address newly minted tokens are credited to |
-    | `_value` |  `uint256` | Amount of tokens to mint |
+    | `_to` |  `address` | address newly minted tokens are credited to |
+    | `_value` |  `uint256` | amount of tokens to mint |
 
     ??? quote "Source code"
 
@@ -254,15 +257,20 @@
 ### `set_minter`
 !!! description "`crvUSD.set_minter(_minter: address):`"
 
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
+
     Function to set the minter address of the token.
+
+    Emits: `SetMinter`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_minter` |  `address` | Minter address |
+    | `_minter` |  `address` | new minter address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 7 10 11"
+        ```python
         event SetMinter:
             minter: indexed(address)
 
@@ -276,9 +284,6 @@
             log SetMinter(_minter)
         ```
 
-    !!!note 
-        The minter address can only be set by the minter itself. For that reason the minter address was set to the deployer's address at the time of deployment and was then set to the actual minter address ([Transaction](https://etherscan.io/tx/0xf2a117bf688b7bf2d719cc7d047feadbc3e9fd8fbcb6ed397c3e9f85598b60cd#eventlog)). 
-
     === "Example"
         ```shell
         >>> crvUSD.set_minter(todo)
@@ -288,9 +293,11 @@
 ### `burn` 
 !!! description "`crvUSD.burn(_value: uint256) -> bool:`"
 
-    Function to burn `_value` amount of tokens.
+    Function to burn `_value` amount of tokens from `msg.sender`.
 
-    Returns: true or flase (`boolean`).
+    Returns: true (`bool`).
+
+    Emits: `Transfer`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -298,7 +305,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 11 14"
+        ```python 
         event Transfer:
             sender: indexed(address)
             receiver: indexed(address)
@@ -333,19 +340,18 @@
 
     Function to burn `_value` amount of tokens from `_from`.
 
-    Returns: true or false (`boolean`).
+    Returns: true (`boolean`).
+
+    Emits: `Transfer`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_from` |  `address` | Address to burn tokens for |
-    | `_value` |  `uint256` | Amount of tokens to burn |
-
-    !!!note
-        Calling this function on behalf of another address requires [`allowance`](#allowance).
+    | `_from` |  `address` | address to burn tokens for |
+    | `_value` |  `uint256` | amount of tokens to burn |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 11 14"
+        ```python 
         event Transfer:
             sender: indexed(address)
             receiver: indexed(address)
@@ -382,10 +388,39 @@
 
 
 ## **Allowances**
+
+### `allowance`
+!!! description "`crvUSD.allowance(arg0: address, arg1: address) -> uint256`"
+
+    Getter method to check the allowance.
+
+    Returns: allowed tokens (`uint256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `arg0` |  `address` | address of the spender |
+    | `arg1` |  `address` | address of the token owner |
+
+    ??? quote "Source code"
+
+        ```python
+        allowance: public(HashMap[address, HashMap[address, uint256]])
+        ```
+
+    === "Example"
+        ```shell
+        >>> crvUSD.set_minter(todo)
+        ```
+
+
 ### `approve`
 !!! description "`crvUSD.approve(_spender: address, _value: uint256) -> bool:`"
 
     Fucntion to allow `_spender` to transfer up to `_value` amount of tokens from the caller's amount.
+
+    Returns: true (`bool`).
+
+    Emits: `Approval`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -394,17 +429,13 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 10 13 22"
+        ```python
         event Approval:
             owner: indexed(address)
             spender: indexed(address)
             value: uint256
 
-        @internal
-        def _approve(_owner: address, _spender: address, _value: uint256):
-            self.allowance[_owner][_spender] = _value
-
-            log Approval(_owner, _spender, _value)
+        allowance: public(HashMap[address, HashMap[address, uint256]])
 
         @external
         def approve(_spender: address, _value: uint256) -> bool:
@@ -418,6 +449,12 @@
             """
             self._approve(msg.sender, _spender, _value)
             return True
+
+        @internal
+        def _approve(_owner: address, _spender: address, _value: uint256):
+            self.allowance[_owner][_spender] = _value
+
+            log Approval(_owner, _spender, _value)
         ```
 
     === "Example"
@@ -427,32 +464,14 @@
         ```
 
 
-### `allowance`
-!!! description "`crvUSD.allowance(arg0: address, arg1: address) -> uint256`"
-
-    Getter to check the allowance.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `address` | todo |
-    | `arg1` |  `address` | todo |
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 7 11"
-        allowance: public(HashMap[address, HashMap[address, uint256]])
-        ```
-
-    === "Example"
-        ```shell
-        >>> crvUSD.set_minter(todo)
-        ```
-
-
 ### `increaseAllowance`
 !!! description "`crvUSD.increaseAllowance(_spender: address, _add_value: uint256) -> bool:`"
 
     Function to increase the allowance granted to `_spender`.
+
+    Returns: true (`bool`).
+
+    Emits: `Approval`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -465,6 +484,8 @@
     ??? quote "Source code"
 
         ```python hl_lines="2"
+        allowance: public(HashMap[address, HashMap[address, uint256]])
+
         @external
         def increaseAllowance(_spender: address, _add_value: uint256) -> bool:
             """
@@ -486,6 +507,12 @@
                 self._approve(msg.sender, _spender, allowance)
 
             return True
+
+        @internal
+        def _approve(_owner: address, _spender: address, _value: uint256):
+            self.allowance[_owner][_spender] = _value
+
+            log Approval(_owner, _spender, _value)
         ```
 
     === "Example"
@@ -499,6 +526,10 @@
 
     Function to decrease the allowance granted to `_spender`.
 
+    Returns: true (`bool`).
+
+    Emits: `Approval`
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_spender` |  `address` | Address to decrease the allowance of |
@@ -510,6 +541,8 @@
     ??? quote "Source code"
 
         ```python hl_lines="2"
+        allowance: public(HashMap[address, HashMap[address, uint256]])
+
         @external
         def decreaseAllowance(_spender: address, _sub_value: uint256) -> bool:
             """
@@ -530,6 +563,12 @@
                 self._approve(msg.sender, _spender, allowance)
 
             return True
+
+        @internal
+        def _approve(_owner: address, _spender: address, _value: uint256):
+            self.allowance[_owner][_spender] = _value
+
+            log Approval(_owner, _spender, _value)
         ```
 
     === "Example"
@@ -543,15 +582,19 @@
 
     Function to permit `_spender` to spend up to `_value` amount of `_owner`'s tokens via a signature.
 
+    Returns: true (`bool`).
+
+    Emits: `Approval`
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_owner` |  `address` | Address which generated the signature and is granting an allowance |
-    | `_spender` |  `uint256` | Address which will be granted an allowance |
-    | `_value` |  `uint256` | Approved amount |
-    | `_deadline` |  `uint256` | Deadline by which the signature must be submitted |
-    | `_v` |  `uint256` | Last byte of the ECDSA signature |
-    | `_r` |  `uint256` | First 32 bytes of the ECDSA signature |
-    | `_s` |  `uint256` | Second 32 bytes of the ECDSA signature |
+    | `_owner` |  `address` | address which generated the signature and is granting an allowance |
+    | `_spender` |  `uint256` | address which will be granted an allowance |
+    | `_value` |  `uint256` | approved amount |
+    | `_deadline` |  `uint256` | deadline by which the signature must be submitted |
+    | `_v` |  `uint256` | last byte of the ECDSA signature |
+    | `_r` |  `uint256` | first 32 bytes of the ECDSA signature |
+    | `_s` |  `uint256` | second 32 bytes of the ECDSA signature |
 
     !!!note
         In the event of a chain fork, replay attacks are prevented as domain separator is recalculated.     
@@ -560,6 +603,13 @@
     ??? quote "Source code"
 
         ```python hl_lines="2"
+        event Approval:
+            owner: indexed(address)
+            spender: indexed(address)
+            value: uint256
+
+        allowance: public(HashMap[address, HashMap[address, uint256]])
+
         @external
         def permit(
             _owner: address,
@@ -602,6 +652,12 @@
             self.nonces[_owner] = nonce + 1
             self._approve(_owner, _spender, _value)
             return True
+
+        @internal
+        def _approve(_owner: address, _spender: address, _value: uint256):
+            self.allowance[_owner][_spender] = _value
+
+            log Approval(_owner, _spender, _value)
         ```
 
     === "Example"

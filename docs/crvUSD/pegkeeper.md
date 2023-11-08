@@ -1,26 +1,28 @@
 ## **Concept of PegKeepers**  
 
-PegKeepers are contracts that help stabilize the peg of crvUSD. They are allocated a specific amount of crvUSD to secure the peg. 
-The DAO decides this balance and can be **raised or lowered** by calling `set_debt_ceiling` in the [Factory Contract](../crvUSD/factory.md).
+PegKeepers are contracts that help stabilize the peg of crvUSD. Each Keeper is allocated a specific amount of crvUSD to secure the peg. 
+The DAO decides this balance and can be **raised or lowered** by calling `set_debt_ceiling` in the [Factory](../crvUSD/factory.md).
 
 
 The underlying actions of the PegKeepers can be divided into two actions, which get executed when calling [`update`](#update):
 
-- **crvUSD price > 1**: The PegKeeper mints and deposits crvUSD single-sidedly into the pool to which it is linked, and receives LP tokens in exchange. This increases the supply of crvUSD in the pool and therefore decreases the price. It is important to note that the LP tokens are not staked in the gauge (if there is one). Thus, the PegKeeper does not receive CRV emissions.
+- **crvUSD price > 1**: The PegKeeper mints and deposits crvUSD single-sidedly into the pool to which it is "linked", and receives LP tokens in exchange. This increases the balance of crvUSD in the pool and therefore decreases the price. It is important to note that the LP tokens are not staked in the gauge (if there is one). Thus, the PegKeeper does not receive CRV emissions.
 
-- **crvUSD price < 1**: If PegKeepers hold a balance of the corresponding LP token, they can withdraw crvUSD from the liquidity pool and burn it. This action reduces the supply of crvUSD in the pool and should subsequently increase its price.
+- **crvUSD price < 1**: If PegKeepers hold a balance of the corresponding LP token, they can single-sidedly withdraw crvUSD from the liquidity pool and burn it. This action reduces the supply of crvUSD in the pool and should subsequently increase its price.
+
+!!!note
+    PegKeepers do not actually *mint or burn* crvUSD tokens. They have a defined allocated balance of crvUSD tokens they can use for deposits. It is important to note that **PegKeepers cannot do anything else apart from depositing and withdrawing**; therefore, crvUSD token balances of the PegKeepers that are not deposited into a pool should not be counted as circulating supply, although technically they are.
 
 
-!!! info
+!!!deploy "Contract Source & Deployment"
     Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/stabilizer/PegKeeper.vy). 
 
-
-| Current PegKeepers | Address  |
-| -------|-------|
-|`PegKepper for crvUSD/USDC Pool`|[0xaA346781dDD7009caa644A4980f044C50cD2ae22](https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22#code)|
-|`PegKepper for crvUSD/USDT Pool`|[0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8](https://etherscan.io/address/0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8#code)|
-|`PegKepper for crvUSD/USDP Pool`|[0x6B765d07cf966c745B340AdCa67749fE75B5c345](https://etherscan.io/address/0x6B765d07cf966c745B340AdCa67749fE75B5c345#code)|
-|`PegKepper for crvUSD/TUSD Pool`|[0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae](https://etherscan.io/address/0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae#code)|
+    | PegKeepers | Deployment Address  |
+    | -------|-------|
+    |`PegKepper for crvUSD/USDC`|[0xaA346781dDD7009caa644A4980f044C50cD2ae22](https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22#code)|
+    |`PegKepper for crvUSD/USDT`|[0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8](https://etherscan.io/address/0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8#code)|
+    |`PegKepper for crvUSD/USDP`|[0x6B765d07cf966c745B340AdCa67749fE75B5c345](https://etherscan.io/address/0x6B765d07cf966c745B340AdCa67749fE75B5c345#code)|
+    |`PegKepper for crvUSD/TUSD`|[0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae](https://etherscan.io/address/0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae#code)|
 
 
 ## **Stabilisation Method** 
@@ -36,7 +38,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 ### `update`
 !!! description "`PegKeeper.update(_beneficiary: address = msg.sender) -> uint256:`"
 
-    Function to either **mint and deposit** or **withdraw and burn** based on the balances of the pools coins:    
+    Function to either **mint and deposit** or **withdraw and burn** based on the balances within the pools.    
 
     Emits: `Provide` or `Withdraw`
 
@@ -54,7 +56,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
     ??? quote "Source code: **Mint and Deposit**"
 
-        ```python hl_lines="1 5 13 17 21 56"
+        ```python
         event Provide:
             amount: uint256
 
@@ -115,7 +117,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
     ??? quote "Source code: **Withdraw and Burn**"
 
-        ```python hl_lines="1 5 14 19 23 58"
+        ```python
         event Withdraw:
             amount: uint256
         
@@ -194,7 +196,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
     ??? quote "Source code"
 
-        ```python hl_lines="7 16 20 25"
+        ```python
         PRECISION: constant(uint256) = 10 ** 18
         # Calculation error for profit
         PROFIT_THRESHOLD: constant(uint256) = 10 ** 18
@@ -242,7 +244,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 39"
+        ```python 
         ACTION_DELAY: constant(uint256) = 15 * 60
 
         @external
@@ -301,7 +303,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 5 11 32 33 34"
+        ```python 
         SHARE_PRECISION: constant(uint256) = 10 ** 5
         caller_share: public(uint256)
 
@@ -353,6 +355,9 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 ### `set_new_caller_share`
 !!! description "`PegKeeper.set_new_caller_share(_new_caller_share: uint256):`"
 
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
+
     Function to set the caller share to `_new_caller_share`.
 
     Emits: `SetNewCallerShare`
@@ -361,12 +366,9 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
     | ----------- | -------| ----|
     | `_new_caller_share` |  `uint256` | New caller share |
 
-    !!!note
-        This function is only callable by the admin of the contract. 
-
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 9 17 19"
+        ```python
         event SetNewCallerShare:
             caller_share: uint256
 
@@ -407,7 +409,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 14 17 19"
+        ```python 
         event Profit:
             lp_amount: uint256
 
@@ -435,8 +437,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
 
 ## **Admin and Receiver**
-PegKeepers have a `admin` and `receiver` addresses. 
-Committing a new `admin` or `receiver` requires the corresponding commit functions to be called, actions that can only be performed by the current admin. Subsequently, the newly committed admin or receiver has to apply these changes within a timespan of 3 * 86400 seconds, corresponding to a window of three days. If an attempt is made to apply these changes after this deadline, the action will fail.
+PegKeepers have an `admin` and a `receiver`. Both of these variables can be altered by calling the respective admin-guarded functions, but such changes must first be approved by a DAO vote. After approval, the newly designated admin or receiver is required to apply these changes within a timeframe of `3 * 86400` seconds, which equates to a window of *three days*. Should there be an attempt to implement these changes after this period, the function to apply the changes will revert.
 
 
 ### `admin`
@@ -448,7 +449,7 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 13 25 28"
+        ```python 
         admin: public(address)
 
         @external
@@ -463,29 +464,11 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
             @param _aggregator Price aggregator which shows the price of pegged in real "dollars"
             @param _admin Admin account
             """
-            assert _index < 2
-            POOL = _pool
-            I = _index
-            pegged: address = _pool.coins(_index)
-            PEGGED = pegged
-            ERC20(pegged).approve(_pool.address, max_value(uint256))
-            ERC20(pegged).approve(_factory, max_value(uint256))
-
-            PEG_MUL = 10 ** (18 - ERC20(_pool.coins(1 - _index)).decimals())
+            ...
 
             self.admin = _admin
-            assert _receiver != empty(address)
-            self.receiver = _receiver
-            log ApplyNewAdmin(msg.sender)
-            log ApplyNewReceiver(_receiver)
-
-            assert _caller_share <= SHARE_PRECISION  # dev: bad part value
-            self.caller_share = _caller_share
-            log SetNewCallerShare(_caller_share)
-
-            FACTORY = _factory
-            AGGREGATOR = _aggregator
-            IS_INVERSE = (_index == 0)
+            
+            ...
         ```
 
     === "Example"
@@ -505,7 +488,7 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         future_admin: public(address)
         ```
 
@@ -516,131 +499,11 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
         '0x0000000000000000000000000000000000000000'
         ```
 
-
-
-### `receiver`
-!!! description "`PegKeeper.receiver() -> address: view`"
-
-    Getter for the receiver of the profit from the PegKeeper.
-
-    Returns: receiver (`address`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1 4 5 10 26 27 29"
-        receiver: public(address)
-
-        @external
-        def __init__(_pool: CurvePool, _index: uint256, _receiver: address, _caller_share: uint256, _factory: address, _aggregator: StableAggregator, _admin: address):
-            """
-            @notice Contract constructor
-            @param _pool Contract pool address
-            @param _index Index of the pegged
-            @param _receiver Receiver of the profit
-            @param _caller_share Caller's share of profit
-            @param _factory Factory which should be able to take coins away
-            @param _aggregator Price aggregator which shows the price pegged in real "dollars"
-            @param _admin Admin account
-            """
-            assert _index < 2
-            POOL = _pool
-            I = _index
-            pegged: address = _pool.coins(_index)
-            PEGGED = pegged
-            ERC20(pegged).approve(_pool.address, max_value(uint256))
-            ERC20(pegged).approve(_factory, max_value(uint256))
-
-            PEG_MUL = 10 ** (18 - ERC20(_pool.coins(1 - _index)).decimals())
-
-            self.admin = _admin
-            assert _receiver != empty(address)
-            self.receiver = _receiver
-            log ApplyNewAdmin(msg.sender)
-            log ApplyNewReceiver(_receiver)
-
-            assert _caller_share <= SHARE_PRECISION  # dev: bad part value
-            self.caller_share = _caller_share
-            log SetNewCallerShare(_caller_share)
-
-            FACTORY = _factory
-            AGGREGATOR = _aggregator
-            IS_INVERSE = (_index == 0)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PegKepper.receiver()
-        '0xeCb456EA5365865EbAb8a2661B0c503410e9B347'
-        ```
-
-
-### `future_receiver`
-!!! description "`PegKeeper.future_receiver() -> address: view`"
-
-    Getter for the future receiver of the PegKeeper's profit.
-
-    Returns: future receiver (`address`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1"
-        future_admin: public(address)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PegKepper.future_receiver()
-        '0x0000000000000000000000000000000000000000'
-        ```
-
-
-
-### `new_admin_deadline`
-!!! description "`PegKeeper.new_admin_deadline() -> uint256: view`"
-
-    Getter for the timestamp indicating the deadline by which the future_admin can apply the admin change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a time **period of three days**.
-
-    Returns: timestamp (`uint256`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1"
-        new_admin_deadline: public(uint256)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PegKepper.new_admin_deadline()
-        0
-        ```
-
-
-### `new_receiver_deadline`
-!!! description "`PegKeeper.new_receiver_deadline() -> uint256: view`"
-
-    Getter for the timestamp indicating the deadline by which the future_receiver can apply the receiver change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a time period of three days.
-
-    Returns: timestamp (`uint256`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1"
-        new_receiver_deadline: public(uint256)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PegKepper.new_receiver_deadline()
-        0
-        ```
-
-
 ### `commit_new_admin`
 !!! description "`PegKeeper.commit_new_admin(_new_admin: address):`"
+
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
 
     Function to commit a new admin.
 
@@ -648,15 +511,11 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_new_admin` |  `address` | New Admin |
-
-    !!!note
-        This function is only callable by the admin of the contract. 
-
+    | `_new_admin` |  `address` | new admin address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 18"
+        ```python 
         event CommitNewAdmin:
             admin: address
 
@@ -687,16 +546,16 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
 ### `apply_new_admin`
 !!! description "`PegKeeper.apply_new_admin():`"
 
+    !!!guard "Guarded Method" 
+        This function is only callable by the `future_admin` of the contract.
+
     Function to apply the new admin of the PegKeeper.
 
     Emits: `ApplyNewAdmin`
 
-    !!! note
-        The changes can only be applied by the designated `future_admin`, and only if the deadline has not yet passed.
-
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 19"
+        ```python 
         event ApplyNewAdmin:
             admin: address
 
@@ -725,23 +584,105 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
         ```
 
 
+### `new_admin_deadline`
+!!! description "`PegKeeper.new_admin_deadline() -> uint256: view`"
+
+    Getter for the timestamp indicating the deadline by which the `future_admin` can apply the admin change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a **timeperiod of three days**.
+
+    Returns: timestamp (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python
+        new_admin_deadline: public(uint256)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PegKepper.new_admin_deadline()
+        0
+        ```
+
+
+### `receiver`
+!!! description "`PegKeeper.receiver() -> address: view`"
+
+    Getter for the receiver of the PegKeeper's profits.
+
+    Returns: receiver (`address`).
+
+    ??? quote "Source code"
+
+        ```python 
+        receiver: public(address)
+
+        @external
+        def __init__(_pool: CurvePool, _index: uint256, _receiver: address, _caller_share: uint256, _factory: address, _aggregator: StableAggregator, _admin: address):
+            """
+            @notice Contract constructor
+            @param _pool Contract pool address
+            @param _index Index of the pegged
+            @param _receiver Receiver of the profit
+            @param _caller_share Caller's share of profit
+            @param _factory Factory which should be able to take coins away
+            @param _aggregator Price aggregator which shows the price pegged in real "dollars"
+            @param _admin Admin account
+            """
+            ...
+
+            assert _receiver != empty(address)
+            self.receiver = _receiver
+            
+            ...
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PegKepper.receiver()
+        '0xeCb456EA5365865EbAb8a2661B0c503410e9B347'
+        ```
+
+
+### `future_receiver`
+!!! description "`PegKeeper.future_receiver() -> address: view`"
+
+    Getter for the future receiver of the PegKeeper's profit.
+
+    Returns: future receiver (`address`).
+
+    ??? quote "Source code"
+
+        ```python 
+        future_admin: public(address)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PegKepper.future_receiver()
+        '0x0000000000000000000000000000000000000000'
+        ```
+
+
 ### `commit_new_receiver`
 !!! description "`PegKeeper.commit_new_receiver(_new_receiver: address):`"
 
-    Function to commit a new receiver.
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
+
+    Function to commit a new receiver address.
 
     Emits: `CommitNewReceiver`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_new_receiver` |  `address` | New Receiver Address |
-
-    !!!note
-        This function is only callable by the admin of the contract. 
+    | `_new_receiver` |  `address` | new receiver address | 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 18"
+        ```python
         event CommitNewReceiver:
             receiver: address
 
@@ -772,13 +713,13 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
 ### `apply_new_receiver`
 !!! description "`PegKeeper.apply_new_receiver():`"
 
-    Function to apply the new receiver of the PegKeeper's profit.
+    Function to apply the new receiver address of the PegKeeper's profit.
 
     Emits: `ApplyNewReceiver`
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 17"
+        ```python 
         event ApplyNewReceiver:
             receiver: address
 
@@ -805,19 +746,40 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
         ```
 
 
+### `new_receiver_deadline`
+!!! description "`PegKeeper.new_receiver_deadline() -> uint256: view`"
+
+    Getter for the timestamp indicating the deadline by which the `future_receiver` can apply the receiver change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a **timeperiod of three days**.
+
+    Returns: timestamp (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python
+        new_receiver_deadline: public(uint256)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PegKepper.new_receiver_deadline()
+        0
+        ```
+
+
 ### `revert_new_option`
 !!! description "`PegKeeper.revert_new_options():`"
+
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
 
     Function to revert admin or receiver changes. Calling this function sets the admin and receiver deadline back to 0 and emits ApplyNewAdmin and ApplyNewReceiver events to revert the changes.
 
     Emits: `ApplyNewAdmin` and `ApplyNewReceiver`
 
-    !!!note
-        This function is only callable by the admin of the contract. 
-
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 8 18 19"
+        ```python 
         event ApplyNewReceiver:
             receiver: address
 
@@ -851,13 +813,13 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
 ### `debt`
 !!! description "`PegKeeper.debt() -> uint256: view`"
 
-    Getter for the stablecoin debt of the PegKeeper. When the PegKeeper deposits crvUSD into the pool, the debt is incremented by the deposited amount. Conversely, if the PegKeeper withdraws, the debt is reduced by the withdrawn amount. `debt` is used to calculate the DebtFraction of the PegKeepers.
+    Getter for the crvUSD debt of the PegKeeper. When the PegKeeper deposits crvUSD into the pool, the debt is incremented by the deposited amount. Conversely, if the PegKeeper withdraws, the debt is reduced by the withdrawn amount. `debt` is used to calculate the DebtFraction of the PegKeepers.
 
     Returns: debt (`uint256`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         debt: public(uint256)
         ```
 
@@ -869,19 +831,16 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
         ```
 
 
-### `factory`
-!!! description "`PegKeeper.factory() -> address: view`"
+### `FACTORY`
+!!! description "`PegKeeper.FACTORY() -> address: view`"
 
     Getter for the address of the factory contract.
 
     Returns: factory contract (`address`).
 
-    !!! note
-        `FACTORY` variable is **immutable**. It can not be changed.
-
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 5 11 35"
+        ```python 
         FACTORY: immutable(address)
 
         @external
@@ -896,41 +855,23 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
             @param _aggregator Price aggregator which shows the price of pegged in real "dollars"
             @param _admin Admin account
             """
-            assert _index < 2
-            POOL = _pool
-            I = _index
-            pegged: address = _pool.coins(_index)
-            PEGGED = pegged
-            ERC20(pegged).approve(_pool.address, max_value(uint256))
-            ERC20(pegged).approve(_factory, max_value(uint256))
-
-            PEG_MUL = 10 ** (18 - ERC20(_pool.coins(1 - _index)).decimals())
-
-            self.admin = _admin
-            assert _receiver != empty(address)
-            self.receiver = _receiver
-            log ApplyNewAdmin(msg.sender)
-            log ApplyNewReceiver(_receiver)
-
-            assert _caller_share <= SHARE_PRECISION  # dev: bad part value
-            self.caller_share = _caller_share
-            log SetNewCallerShare(_caller_share)
+            ...
 
             FACTORY = _factory
-            AGGREGATOR = _aggregator
-            IS_INVERSE = (_index == 0)
+
+            ...
         ```
 
     === "Example"
 
         ```shell
-        >>> PegKepper.factory()
+        >>> PegKepper.FACTORY()
         '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
         ```
 
 
-### `pegged`
-!!! description "`PegKeeper.pegged() -> address: view`"
+### `PEGGED`
+!!! description "`PegKeeper.PEGGED() -> address: view`"
 
     Getter for the address of the pegged token (crvUSD). Pegged asset is determined by the index of the token in the corresponding `pool`. Index value is stored in `I`.
 
@@ -941,7 +882,7 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 5 9 16 18 19 20"
+        ```python 
         PEGGED: immutable(address)
 
         @external
@@ -956,52 +897,31 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
             @param _aggregator Price aggregator which shows the price of pegged in real "dollars"
             @param _admin Admin account
             """
-            assert _index < 2
-            POOL = _pool
-            I = _index
-            pegged: address = _pool.coins(_index)
+            ...
+
             PEGGED = pegged
-            ERC20(pegged).approve(_pool.address, max_value(uint256))
-            ERC20(pegged).approve(_factory, max_value(uint256))
-
-            PEG_MUL = 10 ** (18 - ERC20(_pool.coins(1 - _index)).decimals())
-
-            self.admin = _admin
-            assert _receiver != empty(address)
-            self.receiver = _receiver
-            log ApplyNewAdmin(msg.sender)
-            log ApplyNewReceiver(_receiver)
-
-            assert _caller_share <= SHARE_PRECISION  # dev: bad part value
-            self.caller_share = _caller_share
-            log SetNewCallerShare(_caller_share)
-
-            FACTORY = _factory
-            AGGREGATOR = _aggregator
-            IS_INVERSE = (_index == 0)
+            
+            ...
         ```
 
     === "Example"
 
         ```shell
-        >>> PegKepper.pegged()
+        >>> PegKepper.PEGGED()
         '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
         ```
 
 
-### `pool`
-!!! description "`PegKeeper.pool() -> address: view`"
+### `POOL`
+!!! description "`PegKeeper.POOL() -> address: view`"
 
     Getter for the pool contract address in which the PegKeeper deposits and withdraws.
 
     Returns: pool contract (`address`).
 
-    !!!note
-        `POOL` variable is **immutable**. It can not be changed.
-
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 5 8 17"
+        ```python
         POOL: immutable(CurvePool)
 
         @external
@@ -1016,52 +936,31 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
             @param _aggregator Price aggregator which shows the price of pegged in real "dollars"
             @param _admin Admin account
             """
-            assert _index < 2
+            ...
+
             POOL = _pool
-            I = _index
-            pegged: address = _pool.coins(_index)
-            PEGGED = pegged
-            ERC20(pegged).approve(_pool.address, max_value(uint256))
-            ERC20(pegged).approve(_factory, max_value(uint256))
-
-            PEG_MUL = 10 ** (18 - ERC20(_pool.coins(1 - _index)).decimals())
-
-            self.admin = _admin
-            assert _receiver != empty(address)
-            self.receiver = _receiver
-            log ApplyNewAdmin(msg.sender)
-            log ApplyNewReceiver(_receiver)
-
-            assert _caller_share <= SHARE_PRECISION  # dev: bad part value
-            self.caller_share = _caller_share
-            log SetNewCallerShare(_caller_share)
-
-            FACTORY = _factory
-            AGGREGATOR = _aggregator
-            IS_INVERSE = (_index == 0)
+            
+            ...
         ```
 
     === "Example"
 
         ```shell
-        >>> PegKepper.pool()
+        >>> PegKepper.POOL()
         '0x4DEcE678ceceb27446b35C672dC7d61F30bAD69E'
         ```
 
 
-### `aggregator`
-!!! description "`PegKeeper.aggregator() -> address: view`"
+### `AGGREGATOR`
+!!! description "`PegKeeper.AGGREGATOR() -> address: view`"
 
     Getter for the price aggregator contract for crvUSD. This contract is used to determine the value of crvUSD.
 
     Returns: price aggregator contract (`address`).
 
-    !!!note
-        `AGGREGATOR` variable is **immutable**. It can not be changed.
-
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 5 12 36"
+        ```python
         AGGREGATOR: immutable(StableAggregator)
 
         @external
@@ -1076,35 +975,17 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
             @param _aggregator Price aggregator which shows the price of pegged in real "dollars"
             @param _admin Admin account
             """
-            assert _index < 2
-            POOL = _pool
-            I = _index
-            pegged: address = _pool.coins(_index)
-            PEGGED = pegged
-            ERC20(pegged).approve(_pool.address, max_value(uint256))
-            ERC20(pegged).approve(_factory, max_value(uint256))
+            ...
 
-            PEG_MUL = 10 ** (18 - ERC20(_pool.coins(1 - _index)).decimals())
-
-            self.admin = _admin
-            assert _receiver != empty(address)
-            self.receiver = _receiver
-            log ApplyNewAdmin(msg.sender)
-            log ApplyNewReceiver(_receiver)
-
-            assert _caller_share <= SHARE_PRECISION  # dev: bad part value
-            self.caller_share = _caller_share
-            log SetNewCallerShare(_caller_share)
-
-            FACTORY = _factory
             AGGREGATOR = _aggregator
-            IS_INVERSE = (_index == 0)
+
+            ...
         ```
 
     === "Example"
 
         ```shell
-        >>> PegKepper.aggregator()
+        >>> PegKepper.AGGREGATOR()
         '0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7'
         ```
 
@@ -1118,7 +999,7 @@ Committing a new `admin` or `receiver` requires the corresponding commit functio
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 5 12 36"
+        ```python 
         last_change: public(uint256)
         ```
 
