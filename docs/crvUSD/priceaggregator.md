@@ -333,7 +333,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_admin` |  `address` | New Admin |
+    | `_admin` |  `address` | new admin address |
 
     ??? quote "Source code"
 
