@@ -1,8 +1,7 @@
 The use for the factory contract is to add new markets, raise or lower debt ceilings of already existing markets, set blueprint contracts for AMM and Controller, and set fee receivers.
 
-
-!!! info
-    The Factory Contract is deployed to the Ethereum mainnet at: [0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC).  
+!!!deploy "Contract Source & Deployment"
+    **crvUSD Factory** contract is deployed to the Ethereum mainnet at: [0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC#code).
     Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/ControllerFactory.vy).
 
 
@@ -10,6 +9,9 @@ The use for the factory contract is to add new markets, raise or lower debt ceil
 
 ### `add_market`
 !!! description "`ControllerFactory.add_market(token: address, A: uint256, fee: uint256, admin_fee: uint256, _price_oracle_contract: address, monetary_policy: address, loan_discount: uint256, liquidation_discount: uint256, debt_ceiling: uint256) -> address[2]:`"
+
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
 
     Function to add a new market and automatically deploy an AMM-Contract and a Controller-Contract from the implemented blueprint contracts (see [Implementations](#implementations-blueprint-contracts)). Calls `rate_write()` from the used MonetaryPolicy to check if it has a correct ABI. There are some limitation values for adding new markets regarding `fee`, `A` and `liquidation_discount`.
 
@@ -27,10 +29,7 @@ The use for the factory contract is to add new markets, raise or lower debt ceil
 
     Returns: `address` of Controller and AMM.
 
-    Emits event: `AddNewMarket`
-
-    !!!note
-        `add_market` can only be called by the admin of the contract. 
+    Emits: `AddNewMarket`
 
     ??? quote "Source code"
 
@@ -263,11 +262,14 @@ The use for the factory contract is to add new markets, raise or lower debt ceil
 ### `set_debt_ceiling`
 !!! description "`ControllerFactory.set_debt_ceiling(_to: address, debt_ceiling: uint256):`"
 
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
+
     Function to set the debt ceiling of a market and mint the token amount given for it.
 
     Returns: debt ceiling (`uint256`).
 
-    Emits event: `MintForMarket` or `RemoveFromMarket` or `SetDebtCeiling`
+    Emits: `MintForMarket` or `RemoveFromMarket` or `SetDebtCeiling`
 
     There are two possibilities on how to set the debt ceiling: 
 
@@ -279,14 +281,11 @@ The use for the factory contract is to add new markets, raise or lower debt ceil
     | `_to` |  `address` | Address to set debt ceiling for |
     | `debt_ceiling` |  `uint256` | Maximum to be allowed to mint |
 
-    !!!note 
-        `set_debt_ceiling` can only be called by the `admin` of the contract.
-
     ??? quote "Source code"
 
         === "ControllerFactory.vy"
 
-            ```python hl_lines="1 5 9 14 23 25 26 27 29 31 32 33 35 36 37 41"
+            ```python 
             event SetDebtCeiling:
                 addr: indexed(address)
                 debt_ceiling: uint256
@@ -444,17 +443,16 @@ The use for the factory contract is to add new markets, raise or lower debt ceil
 ### `set_admin`
 !!! description "`ControllerFactory.set_admin(admin: address):`"
 
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
+
     Function to set the admin of the contract.
 
-    Emits event: `SetAdmin`
+    Emits: `SetAdmin`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `admin` |  `address` | Address of the admin |
-
-    !!!note 
-        `set_admin` can only be called by the `admin` of the contract.  
-        At the time of deplyment, admin was set to the deployer of the contract. Ownership has been [trasferred](https://etherscan.io/tx/0xdd2b7a5eba5c2890b94804332825a94d37cb161ceb2a25cf985e0fdc94a55b31) to the DAO right after setting up the implementation contracts and the first market.
 
     ??? quote "Source code"
 
@@ -527,14 +525,14 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 ### `set_fee_receiver`
 !!! description "`ControllerFactory.set_fee_receiver(fee_receiver: address):`"
 
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
+
     Function to set the fee receiver address.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `fee_receiver` |  `address` | Address of the receiver |
-
-    !!!note 
-        `set_fee_receiver` can only be called by the `admin` of the contract.  
+    | `fee_receiver` |  `address` | Address of the receiver | 
 
     ??? quote "Source code"
 
@@ -563,17 +561,18 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
         'todo'
         ```
 
+
 ### `collect_fees_above_ceiling`
 !!! description "`ControllerFactory.collect_fees_above_ceiling(_to: address):`"
+
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
 
     Function to claim fees above the ceiling. This function will automatically increase the debt ceiling if it's not enough to claim admin fees.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_to` |  `address` | Address of the controller |
-
-    !!!note 
-        `collect_fees_above_ceiling` can only be called by the `admin` of the contract.  
 
     ??? quote "Source code"
 
@@ -608,7 +607,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
 
 ## **Implementations (Blueprint Contracts)**
-Implementations are blueprint contracts. When adding a new market by calling `add_market()` a AMM and a Controller contract are created in the form of these implementations. New implementation contracts can be set by the `admin` of the factory (which is the DAO).
+The implementations are based on blueprint contracts. When adding a new market by calling `add_market()` a AMM and a Controller contract are created in the form of these implementations. New implementation contracts can be set by the `admin` of the factory (which is the DAO).
 
 ### `controller_implementation`
 !!! description "`ControllerFactory.controller_implementation() -> address: view`"
@@ -654,15 +653,14 @@ Implementations are blueprint contracts. When adding a new market by calling `ad
         ```
 
 ### `set_implementations`
-    !!! description "`ControllerFactory.set_implementations(controller: address, amm: address):`"
+!!! description "`ControllerFactory.set_implementations(controller: address, amm: address):`"
+
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
 
     Function to set new implementations (blueprints) for controller and amm. 
 
-    Emits event: `SetImplementations`
-
-    !!!note 
-        `set_implementations` can only be called by the `admin` of the contract.  
-        Setting new implementations for controller and amm does not affect the existing ones.
+    Emits: `SetImplementations`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -671,7 +669,7 @@ Implementations are blueprint contracts. When adding a new market by calling `ad
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 6 10"
+        ```python 
         event SetImplementations:
             amm: address
             controller: address
