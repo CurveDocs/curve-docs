@@ -1,7 +1,7 @@
-The use for the factory contract is to add new markets, raise or lower debt ceilings of already existing markets, set blueprint contracts for AMM and Controller, and set fee receivers.
+The use for the Factory contract is to add new markets, raise or lower debt ceilings of already existing markets or PegKeepers, set blueprint contracts for AMM and Controller, and set the fee receiver.
 
 !!!deploy "Contract Source & Deployment"
-    **crvUSD Factory** contract is deployed to the Ethereum mainnet at: [0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC#code).
+    **crvUSD Factory** contract is deployed to the Ethereum mainnet at: [0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC#code).  
     Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/ControllerFactory.vy).
 
 
@@ -15,6 +15,10 @@ The use for the factory contract is to add new markets, raise or lower debt ceil
 
     Function to add a new market and automatically deploy an AMM-Contract and a Controller-Contract from the implemented blueprint contracts (see [Implementations](#implementations-blueprint-contracts)). Calls `rate_write()` from the used MonetaryPolicy to check if it has a correct ABI. There are some limitation values for adding new markets regarding `fee`, `A` and `liquidation_discount`.
 
+    Returns: deployed Controller and AMM (`address`).
+
+    Emits: `AddNewMarket`
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `token` |  `address` | Collateral token address|
@@ -26,10 +30,6 @@ The use for the factory contract is to add new markets, raise or lower debt ceil
     | `loan_discount` |  `uint256` | Loan Discount: allowed to borrow only up to `x_down * (1 - loan_discount)` |
     | `liquidation_discount` |  `uin256` | Discount which defines a bad liquidation threshold |
     | `debt_ceiling` |  `uint256` | Debt ceiling for the market |
-
-    Returns: `address` of Controller and AMM.
-
-    Emits: `AddNewMarket`
 
     ??? quote "Source code"
 
@@ -206,8 +206,18 @@ The use for the factory contract is to add new markets, raise or lower debt ceil
 
     === "Example"
         ```shell
-        >>> ControllerFactory.add_market("todo")
-        todo
+        >>> ControllerFactory.add_market(
+            '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', # collateral token
+            100, # A
+            6000000000000000, # fee
+            0, # admin fee
+            '0xBe83fD842DB4937C0C3d15B2aBA6AF7E854f8dcb', # price oracle contract
+            '0x1E7d3bf98d3f8D8CE193236c3e0eC4b00e32DaaE', # monetary policy
+            90000000000000000, # loan discount
+            60000000000000000, # liquidation discount
+            200000000000000000000000000 # debt ceiling
+        )
+        '0x4e59541306910ad6dc1dac0ac9dfb29bd9f15c67', '0xe0438eb3703bf871e31ce639bd351109c88666ea' # deployed controller and amm address
         ```
 
 
