@@ -14,7 +14,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
 
 ### `create_loan`
-!!! description "`controller.create_loan(collateral: uint256, debt: uint256, N: uint256):`"
+!!! description "`Controller.create_loan(collateral: uint256, debt: uint256, N: uint256):`"
 
     Function to create a loan. The user must specify the amount of `collateral` to deposit into `N`-bands and the amount of `debt` to borrow. If a user already has an existing loan, the function will revert.
 
@@ -176,12 +176,12 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.create_loan(43957348178625209816, 60000000000000000000000, 15)
+        >>> Controller.create_loan(43957348178625209816, 60000000000000000000000, 15)
         ```
 
 
 ### `create_loan_extended`
-!!! description "`controller.create_loan_extended(collateral: uint256, debt: uint256, N: uint256, callbacker: address, callback_args: DynArray[uint256,5]):`"
+!!! description "`Controller.create_loan_extended(collateral: uint256, debt: uint256, N: uint256, callbacker: address, callback_args: DynArray[uint256,5]):`"
 
     Extended function to create a loan. This function passes crvUSD to a callback first so that it can leverage up.
 
@@ -353,12 +353,12 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.create_loan_extended(collateral: uint256, debt: uint256, N: uint256, callbacker: address, callback_args: DynArray[uint256,5])
+        >>> Controller.create_loan_extended(collateral: uint256, debt: uint256, N: uint256, callbacker: address, callback_args: DynArray[uint256,5])
         ```
 
 
 ### `repay`
-!!! description "`controller.repay(_d_debt: uint256, _for: address = msg.sender, max_active_band: int256 = 2**255-1, use_eth: bool = True):`"
+!!! description "`Controller.repay(_d_debt: uint256, _for: address = msg.sender, max_active_band: int256 = 2**255-1, use_eth: bool = True):`"
 
     Function to partially or fully repay `_d_debt` amount of debt.
 
@@ -555,12 +555,12 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.repay(_d_debt: uint256)
+        >>> Controller.repay(_d_debt: uint256)
         ```
 
 
 ### `repay_extended`
-!!! description "`controller.repay_extended(callbacker: address, callback_args: DynArray[uint256,5]):`"
+!!! description "`Controller.repay_extended(callbacker: address, callback_args: DynArray[uint256,5]):`"
 
     Extended function to repay a loan but get a stablecoin for that from callback (to deleverage).
 
@@ -761,14 +761,14 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.repay_extended(callbacker: address, callback_args: DynArray[uint256,5])
+        >>> Controller.repay_extended(callbacker: address, callback_args: DynArray[uint256,5])
         ```
 
 
 ## **Adjusting existing Loans**
 
 ### `add_collateral` 
-!!! description "`controller.add_collateral(collateral: uint256, _for: address = msg.sender):`"
+!!! description "`Controller.add_collateral(collateral: uint256, _for: address = msg.sender):`"
 
     Function to add extra collateral to a position.
 
@@ -964,12 +964,12 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.add_collateral(collateral: uint256)
+        >>> Controller.add_collateral(collateral: uint256)
         ```
 
 
 ### `remove_collateral`
-!!! description "`controller.remove_collateral(collateral: uint256, use_eth: bool = True):`"
+!!! description "`Controller.remove_collateral(collateral: uint256, use_eth: bool = True):`"
 
     Function to remove collateral from a position.
 
@@ -1157,12 +1157,12 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.remove_collateral(collateral: uint256)
+        >>> Controller.remove_collateral(collateral: uint256)
         ```
 
 
 ### `borrow_more`
-!!! description "`controller.borrow_more(collateral: uint256, debt: uint256):`"
+!!! description "`Controller.borrow_more(collateral: uint256, debt: uint256):`"
 
     Function to borrow more stablecoins while adding more collateral (not necessary).
 
@@ -1346,12 +1346,12 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.borrow_more(collateral: uint256, debt: uint256)
+        >>> Controller.borrow_more(collateral: uint256, debt: uint256)
         ```
 
 
 ### `liquidate`
-!!! description "`controller.liquidate(user: address, min_x: uint256, use_eth: bool = True):`"
+!!! description "`Controller.liquidate(user: address, min_x: uint256, use_eth: bool = True):`"
 
     Function to perform a bad liquidation (or self-liquidation) of `user` if `health` is not good.
 
@@ -1587,12 +1587,12 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.liquidate(todo)
+        >>> Controller.liquidate(todo)
         ```
 
 
 ### `liquidate_extended`
-!!! description "`controller.liquidate_extended(user: address, min_x: uint256, frac: uint256, use_eth: bool, callbacker: address, callback_args: DynArray[uint256,5]):`"
+!!! description "`Controller.liquidate_extended(user: address, min_x: uint256, frac: uint256, use_eth: bool, callbacker: address, callback_args: DynArray[uint256,5]):`"
 
     Extended function to perform a bad liquidation (or self-liquidation) of `user` if `health` is not good.
 
@@ -1835,7 +1835,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.liquidate_extended(todo)
+        >>> Controller.liquidate_extended(todo)
         todo
         ```
 
@@ -1843,7 +1843,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 ## **Loan Info Methods**
 
 ### `debt`
-!!! description "`controller.debt(user: address) -> uint256:`"
+!!! description "`Controller.debt(user: address) -> uint256:`"
 
     Getter for the amount of debt for `user`. Decreases every block due to interest rate.
 
@@ -1890,13 +1890,13 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.debt("0x7a16fF8270133F063aAb6C9977183D9e72835428")
+        >>> Controller.debt("0x7a16fF8270133F063aAb6C9977183D9e72835428")
         1552311414080668514314009
         ```
 
 
 ### `total_debt`
-!!! description "`controller.total_debt() -> uint256:`"
+!!! description "`Controller.total_debt() -> uint256:`"
 
     Getter for the total debt of the controller (=total borrowed crvusd for the market).
 
@@ -1918,13 +1918,13 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.total_debt()
+        >>> Controller.total_debt()
         9045646634477681048071827
         ```
 
 
 ### `loan_exists`
-!!! description "`controller.loan_exists(user: address) -> bool:`"
+!!! description "`Controller.loan_exists(user: address) -> bool:`"
 
     Function to check if a loan for `user` exists.
 
@@ -1949,13 +1949,13 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.loan_exists("0x7a16fF8270133F063aAb6C9977183D9e72835428")
+        >>> Controller.loan_exists("0x7a16fF8270133F063aAb6C9977183D9e72835428")
         'true'
         ```
 
 
 ### `user_prices`
-!!! description "`controller.user_prices(user: address) -> uint256[2]:`"
+!!! description "`Controller.user_prices(user: address) -> uint256[2]:`"
 
     Getter for the highest price of the upper band and lowest price of the lower band the user has deposited in the AMM.
 
@@ -2058,13 +2058,13 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.users_price("0x7a16fF8270133F063aAb6C9977183D9e72835428"):
+        >>> Controller.users_price("0x7a16fF8270133F063aAb6C9977183D9e72835428"):
         1975909341832570932896, 1786976990595821859153
         ```
 
 
 ### `health`
-!!! description "`controller.health(user: address, full: bool = False) -> int256:`"
+!!! description "`Controller.health(user: address, full: bool = False) -> int256:`"
 
     Getter for the health of the position normalized to 1e18 for `user`.
 
@@ -2120,15 +2120,15 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.health("0x04d52e150E49c1bbc9Ddde258060A3bF28D9fD70")
+        >>> Controller.health("0x04d52e150E49c1bbc9Ddde258060A3bF28D9fD70")
         33346624773659668
-        >>> controller.health("0x04d52e150E49c1bbc9Ddde258060A3bF28D9fD70", 1)
+        >>> Controller.health("0x04d52e150E49c1bbc9Ddde258060A3bF28D9fD70", 1)
         493166314275207865
         ```
 
 
 ### `user_state`
-!!! description "`controller.user_state(user: address) -> uint256[4]:`"
+!!! description "`Controller.user_state(user: address) -> uint256[4]:`"
 
     Getter for the user state in one call.
 
@@ -2192,13 +2192,13 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.user_state("0x7a16fF8270133F063aAb6C9977183D9e72835428"):
+        >>> Controller.user_state("0x7a16fF8270133F063aAb6C9977183D9e72835428"):
         523889507286953887976, 643761728367446923280941, 1455238676830152227963549, 10
         ```
 
 
 ### `loans`
-!!! description "`controller.liquidation_discounts(arg0: uint256) -> uint256: view`"
+!!! description "`Controller.liquidation_discounts(arg0: uint256) -> uint256: view`"
 
     Getter for the user that created loan at index `arg0`.
 
@@ -2216,13 +2216,13 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.loans(0)
+        >>> Controller.loans(0)
         '0x7a16fF8270133F063aAb6C9977183D9e72835428'
         ```
 
 
 ### `loan_ix`
-!!! description "`controller.loan_ix(arg0: address) -> address: view`"
+!!! description "`Controller.loan_ix(arg0: address) -> address: view`"
 
     Getter for the posistion of the loan in the list.
 
@@ -2240,13 +2240,13 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.loans_ix("0x7a16fF8270133F063aAb6C9977183D9e72835428")
+        >>> Controller.loans_ix("0x7a16fF8270133F063aAb6C9977183D9e72835428")
         0
         ```
 
      
 ### `n_loans`
-!!! description "`controller.n_loans() -> uint256: view`"
+!!! description "`Controller.n_loans() -> uint256: view`"
 
     Getter for the number of loans.
 
@@ -2264,7 +2264,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> controller.n_loans()
+        >>> Controller.n_loans()
         136
         ```
 
@@ -2272,7 +2272,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 The following functions can be used to pre-calculate metrics before creating a loan.
 
 ### `max_borrowable`
-!!! description "`controller.max_borrowable(collateral: uint256, N: uint256) -> uint256:`"
+!!! description "`Controller.max_borrowable(collateral: uint256, N: uint256) -> uint256:`"
 
     Function to calculate the maximum amount of crvUSD that can be borrowed against `collateral` using `N`-bands. If the max_borrowable amount exceeds the crvUSD balance of the controller (essentially, what is left to be borrowed), it returns the amount that remains available for borrowing.
 
@@ -2348,13 +2348,13 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     === "Example"
         ```shell
-        >>> controller.max_borrowable(1000000000000000000, 20)
+        >>> Controller.max_borrowable(1000000000000000000, 20)
         1609245276829365771473
         ```
 
 
 ### `min_collateral`
-!!! description "`controller.min_collateral(debt: uint256, N: uint256) -> uint256:`"
+!!! description "`Controller.min_collateral(debt: uint256, N: uint256) -> uint256:`"
 
     Function to calculate the minimum amount of collateral that is necessary to support `debt` using `N`-bands.
 
@@ -2413,13 +2413,13 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     === "Example"
         ```shell
-        >>> controller.min_collateral(1609245276829365771473, 20)
+        >>> Controller.min_collateral(1609245276829365771473, 20)
         999999846411950179
         ```
 
 
 ### `calculate_debt_n1`
-!!! description "`controller.calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256) -> int256:`"
+!!! description "`Controller.calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256) -> int256:`"
 
     Getter method to calculate the upper band number for the deposit to sit in to support the give debt.
 
@@ -2502,13 +2502,13 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     === "Example"
         ```shell
-        >>> controller.calculate_debt_n1(todo)
+        >>> Controller.calculate_debt_n1(todo)
         todo
         ```
 
 
 ### `health_calculator`
-!!! description "`controller.health_calculator(user: address, d_collateral: int256, d_debt: int256, full: bool, N: uint256 = 0) -> int256:`"
+!!! description "`Controller.health_calculator(user: address, d_collateral: int256, d_debt: int256, full: bool, N: uint256 = 0) -> int256:`"
 
     Function to predict the health after changing collateral (`d_collateral`) or debt (`d_debt`).
 
@@ -2584,13 +2584,13 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     === "Example"
         ```shell
-        >>> controller.health_calculator(todo)
+        >>> Controller.health_calculator(todo)
         todo
         ```
 
 
 ### `tokens_to_liquidate`
-!!! description "`controller.tokens_to_liquidate(user: address, frac: uint256 = 10 ** 18) -> uint256:`"
+!!! description "`Controller.tokens_to_liquidate(user: address, frac: uint256 = 10 ** 18) -> uint256:`"
 
     Function to calculate the amount of stablecoins to have in a liquidator's wallet in order to liquidate a user.
 
@@ -2626,13 +2626,13 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     === "Example"
         ```shell
-        >>> controller.tokens_to_liquidate(todo)
+        >>> Controller.tokens_to_liquidate(todo)
         todo
         ```
 
 
 ### `users_to_liquidate`
-!!! description "`controller.users_to_liquidate(_from: uint256=0, _limit: uint256=0) -> DynArray[Position, 1000]:`"
+!!! description "`Controller.users_to_liquidate(_from: uint256=0, _limit: uint256=0) -> DynArray[Position, 1000]:`"
 
     Getter for a dynamic array of users who can be "hard-liquidated".
 
@@ -2687,10 +2687,9 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     === "Example"
         ```shell
-        >>> controller.users_to_liquidate(0)
+        >>> Controller.users_to_liquidate(0)
         []
         ```
-
 
 
 # **Fees**
@@ -2701,7 +2700,7 @@ There are two kinds of fees:
 While the borrowing-based fee is determined by the MonetaryPolicy Contract, the AMM fee can be set by the DAO. Currently, the AMM fees are set to 0.6% with an admin_fee of 0, meaning all the generated fees from trades within the AMM go to the liquidity providers who are essentially the borrowers.
 
 ### `admin_fees`
-!!! description "`ControllerFactory.admin_fees() -> uint256:`"
+!!! description "`Controller.admin_fees() -> uint256:`"
 
     Getter for the claimable admin fees. Claimable by calling [`colletct_fees`](#collect_fees). 
 
@@ -2745,14 +2744,14 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
     === "Example"
         ```shell
-        >>> ControllerFactory.admin_fees()
+        >>> Controller.admin_fees()
         1412804120167468477413
         ```
 
 
 
 ### `set_amm_fee`
-!!! description "`PoolProxy.set_amm_fee(fee: uint256):`"
+!!! description "`Controller.set_amm_fee(fee: uint256):`"
 
     Function to set the AMM fee.
 
@@ -2806,13 +2805,13 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
     === "Example"
         ```shell
-        >>> PoolProxy.set_amm_fee(todo):
+        >>> Controller.set_amm_fee(todo):
         todo
         ```
 
 
 ### `set_amm_admin_fee`
-!!! description "`PoolProxy.set_amm_admin_fee(fee: uint256):`"
+!!! description "`Controller.set_amm_admin_fee(fee: uint256):`"
 
     Function to set the AMM admin fee.
 
@@ -2866,13 +2865,13 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
     === "Example"
         ```shell
-        >>> PoolProxy.set_amm_admin_fee(todo):
+        >>> Controller.set_amm_admin_fee(todo):
         todo
         ```
 
 
 ### `collect_fees`
-!!! description "`PoolProxy.collect_fees():`"
+!!! description "`Controller.collect_fees():`"
 
     Function to **collects all fees**, including **Borrwing-based fees (interest rate)** and **AMM-based fees (swap fee)**(if applicable). If there are any AMM-based fees (represented by `admin_fee_x` and/or `admin_fee_y`), the `reset_admin_fee()` method will be invoked, which resets these variables to zero.
 
@@ -2942,7 +2941,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
     === "Example"
         ```shell
-        >>> PoolProxy.collect_fees():
+        >>> Controller.collect_fees():
         ```
 
 
@@ -2950,7 +2949,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Documenatation](../crvUSD/monetarypolicy.md).
 
 ### `monetary_policy`
-!!! description "`controller.monetary_policy() -> address: view`"
+!!! description "`Controller.monetary_policy() -> address: view`"
 
     Getter for the monetary policy contract.
 
@@ -2964,12 +2963,12 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> controller.monetary_policy()
+        >>> Controller.monetary_policy()
         '0xc684432FD6322c6D58b6bC5d28B18569aA0AD0A1'
         ```
 
 ### `set_monetary_policy`
-!!! description "`controller.set_monetary_policy(monetary_policy: address):"
+!!! description "`Controller.set_monetary_policy(monetary_policy: address):"
 
     Function to set the monetary policy contract. Initially, the monetary policy contract is configured when a new market is added via the Factory. However, this function allows the contract address to be changed later. When setting the new address, the function calls `rate_write()` from the monetary policy contract to verify if the ABI is correct.
 
@@ -3017,7 +3016,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> controller.set_monetary_policy("todo")
+        >>> Controller.set_monetary_policy("todo")
         todo
         ```
 
@@ -3026,7 +3025,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 # **Contract Info Methods**
 
 ### `factory`
-!!! description "`controller.factory() -> address: view`"
+!!! description "`Controller.factory() -> address: view`"
 
     Getter of the factory contract of the controller.
 
@@ -3092,13 +3091,13 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> controller.factory()
+        >>> Controller.factory()
         '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC
         ```
 
 
 ### `amm`
-!!! description "`controller.amm() -> address: view`"
+!!! description "`Controller.amm() -> address: view`"
 
     Getter of the AMM contract of the controller.
 
@@ -3158,13 +3157,13 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> controller.amm()
+        >>> Controller.amm()
         '0x136e783846ef68C8Bd00a3369F787dF8d683a696'
         ```
 
 
 ### `collateral_token`
-!!! description "`controller.collateral_token() -> address: view`"
+!!! description "`Controller.collateral_token() -> address: view`"
 
     Getter of the collateral token for the market.
 
@@ -3224,13 +3223,13 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> controller.collateral_token()
+        >>> Controller.collateral_token()
         '0xac3E018457B222d93114458476f3E3416Abbe38F'
         ```
 
 
 ### `amm_price`
-!!! description "`controller.amm_price() -> uint256:`"
+!!! description "`Controller.amm_price() -> uint256:`"
 
     Getter for the current price from the AMM.
 
@@ -3305,13 +3304,13 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> controller.amm_price():
+        >>> Controller.amm_price():
         1894335198818887625018
         ```
 
 
 ### `liquidation_discounts`
-!!! description "`controller.liquidation_discounts(arg0: address) -> uint256: view`"
+!!! description "`Controller.liquidation_discounts(arg0: address) -> uint256: view`"
 
     Getter method for the liquidation discount of a user.
 
@@ -3329,13 +3328,13 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> controller.liquidation_discounts("0x7a16fF8270133F063aAb6C9977183D9e72835428")
+        >>> Controller.liquidation_discounts("0x7a16fF8270133F063aAb6C9977183D9e72835428")
         60000000000000000
         ```
 
 
 ### `minted`
-!!! description "`controller.minted() -> uint256: view`"
+!!! description "`Controller.minted() -> uint256: view`"
 
     Getter for the total amount of crvUSD minted from this controller. Increments by the amount of debt when calling `create_loan` or `borrow_more`.
 
@@ -3349,13 +3348,13 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> controller.minted()
+        >>> Controller.minted()
         17090918188139724484312313
         ```
 
 
 ### `redeemed`
-!!! description "`controller.redeemed() -> uint256: view`"
+!!! description "`Controller.redeemed() -> uint256: view`"
 
     Getter for the total amount of crvUSD redeemed from this controller. Increments by the amount of debt that is repayed when calling `repay` or `repay_extended`.
 
@@ -3369,12 +3368,12 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> controller.redeemed()
+        >>> Controller.redeemed()
         7731390765158807406740136
         ```        
 
 ### `liquidation_discount`
-!!! description "`controller.liquidation_discount() -> uint256: view`"
+!!! description "`Controller.liquidation_discount() -> uint256: view`"
 
     Getter for the liquidation discount. This value is used to discount the collateral value when calculating the health for liquidation puroses in order to incentivize liquidators.
 
@@ -3431,13 +3430,13 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> controller.liquidation_discount()
+        >>> Controller.liquidation_discount()
         60000000000000000
         ```
 
 
 ### `loan_discounts`
-!!! description "`controller.liquidation_discount() -> uint256: view`"
+!!! description "`Controller.liquidation_discount() -> uint256: view`"
 
     Getter for the discount of the maximum loan size compared to `get_x_down()` value. This value defines the LTV.
 
@@ -3494,23 +3493,23 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> controller.loan_discount()
+        >>> Controller.loan_discount()
         90000000000000000
         ```
 
 # **Setting parameters** 
 
 ### `set_borrowing_discounts`
-!!! description "`controller.set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256)`"
+!!! description "`Controller.set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256)`"
 
-    Function to set the borrowing discounts for 
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
+
+    Function to set the borrowing discounts. This metric defines the max LTV and where bad liquidations start.
 
     Returns: total redeemed (`uint256`).
 
     Emits: `SetBorrowingDiscount`
-
-    !!!note
-        This function is only callable by the admin of the contract. 
 
     ??? quote "Source code"
 
@@ -3538,12 +3537,12 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> controller.set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256):
+        >>> Controller.set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256):
         ``` 
 
 
 ### `liquidity_mining_callback`
-!!! description "`controller.liquidity_mining_callback() -> uint256: view`"
+!!! description "`Controller.liquidity_mining_callback() -> uint256: view`"
 
     Getter for the liquidity mining callback contract.
 
@@ -3557,18 +3556,18 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> controller.liquidity_mining_callback()
+        >>> Controller.liquidity_mining_callback()
         '0x0000000000000000000000000000000000000000'
         ```  
 
 
 ### `set_callback`
-!!! description "`controller.redeemed() -> uint256: view`"
+!!! description "`Controller.redeemed() -> uint256: view`"
+
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract.
 
     Function to set a callback for liquidity mining.
-
-    !!!note
-        This function is only callable by the Factory `admin`.
 
     ??? quote "Source code"
 
@@ -3585,6 +3584,6 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> controller.set_callback('todo')
+        >>> Controller.set_callback('todo')
         todo
         ```  
