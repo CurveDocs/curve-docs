@@ -437,7 +437,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
 
 ## **Admin and Receiver**
-PegKeepers have a `admin` and `receiver` address. Committing a new `admin` or `receiver` requires the corresponding commit functions to be called, actions that can only be performed by the current admin. Subsequently, the newly committed admin or receiver has to apply these changes within a timespan of 3 * 86400 seconds, corresponding to a window of three days. If an attempt is made to apply these changes after this deadline, the action will fail.
+PegKeepers have an `admin` and a `receiver`. Both of these variables can be altered by calling the respective admin-guarded functions, but such changes must first be approved by a DAO vote. After approval, the newly designated admin or receiver is required to apply these changes within a timeframe of `3 * 86400` seconds, which equates to a window of *three days*. Should there be an attempt to implement these changes after this period, the function to apply the changes will revert.
 
 
 ### `admin`
@@ -498,111 +498,6 @@ PegKeepers have a `admin` and `receiver` address. Committing a new `admin` or `r
         >>> PegKepper.future_admin()
         '0x0000000000000000000000000000000000000000'
         ```
-
-
-### `receiver`
-!!! description "`PegKeeper.receiver() -> address: view`"
-
-    Getter for the receiver of the profit from the PegKeeper.
-
-    Returns: receiver (`address`).
-
-    ??? quote "Source code"
-
-        ```python 
-        receiver: public(address)
-
-        @external
-        def __init__(_pool: CurvePool, _index: uint256, _receiver: address, _caller_share: uint256, _factory: address, _aggregator: StableAggregator, _admin: address):
-            """
-            @notice Contract constructor
-            @param _pool Contract pool address
-            @param _index Index of the pegged
-            @param _receiver Receiver of the profit
-            @param _caller_share Caller's share of profit
-            @param _factory Factory which should be able to take coins away
-            @param _aggregator Price aggregator which shows the price pegged in real "dollars"
-            @param _admin Admin account
-            """
-            ...
-
-            assert _receiver != empty(address)
-            self.receiver = _receiver
-            
-            ...
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PegKepper.receiver()
-        '0xeCb456EA5365865EbAb8a2661B0c503410e9B347'
-        ```
-
-
-### `future_receiver`
-!!! description "`PegKeeper.future_receiver() -> address: view`"
-
-    Getter for the future receiver of the PegKeeper's profit.
-
-    Returns: future receiver (`address`).
-
-    ??? quote "Source code"
-
-        ```python 
-        future_admin: public(address)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PegKepper.future_receiver()
-        '0x0000000000000000000000000000000000000000'
-        ```
-
-
-
-### `new_admin_deadline`
-!!! description "`PegKeeper.new_admin_deadline() -> uint256: view`"
-
-    Getter for the timestamp indicating the deadline by which the future_admin can apply the admin change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a time **period of three days**.
-
-    Returns: timestamp (`uint256`).
-
-    ??? quote "Source code"
-
-        ```python
-        new_admin_deadline: public(uint256)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PegKepper.new_admin_deadline()
-        0
-        ```
-
-
-### `new_receiver_deadline`
-!!! description "`PegKeeper.new_receiver_deadline() -> uint256: view`"
-
-    Getter for the timestamp indicating the deadline by which the future_receiver can apply the receiver change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a time period of three days.
-
-    Returns: timestamp (`uint256`).
-
-    ??? quote "Source code"
-
-        ```python
-        new_receiver_deadline: public(uint256)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PegKepper.new_receiver_deadline()
-        0
-        ```
-
 
 ### `commit_new_admin`
 !!! description "`PegKeeper.commit_new_admin(_new_admin: address):`"
@@ -689,13 +584,95 @@ PegKeepers have a `admin` and `receiver` address. Committing a new `admin` or `r
         ```
 
 
+### `new_admin_deadline`
+!!! description "`PegKeeper.new_admin_deadline() -> uint256: view`"
+
+    Getter for the timestamp indicating the deadline by which the `future_admin` can apply the admin change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a **timeperiod of three days**.
+
+    Returns: timestamp (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python
+        new_admin_deadline: public(uint256)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PegKepper.new_admin_deadline()
+        0
+        ```
+
+
+### `receiver`
+!!! description "`PegKeeper.receiver() -> address: view`"
+
+    Getter for the receiver of the PegKeeper's profits.
+
+    Returns: receiver (`address`).
+
+    ??? quote "Source code"
+
+        ```python 
+        receiver: public(address)
+
+        @external
+        def __init__(_pool: CurvePool, _index: uint256, _receiver: address, _caller_share: uint256, _factory: address, _aggregator: StableAggregator, _admin: address):
+            """
+            @notice Contract constructor
+            @param _pool Contract pool address
+            @param _index Index of the pegged
+            @param _receiver Receiver of the profit
+            @param _caller_share Caller's share of profit
+            @param _factory Factory which should be able to take coins away
+            @param _aggregator Price aggregator which shows the price pegged in real "dollars"
+            @param _admin Admin account
+            """
+            ...
+
+            assert _receiver != empty(address)
+            self.receiver = _receiver
+            
+            ...
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PegKepper.receiver()
+        '0xeCb456EA5365865EbAb8a2661B0c503410e9B347'
+        ```
+
+
+### `future_receiver`
+!!! description "`PegKeeper.future_receiver() -> address: view`"
+
+    Getter for the future receiver of the PegKeeper's profit.
+
+    Returns: future receiver (`address`).
+
+    ??? quote "Source code"
+
+        ```python 
+        future_admin: public(address)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PegKepper.future_receiver()
+        '0x0000000000000000000000000000000000000000'
+        ```
+
+
 ### `commit_new_receiver`
 !!! description "`PegKeeper.commit_new_receiver(_new_receiver: address):`"
 
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract.
 
-    Function to commit a new receiver.
+    Function to commit a new receiver address.
 
     Emits: `CommitNewReceiver`
 
@@ -736,7 +713,7 @@ PegKeepers have a `admin` and `receiver` address. Committing a new `admin` or `r
 ### `apply_new_receiver`
 !!! description "`PegKeeper.apply_new_receiver():`"
 
-    Function to apply the new receiver of the PegKeeper's profit.
+    Function to apply the new receiver address of the PegKeeper's profit.
 
     Emits: `ApplyNewReceiver`
 
@@ -766,6 +743,27 @@ PegKeepers have a `admin` and `receiver` address. Committing a new `admin` or `r
 
         ```shell
         >>> PegKepper.apply_new_receiver():
+        ```
+
+
+### `new_receiver_deadline`
+!!! description "`PegKeeper.new_receiver_deadline() -> uint256: view`"
+
+    Getter for the timestamp indicating the deadline by which the `future_receiver` can apply the receiver change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a **timeperiod of three days**.
+
+    Returns: timestamp (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python
+        new_receiver_deadline: public(uint256)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PegKepper.new_receiver_deadline()
+        0
         ```
 
 
@@ -815,7 +813,7 @@ PegKeepers have a `admin` and `receiver` address. Committing a new `admin` or `r
 ### `debt`
 !!! description "`PegKeeper.debt() -> uint256: view`"
 
-    Getter for the stablecoin debt of the PegKeeper. When the PegKeeper deposits crvUSD into the pool, the debt is incremented by the deposited amount. Conversely, if the PegKeeper withdraws, the debt is reduced by the withdrawn amount. `debt` is used to calculate the DebtFraction of the PegKeepers.
+    Getter for the crvUSD debt of the PegKeeper. When the PegKeeper deposits crvUSD into the pool, the debt is incremented by the deposited amount. Conversely, if the PegKeeper withdraws, the debt is reduced by the withdrawn amount. `debt` is used to calculate the DebtFraction of the PegKeepers.
 
     Returns: debt (`uint256`).
 
@@ -833,7 +831,7 @@ PegKeepers have a `admin` and `receiver` address. Committing a new `admin` or `r
         ```
 
 
-### `factory`
+### `FACTORY`
 !!! description "`PegKeeper.FACTORY() -> address: view`"
 
     Getter for the address of the factory contract.
