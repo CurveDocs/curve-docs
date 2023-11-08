@@ -68,6 +68,7 @@ nav:
     - MonetaryPolicy: crvUSD/monetarypolicy.md
     - PriceAggregator: crvUSD/priceaggregator.md
     - Oracle: crvUSD/oracle.md
+    - Factory: crvUSD/factory.md
     - Deployments: crvUSD/deployments.md
 
   - Stableswap-NG:
