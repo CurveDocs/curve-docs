@@ -361,26 +361,26 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
     === "Example"
         ```shell
         >>> Router.get_dy([
-            '0x34635280737b5BFe6c7DC2FC3065D60d66e78185' # cvxPRISMA
-            '0x3b21C2868B6028CfB38Ff86127eF22E68d16d53B' # cvxPRISMA/PRISMA pool
-            '0xdA47862a83dac0c112BA89c6abC2159b95afd71C' # PRISMA
-            '0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B' # PRISMA/ETH pool
-            '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE' # eth
+            '0x34635280737b5BFe6c7DC2FC3065D60d66e78185'    # cvxPRISMA
+            '0x3b21C2868B6028CfB38Ff86127eF22E68d16d53B'    # cvxPRISMA/PRISMA pool
+            '0xdA47862a83dac0c112BA89c6abC2159b95afd71C'    # PRISMA
+            '0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B'    # PRISMA/ETH pool
+            '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'    # ETH
             '0x0000000000000000000000000000000000000000'
             '0x0000000000000000000000000000000000000000'
             '0x0000000000000000000000000000000000000000'
             '0x0000000000000000000000000000000000000000'
             '0x0000000000000000000000000000000000000000'
             '0x0000000000000000000000000000000000000000'],
-            [[1, 0, 1, 1, 2], # first swap: cvxPRISMA <> PRISMA
-            [1, 0, 1, 2, 2], # second swap: PRISMA <> ETH
+            [[1, 0, 1, 1, 2],   # first swap: cvxPRISMA <> PRISMA
+            [1, 0, 1, 2, 2],    # second swap: PRISMA <> ETH
             [0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0]],
             2697000000000000000000, # _amount
             ? , # _expected
-            [0x3b21C2868B6028CfB38Ff86127eF22E68d16d53B, # cvxPRISMA/PRISMA pool
-            0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B, # PRISMA/ETH pool
+            [0x3b21C2868B6028CfB38Ff86127eF22E68d16d53B,    # cvxPRISMA/PRISMA pool
+            0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B,     # PRISMA/ETH pool
             0x0000000000000000000000000000000000000000,
             0x0000000000000000000000000000000000000000,
             0x0000000000000000000000000000000000000000],
@@ -602,7 +602,7 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
             [1, 0, 1, 2, 2],    # second swap: PRISMA <> ETH
             [0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0]],   # **_swap_params**
+            [0, 0, 0, 0, 0]],
             100000000000000000000,  # _amount
             ['0x3b21C2868B6028CfB38Ff86127eF22E68d16d53B',  # cvxPRISMA/PRISMA pool
             '0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B',   # PRISMA/ETH pool

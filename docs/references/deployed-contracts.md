@@ -248,7 +248,7 @@ Here is a list of all burner contracts currently in use:
 
 ## **Curve Router**
 
-Routers that performs up to 5 swaps in a single transaction and can do estimations with get_dy and get_dx.
+Routers that performs up to 5 swaps in a single transaction and can do estimations with `get_dy` and `get_dx`.
 
 !!!deploy "Contract Source & Deployment"
     Source code available on [Github](https://github.com/curvefi/curve-router-ng/tree/master/contracts).
