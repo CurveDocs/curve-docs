@@ -138,7 +138,7 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
     Retuns: received amount of final output token (`uint256`).
 
     !!!warning
-        Routing and swap params must be determined off-chain. This functionality is designed for gas efficiency over ease-of-use.
+        Routing and swap parameters must be determined off-chain. The router is designed for gas efficiency over ease-of-use.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
