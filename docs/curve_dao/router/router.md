@@ -143,7 +143,7 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_route` |  `address[11]` | Array of [initial token, pool or zap, token, pool or zap, token, ...]. The array is iterated until a pool address of `ZERO_ADDRESS`, then the last given token is transferred to `_receiver` |
-    | `_swap_params` |  `uint256[5][5]` | Multidimensional array of **`[i, j, swap_type, pool_type, n_coins]`** where `i` is the index of input token and `j` is the index of output token with `pool_type`: 1 - stable, 2 - crypto, 3 - tricrypto, 4 - llamma and `n_coins` is the number of coins in pool.  |
+    | `_swap_params` |  `uint256[5][5]` | Multidimensional array of **`[i, j, swap_type, pool_type, n_coins]`** where `i` is the index of input token and `j` is the index of output token, with `pool_type`: 1 - stable, 2 - crypto, 3 - tricrypto, 4 - llamma and `n_coins` is the number of coins in pool.  |
     | `_amount` |  `uint256` | The amount of input token (`_route[0]`) to be sent. |
     | `_expected` |  `uint256` | The minimum amount received after the final swap. |
     | `_pools` |  `address[5]` | Array of pools for swaps via zap contracts. This parameter is only needed for `swap_type = 3`. |
@@ -360,21 +360,46 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
 
     === "Example"
         ```shell
-        >>> Router.exchange(todo)
+        >>> Router.get_dy([
+            '0x34635280737b5BFe6c7DC2FC3065D60d66e78185' # cvxPRISMA
+            '0x3b21C2868B6028CfB38Ff86127eF22E68d16d53B' # cvxPRISMA/PRISMA pool
+            '0xdA47862a83dac0c112BA89c6abC2159b95afd71C' # PRISMA
+            '0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B' # PRISMA/ETH pool
+            '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE' # eth
+            '0x0000000000000000000000000000000000000000'
+            '0x0000000000000000000000000000000000000000'
+            '0x0000000000000000000000000000000000000000'
+            '0x0000000000000000000000000000000000000000'
+            '0x0000000000000000000000000000000000000000'
+            '0x0000000000000000000000000000000000000000'],
+            [[1, 0, 1, 1, 2], # first swap: cvxPRISMA <> PRISMA
+            [1, 0, 1, 2, 2], # second swap: PRISMA <> ETH
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0]],
+            2697000000000000000000, # _amount
+            ? , # _expected
+            [0x3b21C2868B6028CfB38Ff86127eF22E68d16d53B, # cvxPRISMA/PRISMA pool
+            0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B, # PRISMA/ETH pool
+            0x0000000000000000000000000000000000000000,
+            0x0000000000000000000000000000000000000000,
+            0x0000000000000000000000000000000000000000],
+        )
+        393335776549796040
         ```
 
 
 ### `get_dy`
-!!! description "`LPBurner.get_dy(_route: address[11], _swap_params: uint256[5][5], _amount: uint256, _pools: address[5]=empty(address[5])) -> uint256:`"
+!!! description "`Router.get_dy(_route: address[11], _swap_params: uint256[5][5], _amount: uint256, _pools: address[5] = empty(address[5])) -> uint256:`"
 
     Getter for the amount of the final output token received in an exchange.
 
-    Retuns: expected amount of final output token (`uint256`).
+    Retuns: **expected** amount of final output token (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_route` |  `address[11]` | Array of [initial token, pool or zap, token, pool or zap, token, ...]. The array is iterated until a pool address of `ZERO_ADDRESS`, then the last given token is transferred to `_receiver`. |
-    | `_swap_params` |  `uint256[5][5]` | Multidimensional array of **`[i, j, swap_type, pool_type, n_coins]`** where `i` is the index of input token and `j` is the index of output token with `pool_type`: 1 - stable, 2 - crypto, 3 - tricrypto, 4 - llamma and `n_coins` is the number of coins in pool. |
+    | `_route` |  `address[11]` | Array of [initial token, pool or zap, token, pool or zap, token, ...]. The array is iterated until a pool address of `ZERO_ADDRESS`. |
+    | `_swap_params` |  `uint256[5][5]` | Multidimensional array of **`[i, j, swap_type, pool_type, n_coins]`** where `i` is the index of input token and `j` is the index of output token, with `pool_type`: 1 - stable, 2 - crypto, 3 - tricrypto, 4 - llamma and `n_coins` is the number of coins in pool. |
     | `_amount` |  `uint256` | The amount of input token (`_route[0]`) to be sent. |
     | `_pools` |  `address[5]=empty(address[5])` | Array of pools for swaps via zap contracts. This parameter is only needed for `swap_type = 3`. |
 
@@ -561,12 +586,36 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
 
     === "Example"
         ```shell
-        >>> Router.exchange(todo)
+        >>> Router.get_dy(
+            ['0x34635280737b5BFe6c7DC2FC3065D60d66e78185',  # crxPRISMA
+            '0x3b21C2868B6028CfB38Ff86127eF22E68d16d53B',   # cvxPRISMA/PRISMA pool
+            '0xdA47862a83dac0c112BA89c6abC2159b95afd71C',   # PRISMA
+            '0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B',   # PRISMA/ETH pool
+            '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',   # ETH
+            '0x0000000000000000000000000000000000000000', 
+            '0x0000000000000000000000000000000000000000', 
+            '0x0000000000000000000000000000000000000000', 
+            '0x0000000000000000000000000000000000000000', 
+            '0x0000000000000000000000000000000000000000', 
+            '0x0000000000000000000000000000000000000000'],
+            [[1, 0, 1, 1, 2],   # first swap: cvxPRISMA <> PRISMA
+            [1, 0, 1, 2, 2],    # second swap: PRISMA <> ETH
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0]],   # **_swap_params**
+            100000000000000000000,  # _amount
+            ['0x3b21C2868B6028CfB38Ff86127eF22E68d16d53B',  # cvxPRISMA/PRISMA pool
+            '0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B',   # PRISMA/ETH pool
+            '0x0000000000000000000000000000000000000000', 
+            '0x0000000000000000000000000000000000000000', 
+            '0x0000000000000000000000000000000000000000'])
+        )
+        18597416260226417
         ```
 
 
 ### `get_dx`
-!!! description "`LPBurner.get_dy(_route: address[11], _swap_params: uint256[5][5], _amount: uint256, _pools: address[5]=empty(address[5])) -> uint256:`"
+!!! description "`Router.get_dx(_route: address[11], _swap_params: uint256[5][5], _out_amount: uint256, _pools: address[5], _base_pools: address[5]=empty(address[5]), _base_tokens: address[5] = empty(address[5])) -> uint256:`"
 
     Getter method to calculate the input amount required to receive the desired output amount.
 
@@ -574,8 +623,8 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_route` |  `address[11]` | Array of [initial token, pool or zap, token, pool or zap, token, ...]. The array is iterated until a pool address of `ZERO_ADDRESS`, then the last given token is transferred to `_receiver`. |
-    | `_swap_params` |  `uint256[5][5]` | Multidimensional array of **`[i, j, swap_type, pool_type, n_coins]`** where `i` is the index of input token and `j` is the index of output token with `pool_type`: 1 - stable, 2 - crypto, 3 - tricrypto, 4 - llamma and `n_coins` is the number of coins in pool. |
+    | `_route` |  `address[11]` | Array of [initial token, pool or zap, token, pool or zap, token, ...]. The array is iterated until a pool address of `ZERO_ADDRESS`. |
+    | `_swap_params` |  `uint256[5][5]` | Multidimensional array of **`[i, j, swap_type, pool_type, n_coins]`** where `i` is the index of input token and `j` is the index of output token, with `pool_type`: 1 - stable, 2 - crypto, 3 - tricrypto, 4 - llamma and `n_coins` is the number of coins in pool. |
     | `_out_amount` |  `uint256` | The desired amount of output coin to receive. |
     | `_pools` |  `address[5]` | Array of pools. |
     | `_base_pools` |  `address[5]=empty(address[5])` | Array of base pools (for meta pools). |
@@ -768,4 +817,31 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
                     raise "Bad swap type"
 
             return amount
+        ```
+
+    === "Example"
+        ```shell
+        >>> Router.get_dx(
+        ['0x34635280737b5BFe6c7DC2FC3065D60d66e78185',  # crxPRISMA
+        '0x3b21C2868B6028CfB38Ff86127eF22E68d16d53B',   # cvxPRISMA/PRISMA pool
+        '0xdA47862a83dac0c112BA89c6abC2159b95afd71C',   # PRISMA
+        '0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B',   # PRISMA/ETH pool
+        '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',   # ETH
+        '0x0000000000000000000000000000000000000000', 
+        '0x0000000000000000000000000000000000000000', 
+        '0x0000000000000000000000000000000000000000', 
+        '0x0000000000000000000000000000000000000000', 
+        '0x0000000000000000000000000000000000000000', 
+        '0x0000000000000000000000000000000000000000'], 
+        [[1, 0, 1, 1, 2],   # first swap: cvxPRISMA <> PRISMA
+        [1, 0, 1, 2, 2],    # second swap: PRISMA <> ETH
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0]], 
+        100000000000000000000,  # _out_amount
+        ['0x3b21C2868B6028CfB38Ff86127eF22E68d16d53B',  # cvxPRISMA/PRISMA pool
+        '0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B',   # PRISMA/ETH pool
+        '0x0000000000000000000000000000000000000000', 
+        '0x0000000000000000000000000000000000000000', 
+        '0x0000000000000000000000000000000000000000'])
         ```
