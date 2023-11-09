@@ -131,7 +131,7 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
 
 
 ### `exchange`
-!!! description "`LPBurner.exchange(_route: address[11], _swap_params: uint256[5][5], _amount: uint256, _expected: uint256, _pools: address[5] = empty(address[5]), _receiver: address = msg.sender) -> uint256:`"
+!!! description "`Router.exchange(_route: address[11], _swap_params: uint256[5][5], _amount: uint256, _expected: uint256, _pools: address[5] = empty(address[5]), _receiver: address = msg.sender) -> uint256:`"
 
     !!!warning
         Routing and swap parameters must be determined off-chain. The router is designed for gas efficiency over ease-of-use.
