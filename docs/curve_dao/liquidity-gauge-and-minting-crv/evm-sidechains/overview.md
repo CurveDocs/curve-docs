@@ -12,15 +12,18 @@ Source code for the smart contracts used in sidechain emissions is available on 
 
 At a high level, the process of CRV distribution on sidechain gauges is as follows:
 
-1.  **On Ethereum, a `RootChainGauge` contract mints allocated CRV each week and transfers it over the bridge.**
+<div align="center">
 
-    At the beginning of each epoch week, a call is made to the `checkpoint` function within each gauge. This function mints all of the allocated CRV for the previous week, and transfers them over the bridge to another contract deployed at the *same address on the related sidechain*.
-
-    Checkpointing may be performed by anyone. However, for chains that use the [AnySwap bridge](https://anyswap.exchange/bridge#/router) the checkpoint must happen via the `CheckpointProxy` contract.
-
-
-1.  **On the sidechain, CRV is received into a `ChildLiquidityGauge` contract and then transfered to the `ChildGaugeFactory` from  which the tokens then can be claimed.**
-
+```mermaid
+graph TB
+    gc[(GaugeController)] -->|1. mint CRV| rcg1(RootChainGauge)
+    rcg1 -->|2. transmit emissions to sidechain| clg(ChildLiquidityGauge)
+    clg --> |3. transfer CRV| clgf(ChildLiquidityGaugeFactory)
+    clgf .-> |4. claim| u([USER])
+    clgf .-> |4. claim| u1([USER])
+    clgf .-> |4. claim| u2([USER])
+```
+</div>
 
 
 ## **RootChainGauge**
