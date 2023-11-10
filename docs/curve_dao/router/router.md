@@ -1,7 +1,3 @@
-!!!deploy "Contract Source & Deployment"
-    Contract deployments can be found [here](../../references/deployed-contracts.md#curve-router).  
-    Source code available on [Github](https://github.com/curvefi/curve-router-ng/tree/master/contracts).
-
 The Curve router can perform **up to five swaps in a single transaction**. Additionally, it can **perform estimations with `get_dy` and `get_dx`.**
 The contract utilizes interfaces for all relevant Curve pools, such as StableSwap, CryptoSwap, LLAMMA, and others, to execute swaps.
 
@@ -128,6 +124,10 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
         fee: uint256
         exchangeFeeRate: uint256
     ```
+
+!!!deploy "Contract Source & Deployment"
+    All contract deployments can be found [here](../../references/deployed-contracts.md#curve-router).  
+    Source code available on [Github](https://github.com/curvefi/curve-router-ng/tree/master/contracts).
 
 
 ### `exchange`
@@ -842,5 +842,5 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
             '0x0000000000000000000000000000000000000000', 
             '0x0000000000000000000000000000000000000000', 
             '0x0000000000000000000000000000000000000000'])
-        'todo'
+        18597416260226417 # expected input
         ```
