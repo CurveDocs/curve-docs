@@ -26,17 +26,17 @@ graph TB
 </div>
 
 
-1. On Ethereum, a `RootChainGauge` contract mints allocated CRV depending on the gauge weight each week and bridges them to the `ChildLiquidityGauge`.
+1. **On Ethereum, a `RootChainGauge` contract mints allocated CRV depending on the gauge weight each week and bridges them to the `ChildLiquidityGauge`.**
 
     At the beginning of each epoch week, a call is made to the `transmit_emissions()`function within each gauge. Although this function can be called by anyone, it needs to be done via the RootChainGaugeFactory proxy. This function mints all of the allocated CRV for the previous week, and transfers them over the bridge to the contract deployed at the same address on the related sidechain. Emissions are delayed by one week in order to avoid exceeding the max allowable supply of CRV.
 
 
-2. On the sidechain, CRV is received into a `ChildLiquidityGauge` contract and then further transfered to the `ChildLiquidityGaugeFactory`.
+2. **On the sidechain, CRV is received into a `ChildLiquidityGauge` contract and then further transfered to the `ChildLiquidityGaugeFactory`.**
 
     The bridged CRV tokens are transfered upon a user interaction with the `ChildLiquidityGauge`.This happens whenever a user performs a checkpoint via the `_checkpoint()` function. Due to this mechanism, the gauge needs a user interaction before CRV emissions can be streamed/claimed on sidechains. The relevant function is called whenever a user depoits or withdraws lp tokens or `user_checkpoint()` itself is called.
 
 
-3. Users can claim their emissions directly from the `ChildLiquidityGaugeFactory`.
+3. **Users can claim their emissions directly from the `ChildLiquidityGaugeFactory`.**
     
     CRV emissions can be claimed by calling `mint()` on the contract. This step does not literally mint CRV tokens, as they have already been minted before. 
 
