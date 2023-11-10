@@ -1,7 +1,8 @@
-Admin controls of the GaugeController.
+**Admin guarded functions of the GaugeController.**
 
+## **Adding New Gauges and Types**
 
-# **Adding New Gauges and Types**
+In order for a liquidity gauge to be elegible to receive CRV emission, its address needs to be added to the GaugeController.
 
 ### `add_gauge`
 !!! description "`GaugeController.add_gauge(addr: address, gauge_type: int128, weight: uint256 = 0):`"
@@ -9,20 +10,22 @@ Admin controls of the GaugeController.
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to add a new gauge to the GaugeController.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ---------- |
-    | `addr` |  `address` | Gauge Address |
-    | `gauge_type` |  `int128` | Gauge Type |
-    | `weight` |  `uint256` | Gauge weight | 
-
     !!!warning
         Once a gauge has been added it cannot be removed. New gauges should be very carefully verified prior to adding them to the gauge controller.
 
+    Function to add a new gauge to the GaugeController.
+
+    Emits: `NewGauge`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ---------- |
+    | `addr` |  `address` | gauge address |
+    | `gauge_type` |  `int128` | gauge type |
+    | `weight` |  `uint256` | gauge weight; defaults to 0 | 
+
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 41"
+        ```python
         event NewGauge:
             addr: address
             gauge_type: int128
@@ -82,15 +85,16 @@ Admin controls of the GaugeController.
 
     Function to add a new gauge type.
 
+    Emits: `AddType`
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `addr` |  `address` | Gauge Address |
-    | `gauge_type` |  `int128` | Gauge Type |
-    | `weight` |  `uint256` | Gauge weight | 
+    | `_name` |  `String[64]` | gauge type name |
+    | `weight` |  `uint256` | gauge weight; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 18"
+        ```python
         event AddType:
             name: String[64]
             type_id: int128
@@ -118,6 +122,7 @@ Admin controls of the GaugeController.
         todo
         ```
 
+
 ### `change_type_weight`
 !!! description "`GaugeController.change_type_weight(type_id: int128, weight: uint256):`"
 
@@ -126,19 +131,31 @@ Admin controls of the GaugeController.
 
     Function to change the weight for a give gauge.
 
+    Emits: `NewTypeWeight`
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `type_id` |  `int128` | Gauge Type ID |
-    | `weight` |  `uint256` | New Gauge Type weight |
+    | `type_id` |  `int128` | gauge type id |
+    | `weight` |  `uint256` | new gauge type weight |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8 28"
+        ```python
         event NewTypeWeight:
             type_id: int128
             time: uint256
             weight: uint256
             total_weight: uint256
+
+        @external
+        def change_type_weight(type_id: int128, weight: uint256):
+            """
+            @notice Change gauge type `type_id` weight to `weight`
+            @param type_id Gauge type id
+            @param weight New Gauge weight
+            """
+            assert msg.sender == self.admin
+            self._change_type_weight(type_id, weight)
 
         @internal
         def _change_type_weight(type_id: int128, weight: uint256):
@@ -159,16 +176,6 @@ Admin controls of the GaugeController.
             self.time_type_weight[type_id] = next_time
 
             log NewTypeWeight(type_id, next_time, weight, _total_weight)
-
-        @external
-        def change_type_weight(type_id: int128, weight: uint256):
-            """
-            @notice Change gauge type `type_id` weight to `weight`
-            @param type_id Gauge type id
-            @param weight New Gauge weight
-            """
-            assert msg.sender == self.admin
-            self._change_type_weight(type_id, weight)
         ```
 
     === "Example"
@@ -179,7 +186,8 @@ Admin controls of the GaugeController.
         ```
 
 
-# **Transfer Ownership**
+
+## **Transfer Ownership**
 
 ### `commit_transfer_ownership`
 !!! description "`GaugeController.commit_transfer_ownership(addr: address)`"
@@ -189,13 +197,18 @@ Admin controls of the GaugeController.
 
     Function to commit the ownership of the contract to `addr`.
 
+    Emits: `CommitOwnership`
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `addr` |  `address` | New Admin Address |
+    | `addr` |  `address` | new admin address |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 10"
+        ```python
+        event CommitOwnership:
+            admin: address
+
         future_admin: public(address)  # Can and will be a smart contract
 
         @external
@@ -212,13 +225,11 @@ Admin controls of the GaugeController.
     === "Example"
         
         ```shell
-        >>> GaugeController.commit_transfer_ownership(todo)
-        todo
+        >>> GaugeController.commit_transfer_ownership("0xd8da6bf26964af9d7eed9e03e53415d37aa96045")
         ```
 
 
 ### `apply_transfer_ownership`
-
 !!! description "`GaugeController.apply_transfer_ownership() -> address: view`"
 
     !!!guard "Guarded Method"
@@ -226,9 +237,11 @@ Admin controls of the GaugeController.
 
     Function to apply the new ownership.
 
+    Emits: `ApplyOwnership`
+
     ??? quote "Source code"
 
-        ```python hl_lines="1 5"
+        ```python
         event ApplyOwnership:
             admin: address
 

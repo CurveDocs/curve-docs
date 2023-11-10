@@ -1,12 +1,12 @@
 <h1> </h1>
 
-# **`The Curve DAO: Liquidity Gauges and Minting CRV`**
+# **`Curve DAO: Liquidity Gauges and Minting CRV`**
 
 Curve incentivizes liquidity providers with the CRV, the protocol governance token. Allocation, distribution and minting of CRV are managed via several related DAO contracts:
 
-- **`LiquidityGauge:`** Measures liquidity provided by users over time, in order to distribute CRV and other rewards
+- **`GaugeController:`** Central controller that maintains a list of gauges, weights and type weights, and coordinates the rate of CRV production for each liquidity gauge
 
-- **`GaugeController:`** Central controller that maintains a list of gauges, weights and type weights, and coordinates the rate of CRV production for each gauge
+- **`LiquidityGauge:`** Measures liquidity provided by users over time, in order to distribute CRV and other rewards
 
 - **`Minter:`** CRV minting contract, generates new CRV according to liquidity gauges
 
@@ -20,7 +20,6 @@ CRV follows a piecewise linear inflation schedule. The inflation is reduced by a
   ![](https://curve.readthedocs.io/_images/inflation.svg){ width="500" }
   <figcaption></figcaption>
 </figure>
-
 
 
 The initial supply of CRV is 1.273 billion tokens, which is 42% of the eventual t -> $\infty$ supply of $\approx$ 3.03 billion tokens. All of these initial tokens are gradually vested (with every block). The initial inflation rate which supports the above inflation schedule is $r = 22.0$% (279.6 millions per year).   
@@ -70,7 +69,7 @@ When a user applies a new weight vote, it gets applied at the start of the next 
 ## **The Gauge Controller**
 The Gauge Controller maintains a list of gauges and their types, with the weights of each gauge and type. In order to implement weight voting, `GaugeController` has to include parameters handling linear character of voting power each user has.
 
-`GaugeController` records points (bias + slope) per gauge in `vote_points`, and _scheduled_ changes in biases and slopes for those points in `vote_bias_changes` and `vote_slope_changes`. New changes are applied at the start of each epoch week.
+`GaugeController` records points (bias + slope) per gauge in `vote_points`, and *scheduled* changes in biases and slopes for those points in `vote_bias_changes` and `vote_slope_changes`. New changes are applied at the start of each epoch week.
 
 Per-user, per-gauge slopes are stored in `vote_user_slopes`, along with the power the user has used and the time their vote-lock ends.
 
