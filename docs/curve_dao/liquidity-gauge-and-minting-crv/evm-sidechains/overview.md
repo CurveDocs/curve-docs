@@ -16,31 +16,45 @@ At a high level, the process of CRV distribution on sidechain gauges is as follo
 
 ```mermaid
 graph TB
-    gc[(GaugeController)] -->|1. mint CRV| rcg1(RootChainGauge)
-    rcg1 -->|2. transmit emissions to sidechain| clg(ChildLiquidityGauge)
-    clg --> |3. transfer CRV| clgf(ChildLiquidityGaugeFactory)
-    clgf .-> |4. claim| u([USER])
-    clgf .-> |4. claim| u1([USER])
-    clgf .-> |4. claim| u2([USER])
+    gc[(GaugeController)] -->|mint CRV| rcg1(RootLiquidityGauge)
+    rcg1 -->|bridge CRV to sidechain| clg(ChildLiquidityGauge)
+    clg --> |transfer CRV| clgf(ChildLiquidityGaugeFactory)
+    clgf .-> |claim| u([USER])
+    clgf .-> |claim| u1([USER])
+    clgf .-> |claim| u2([USER])
 ```
 </div>
 
 
-## **RootChainGauge**
+1. On Ethereum, a `RootChainGauge` contract mints allocated CRV depending on the gauge weight each week and bridges them to the `ChildLiquidityGauge`.
+
+    At the beginning of each epoch week, a call is made to the `transmit_emissions()`function within each gauge. Although this function can be called by anyone, it needs to be done via the RootChainGaugeFactory proxy. This function mints all of the allocated CRV for the previous week, and transfers them over the bridge to the contract deployed at the same address on the related sidechain. Emissions are delayed by one week in order to avoid exceeding the max allowable supply of CRV.
+
+
+2. On the sidechain, CRV is received into a `ChildLiquidityGauge` contract and then further transfered to the `ChildLiquidityGaugeFactory`.
+
+    The bridged CRV tokens are transfered upon a user interaction with the `ChildLiquidityGauge`.This happens whenever a user performs a checkpoint via the `_checkpoint()` function. Due to this mechanism, the gauge needs a user interaction before CRV emissions can be streamed/claimed on sidechains. The relevant function is called whenever a user depoits or withdraws lp tokens or `user_checkpoint()` itself is called.
+
+
+3. Users can claim their emissions directly from the `ChildLiquidityGaugeFactory`.
+    
+    CRV emissions can be claimed by calling `mint()` on the contract. This step does not literally mint CRV tokens, as they have already been minted before. 
+
+
+
+# **RootLiquidityGauge**
 `RootChainGauge` is a simplified liquidity gauge contract used for bridging CRV from Ethereum to a sidechain. Each root gauge is added to the gauge controller and receives gauge weight votes to determine emissions for a sidechain pool.
 
 
-## **ChildChainGauge**
-`ChildChainGauge` is a simple reward streaming contract. The logic is similar to that of the [Synthetix staking rewards contract](https://github.com/Synthetixio/synthetix/blob/master/contracts/StakingRewards.sol).
+# **ChildLiquidityGauge**
+ChildChainStreamer is a simple reward streaming contract. The logic is similar to that of the [Synthetix staking rewards contract](https://github.com/Synthetixio/synthetix/blob/master/contracts/StakingRewards.sol).
 
-For each `RootChainGauge` deployed on Ethereum, a `ChildGauge` is deployed at the same address on the related sidechain.
-
-
-## **RewardsOnlyGauge**
-`RewardsOnlyGauge` is a simplified version of the same gauge contract used on Ethereum. The logic around CRV emissions and minting has been removed - it only deals with distribution of externally received rewards.
-
-The API for this contract is similar to that of `LiquidityGaugeV3`.
+For each RootChainGauge deployed on Ethereum, a `ChildChainStreamer` is deployed at the same address on the related sidechain. CRV tokens that are sent over the bridge are transferred into the contract. From there they are transfered unpon a user interaction to the `ChildLiquidityGaugeFactory`.
 
 
-## **RewardClaimer**
-`RewardClaimer` is a minimal passthrough contract that allows claiming from multiple reward streamers. For example the am3CRV pool on Polygon utilizes this contract to receive both CRV emissions bridged across from Ethereum, as well as WMATIC rewards supplied via a `RewardStreamer` contract. The `RewardsOnlyGauge` calls the `RewardClaimer` as a way to retrieve both the CRV and WMATIC rewards.
+# **ChildLiquidityGaugeFactory**
+`ChildLiquidityGaugeFactory` is used to claim the CRV emissions from.
+
+
+# **RootLiquidityGaugeFactory**
+`RootLiquidityGaugeFactory` is a Factory contract to deploy gauges and create Root- and ChildGauges. Emissions are transmitted by calling `transmit_emissions(_gauge: address)` function by inputting the RootLiquidityGauge address.
