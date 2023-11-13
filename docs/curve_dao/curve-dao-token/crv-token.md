@@ -9,13 +9,14 @@
 
 For a broader understanding of the use case of the CRV token, check out [Understanding CRV](https://resources.curve.fi/crv-token/understanding-crv/).
 
-| Allocation | More about the release schedule [here](https://dao.curve.fi/releaseschedule) |
-| ------| --------------------------|
-| `57%` |`Inflation`                | 
-| `30%` |`Shareholder (team and investors)` | 
-| `5%`  |`DAO-controlled reserve`   | 
-| `5%`  |`Early user`               | 
-| `3%`  |`Employees`                | 
+```mermaid
+pie title Tokenomics
+    "Inflation": 57
+    "Shareholders": 30
+    "DAO-controller reserve": 5
+    "Early User": 5
+    "Employees": 3
+```
 
 
 ## **Contract Info Methods** 
