@@ -269,7 +269,10 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 ## **EVM Sidechain Gauges**
 
-At the time of writing (13.11.2023), Celo, 
+!!!danger "MULTICHAIN WARNING"
+    At the time of writing (13.11.2023), sidechain gauges on Celo, Avalanche and Fantom are disabled due to issues with Multichain.    
+    The Multichain service stopped currently, and all bridge transactions will be stuck on the source chains. There is no confirmed resume time.  
+    Multichain statement: https://twitter.com/MultichainOrg/status/1677180114227056641
 
 !!!deploy "Contract Source & Deployment"
     Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges/sidechain).
