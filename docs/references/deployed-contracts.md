@@ -269,6 +269,11 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 ## **EVM Sidechain Gauges**
 
+At the time of writing (13.11.2023), Celo, 
+
+!!!deploy "Contract Source & Deployment"
+    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges/sidechain).
+
 | Type   | Chain | Address  |
 | -------- | -------|-------|
 | `RootLiquidityGaugeFactory` | Ethereum | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://arbiscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5#code) |
@@ -279,9 +284,19 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `ChildLiquidityGaugeFactory` | Polygon | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://polygonscan.com/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5) |
 | `veBoost - Boost Delegation V2` | Polygon | [0xb5ACC710AEDE048600E10eEDcefDf98d4aBf4B1E](https://polygonscan.com/address/0xb5ACC710AEDE048600E10eEDcefDf98d4aBf4B1E) |
 | `ChildLiquidityGaugeFactory` | Base | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://basescan.org/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5) |
-| `veBoost - Boost Delegation V2` | Base | not set yet |
+| `veBoost - Boost Delegation V2` | Base | not set |
 | `ChildLiquidityGaugeFactory` | Gnosis | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://gnosisscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
 | `veBoost - Boost Delegation V2` | Gnosis | [0xefde221f306152971d8e9f181bfe998447975810](https://gnosisscan.io/address/0xefde221f306152971d8e9f181bfe998447975810) |
+| `ChildLiquidityGaugeFactory` | Celo | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://celoscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
+| `veBoost - Boost Delegation V2` | Celo | not set |
+| `ChildLiquidityGaugeFactory` | Avalanche | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://snowtrace.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
+| `veBoost - Boost Delegation V2` | Avalanche | [0xc55837710bc500f1e3c7bb9dd1d51f7c5647e657](https://snowtrace.io/address/0xc55837710bc500f1e3c7bb9dd1d51f7c5647e657) |
+| `ChildLiquidityGaugeFactory` | Fantom | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://ftmscan.com/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5) |
+| `veBoost - Boost Delegation V2` | Fantom | [0xb75dca485E21A77E1B433eCAcb74475FC67e259c](https://ftmscan.com/address/0xb75dca485E21A77E1B433eCAcb74475FC67e259c) |
+| `ChildLiquidityGaugeFactory` | Moonbeam | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://moonscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
+| `veBoost - Boost Delegation V2` | Moonbeam | not set |
+
+
 
 
 
