@@ -33,28 +33,28 @@ graph LR
 
 1. **On Ethereum, a `RootChainGauge` contract mints allocated CRV depending on the gauge weight each week and bridges them to the `ChildLiquidityGauge`.**
 
-    At the beginning of each epoch week, a call is made to the `transmit_emissions()` function within each gauge. Although this function can be called by anyone, it needs to be done via the RootChainGaugeFactory proxy. This function mints all of the allocated CRV for the previous week, and transfers them over the bridge to the contract deployed at the same address on the related sidechain. Emissions are delayed by one week in order to avoid exceeding the max allowable supply of CRV.
+    At the beginning of each epoch week, a call is made to the `transmit_emissions()` function within each gauge. Although this function can be called by anyone, it needs to be done via the RootChainGaugeFactory contract, which acts as a proxy for all deployed RootGauges. This function mints all of the allocated CRV for the previous week, and transfers them over the bridge to the contract deployed at the same address on the related sidechain. Emissions are delayed by one week in order to avoid exceeding the maximum allowable supply of CRV.
 
 
-2. **On the sidechain, CRV is received into a `ChildLiquidityGauge` contract and then further transfered to the `ChildLiquidityGaugeFactory`.**
+2. **On the sidechain, CRV is received into a `ChildLiquidityGauge` contract and upon an interaction with the gauge further transfered to the `ChildLiquidityGaugeFactory`.**
 
-    The bridged CRV tokens are transfered upon a user interaction with the `ChildLiquidityGauge`.This happens whenever a user performs a checkpoint via the `_checkpoint()` function. Due to this mechanism, the gauge needs a user interaction before CRV emissions can be streamed/claimed on sidechains. The relevant function is called whenever a user depoits or withdraws lp tokens or `user_checkpoint()` itself is called.
+    The bridged CRV tokens are transferred upon a user interaction with the `ChildLiquidityGauge`. This happens whenever a user performs a checkpoint via the `_checkpoint()` function. Due to this mechanism, the gauge needs user interaction before CRV emissions can be streamed/claimed on sidechains. The checkpoint is made when users either deposit or withdraw LP tokens, claim rewards, or call `user_checkpoint()` itself."
 
 
 3. **Users can claim their emissions directly from the `ChildLiquidityGaugeFactory`.**
     
-    CRV emissions can be claimed by calling `mint()` on the contract. This step does not literally mint CRV tokens, as they have already been minted before. 
+    CRV emissions can be claimed from the ChildLiquidityGaugeFactory by calling the `mint()` function. It's worth mentioning that this function does not actually mint new CRV tokens, since the tokens have already been minted previously. It is a 'pseudo-mint'.
 
 
 
-# **RootLiquidityGauge**
-`RootChainGauge` is a simplified liquidity gauge contract used for bridging CRV from Ethereum to a sidechain. Each root gauge is added to the gauge controller and receives gauge weight votes to determine emissions for a sidechain pool.
+# **RootChainGauge**
+`RootChainGauge` is a simplified liquidity gauge contract on Ethereum used for bridging CRV from Ethereum to a sidechain. This gauge can be, just like any other liquidity gauge, be added to the GaugeController. As soon as the DAO approved, it is eligible to receive CRV emissions.
 
 
 # **ChildLiquidityGauge**
-ChildChainStreamer is a simple reward streaming contract. The logic is similar to that of the [Synthetix staking rewards contract](https://github.com/Synthetixio/synthetix/blob/master/contracts/StakingRewards.sol).
+`ChildLiquidityGauge` is a gauge contract on the sidechain. 
 
-For each RootChainGauge deployed on Ethereum, a `ChildChainStreamer` is deployed at the same address on the related sidechain. CRV tokens that are sent over the bridge are transferred into the contract. From there they are transfered unpon a user interaction to the `ChildLiquidityGaugeFactory`.
+For each `RootChainGauge` deployed on Ethereum, a `ChildLiquidityGauge` is deployed at the same address on the corresponding sidechain. CRV tokens are bridged into this contract. From here, they are further transferred upon a user interaction with the contract to the `ChildLiquidityGaugeFactory`."
 
 
 # **ChildLiquidityGaugeFactory**
@@ -62,4 +62,4 @@ For each RootChainGauge deployed on Ethereum, a `ChildChainStreamer` is deployed
 
 
 # **RootLiquidityGaugeFactory**
-`RootLiquidityGaugeFactory` is a Factory contract to deploy gauges and create Root- and ChildGauges. Emissions are transmitted by calling `transmit_emissions(_gauge: address)` function by inputting the RootLiquidityGauge address.
+`RootLiquidityGaugeFactory` is a factory contract designed to create both Root- and ChildGauges. Allocated emissions are transmitted by calling the `transmit_emissions(_gauge: address)` function and inputting the address of the `RootLiquidityGauge`. It also serves as a proxy for all deployed RootChainGauges.
