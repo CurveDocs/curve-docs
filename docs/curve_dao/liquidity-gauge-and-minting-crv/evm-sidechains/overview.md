@@ -15,20 +15,25 @@ At a high level, the process of CRV distribution on sidechain gauges is as follo
 <div align="center">
 
 ```mermaid
-graph TB
-    gc[(GaugeController)] -->|mint CRV| rcg1(RootLiquidityGauge)
-    rcg1 -->|bridge CRV to sidechain| clg(ChildLiquidityGauge)
+graph LR
+    subgraph Ethereum
+    gc[(Minter)] -->|mint CRV| rcg(RootLiquidityGauge)
+    end
+    rcg .- b{Brigde}
+    b .- clg(ChildLiquidityGauge)
+    subgraph EVM Sidechain
     clg --> |transfer CRV| clgf(ChildLiquidityGaugeFactory)
     clgf .-> |claim| u([USER])
     clgf .-> |claim| u1([USER])
     clgf .-> |claim| u2([USER])
+    end
 ```
 </div>
 
 
 1. **On Ethereum, a `RootChainGauge` contract mints allocated CRV depending on the gauge weight each week and bridges them to the `ChildLiquidityGauge`.**
 
-    At the beginning of each epoch week, a call is made to the `transmit_emissions()`function within each gauge. Although this function can be called by anyone, it needs to be done via the RootChainGaugeFactory proxy. This function mints all of the allocated CRV for the previous week, and transfers them over the bridge to the contract deployed at the same address on the related sidechain. Emissions are delayed by one week in order to avoid exceeding the max allowable supply of CRV.
+    At the beginning of each epoch week, a call is made to the `transmit_emissions()` function within each gauge. Although this function can be called by anyone, it needs to be done via the RootChainGaugeFactory proxy. This function mints all of the allocated CRV for the previous week, and transfers them over the bridge to the contract deployed at the same address on the related sidechain. Emissions are delayed by one week in order to avoid exceeding the max allowable supply of CRV.
 
 
 2. **On the sidechain, CRV is received into a `ChildLiquidityGauge` contract and then further transfered to the `ChildLiquidityGaugeFactory`.**
