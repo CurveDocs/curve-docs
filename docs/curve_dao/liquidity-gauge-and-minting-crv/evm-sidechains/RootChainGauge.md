@@ -1,19 +1,27 @@
-Individual RootChainGauges are deployed from a `implementation` via the RootChainGaugeFactory. 
+Individual RootChainGauges are deployed from a `implementation` via the RootChainGaugeFactory.  
+The RootGauge on Ethereum and the ChildGauge on sidechains _should_ share the same contract address. If not, its not a valid gauge.
+
+!!!deploy "Contract Source & Deployment" 
+    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges/sidechain). 
 
 
-## Transmitting Emissions
+
+## **Transmitting Emissions**
+
+Allocated CRV emissions are bridged from this contract to the `ChildGauge` on the corresponding sidechain. Transmitting emissions is permissionless, although the `transmit_emission()` function needs to be called from the [RootChainGaugeFactory](../evm-sidechains/RootChainGaugeFactory.md), which acts as a proxy for all deployed RootGauges.
+
 
 ### `transmit_emissions`
 !!! description "`RootChainGauge.transmit_emissions():`"
 
-    Function to actually mint the CRV emissions from the Minter and bridge them to the ChildGauge on the sidechain/l2 utilizing `bridger`.
+    !!!guard "Guarded Method"
+        This function is technically callable by anyone, although it needs to be called from the `RootChainGaugeFactory` proxy.
 
-    !!!note
-        The ChildGauge on the sidechain/L2 has the same address as the RootGauge on ethereum. This function in only callable by the RootChainFactory.
+    Function to mint the allocated CRV for the gauge from the `Minter` and bridge them to the ChildGauge on the sidechain utilizing the `bridger` contract. 
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 8 14"
+        ```python
         @external
         def transmit_emissions():
             """
@@ -40,13 +48,13 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
 ### `bridger`
 !!! description "`RootChainGauge.bridger() -> address: view`"
 
-    Getter for the bridger address.
+    Getter for the bridger contract. The bridger receives maximum approval when initializing the contract in order to actually be able to bridge CRV.
 
-    Returns: bridger (`address`).
+    Returns: bridger contract (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 11"
+        ```python
         bridger: public(address)
 
         @external
@@ -83,14 +91,14 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
 ### `update_bridger`
 !!! description "`RootChainGauge.update_bridger():`"
 
-    Function to update the bridger contract. Sets approval for the "old" bridger to 0 and gives max approval to the new bridger contract.
+    Function to update the bridger contract. Sets approval for the previous bridger to 0 and gives maximum approval to the new bridger contract.
 
     !!!note
-        The bridger contract is set within the RootGaugeFactory.
+        The bridger contract is set within the `RootChainGaugeFactory`.
 
     ??? quote "Source code"
 
-        ```python hl_lines="4 13"
+        ```python
         bridger: public(address)
 
         @external
@@ -114,19 +122,16 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
 
 
 
-## Checkpointing and Inizializing the Gauge
+## **Checkpointing and Inizializing Gauges**
 
-### `use_checkpoint`
-!!! description "`RootChainGauge.use_checkpoint():`"
+### `user_checkpoint`
+!!! description "`RootChainGauge.user_checkpoint():`"
 
-    Function to checkpoint the gauge.
-
-    !!!note
-        The ChildGauge on the sidechain/L2 has the same address as the RootGauge on ethereum. This function in only callable by the RootChainFactory.
+    Function to checkpoint the gauge. Calculates and updates `total_emissions`. If `last_period != current_period` it will do a checkpoint, otherwise it will just return `true` without making a checkpoint.
 
     ??? quote "Source code"
 
-        ```python hl_lines="8"
+        ```python
         WEEK: constant(uint256) = 604800
         YEAR: constant(uint256) = 86400 * 365
         RATE_DENOMINATOR: constant(uint256) = 10 ** 18
@@ -185,7 +190,7 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
     === "Example"
 
         ```shell
-        >>> RootChainGauge.use_checkpoint():
+        >>> RootChainGauge.user_checkpoint():
         ```
 
 
@@ -193,16 +198,16 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
 ### `initialize`
 !!! description "`RootChainGauge.initialize(_bridger: address, _chain_id: uint256):`"
 
-    Proxy method to initialize the contract. This function is called when a need sidechain/L2 gauge is deployed through the RootChainFactory. Also gives max approval to the bridger contract.
+    Proxy method to initialize the contract. This function is called when a need sidechain/L2 gauge is deployed through the RootChainFactory. Also gives maximum approval to the bridger contract. This function is called when a new RootGauge is deployed via [`deploy_gauge()`](../evm-sidechains/RootChainGaugeFactory.md#deploy_gauge) function on the Factory.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_bridger` |  `address` | Bridger Contract Address |
-    | `_chain_id` |  `uint256` | Chain ID |
+    | `_bridger` |  `address` | bridger contract address |
+    | `_chain_id` |  `uint256` | chain id |
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```python
         @external
         def initialize(_bridger: address, _chain_id: uint256):
             """
@@ -233,7 +238,31 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
         ```
 
 
-## Killing the Gauge
+## **Killing the Gauge**
+
+RootGauges can be killed by the owner of the RootChainGaugeFactory.
+
+### `is_killed`
+!!! description "`RootChainGauge.is_killed() -> bool: view`"
+
+    Getter function to check if the gauge is killed.
+
+    Returns: True or False (`bool`).
+
+    ??? quote "Source code"
+
+        ```python
+        is_killed: public(bool)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> RootChainGauge.is_killed():
+        'false'
+        ```
+
+
 ### `set_killed`
 !!! description "`RootChainGauge.set_killed(_is_killed: bool):`"
 
@@ -244,11 +273,11 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_is_killed` |  `bool` | True or False |
+    | `_is_killed` |  `bool` | true or fales |
 
     ??? quote "Source code"
 
-        ```python hl_lines="4 11 12"
+        ```python
         inflation_params: public(InflationParams)
 
         @external
@@ -273,32 +302,11 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
     === "Example"
 
         ```shell
-        >>> RootChainGauge.set_killed('True'):
+        >>> RootChainGauge.set_killed('true'):
         ```
 
 
-### `is_killed`
-!!! description "`RootChainGauge.is_killed() -> bool: view`"
-
-    Getter function to check if the gauge is killed.
-
-    Returns: True or False (`bool`).
-
-    ??? quote "Source code"
-
-        ```python hl_lines="1"
-        is_killed: public(bool)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> RootChainGauge.is_killed():
-        'False'
-        ```
-
-
-## Contract Info Methods
+## **Contract Info Methods**
 
 ### `integrate_fraction`
 !!! description "`RootChainGauge.integrate_fraction(_user: address) -> uint256:`"
@@ -313,7 +321,7 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 9"
+        ```python
         @view
         @external
         def integrate_fraction(_user: address) -> uint256:
@@ -343,7 +351,7 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 10"
+        ```python
         chain_id: public(uint256)
 
         @external
@@ -354,19 +362,8 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
             assert self.factory == ZERO_ADDRESS  # dev: already initialized
 
             self.chain_id = _chain_id
-            self.bridger = _bridger
-            self.factory = msg.sender
 
-            inflation_params: InflationParams = InflationParams({
-                rate: CRV20(CRV).rate(),
-                finish_time: CRV20(CRV).future_epoch_time_write()
-            })
-            assert inflation_params.rate != 0
-
-            self.inflation_params = inflation_params
-            self.last_period = block.timestamp / WEEK
-
-            ERC20(CRV).approve(_bridger, MAX_UINT256)
+            ...
         ```
 
     === "Example"
@@ -376,6 +373,7 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
         42161
         ```
 
+
 ### `factory`
 !!! description "`RootChainGauge.factory() -> address: view`"
 
@@ -384,11 +382,11 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
     Returns: bridger (`address`).
 
     !!!note
-        `factory` is set to `0x000000000000000000000000000000000000dEaD` so they contract does not initialize itself. Actual `factory` address is set when actually inizializing the contract via the `initialize` function.
+        `factory` is set to `0x000000000000000000000000000000000000dEaD` so they contract does not initialize itself when deploying. Actual `factory` address is set when actually inizializing the contract via the `initialize()` function.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 17 21"
+        ```python
         factory: public(address)
 
         @external
@@ -411,16 +409,7 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
             self.bridger = _bridger
             self.factory = msg.sender
 
-            inflation_params: InflationParams = InflationParams({
-                rate: CRV20(CRV).rate(),
-                finish_time: CRV20(CRV).future_epoch_time_write()
-            })
-            assert inflation_params.rate != 0
-
-            self.inflation_params = inflation_params
-            self.last_period = block.timestamp / WEEK
-
-            ERC20(CRV).approve(_bridger, MAX_UINT256)
+            ...
         ```
 
     === "Example"
@@ -429,6 +418,7 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
         >>> RootChainGauge.factory():
         '0xabC000d88f23Bb45525E447528DBF656A9D55bf5'
         ```
+
 
 ### `inflation_params`
 !!! description "`RootChainGauge.inflation_params() -> tuple: view`"
@@ -439,7 +429,7 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5"
+        ```python
         struct InflationParams:
             rate: uint256
             finish_time: uint256
@@ -454,25 +444,25 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
         5181574864521283150, 1723501048
         ```
 
-### `last_period` (todo)
+
+### `last_period` 
 !!! description "`RootChainGauge.last_period() -> uint256: view`"
 
-    todo
+    Getter for the last period.
 
-    Returns: timestamp (`uint256`).
+    Returns: period (`uint256`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5"
+        ```python
         last_period: public(uint256)
-
-
         ```
 
     === "Example"
 
         ```shell
-        >>> RootChainGauge.inflation_params():
+        >>> RootChainGauge.last_period():
+        2810
         ```
 
 
@@ -485,7 +475,7 @@ Individual RootChainGauges are deployed from a `implementation` via the RootChai
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 47"
+        ```python
         total_emissions: public(uint256)
 
         @external
