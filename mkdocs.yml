@@ -47,11 +47,11 @@ nav:
       - Gauges for EVM Sidechains: 
         - Overview: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/overview.md
         - RootChainGauge: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGauge.md
-        - RootChainFactory: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md
-        - ChildGauge: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/ChildGauge.md
-        - ChildGaugeFactory: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/ChildGaugeFactory.md
+        - RootChainGaugeFactory: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md
+        - ChilChaindGauge: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/ChildGauge.md
+        - ChildChainGaugeFactory: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/ChildGaugeFactory.md
       - Minter: curve_dao/liquidity-gauge-and-minting-crv/minter.md 
-      
+
     - Ownership Proxies:
       - Overview: curve_dao/ownership-proxy/overview.md
       - Agents: curve_dao/ownership-proxy/Agents.md

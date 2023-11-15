@@ -1,11 +1,11 @@
-The RootChainLiquiditiyGaugeFactory is used to deploy *RootChainGauges and ChildGauges* on sidechains.
-For further implementation details pelase refer to [this](../evm-sidechains/overview.md#implementation-details).
+The `RootChainLiquiditiyGaugeFactory` is used to deploy *Root- and ChildGauges*. For further implementation details pelase refer to [this](../evm-sidechains/overview.md#implementation-details).
 
 !!!deploy "Contract Source & Deployment"
-    **`RootChainGaugeFactory`** contract is deployed on the Ethereum mainnet at: [0xabC000d88f23Bb45525E447528DBF656A9D55bf5](https://etherscan.io/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5#code).  
+    **`RootChainGaugeFactory`** contract is deployed on the Ethereum mainnet at: [0xabC000d88f23Bb45525E447528DBF656A9D55bf5](https://etherscan.io/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5#code).    
+    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges/sidechain). 
 
 
-## Transmitting Emissions
+## **Transmitting Emissions**
 
 ### `transmit_emissions`
 !!! description "`RootChainFactory.transmit_emissions(_gauge: address):`"
@@ -21,7 +21,7 @@ For further implementation details pelase refer to [this](../evm-sidechains/over
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```python
         @external
         def transmit_emissions(_gauge: address):
             """
@@ -44,7 +44,7 @@ For further implementation details pelase refer to [this](../evm-sidechains/over
         ```
 
 
-## Implementations and Gauges
+## **Implementations and Gauges**
 
 The RootChainGaugeFactory uses implementations to create ChildGauges through this implementation.
 
@@ -58,7 +58,7 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 12"
+        ```python
         get_implementation: public(address)
 
         @external
@@ -97,7 +97,7 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 8 15 16"
+        ```python
         event UpdateImplementation:
             _old_implementation: address
             _new_implementation: address
@@ -137,7 +137,7 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         get_gauge: public(HashMap[uint256, address[MAX_UINT256]])
         ```
 
@@ -163,7 +163,7 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 21 23"
+        ```python
         get_gauge_count: public(HashMap[uint256, uint256])
 
         @payable
@@ -217,7 +217,7 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 24 28"
+        ```python
         is_valid_gauge: public(HashMap[address, bool])
 
         @payable
@@ -257,10 +257,12 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
         ```
 
 
+## **Deploying Gauges**
+
 ### `deploy_gauge`
 !!! description "`RootChainFactory.deploy_gauge(_chain_id: uint256, _salt: bytes32) -> address:`"
 
-    Function to deploy a RootLiquidityGauge.
+    Function to deploy a RootGauge.
 
     Returns: gauge (`address`).
 
@@ -273,7 +275,7 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 10 23 24"
+        ```python
         event DeployedGauge:
             _implementation: indexed(address)
             _chain_id: indexed(uint256)
@@ -330,7 +332,7 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```python
         @external
         def deploy_child_gauge(_chain_id: uint256, _lp_token: address, _salt: bytes32, _manager: address = msg.sender):
             bridger: address = self.get_bridger[_chain_id]
@@ -357,8 +359,7 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
 
 
-
-## Call Proxy and Bridgers
+## **Call Proxy and Bridgers**
 
 Different `bridgers` for different chains!
 
@@ -372,7 +373,7 @@ Different `bridgers` for different chains!
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 6"
+        ```python
         call_proxy: public(address)
 
         @external
@@ -405,7 +406,7 @@ Different `bridgers` for different chains!
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         get_bridger: public(HashMap[uint256, address])
         ```
 
@@ -433,7 +434,7 @@ Different `bridgers` for different chains!
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 14 15"
+        ```python
         event UpdateCallProxy:
             _old_call_proxy: address
             _new_call_proxy: address
@@ -475,7 +476,7 @@ Different `bridgers` for different chains!
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 15 16"
+        ```python
         event BridgerUpdated:
             _chain_id: indexed(uint256)
             _old_bridger: address
@@ -502,7 +503,7 @@ Different `bridgers` for different chains!
 
 
 
-## Admin Ownership
+## **Admin Ownership**
 
 ### `owner`
 !!! description "`RootChainFactory.owner() -> address: view`"
@@ -513,7 +514,7 @@ Different `bridgers` for different chains!
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         owner: public(address)
         ```
 
@@ -534,7 +535,7 @@ Different `bridgers` for different chains!
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         future_owner: public(address)
         ```
 
@@ -560,7 +561,7 @@ Different `bridgers` for different chains!
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 2 5 10 12"
+        ```python
         owner: public(address)
         future_owner: public(address)
 
@@ -594,7 +595,11 @@ Different `bridgers` for different chains!
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 2 5 10 12 13"
+        ```python
+        event TransferOwnership:
+            _old_owner: address
+            _new_owner: address
+
         owner: public(address)
         future_owner: public(address)
 

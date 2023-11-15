@@ -267,6 +267,40 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | Kava | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://kavascan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D/contracts#address-tabs) |
 
 
+## **EVM Sidechain Gauges**
+
+!!!danger "MULTICHAIN WARNING"
+    At the time of writing (13.11.2023), sidechain gauges on Celo, Avalanche and Fantom are disabled due to issues with Multichain.    
+    The Multichain service stopped currently, and all bridge transactions will be stuck on the source chains. There is no confirmed resume time.  
+    Multichain statement: https://twitter.com/MultichainOrg/status/1677180114227056641
+
+!!!deploy "Contract Source & Deployment"
+    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges/sidechain).
+
+| Type   | Chain | Address  |
+| -------- | -------|-------|
+| `RootLiquidityGaugeFactory` | Ethereum | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://etherscan.io/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5) |
+| `ChildLiquidityGaugeFactory` | Arbitrum | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://arbiscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5#code) |
+| `veBoost - Boost Delegation V2` | Arbitrum | [0x98c80fa823759b642c3e02f40533c164f40727ae](https://arbiscan.io/address/0x98c80fa823759b642c3e02f40533c164f40727ae#code) |
+| `ChildLiquidityGaugeFactory` | Optimism | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://optimistic.etherscan.io/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5#code) |
+| `veBoost - Boost Delegation V2` | Optimism | [0x65a0b01756E837e6670634816E4F5B3a3fF21107](https://optimistic.etherscan.io/address/0x65a0b01756E837e6670634816E4F5B3a3fF21107#code) |
+| `ChildLiquidityGaugeFactory` | Polygon | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://polygonscan.com/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5) |
+| `veBoost - Boost Delegation V2` | Polygon | [0xb5ACC710AEDE048600E10eEDcefDf98d4aBf4B1E](https://polygonscan.com/address/0xb5ACC710AEDE048600E10eEDcefDf98d4aBf4B1E) |
+| `ChildLiquidityGaugeFactory` | Base | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://basescan.org/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5) |
+| `veBoost - Boost Delegation V2` | Base | :material-close: not set |
+| `ChildLiquidityGaugeFactory` | Gnosis | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://gnosisscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
+| `veBoost - Boost Delegation V2` | Gnosis | [0xefde221f306152971d8e9f181bfe998447975810](https://gnosisscan.io/address/0xefde221f306152971d8e9f181bfe998447975810) |
+| `ChildLiquidityGaugeFactory` | Celo | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://celoscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
+| `veBoost - Boost Delegation V2` | Celo | :material-close: not set |
+| `ChildLiquidityGaugeFactory` | Avalanche | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://snowtrace.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
+| `veBoost - Boost Delegation V2` | Avalanche | [0xc55837710bc500f1e3c7bb9dd1d51f7c5647e657](https://snowtrace.io/address/0xc55837710bc500f1e3c7bb9dd1d51f7c5647e657) |
+| `ChildLiquidityGaugeFactory` | Fantom | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://ftmscan.com/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5) |
+| `veBoost - Boost Delegation V2` | Fantom | [0xb75dca485E21A77E1B433eCAcb74475FC67e259c](https://ftmscan.com/address/0xb75dca485E21A77E1B433eCAcb74475FC67e259c) |
+| `ChildLiquidityGaugeFactory` | Moonbeam | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://moonscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
+| `veBoost - Boost Delegation V2` | Moonbeam | :material-close: not set |
+
+
+
 ## **Curve Stablecoin**
 For testing in production purposes, several contract deployments have taken place. Please ensure that you are using the correct and latest version. The latest deployment logs can be found [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
 

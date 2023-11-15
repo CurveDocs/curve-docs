@@ -454,7 +454,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
         ```
 
 
-## **Killing The Fee Distributor**
+## **Killing The FeeDistributor**
 
 !!!danger "Consequences"
     The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV balance to the `emergency_return` address and blocks the ability to claim or burn. The contract cannot be unkilled.
