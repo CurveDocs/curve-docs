@@ -66,18 +66,8 @@ Allocated CRV emissions are bridged from this contract to the `ChildGauge` on th
 
             self.chain_id = _chain_id
             self.bridger = _bridger
-            self.factory = msg.sender
 
-            inflation_params: InflationParams = InflationParams({
-                rate: CRV20(CRV).rate(),
-                finish_time: CRV20(CRV).future_epoch_time_write()
-            })
-            assert inflation_params.rate != 0
-
-            self.inflation_params = inflation_params
-            self.last_period = block.timestamp / WEEK
-
-            ERC20(CRV).approve(_bridger, MAX_UINT256)
+            ...
         ```
 
     === "Example"
@@ -382,7 +372,7 @@ RootGauges can be killed by the owner of the RootChainGaugeFactory.
     Returns: bridger (`address`).
 
     !!!note
-        `factory` is set to `0x000000000000000000000000000000000000dEaD` so they contract does not initialize itself when deploying. Actual `factory` address is set when actually inizializing the contract via the `initialize()` function.
+        `factory` is set to `0x000000000000000000000000000000000000dEaD` so they contract does not initialize itself when deploying. The actual `factory` address is set when actually inizializing the contract via the `initialize()` function.
 
     ??? quote "Source code"
 
