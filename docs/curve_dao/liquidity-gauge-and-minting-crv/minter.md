@@ -1,5 +1,4 @@
-The Minter contract in Curve Finance is responsible for the issuance and distribution of the CRV (Curve's governance token) to liquidity providers. It acts as a mechanism to reward users who provide liquidity to Curve's pools. The Minter contract calculates the amount of CRV tokens to be allocated based on various factors such as the duration and amount of liquidity provided. By incentivizing liquidity provision, the Minter contract promotes the growth and sustainability of the Curve ecosystem.
-
+The `Minter` contract is responsible for the issuance and distribution of CRV. It is a fixed address and therefore cannot be swapped out or upgraded.
 
 !!!deploy "Contract Source & Deployment"
     **Minter** contract is deployed to the Ethereum mainnet at: [0xd061D61a4d941c39E5453435B6345Dc261C2fcE0](https://etherscan.io/address/0xd061D61a4d941c39E5453435B6345Dc261C2fcE0#code).  
