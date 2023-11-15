@@ -279,7 +279,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Type   | Chain | Address  |
 | -------- | -------|-------|
-| `RootLiquidityGaugeFactory` | Ethereum | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://arbiscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5#code) |
+| `RootLiquidityGaugeFactory` | Ethereum | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://etherscan.io/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5) |
 | `ChildLiquidityGaugeFactory` | Arbitrum | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://arbiscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5#code) |
 | `veBoost - Boost Delegation V2` | Arbitrum | [0x98c80fa823759b642c3e02f40533c164f40727ae](https://arbiscan.io/address/0x98c80fa823759b642c3e02f40533c164f40727ae#code) |
 | `ChildLiquidityGaugeFactory` | Optimism | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://optimistic.etherscan.io/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5#code) |
