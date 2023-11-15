@@ -1,10 +1,8 @@
-The RootChainLiquiditiyGaugeFactory is used to deploy *RootChainGauges and ChildGauges* on sidechains.
-For further implementation details pelase refer to [this](../evm-sidechains/overview.md#implementation-details).
+The `RootChainLiquiditiyGaugeFactory` is used to deploy *Root- and ChildGauges*. For further implementation details pelase refer to [this](../evm-sidechains/overview.md#implementation-details).
 
 !!!deploy "Contract Source & Deployment"
     **`RootChainGaugeFactory`** contract is deployed on the Ethereum mainnet at: [0xabC000d88f23Bb45525E447528DBF656A9D55bf5](https://etherscan.io/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5#code).    
     Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges/sidechain). 
-
 
 
 ## **Transmitting Emissions**
@@ -46,7 +44,7 @@ For further implementation details pelase refer to [this](../evm-sidechains/over
         ```
 
 
-## Implementations and Gauges
+## **Implementations and Gauges**
 
 The RootChainGaugeFactory uses implementations to create ChildGauges through this implementation.
 
@@ -259,10 +257,12 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
         ```
 
 
+## **Deploying Gauges**
+
 ### `deploy_gauge`
 !!! description "`RootChainFactory.deploy_gauge(_chain_id: uint256, _salt: bytes32) -> address:`"
 
-    Function to deploy a RootLiquidityGauge.
+    Function to deploy a RootGauge.
 
     Returns: gauge (`address`).
 
@@ -359,8 +359,7 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
 
 
-
-## Call Proxy and Bridgers
+## **Call Proxy and Bridgers**
 
 Different `bridgers` for different chains!
 

@@ -1,9 +1,7 @@
-Individual RootChainGauges are deployed from a `implementation` via the RootChainGaugeFactory.  
-The RootGauge on Ethereum and the ChildGauge on sidechains _should_ share the same contract address. If not, its not a valid gauge.
+Individual RootChainGauges are deployed from a `implementation` via the RootChainGaugeFactory. The `RootGauge` on Ethereum and the ChildGauge on sidechains _should_ share the same contract address. If not, its not a valid gauge.
 
 !!!deploy "Contract Source & Deployment" 
     Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges/sidechain). 
-
 
 
 ## **Transmitting Emissions**
