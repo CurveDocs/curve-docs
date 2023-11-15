@@ -1,25 +1,8 @@
-child gauge factory.
-
-this contract has the same address as the root liquidity gauge factory!!!!
-
-
-so flow is pretty much this: voting for the gauges in on L1 --> rootliquititygauge factory mints and transmits the emissions to --> childgaugefactory --> users can claim from this contract.
-
-
-if child gauge `is_mirrored` is true, the root gauge of the gauge has the same address on eth mainnet as the child gauge on the sidechain!
-
-
-
-vote-escrowed boost: https://arbiscan.io/address/0x98c80fa823759b642c3e02f40533c164f40727ae#code
-
-examples of the shell are from the arbitrum childgaugefactory.
-
-
+The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGaugeFactory` on Ethereum and `ChildGaugeFactory` on the according chain share the same contract address.
 
 !!!deploy "Contract Source & Deployment"
     All contract deployments can be found [here](../../../references/deployed-contracts.md#evm-sidechain-gauges).  
     Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges/sidechain). 
-
 
 
 ## **Contract Info Methods**
@@ -196,7 +179,7 @@ examples of the shell are from the arbitrum childgaugefactory.
 
     === "Example"
 
-        ```shell''
+        ```shell
         >>> ChildGaugeFactory.gauge_data('0xCE5F24B7A95e9cBa7df4B54E911B4A3Dc8CDAf6f'):
         6778598407
         ```
@@ -262,7 +245,7 @@ examples of the shell are from the arbitrum childgaugefactory.
 
     === "Example"
 
-        ```shell''
+        ```shell
         >>> ChildGaugeFactory.get_gauge_from_lp_token('0x7f90122bf0700f9e7e1f688fe926940e8839f353'):
         '0xCE5F24B7A95e9cBa7df4B54E911B4A3Dc8CDAf6f'
         ```
@@ -324,7 +307,7 @@ examples of the shell are from the arbitrum childgaugefactory.
 
     === "Example"
 
-        ```shell''
+        ```shell
         >>> ChildGaugeFactory.get_gauge_count():
         19
         ```
@@ -349,7 +332,7 @@ examples of the shell are from the arbitrum childgaugefactory.
 
     === "Example"
 
-        ```shell''
+        ```shell
         >>> ChildGaugeFactory.get_gauge(1):
         '0xCE5F24B7A95e9cBa7df4B54E911B4A3Dc8CDAf6f'
         ```
@@ -421,7 +404,7 @@ examples of the shell are from the arbitrum childgaugefactory.
 
     === "Example"
 
-        ```shell''
+        ```shell
         >>> ChildGaugeFactory.mint('todo'):
         ```
 
@@ -493,7 +476,7 @@ examples of the shell are from the arbitrum childgaugefactory.
 
     === "Example"
 
-        ```shell''
+        ```shell
         >>> ChildGaugeFactory.mint_many('todo'):
         ```
 
@@ -561,7 +544,7 @@ examples of the shell are from the arbitrum childgaugefactory.
 
     === "Example"
 
-        ```shell''
+        ```shell
         >>> ChildGaugeFactory.minted('0xbac512b0be66194e1912d76bb929e19a84adfa07', '0xCE5F24B7A95e9cBa7df4B54E911B4A3Dc8CDAf6f'):
         1782570157728607
         ```
@@ -642,7 +625,7 @@ examples of the shell are from the arbitrum childgaugefactory.
 
     === "Example"
 
-        ```shell''
+        ```shell
         >>> ChildGaugeFactory.mint_many('todo'):
         ```
 
