@@ -15,13 +15,18 @@ Here is a list of contract deployments that are used in the Curve DAO:
 | `Vesting Escrow` |  [VestingEscrow.vy](https://etherscan.io/address/0x575ccd8e2d300e2377b43478339e364000318e2c) | [0x575ccd8e2d300e2377b43478339e364000318e2c](https://etherscan.io/address/0x575ccd8e2d300e2377b43478339e364000318e2c) |
 
 
-### **Ownership Proxies**
-| Name      | Source   | Address |
+### **Proxies**
+
+| Name      | Description   | Address |
 | ----------- | -------| ----|
-| `Gauge Owner` |  [GaugeProxy.vy](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/GaugeProxy.vy) | [0x519AFB566c05E00cfB9af73496D00217A630e4D5](https://etherscan.io/token/0x519AFB566c05E00cfB9af73496D00217A630e4D5) |
-| `Pool Owner` |  [PoolProxy.vy](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/PoolProxy.vy) | [0xeCb456EA5365865EbAb8a2661B0c503410e9B347](https://etherscan.io/token/0xeCb456EA5365865EbAb8a2661B0c503410e9B347) |
-| `Crypto Pool Owner` |  **in use?** | - |
-| `Factory Pool Owner` |  **in use?** | - |
+| `Pool Proxy` |  Pool Proxy of early Curve pools + Fee Receiver | [0xeCb456EA5365865EbAb8a2661B0c503410e9B347](https://etherscan.io/token/0xeCb456EA5365865EbAb8a2661B0c503410e9B347) |
+| `StableSwap Owner Proxy` |  Owner Proxy of pools deployed via the [Metapool Facotry](https://etherscan.io/address/0xb9fc157394af804a3578134a6585c0dc9cc990d4) | [0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571](https://etherscan.io/address/0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571) |
+| `StableSwap Owner Proxy` |  Owner Proxy of pools deployed via the [crvUSD Facotry](https://etherscan.io/address/0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d) | [0x768caA20Cf1921772B6F56950e23Bafd94aF5CFF](https://etherscan.io/address/0x768caA20Cf1921772B6F56950e23Bafd94aF5CFF) |
+| `CryptoSwap Owner Proxy` |  Owner Proxy of pools deployed via the [CryptoSwap Facotry](https://etherscan.io/address/0xf18056bbd320e96a48e3fbf8bc061322531aac99) | [0x5a8fdC979ba9b6179916404414F7BA4D8B77C8A1](https://etherscan.io/address/0x5a8fdC979ba9b6179916404414F7BA4D8B77C8A1) |
+| `Gauge Owner` |  Gauge Proxy to kill gauges | [0x519AFB566c05E00cfB9af73496D00217A630e4D5](https://etherscan.io/token/0x519AFB566c05E00cfB9af73496D00217A630e4D5) |
+| `Gauge Manager Proxy` |  Gauge Proxy to kill gauges | [0x201798B679859DDF129651d6B58a5C32527EA04c](https://etherscan.io/address/0x201798B679859DDF129651d6B58a5C32527EA04c) |
+| `Gauge Manager Proxy` |  Gauge Manager Proxy for two-coin cryptopools | [0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9](https://etherscan.io/address/0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9) |
+
 
 
 ### **Aragon**
