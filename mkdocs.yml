@@ -57,7 +57,6 @@ nav:
       - Agents: curve_dao/ownership-proxy/Agents.md
       - PoolProxy: curve_dao/ownership-proxy/PoolProxy.md
       - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
-      - RootChainGaugeProxy: curve_dao/ownership-proxy/RootChainGaugeFactoryProxy.md
 
     - Governance and Voting:  
       - Overview: curve_dao/governance/overview.md
