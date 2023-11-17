@@ -127,7 +127,7 @@ nav:
     - Overview: cryptoswap_exchange/overview.md
     - Pools:
       - Overview: cryptoswap_exchange/pools/overview.md
-      - TwoCrypto Pool: cryptoswap_exchange/pools/overview.md
+      - Crypto Pool: cryptoswap_exchange/pools/crypto-pool.md
     - Liquidity Pool Tokens:
       - Overview: cryptoswap_exchange/lp_tokens/overview.md
       - Curve Token V5: cryptoswap_exchange/lp_tokens/lp-token-V5.md
