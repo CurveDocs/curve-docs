@@ -132,6 +132,10 @@ nav:
     - Liquidity Pool Tokens:
       - Overview: cryptoswap_exchange/lp_tokens/overview.md
       - Curve Token V5: cryptoswap_exchange/lp_tokens/lp-token-V5.md
+    - Pool Factory: 
+      - Overview: cryptoswap_exchange/factory/overview.md
+      - Deployer API: cryptoswap_exchange/factory/deployer-api.md
+      - Admin Controls: cryptoswap_exchange/factory/admin-controls.md
 
   - Registry:
     - Overview: registry/overview.md
