@@ -1,9 +1,9 @@
+<h1> </h1>
 
-## Pool Ownership
 Pools created through the Factory are "owned" by the factory `admin` (DAO). Ownership can only be changed within the factory contract via `commit_transfer_ownership` and `accept_transfer_ownership`. 
 
 
-## Amplification Coefficient / Gamma Admin Controls
+## **Parameter Controls**
 
 More informations about the parameters [here](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).
 
@@ -13,7 +13,10 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 ### `ramp_A_gamma`
 !!! description "`CryptoSwap.ramp_A_gamma(future_A: uint256, future_gamma: uint256, future_time: uint256):`"
 
-    Function to ramp A and gamma parameter values linearly. `A` and `gamma` are packed within the same variable.
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the factory contract.
+
+    Function to ramp A and gamma parameter values linearly.
 
     Emits: `RampAgamma`
 
@@ -21,14 +24,11 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
     | ----------- | -------| ----|
     | `future_A` | `uint256` | future A value |
     | `future_gamma` | `uint256` | future gamma value |
-    | `future_time` | `uint256` | timestamp at which the ramping will end|
-
-    !!!note
-        This function is only callable by the `admin` of the factory contract. 
+    | `future_time` | `uint256` | timestamp at which the parameters are fully ramped |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 10 39"
+        ```python
         event RampAgamma:
             initial_A: uint256
             future_A: uint256
@@ -38,28 +38,19 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
             future_time: uint256
 
         @external
-        def ramp_A_gamma(
-            future_A: uint256, future_gamma: uint256, future_time: uint256
-        ):
-            """
-            @notice Initialise Ramping A and gamma parameter values linearly.
-            @dev Only accessible by factory admin, and only
-            @param future_A The future A value.
-            @param future_gamma The future gamma value.
-            @param future_time The timestamp at which the ramping will end.
-            """
-            assert msg.sender == factory.admin()  # dev: only owner
-            assert block.timestamp > self.initial_A_gamma_time + (MIN_RAMP_TIME - 1)  # dev: ramp undergoing
-            assert future_time > block.timestamp + MIN_RAMP_TIME - 1  # dev: insufficient time
+        def ramp_A_gamma(future_A: uint256, future_gamma: uint256, future_time: uint256):
+            assert msg.sender == Factory(self.factory).admin()  # dev: only owner
+            assert block.timestamp > self.initial_A_gamma_time + (MIN_RAMP_TIME-1)
+            assert future_time > block.timestamp + (MIN_RAMP_TIME-1)  # dev: insufficient time
 
             A_gamma: uint256[2] = self._A_gamma()
-            initial_A_gamma: uint256 = A_gamma[0] << 128
-            initial_A_gamma = initial_A_gamma | A_gamma[1]
+            initial_A_gamma: uint256 = shift(A_gamma[0], 128)
+            initial_A_gamma = bitwise_or(initial_A_gamma, A_gamma[1])
 
-            assert future_A > MIN_A - 1
-            assert future_A < MAX_A + 1
-            assert future_gamma > MIN_GAMMA - 1
-            assert future_gamma < MAX_GAMMA + 1
+            assert future_A > MIN_A-1
+            assert future_A < MAX_A+1
+            assert future_gamma > MIN_GAMMA-1
+            assert future_gamma < MAX_GAMMA+1
 
             ratio: uint256 = 10**18 * future_A / A_gamma[0]
             assert ratio < 10**18 * MAX_A_CHANGE + 1
@@ -72,19 +63,12 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
             self.initial_A_gamma = initial_A_gamma
             self.initial_A_gamma_time = block.timestamp
 
-            future_A_gamma: uint256 = future_A << 128
-            future_A_gamma = future_A_gamma | future_gamma
+            future_A_gamma: uint256 = shift(future_A, 128)
+            future_A_gamma = bitwise_or(future_A_gamma, future_gamma)
             self.future_A_gamma_time = future_time
             self.future_A_gamma = future_A_gamma
 
-            log RampAgamma(
-                A_gamma[0],
-                future_A,
-                A_gamma[1],
-                future_gamma,
-                block.timestamp,
-                future_time,
-            )
+            log RampAgamma(A_gamma[0], future_A, A_gamma[1], future_gamma, block.timestamp, future_time)
         ```
 
     === "Example"
@@ -97,16 +81,16 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 ### `stop_ramp_A_gamma`
 !!! description "`CryptoSwap.stop_ramp_A_gamma():`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the factory contract.
+
     Function to immediately stop ramping A and gamma parameters and set them to the current value.
 
     Emits: `StopRampA`
 
-    !!!note
-        This function is only callable by the `admin` of the factory contract. 
-
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 24"
+        ```python
         event StopRampA:
             current_A: uint256
             current_gamma: uint256
@@ -114,21 +98,16 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
         @external
         def stop_ramp_A_gamma():
-            """
-            @notice Stop Ramping A and gamma parameters immediately.
-            @dev Only accessible by factory admin.
-            """
-            assert msg.sender == factory.admin()  # dev: only owner
+            assert msg.sender == Factory(self.factory).admin()  # dev: only owner
 
             A_gamma: uint256[2] = self._A_gamma()
-            current_A_gamma: uint256 = A_gamma[0] << 128
-            current_A_gamma = current_A_gamma | A_gamma[1]
+            current_A_gamma: uint256 = shift(A_gamma[0], 128)
+            current_A_gamma = bitwise_or(current_A_gamma, A_gamma[1])
             self.initial_A_gamma = current_A_gamma
             self.future_A_gamma = current_A_gamma
             self.initial_A_gamma_time = block.timestamp
             self.future_A_gamma_time = block.timestamp
-
-            # ------ Now (block.timestamp < t1) is always False, so we return saved A.
+            # now (block.timestamp < t1) is always False, so we return saved A
 
             log StopRampA(A_gamma[0], A_gamma[1], block.timestamp)
         ```
@@ -140,141 +119,116 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
         ```
 
 
-
-## Parameter Admin Controls
-
 ### `commit_new_parameters`
 !!! description "`CryptoSwap.commit_new_parameters(_new_mid_fee: uint256, _new_out_fee: uint256, _new_fee_gamma: uint256, _new_allowed_extra_profit: uint256, _new_adjustment_step: uint256, _new_ma_time: uint256):`"
 
-    Function to commit new parameters. The new parameters do not take immedaite effect.
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the factory contract.
+
+    Function to commit new parameters. The new parameters do not take immedaite effect, they need to be applied first.
 
     Emits: `CommitNewParameters`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_new_mid_fee` | `uint256` | new `mid_fee` value |
-    | `_new_out_fee` | `uint256` | new `out_fee` value |
-    | `_new_fee_gamma` | `uint256` | new `fee_gamma` value |
-    | `_new_allowed_extra_profit` | `uint256` | new `allowed_extra_profit` value |
-    | `_new_adjustment_step` | `uint256` |new `adjustment_step` value |
-    | `_new_ma_time` | `uint256` | new `ma_time` value |
-
-    !!!note
-        This function is only callable by the `admin` of the factory contract. 
+    | `_new_mid_fee` | `uint256` | new mid fee value |
+    | `_new_out_fee` | `uint256` | new out fee value |
+    | `_new_admin_fee` | `uint256` | new admin fee value |
+    | `_new_fee_gamma` | `uint256` | new  fee-gamma value |
+    | `_new_allowed_extra_profit` | `uint256` | new allowed_extra_profit value |
+    | `_new_adjustment_step` | `uint256` |new adjustment_step value |
+    | `_new_ma_time` | `uint256` | new ma_time value |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 16 89"
+        ```python
         event CommitNewParameters:
             deadline: indexed(uint256)
+            admin_fee: uint256
             mid_fee: uint256
             out_fee: uint256
             fee_gamma: uint256
             allowed_extra_profit: uint256
             adjustment_step: uint256
-            ma_time: uint256
-
-        future_packed_rebalancing_params: uint256
-        future_packed_fee_params: uint256
-
-        ADMIN_ACTIONS_DELAY: constant(uint256) = 3 * 86400
+            ma_half_time: uint256
 
         @external
         def commit_new_parameters(
             _new_mid_fee: uint256,
             _new_out_fee: uint256,
+            _new_admin_fee: uint256,
             _new_fee_gamma: uint256,
             _new_allowed_extra_profit: uint256,
             _new_adjustment_step: uint256,
-            _new_ma_time: uint256,
-        ):
-            """
-            @notice Commit new parameters.
-            @dev Only accessible by factory admin.
-            @param _new_mid_fee The new mid fee.
-            @param _new_out_fee The new out fee.
-            @param _new_fee_gamma The new fee gamma.
-            @param _new_allowed_extra_profit The new allowed extra profit.
-            @param _new_adjustment_step The new adjustment step.
-            @param _new_ma_time The new ma time. ma_time is time_in_seconds/ln(2).
-            """
+            _new_ma_half_time: uint256,
+            ):
             assert msg.sender == Factory(self.factory).admin()  # dev: only owner
             assert self.admin_actions_deadline == 0  # dev: active action
+
+            new_mid_fee: uint256 = _new_mid_fee
+            new_out_fee: uint256 = _new_out_fee
+            new_admin_fee: uint256 = _new_admin_fee
+            new_fee_gamma: uint256 = _new_fee_gamma
+            new_allowed_extra_profit: uint256 = _new_allowed_extra_profit
+            new_adjustment_step: uint256 = _new_adjustment_step
+            new_ma_half_time: uint256 = _new_ma_half_time
+
+            # Fees
+            if new_out_fee < MAX_FEE+1:
+                assert new_out_fee > MIN_FEE-1  # dev: fee is out of range
+            else:
+                new_out_fee = self.out_fee
+            if new_mid_fee > MAX_FEE:
+                new_mid_fee = self.mid_fee
+            assert new_mid_fee <= new_out_fee  # dev: mid-fee is too high
+            if new_admin_fee > MAX_ADMIN_FEE:
+                new_admin_fee = self.admin_fee
+
+            # AMM parameters
+            if new_fee_gamma < 10**18:
+                assert new_fee_gamma > 0  # dev: fee_gamma out of range [1 .. 10**18]
+            else:
+                new_fee_gamma = self.fee_gamma
+            if new_allowed_extra_profit > 10**18:
+                new_allowed_extra_profit = self.allowed_extra_profit
+            if new_adjustment_step > 10**18:
+                new_adjustment_step = self.adjustment_step
+
+            # MA
+            if new_ma_half_time < 7*86400:
+                assert new_ma_half_time > 0  # dev: MA time should be longer than 1 second
+            else:
+                new_ma_half_time = self.ma_half_time
 
             _deadline: uint256 = block.timestamp + ADMIN_ACTIONS_DELAY
             self.admin_actions_deadline = _deadline
 
-            # ----------------------------- Set fee params ---------------------------
+            self.future_admin_fee = new_admin_fee
+            self.future_mid_fee = new_mid_fee
+            self.future_out_fee = new_out_fee
+            self.future_fee_gamma = new_fee_gamma
+            self.future_allowed_extra_profit = new_allowed_extra_profit
+            self.future_adjustment_step = new_adjustment_step
+            self.future_ma_half_time = new_ma_half_time
 
-            new_mid_fee: uint256 = _new_mid_fee
-            new_out_fee: uint256 = _new_out_fee
-            new_fee_gamma: uint256 = _new_fee_gamma
-
-            current_fee_params: uint256[3] = self._unpack(self.packed_fee_params)
-
-            if new_out_fee < MAX_FEE + 1:
-                assert new_out_fee > MIN_FEE - 1  # dev: fee is out of range
-            else:
-                new_out_fee = current_fee_params[1]
-
-            if new_mid_fee > MAX_FEE:
-                new_mid_fee = current_fee_params[0]
-            assert new_mid_fee <= new_out_fee  # dev: mid-fee is too high
-
-            if new_fee_gamma < 10**18:
-                assert new_fee_gamma > 0  # dev: fee_gamma out of range [1 .. 10**18]
-            else:
-                new_fee_gamma = current_fee_params[2]
-
-            self.future_packed_fee_params = self._pack(
-                [new_mid_fee, new_out_fee, new_fee_gamma]
-            )
-
-            # ----------------- Set liquidity rebalancing parameters -----------------
-
-            new_allowed_extra_profit: uint256 = _new_allowed_extra_profit
-            new_adjustment_step: uint256 = _new_adjustment_step
-            new_ma_time: uint256 = _new_ma_time
-
-            current_rebalancing_params: uint256[3] = self._unpack(self.packed_rebalancing_params)
-
-            if new_allowed_extra_profit > 10**18:
-                new_allowed_extra_profit = current_rebalancing_params[0]
-
-            if new_adjustment_step > 10**18:
-                new_adjustment_step = current_rebalancing_params[1]
-
-            if new_ma_time < 872542:  # <----- Calculated as: 7 * 24 * 60 * 60 / ln(2)
-                assert new_ma_time > 86  # dev: MA time should be longer than 60/ln(2)
-            else:
-                new_ma_time = current_rebalancing_params[2]
-
-            self.future_packed_rebalancing_params = self._pack(
-                [new_allowed_extra_profit, new_adjustment_step, new_ma_time]
-            )
-
-            # ---------------------------------- LOG ---------------------------------
-
-            log CommitNewParameters(
-                _deadline,
-                new_mid_fee,
-                new_out_fee,
-                new_fee_gamma,
-                new_allowed_extra_profit,
-                new_adjustment_step,
-                new_ma_time,
-            )
+            log CommitNewParameters(_deadline, new_admin_fee, new_mid_fee, new_out_fee,
+                                    new_fee_gamma,
+                                    new_allowed_extra_profit, new_adjustment_step,
+                                    new_ma_half_time)
         ```
 
     === "Example"
 
         ```shell
-        >>> CryptoSwap.commit_new_parameters(20000000, 45000000, 350000000000000, 100000000000, 100000000000, 1800)
+        >>> CryptoSwap.commit_new_parameters(20000000, 45000000, 50000000, 350000000000000, 100000000000, 100000000000, 1800)
         ```
 
 
 ### `apply_new_parameters` 
 !!! description "`CryptoSwap.apply_new_parameters()`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the factory contract.
 
     Function to apply the parameters from [`commit_new_parameters`](#commit_new_parameters).
 
@@ -282,51 +236,47 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 18 37"
+        ```python
         event NewParameters:
+            admin_fee: uint256
             mid_fee: uint256
             out_fee: uint256
             fee_gamma: uint256
             allowed_extra_profit: uint256
             adjustment_step: uint256
-            ma_time: uint256
-
-        packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
-        #               parameters allowed_extra_profit, adjustment_step, and ma_time.
-        future_packed_rebalancing_params: uint256
-
-        packed_fee_params: public(uint256)  # <---- Packs mid_fee, out_fee, fee_gamma.
-        future_packed_fee_params: uint256
+            ma_half_time: uint256
 
         @external
-        @nonreentrant("lock")
+        @nonreentrant('lock')
         def apply_new_parameters():
-            """
-            @notice Apply committed parameters.
-            @dev Only callable after admin_actions_deadline.
-            """
+            assert msg.sender == Factory(self.factory).admin()  # dev: only owner
             assert block.timestamp >= self.admin_actions_deadline  # dev: insufficient time
             assert self.admin_actions_deadline != 0  # dev: no active action
 
             self.admin_actions_deadline = 0
 
-            packed_fee_params: uint256 = self.future_packed_fee_params
-            self.packed_fee_params = packed_fee_params
+            admin_fee: uint256 = self.future_admin_fee
+            if self.admin_fee != admin_fee:
+                self._claim_admin_fees()
+                self.admin_fee = admin_fee
 
-            packed_rebalancing_params: uint256 = self.future_packed_rebalancing_params
-            self.packed_rebalancing_params = packed_rebalancing_params
+            mid_fee: uint256 = self.future_mid_fee
+            self.mid_fee = mid_fee
+            out_fee: uint256 = self.future_out_fee
+            self.out_fee = out_fee
+            fee_gamma: uint256 = self.future_fee_gamma
+            self.fee_gamma = fee_gamma
+            allowed_extra_profit: uint256 = self.future_allowed_extra_profit
+            self.allowed_extra_profit = allowed_extra_profit
+            adjustment_step: uint256 = self.future_adjustment_step
+            self.adjustment_step = adjustment_step
+            ma_half_time: uint256 = self.future_ma_half_time
+            self.ma_half_time = ma_half_time
 
-            rebalancing_params: uint256[3] = self._unpack(packed_rebalancing_params)
-            fee_params: uint256[3] = self._unpack(packed_fee_params)
-
-            log NewParameters(
-                fee_params[0],
-                fee_params[1],
-                fee_params[2],
-                rebalancing_params[0],
-                rebalancing_params[1],
-                rebalancing_params[2],
-            )
+            log NewParameters(admin_fee, mid_fee, out_fee,
+                            fee_gamma,
+                            allowed_extra_profit, adjustment_step,
+                            ma_half_time)
         ```
 
     === "Example"
@@ -339,22 +289,18 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 ### `revert_new_parameters`
 !!! description "`CryptoSwap.revert_new_parameters() -> address: view`"
 
-    Function to revert the parameters changes.
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the factory contract.
 
-    !!!note
-        This function is only callable by the `admin` of the factory contract. 
+    Function to revert the parameters changes.
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```python
         @external
         def revert_new_parameters():
-            """
-            @notice Revert committed parameters
-            @dev Only accessible by factory admin. Setting admin_actions_deadline to 0
-                ensures a revert in apply_new_parameters.
-            """
             assert msg.sender == Factory(self.factory).admin()  # dev: only owner
+
             self.admin_actions_deadline = 0
         ```
 
@@ -371,7 +317,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 ### `admin_actions_deadline`
 !!! description "`CryptoSwap.admin_actions_deadline() -> uint256: view`"
 
-    Getter for the admin actions deadline. This is the deadline until which new parameter changes can be applied. When committing new changes, there is a three-day timespan to apply them (`ADMIN_ACTIONS_DELAY`), otherwise the call will revert.
+    Getter for the admin actions deadline. This is the deadline after which new parameter changes can be applied. When committing new changes, there is a three-day timespan after being able to apply them (`ADMIN_ACTIONS_DELAY`), otherwise the call will revert.
 
     Returns: timestamp (`uint256`).
 
@@ -400,7 +346,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         initial_A_gamma: public(uint256)
         ```
 
@@ -421,7 +367,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         initial_A_gamma_time: public(uint256)
         ```
 
@@ -442,7 +388,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         future_A_gamma: public(uint256)
         ```
 
@@ -462,7 +408,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         future_A_gamma_time: public(uint256)
         ```
 
@@ -470,5 +416,47 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
         ```shell
         >>> CryptoSwap.future_A_gamma_time()
+        0
+        ```
+
+
+### `future_allowed_extra_profit`
+!!! description "`CryptoSwap.future_allowed_extra_profit() -> uint256:`"
+
+    Getter for the future allowed extra profit.
+
+    Returns: future allowed extra profit (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python
+        future_allowed_extra_profit: public(uint256)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> CryptoSwap.future_allowed_extra_profit()
+        0
+        ```
+
+
+### `future_adjustment_step`
+!!! description "`CryptoSwap.future_adjustment_step() -> uint256:`"
+
+    Getter for the future adjustment step.
+
+    Returns: future adjustment step (`uint256`).
+
+    ??? quote "Source code"
+
+        ```python
+        future_adjustment_step: public(uint256)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> CryptoSwap.future_adjustment_step()
         0
         ```

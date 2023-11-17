@@ -1,45 +1,3 @@
-TODO: 
-- highlight lines in code blocks
-
-
-
-!!!tip
-    For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored as a single unsigned integer. This consolidation reduces storage read and write operations, leading to more cost-efficient calls. When these parameters are accessed, they are subsequently unpacked.
-
-    ??? quote "_pack()"
-
-        ```python hl_lines="1 3 8 13"
-        @internal
-        @view
-        def _pack(x: uint256[3]) -> uint256:
-            """
-            @notice Packs 3 integers with values <= 10**18 into a uint256
-            @param x The uint256[3] to pack
-            @return uint256 Integer with packed values
-            """
-            return (x[0] << 128) | (x[1] << 64) | x[2]
-        ```
-
-
-    ??? quote "_unpack()"
-
-        ```python hl_lines="1 3 8 13"
-        @internal
-        @view
-        def _unpack(_packed: uint256) -> uint256[3]:
-            """
-            @notice Unpacks a uint256 into 3 integers (values must be <= 10**18)
-            @param val The uint256 to unpack
-            @return uint256[3] A list of length 3 with unpacked integers
-            """
-            return [
-                (_packed >> 128) & 18446744073709551615,
-                (_packed >> 64) & 18446744073709551615,
-                _packed & 18446744073709551615,
-            ]
-        ```
-
-
 
 
 ## **Exchange Methods**
@@ -49,7 +7,7 @@ TODO:
 
     Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`.
 
-    Returns:  Amount of tokens at index j received by the `receiver
+    Returns:  amount of tokens received (`uint256`).
     
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -475,7 +433,7 @@ TODO:
 
     Getter for the received amount of coin `j` for swapping in `dx` amount of coin `i`. This method includes fees.
 
-    Returns: amount of tokens (`uint256`).
+    Returns: output amount (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1352,6 +1310,8 @@ TODO:
     Funtion to withdraw liquidity in a single token.
 
     Returns: amount of withdrawn coin (`uint256`).
+
+    Emits: `RemoveLiquidityOne`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -4209,7 +4169,7 @@ The price scaling parameters can be adjusted by the admin of the pool, see [here
 ### `adjustment_step`
 !!! description "`TriCrypto.adjustment_step() -> uint256:`"
 
-    Getter for the current allowed extra profit.
+    Getter for the adjust step.
 
     Returns: allowed extra profit (`uint256`).
 
