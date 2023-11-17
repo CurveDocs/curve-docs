@@ -128,6 +128,7 @@ nav:
     - Pools:
       - Overview: cryptoswap_exchange/pools/overview.md
       - Crypto Pool: cryptoswap_exchange/pools/crypto-pool.md
+      - Admin Controls: cryptoswap_exchange/pools/admin-controls.md
     - Liquidity Pool Tokens:
       - Overview: cryptoswap_exchange/lp_tokens/overview.md
       - Curve Token V5: cryptoswap_exchange/lp_tokens/lp-token-V5.md
