@@ -3,5 +3,3 @@ In exchange for depositing coins into a Curve pool, liquidity providers receive 
 !!!info 
     There might be some variations of LP Tokens, but the two listed above are the most recent implementations.  
     For older Curve pools the token attribute `version` is not always public and a getter has not been explicitly implemented.
-
-

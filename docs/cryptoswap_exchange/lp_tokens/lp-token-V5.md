@@ -1,6 +1,9 @@
-The LP Token and Liquidity Pool for two-coin cryptoswap pools are separated.
+The LP token and exchange contract for two-coin CryptoSwap pools are two separate contracts from each other. Newer versions, like Tricrypto-NG, combine both the LP token and exchange contract into a single contract.
 
-The LP Token is generated using the `token_implementation` contract within the [Factory](https://etherscan.io/address/0xf18056bbd320e96a48e3fbf8bc061322531aac99) when the `deploy_pool()` function is called. Subsequently, the token is set up by calling the `initialize()` function, which sets its name, symbol, and associated liquidity pool.
+The LP Token is generated using the `token_implementation` contract within the Factory when the `deploy_pool()` function is called. Subsequently, the token is further initialized by calling the [`initialize()`](#initialize) function, which sets its name, symbol, and associated liquidity pool.
+
+
+To query the currently implemented LP token contract:
 
 ```shell
 >>> Factory.token_implementation()
@@ -99,7 +102,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 ## **LP Token Info Methods**
 
 ### `name`
-!!! description "`LPToken.name() -> String[64]: view`"
+!!! description "`LPTokenV5.name() -> String[64]: view`"
 
     Getter for the name of the LP token.
 
@@ -129,13 +132,13 @@ The LP Token is generated using the `token_implementation` contract within the [
     === "Example"
 
         ```shell
-        >>> LPToken.name()
+        >>> LPTokenV5.name()
         'Curve.fi Factory Crypto Pool: LDO/ETH'
         ```
 
 
 ### `symbol`
-!!! description "`LPToken.symbol() -> String[32]: view`"
+!!! description "`LPTokenV5.symbol() -> String[32]: view`"
 
     Getter for the symbol of the LP token.
 
@@ -165,13 +168,13 @@ The LP Token is generated using the `token_implementation` contract within the [
     === "Example"
 
         ```shell
-        >>> LPToken.symbol()
+        >>> LPTokenV5.symbol()
         'LDOETH-f'
         ```
 
 
 ### `decimals`
-!!! description "`LPToken.decimals() -> uint8`"
+!!! description "`LPTokenV5.decimals() -> uint8`"
 
     Getter for the decimals of the LP token.
 
@@ -194,13 +197,13 @@ The LP Token is generated using the `token_implementation` contract within the [
     === "Example"
 
         ```shell
-        >>> LPToken.decimals()
+        >>> LPTokenV5.decimals()
         18
         ```
 
 
 ### `version`
-!!! description "`LPToken.version() -> String[8]:`"
+!!! description "`LPTokenV5.version() -> String[8]:`"
 
     Getter for the version of the LP token.
 
@@ -223,13 +226,13 @@ The LP Token is generated using the `token_implementation` contract within the [
     === "Example"
 
         ```shell
-        >>> LPToken.version()
+        >>> LPTokenV5.version()
         'v5.0.0'
         ```
 
 
 ### `balanceOf`
-!!! description "`LPToken.balanceOf(arg0: address) -> uint256: view`"
+!!! description "`LPTokenV5.balanceOf(arg0: address) -> uint256: view`"
 
     Getter for the LP token balance of an address.
 
@@ -248,13 +251,13 @@ The LP Token is generated using the `token_implementation` contract within the [
     === "Example"
 
         ```shell
-        >>> LPToken.balanceOf("0xe5d5Aa1Bbe72F68dF42432813485cA1Fc998DE32")
+        >>> LPTokenV5.balanceOf("0xe5d5Aa1Bbe72F68dF42432813485cA1Fc998DE32")
         74284034901658384235023
         ```
 
 
 ### `totalSupply`
-!!! description "`LPToken.totalSupply() -> uint256: view`"
+!!! description "`LPTokenV5.totalSupply() -> uint256: view`"
 
     Getter for the total supply of the LP token.
 
@@ -269,13 +272,13 @@ The LP Token is generated using the `token_implementation` contract within the [
     === "Example"
 
         ```shell
-        >>> LPToken.totalSupply()
+        >>> LPTokenV5.totalSupply()
         74357443715423884544842
         ```
 
 
 ### `minter`
-!!! description "`LPToken.totalSupply() -> uint256: view`"
+!!! description "`LPTokenV5.totalSupply() -> uint256: view`"
 
     Getter for the minter contract of the LP token. Minter contract address is the liquidity pool itself.
 
@@ -309,7 +312,7 @@ The LP Token is generated using the `token_implementation` contract within the [
     === "Example"
 
         ```shell
-        >>> LPToken.minter()
+        >>> LPTokenV5.minter()
         '0x9409280DC1e6D33AB7A8C6EC03e5763FB61772B5'
         ```
 
@@ -317,7 +320,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
 ## **Allowance and Transfer Methods**
 ### `transfer`
-!!! description "`LPToken.transfer(_to: address, _value: uint256) -> bool`"
+!!! description "`LPTokenV5.transfer(_to: address, _value: uint256) -> bool`"
 
     Function to transfer `_value` token from `msg.sender` to `_to`.
 
@@ -363,7 +366,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
 
 ### `transferFrom`
-!!! description "`LPToken.transfer(_to: address, _value: uin256) -> bool:`"
+!!! description "`LPTokenV5.transfer(_to: address, _value: uin256) -> bool:`"
 
     Function to transfer `_value` token from `msg.sender` to `_to`. Needs [`allowance`](#allowance) to successfully transfer on behalf of someone else.
 
@@ -412,7 +415,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
 
 ### `approve`
-!!! description "`LPToken.approve(_spender: address, _value: uint256) -> bool:`"
+!!! description "`LPTokenV5.approve(_spender: address, _value: uint256) -> bool:`"
 
     Function to approve `_spender` to transfer `_value` on behalf of msg.sender.
 
@@ -462,7 +465,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
 
 ### `permit`
-!!! description "`LPToken.permit(_owner: address, _spender: address, _value: uint256, _deadline: uint256, _v: uint8, _r: bytes32, _s: bytes32) -> bool::`"
+!!! description "`LPTokenV5.permit(_owner: address, _spender: address, _value: uint256, _deadline: uint256, _v: uint8, _r: bytes32, _s: bytes32) -> bool::`"
 
     Function to approve the spender by the owner's signature to expend the owner's tokens.
 
@@ -537,13 +540,13 @@ The LP Token is generated using the `token_implementation` contract within the [
     === "Example"
 
         ```shell
-        >>> LPToken.permit()
+        >>> LPTokenV5.permit()
         "todo"
         ```
 
 
 ### `allowance`
-!!! description "`LPToken.allowance(arg0: address, arg1: address) -> uint256: view`"
+!!! description "`LPTokenV5.allowance(arg0: address, arg1: address) -> uint256: view`"
 
     Getter method to check the allowance of `arg0` for funds of `arg1`.
 
@@ -563,13 +566,13 @@ The LP Token is generated using the `token_implementation` contract within the [
     === "Example"
 
         ```shell
-        >>> LPToken.allowance("todo")
+        >>> LPTokenV5.allowance("todo")
         "todo"
         ```
 
 
 ### `increaseAllowance`
-!!! description "`LPToken.increaseAllowance(_spender: address, _added_value: uint256) -> bool:`"
+!!! description "`LPTokenV5.increaseAllowance(_spender: address, _added_value: uint256) -> bool:`"
 
     Function to increase the allowance granted to `_spender`.
 
@@ -612,13 +615,13 @@ The LP Token is generated using the `token_implementation` contract within the [
     === "Example"
 
         ```shell
-        >>> LPToken.increaseAllowance("todo")
+        >>> LPTokenV5.increaseAllowance("todo")
         "todo"
         ```
 
 
 ### `decreaseAllowance`
-!!! description "`LPToken.decreaseAllowance(_spender: address, _subtracted_value: uint256) -> bool:`"
+!!! description "`LPTokenV5.decreaseAllowance(_spender: address, _subtracted_value: uint256) -> bool:`"
 
     Function to decrease the allowance granted to `_spender`.
 
@@ -659,7 +662,7 @@ The LP Token is generated using the `token_implementation` contract within the [
     === "Example"
 
         ```shell
-        >>> LPToken.allowance("todo")
+        >>> LPTokenV5.allowance("todo")
         "todo"
         ```
 
@@ -673,7 +676,7 @@ The logic for both minting and burning the tokens resides in the pool contract.
 
 
 ### `mint`
-!!! description "`LPToken.mint(_to: address, _value: uint256) -> bool:`"
+!!! description "`LPTokenV5.mint(_to: address, _value: uint256) -> bool:`"
 
     !!!guard "Guarded Method"
         This function is only callable by the `minter` of the contract, which is the liquidity pool.
@@ -718,13 +721,13 @@ The logic for both minting and burning the tokens resides in the pool contract.
     === "Example"
 
         ```shell
-        >>> LPToken.mint("todo")
+        >>> LPTokenV5.mint("todo")
         "todo"
         ```
 
 
 ### `burnFrom`
-!!! description "`LPToken.burnFrom(_to: address, _value: uint256) -> bool:`"
+!!! description "`LPTokenV5.burnFrom(_to: address, _value: uint256) -> bool:`"
 
     Function to burn `_value` LP Tokens from `_to` and transfer them to `ZERO_ADDRESS`.
 
@@ -764,7 +767,7 @@ The logic for both minting and burning the tokens resides in the pool contract.
     === "Example"
 
         ```shell
-        >>> LPToken.burnFrom("todo")
+        >>> LPTokenV5.burnFrom("todo")
         "todo"
         ```
 
@@ -775,7 +778,7 @@ The logic for both minting and burning the tokens resides in the pool contract.
 The `initialize` function is used to initialize the pool when it's created through the factory.
 
 ### `initialize`
-!!! description "`LPToken.initialize(_name: String[64], _symbol: String[32], _pool: address):`"
+!!! description "`LPTokenV5.initialize(_name: String[64], _symbol: String[32], _pool: address):`"
 
     Function to initialize the LP Token and setting name (`_name`), symbol (`_symbol`) and the corresponding liquidity pool (`_pool`).  
     This function triggers a transfer event, enabling block explorers to recognize the contract as an ERC20.
@@ -814,6 +817,6 @@ The `initialize` function is used to initialize the pool when it's created throu
     === "Example"
 
         ```shell
-        >>> LPToken.initialize("todo")
+        >>> LPTokenV5.initialize("todo")
         "todo"
         ```
