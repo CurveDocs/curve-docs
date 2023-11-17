@@ -1,28 +1,21 @@
-While Curve metapools support swaps between base pool coins, the base pool LP token and metapool coins, 
-they do not allow liquidity providers to deposit and/or withdraw base pool coins.
+While Curve metapools support swaps between base pool coins, the base pool LP token and metapool coins, they do not allow liquidity providers to deposit and/or withdraw base pool coins.
 
-For example, the `GUSD` metapool is a pool consisting of `GUSD` and `3CRV` (the LP token of the `3Pool`) and allows 
-for swaps between `GUSD`, `DAI`, `USDC`, `USDT` and `3CRV`. However, liquidity providers are not able to deposit 
-`DAI`, `USDC` or `USDT` to the pool directly. The main reason why this is not possible lies in the maximum byte
-code size of contracts. Metapools are complex and can therefore end up being very close to the contract 
-byte code size limit. In order to overcome this restriction, liquidity can be added and removed to and 
-from a metapool in the base pool’s coins through a metapool deposit zap.
+For example, the `GUSD` metapool is a pool consisting of `GUSD` and `3CRV` (the LP token of the `3Pool`) and allows  for swaps between `GUSD`, `DAI`, `USDC`, `USDT` and `3CRV`. However, liquidity providers are not able to deposit  `DAI`, `USDC` or `USDT` to the pool directly. The main reason why this is not possible lies in the maximum byte
+code size of contracts. Metapools are complex and can therefore end up being very close to the contract  byte code size limit. In order to overcome this restriction, liquidity can be added and removed to and from a metapool in the base pool’s coins through a metapool deposit zap.
 
 The template source code for a metapool deposit “zap” may be viewed on 
 [GitHub](https://github.com/curvefi/curve-contract/blob/master/contracts/pool-templates/meta/DepositTemplateMeta.vy).
 
-!!! note
 
-    Metapool deposit zaps contain the following private and hardcoded constants:
+Metapool deposit zaps contain the following private and hardcoded constants:
 
-    - `N_COINS`: Number of coins in the metapool (excluding base pool coins)
-    - `BASE_N_COINS`: Number of coins in the base pool
-    - `N_ALL_COINS`: All coins in the metapool, excluding the base pool LP token (`N_COINS + BASE_N_COINS - 1`)
+- `N_COINS`: Number of coins in the metapool (excluding base pool coins)
+- `BASE_N_COINS`: Number of coins in the base pool
+- `N_ALL_COINS`: All coins in the metapool, excluding the base pool LP token (`N_COINS + BASE_N_COINS - 1`)
 
-## Get Deposit Zap Information
+## **Get Deposit Zap Information**
 
-### `DepositZap.pool`
-
+### `pool`
 !!! description "`DepositZap.pool() → address: view`"
 
     Getter for the metapool associated with this deposit contract.
@@ -52,8 +45,7 @@ The template source code for a metapool deposit “zap” may be viewed on
         >>> todo:
         ```
 
-### `DepositZap.base_pool`
-
+### `base_pool`
 !!! description "`DepositZap.base_pool() → address: view`"
 
     Getter for the base pool of the metapool associated with this deposit contract.
@@ -86,8 +78,7 @@ The template source code for a metapool deposit “zap” may be viewed on
         >>> todo:
         ```
 
-### `DepositZap.base_coins`
-
+### `base_coins`
 !!! description "`DepositZap.base_coins(i: uint256) → address: view`"
 
     Getter for the array of the coins of the metapool’s base pool.
@@ -155,8 +146,7 @@ The template source code for a metapool deposit “zap” may be viewed on
         >>> todo:
         ```
 
-### `DepositZap.token`
-
+### `token`
 !!! description "`DepositZap.token() → address: view`"
 
     Getter for the LP token of the associated metapool.
@@ -187,15 +177,12 @@ The template source code for a metapool deposit “zap” may be viewed on
         >>> todo:
         ```
 
-## Add/Remove Liquidity
+## **Add/Remove Liquidity**
 
-!!! note
+For methods taking the index argument `i`, a number in the range from `0` to `N_ALL_COINS - 1` is valid. This refers to all coins apart from the base pool LP token.
 
-    For methods taking the index argument `i`, a number in the range from `0` to `N_ALL_COINS - 1` is valid. 
-    This refers to all coins apart from the base pool LP token.
 
-### `DepositZap.add_liquidity`
-
+### `add_liquidity`
 !!! description "`DepositZap.add_liquidity(_amounts: uint256[N_ALL_COINS], _min_mint_amount: uint256) → uint256`"
 
     Wrap underlying coins and deposit them in the pool. Returns the amount of LP token received in exchange for 
@@ -282,7 +269,7 @@ The template source code for a metapool deposit “zap” may be viewed on
 
         ```
 
-### `DepositZap.remove_liquidity`
+### `remove_liquidity`
 
 !!! description "`DepositZap.remove_liquidity(_amount: uint256, _min_amounts: uint256[N_ALL_COINS]) → uint256[N_ALL_COINS]`"
 
@@ -358,8 +345,7 @@ The template source code for a metapool deposit “zap” may be viewed on
         >>> todo:
         ```
 
-### `DepositZap.remove_liquidity_one_coin`
-
+### `remove_liquidity_one_coin`
 !!! description "`DepositZap.remove_liquidity_one_coin(_token_amount: uint256, i: int128, _min_amount: uint256) → uint256`"
 
     Withdraw and unwrap a single coin from the metapool. Returns the amount of the underlying coin received.
@@ -425,8 +411,7 @@ The template source code for a metapool deposit “zap” may be viewed on
         >>> todo:
         ```
 
-### `DepositZap.remove_liquidity_imbalance`
-
+### `remove_liquidity_imbalance`
 !!! description "`DepositZap.remove_liquidity_imbalance(_amounts: uint256[N_ALL_COINS], _max_burn_amount: uint256) → uint256`"
 
     Withdraw coins from the pool in an imbalanced amount. Returns the actual amount of the LP token burned in the 
@@ -529,8 +514,7 @@ The template source code for a metapool deposit “zap” may be viewed on
         >>> todo:
         ```
 
-### `DepositZap.calc_withdraw_one_coin`
-
+### `calc_withdraw_one_coin`
 !!! description "`DepositZap.calc_withdraw_one_coin(_token_amount: uint256, i: int128) → uint256`"
 
     Calculate the amount received when withdrawing and unwrapping a single coin. Returns the amount of coin `i` received.
@@ -565,8 +549,7 @@ The template source code for a metapool deposit “zap” may be viewed on
         >>> todo:
         ```
 
-### `DepositZap.calc_token_amount`
-
+### `calc_token_amount`
 !!! description "`DepositZap.calc_token_amount(_amounts: uint256[N_ALL_COINS], _is_deposit: bool) → uint256`"
 
     Calculate addition or reduction in token supply from a deposit or withdrawal.

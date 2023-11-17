@@ -1,21 +1,20 @@
 This section discusses the different methods in the Curve 
 [SynthSwap](https://etherscan.io/address/0x58A3c68e2D3aAf316239c003779F71aCb870Ee47) contract.
 
-## Adding and Finding Swappable Assets
+## **Adding and Finding Swappable Assets**
 
 In general, any asset that is within a Curve pool also containing a Synth may be used in a cross asset swap. 
 
-### `SynthSwap.add_synth`
-
-!!! description "`def add_synth(_synth: address, _pool: address)`"
+### `add_synth`
+!!! description "`SynthSwap.add_synth(_synth: address, _pool: address)`"
 
     Add a new swappable synth. This method is callable by anyone, however `_pool` must exist within the Curve
     pool registry and `_synth` must be a valid synth that is swappable within the pool.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_synth`       |  `address` | Address of the synth |
-    | `_pool`       |  `address` | Address of Curve pool containing the synth |
+    | `_synth`       |  `address` | address of the synth |
+    | `_pool`       |  `address` | address of Curve pool containing the synth |
 
     Emits: <mark style="background-color: #FFD580; color: black">NewSynth</mark>
 
@@ -60,8 +59,7 @@ In general, any asset that is within a Curve pool also containing a Synth may be
         ```
 
 
-### `SynthSwap.synth_pools`
-
+### `synth_pools`
 !!! description "`SynthSwap.synth_pools(_synth: address) → address: view`"
 
     Get the address of the Curve pool used to swap a synthetic asset. If this function returns `ZERO_ADDRESS`, 
@@ -86,8 +84,8 @@ In general, any asset that is within a Curve pool also containing a Synth may be
         >>> todo:
         ```
 
-### `SynthSwap.swappable_synth`
 
+### `swappable_synth`
 !!! description "`SynthSwap.swappable_synth(_token: address) → address: view`"
 
     Get the address of the synthetic asset that `_token` may be directly swapped for. If this function returns 
@@ -112,10 +110,10 @@ In general, any asset that is within a Curve pool also containing a Synth may be
         >>> todo:
         ```
 
-## Estimate Swap Amounts
+
+## **Estimate Swap Amounts**
 
 ### `SynthSwap.get_swap_into_synth_amount`
-
 !!! description "`SynthSwap.get_swap_into_synth_amount(_from: address, _synth: address, _amount: uint256) → uint256: view`"
 
     Returns the expected amount of `_synth` received in the swap.
@@ -185,8 +183,7 @@ In general, any asset that is within a Curve pool also containing a Synth may be
         slightly to account for market movement prior to the transaction confirming.
 
 
-### `SynthSwap.get_swap_from_synth_amount`
-
+### `get_swap_from_synth_amount`
 !!! description "`SynthSwap.get_swap_from_synth_amount(_synth: address, _to: address, _amount: uint256) → uint256: view`"
 
     Returns the expected amount of `_to` received in the swap.
@@ -240,8 +237,8 @@ In general, any asset that is within a Curve pool also containing a Synth may be
         273663013
         ```
 
-### `SynthSwap.get_estimated_swap_amount`
 
+### `get_estimated_swap_amount`
 !!! description "`SynthSwap.get_estimated_swap_amount(_from: address, _to: address, _amount: uint256) → uint256: view`"
 
     Estimate the final amount of `_to` received when swapping between `_from` and `_to`.
@@ -253,7 +250,7 @@ In general, any asset that is within a Curve pool also containing a Synth may be
     | `_amount`       |  `uint256` | Amount of `_from` to swap |
 
     ??? quote "Source code"
-    
+
         ```python
         @view
         @internal
@@ -330,9 +327,11 @@ In general, any asset that is within a Curve pool also containing a Synth may be
         As swaps take a settlement period into account, the actual received amount may be different due to rate changes 
         during the settlement period.
 
-## Initiate a Swap
 
-### `SynthSwap.swap_into_synth`
+
+## **Initiate a Swap**
+
+### `swap_into_synth`
 
 !!! description "`SynthSwap.swap_into_synth(_from: address, _synth: address, _amount: uint256, _expected: uint256, _receiver: address = msg.sender, _existing_token_id: uint256 = 0) → uint256: payable`"
 
@@ -510,10 +509,11 @@ In general, any asset that is within a Curve pool also containing a Synth may be
         Synth swaps require a settlement time to complete and so the newly generated synth cannot immediately be 
         transferred onward. Calling this function mints an NFT representing ownership of the unsettled synth.
 
-## Get Info about an Unsettled Swap
 
-### `SynthSwap.token_info`
 
+## **Get Info about an Unsettled Swap**
+
+### `token_info`
 !!! description "`SynthSwap.token_info(_token_id: uint256) → address, address, uint256, uint256: view`"
 
     Get information about the underlying synth represented by an NFT.
@@ -575,10 +575,9 @@ In general, any asset that is within a Curve pool also containing a Synth may be
         }
         ```
 
-## Complete a Swap
+## **Complete a Swap**
 
-### `SynthSwap.swap_from_synth`
-
+### `swap_from_synth`
 !!! description "`SynthSwap.swap_from_synth(_token_id: uint256, _to: address, _amount: uint256, _expected: uint256, _receiver: address = msg.sender) → uint256: nonpayable`"
 
     Swap the underlying synth represented by an NFT into another asset. Callable by the owner or operator of 
@@ -677,8 +676,8 @@ In general, any asset that is within a Curve pool also containing a Synth may be
           Gas price: 20 gwei   Gas limit: 800000   Nonce: 6
         ```
 
-### `SynthSwap.withdraw`
 
+### `withdraw`
 !!! description "`StableSwap.withdraw(_token_id: uint256, _amount: uint256, _receiver: address = msg.sender) → uint256: nonpayable`"
 
     Withdraw the underlying synth represented by an NFT. Callable by the owner or operator of `_token_id` 
@@ -763,19 +762,21 @@ In general, any asset that is within a Curve pool also containing a Synth may be
           Gas price: 20 gwei   Gas limit: 800000   Nonce: 6
         ```
 
-### `SynthSwap.settle`
 
+### `settle`
 !!! description "`StableSwap.settle(_token_id: uint256) → bool: nonpayable`"
 
     Settle the synth represented in an NFT. Note that settlement is performed when swapping or withdrawing, 
-    there is no requirement to call this function separately. Returns `True`.
+    there is no requirement to call this function separately. 
+    
+    Returns: true (`bool`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_token_id` |  `uint256` | The identifier for an NFT |
     
     ??? quote "Source code"
-    
+
         ```python
         @external
         def settle(_token_id: uint256) -> bool:
