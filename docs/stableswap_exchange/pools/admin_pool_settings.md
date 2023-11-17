@@ -1,18 +1,15 @@
 ## Overview
 
-The following are methods that may only be called by the pool admin (``owner``).
+The following are methods that may only be called by the pool admin (`owner`).
 
-Additionally, some admin methods require a two-phase transaction process, whereby changes are committed in a first 
-transaction and after a forced delay applied via a second transaction. The minimum delay after which a committed 
-action can be applied is given by the constant pool attribute ``admin_actions_delay``, which is set to 3 days.
+Additionally, some admin methods require a two-phase transaction process, whereby changes are committed in a first transaction and after a forced delay applied via a second transaction. The minimum delay after which a committed action can be applied is given by the constant pool attribute `admin_actions_delay`, which is set to 3 days.
 
-## Pool Ownership Methods
+## **Pool Ownership Methods**
 
-### `StableSwap.commit_transfer_ownership`
-
+### `commit_transfer_ownership`
 !!! description "StableSwap.commit_transfer_ownership(_owner: address)"
 
-    Initiate an ownership transfer of pool to ``_owner``.
+    Initiate an ownership transfer of pool to `_owner`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -50,8 +47,8 @@ action can be applied is given by the constant pool attribute ``admin_actions_de
         The ownership can not be transferred before ``transfer_ownership_deadline``, which is the timestamp of the 
         current block delayed by ``ADMIN_ACTIONS_DELAY``.
 
-### `StableSwap.apply_transfer_ownership`
 
+### `apply_transfer_ownership`
 !!! description "StableSwap.apply_transfer_ownership()"
 
     Transfers ownership of the pool from current owner to the owner previously set via ``commit_transfer_ownership``.
@@ -85,8 +82,8 @@ action can be applied is given by the constant pool attribute ``admin_actions_de
 
         Pool ownership can only be transferred once.
 
-### `StableSwap.revert_transfer_ownership()`
 
+### `revert_transfer_ownership()`
 !!! description "`StableSwap.revert_transfer_ownership()`"
 
     Reverts any previously committed transfer of ownership. This method resets the 
@@ -109,23 +106,17 @@ action can be applied is given by the constant pool attribute ``admin_actions_de
         todo: log output
         ```
 
-## Amplification Coefficient Admin Controls
+## **Amplification Coefficient Admin Controls**
 
-The amplification coefficient ``A`` determines a pool’s tolerance for imbalance between the assets within it. 
-A higher value means that trades will incur slippage sooner as the assets within the pool become imbalanced.
+The amplification coefficient ``A`` determines a pool’s tolerance for imbalance between the assets within it. A higher value means that trades will incur slippage sooner as the assets within the pool become imbalanced.
 
 !!! note
+    Within the pools, ``A`` is in fact implemented as ``1 / A`` and therefore a higher value implies that the pool will be more tolerant to slippage when imbalanced.
 
-    Within the pools, ``A`` is in fact implemented as ``1 / A`` and therefore a higher value implies that the pool will 
-    be more tolerant to slippage when imbalanced.
+The appropriate value for A is dependent upon the type of coin being used within the pool, and is subject to optimisation and pool-parameter update based on the market history of the trading pair. It is possible to modify the amplification coefficient for a pool after it has been deployed. However, it requires a vote within the Curve DAO and must reach a 15% quorum.
 
-The appropriate value for A is dependent upon the type of coin being used within the pool, and is subject to optimisation
-and pool-parameter update based on the market history of the trading pair. It is possible to modify the amplification 
-coefficient for a pool after it has been deployed. However, it requires a vote within the Curve DAO and must reach a 
-15% quorum.
 
-### `StableSwap.ramp_A`
-
+### `ramp_A`
 !!! description "`StableSwap.ramp_A(_future_A: uint256, _future_time: uint256)`"
 
     Ramp ``A`` up or down by setting a new ``A`` to take effect at a future point in time.
@@ -176,8 +167,8 @@ coefficient for a pool after it has been deployed. However, it requires a vote w
         todo: log output
         ```
 
-### `StableSwap.stop_ramp_A`
 
+### `stop_ramp_A`
 !!! description "StableSwap.stop_ramp_A()"
 
     Stop ramping ``A`` up or down and sets ``A`` to current ``A``.
@@ -208,28 +199,36 @@ coefficient for a pool after it has been deployed. However, it requires a vote w
         todo: log output
         ```
 
-## Swap Fees Admin Controls
+## **Swap Fees Admin Controls**
 
 todo: hyperlink to fee collection and distribution
 Curve pools charge fees on token swaps, where the fee may differ between pools. An admin fee is charged on the pool fee. 
 For an overview of how fees are distributed, please refer to Fee Collection and Distribution.
 
 
-### `StableSwap.commit_new_fee`
+### `commit_new_fee`
 !!! description "`StableSwap.commit_new_fee(_new_fee: uint256, _new_admin_fee: uint256)`"
 
     The method commits new fee params: these fees do not take immediate effect.
+
+    Emits: `CommitNewFee`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_new_fee`       |  `uint256` | New pool fee |
     | `_new_admin_fee`       |  `uint256` | New admin fee (expressed as a percentage of the pool fee) |
 
-    Emits: <mark style="background-color: #FFD580; color: black">CommitNewFee</mark>
+    !!! note
+        Both the pool ``fee`` and the ``admin_fee`` are capped by the constants ``MAX_FEE`` and ``MAX_ADMIN_FEE``, respectively. By default ``MAX_FEE`` is set at 50% and ``MAX_ADMIN_FEE`` at 100% (which is charged on the ``MAX_FEE`` amount).
 
     ??? quote "Source code"
-    
+
         ```python
+        event CommitNewFee:
+            deadline: indexed(uint256)
+            fee: uint256
+            admin_fee: uint256
+
         MAX_ADMIN_FEE: constant(uint256) = 10 * 10 ** 9
         MAX_FEE: constant(uint256) = 5 * 10 ** 9
         ADMIN_ACTIONS_DELAY: constant(uint256) = 3 * 86400
@@ -252,28 +251,25 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
     === "Example"
     
         ```shell
-        >>> pool.commit_new_fee()
+        >>> StableSwap.commit_new_fee()
         todo: log output
         ```
 
-    !!! note
 
-        Both the pool ``fee`` and the ``admin_fee`` are capped by the constants ``MAX_FEE`` and ``MAX_ADMIN_FEE``, 
-        respectively. By default ``MAX_FEE`` is set at 50% and ``MAX_ADMIN_FEE`` at 100% (which is charged on the 
-        ``MAX_FEE`` amount).
-
-
-### `StableSwap.apply_new_fee`
-
-!!! description "StableSwap.apply_new_fee()"
+### `apply_new_fee`
+!!! description "`StableSwap.apply_new_fee()`"
 
     Apply the previously committed new pool and admin fees for the pool.
 
-    Emits: <mark style="background-color: #FFD580; color: black">NewFee</mark>
+    Emits: `NewFee`
 
     ??? quote "Source code"
 
         ```python
+        event NewFee:
+            fee: uint256
+            admin_fee: uint256
+
         @external
         def apply_new_fee():
             assert msg.sender == self.owner  # dev: only owner
@@ -292,7 +288,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
     === "Example"
 
         ```shell
-        >>> pool.commit_new_fee()
+        >>> StableSwap.commit_new_fee()
         todo: log output
         ```
     
@@ -300,8 +296,8 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
 
         Unlike ownership transfers, pool and admin fees may be set more than once.
 
-### `StableSwap.revert_new_parameters`
 
+### `revert_new_parameters`
 !!! description "`StableSwap.revert_new_parameters()`"
 
     Resets any previously committed new fees.
@@ -319,22 +315,24 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
     === "Example"
 
         ```shell
-        >>> pool.revert_new_parameters()
+        >>> StableSwap.revert_new_parameters()
         todo: log output
         ```
 
-### `StableSwap.admin_balances`
 
+### `admin_balances`
 !!! description "`StableSwap.admin_balances(i: uint256) → uint256`"
 
-    Get the admin balance for a single coin in the pool.
+    Getter for the admin balance for coin `i` in the pool.
+
+    Returns: balance (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `i`       |  `uint256` | Index of the coin to get admin balance for |
+    | `i`       |  `uint256` | index of the coin to get admin balance for |
 
     ??? quote "Source code"
-    
+
         ```python
         @view
         @external
@@ -345,15 +343,15 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
     === "Example"
 
         ```shell
-        >>> pool.admin_balances()
+        >>> StableSwap.admin_balances()
         todo: log output
         ```
 
-### `StableSwap.withdraw_admin_fees`
 
+### `withdraw_admin_fees`
 !!! description "`StableSwap.withdraw_admin_fees()`"
     
-    Withdraws and transfers admin fees of the pool to the pool owner.
+    Function to withdraw and transfer admin fees of the pool to the pool owner.
 
     ```python
     @external
@@ -370,15 +368,18 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
     === "Example"
 
         ```shell
-        >>> pool.withdraw_admin_fees()
+        >>> StableSwap.withdraw_admin_fees()
         todo: log output
         ```
 
-### `StableSwap.donate_admin_fees`
 
+### `donate_admin_fees`
 !!! description "`StableSwap.donate_admin_fees()`"
 
     Donate all admin fees to the pool’s liquidity providers.
+
+    !!! note
+        Older Curve pools do not implement this method.
 
     ??? quote "Source code"
 
@@ -397,14 +398,11 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
         todo: log output
         ```
 
-    !!! note
 
-        Older Curve pools do not implement this method.
 
-## Kill a Pool
+## **Kill a Pool**
 
-### `StableSwap.kill_me`
-
+### `kill_me`
 !!! description "`StableSwap.kill_me()`"
 
     Pause a pool by setting the ``is_killed`` boolean flag to ``True``.
@@ -418,9 +416,12 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
     
     It is only possible for existing LPs to remove liquidity via ``remove_liquidity`` from a paused pool.
 
+    !!! note
+        Pools can only be killed within the first 30 days after deployment.
+
     ??? quote "Source code"
-    
-        ```python hl_lines="10 26 39 53 61"
+
+        ```python
         @external
         @nonreentrant('lock')
         def add_liquidity(amounts: uint256[N_COINS], min_mint_amount: uint256) -> uint256:
@@ -490,19 +491,15 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
         todo: add example
         ```
 
-    !!! note
 
-        Pools can only be killed within the first 30 days after deployment.
-
-### `StableSwap.unkill_me`
-
-!!! description "StableSwap.unkill_me"
+### `unkill_me`
+!!! description "`StableSwap.unkill_me():`"
 
     Unpause a pool that was previously paused, re-enabling exchanges.
 
     ??? quote "Source code"
-    
-        ```vyper
+
+        ```python
         @external
         def unkill_me():
             assert msg.sender == self.owner  # dev: only owner

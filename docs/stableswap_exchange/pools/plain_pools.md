@@ -1,13 +1,12 @@
-## Overview
+## **Overview**
 
 The simplest Curve pool is a plain pool, which is an implementation of the StableSwap invariant for two or more tokens. 
 The key characteristic of a plain pool is that the pool contract holds all deposited assets at **all** times.
 
 An example of a Curve plain pool is [3Pool](https://github.com/curvefi/curve-contract/tree/master/contracts/pools/3pool), 
-which contains the tokens ``DAI``, ``USDC`` and ``USDT``.
+which contains the tokens `DAI`, `USDC` and `USDT`.
 
 !!! note
-
     The API of plain pools is also implemented by lending and metapools.
 
 The following Brownie console interaction examples are using 
@@ -15,9 +14,9 @@ The following Brownie console interaction examples are using
 pools may be viewed on 
 [GitHub](https://github.com/curvefi/curve-contract/blob/master/contracts/pool-templates/base/SwapTemplateBase.vy).
 
-## Pool Info Methods
+## **Pool Info Methods**
 
-### `StableSwap.coins`
+### `coins`
 
 !!! description "`StableSwap.coins(i: uint256) → address: view`"
 
@@ -27,11 +26,11 @@ pools may be viewed on
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `i`       |  `uint256` | Coin index |
+    | `i`       |  `uint256` | coin index |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8 17 23 24 25"
+        ```python
         coins: public(address[N_COINS])
 
         ...
@@ -57,24 +56,18 @@ pools may be viewed on
             for i in range(N_COINS):
                 assert _coins[i] != ZERO_ADDRESS
             self.coins = _coins
-            self.initial_A = _A * A_PRECISION
-            self.future_A = _A * A_PRECISION
-            self.fee = _fee
-            self.admin_fee = _admin_fee
-            self.owner = _owner
-            self.kill_deadline = block.timestamp + KILL_DEADLINE_DT
-            self.lp_token = _pool_token
+            ...
         ```
 
     === "Example"
         
         ```shell
-        >>> pool.coin(0)
+        >>> StableSwap.coin(0)
         '0xdB25f211AB05b1c97D595516F45794528a807ad8'
         ```
 
-### `StableSwap.balances`
 
+### `balances`
 !!! description "`StableSwap.balances(i: uint256) → uint256: view`"
 
     Getter for the pool balances array.
@@ -88,12 +81,12 @@ pools may be viewed on
     === "Example"
     
         ```shell
-        >>> pool.balances(0)
+        >>> StableSwap.balances(0)
         2918187395
         ```
 
-### `StableSwap.owner`
 
+### `owner`
 !!! description "`StableSwap.owner() → address: view`"
 
     Getter for the admin/owner of the pool contract.
@@ -101,11 +94,9 @@ pools may be viewed on
     Returns: `address` of the admin of the pool contract.
 
     ??? quote "Source code"
-    
-        ```python hl_lines="1 7 16 30"
-        owner: public(address)
 
-        ...
+        ```python
+        owner: public(address)
 
         @external
         def __init__(
@@ -125,33 +116,29 @@ pools may be viewed on
             @param _fee Fee to charge for exchanges
             @param _admin_fee Admin fee
             """
-            for i in range(N_COINS):
-                assert _coins[i] != ZERO_ADDRESS
-            self.coins = _coins
-            self.initial_A = _A * A_PRECISION
-            self.future_A = _A * A_PRECISION
-            self.fee = _fee
-            self.admin_fee = _admin_fee
+            ...
             self.owner = _owner
-            self.kill_deadline = block.timestamp + KILL_DEADLINE_DT
-            self.lp_token = _pool_token
+            ...
         ```
         
     === "Example"
     
         ```shell
-        >>> pool.owner()
+        >>> StableSwap.owner()
         '0xeCb456EA5365865EbAb8a2661B0c503410e9B347'
         ```
 
-### `StableSwap.lp_token`
 
+### `lp_token`
 !!! description "`StableSwap.lp_token() → address: view`"
 
     Getter for the LP token of the pool.
 
-    Returns: `address` of the `lp_token`.
+    Returns: lp token (`address`).
         
+    !!! note
+        In older Curve pools ``lp_token`` may not be ``public`` and thus not visible.
+
     === "Example"
     
         ```shell
@@ -159,23 +146,22 @@ pools may be viewed on
         '0x194eBd173F6cDacE046C53eACcE9B953F28411d1'
         ```
 
-    !!! note
-    
-        In older Curve pools ``lp_token`` may not be ``public`` and thus not visible.
 
 
-### `StableSwap.A (Amplification factor)`
-
+### `A`
 !!! description "`StableSwap.A() → uint256: view`"
 
     Getter for the amplification coefficient of the pool.
+
+    Returns: A (`uint256`).
+
+    !!! note
+        The amplification coefficient is scaled by ``A_PRECISION`` (``=100``)
 
     ??? quote "Source code"
 
         ```python
         A_PRECISION: constant(uint256) = 100
-        
-        ...
 
         @view
         @external
@@ -190,13 +176,9 @@ pools may be viewed on
         100
         ```
 
-    !!! note
-        
-        The amplification coefficient is scaled by ``A_PRECISION`` (``=100``)
 
 
-### `StableSwap.A_precise`
-
+### `A_precise`
 !!! description "`StableSwap.A_precise() → uint256: view`"
 
     Getter for the unscaled amplification coefficient of the pool.
@@ -213,15 +195,21 @@ pools may be viewed on
     === "Example"
     
         ```shell
-        >>> pool.A()
+        >>> pool.A_precise()
         10000
         ```
 
-### `StableSwap.get_virtual_price`
 
+### `get_virtual_price`
 !!! description "`StableSwap.get_virtual_price() → uint256: view`"
 
     Current virtual price of the pool LP token relative to the underlying pool assets.
+
+    Returns: virutal price of the lp token (`uint256`).
+
+    !!! note
+        - The method returns `virtual_price` as an integer with `1e18` precision.
+        - `virtual_price` returns a price relative to the underlying. You can get the absolute price by multiplying it with the price of the underlying assets.
 
     ??? quote "Source code"
 
@@ -247,25 +235,22 @@ pools may be viewed on
         >>> pool.get_virtual_price()
         1001692838188850782
         ```
-    
-    !!! note
 
-        - The method returns ``virtual_price`` as an integer with ``1e18`` precision.
-        - ``virtual_price`` returns a price relative to the underlying. You can get the absolute price
-        by multiplying it with the price of the underlying assets.
 
-### `StableSwap.fee`
-
+### `fee`
 !!! description "`StableSwap.fee() → uint256: view`"
 
-    The pool swap fee.
+    Getter for the swap fee.
+
+    Returns: fee (`uint256`).
+
+    !!! note
+        The method returns `fee` as an integer with `1e10` precision.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 11 20 28"
+        ```python 
         fee: public(uint256)  # fee * 1e10
-
-        ...
     
         @external
         def __init__(
@@ -285,16 +270,9 @@ pools may be viewed on
             @param _fee Fee to charge for exchanges
             @param _admin_fee Admin fee
             """
-            for i in range(N_COINS):
-                assert _coins[i] != ZERO_ADDRESS
-            self.coins = _coins
-            self.initial_A = _A * A_PRECISION
-            self.future_A = _A * A_PRECISION
+            ...
             self.fee = _fee
-            self.admin_fee = _admin_fee
-            self.owner = _owner
-            self.kill_deadline = block.timestamp + KILL_DEADLINE_DT
-            self.lp_token = _pool_token
+            ...
         ```
         
     === "Example"
@@ -303,23 +281,23 @@ pools may be viewed on
         >>> pool.fee()
         4000000
         ```
-    
-    !!! note
 
-        The method returns ``fee`` as an integer with ``1e10`` precision.
 
-### `StableSwap.admin_fee`
-
+### `admin_fee`
 !!! description "`StableSwap.admin_fee() → uint256: view`"
 
-    The percentage of the swap fee that is taken as an admin fee.
+    Getter for the admin fee, which represents the percentage of the swap fee that is taken and distributed to veCRV holder.
+
+    Returns: admin fee (`uint256`).
+
+    !!! note
+        - The method returns an integer with with `1e10` precision.
+        - Admin fee is set at 50% (`5000000000`) and is paid out to veCRV holders.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 12 21 29"
+        ```python
         admin_fee: public(uint256)  # admin_fee * 1e10
-
-        ...
     
         @external
         def __init__(
@@ -339,16 +317,9 @@ pools may be viewed on
             @param _fee Fee to charge for exchanges
             @param _admin_fee Admin fee
             """
-            for i in range(N_COINS):
-                assert _coins[i] != ZERO_ADDRESS
-            self.coins = _coins
-            self.initial_A = _A * A_PRECISION
-            self.future_A = _A * A_PRECISION
-            self.fee = _fee
+            ...
             self.admin_fee = _admin_fee
-            self.owner = _owner
-            self.kill_deadline = block.timestamp + KILL_DEADLINE_DT
-            self.lp_token = _pool_token
+            ...
         ```
         
     === "Example"
@@ -358,25 +329,19 @@ pools may be viewed on
         5000000000
         ```
 
-    !!! note
 
-        - The method returns an integer with with ``1e10`` precision.
-        - Admin fee is set at 50% (``5000000000``) and is paid out to veCRV holders.
+## **Exchange Methods**
 
-
-## Exchange Methods
-
-### `StableSwap.get_dy`
-
+### `get_dy`
 !!! description "`StableSwap.get_dy(i: int128, j: int128, _dx: uint256) → uint256: view`"
 
-    Get the amount of coin ``j`` one would receive for swapping ``dx`` of coin ``i``.
+    Get the amount of coin `j` one would receive for swapping `dx` of coin `i`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `i`       |  `uint128` | Index of coin to swap from |
-    | `j`       |  `uint128` | Index of coin to swap to |
-    | `dx`       |  `uint256` | Amount of coin `i` to swap |
+    | `i`       |  `uint128` | index of coin to swap from |
+    | `j`       |  `uint128` | index of coin to swap to |
+    | `dx`       |  `uint256` | amount of coin `i` to swap |
 
     ??? quote "Source code"
 
@@ -401,33 +366,33 @@ pools may be viewed on
         996307731416690125
         ```
 
-    !!! note
 
-        Note: In this example,  the ``EURS Pool`` coins decimals for ``coins(0)`` and ``coins(1)`` are 
-        ``2`` and ``18``, respectively.
-
-
-### `StableSwap.exchange`
-
+### `exchange`
 !!! description "`StableSwap.exchange(i: int128, j: int128, dx: uint256, min_dy: uint256) → uint256`"
 
-    Perform an exchange between two coins.
+    Function to perform an exchange between two coins.
+
+    Returns: actual amount of `j` received (`uint256`).
+
+    Emits: `TokenExchange`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `i`       |  `uint128` | Index of coin to swap from |
-    | `j`       |  `uint128` | Index of coin to swap to |
-    | `dx`       |  `uint256` | Amount of coin `i` to swap |
-    | `min_dy`       |  `uint256` | Minimum amount of ``j`` to receive |
-
-    Returns the actual amount of coin ``j`` received. Index values can be found via the 
-    ``coins`` public getter method.
-
-    Emits: <mark style="background-color: #FFD580; color: black">TokenExchange</mark>
+    | `i`       |  `uint128` | index of coin to swap from |
+    | `j`       |  `uint128` | index of coin to swap to |
+    | `dx`       |  `uint256` | amount of coin `i` to swap |
+    | `min_dy`       |  `uint256` | minimum amount of `j` to receive |
 
     ??? quote "Source code"
 
         ```python
+        event TokenExchange:
+            buyer: indexed(address)
+            sold_id: int128
+            tokens_sold: uint256
+            bought_id: int128
+            tokens_bought: uint256
+
         @external
         @nonreentrant('lock')
         def exchange(i: int128, j: int128, dx: uint256, min_dy: uint256) -> uint256:
@@ -502,21 +467,22 @@ pools may be viewed on
         >>> pool.exchange(0, 1, 10**2, expected, {"from": alice})
         ```
 
-## Add/Remove Liquidity Methods
+## **Add/Remove Liquidity Methods**
 
-### `StableSwap.calc_token_amount`
-
+### `calc_token_amount`
 !!! description "`StableSwap.calc_token_amount(_amounts: uint256[N_COINS], _: bool) → uint256: view`"
 
-    Calculate addition or reduction in token supply from a deposit or withdrawal. Returns the expected amount of LP 
-    tokens received. This calculation accounts for slippage, but not fees.
-
-    `N_COINS`: Number of coins in the pool.
+    Function to calculate addition or reduction in token supply from a deposit or withdrawal. 
+    
+    Returns: expected amount of LP tokens received (`uint256`). 
+    
+    !!!note
+        This calculation accounts for slippage, but not fees.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `amounts`       |  `uint256[N_COINS]` | Amount of each coin being deposited |
-    | `is_deposit`       |  `bool` | Set True for deposits, False for withdrawals |
+    | `amounts`       |  `uint256[N_COINS]` | amount of each coin being deposited |
+    | `is_deposit`       |  `bool` | set `True` for deposits, `False` for withdrawals |
 
     ??? quote "Source code"
 
@@ -557,22 +523,31 @@ pools may be viewed on
         1996887509167925969
         ```
 
-### `StableSwap.add_liquidity`
 
+### `add_liquidity`
 !!! description "`StableSwap.add_liquidity(amounts: uint256[N_COINS], min_mint_amount: uint256) → uint256`"
 
-    Deposit coins into the pool. Returns the amount of LP tokens received in exchange for the deposited tokens.
+    Function to deposit coins into the pool.
+
+    Returns: amount of LP tokens received (`uint256`).
+
+    Emits: `AddLiquidity`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `amounts`       |  `uint256[N_COINS]` | Amount of each coin being deposited |
-    | `min_mint_amount`       |  `uint256` | Minimum amount of LP tokens to mint from the deposit |
-
-    Emits: <mark style="background-color: #FFD580; color: black">AddLiquidity</mark>
+    | `amounts`       |  `uint256[N_COINS]` | amount of each coin being deposited |
+    | `min_mint_amount`       |  `uint256` | minimum amount of LP tokens to mint from the deposit |
 
     ??? quote "Source code"
 
         ```python
+        event AddLiquidity:
+            provider: indexed(address)
+            token_amounts: uint256[N_COINS]
+            fees: uint256[N_COINS]
+            invariant: uint256
+            token_supply: uint256
+    
         @external
         @nonreentrant('lock')
         def add_liquidity(amounts: uint256[N_COINS], min_mint_amount: uint256) -> uint256:
@@ -668,22 +643,28 @@ pools may be viewed on
         >>> todo: add_liquidity console output example
         ```
 
-### `StableSwap.remove_liquidity`
 
+### `remove_liquidity`
 !!! description "`StableSwap.remove_liquidity(_amount: uint256, min_amounts: uint256[N_COINS]) → uint256[N_COINS]`"
 
     Withdraw coins from the pool. Returns a list of the amounts for each coin that was withdrawn.
 
+    Emits: `RemoveLiquidity`
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_amount`       |  `uint256` | Quantity of LP tokens to burn in the withdrawal |
-    | `min_amounts`       |  `uint256[N_COINS]`` | Minimum amounts of underlying coins to receive |
-
-    Emits: <mark style="background-color: #FFD580; color: black">RemoveLiquidity</mark>
+    | `_amount`       |  `uint256` | quantity of LP tokens to burn in the withdrawal |
+    | `min_amounts`       |  `uint256[N_COINS]`` | minimum amounts of underlying coins to receive |
 
     ??? quote "Source code"
 
         ```python
+        event RemoveLiquidity:
+            provider: indexed(address)
+            token_amounts: uint256[N_COINS]
+            fees: uint256[N_COINS]
+            token_supply: uint256
+
         @external
         @nonreentrant('lock')
         def remove_liquidity(_amount: uint256, min_amounts: uint256[N_COINS]) -> uint256[N_COINS]:
@@ -729,22 +710,31 @@ pools may be viewed on
         >>> todo: remove_liquidity console output example
         ```
 
-### `StableSwap.remove_liquidity_imbalance`
 
+### `remove_liquidity_imbalance`
 !!! description "`StableSwap.remove_liquidity_imbalance(amounts: uint256[N_COINS], max_burn_amount: uint256) → uint256`"
 
-    Withdraw coins from the pool in an imbalanced amount. Returns a list of the amounts for each coin that was withdrawn.
+    Function to withdraw coins from the pool in an imbalanced amount. 
+    
+    Returns: list of the amounts for each coin that was withdrawn (`uint256`).
+
+    Emits: `RemoveLiquidityImbalance`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `amounts`       |  `uint256[N_COINS]` | List of amounts of underlying coins to withdraw |
-    | `max_burn_amount`       |  `uint256` | Maximum amount of LP token to burn in the withdrawal |
-
-    Emits: <mark style="background-color: #FFD580; color: black">RemoveLiquidityImbalance</mark>
+    | `amounts`       |  `uint256[N_COINS]` | list of amounts of underlying coins to withdraw |
+    | `max_burn_amount`       |  `uint256` | maximum amount of LP token to burn in the withdrawal |
 
     ??? quote "Source code"
 
         ```python
+        event RemoveLiquidityImbalance:
+            provider: indexed(address)
+            token_amounts: uint256[N_COINS]
+            fees: uint256[N_COINS]
+            invariant: uint256
+            token_supply: uint256
+
         @external
         @nonreentrant('lock')
         def remove_liquidity_imbalance(amounts: uint256[N_COINS], max_burn_amount: uint256) -> uint256:
@@ -816,11 +806,13 @@ pools may be viewed on
         >>> todo: remove_liquidity_imbalance console output example
         ```
 
-### `StableSwap.calc_withdraw_one_coin`
 
+### `calc_withdraw_one_coin`
 !!! description "`StableSwap.calc_withdraw_one_coin(_token_amount: uint256, i: int128) → uint256`"
 
-    Calculate the amount received when withdrawing a single coin.
+    Function to calculate the amount received when withdrawing a single coin.
+
+    Returns: expected amount of tokens received (`uint256`)
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -828,8 +820,19 @@ pools may be viewed on
     | `i` | `int128` | Index value of the coin to withdraw |
 
     ??? quote "Source code"
-        
+
         ```python
+        @view
+        @external
+        def calc_withdraw_one_coin(_token_amount: uint256, i: int128) -> uint256:
+            """
+            @notice Calculate the amount received when withdrawing a single coin
+            @param _token_amount Amount of LP tokens to burn in the withdrawal
+            @param i Index value of the coin to withdraw
+            @return Amount of coin received
+            """
+            return self._calc_withdraw_one_coin(_token_amount, i)[0]
+
         @view
         @internal
         def _calc_withdraw_one_coin(_token_amount: uint256, i: int128) -> (uint256, uint256, uint256):
@@ -860,18 +863,6 @@ pools may be viewed on
             dy_0: uint256 = (xp[i] - new_y) / precisions[i]  # w/o fees
         
             return dy, dy_0 - dy, total_supply
-        
-        
-        @view
-        @external
-        def calc_withdraw_one_coin(_token_amount: uint256, i: int128) -> uint256:
-            """
-            @notice Calculate the amount received when withdrawing a single coin
-            @param _token_amount Amount of LP tokens to burn in the withdrawal
-            @param i Index value of the coin to withdraw
-            @return Amount of coin received
-            """
-            return self._calc_withdraw_one_coin(_token_amount, i)[0]
         ```
         
     === "Example"
@@ -880,19 +871,21 @@ pools may be viewed on
         >>> todo: calculate_withdraw_one_coin console output example
         ```
 
-### `StableSwap.remove_liquidity_one_coin`
 
+### `remove_liquidity_one_coin`
 !!! description "`StableSwap.remove_liquidity_one_coin(_token_amount: uint256, i: int128, _min_amount: uint256) → uint256`"
 
-    Withdraw a single coin from the pool. Returns the amount of coin ``i`` received.
+    Withdraw a single coin from the pool. Returns the amount of coin `i` received.
+
+    Returns: amount of coin received (`uint256`).
+
+    Emits: `RemoveLiquidityOne`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_token_amount` | `uint256` | Amount of LP tokens to burn in the withdrawal |
-    | `i` | `int128` | Index value of the coin to withdraw |
-    | `_min_amount` | `uint256` | Minimum amount of coin to receive |
-
-    Emits: <mark style="background-color: #FFD580; color: black">RemoveLiquidityOne</mark>
+    | `_token_amount` | `uint256` | amount of LP tokens to burn in the withdrawal |
+    | `i` | `int128` | index value of the coin to withdraw |
+    | `_min_amount` | `uint256` | minimum amount of coin to receive |
 
     ??? quote "Source code"
 

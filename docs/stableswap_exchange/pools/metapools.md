@@ -15,34 +15,30 @@ gauge may differ for the base pool’s liquidity gauge and the metapool’s liqu
 gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
 
 !!! note
-
     Metapools also implement the ABI from plain pools. The template source code for metapools may be viewed on 
     [GitHub](https://github.com/curvefi/curve-contract/blob/master/contracts/pool-templates/meta/SwapTemplateMeta.vy).
 
-## Pool Info Methods
+## **Pool Info Methods**
 
-### `StableSwap.base_coins`
-
+### `base_coins`
 !!! description "`StableSwap.base_coins(i: uint256) → address: view`"
     
-    Get the coins of the base pool. Returns `address` of the coin at index `i`.
+    Getter for the coins of the base pool at index `i`. 
+    
+    Returns: coin (`address`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `i`       |  `uint256` | Coin index |
+    | `i`       |  `uint256` | coin index |
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 6 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59"
+        ```python
         # Token corresponding to the pool is always the last one
         BASE_POOL_COINS: constant(int128) = 3
-
-        ...
     
         base_coins: public(address[BASE_POOL_COINS])
 
-        ...
-
         @external
         def __init__(
             _owner: address,
@@ -63,20 +59,7 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
             @param _fee Fee to charge for exchanges
             @param _admin_fee Admin fee
             """
-            for i in range(N_COINS):
-                assert _coins[i] != ZERO_ADDRESS
-            self.coins = _coins
-            self.initial_A = _A * A_PRECISION
-            self.future_A = _A * A_PRECISION
-            self.fee = _fee
-            self.admin_fee = _admin_fee
-            self.owner = _owner
-            self.kill_deadline = block.timestamp + KILL_DEADLINE_DT
-            self.token = CurveToken(_pool_token)
-        
-            self.base_pool = _base_pool
-            self.base_virtual_price = Curve(_base_pool).get_virtual_price()
-            self.base_cache_updated = block.timestamp
+            ...
             for i in range(BASE_POOL_COINS):
                 _base_coin: address = Curve(_base_pool).coins(convert(i, uint256))
                 self.base_coins[i] = _base_coin
@@ -98,35 +81,33 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
     === "Example"
     
         ```shell
-        >>> metapool.base_coins(0)
+        >>> StableSwap.base_coins(0)
         '0x6B175474E89094C44Da98b954EedeAC495271d0F'
-        >>> metapool.base_coins(1)
+        >>> StableSwap.base_coins(1)
         '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
-        >>> metapool.base_coins(2)
+        >>> StableSwap.base_coins(2)
         '0xdAC17F958D2ee523a2206206994597C13D831ec7'
         ```
 
-### `StableSwap.coins`
 
+### `coins`
 !!! description "`StableSwap.coins(i: uint256) → address: view`"
 
-    Get the coins of the metapool. Returns `address` of coin at index `i`.
+    Getter for the coins of the metapooln at index `i`. 
+    
+    Returns: coin (`address`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `i`       |  `uint256` | Coin index |
+    | `i`       |  `uint256` | coin index |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 12 22 29 30 31"
+        ```python
         N_COINS: constant(int128) = 2
-
-        ...
 
         coins: public(address[N_COINS])
 
-        ...
-
         @external
         def __init__(
             _owner: address,
@@ -150,59 +131,30 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
             for i in range(N_COINS):
                 assert _coins[i] != ZERO_ADDRESS
             self.coins = _coins
-            self.initial_A = _A * A_PRECISION
-            self.future_A = _A * A_PRECISION
-            self.fee = _fee
-            self.admin_fee = _admin_fee
-            self.owner = _owner
-            self.kill_deadline = block.timestamp + KILL_DEADLINE_DT
-            self.token = CurveToken(_pool_token)
-        
-            self.base_pool = _base_pool
-            self.base_virtual_price = Curve(_base_pool).get_virtual_price()
-            self.base_cache_updated = block.timestamp
-            for i in range(BASE_POOL_COINS):
-                _base_coin: address = Curve(_base_pool).coins(convert(i, uint256))
-                self.base_coins[i] = _base_coin
-        
-                # approve underlying coins for infinite transfers
-                _response: Bytes[32] = raw_call(
-                    _base_coin,
-                    concat(
-                        method_id("approve(address,uint256)"),
-                        convert(_base_pool, bytes32),
-                        convert(MAX_UINT256, bytes32),
-                    ),
-                    max_outsize=32,
-                )
-                if len(_response) > 0:
-                    assert convert(_response, bool)
+            ...
         ```
         
     === "Example"
     
         ```shell
-        >>> metapool.coins(0)
+        >>> StableSwap.coins(0)
         '0x056Fd409E1d7A124BD7017459dFEa2F387b6d5Cd'
-        >>> metapool.coins(1)
+        >>> StableSwap.coins(1)
         '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490'
         ```
 
-        In this console example, ``coins(0)`` is the metapool’s coin (``GUSD``) and ``coins(1)`` is the LP token of 
-        the base pool (``3CRV``).
 
-### `StableSwap.base_pool`
-
+### `base_pool`
 !!! description "`StableSwap.base_pool() → address: view`"
 
-    Get the address of the base pool. Returns `address` of the base pool implementation.
+    Getter for the address of the base pool. 
+    
+    Returns: base pool implementation (`address`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 10 20 36 40"
+        ```python
         base_pool: public(address)
-
-        ...
 
         @external
         def __init__(
@@ -224,57 +176,33 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
             @param _fee Fee to charge for exchanges
             @param _admin_fee Admin fee
             """
-            for i in range(N_COINS):
-                assert _coins[i] != ZERO_ADDRESS
-            self.coins = _coins
-            self.initial_A = _A * A_PRECISION
-            self.future_A = _A * A_PRECISION
-            self.fee = _fee
-            self.admin_fee = _admin_fee
-            self.owner = _owner
-            self.kill_deadline = block.timestamp + KILL_DEADLINE_DT
-            self.token = CurveToken(_pool_token)
-        
+            ...
             self.base_pool = _base_pool
-            self.base_virtual_price = Curve(_base_pool).get_virtual_price()
-            self.base_cache_updated = block.timestamp
-            for i in range(BASE_POOL_COINS):
-                _base_coin: address = Curve(_base_pool).coins(convert(i, uint256))
-                self.base_coins[i] = _base_coin
-        
-                # approve underlying coins for infinite transfers
-                _response: Bytes[32] = raw_call(
-                    _base_coin,
-                    concat(
-                        method_id("approve(address,uint256)"),
-                        convert(_base_pool, bytes32),
-                        convert(MAX_UINT256, bytes32),
-                    ),
-                    max_outsize=32,
-                )
-                if len(_response) > 0:
-                    assert convert(_response, bool)
+            ...
         ```
 
     === "Example"
     
         ```shell
-        >>> metapool.base_pool()
+        >>> StableSwap.base_pool()
         '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7'
         ```
 
-### `StableSwap.base_virtual_price`
 
+### `base_virtual_price`
 !!! description "`StableSwap.base_virtual_price() → uint256: view`"
 
-    Get the current price of the base pool LP token relative to the underlying base pool assets.
+    Getter for the current price of the base pool LP token relative to the underlying base pool assets.
+
+    Returns: base pool lp token price (`uint256`).
+
+    !!! note
+        The base pool’s virtual price is only fetched from the base pool if the cached price has expired. A fetched based pool virtual price is cached for 10 minutes (``BASE_CACHE_EXPIRES: constant(int128) = 10 * 60``).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 37"
+        ```python
         base_virtual_price: public(uint256)
-
-        ...
 
         @external
         def __init__(
@@ -296,66 +224,32 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
             @param _fee Fee to charge for exchanges
             @param _admin_fee Admin fee
             """
-            for i in range(N_COINS):
-                assert _coins[i] != ZERO_ADDRESS
-            self.coins = _coins
-            self.initial_A = _A * A_PRECISION
-            self.future_A = _A * A_PRECISION
-            self.fee = _fee
-            self.admin_fee = _admin_fee
-            self.owner = _owner
-            self.kill_deadline = block.timestamp + KILL_DEADLINE_DT
-            self.token = CurveToken(_pool_token)
-        
-            self.base_pool = _base_pool
+            ...
             self.base_virtual_price = Curve(_base_pool).get_virtual_price()
-            self.base_cache_updated = block.timestamp
-            for i in range(BASE_POOL_COINS):
-                _base_coin: address = Curve(_base_pool).coins(convert(i, uint256))
-                self.base_coins[i] = _base_coin
-        
-                # approve underlying coins for infinite transfers
-                _response: Bytes[32] = raw_call(
-                    _base_coin,
-                    concat(
-                        method_id("approve(address,uint256)"),
-                        convert(_base_pool, bytes32),
-                        convert(MAX_UINT256, bytes32),
-                    ),
-                    max_outsize=32,
-                )
-                if len(_response) > 0:
-                    assert convert(_response, bool)
+            ...
         ```
 
     === "Example"
     
         ```shell
-        >>> metapool.base_virtual_price()
+        >>> StableSwap.base_virtual_price()
         1014750545929625438
         ```
 
-    !!! note
 
-        The base pool’s virtual price is only fetched from the base pool if the cached price has expired. A 
-        fetched based pool virtual price is cached for 10 minutes (``BASE_CACHE_EXPIRES: constant(int128) = 10 * 60``).
-
-### `StableSwap.base_cache_update()`
-
+### `base_cache_update()`
 !!! description "`StableSwap.base_cache_update() → uint256: view`"
 
-    Get the timestamp at which the base pool virtual price was last cached.
+    Getter for the timestamp at which the base pool virtual price was last cached.
+
+    Returns: timestamp (`uint256`).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 42 64 67 75"
+        ```python
         base_cache_updated: public(uint256)
 
-        ...
-
         BASE_CACHE_EXPIRES: constant(int128) = 10 * 60  # 10 min
-
-        ...
 
         @external
         def __init__(
@@ -377,38 +271,9 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
             @param _fee Fee to charge for exchanges
             @param _admin_fee Admin fee
             """
-            for i in range(N_COINS):
-                assert _coins[i] != ZERO_ADDRESS
-            self.coins = _coins
-            self.initial_A = _A * A_PRECISION
-            self.future_A = _A * A_PRECISION
-            self.fee = _fee
-            self.admin_fee = _admin_fee
-            self.owner = _owner
-            self.kill_deadline = block.timestamp + KILL_DEADLINE_DT
-            self.token = CurveToken(_pool_token)
-        
-            self.base_pool = _base_pool
-            self.base_virtual_price = Curve(_base_pool).get_virtual_price()
+            ...
             self.base_cache_updated = block.timestamp
-            for i in range(BASE_POOL_COINS):
-                _base_coin: address = Curve(_base_pool).coins(convert(i, uint256))
-                self.base_coins[i] = _base_coin
-        
-                # approve underlying coins for infinite transfers
-                _response: Bytes[32] = raw_call(
-                    _base_coin,
-                    concat(
-                        method_id("approve(address,uint256)"),
-                        convert(_base_pool, bytes32),
-                        convert(MAX_UINT256, bytes32),
-                    ),
-                    max_outsize=32,
-                )
-                if len(_response) > 0:
-                    assert convert(_response, bool)
-
-        ...
+            ...
 
         @internal
         def _vp_rate() -> uint256:
@@ -432,36 +297,33 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
     === "Example"
     
         ```shell
-        >>> metapool.base_cache_updated()
+        >>> StableSwap.base_cache_updated()
         1616583340
         ```
 
-## Exchange Methods
 
-Similar to lending pools, on metapools exchanges can be made either between the coins the metapool actually holds 
-(another pool’s LP token and some other coin) or between the metapool’s underlying coins. In the context of a metapool, 
-**underlying** coins refers to the metapool’s coin and any of the base pool’s coins. The base pool’s LP token is **not** 
-included as an underlying coin.
+## **Exchange Methods**
+
+Similar to lending pools, on metapools exchanges can be made either between the coins the metapool actually holds (another pool’s LP token and some other coin) or between the metapool’s underlying coins. In the context of a metapool, **underlying** coins refers to the metapool’s coin and any of the base pool’s coins. The base pool’s LP token is **not** included as an underlying coin.
 
 For example, the GUSD metapool would have the following:
 
-Coins: ``GUSD``, ``3CRV`` (3Pool LP)
+Coins: `GUSD`, `3CRV` (3Pool LP)
 
-Underlying coins: ``GUSD``, ``DAI``, ``USDC``, ``USDT``
+Underlying coins: `GUSD`, `DAI`, `USDC`, `USDT`
 
 !!! note
+    While metapools contain public getters for `coins` and `base_coins`, there exists no getter for obtaining a list of all underlying coins.
 
-    While metapools contain public getters for ``coins`` and ``base_coins``, there exists no getter for obtaining a list 
-    of all underlying coins.
 
-### `StableSwap.exchange`
-
+### `exchange`
 !!! description "`StableSwap.exchange(i: int128, j: int128, _dx: uint256, _min_dy: uint256) → uint256`"
 
-    Perform an exchange between two (non-underlying) coins in the metapool. Index values can be found via the ``coins`` 
-    public getter method.
+    Function to perform an exchange between two (non-underlying) coins in the metapool.
 
-    Returns: the actual amount of coin ``j`` received.
+    Returns: the actual amount of coin `j` received (`uint256`).
+
+    Emits: `TokenExchange`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -470,13 +332,16 @@ Underlying coins: ``GUSD``, ``DAI``, ``USDC``, ``USDT``
     | `_dx`       |  `uint256` | Amount of ``i`` being exchanged |
     | `_min_dy`      |  `uint256` | Minimum amount of ``j`` to receive |
 
-    Emits: <mark style="background-color: #FFD580; color: black">TokenExchange</mark>
-
-    todo: explain how fee is calculated
-
     ??? quote "Source code"
 
         ```python
+        event TokenExchange:
+            buyer: indexed(address)
+            sold_id: int128
+            tokens_sold: uint256
+            bought_id: int128
+            tokens_bought: uint256
+
         @external
         @nonreentrant('lock')
         def exchange(i: int128, j: int128, dx: uint256, min_dy: uint256) -> uint256:
@@ -525,18 +390,19 @@ Underlying coins: ``GUSD``, ``DAI``, ``USDC``, ``USDT``
     === "Example"
     
         ```shell
-        >>> lending_pool.exchange()
+        >>> StableSwap.exchange()
         todo: console output
         ```
 
-### `StableSwap.exchange_underlying`
 
+### `exchange_underlying`
 !!! description "StableSwap.exchange_underlying(i: int128, j: int128, _dx: uint256, _min_dy: uint256) → uint256"
 
-    Perform an exchange between two underlying tokens. Index values are the ``coins`` followed by the ``base_coins``, 
-    where the base pool LP token is **not** included as a value. 
+    Function to perform an exchange between two underlying tokens. Index values are the `coins` followed by the `base_coins`, where the base pool LP token is **not** included as a value. 
 
-    Returns: the actual amount of coin ``j`` received.
+    Returns: the actual amount of coin `j` received (`uint256`).
+
+    Emits: `TokenExchangeUnderlying`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -545,11 +411,16 @@ Underlying coins: ``GUSD``, ``DAI``, ``USDC``, ``USDT``
     | `_dx`       |  `uint256` | Amount of ``i`` being exchanged |
     | `_min_dy`      |  `uint256` | Minimum amount of ``j`` to receive |
 
-    Emits: <mark style="background-color: #FFD580; color: black">TokenExchangeUnderlying</mark>
-
     ??? quote "Source code"  
-    
+
         ```python
+        event TokenExchangeUnderlying:
+            buyer: indexed(address)
+            sold_id: int128
+            tokens_sold: uint256
+            bought_id: int128
+            tokens_bought: uint256
+
         @external
         @nonreentrant('lock')
         def exchange_underlying(i: int128, j: int128, dx: uint256, min_dy: uint256) -> uint256:
@@ -689,6 +560,6 @@ Underlying coins: ``GUSD``, ``DAI``, ``USDC``, ``USDT``
     === "Example"
     
         ```shell
-        >>> lending_pool.exchange_underlying()
+        >>> StableSwap.exchange_underlying()
         todo: console output
         ```

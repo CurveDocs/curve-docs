@@ -1,31 +1,36 @@
-The Curve Token V3 is more gas efficient than versions 1 and 2. The implementation for a Curve Token V3 may be viewed on 
-[GitHub](https://github.com/curvefi/curve-contract/blob/master/contracts/tokens/CurveTokenV3.vy).
+The Curve Token V3 is more gas efficient than versions 1 and 2.
 
-!!! note
+Compared to the Curve Token V2 API, there have been the following changes:
 
-    Compared to the Curve Token V2 API, there have been the following changes:
+- `increaseAllowance` and `decreaseAllowance` methods added to mitigate race conditions.
 
-    `increaseAllowance` and `decreaseAllowance` methods added to mitigate race conditions.
 
-### `CurveToken.increaseAllowance`
+!!!deploy "Contract Source & Deployment"
+    Source code available on [Github](https://github.com/curvefi/curve-contract/blob/master/contracts/tokens/CurveTokenV3.vy).
 
-!!! description "`CurveToken.increaseAllowance(_spender: address, _added_value: uint256) → bool`"
 
-    Increase the allowance granted to `_spender` by the `msg.sender`.
+### `increaseAllowance`
+!!! description "`CurveTokenV3.increaseAllowance(_spender: address, _added_value: uint256) → bool`"
 
-    This is alternative to `approve` that can be used as a mitigation for the potential race condition. Returns `True` 
-    if success.
+    Increase the allowance granted to `_spender` by the `msg.sender`. This is alternative to `approve` that can be used as a mitigation for the potential race condition. 
+    
+    Returns: `true` (`bool`) if not reverted.
+
+    Emits: `Approval`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_spender` | `address` | Account whose tokens will be burned |
-    | `_value` | `uint256` | Amount that will be burned |
-
-    Emits: <mark style="background-color: #FFD580; color: black">Approval</mark>
+    | `_spender` | `address` | account whose tokens will be burned |
+    | `_value` | `uint256` | amount that will be burned |
 
     ??? quote "Source code"
 
         ```python
+        event Approval:
+            _owner: indexed(address)
+            _spender: indexed(address)
+            _value: uint256
+
         @external
         def approve(_spender : address, _value : uint256) -> bool:
             """
@@ -66,29 +71,33 @@ The Curve Token V3 is more gas efficient than versions 1 and 2. The implementati
     === "Example"
     
         ```shell
-        >>> lp_token.increaseAllowance()
+        >>> CurveTokenV3.increaseAllowance()
         todo: ""
         ```
 
-### `CurveToken.decreaseAllowance`
 
-!!! description "`CurveToken.decreaseAllowance(_spender: address, _subtracted_value: uint256) → bool`"
+### `decreaseAllowance`
+!!! description "`CurveTokenV3.decreaseAllowance(_spender: address, _subtracted_value: uint256) → bool`"
 
-    Decrease the allowance granted to `_spender` by the `msg.sender`.
+    Function to decrease the allowance granted to `_spender` by the `msg.sender`. This is alternative to `approve` that can be used as a mitigation for the potential race condition.
 
-    This is alternative to `approve` that can be used as a mitigation for the potential race condition. Returns `True` 
-    if success.
+    Returns: `true` (`bool`) if not reverted.
+
+    Emits: `Approval`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_spender` | `address` | Account whose tokens will be burned |
-    | `_added_value` | `uint256` | Amount that will be burned |
-
-    Emits: <mark style="background-color: #FFD580; color: black">Approval</mark>
+    | `_spender` | `address` | account whose tokens will be burned |
+    | `_added_value` | `uint256` | amount that will be burned |
 
     ??? quote "Source code"
 
         ```python
+        event Approval:
+            _owner: indexed(address)
+            _spender: indexed(address)
+            _value: uint256
+    
         @external
         def approve(_spender : address, _value : uint256) -> bool:
             """
@@ -129,6 +138,6 @@ The Curve Token V3 is more gas efficient than versions 1 and 2. The implementati
     === "Example"
     
         ```shell
-        >>> lp_token.decreaseAllowance()
+        >>> CurveTokenV3.decreaseAllowance()
         todo: ""
         ```

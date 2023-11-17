@@ -6,44 +6,42 @@ the underlying token itself, but a **wrapped** representation of it.
 
 Currently, Curve supports the following lending pools:
 
-``aave``: [Aave pool](https://www.curve.fi/aave), with lending on [Aave](https://www.aave.com)
+`aave`: [Aave pool](https://www.curve.fi/aave), with lending on [Aave](https://www.aave.com)
 
-``busd``: [BUSD](https://www.curve.fi/busd) pool, with lending on [yearn.finance](https://www.yearn.finance)
+`busd`: [BUSD](https://www.curve.fi/busd) pool, with lending on [yearn.finance](https://www.yearn.finance)
 
-``compound``: [Compound](https://www.curve.fi/compound) pool, with lending on [Compound](https://compound.finance/)
+`compound`: [Compound](https://www.curve.fi/compound) pool, with lending on [Compound](https://compound.finance/)
 
-``ib``: [Iron Bank pool](https://curve.fi/ib), with lending on [Cream](https://v1.yearn.finance/lending)
+`ib`: [Iron Bank pool](https://curve.fi/ib), with lending on [Cream](https://v1.yearn.finance/lending)
 
-``pax``: [PAX](https://curve.fi/pax) pool, with lending on [yearn.finance](https://www.yearn.finance)
+`pax`: [PAX](https://curve.fi/pax) pool, with lending on [yearn.finance](https://www.yearn.finance)
 
-``usdt``: [USDT pool](https://curve.fi/usdt), with lending on [Compound](https://www.curve.fi/compound)
+`usdt`: [USDT pool](https://curve.fi/usdt), with lending on [Compound](https://www.curve.fi/compound)
 
-``y``: [Y pool](https://curve.fi/y), with lending on [yearn.finance](https://www.yearn.finance)
+`y`: [Y pool](https://curve.fi/y), with lending on [yearn.finance](https://www.yearn.finance)
 
 An example of a Curve lending pool is 
 [Compound Pool](https://github.com/curvefi/curve-contract/tree/master/contracts/pools/compound), 
-which contains the wrapped tokens ``cDAI`` and ``cUSDC``, while the underlying tokens ``DAI`` and ``USDC`` are lent out 
+which contains the wrapped tokens `cDAI` and `cUSDC`, while the underlying tokens `DAI` and `USDC` are lent out 
 on Compound. Liquidity providers of the Compound Pool therefore receive interest generated on Compound in addition to 
 fees from token swaps in the pool.
 
 Implementation of lending pools may differ with respect to how wrapped tokens accrue interest. There are two main types 
 of wrapped tokens that are used by lending pools:
 
-``cToken-style tokens``: These are tokens, such as interest-bearing cTokens on Compound (e.g., ``cDAI``) or on yTokens 
-                         on Yearn, where interest accrues as the rate of the token increases.
+`cToken-style tokens`: These are tokens, such as interest-bearing cTokens on Compound (e.g., `cDAI`) or on yTokens on Yearn, where interest accrues as the rate of the token increases.
 
-``aToken-style tokens``: These are tokens, such as aTokens on AAVE (e.g., ``aDAI``), where interest accrues as the 
-balance of the token increases.
+`aToken-style tokens`: These are tokens, such as aTokens on AAVE (e.g., `aDAI`), where interest accrues as the balance of the token increases.
 
-The template source code for lending pools may be viewed on GitHub.
 
-!!! Note
-
+!!!info
     Lending pools also implement the ABI from plain pools. Refer to the plan pools documentation for overlapping methods.
 
-## Pool Info Methods
 
-### `StableSwap.underlying_coins`
+
+## **Pool Info Methods**
+
+### `underlying_coins`
 
 !!! description "`StableSwap.underlying_coins(i: uint256) → address: view`"
 
@@ -55,7 +53,7 @@ The template source code for lending pools may be viewed on GitHub.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 9 19 25 26 27 29 30 31 32 33 34 35 36 37 38 39 40 43"
+        ```python
         underlying_coins: public(address[N_COINS])
 
         ...
@@ -111,25 +109,28 @@ The template source code for lending pools may be viewed on GitHub.
     === "Example"
     
         ```shell
-        >>> lending_pool.coins(0)
+        >>> StableSwap.coins(0)
         '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643'
-        >>> lending_pool.coins(1)
+        >>> StableSwap.coins(1)
         '0x39AA39c021dfbaE8faC545936693aC917d5E7563'
         ```
 
-## Exchange Methods
+## **Exchange Methods**
 
 Like plain pools, lending pools have the ``exchange`` method. However, in the case of lending pools, calling ``exchange`` 
 performs a swap between two wrapped tokens in the pool.
 
 For example, calling ``exchange`` on the Compound Pool, would result in a swap between the wrapped tokens ``cDAI`` and ``cUSDC``.
 
-### `StableSwap.exchange_underlying`
-
+### `exchange_underlying`
 !!! description "`StableSwap.exchange_underlying(i: int128, j: int128, dx: uint256, min_dy: uint256) → uint256`"
 
     Perform an exchange between two underlying tokens. Index values can be found via the ``underlying_coins`` public 
     getter method. Returns the actual amount of coin ``j`` received.
+
+    Returns: the actual amount of coin `j` received (`uint256`).
+
+    Emits: `TokenExchangeUnderlying`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -138,11 +139,19 @@ For example, calling ``exchange`` on the Compound Pool, would result in a swap b
     | `_dx`       |  `uint256` | Amount of ``i`` being exchanged |
     | `_min_dy`       |  `uint256` | Minimum amount of ``j`` to receive |
 
-    Emits: <mark style="background-color: #FFD580; color: black">TokenExchangeUnderlying</mark>
+    !!! note
+        Older Curve lending pools may not implement the same signature for `exchange_underlying`. For instance, Compound pool does not return anything for `exchange_underlying` and therefore costs more in terms of gas.
 
     ??? quote "Source code"
 
         ```python
+        event TokenExchangeUnderlying:
+            buyer: indexed(address)
+            sold_id: int128
+            tokens_sold: uint256
+            bought_id: int128
+            tokens_bought: uint256
+
         @external
         @nonreentrant('lock')
         def exchange_underlying(i: int128, j: int128, dx: uint256, min_dy: uint256) -> uint256:
@@ -197,50 +206,48 @@ For example, calling ``exchange`` on the Compound Pool, would result in a swap b
     === "Example"
     
         ```shell
-        >>> lending_pool.exchange_underlying()
+        >>> StableSwap.exchange_underlying()
         todo: console output
         ```
 
-    !!! note
 
-        Older Curve lending pools may not implement the same signature for ``exchange_underlying``. For instance, Compound 
-        pool does not return anything for ``exchange_underlying`` and therefore costs more in terms of gas.
+## **Add/Remove Liquidity Methods**
 
-## Add/Remove Liquidity Methods
+The function signatures for adding and removing liquidity to a lending pool are mostly the same as for a plain pool. However, for lending pools, liquidity is added and removed in the wrapped token, not the underlying.
 
-The function signatures for adding and removing liquidity to a lending pool are mostly the same as for a plain pool. 
-However, for lending pools, liquidity is added and removed in the wrapped token, not the underlying.
-
-In order to be able to add and remove liquidity in the underlying token (e.g., remove DAI from Compound Pool instead of 
-``cDAI``) there exists a ``Deposit<POOL>.vy`` contract (e.g., ([DepositCompound.vy](https://github.com/curvefi/curve-contract/blob/master/contracts/pools/compound/DepositCompound.vy)).
+In order to be able to add and remove liquidity in the underlying token (e.g., remove DAI from Compound Pool instead of `cDAI`) there exists a `Deposit<POOL>.vy` contract (e.g., ([DepositCompound.vy](https://github.com/curvefi/curve-contract/blob/master/contracts/pools/compound/DepositCompound.vy)).
 
 !!! warning
+    Older Curve lending pools (e.g., Compound Pool) do not implement all plain pool methods for adding and removing liquidity. For instance, `remove_liquidity_one_coin` is not implemented by Compound Pool).
 
-    Older Curve lending pools (e.g., Compound Pool) do not implement all plain pool methods for adding and removing 
-    liquidity. For instance, ``remove_liquidity_one_coin`` is not implemented by Compound Pool).
+Some newer pools (e.g., [IB](https://github.com/curvefi/curve-contract/blob/master/contracts/pools/ib/StableSwapIB.vy)) have a modified signature for `add_liquidity` and allow the caller to specify whether the deposited liquidity is in the wrapped or underlying token.
 
-Some newer pools (e.g., [IB](https://github.com/curvefi/curve-contract/blob/master/contracts/pools/ib/StableSwapIB.vy)) 
-have a modified signature for ``add_liquidity`` and allow the caller to specify whether the deposited liquidity is in 
-the wrapped or underlying token.
 
-### `StableSwap.add_liquidity`
-
+### `add_liquidity`
 !!! description "`StableSwap.add_liquidity(_amounts: uint256[N_COINS], _min_mint_amount: uint256, _use_underlying: bool = False) → uint256`"
 
-    Perform an exchange between two underlying tokens. Index values can be found via the ``underlying_coins`` public 
-    getter method. Returns amount of LP tokens received in exchange for the deposited tokens.
+    Function to deposit coins into the pool.
+
+    Returns: amount of LP tokens received (`uint256`).
+
+    Emits: `AddLiquidity`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_amounts`       |  `uint256[N_COINS]` | List of amounts of coins to deposit |
-    | `_min_mint_amount`       |  `uint256` | Minimum amount of LP tokens to mint from the deposit |
-    | `_use_underlying`       |  `bool` | If ``True``, deposit underlying assets instead of wrapped assets |
-
-    Emits: <mark style="background-color: #FFD580; color: black">AddLiquidity</mark>
+    | `_amounts`       |  `uint256[N_COINS]` | list of amounts of coins to deposit |
+    | `_min_mint_amount`       |  `uint256` | minimum amount of LP tokens to mint from the deposit |
+    | `_use_underlying`       |  `bool` | if `True`, deposit underlying assets instead of wrapped assets |
     
     ??? quote "Source code"
 
         ```python
+        event AddLiquidity:
+            provider: indexed(address)
+            token_amounts: uint256[N_COINS]
+            fees: uint256[N_COINS]
+            invariant: uint256
+            token_supply: uint256
+
         @external
         @nonreentrant('lock')
         def add_liquidity(_amounts: uint256[N_COINS], _min_mint_amount: uint256, _use_underlying: bool = False) -> uint256:
@@ -355,6 +362,6 @@ the wrapped or underlying token.
     === "Example"
     
         ```shell
-        >>> lending_pool.add_liquidity()
+        >>> StableSwap.add_liquidity()
         todo: console output
         ```

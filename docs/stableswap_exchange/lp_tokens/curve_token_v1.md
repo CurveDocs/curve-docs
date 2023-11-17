@@ -1,8 +1,8 @@
-## Token Methods
+## **Token Methods**
 
-### `CurveToken.name`
+### `name`
 
-!!! description "CurveToken.name() → string[64]: view"
+!!! description "CurveTokenV1.name() → string[64]: view"
 
     Get token name.
 
@@ -28,13 +28,13 @@
     === "Example"
 
         ```shell
-        >>> lp_token.symbol()
+        >>> CurveTokenV1.symbol()
         'Curve.fi yDAI/yUSDC/yUSDT/yBUSD'
         ```
 
-### `CurveToken.symbol`
 
-!!! description "CurveToken.symbol() → string[32]: view"
+### `symbol`
+!!! description "CurveTokenV1.symbol() → string[32]: view"
 
     Get token symbol.
 
@@ -64,9 +64,9 @@
         'yDAI+yUSDC+yUSDT+yBUSD'
         ```
 
-### `CurveToken.decimals`
 
-!!! description "CurveToken.decimals() → uint256: view"
+### `decimals`
+!!! description "CurveTokenV1.decimals() → uint256: view"
 
     Get token precision (decimals).
 
@@ -96,9 +96,9 @@
         18
         ```
 
-### `CurveToken.balanceOf`
 
-!!! description "CurveToken.balanceOf(account: address) → uint256: view"
+### `balanceOf`
+!!! description "CurveTokenV1.balanceOf(account: address) → uint256: view"
 
     Get token balance for an account.
 
@@ -132,14 +132,13 @@
     === "Example"
 
         ```shell
-        >>> lp_token.balanceOf("0x69fb7c45726cfe2badee8317005d3f94be838840")
+        >>> CurveTokenV1.balanceOf("0x69fb7c45726cfe2badee8317005d3f94be838840")
         72372801850459006740117197
         ```
 
 
-### `CurveToken.totalSupply`
-
-!!! description "CurveToken.totalSupply() → uint256: view"
+### `totalSupply`
+!!! description "CurveTokenV1.totalSupply() → uint256: view"
 
     Get total token supply.
 
@@ -158,13 +157,13 @@
     === "Example"
 
         ```shell
-        >>> lp_token.totalSupply()
+        >>> CurveTokenV1.totalSupply()
         73112516629065063732935484
         ```
 
-### `CurveToken.allowance`
 
-!!! description "CurveToken.allowance(_owner: address, _spender: address) → uint256: view"
+### `allowance`
+!!! description "CurveTokenV1.allowance(_owner: address, _spender: address) → uint256: view"
 
     This view method gets the allowance of an address (`_spender`) to spend on behalf of some other account `_owner`.
 
@@ -188,23 +187,28 @@
             return self.allowances[_owner][_spender]
         ```
 
-### `CurveToken.transfer`
 
-!!! description "CurveToken.transfer(_to: address, _value: uint256) → bool"
+### `transfer`
+!!! description "CurveTokenV1.transfer(_to: address, _value: uint256) → bool"
 
     Transfer tokens to a specified address. `_from` address is implicitly `msg.sender`. Returns ``True`` if the
     transfer succeeds.
+
+    Emits: `Transfer`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_to` | `address` | Receiver of the tokens |
     | `_value`    | `uint256` | Amount of tokens to be transferred |
 
-    Emits: <mark style="background-color: #FFD580; color: black">Transfer</mark>
-
     ??? quote "Source code"
 
         ```python
+        event Transfer:
+            _from: indexed(address)
+            _to: indexed(address)
+            _value: uint256
+
         @public
         def transfer(_to : address, _value : uint256) -> bool:
             """
@@ -220,24 +224,29 @@
             return True
         ```
 
-### `CurveToken.transferFrom`
 
-!!! description "CurveToken.transferFrom(_from: address, _to: address, _value: uint256) → bool"
+### `transferFrom`
+!!! description "CurveTokenV1.transferFrom(_from: address, _to: address, _value: uint256) → bool"
 
     Transfer tokens from one address to another. `msg.sender` does the transfer on behalf of the `_from` address, and
     requires sufficient spending allowance. Returns ``True`` if transfer succeeds.
 
+    Emits: `Transfer`
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_from` | `address` | Address which `msg.sender` want to send tokens from |
-    | `_to` | `address` | Address which `msg.sender` want to transfer to |
-    | `_value`    | `uint256` | Amount of tokens to be transferred |
-
-    Emits: <mark style="background-color: #FFD580; color: black">Transfer</mark>
+    | `_from` | `address` | address which `msg.sender` want to send tokens from |
+    | `_to` | `address` | address which `msg.sender` want to transfer to |
+    | `_value`    | `uint256` | amount of tokens to be transferred |
 
     ??? quote "Source code"
 
         ```python
+        event Transfer:
+            _from: indexed(address)
+            _to: indexed(address)
+            _value: uint256
+
         @public
         def transferFrom(_from : address, _to : address, _value : uint256) -> bool:
             """
@@ -261,28 +270,36 @@
         ```
 
     !!! note
-
-    While this function emits a Transfer event, this is not required as per the specification, and other compliant
-    implementations may not emit the event.
+        While this function emits a Transfer event, this is not required as per the specification, and other compliant implementations may not emit the event.
 
 
-### `CurveToken.approve`
+### `approve`
+!!! description "CurveTokenV1.approve(_spender: address, _value: uint256) → bool"
 
-!!! description "CurveToken.approve(_spender: address, _value: uint256) → bool"
+    !!! warning
+        Beware that changing an allowance with this method brings the risk that someone may use both the old and the new allowance by unfortunate transaction ordering. One possible solution to mitigate this race condition is to first reduce the spender’s allowance to 0 and set the desired value afterwards (see this [GitHub issue](https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729)).
+
+    !!! warning
+        For Curve LP Tokens V1 and V2, **non-zero to non-zero approvals are prohibited**. Instead, after every non-zero approval, the allowance for the spender must be reset to 0.
 
     Approve the passed address to spend the specified amount of tokens on behalf of ``msg.sender``. Returns ``True`` on
     successful approvals.
 
+    Emits: `Approval`
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_spender` | `address` | Address which will spend the funds |
-    | `_value`    | `uint256` | Amount of tokens to be spent |
-
-    Emits: <mark style="background-color: #FFD580; color: black">Approval</mark>
+    | `_spender` | `address` | address which will spend the funds |
+    | `_value`    | `uint256` | amount of tokens to be spent |
 
     ??? quote "Source code"
 
         ```python
+        event Approval:
+            _owner: indexed(address)
+            _spender: indexed(address)
+            _value: uint256
+
         @public
         def approve(_spender : address, _value : uint256) -> bool:
             """
@@ -300,30 +317,16 @@
             return True
         ```
 
-    !!! warning
 
-    Beware that changing an allowance with this method brings the risk that someone may use both the old and the new
-    allowance by unfortunate transaction ordering. One possible solution to mitigate this race condition is
-    to first reduce the spender’s allowance to 0 and set the desired value afterwards (see this
-    [GitHub issue](https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729)).
-
-    !!! warning
-
-    For Curve LP Tokens V1 and V2, **non-zero to non-zero approvals are prohibited**. Instead, after every non-zero
-    approval, the allowance for the spender must be reset to 0.
-
-
-## Minter Methods
+## **Minter Methods**
 
 The following methods are only callable by the ``minter`` (private attribute).
 
 !!! note
-
     For Curve Token V1, the ``minter`` attribute is not ``public``.
 
-### `CurveToken.mint`
-
-!!! description "CurveToken.mint(_to: address, _value: uint256)"
+### `mint`
+!!! description "CurveTokenV1.mint(_to: address, _value: uint256)"
 
     This encapsulates the modification of balances such that the proper events are emitted.
 
@@ -354,21 +357,25 @@ The following methods are only callable by the ``minter`` (private attribute).
         ```
 
 
-### `CurveToken.burn`
-
-!!! description "CurveToken.burn(_value: uint256)"
+### `burn`
+!!! description "CurveTokenV1.burn(_value: uint256)"
 
     Burn an amount of the token of ``msg.sender``.
 
+    Emits: `Transfer`
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_value`    | `uint256` | Token amount that will be burned |
-
-    Emits: <mark style="background-color: #FFD580; color: black">Transfer</mark>
+    | `_value`    | `uint256` | token amount that will be burned |
 
     ??? quote "Source code"
 
         ```python
+        event Transfer:
+            _from: indexed(address)
+            _to: indexed(address)
+            _value: uint256
+
         @private
         def _burn(_to: address, _value: uint256):
             """
@@ -393,22 +400,26 @@ The following methods are only callable by the ``minter`` (private attribute).
         ```
 
 
-### `CurveToken.burnFrom`
+### `burnFrom`
+!!! description "CurveTokenV1.burnFrom(_to: address, _value: uint256)"
 
-!!! description "CurveToken.burnFrom(_to: address, _value: uint256)"
+    Function to burn `_value` of the token from `_to`.
 
-    Burn an amount of the token from a given account.
+    Emits: `Tranfer`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_to`       |  `address` | Account whose tokens will be burned|
-    | `_value`    | `uint256` | Token amount that will be burned |
-
-    Emits: <mark style="background-color: #FFD580; color: black">Transfer</mark>
+    | `_to`       |  `address` | account whose tokens will be burned|
+    | `_value`    | `uint256` | token amount that will be burned |
 
     ??? quote "Source code"
 
         ```python
+        event Transfer:
+            _from: indexed(address)
+            _to: indexed(address)
+            _value: uint256
+
         @private
         def _burn(_to: address, _value: uint256):
             """
@@ -433,15 +444,15 @@ The following methods are only callable by the ``minter`` (private attribute).
             self._burn(_to, _value)
         ```
 
-### `CurveToken.set_minter`
 
-!!! description "CurveToken.set_minter(_minter: address)"
+### `set_minter`
+!!! description "CurveTokenV1.set_minter(_minter: address)"
 
-    Set a new minter for the token.
+    Function to set a new minter for the token.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_minter`       |  `address` | Address of the new minter |
+    | `_minter`       |  `address` | address of the new minter |
 
     ??? quote "Source code"
 
