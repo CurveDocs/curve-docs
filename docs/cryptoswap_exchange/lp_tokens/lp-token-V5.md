@@ -10,7 +10,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
 ??? quote "deploy_pool()"
 
-    ```python hl_lines="2 56 59"
+    ```python
     @external
     def deploy_pool(
         _name: String[32],
@@ -107,7 +107,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 7"
+        ```python
         name: public(String[64])
 
         @external
@@ -143,7 +143,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 8"
+        ```python
         symbol: public(String[32])
 
         @external
@@ -179,7 +179,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```python
         @view
         @external
         def decimals() -> uint8:
@@ -208,7 +208,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 9"
+        ```python
         VERSION: constant(String[8]) = "v5.0.0"
 
         @view
@@ -241,7 +241,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         balanceOf: public(HashMap[address, uint256])
         ```
 
@@ -262,7 +262,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         totalSupply: public(uint256)
         ```
 
@@ -283,7 +283,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 5 8 9"
+        ```python
         minter: public(address)
 
         @external
@@ -332,7 +332,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 18 19"
+        ```python
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
@@ -378,7 +378,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 21 22"
+        ```python
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
@@ -427,7 +427,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 22 23"
+        ```python
         event Approval:
             _owner: indexed(address)
             _spender: indexed(address)
@@ -477,7 +477,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 "
+        ```python
         event Approval:
             _owner: indexed(address)
             _spender: indexed(address)
@@ -556,7 +556,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```python
         allowance: public(HashMap[address, HashMap[address, uint256]])
         ```
 
@@ -584,7 +584,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 9 21 22"
+        ```python
         event Approval:
             _owner: indexed(address)
             _spender: indexed(address)
@@ -631,7 +631,7 @@ The LP Token is generated using the `token_implementation` contract within the [
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 9 21 22"
+        ```python
         event Approval:
             _owner: indexed(address)
             _spender: indexed(address)
@@ -691,7 +691,7 @@ The logic for both minting and burning the tokens resides in the pool contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 20 21"
+        ```python
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
@@ -739,7 +739,7 @@ The logic for both minting and burning the tokens resides in the pool contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 18 19"
+        ```python
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
@@ -789,7 +789,7 @@ The `initialize` function is used to initialize the pool when it's created throu
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 19"
+        ```python
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
