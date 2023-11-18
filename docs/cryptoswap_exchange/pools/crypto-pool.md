@@ -1,6 +1,8 @@
-**Crypto-Pools are exchange contracts containing two volatile assets.**
+**Crypto-Pools are exchange contracts containing two volatile (non-pegged) assets.**
 
-These exchange contracts are deployed via the [CryptoSwap Factory](../factory/overview.md). Unlike newer Factory contracts, which utilize blueprint contracts, the earlier versions did not have this feature at the time of their deployments. Instead, in these earlier versions, the exchange contract is created using the Vyper built-in `create_forwarder_to()` (in the meantime renamed to `create_minimal_proxy_to`) function. The pool is then initialized via the `initialize()` function of the pool implementation contract, which sets all the relevant variables, such as paired tokens, prices, and parameters.
+These exchange contracts are deployed via the [CryptoSwap Factory](../factory/overview.md). Unlike newer Factory contracts, which utilize blueprint contracts, the earlier versions did not have this feature at the time of their deployments. Instead, in these earlier versions, the exchange contract is created using the Vyper built-in **`create_forwarder_to()`** (in the meantime renamed to `create_minimal_proxy_to`) function. 
+
+The pool is then initialized via the **`initialize()`** function of the pool implementation contract, which sets all the relevant variables, such as paired tokens, prices, and parameters.
 
 
 ??? quote "Initializing the Pool"
