@@ -1,102 +1,21 @@
 The LP token and exchange contract for two-coin CryptoSwap pools are two separate contracts from each other. Newer versions, like Tricrypto-NG, combine both the LP token and exchange contract into a single contract.
 
-The LP Token is generated using the `token_implementation` contract within the Factory when the `deploy_pool()` function is called. Subsequently, the token is further initialized by calling the [`initialize()`](#initialize) function, which sets its name, symbol, and associated liquidity pool.
+The LP token contract is created from the `token_implementation` using the [`create_forwarder_to()`](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=create_forwarder_to#chain-interaction) (in the meantime renamed to `create_minimal_proxy_to`) function, which is a built-in function in Vyper.
+
+After deployment, the LP token contract is then initialized through the `initialize()` function.
 
 
-To query the currently implemented LP token contract:
+!!!info
+    Newer deployments might make use of blueprint contracts ([EIP-5202](https://eips.ethereum.org/EIPS/eip-5202)), eliminating the need for an `initialize()` function.
+
+
+
+*To query the currently implemented LP token contract:*
 
 ```shell
 >>> Factory.token_implementation()
 '0xc08550A4cc5333f40e593eCc4C4724808085D304'
 ```
-
-
-??? quote "deploy_pool()"
-
-    ```python
-    @external
-    def deploy_pool(
-        _name: String[32],
-        _symbol: String[10],
-        _coins: address[2],
-        A: uint256,
-        gamma: uint256,
-        mid_fee: uint256,
-        out_fee: uint256,
-        allowed_extra_profit: uint256,
-        fee_gamma: uint256,
-        adjustment_step: uint256,
-        admin_fee: uint256,
-        ma_half_time: uint256,
-        initial_price: uint256
-    ) -> address:
-        """
-        @notice Deploy a new pool
-        @param _name Name of the new plain pool
-        @param _symbol Symbol for the new plain pool - will be concatenated with factory symbol
-        Other parameters need some description
-        @return Address of the deployed pool
-        """
-        # Validate parameters
-        assert A > MIN_A-1
-        assert A < MAX_A+1
-        assert gamma > MIN_GAMMA-1
-        assert gamma < MAX_GAMMA+1
-        assert mid_fee > MIN_FEE-1
-        assert mid_fee < MAX_FEE-1
-        assert out_fee >= mid_fee
-        assert out_fee < MAX_FEE-1
-        assert admin_fee < 10**18+1
-        assert allowed_extra_profit < 10**16+1
-        assert fee_gamma < 10**18+1
-        assert fee_gamma > 0
-        assert adjustment_step < 10**18+1
-        assert adjustment_step > 0
-        assert ma_half_time < 7 * 86400
-        assert ma_half_time > 0
-        assert initial_price > 10**6
-        assert initial_price < 10**30
-        assert _coins[0] != _coins[1], "Duplicate coins"
-
-        decimals: uint256[2] = empty(uint256[2])
-        for i in range(2):
-            d: uint256 = ERC20(_coins[i]).decimals()
-            assert d < 19, "Max 18 decimals for coins"
-            decimals[i] = d
-        precisions: uint256 = (18 - decimals[0]) + shift(18 - decimals[1], 8)
-
-
-        name: String[64] = concat("Curve.fi Factory Crypto Pool: ", _name)
-        symbol: String[32] = concat(_symbol, "-f")
-
-        token: address = create_forwarder_to(self.token_implementation)
-        pool: address = create_forwarder_to(self.pool_implementation)
-
-        Token(token).initialize(name, symbol, pool)
-        CryptoPool(pool).initialize(
-            A, gamma, mid_fee, out_fee, allowed_extra_profit, fee_gamma,
-            adjustment_step, admin_fee, ma_half_time, initial_price,
-            token, _coins, precisions)
-
-        length: uint256 = self.pool_count
-        self.pool_list[length] = pool
-        self.pool_count = length + 1
-        self.pool_data[pool].token = token
-        self.pool_data[pool].decimals = shift(decimals[0], 8) + decimals[1]
-        self.pool_data[pool].coins = _coins
-
-        key: uint256 = bitwise_xor(convert(_coins[0], uint256), convert(_coins[1], uint256))
-        length = self.market_counts[key]
-        self.markets[key][length] = pool
-        self.market_counts[key] = length + 1
-
-        log CryptoPoolDeployed(
-            token, _coins,
-            A, gamma, mid_fee, out_fee, allowed_extra_profit, fee_gamma,
-            adjustment_step, admin_fee, ma_half_time, initial_price,
-            msg.sender)
-        return pool
-    ```
 
 
 ## **LP Token Info Methods**
@@ -775,8 +694,6 @@ The logic for both minting and burning the tokens resides in the pool contract.
 
 ## **Initialize Method**
 
-The `initialize` function is used to initialize the pool when it's created through the factory.
-
 ### `initialize`
 !!! description "`LPTokenV5.initialize(_name: String[64], _symbol: String[32], _pool: address):`"
 
@@ -787,8 +704,9 @@ The `initialize` function is used to initialize the pool when it's created throu
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_spender` |  `address` | Address to decrease the allowance of  |
-    | `_subtracted_value` |  `uint256` | Amount ot decrease the allowance by |
+    | `_name` |  `String[64]` | name of the lp token  |
+    | `_symbol` |  `String[32]` | symbol of the lp token |
+    | `_pool` |  `address` | liquidity pool address |
 
     ??? quote "Source code"
 
@@ -818,5 +736,4 @@ The `initialize` function is used to initialize the pool when it's created throu
 
         ```shell
         >>> LPTokenV5.initialize("todo")
-        "todo"
         ```
