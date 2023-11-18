@@ -1,11 +1,14 @@
 <h1> </h1>
 
-Pools created through the Factory are "owned" by the factory `admin` (DAO). Ownership can only be changed within the factory contract via `commit_transfer_ownership` and `accept_transfer_ownership`. 
+**The following functions are admin-only functions.**
+
+Pools created through the Factory are 'owned' by the factory `admin` (DAO). Ownership can be transferred only within the Factory contract, and this is done through the use of the `commit_transfer_ownership()` and `accept_transfer_ownership()` functions.
+
 
 
 ## **Parameter Controls**
 
-More informations about the parameters [here](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).
+More informations about the parameters [here](../pools/overview.md).
 
 The appropriate value for `A` and `gamma` is dependent upon the type of coin being used within the pool, and is subject to optimisation and pool-parameter update based on the market history of the trading pair. It is possible to modify the parameters for a pool after it has been deployed. However, it requires a vote within the Curve DAO and must reach a 15% quorum.
 
@@ -312,7 +315,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
 
 
-## Admin Control Info Methods
+## **Admin Control Info Methods**
 
 ### `admin_actions_deadline`
 !!! description "`CryptoSwap.admin_actions_deadline() -> uint256: view`"
@@ -323,7 +326,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 3"
+        ```python
         admin_actions_deadline: public(uint256)
 
         ADMIN_ACTIONS_DELAY: constant(uint256) = 3 * 86400
