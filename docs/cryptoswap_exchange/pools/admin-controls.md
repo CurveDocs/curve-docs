@@ -2,7 +2,7 @@
 
 **The following functions are admin-only functions.**
 
-Pools created through the Factory are 'owned' by the factory `admin` (DAO). Ownership can be transferred only within the Factory contract, and this is done through the use of the `commit_transfer_ownership()` and `accept_transfer_ownership()` functions.
+Pools created through the Factory are 'owned' by the factory **`admin`** (DAO). Ownership can be transferred only within the Factory contract, and this is done through the use of the **`commit_transfer_ownership()`** and **`accept_transfer_ownership()`** functions.
 
 
 

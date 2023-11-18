@@ -1,4 +1,4 @@
-Exchange and LP token contracts are created using Vyper's built-in function [`create_forwarder_to()`](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=create_forwarder_to#chain-interaction) (now renamed to `create_minimal_proxy_to`). These contracts are based on the `pool_implementations` and `token_implementation` contracts. This method is also used for the deployment of liquidity gauges.
+Exchange and LP token contracts are created using Vyper's built-in function [**`create_forwarder_to()`**](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=create_forwarder_to#chain-interaction) (renamed to **`create_minimal_proxy_to`** starting from version 0.3.4). These contracts are based on the **`pool_implementations`** and **`token_implementation`** contracts. This method is also used for the deployment of liquidity gauges.
 
 The deployed contracts then need to be initialized. For further details visit the according sections.
 
