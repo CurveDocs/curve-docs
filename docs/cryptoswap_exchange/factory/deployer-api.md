@@ -1,12 +1,15 @@
-The Factory utilizes implementation contracts to deploy pools. Unlike most of the newer Factory contracts, these **do not use blueprint contracts**. When deploying a pool, the [exchange contract](../pools/crypto-pool.md) and [LP token](../lp_tokens/lp-token-V5.md#initialize) are initialized via the `initialize()` function of the `pool_implementation` and `token_implementation` contract.
+Exchange and LP token contracts are created using Vyper's built-in function [`create_forwarder_to()`](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=create_forwarder_to#chain-interaction) (now renamed to `create_minimal_proxy_to`). These contracts are based on the `pool_implementations` and `token_implementation` contracts. This method is also used for the deployment of liquidity gauges.
+
+The deployed contracts then need to be initialized. For further details visit the according sections.
 
 
-## **Deploy Pools**
+## **Deploy Liquidity Pool**
 
 ### `deploy_pool`
 
 !!!warning
-    Transaction will revert when the following requirements are not met:
+    The transaction will revert if the following requirements are not met:
+    If the tables below appear empty, please refresh the site to view the content.
 
 The pool **deployment is permissionless**, but it must adhere to certain parameter limitations:
 
@@ -44,11 +47,11 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
 
 !!! description "`Factory.deploy_pool(_name: String[32], _symbol: String[10], _coins: address[2], A: uint256, gamma: uint256, mid_fee: uint256, out_fee: uint256, allowed_extra_profit: uint256, fee_gamma: uint256, adjustment_step: uint256, admin_fee: uint256, ma_half_time: uint256, initial_price: uint256) -> address:`"
 
-    Function to deploy a plain pool.
+    Function to deploy a cryptoswap pool.
 
     Returns: deployed pool (`address`).
 
-    Emits event: `CryptoPoolDeployed`
+    Emits: `CryptoPoolDeployed`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -206,24 +209,31 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
         ```
 
 
-## **Deploy Gauge**
+## **Deploy Liquidity Gauge**
+
 ### `deploy_gauge`
 
 !!! description "`deploy_gauge(_pool: address) -> address`"
 
-    Deploy a liquidity gauge for a factory pool. The deployed gauge implementation is whatever the factory admin
-    has set `gauge_implementation` to.
+    !!!warning
+        When deploying a gauge using the factory contract, one needs to use the same factory that deployed the pool, otherwise the function will revert.
+
+    Function to deploy a liquidity gauge for a factory pool. The deployed gauge is created from the `gauge_implementation`.
+
+    Emits: `LiquidityGaugeDeployed`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` | Factory pool address to deploy a gauge for |
-
-    !!!info
-        When deploying a gauge using the factory contract, one needs to use the same factory that deployed the pool.
+    | `_pool` |  `address` | factory pool address to deploy a gauge for |
 
     ??? quote "Source code"
 
         ```python
+        event LiquidityGaugeDeployed:
+            pool: address
+            token: address
+            gauge: address
+
         @external
         def deploy_gauge(_pool: address) -> address:
             """
@@ -233,14 +243,13 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
             """
             assert self.pool_data[_pool].coins[0] != ZERO_ADDRESS, "Unknown pool"
             assert self.pool_data[_pool].liquidity_gauge == ZERO_ADDRESS, "Gauge already deployed"
-            implementation: address = self.gauge_implementation
-            assert implementation != ZERO_ADDRESS, "Gauge implementation not set"
-        
-            gauge: address = create_forwarder_to(implementation)
-            LiquidityGauge(gauge).initialize(_pool)
+
+            gauge: address = create_forwarder_to(self.gauge_implementation)
+            token: address = self.pool_data[_pool].token
+            LiquidityGauge(gauge).initialize(token)
             self.pool_data[_pool].liquidity_gauge = gauge
-        
-            log LiquidityGaugeDeployed(_pool, gauge)
+
+            log LiquidityGaugeDeployed(_pool, token, gauge)
             return gauge
         ```
 
