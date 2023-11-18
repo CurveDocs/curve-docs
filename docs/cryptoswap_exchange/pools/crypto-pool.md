@@ -388,13 +388,177 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
     === "Example"
 
         ```shell
-        >>> CryptoSwap.exchange()
+        >>> CryptoSwap.exchange_underlying()
         1696841675
         ```
 
 
-### `exchange_extended` (todo)
+### `exchange_extended`
+!!! description "`CryptoSwap.exchange_extended(i: uint256, j: uint256, dx: uint256, min_dy: uint256, use_eth: bool, sender: address, receiver: address, cb: bytes32) -> uint256:`"
 
+    !!!note 
+        This method does not allow swapping in native token, but does allow swaps that transfer out native token from the pool.
+
+    Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy` with using a callback method.
+
+    Returns: output amount (`uint256`).
+
+    Emits: `TokenExchange`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `i` | `uint256` | index value for the input coin |
+    | `j` | `uint256` | index value for the output coin |
+    | `dx` | `uint256` | amount of input coin being swapped in |
+    | `min_dy` | `uint256` | minimum amount of output coin to receive |
+    | `use_eth` | `bool` | whether to use plain ETH; defaults to `False` (uses wETH instead) |
+    | `receiver` | `address` | address to send output coin to; deafaults to `msg.sender` |
+    | `cb` | `bytes32` | callback signature |
+
+    ??? quote "Source code"
+
+        ```python
+        event TokenExchange:
+            buyer: indexed(address)
+            sold_id: uint256
+            tokens_sold: uint256
+            bought_id: uint256
+            tokens_bought: uint256
+
+        @payable
+        @external
+        @nonreentrant('lock')
+        def exchange_extended(i: uint256, j: uint256, dx: uint256, min_dy: uint256,
+                            use_eth: bool, sender: address, receiver: address, cb: bytes32) -> uint256:
+            assert cb != EMPTY_BYTES32  # dev: No callback specified
+            return self._exchange(sender, msg.value, i, j, dx, min_dy, use_eth, receiver, msg.sender, cb)
+
+        @internal
+        def _exchange(sender: address, mvalue: uint256, i: uint256, j: uint256, dx: uint256, min_dy: uint256,
+                    use_eth: bool, receiver: address, callbacker: address, callback_sig: bytes32) -> uint256:
+            assert i != j  # dev: coin index out of range
+            assert i < N_COINS  # dev: coin index out of range
+            assert j < N_COINS  # dev: coin index out of range
+            assert dx > 0  # dev: do not exchange 0 coins
+
+            A_gamma: uint256[2] = self._A_gamma()
+            xp: uint256[N_COINS] = self.balances
+            p: uint256 = 0
+            dy: uint256 = 0
+
+            in_coin: address = self.coins[i]
+            out_coin: address = self.coins[j]
+
+            y: uint256 = xp[j]
+            x0: uint256 = xp[i]
+            xp[i] = x0 + dx
+            self.balances[i] = xp[i]
+
+            price_scale: uint256 = self.price_scale
+            precisions: uint256[2] = self._get_precisions()
+
+            xp = [xp[0] * precisions[0], xp[1] * price_scale * precisions[1] / PRECISION]
+
+            prec_i: uint256 = precisions[0]
+            prec_j: uint256 = precisions[1]
+            if i == 1:
+                prec_i = precisions[1]
+                prec_j = precisions[0]
+
+            # In case ramp is happening
+            t: uint256 = self.future_A_gamma_time
+            if t > 0:
+                x0 *= prec_i
+                if i > 0:
+                    x0 = x0 * price_scale / PRECISION
+                x1: uint256 = xp[i]  # Back up old value in xp
+                xp[i] = x0
+                self.D = self.newton_D(A_gamma[0], A_gamma[1], xp)
+                xp[i] = x1  # And restore
+                if block.timestamp >= t:
+                    self.future_A_gamma_time = 1
+
+            dy = xp[j] - self.newton_y(A_gamma[0], A_gamma[1], xp, self.D, j)
+            # Not defining new "y" here to have less variables / make subsequent calls cheaper
+            xp[j] -= dy
+            dy -= 1
+
+            if j > 0:
+                dy = dy * PRECISION / price_scale
+            dy /= prec_j
+
+            dy -= self._fee(xp) * dy / 10**10
+            assert dy >= min_dy, "Slippage"
+            y -= dy
+
+            self.balances[j] = y
+
+            # Do transfers in and out together
+            # XXX coin vs ETH
+            if use_eth and in_coin == WETH20:
+                assert mvalue == dx  # dev: incorrect eth amount
+            else:
+                assert mvalue == 0  # dev: nonzero eth amount
+                if callback_sig == EMPTY_BYTES32:
+                    response: Bytes[32] = raw_call(
+                        in_coin,
+                        _abi_encode(
+                            sender, self, dx, method_id=method_id("transferFrom(address,address,uint256)")
+                        ),
+                        max_outsize=32,
+                    )
+                    if len(response) != 0:
+                        assert convert(response, bool)  # dev: failed transfer
+                else:
+                    b: uint256 = ERC20(in_coin).balanceOf(self)
+                    raw_call(
+                        callbacker,
+                        concat(slice(callback_sig, 0, 4), _abi_encode(sender, receiver, in_coin, dx, dy))
+                    )
+                    assert ERC20(in_coin).balanceOf(self) - b == dx  # dev: callback didn't give us coins
+                if in_coin == WETH20:
+                    WETH(WETH20).withdraw(dx)
+
+            if use_eth and out_coin == WETH20:
+                raw_call(receiver, b"", value=dy)
+            else:
+                if out_coin == WETH20:
+                    WETH(WETH20).deposit(value=dy)
+                response: Bytes[32] = raw_call(
+                    out_coin,
+                    _abi_encode(receiver, dy, method_id=method_id("transfer(address,uint256)")),
+                    max_outsize=32,
+                )
+                if len(response) != 0:
+                    assert convert(response, bool)
+
+            y *= prec_j
+            if j > 0:
+                y = y * price_scale / PRECISION
+            xp[j] = y
+
+            # Calculate price
+            if dx > 10**5 and dy > 10**5:
+                _dx: uint256 = dx * prec_i
+                _dy: uint256 = dy * prec_j
+                if i == 0:
+                    p = _dx * 10**18 / _dy
+                else:  # j == 0
+                    p = _dy * 10**18 / _dx
+
+            self.tweak_price(A_gamma, xp, p, 0)
+
+            log TokenExchange(sender, i, dx, j, dy)
+
+            return dy
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> CryptoSwap.exchange_extended()
+        1696841675
+        ```
 
 ### `get_dy`
 !!! description "`CryptoSwap.get_dy(i: uint256, j: uint256, dx: uint256) -> uint256:`"
@@ -450,47 +614,8 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
     === "Example"
 
         ```shell
-        >>> CryptoSwap.()
-        1696841675
-        ```
-
-
-### `calc_token_amount` (??????)
-!!! description "`CryptoSwap.calc_token_amount(amounts: uint256[N_COINS]) -> uint256:`"
-
-    todo
-
-    Returns: amount of tokens (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `amounts` |  `uint256[N_COINS]` | amounts of tokens being deposited or withdrawn |
-
-    ??? quote "Source code"
-
-        ```python
-        N_COINS: constant(int128) = 2
-
-        @view
-        @external
-        def calc_token_amount(amounts: uint256[N_COINS]) -> uint256:
-            token_supply: uint256 = CurveToken(self.token).totalSupply()
-            precisions: uint256[2] = self._get_precisions()
-            price_scale: uint256 = self.price_scale * precisions[1]
-            A_gamma: uint256[2] = self._A_gamma()
-            xp: uint256[N_COINS] = self.xp()
-            amountsp: uint256[N_COINS] = [
-                amounts[0] * precisions[0],
-                amounts[1] * price_scale / PRECISION]
-            D0: uint256 = self.D
-            if self.future_A_gamma_time > 0:
-                D0 = self.newton_D(A_gamma[0], A_gamma[1], xp)
-            xp[0] += amountsp[0]
-            xp[1] += amountsp[1]
-            D: uint256 = self.newton_D(A_gamma[0], A_gamma[1], xp)
-            d_token: uint256 = token_supply * D / D0 - token_supply
-            d_token -= self._calc_token_fee(amountsp, xp) * d_token / 10**10 + 1
-            return d_token
+        >>> CryptoSwap.get_dy(0, 1, 1e18) # get_dy: 1 ETH for dy PRISMA
+        2244836869048665161301
         ```
 
 
@@ -570,6 +695,12 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
             return dy, p, D, xp
         ```
 
+    === "Example"
+
+        ```shell
+        >>> CryptoSwap.calc_withdraw_one_coin(1000000000000000000, 0) # withdraw 1 LP token in coin[0]
+        43347133051647883
+        ```
 
 
 ## **Adding/Removing Liquidity**
@@ -716,6 +847,12 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
             return d_token
         ```
 
+    === "Example"
+
+        ```shell
+        >>> CryptoSwap.add_liquidity(todo)
+        
+        ```
 
 ### `remove_liquidity`
 !!! description "`CryptoSwap.remove_liquidity(_amount: uint256, min_amounts: uint256[N_COINS], use_eth: bool = False, receiver: address = msg.sender):`"
@@ -777,6 +914,12 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
             self.D = D - D * amount / total_supply
 
             log RemoveLiquidity(msg.sender, balances, total_supply - _amount)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> CryptoSwap.remove_liquidity(todo)
         ```
 
 
@@ -847,9 +990,135 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
             return dy
         ```
 
+    === "Example"
+
+        ```shell
+        >>> CryptoSwap.remove_liquidity_one_coin()
+        ```
 
 
 ## **Oracles Methods**
+
+Oracle prices are updated whenever the `tweak_price` function is called. This occurs when any of the `_exchange()`, `add_liquidity()`, or `remove_liquidity_one_coin()` functions are called.
+
+
+??? quote "Source code"
+
+```python "Update Price Oracles"
+
+@internal
+def tweak_price(A_gamma: uint256[2],_xp: uint256[N_COINS], p_i: uint256, new_D: uint256):
+    price_oracle: uint256 = self._price_oracle
+    last_prices: uint256 = self.last_prices
+    price_scale: uint256 = self.price_scale
+    last_prices_timestamp: uint256 = self.last_prices_timestamp
+    p_new: uint256 = 0
+
+    if last_prices_timestamp < block.timestamp:
+        # MA update required
+        ma_half_time: uint256 = self.ma_half_time
+        alpha: uint256 = self.halfpow((block.timestamp - last_prices_timestamp) * 10**18 / ma_half_time)
+        price_oracle = (last_prices * (10**18 - alpha) + price_oracle * alpha) / 10**18
+        self._price_oracle = price_oracle
+        self.last_prices_timestamp = block.timestamp
+
+    D_unadjusted: uint256 = new_D  # Withdrawal methods know new D already
+    if new_D == 0:
+        # We will need this a few times (35k gas)
+        D_unadjusted = self.newton_D(A_gamma[0], A_gamma[1], _xp)
+
+    if p_i > 0:
+        last_prices = p_i
+
+    else:
+        # calculate real prices
+        __xp: uint256[N_COINS] = _xp
+        dx_price: uint256 = __xp[0] / 10**6
+        __xp[0] += dx_price
+        last_prices = price_scale * dx_price / (_xp[1] - self.newton_y(A_gamma[0], A_gamma[1], __xp, D_unadjusted, 1))
+
+    self.last_prices = last_prices
+
+    total_supply: uint256 = CurveToken(self.token).totalSupply()
+    old_xcp_profit: uint256 = self.xcp_profit
+    old_virtual_price: uint256 = self.virtual_price
+
+    # Update profit numbers without price adjustment first
+    xp: uint256[N_COINS] = [D_unadjusted / N_COINS, D_unadjusted * PRECISION / (N_COINS * price_scale)]
+    xcp_profit: uint256 = 10**18
+    virtual_price: uint256 = 10**18
+
+    if old_virtual_price > 0:
+        xcp: uint256 = self.geometric_mean(xp, True)
+        virtual_price = 10**18 * xcp / total_supply
+        xcp_profit = old_xcp_profit * virtual_price / old_virtual_price
+
+        t: uint256 = self.future_A_gamma_time
+        if virtual_price < old_virtual_price and t == 0:
+            raise "Loss"
+        if t == 1:
+            self.future_A_gamma_time = 0
+
+    self.xcp_profit = xcp_profit
+
+    norm: uint256 = price_oracle * 10**18 / price_scale
+    if norm > 10**18:
+        norm -= 10**18
+    else:
+        norm = 10**18 - norm
+    adjustment_step: uint256 = max(self.adjustment_step, norm / 5)
+
+    needs_adjustment: bool = self.not_adjusted
+    # if not needs_adjustment and (virtual_price-10**18 > (xcp_profit-10**18)/2 + self.allowed_extra_profit):
+    # (re-arrange for gas efficiency)
+    if not needs_adjustment and (virtual_price * 2 - 10**18 > xcp_profit + 2*self.allowed_extra_profit) and (norm > adjustment_step) and (old_virtual_price > 0):
+        needs_adjustment = True
+        self.not_adjusted = True
+
+    if needs_adjustment:
+        if norm > adjustment_step and old_virtual_price > 0:
+            p_new = (price_scale * (norm - adjustment_step) + adjustment_step * price_oracle) / norm
+
+            # Calculate balances*prices
+            xp = [_xp[0], _xp[1] * p_new / price_scale]
+
+            # Calculate "extended constant product" invariant xCP and virtual price
+            D: uint256 = self.newton_D(A_gamma[0], A_gamma[1], xp)
+            xp = [D / N_COINS, D * PRECISION / (N_COINS * p_new)]
+            # We reuse old_virtual_price here but it's not old anymore
+            old_virtual_price = 10**18 * self.geometric_mean(xp, True) / total_supply
+
+            # Proceed if we've got enough profit
+            # if (old_virtual_price > 10**18) and (2 * (old_virtual_price - 10**18) > xcp_profit - 10**18):
+            if (old_virtual_price > 10**18) and (2 * old_virtual_price - 10**18 > xcp_profit):
+                self.price_scale = p_new
+                self.D = D
+                self.virtual_price = old_virtual_price
+
+                return
+
+            else:
+                self.not_adjusted = False
+
+                # Can instead do another flag variable if we want to save bytespace
+                self.D = D_unadjusted
+                self.virtual_price = virtual_price
+                self._claim_admin_fees()
+
+                return
+
+    # If we are here, the price_scale adjustment did not happen
+    # Still need to update the profit counter and D
+    self.D = D_unadjusted
+    self.virtual_price = virtual_price
+
+    # norm appeared < adjustment_step after
+    if needs_adjustment:
+        self.not_adjusted = False
+        self._claim_admin_fees()
+```
+
+
 ### `lp_price`
 !!! description "`CryptoSwap.lp_price() -> uint256:`"
 
@@ -926,7 +1195,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
     === "Example"
 
         ```shell
-        >>> CryptoSwap.oracle_price()
+        >>> CryptoSwap.price_oracle()
         409798289826499
         ```
 
@@ -968,8 +1237,8 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
     === "Example"
 
         ```shell
-        >>> CryptoSwap.fee_gamma()
-        1700227919
+        >>> CryptoSwap.last_prices_timestamp()
+        1700314907
         ```
 
 
@@ -1066,7 +1335,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 
 ## **Fee Methods**
 
-add some info about claiming fees here! rebalancing etc..
+Fees are charged based on the balance/imbalance of the pool. Fee is low when the pool is balanced and increases the more it is imbalanced.
 
 ### `fee`
 !!! description "`CryptoSwap.fee() -> uint256:`"
@@ -1581,11 +1850,11 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
         '0xF18056Bbd320E96A48e3Fbf8bC061322531aac99'
         ```
 
-## **Internal Math Functions** (check)
+## **Internal Math Functions**
 
-All these math functions are interally embedded into the contract. They can not externally be called.
+All these math functions are interally embedded into the contract. They can not be called externally.
 
-### `geometric mean`
+### `geometric_mean`
 !!! description "`CryptoSwap.geometric_mean(unsorted_x: uint256[N_COINS], sort: bool) -> uint256:`"
 
     Function to calculate the geometric mean of a list of numbers in 1e18 precision.
@@ -1641,9 +1910,9 @@ All these math functions are interally embedded into the contract. They can not 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `AMN` |  `todo` |  |
-    | `gamma` |  `uint256` | index of the coin |
-    | `x_unsorted` |  `uint256[N_COINS]` | array containing two values |
+    | `AMN` |  `uint256` | `ANN = A * N**N` |
+    | `gamma` |  `uint256` | `AMM.gamma()` value |
+    | `x_unsorted` |  `uint256[N_COINS]` | unsorted array of coin balances |
 
     ??? quote "Source code"
 
@@ -1727,7 +1996,7 @@ All these math functions are interally embedded into the contract. They can not 
         ```
 
 
-### `newton_y` 
+### `newton_y`
 !!! description "`CryptoSwap.newton_y(ANN: uint256, gamma: uint256, x: uint256[N_COINS], D: uint256, i: uint256) -> uint256:`"
 
     Function to calculate x[i] given balances `x` and invariant D.
@@ -1736,11 +2005,11 @@ All these math functions are interally embedded into the contract. They can not 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `AMN` |  `todo` |  |
-    | `gamma` |  `uint256` | gamma |
-    | `x` |  `uint256[N_COINS]` | array containing two values |
+    | `AMN` |  `uint256` | `ANN = A * N**N` |
+    | `gamma` |  `uint256` | `AMM.gamma()` value |
+    | `x` |  `uint256[N_COINS]` | array containing coin balances |
     | `D` |  `uint256` | D invariant |
-    | `i` |  `uint256` |  |
+    | `i` |  `uint256` | coin index to calculate x[i] for |
 
     ??? quote "Source code"
 
@@ -1824,7 +2093,6 @@ All these math functions are interally embedded into the contract. They can not 
 
             raise "Did not converge"
         ```
-
 
 
 ### `halfpow`
