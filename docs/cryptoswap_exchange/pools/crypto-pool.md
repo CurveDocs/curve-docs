@@ -78,7 +78,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event TokenExchange:
             buyer: indexed(address)
             sold_id: uint256
@@ -247,7 +247,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event TokenExchange:
             buyer: indexed(address)
             sold_id: uint256
@@ -417,7 +417,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event TokenExchange:
             buyer: indexed(address)
             sold_id: uint256
@@ -578,7 +578,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @view
         def get_dy(i: uint256, j: uint256, dx: uint256) -> uint256:
@@ -636,7 +636,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         N_COINS: constant(int128) = 2
 
         @view
@@ -723,7 +723,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event AddLiquidity:
             provider: indexed(address)
             token_amounts: uint256[N_COINS]
@@ -870,7 +870,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event RemoveLiquidity:
             provider: indexed(address)
             token_amounts: uint256[N_COINS]
@@ -942,7 +942,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event RemoveLiquidityOne:
             provider: indexed(address)
             token_amount: uint256
@@ -1004,7 +1004,7 @@ Oracle prices are updated whenever the `tweak_price` function is called. This oc
 
 ??? quote "Source code"
 
-```python "Update Price Oracles"
+```vyper "Update Price Oracles"
 
 @internal
 def tweak_price(A_gamma: uint256[2],_xp: uint256[N_COINS], p_i: uint256, new_D: uint256):
@@ -1128,7 +1128,7 @@ def tweak_price(A_gamma: uint256[2],_xp: uint256[N_COINS], p_i: uint256, new_D: 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @view
         def lp_price() -> uint256:
@@ -1170,7 +1170,7 @@ def tweak_price(A_gamma: uint256[2],_xp: uint256[N_COINS], p_i: uint256, new_D: 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @view
         def price_oracle() -> uint256:
@@ -1209,7 +1209,7 @@ def tweak_price(A_gamma: uint256[2],_xp: uint256[N_COINS], p_i: uint256, new_D: 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         last_prices: public(uint256)
         ```
 
@@ -1230,7 +1230,7 @@ def tweak_price(A_gamma: uint256[2],_xp: uint256[N_COINS], p_i: uint256, new_D: 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         last_prices_timestamp: public(uint256)
         ```
 
@@ -1252,7 +1252,7 @@ def tweak_price(A_gamma: uint256[2],_xp: uint256[N_COINS], p_i: uint256, new_D: 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         price_scale: public(uint256)   # Internal price scale
         ```
 
@@ -1273,7 +1273,7 @@ def tweak_price(A_gamma: uint256[2],_xp: uint256[N_COINS], p_i: uint256, new_D: 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         ma_half_time: public(uint256)
         ```
 
@@ -1294,7 +1294,7 @@ def tweak_price(A_gamma: uint256[2],_xp: uint256[N_COINS], p_i: uint256, new_D: 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         virtual_price: public(uint256)  # Cached (fast to read) virtual price also used internally
         ```
 
@@ -1315,7 +1315,7 @@ def tweak_price(A_gamma: uint256[2],_xp: uint256[N_COINS], p_i: uint256, new_D: 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @view
         def get_virtual_price() -> uint256:
@@ -1346,7 +1346,7 @@ Fees are charged based on the balance/imbalance of the pool. Fee is low when the
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @view
         def fee() -> uint256:
@@ -1386,7 +1386,7 @@ Fees are charged based on the balance/imbalance of the pool. Fee is low when the
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         mid_fee: public(uint256)
         ```
 
@@ -1407,7 +1407,7 @@ Fees are charged based on the balance/imbalance of the pool. Fee is low when the
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         out_fee: public(uint256)
         ```
 
@@ -1428,7 +1428,7 @@ Fees are charged based on the balance/imbalance of the pool. Fee is low when the
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         fee_gamma: public(uint256)
         ```
 
@@ -1449,7 +1449,7 @@ Fees are charged based on the balance/imbalance of the pool. Fee is low when the
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         xcp_profit: public(uint256)
         ```
 
@@ -1470,7 +1470,7 @@ Fees are charged based on the balance/imbalance of the pool. Fee is low when the
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         xcp_profit_a: public(uint256)  # Full profit at last claim of admin fees
         ```
 
@@ -1491,7 +1491,7 @@ Fees are charged based on the balance/imbalance of the pool. Fee is low when the
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         admin_fee: public(uint256)
         ```
 
@@ -1512,7 +1512,7 @@ Fees are charged based on the balance/imbalance of the pool. Fee is low when the
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event ClaimAdminFee:
             admin: indexed(address)
             tokens: uint256
@@ -1588,7 +1588,7 @@ The price scaling parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         allowed_extra_profit: public(uint256)  # 2 * 10**12 - recommended value
         ```
 
@@ -1609,7 +1609,7 @@ The price scaling parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         adjustment_step: public(uint256)
         ```
 
@@ -1639,7 +1639,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def A() -> uint256:
@@ -1692,7 +1692,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def gamma() -> uint256:
@@ -1751,7 +1751,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         coins: public(address[N_COINS])
         ```
 
@@ -1776,7 +1776,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         coins: public(address[N_COINS])
         ```
 
@@ -1797,7 +1797,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         D: public(uint256)
         ```
 
@@ -1818,7 +1818,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         token: public(address)
         ```
 
@@ -1839,7 +1839,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         factory: public(address)
         ```
 
@@ -1868,7 +1868,7 @@ All these math functions are interally embedded into the contract. They can not 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         N_COINS: constant(int128) = 2
 
         @internal
@@ -1916,7 +1916,7 @@ All these math functions are interally embedded into the contract. They can not 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         N_COINS: constant(int128) = 2
 
         @internal
@@ -2013,7 +2013,7 @@ All these math functions are interally embedded into the contract. They can not 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         N_COINS: constant(int128) = 2
 
         @internal
@@ -2108,7 +2108,7 @@ All these math functions are interally embedded into the contract. They can not 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @internal
         @pure
         def halfpow(power: uint256) -> uint256:

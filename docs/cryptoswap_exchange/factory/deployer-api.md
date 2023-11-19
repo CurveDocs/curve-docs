@@ -72,7 +72,7 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event CryptoPoolDeployed:
             token: address
             coins: address[2]
@@ -228,7 +228,7 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event LiquidityGaugeDeployed:
             pool: address
             token: address

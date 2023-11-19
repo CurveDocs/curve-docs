@@ -16,7 +16,7 @@
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event UpdatePoolImplementation:
             _old_pool_implementation: address
             _new_pool_implementation: address
@@ -59,7 +59,7 @@
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event UpdateTokenImplementation:
             _old_token_implementation: address
             _new_token_implementation: address
@@ -102,7 +102,7 @@
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event UpdateGaugeImplementation:
             _old_gauge_implementation: address
             _new_gauge_implementation: address
@@ -147,7 +147,7 @@
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event UpdateFeeReceiver:
             _old_fee_receiver: address
             _new_fee_receiver: address
@@ -191,7 +191,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         future_admin: public(address)    
 
         @external
@@ -224,7 +224,7 @@
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event TransferOwnership:
             _old_owner: address
             _new_owner: address

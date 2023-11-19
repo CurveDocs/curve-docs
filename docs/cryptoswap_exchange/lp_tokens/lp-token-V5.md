@@ -29,7 +29,7 @@ After deployment, the LP token contract is then initialized through the **`initi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         name: public(String[64])
 
         @external
@@ -65,7 +65,7 @@ After deployment, the LP token contract is then initialized through the **`initi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         symbol: public(String[32])
 
         @external
@@ -101,7 +101,7 @@ After deployment, the LP token contract is then initialized through the **`initi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def decimals() -> uint8:
@@ -130,7 +130,7 @@ After deployment, the LP token contract is then initialized through the **`initi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         VERSION: constant(String[8]) = "v5.0.0"
 
         @view
@@ -163,7 +163,7 @@ After deployment, the LP token contract is then initialized through the **`initi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         balanceOf: public(HashMap[address, uint256])
         ```
 
@@ -184,7 +184,7 @@ After deployment, the LP token contract is then initialized through the **`initi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         totalSupply: public(uint256)
         ```
 
@@ -205,7 +205,7 @@ After deployment, the LP token contract is then initialized through the **`initi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         minter: public(address)
 
         @external
@@ -254,7 +254,7 @@ After deployment, the LP token contract is then initialized through the **`initi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
@@ -300,7 +300,7 @@ After deployment, the LP token contract is then initialized through the **`initi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
@@ -349,7 +349,7 @@ After deployment, the LP token contract is then initialized through the **`initi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Approval:
             _owner: indexed(address)
             _spender: indexed(address)
@@ -399,7 +399,7 @@ After deployment, the LP token contract is then initialized through the **`initi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Approval:
             _owner: indexed(address)
             _spender: indexed(address)
@@ -478,7 +478,7 @@ After deployment, the LP token contract is then initialized through the **`initi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         allowance: public(HashMap[address, HashMap[address, uint256]])
         ```
 
@@ -506,7 +506,7 @@ After deployment, the LP token contract is then initialized through the **`initi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Approval:
             _owner: indexed(address)
             _spender: indexed(address)
@@ -553,7 +553,7 @@ After deployment, the LP token contract is then initialized through the **`initi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Approval:
             _owner: indexed(address)
             _spender: indexed(address)
@@ -613,7 +613,7 @@ The logic for both minting and burning the tokens resides in the pool contract.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
@@ -661,7 +661,7 @@ The logic for both minting and burning the tokens resides in the pool contract.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
@@ -710,7 +710,7 @@ The logic for both minting and burning the tokens resides in the pool contract.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)

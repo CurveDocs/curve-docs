@@ -21,7 +21,7 @@ All deployed pools share the same fee receiver. A new address can be set by call
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         fee_receiver: public(address)
 
         @external
@@ -53,7 +53,7 @@ All deployed pools share the same fee receiver. A new address can be set by call
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         pool_implementation: public(address)
         ```
 
@@ -73,7 +73,7 @@ All deployed pools share the same fee receiver. A new address can be set by call
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         token_implementation: public(address)
         ```
 
@@ -93,7 +93,7 @@ All deployed pools share the same fee receiver. A new address can be set by call
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         gauge_implementation: public(address)
         ```
 
@@ -118,7 +118,7 @@ Admin is the owner of the contract and has exclusive possibility to call admin-o
 
     ??? quote "Source code"
 
-        ```python hl_lines"1"
+        ```vyper hl_lines"1"
         admin: public(address)
 
         @external
@@ -147,7 +147,7 @@ Admin is the owner of the contract and has exclusive possibility to call admin-o
 
     ??? quote "Source code"
 
-        ```python hl_lines"1"
+        ```vyper hl_lines"1"
         admin: public(address)
 
         @external
