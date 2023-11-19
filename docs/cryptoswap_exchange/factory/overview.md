@@ -10,7 +10,7 @@ Every FactoryContract from Curve comes with built-in functions designed to feed 
 
 ## **Fee Receiver**
 
-All deployed pools share the same fee receiver. A new address can be set by calling the [`set_fee_receiver()`](../factory/admin-controls.md#set_fee_receiver) function.
+All deployed pools share the same fee receiver. A new address can be set by calling the [**`set_fee_receiver()`**](../factory/admin-controls.md#set_fee_receiver) function.
 
 ### `fee_receiver`
 !!! description "`Factory.fee_receiver() -> address: view`"
