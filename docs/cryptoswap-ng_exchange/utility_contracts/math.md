@@ -706,7 +706,7 @@
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_x` |  `uint256` | List of three numbers |
+    | `_x` |  `uint256` | list of three numbers |
 
     ??? quote "Source code"
 
