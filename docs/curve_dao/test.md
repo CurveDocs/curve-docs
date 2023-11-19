@@ -61,7 +61,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 2 5"
+        ```vyper hl_lines="1 2 5"
         name: public(String[64])
         symbol: public(String[32])
 

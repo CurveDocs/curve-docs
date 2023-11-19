@@ -14,7 +14,7 @@ Each pool factory has a built-in registry:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def metapool_implementations(_base_pool: address) -> address[10]:
@@ -45,7 +45,7 @@ The following getter methods are available for finding pools that were deployed 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         pool_count: public(uint256)              # actual length of pool_list
         ...
         ```
@@ -69,7 +69,7 @@ The following getter methods are available for finding pools that were deployed 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         pool_list: public(address[4294967296])   # master list of pools
         ...
         ```
@@ -102,7 +102,7 @@ The following getter methods are available for finding pools that were deployed 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def find_pool_for_coins(_from: address, _to: address, i: uint256 = 0) -> address:
@@ -147,7 +147,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_n_coins(_pool: address) -> (uint256):
@@ -178,7 +178,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_coins(_pool: address) -> address[4]:
@@ -210,7 +210,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_underlying_coins(_pool: address) -> address[MAX_COINS]:
@@ -260,7 +260,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_decimals(_pool: address) -> uint256[MAX_PLAIN_COINS]:
@@ -296,7 +296,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_underlying_decimals(_pool: address) -> uint256[MAX_COINS]:
@@ -349,7 +349,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_coin_indices(
@@ -434,7 +434,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_gauge(_pool: address) -> address:
@@ -466,7 +466,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_implementation_address(_pool: address) -> address:
@@ -496,7 +496,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def is_meta(_pool: address) -> bool:
@@ -528,7 +528,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_pool_asset_type(_pool: address) -> uint256:
@@ -563,7 +563,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_fee_receiver(_pool: address) -> address:
@@ -595,7 +595,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_balances(_pool: address) -> uint256[MAX_PLAIN_COINS]:
@@ -641,7 +641,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_underlying_balances(_pool: address) -> uint256[MAX_COINS]:
@@ -696,7 +696,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_admin_balances(_pool: address) -> uint256[MAX_PLAIN_COINS]:
@@ -733,7 +733,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_metapool_rates(_pool: address) -> uint256[2]:

@@ -9,7 +9,7 @@ MIM is then burnt for 3CRV and sent to the FeeDistributor.
 
 ??? quote "Proxy Source Code"
 
-    ```python
+    ```vyper
     @external
     def bridge(_coin: address):
         """
@@ -65,7 +65,7 @@ MIM is then burnt for 3CRV and sent to the FeeDistributor.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event AssetBridged:
             token: indexed(address)
             amount: uint256
@@ -133,7 +133,7 @@ MIM is then burnt for 3CRV and sent to the FeeDistributor.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         PROXY_OFT: public(immutable(address))
 
         @external
@@ -161,7 +161,7 @@ MIM is then burnt for 3CRV and sent to the FeeDistributor.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         TOKEN: public(immutable(address))
 
         @external
@@ -197,7 +197,7 @@ Receiver of the bridged funds is the 0xECB contract on Ethereum Mainnet.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         PROXY_OFT: public(immutable(address))
 
         @external
@@ -232,7 +232,7 @@ Receiver of the bridged funds is the 0xECB contract on Ethereum Mainnet.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         def set_root_receiver(receiver: address):
             assert msg.sender == self.owner

@@ -25,7 +25,7 @@ In order for a liquidity gauge to be elegible to receive CRV emission, its addre
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event NewGauge:
             addr: address
             gauge_type: int128
@@ -94,7 +94,7 @@ In order for a liquidity gauge to be elegible to receive CRV emission, its addre
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event AddType:
             name: String[64]
             type_id: int128
@@ -140,7 +140,7 @@ In order for a liquidity gauge to be elegible to receive CRV emission, its addre
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event NewTypeWeight:
             type_id: int128
             time: uint256
@@ -205,7 +205,7 @@ In order for a liquidity gauge to be elegible to receive CRV emission, its addre
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event CommitOwnership:
             admin: address
 
@@ -241,7 +241,7 @@ In order for a liquidity gauge to be elegible to receive CRV emission, its addre
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event ApplyOwnership:
             admin: address
 

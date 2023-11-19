@@ -46,7 +46,7 @@ If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/addr
 
         === "OwnerProxy.vy"
 
-            ```python hl_lines="5 6 7"
+            ```vyper hl_lines="5 6 7"
             ownership_admin: public(address)
             gauge_manager: public(HashMap[address, address])
 
@@ -58,7 +58,7 @@ If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/addr
         
         === "GaugeV4.vy"
 
-            ```python hl_lines="6 10"
+            ```vyper hl_lines="6 10"
             MAX_REWARDS: constant(uint256) = 8
 
             admin: public(address)
@@ -103,7 +103,7 @@ If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/addr
 
         === "OwnerProxy.vy"
 
-            ```python hl_lines="1"
+            ```vyper hl_lines="1"
             ownership_admin: public(address)
             gauge_manager: public(HashMap[address, address])
 
@@ -115,7 +115,7 @@ If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/addr
         
         === "GaugeV4.vy"
 
-            ```python hl_lines="3"
+            ```vyper hl_lines="3"
             admin: public(address)
 
             @external
@@ -150,7 +150,7 @@ If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/addr
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         @external
         def migrate_gauge_manager(_gauge: address):
             manager: address = ManagerProxy(OLD_MANAGER_PROXY).gauge_manager(_gauge)
@@ -186,7 +186,7 @@ Depositing reward tokens is done directly via the individual gauges after the re
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5"
+        ```vyper hl_lines="1 5"
         WEEK: constant(uint256) = 604800
 
         @external
@@ -246,7 +246,7 @@ These methods are queried directly from the individual gauge contracts.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 15"
+        ```vyper hl_lines="1 4 15"
         reward_tokens: public(address[MAX_REWARDS])
 
         @external
@@ -282,7 +282,7 @@ These methods are queried directly from the individual gauge contracts.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 16"
+        ```vyper hl_lines="1 16"
         reward_count: public(uint256)
 
         @external
@@ -322,7 +322,7 @@ These methods are queried directly from the individual gauge contracts.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         reward_data: public(HashMap[address, Reward])
         ```
 

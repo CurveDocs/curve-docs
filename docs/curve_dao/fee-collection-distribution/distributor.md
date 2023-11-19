@@ -25,7 +25,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event CheckpointToken:
             time: uint256
             tokens: uint256
@@ -98,7 +98,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @internal
         def _checkpoint_total_supply():
             ve: address = self.voting_escrow
@@ -159,7 +159,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Claimed:
             recipient: indexed(address)
             amount: uint256
@@ -291,7 +291,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event Claimed:
             recipient: indexed(address)
             amount: uint256
@@ -427,7 +427,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         def burn(_coin: address) -> bool:
             """
@@ -468,7 +468,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         is_killed: public(bool)
         ```
 
@@ -493,7 +493,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         is_killed: public(bool)
 
         @external
@@ -527,7 +527,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         emergency_return: public(address)
         ```
 
@@ -551,7 +551,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         def recover_balance(_coin: address) -> bool:
             """
@@ -596,7 +596,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         admin: public(address)
         ```
 
@@ -616,7 +616,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         future_admin: public(address)
         ```
 
@@ -641,7 +641,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event CommitAdmin:
             admin: address
 
@@ -680,7 +680,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event ApplyAdmin:
             admin: address
 
@@ -723,7 +723,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @view
         @external
         def ve_for_at(_user: address, _timestamp: uint256) -> uint256:
@@ -761,7 +761,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         start_time: public(uint256)
 
         @external
@@ -809,7 +809,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         user_epoch_of: public(HashMap[address, uint256])
         ```
 
@@ -829,7 +829,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         voting_escrow: public(address)
 
         @external
@@ -875,7 +875,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         token: public(address)
 
         @external
@@ -921,7 +921,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         can_checkpoint_token: public(bool)
         ```
 
@@ -942,7 +942,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event ToggleAllowCheckpointToken:
             toggle_flag: bool
 
@@ -973,7 +973,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         token_last_balance: public(uint256)
         ```
 

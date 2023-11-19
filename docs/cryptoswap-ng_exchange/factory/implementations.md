@@ -17,7 +17,7 @@ Implementations are used to deploy pool contracts whenever a new pool is deploye
 
 ??? quote "CryptoswapFactory.deploy_pool()"
 
-    ```python hl_lines="2"
+    ```vyper hl_lines="2"
     @external
     def deploy_pool(
         _name: String[32],
@@ -106,7 +106,7 @@ This contract *does not utilize blueprints* to deploy pools created via `deploy_
 
 ??? quote "initialize()"
 
-    ``` python hl_lines="2"
+    ``` vyper hl_lines="2"
     @external
     def initialize(
         A: uint256,
@@ -170,7 +170,7 @@ Implementations are blueprint contracts from which pools are created. For more i
 
 ??? quote "TricryptoFactory.deploy_pool()"
 
-    ```python hl_lines="2 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104"
+    ```vyper hl_lines="2 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104"
     @external
     def deploy_pool(
         _name: String[64],
@@ -333,7 +333,7 @@ The TricryptoFactory utilizes four different implementations:
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         pool_implementations: public(HashMap[uint256, address])
         ```
 
@@ -354,7 +354,7 @@ The TricryptoFactory utilizes four different implementations:
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         gauge_implementation: public(address)
         ```
 
@@ -375,7 +375,7 @@ The TricryptoFactory utilizes four different implementations:
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         views_implementation: public(address)
         ```
 
@@ -396,7 +396,7 @@ The TricryptoFactory utilizes four different implementations:
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         math_implementation: public(address)
         ```
 
@@ -430,7 +430,7 @@ These implementations can be changed by the `admin` of the contract, which is th
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         event UpdatePoolImplementation:
             _implemention_id: uint256
             _old_pool_implementation: address
@@ -482,7 +482,7 @@ These implementations can be changed by the `admin` of the contract, which is th
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         event UpdateGaugeImplementation:
             _old_gauge_implementation: address
             _new_gauge_implementation: address
@@ -525,7 +525,7 @@ These implementations can be changed by the `admin` of the contract, which is th
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         event UpdateViewsImplementation:
             _old_views_implementation: address
             _new_views_implementation: address
@@ -567,7 +567,7 @@ These implementations can be changed by the `admin` of the contract, which is th
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         event UpdateMathImplementation:
             _old_math_implementation: address
             _new_math_implementation: address

@@ -45,7 +45,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         smart_wallet_checker: public(address)
         ```
 
@@ -65,7 +65,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         future_smart_wallet_checker: public(address)
         ```
 
@@ -92,7 +92,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event Deposit:
             provider: indexed(address)
             value: uint256
@@ -192,7 +192,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @nonreentrant('lock')
         def increase_amount(_value: uint256):
@@ -262,7 +262,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @nonreentrant('lock')
         def increase_unlock_time(_unlock_time: uint256):
@@ -334,7 +334,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @nonreentrant('lock')
         def deposit_for(_addr: address, _value: uint256):
@@ -401,7 +401,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @nonreentrant('lock')
         def withdraw():
@@ -444,7 +444,7 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         def checkpoint():
             """
@@ -588,7 +588,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         admin: public(address)  # Can and will be a smart contract
         future_admin: public(address)
 
@@ -626,7 +626,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         admin: public(address)  # Can and will be a smart contract
         future_admin: public(address)
 
@@ -664,7 +664,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @view
         def get_last_user_slope(addr: address) -> int128:
@@ -698,7 +698,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @view
         def user_point_history__ts(_addr: address, _idx: uint256) -> uint256:
@@ -731,7 +731,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         locked: public(HashMap[address, LockedBalance])
         epoch: public(uint256)
 
@@ -767,7 +767,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @view
         def balanceOf(addr: address, _t: uint256 = block.timestamp) -> uint256:
@@ -811,7 +811,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @view
         def balanceOfAt(addr: address, _block: uint256) -> uint256:
@@ -883,7 +883,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @view
         def totalSupply(t: uint256 = block.timestamp) -> uint256:
@@ -917,7 +917,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @view
         def totalSupplyAt(_block: uint256) -> uint256:
@@ -960,7 +960,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         token: public(address)
 
         @external
@@ -999,7 +999,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         supply: public(uint256)
         ```
 
@@ -1026,7 +1026,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         struct LockedBalance:
             amount: int128
             end: uint256
@@ -1050,7 +1050,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         epoch: public(uint256)
         ```
 
@@ -1074,7 +1074,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         point_history: public(Point[100000000000000000000000000000])  # epoch -> unsigned point
 
         @external
@@ -1110,7 +1110,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         name: public(String[64])
 
         @external
@@ -1149,7 +1149,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         symbol: public(String[32])
 
         @external
@@ -1188,7 +1188,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         version: public(String[32])
 
         @external
@@ -1226,7 +1226,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         decimals: public(uint256)
 
         @external
@@ -1265,7 +1265,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         controller: public(address)
 
         @external
@@ -1291,7 +1291,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         def changeController(_newController: address):
             """
@@ -1310,7 +1310,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         # Aragon's view methods for compatibility
         controller: public(address)
         transfersEnabled: public(bool)

@@ -23,7 +23,7 @@ Liquidity Gauge V2 also added admin ownership. `admin` is able to kill a gauge a
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 9 21 35 38"
+        ```vyper hl_lines="1 9 21 35 38"
         admin: public(address)
 
         @external
@@ -86,7 +86,7 @@ Liquidity Gauge V2 also added admin ownership. `admin` is able to kill a gauge a
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 11 20"
+        ```vyper hl_lines="1 11 20"
         future_admin: public(address)  # Can and will be a smart contract
 
         @external
@@ -133,7 +133,7 @@ Liquidity Gauge V2 also added admin ownership. `admin` is able to kill a gauge a
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 8 13 15 16"
+        ```vyper hl_lines="1 5 8 13 15 16"
         event CommitOwnership:
             admin: address
 
@@ -179,7 +179,7 @@ Liquidity Gauge V2 also added admin ownership. `admin` is able to kill a gauge a
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8 12 16"
+        ```vyper hl_lines="1 8 12 16"
         event ApplyOwnership:
             admin: address
 
@@ -227,7 +227,7 @@ Liquidity Gauge V2 also added admin ownership. `admin` is able to kill a gauge a
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @nonreentrant('lock')
         def claimable_reward(_addr: address, _token: address) -> uint256:
@@ -272,7 +272,7 @@ Liquidity Gauge V2 also added admin ownership. `admin` is able to kill a gauge a
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @nonreentrant('lock')
         def claim_rewards(_addr: address = msg.sender):
@@ -303,7 +303,7 @@ Liquidity Gauge V2 also added admin ownership. `admin` is able to kill a gauge a
 
     ??? quote "Source code"
 
-        ```python hl_lines="9"
+        ```vyper hl_lines="9"
         # reward token -> integral
         reward_integral: public(HashMap[address, uint256])
 
@@ -377,7 +377,7 @@ Liquidity Gauge V2 also added admin ownership. `admin` is able to kill a gauge a
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @nonreentrant('lock')
         def set_rewards(_reward_contract: address, _sigs: bytes32, _reward_tokens: address[MAX_REWARDS]):
@@ -473,7 +473,7 @@ Liquidity Gauge V2 also added admin ownership. `admin` is able to kill a gauge a
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         reward_contract: public(address)
         ```
 
@@ -498,7 +498,7 @@ Liquidity Gauge V2 also added admin ownership. `admin` is able to kill a gauge a
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         reward_tokens: public(address[MAX_REWARDS])
         ```
 
@@ -523,7 +523,7 @@ V2 Liquidity Gauges introduced the possibility to kill gauges. Killing a gauge s
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 12"
+        ```vyper hl_lines="1 12"
         is_killed: public(bool)
 
         @external
@@ -556,7 +556,7 @@ V2 Liquidity Gauges introduced the possibility to kill gauges. Killing a gauge s
 
     ??? quote "Source code"
 
-        ```python hl_lines="4"
+        ```vyper hl_lines="4"
         is_killed: public(bool)
 
         @external
@@ -593,7 +593,7 @@ V2 Liquidity Gauges introduced the possibility to kill gauges. Killing a gauge s
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @view
         @external
         def decimals() -> uint256:
@@ -623,7 +623,7 @@ V2 Liquidity Gauges introduced the possibility to kill gauges. Killing a gauge s
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 13"
+        ```vyper hl_lines="1 13"
         name: public(String[64])
 
         @external
@@ -671,7 +671,7 @@ V2 Liquidity Gauges introduced the possibility to kill gauges. Killing a gauge s
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 12 14"
+        ```vyper hl_lines="1 12 14"
         symbol: public(String[32])
         
         @external
@@ -723,7 +723,7 @@ V2 Liquidity Gauges introduced the possibility to kill gauges. Killing a gauge s
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```vyper hl_lines="2"
         # reward token -> integral
         reward_integral: public(HashMap[address, uint256])
         ```
@@ -749,7 +749,7 @@ V2 Liquidity Gauges introduced the possibility to kill gauges. Killing a gauge s
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```vyper hl_lines="2"
         # reward token -> integral
         reward_integral: public(HashMap[address, uint256])
         ```

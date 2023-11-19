@@ -44,7 +44,7 @@ Limitations when deploying stableswap-ng pools:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event PlainPoolDeployed:
             coins: DynArray[address, MAX_COINS]
             A: uint256
@@ -236,7 +236,7 @@ Limitations when deploying meta pools:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event MetaPoolDeployed:
             coin: address
             base_pool: address
@@ -414,7 +414,7 @@ Limitations when deploying meta pools:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event LiquidityGaugeDeployed:
             pool: address
             gauge: address

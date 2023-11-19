@@ -33,7 +33,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "Controller.vy"
 
-            ```python hl_lines="1 2 4 5 8 30 37 38 43 51"
+            ```vyper hl_lines="1 2 4 5 8 30 37 38 43 51"
             log UserState(msg.sender, collateral, debt, n1, n2, liquidation_discount)
             log Borrow(msg.sender, collateral, debt)
 
@@ -89,7 +89,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
         
         === "AMM.vy"
 
-            ```python hl_lines="3"
+            ```vyper hl_lines="3"
             @external
             @nonreentrant('lock')
             def deposit_range(user: address, amount: uint256, n1: int256, n2: int256):
@@ -200,7 +200,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "Controller.vy"
 
-            ```python hl_lines="1 2 5 27 34 35 40 61"
+            ```vyper hl_lines="1 2 5 27 34 35 40 61"
             log UserState(msg.sender, collateral, debt, n1, n2, liquidation_discount)
             log Borrow(msg.sender, collateral, debt)
 
@@ -266,7 +266,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
         
         === "AMM.vy"
 
-            ```python hl_lines="3"
+            ```vyper hl_lines="3"
             @external
             @nonreentrant('lock')
             def deposit_range(user: address, amount: uint256, n1: int256, n2: int256):
@@ -378,7 +378,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "Controller.vy"
 
-            ```python hl_lines="1 9 17"
+            ```vyper hl_lines="1 9 17"
             event UserState:
                 user: indexed(address)
                 collateral: uint256
@@ -462,7 +462,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
         
         === "AMM.vy"
 
-            ```python hl_lines="1 9 84"
+            ```vyper hl_lines="1 9 84"
             event Deposit:
                 provider: indexed(address)
                 amount: uint256
@@ -576,7 +576,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "Controller.vy"
 
-            ```python hl_lines="1 9 16"
+            ```vyper hl_lines="1 9 16"
             event UserState:
                 user: indexed(address)
                 collateral: uint256
@@ -668,7 +668,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
         
         === "AMM.vy"
 
-            ```python hl_lines="1 9 84"
+            ```vyper hl_lines="1 9 84"
             event Deposit:
                 provider: indexed(address)
                 amount: uint256
@@ -784,7 +784,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "Controller.vy"
 
-            ```python hl_lines="1 9 15 52 53 54 59 67 68 71"
+            ```vyper hl_lines="1 9 15 52 53 54 59 67 68 71"
             event UserState:
                 user: indexed(address)
                 collateral: uint256
@@ -871,7 +871,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
         
         === "AMM.vy"
 
-            ```python hl_lines="1 9 84"
+            ```vyper hl_lines="1 9 84"
             event Deposit:
                 provider: indexed(address)
                 amount: uint256
@@ -984,7 +984,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "Controller.vy"
 
-            ```python hl_lines="1 9 14 49 50 53 57 65 66 69"
+            ```vyper hl_lines="1 9 14 49 50 53 57 65 66 69"
             event UserState:
                 user: indexed(address)
                 collateral: uint256
@@ -1064,7 +1064,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
         
         === "AMM.vy"
 
-            ```python hl_lines="1 9 84"
+            ```vyper hl_lines="1 9 84"
             event Deposit:
                 provider: indexed(address)
                 amount: uint256
@@ -1178,7 +1178,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "Controller.vy"
 
-            ```python hl_lines="1 9 14 49 50 53 58 66 68"
+            ```vyper hl_lines="1 9 14 49 50 53 58 66 68"
             event UserState:
                 user: indexed(address)
                 collateral: uint256
@@ -1253,7 +1253,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
         
         === "AMM.vy"
 
-            ```python hl_lines="1 9 84"
+            ```vyper hl_lines="1 9 84"
             event Deposit:
                 provider: indexed(address)
                 amount: uint256
@@ -1368,7 +1368,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "Controller.vy"
 
-            ```python hl_lines="1 9 14 22 52"
+            ```vyper hl_lines="1 9 14 22 52"
             event UserState:
                 user: indexed(address)
                 collateral: uint256
@@ -1488,7 +1488,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
         
         === "AMM.vy"
 
-            ```python hl_lines="1 8"
+            ```vyper hl_lines="1 8"
             event Withdraw:
                 provider: indexed(address)
                 amount_borrowed: uint256
@@ -1612,7 +1612,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "Controller.vy"
 
-            ```python hl_lines="1 9 14 22 52"
+            ```vyper hl_lines="1 9 14 22 52"
             event UserState:
                 user: indexed(address)
                 collateral: uint256
@@ -1736,7 +1736,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
         
         === "AMM.vy"
 
-            ```python hl_lines="1 8"
+            ```vyper hl_lines="1 8"
             event Withdraw:
                 provider: indexed(address)
                 amount_borrowed: uint256
@@ -1855,7 +1855,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 23"
+        ```vyper hl_lines="1 7 23"
         struct Loan:
             initial_debt: uint256
             rate_mul: uint256
@@ -1904,7 +1904,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def total_debt() -> uint256:
@@ -1936,7 +1936,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     ??? quote "Source code"
 
-        ```python hl_lines="4"
+        ```vyper hl_lines="4"
         @external
         @view
         @nonreentrant('lock')
@@ -1970,7 +1970,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "Controller.vy"
 
-            ```python hl_lines="4"
+            ```vyper hl_lines="4"
             @view
             @external
             @nonreentrant('lock')
@@ -1987,7 +1987,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "AMM.vy"
 
-            ```python hl_lines="3 50 60"
+            ```vyper hl_lines="3 50 60"
             @internal
             @view
             def _p_oracle_up(n: int256) -> uint256:
@@ -2078,7 +2078,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 32"
+        ```vyper hl_lines="3 32"
         @internal
         @view
         def _health(user: address, debt: uint256, full: bool, liquidation_discount: uint256) -> int256:
@@ -2143,7 +2143,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "Controller.vy"
 
-            ```python hl_lines="4 12"
+            ```vyper hl_lines="4 12"
             @view
             @external
             @nonreentrant('lock')
@@ -2160,7 +2160,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "AMM.vy"
 
-            ```python hl_lines="4 15"
+            ```vyper hl_lines="4 15"
             @external
             @view
             @nonreentrant('lock')
@@ -2210,7 +2210,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         loans: public(address[2**64 - 1])  # Enumerate existing loans
         ```
 
@@ -2234,7 +2234,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         loan_ix: public(HashMap[address, uint256])  # Position of the loan in the list
         ```
 
@@ -2258,7 +2258,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         n_loans: public(uint256)  # Number of nonzero loans
         ```
 
@@ -2285,7 +2285,7 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 28 33 58"
+        ```vyper hl_lines="3 28 33 58"
         @internal
         @view
         def get_y_effective(collateral: uint256, N: uint256, discount: uint256) -> uint256:
@@ -2367,7 +2367,7 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 28 33 41 42"
+        ```vyper hl_lines="3 28 33 41 42"
         @internal
         @view
         def get_y_effective(collateral: uint256, N: uint256, discount: uint256) -> uint256:
@@ -2436,7 +2436,7 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 52"
+        ```vyper hl_lines="3 52"
         @internal
         @view
         def _calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256) -> int256:
@@ -2468,7 +2468,7 @@ The following functions can be used to pre-calculate metrics before creating a l
             y_effective = y_effective * p_base / (debt + 1)  # Now it's a ratio
 
             # n1 = floor(log2(y_effective) / self.logAratio)
-            # EVM semantics is not doing floor unlike Python, so we do this
+            # EVM semantics is not doing floor unlike vyper, so we do this
             assert y_effective > 0, "Amount too low"
             n1: int256 = self.log2(y_effective)  # <- switch to faster ln() XXX?
             if n1 < 0:
@@ -2525,7 +2525,7 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     ??? quote "Source code"
 
-        ```python hl_lines="4"
+        ```vyper hl_lines="4"
         @external
         @view
         @nonreentrant('lock')
@@ -2603,7 +2603,7 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     ??? quote "Source code"
 
-        ```python hl_lines="4"
+        ```vyper hl_lines="4"
         @view
         @external
         @nonreentrant('lock')
@@ -2648,7 +2648,7 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     ??? quote "Source code"
 
-        ```python hl_lines="4"
+        ```vyper hl_lines="4"
         @view
         @external
         @nonreentrant('lock')
@@ -2710,7 +2710,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
         === "Controller.vy"
 
-            ```python hl_lines="1 7 16"
+            ```vyper hl_lines="1 7 16"
             struct Loan:
                 initial_debt: uint256
                 rate_mul: uint256
@@ -2731,7 +2731,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
         === "AMM.vy"
 
-                ```python hl_lines="3 8"
+                ```vyper hl_lines="3 8"
                 @internal
                 @view
                 def _rate_mul() -> uint256:
@@ -2767,7 +2767,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
         === "Controller.vy"
 
-            ```python hl_lines="1 2 6 13"
+            ```vyper hl_lines="1 2 6 13"
             MIN_FEE: constant(uint256) = 10**6  # 1e-12, still needs to be above 0
             MAX_FEE: constant(uint256) = 10**17  # 10%
 
@@ -2785,7 +2785,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
         === "AMM.vy"
 
-            ```python hl_lines="1 4 6 10"
+            ```vyper hl_lines="1 4 6 10"
             event SetFee:
                 fee: uint256
             
@@ -2827,7 +2827,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
         === "Controller.vy"
 
-            ```python hl_lines="1 2 6 13"
+            ```vyper hl_lines="1 2 6 13"
             MIN_FEE: constant(uint256) = 10**6  # 1e-12, still needs to be above 0
             MAX_FEE: constant(uint256) = 10**17  # 10%
 
@@ -2845,7 +2845,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
         === "AMM.vy"
 
-            ```python hl_lines="1 4 6 10"
+            ```vyper hl_lines="1 4 6 10"
             event SetAdminFee:
                 fee: uint256
             
@@ -2882,7 +2882,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
         === "Controller.vy"
 
-            ```python hl_lines="3 7 13"
+            ```vyper hl_lines="3 7 13"
             @external
             @nonreentrant('lock')
             def collect_fees() -> uint256:
@@ -2924,7 +2924,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
         === "AMM.vy"
 
-            ```python hl_lines="1 2 6 10"
+            ```vyper hl_lines="1 2 6 10"
             admin_fees_x: public(uint256)
             admin_fees_y: public(uint256)
 
@@ -2957,7 +2957,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         monetary_policy: public(MonetaryPolicy)
         ```
 
@@ -2985,7 +2985,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
         === "Controller.vy"
 
-            ```python hl_lines="1 4 8 16"
+            ```vyper hl_lines="1 4 8 16"
             event SetMonetaryPolicy:
                 monetary_policy: address
 
@@ -3006,7 +3006,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
         === "AMM.vy"
 
-            ```python hl_lines="1"
+            ```vyper hl_lines="1"
             @external
             def rate_write(_for: address = msg.sender) -> uint256:
                 # Not needed here but useful for more automated policies
@@ -3036,7 +3036,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 10 17 25"
+        ```vyper hl_lines="1 7 10 17 25"
         interface Factory:
             def stablecoin() -> address: view
             def admin() -> address: view
@@ -3108,7 +3108,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 9 17 30"
+        ```vyper hl_lines="1 4 9 17 30"
         AMM: immutable(LLAMMA)
 
         @external
@@ -3174,7 +3174,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 12"
+        ```vyper hl_lines="1 5 12"
         COLLATERAL_TOKEN: immutable(ERC20)
 
         @external
@@ -3244,7 +3244,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
         === "Controller.vy"
 
-            ```python hl_lines="4 8"
+            ```vyper hl_lines="4 8"
             # AMM has a nonreentrant decorator
             @view
             @external
@@ -3257,7 +3257,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
         === "AMM.vy"
 
-            ```python hl_lines="3 36"
+            ```vyper hl_lines="3 36"
             @internal
             @view
             def _get_p(n: int256, x: uint256, y: uint256) -> uint256:
@@ -3322,7 +3322,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         liquidation_discounts: public(HashMap[address, uint256])
         ```
 
@@ -3342,7 +3342,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         minted: public(uint256)
         ```
 
@@ -3362,7 +3362,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         redeemed: public(uint256)
         ```
 
@@ -3381,7 +3381,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 8 26"
+        ```vyper hl_lines="1 4 8 26"
         liquidation_discount: public(uint256)
 
         @external
@@ -3444,7 +3444,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 7 27"
+        ```vyper hl_lines="1 4 7 27"
         loan_discount: public(uint256)
 
         @external
@@ -3513,7 +3513,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 19"
+        ```vyper hl_lines="1 7 19"
         event SetBorrowingDiscounts:
             loan_discount: uint256
             liquidation_discount: uint256
@@ -3550,7 +3550,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         liquidity_mining_callback: public(LMGauge)
         ```
 
@@ -3571,7 +3571,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @nonreentrant('lock')
         def set_callback(cb: address):

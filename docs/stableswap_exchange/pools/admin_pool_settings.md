@@ -22,7 +22,7 @@ action can be applied is given by the constant pool attribute ``admin_actions_de
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         ADMIN_ACTIONS_DELAY: constant(uint256) = 3 * 86400
 
         ...
@@ -60,7 +60,7 @@ action can be applied is given by the constant pool attribute ``admin_actions_de
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def apply_transfer_ownership():
             assert msg.sender == self.owner  # dev: only owner
@@ -94,7 +94,7 @@ action can be applied is given by the constant pool attribute ``admin_actions_de
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def revert_transfer_ownership():
             assert msg.sender == self.owner  # dev: only owner
@@ -139,7 +139,7 @@ coefficient for a pool after it has been deployed. However, it requires a vote w
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         MIN_RAMP_TIME: constant(uint256) = 86400
         MAX_A_CHANGE: constant(uint256) = 10
         MAX_A: constant(uint256) = 10 ** 6
@@ -186,7 +186,7 @@ coefficient for a pool after it has been deployed. However, it requires a vote w
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def stop_ramp_A():
             assert msg.sender == self.owner  # dev: only owner
@@ -229,7 +229,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
 
     ??? quote "Source code"
     
-        ```python
+        ```vyper
         MAX_ADMIN_FEE: constant(uint256) = 10 * 10 ** 9
         MAX_FEE: constant(uint256) = 5 * 10 ** 9
         ADMIN_ACTIONS_DELAY: constant(uint256) = 3 * 86400
@@ -273,7 +273,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def apply_new_fee():
             assert msg.sender == self.owner  # dev: only owner
@@ -308,7 +308,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def revert_new_parameters():
             assert msg.sender == self.owner  # dev: only owner
@@ -335,7 +335,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
 
     ??? quote "Source code"
     
-        ```python
+        ```vyper
         @view
         @external
         def admin_balances(i: uint256) -> uint256:
@@ -355,7 +355,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
     
     Withdraws and transfers admin fees of the pool to the pool owner.
 
-    ```python
+    ```vyper
     @external
     def withdraw_admin_fees():
         assert msg.sender == self.owner  # dev: only owner
@@ -382,7 +382,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def donate_admin_fees():
             assert msg.sender == self.owner  # dev: only owner
@@ -420,7 +420,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
 
     ??? quote "Source code"
     
-        ```python hl_lines="10 26 39 53 61"
+        ```vyper hl_lines="10 26 39 53 61"
         @external
         @nonreentrant('lock')
         def add_liquidity(amounts: uint256[N_COINS], min_mint_amount: uint256) -> uint256:

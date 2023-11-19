@@ -18,7 +18,7 @@ This value is subsequently used in the internal function `_raw_price()` to compu
 
 ??? quote "`_ema_tvl() -> uint256[N_POOLS]:`"
 
-    ```python
+    ```vyper
     last_timestamp: public(uint256)
     last_tvl: public(uint256[N_POOLS])
     TVL_MA_TIME: public(constant(uint256)) = 50000  # s
@@ -60,7 +60,7 @@ $\text{last_tvl}_i = \text{smoothed TVL of i-th pool}$ in `TRICRYPTO[N_POOLS]`
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 4 8 20"
+        ```vyper hl_lines="3 4 8 20"
         @external
         @view
         def ema_tvl() -> uint256[N_POOLS]:
@@ -104,7 +104,7 @@ $\text{last_tvl}_i = \text{smoothed TVL of i-th pool}$ in `TRICRYPTO[N_POOLS]`
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         last_tvl: public(uint256[N_POOLS])
         ```
 
@@ -121,7 +121,7 @@ $\text{last_tvl}_i = \text{smoothed TVL of i-th pool}$ in `TRICRYPTO[N_POOLS]`
 
 ??? quote "`_raw_price(tvls: uint256[N_POOLS], agg_price: uint256) -> uint256:`"
 
-    ```python
+    ```vyper
     @internal
     @view
     def _raw_price(tvls: uint256[N_POOLS], agg_price: uint256) -> uint256:
@@ -193,7 +193,7 @@ $rate_{wstETH} =$ amount of stETH for 1 wstETH
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 16 18"
+        ```vyper hl_lines="1 16 18"
         @external
         @view
         def raw_price() -> uint256:
@@ -266,7 +266,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
 ??? quote "ETH Price Limit"
 
-    ```python
+    ```vyper
     # Limit ETH price
     if use_chainlink:
         chainlink_lrd: ChainlinkAnswer = CHAINLINK_AGGREGATOR_ETH.latestRoundData()
@@ -283,7 +283,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
 ??? quote "stETH Price Limit"
 
-    ```python
+    ```vyper
     # Limit STETH price
     if use_chainlink:
         chainlink_lrd: ChainlinkAnswer = CHAINLINK_AGGREGATOR_STETH.latestRoundData()
@@ -304,7 +304,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         use_chainlink: public(bool)
         ```
 
@@ -330,7 +330,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 6"
+        ```vyper hl_lines="1 4 6"
         use_chainlink: public(bool)
 
         @external
@@ -374,7 +374,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         N_POOLS: public(constant(uint256)) = 2
         ```
 
@@ -399,7 +399,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         TRICRYPTO: public(immutable(Tricrypto[N_POOLS]))
         ```
 
@@ -426,7 +426,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         TRICRYPTO_IX: public(immutable(uint256[N_POOLS]))
         ```
 
@@ -447,7 +447,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         STABLESWAP_AGGREGATOR: public(immutable(StableAggregator))
         ```
 
@@ -472,7 +472,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         STABLESWAP: public(immutable(Stableswap[N_POOLS]))
         ```
 
@@ -493,7 +493,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         STABLECOIN: public(immutable(address))
         ```
 
@@ -514,7 +514,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         FACTORY: public(immutable(ControllerFactory))
         ```
 
@@ -535,7 +535,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         BOUND_SIZE: public(immutable(uint256))
         ```
 
@@ -556,7 +556,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         STAKEDSWAP: public(immutable(Stableswap))
         ```
 
@@ -577,7 +577,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         WSTETH: public(immutable(wstETH))
         ```
 
@@ -598,7 +598,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         last_timestamp: public(uint256)
         ```
 
@@ -619,7 +619,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         TVL_MA_TIME: public(constant(uint256)) = 50000  # s
         ```
 
@@ -640,7 +640,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 4 8 47"
+        ```vyper hl_lines="3 4 8 47"
         @external
         @view
         def price() -> uint256:
@@ -709,7 +709,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 7"
+        ```vyper hl_lines="2 7"
         @external
         def price_w() -> uint256:
             tvls: uint256[N_POOLS] = self._ema_tvl()

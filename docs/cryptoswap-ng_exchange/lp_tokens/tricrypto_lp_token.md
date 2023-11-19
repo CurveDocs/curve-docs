@@ -15,7 +15,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 5 23"
+        ```vyper hl_lines="1 4 5 23"
         name: public(immutable(String[64]))
 
         @external
@@ -100,7 +100,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 6 24"
+        ```vyper hl_lines="1 4 6 24"
         symbol: public(immutable(String[32]))
 
         @external
@@ -188,7 +188,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         decimals: public(constant(uint8)) = 18
         ```
 
@@ -213,7 +213,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         version: public(constant(String[8])) = "v2.0.0"
         ```
 
@@ -238,7 +238,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         balanceOf: public(HashMap[address, uint256])
         ```
 
@@ -259,7 +259,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         totalSupply: public(uint256)
         ```
 
@@ -289,7 +289,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 15 18 24"
+        ```vyper hl_lines="1 7 15 18 24"
         event Transfer:
             sender: indexed(address)
             receiver: indexed(address)
@@ -341,7 +341,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 19 20 23 29"
+        ```vyper hl_lines="1 7 19 20 23 29"
         event Transfer:
             sender: indexed(address)
             receiver: indexed(address)
@@ -395,7 +395,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 19 20 23 26"
+        ```vyper hl_lines="1 7 19 20 23 26"
         event Approval:
             owner: indexed(address)
             spender: indexed(address)
@@ -446,7 +446,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         allowance: public(HashMap[address, HashMap[address, uint256]])
         ```
 
@@ -472,7 +472,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 20 22"
+        ```vyper hl_lines="1 4 20 22"
         allowance: public(HashMap[address, HashMap[address, uint256]])
 
         @external
@@ -520,7 +520,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 20 22"
+        ```vyper hl_lines="1 4 20 22"
         allowance: public(HashMap[address, HashMap[address, uint256]])
 
         @external
@@ -572,7 +572,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 45 46"
+        ```vyper hl_lines="2 45 46"
         @external
         def permit(
             _owner: address,

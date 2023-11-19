@@ -51,7 +51,7 @@ When liquidity pools include a rebasing token, the pool behaves differently than
 
 ??? quote "`_balances`"
 
-    ```python
+    ```vyper
     @view
     @internal
     def _balances() -> DynArray[uint256, MAX_COINS]:
@@ -103,7 +103,7 @@ $xps2 = (xp_i + xp_j)^2$
 
 ??? quote "`_dynamic_fee()`"
 
-    ```python
+    ```vyper
     FEE_DENOMINATOR: constant(uint256) = 10 ** 10
     fee: public(uint256)  # fee * 1e10
     offpeg_fee_multiplier: public(uint256)  # * 1e10
@@ -134,7 +134,7 @@ Oracles are updated when users perform a swap or when liquidity is added or remo
 
 ??? quote "`upkeep_oracles`"
 
-    ```python
+    ```vyper
     @internal
     def upkeep_oracles(xp: DynArray[uint256, MAX_COINS], amp: uint256, D: uint256):
         """

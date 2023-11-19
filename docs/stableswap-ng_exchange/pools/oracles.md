@@ -11,7 +11,7 @@ Oracles are kept up when users perform a swap or liquidity is added or removed f
 
 ??? quote "`upkeep_oracles`"
 
-    ```python
+    ```vyper
     @internal
     def upkeep_oracles(xp: DynArray[uint256, MAX_COINS], amp: uint256, D: uint256):
         """
@@ -76,7 +76,7 @@ Oracles are kept up when users perform a swap or liquidity is added or removed f
 
 ??? quote "`Token Exchange Oracle`"
 
-    ```python
+    ```vyper
     @external
     @nonreentrant('lock')
     def exchange(

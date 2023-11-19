@@ -21,7 +21,7 @@ The `RootChainLiquiditiyGaugeFactory` is used to deploy *Root- and ChildGauges*.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def transmit_emissions(_gauge: address):
             """
@@ -58,7 +58,7 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         get_implementation: public(address)
 
         @external
@@ -97,7 +97,7 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event UpdateImplementation:
             _old_implementation: address
             _new_implementation: address
@@ -137,7 +137,7 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         get_gauge: public(HashMap[uint256, address[MAX_UINT256]])
         ```
 
@@ -163,7 +163,7 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         get_gauge_count: public(HashMap[uint256, uint256])
 
         @payable
@@ -217,7 +217,7 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         is_valid_gauge: public(HashMap[address, bool])
 
         @payable
@@ -275,7 +275,7 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event DeployedGauge:
             _implementation: indexed(address)
             _chain_id: indexed(uint256)
@@ -332,7 +332,7 @@ The RootChainGaugeFactory uses implementations to create ChildGauges through thi
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def deploy_child_gauge(_chain_id: uint256, _lp_token: address, _salt: bytes32, _manager: address = msg.sender):
             bridger: address = self.get_bridger[_chain_id]
@@ -373,7 +373,7 @@ Different `bridgers` for different chains!
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         call_proxy: public(address)
 
         @external
@@ -406,7 +406,7 @@ Different `bridgers` for different chains!
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         get_bridger: public(HashMap[uint256, address])
         ```
 
@@ -434,7 +434,7 @@ Different `bridgers` for different chains!
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event UpdateCallProxy:
             _old_call_proxy: address
             _new_call_proxy: address
@@ -476,7 +476,7 @@ Different `bridgers` for different chains!
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event BridgerUpdated:
             _chain_id: indexed(uint256)
             _old_bridger: address
@@ -514,7 +514,7 @@ Different `bridgers` for different chains!
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         owner: public(address)
         ```
 
@@ -535,7 +535,7 @@ Different `bridgers` for different chains!
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         future_owner: public(address)
         ```
 
@@ -561,7 +561,7 @@ Different `bridgers` for different chains!
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         owner: public(address)
         future_owner: public(address)
 
@@ -595,7 +595,7 @@ Different `bridgers` for different chains!
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event TransferOwnership:
             _old_owner: address
             _new_owner: address

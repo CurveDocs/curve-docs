@@ -25,7 +25,7 @@ The Curve Token V3 is more gas efficient than versions 1 and 2. The implementati
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def approve(_spender : address, _value : uint256) -> bool:
             """
@@ -88,7 +88,7 @@ The Curve Token V3 is more gas efficient than versions 1 and 2. The implementati
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def approve(_spender : address, _value : uint256) -> bool:
             """

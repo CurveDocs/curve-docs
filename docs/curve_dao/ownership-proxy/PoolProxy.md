@@ -32,7 +32,7 @@ Parameter changes need to be done through the proxy, as those relevant functions
 
         === "PoolProxy.vy"
 
-            ```python hl_lines="3 21"
+            ```vyper hl_lines="3 21"
             interface Curve:
                 def withdraw_admin_fees(): nonpayable
                 def kill_me(): nonpayable
@@ -64,7 +64,7 @@ Parameter changes need to be done through the proxy, as those relevant functions
 
         === "Pool.vy"
 
-            ```python hl_lines="1 4"
+            ```vyper hl_lines="1 4"
             is_killed: bool
 
             @external

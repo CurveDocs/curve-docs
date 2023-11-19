@@ -63,7 +63,7 @@ In general, a pool can be "unkilled" again by calling the function `unkill_me()`
 
 ??? quote "Source code"
 
-    ```python hl_lines="1 2 3 6 9 12 14"
+    ```vyper hl_lines="1 2 3 6 9 12 14"
     is_killed: bool
     kill_deadline: uint256
     KILL_DEADLINE_DT: constant(uint256) = 2 * 30 * 86400
@@ -89,7 +89,7 @@ By doing this, the rate of the gauge is set to 0, effectively stopping all the $
 
 ??? quote "Source code"
 
-    ```python hl_lines="1 4 12 31 32 33"
+    ```vyper hl_lines="1 4 12 31 32 33"
     is_killed: public(bool)
 
     @external

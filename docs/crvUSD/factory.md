@@ -35,7 +35,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
         === "ControllerFactory.vy"
 
-            ```python
+            ```vyper
             # Limits
             MIN_A: constant(uint256) = 2
             MAX_A: constant(uint256) = 10000
@@ -110,7 +110,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
         === "MonetaryPolicy.vy"
 
-            ```python
+            ```vyper
             @internal
             @view
             def calculate_rate() -> uint256:
@@ -144,7 +144,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
         === "PriceOracle.vy"
 
-            ```python
+            ```vyper
             @external
             @view
             def price() -> uint256:
@@ -191,7 +191,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
         === "AMM.vy"
 
-            ```python
+            ```vyper
             @external
             def set_admin(_admin: address):
                 """
@@ -234,7 +234,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         debt_ceiling: public(HashMap[address, uint256])
         ```
 
@@ -258,7 +258,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         debt_ceiling: public(HashMap[address, uint256])
         ```
 
@@ -293,7 +293,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
         === "ControllerFactory.vy"
 
-            ```python 
+            ```vyper 
             event SetDebtCeiling:
                 addr: indexed(address)
                 debt_ceiling: uint256
@@ -346,7 +346,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
         === "Stablecoin.vy"
 
-            ```python
+            ```vyper
             @external
             def mint(_to: address, _value: uint256) -> bool:
                 """
@@ -394,7 +394,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @nonreentrant('lock')
         def rug_debt_ceiling(_to: address):
@@ -448,7 +448,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         admin: public(address)
 
         @external
@@ -493,7 +493,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event SetAdmin:
             admin: address
 
@@ -531,7 +531,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         fee_receiver: public(address)
 
         @external
@@ -576,7 +576,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event SetFeeReceiver:
             fee_receiver: address
 
@@ -618,7 +618,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
         === "Factory.vy"
 
-            ```python 
+            ```vyper 
             @external
             @nonreentrant('lock')
             def collect_fees_above_ceiling(_to: address):
@@ -642,7 +642,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
         === "Controller.vy"
 
-            ```python
+            ```vyper
             @external
             @nonreentrant('lock')
             def collect_fees() -> uint256:
@@ -702,7 +702,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         collaterals: public(address[MAX_CONTROLLERS])
         ```
 
@@ -722,7 +722,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         amm_implementation: public(address)
         ```
 
@@ -750,7 +750,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event SetImplementations:
             amm: address
             controller: address
@@ -791,7 +791,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         STABLECOIN: immutable(ERC20)
 
         @external
@@ -827,7 +827,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @view
         def total_debt() -> uint256:
@@ -865,7 +865,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @view
         def get_controller(collateral: address, i: uint256 = 0) -> address:
@@ -899,7 +899,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @view
         def get_amm(collateral: address, i: uint256 = 0) -> address:
@@ -932,7 +932,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         MAX_CONTROLLERS: constant(uint256) = 50000
         controllers: public(address[MAX_CONTROLLERS])
         ```
@@ -958,7 +958,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         amms: public(address[MAX_CONTROLLERS])
         ```
 
@@ -978,7 +978,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         n_collaterals: public(uint256)
         ```
 
@@ -1002,7 +1002,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         collaterals: public(address[MAX_CONTROLLERS])
         ```
 
@@ -1030,7 +1030,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         collaterals_index: public(HashMap[address, uint256[1000]])
         ```
 
@@ -1050,7 +1050,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         WETH: public(immutable(address))
 
         @external

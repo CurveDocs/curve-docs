@@ -24,7 +24,7 @@ The implementation for a Curve Token V2 may be viewed on
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 11"
+        ```vyper hl_lines="1 11"
         minter: public(address)
 
         @external
@@ -59,7 +59,7 @@ The implementation for a Curve Token V2 may be viewed on
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 11"
+        ```vyper hl_lines="1 11"
         @external
         def set_name(_name: String[64], _symbol: String[32]):
             assert Curve(self.minter).owner() == msg.sender
@@ -90,7 +90,7 @@ The implementation for a Curve Token V2 may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def mint(_to: address, _value: uint256) -> bool:
             """
@@ -130,7 +130,7 @@ The implementation for a Curve Token V2 may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def burnFrom(_to: address, _value: uint256) -> bool:
             """

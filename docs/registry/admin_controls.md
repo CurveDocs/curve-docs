@@ -11,7 +11,7 @@ The following are methods that may only be called by the owner of the contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 9 12"
+        ```vyper hl_lines="2 9 12"
         @external
         def add_registry_handler(_registry_handler: address):
             """
@@ -50,7 +50,7 @@ The following are methods that may only be called by the owner of the contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         def update_registry_handler(_index: uint256, _registry_handler: address):
             """

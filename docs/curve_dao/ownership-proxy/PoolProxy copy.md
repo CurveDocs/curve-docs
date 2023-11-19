@@ -17,7 +17,7 @@ As these proxies are the admins of the exchange contracts, they are used to call
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5"
+        ```vyper hl_lines="1 5"
         ownership_admin: public(address)
 
         @external
@@ -46,7 +46,7 @@ As these proxies are the admins of the exchange contracts, they are used to call
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6"
+        ```vyper hl_lines="1 6"
         parameter_admin: public(address)
 
         @external
@@ -75,7 +75,7 @@ As these proxies are the admins of the exchange contracts, they are used to call
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7"
+        ```vyper hl_lines="1 7"
         emergency_admin: public(address)
 
         @external
@@ -104,7 +104,7 @@ As these proxies are the admins of the exchange contracts, they are used to call
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 13"
+        ```vyper hl_lines="1 13"
         future_ownership_admin: public(address)
 
         @external
@@ -140,7 +140,7 @@ As these proxies are the admins of the exchange contracts, they are used to call
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 14"
+        ```vyper hl_lines="1 14"
         future_parameter_admin: public(address)
 
         @external
@@ -176,7 +176,7 @@ As these proxies are the admins of the exchange contracts, they are used to call
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 15"
+        ```vyper hl_lines="1 15"
         future_emergency_admin: public(address)
 
         @external
@@ -216,7 +216,7 @@ As these proxies are the admins of the exchange contracts, they are used to call
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 20"
+        ```vyper hl_lines="1 7 20"
         event CommitAdmins:
             ownership_admin: address
             parameter_admin: address
@@ -258,7 +258,7 @@ As these proxies are the admins of the exchange contracts, they are used to call
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 20"
+        ```vyper hl_lines="1 7 20"
         event ApplyAdmins:
             ownership_admin: address
             parameter_admin: address
@@ -303,7 +303,7 @@ As these proxies are the admins of the exchange contracts, they are used to call
 
     ??? quote "Source code"
 
-        ```python hl_lines="5 21"
+        ```vyper hl_lines="5 21"
         interface Curve:
             def withdraw_admin_fees(): nonpayable
             def kill_me(): nonpayable
@@ -352,7 +352,7 @@ As these proxies are the admins of the exchange contracts, they are used to call
 
     ??? quote "Source code"
 
-        ```python hl_lines="6 21"
+        ```vyper hl_lines="6 21"
         interface Curve:
             def withdraw_admin_fees(): nonpayable
             def kill_me(): nonpayable
@@ -399,7 +399,7 @@ As these proxies are the admins of the exchange contracts, they are used to call
 
     ??? quote "Source code"
 
-        ```python hl_lines="7 21"
+        ```vyper hl_lines="7 21"
         interface Curve:
             def withdraw_admin_fees(): nonpayable
             def kill_me(): nonpayable
@@ -446,7 +446,7 @@ As these proxies are the admins of the exchange contracts, they are used to call
 
     ??? quote "Source code"
 
-        ```python hl_lines="8 21"
+        ```vyper hl_lines="8 21"
         interface Curve:
             def withdraw_admin_fees(): nonpayable
             def kill_me(): nonpayable
@@ -510,7 +510,7 @@ input text and refer to the stableswap section!!!
 
     ??? quote "Source code"
 
-        ```python hl_lines="9 21 38"
+        ```vyper hl_lines="9 21 38"
         interface Curve:
             def withdraw_admin_fees(): nonpayable
             def kill_me(): nonpayable
@@ -569,7 +569,7 @@ input text and refer to the stableswap section!!!
 
     ??? quote "Source code"
 
-        ```python hl_lines="9 21 38"
+        ```vyper hl_lines="9 21 38"
         interface Curve:
             def withdraw_admin_fees(): nonpayable
             def kill_me(): nonpayable
@@ -648,7 +648,7 @@ input text and refer to the stableswap section!!!
 
     ??? quote "Source code"
 
-        ```python hl_lines="11 21"
+        ```vyper hl_lines="11 21"
         interface Curve:
             def withdraw_admin_fees(): nonpayable
             def kill_me(): nonpayable
@@ -698,7 +698,7 @@ input text and refer to the stableswap section!!!
 
     ??? quote "Source code"
 
-        ```python hl_lines="12 21"
+        ```vyper hl_lines="12 21"
         interface Curve:
             def withdraw_admin_fees(): nonpayable
             def kill_me(): nonpayable
@@ -748,7 +748,7 @@ input text and refer to the stableswap section!!!
 
     ??? quote "Source code"
 
-        ```python hl_lines="13 21"
+        ```vyper hl_lines="13 21"
         interface Curve:
             def withdraw_admin_fees(): nonpayable
             def kill_me(): nonpayable
@@ -797,7 +797,7 @@ input text and refer to the stableswap section!!!
 
     ??? quote "Source code"
 
-        ```python hl_lines="14 21"
+        ```vyper hl_lines="14 21"
         interface Curve:
             def withdraw_admin_fees(): nonpayable
             def kill_me(): nonpayable
@@ -847,7 +847,7 @@ input text and refer to the stableswap section!!!
 
     ??? quote "Source code"
 
-        ```python hl_lines="15 21"
+        ```vyper hl_lines="15 21"
         interface Curve:
             def withdraw_admin_fees(): nonpayable
             def kill_me(): nonpayable
@@ -909,7 +909,7 @@ input text and refer to the stableswap section!!!
 
         === "PoolProxy.vy"
 
-            ```python hl_lines="3 21"
+            ```vyper hl_lines="3 21"
             interface Curve:
                 def withdraw_admin_fees(): nonpayable
                 def kill_me(): nonpayable
@@ -941,7 +941,7 @@ input text and refer to the stableswap section!!!
 
         === "Pool.vy"
 
-            ```python hl_lines="1 4"
+            ```vyper hl_lines="1 4"
             is_killed: bool
 
             @external
@@ -974,7 +974,7 @@ input text and refer to the stableswap section!!!
 
         === "PoolProxy.vy"
 
-            ```python hl_lines="4 21"
+            ```vyper hl_lines="4 21"
             interface Curve:
                 def withdraw_admin_fees(): nonpayable
                 def kill_me(): nonpayable
@@ -1006,7 +1006,7 @@ input text and refer to the stableswap section!!!
 
         === "Pool.vy"
 
-            ```python hl_lines="1 4"
+            ```vyper hl_lines="1 4"
             is_killed: bool
 
             @external

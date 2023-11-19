@@ -31,7 +31,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event RampAgamma:
             initial_A: uint256
             future_A: uint256
@@ -93,7 +93,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event StopRampA:
             current_A: uint256
             current_gamma: uint256
@@ -144,7 +144,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event CommitNewParameters:
             deadline: indexed(uint256)
             admin_fee: uint256
@@ -239,7 +239,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event NewParameters:
             admin_fee: uint256
             mid_fee: uint256
@@ -299,7 +299,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def revert_new_parameters():
             assert msg.sender == Factory(self.factory).admin()  # dev: only owner
@@ -326,7 +326,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         admin_actions_deadline: public(uint256)
 
         ADMIN_ACTIONS_DELAY: constant(uint256) = 3 * 86400
@@ -349,7 +349,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         initial_A_gamma: public(uint256)
         ```
 
@@ -370,7 +370,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         initial_A_gamma_time: public(uint256)
         ```
 
@@ -391,7 +391,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         future_A_gamma: public(uint256)
         ```
 
@@ -411,7 +411,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         future_A_gamma_time: public(uint256)
         ```
 
@@ -432,7 +432,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         future_allowed_extra_profit: public(uint256)
         ```
 
@@ -453,7 +453,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         future_adjustment_step: public(uint256)
         ```
 

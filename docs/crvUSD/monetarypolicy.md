@@ -61,7 +61,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @view
         @external
         def rate() -> uint256:
@@ -108,7 +108,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         MAX_RATE: constant(uint256) = 43959106799  # 400% APY
         rate0: public(uint256)
 
@@ -152,7 +152,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event SetRate:
             rate: uint256
 
@@ -183,7 +183,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         sigma: public(int256)  # 2 * 10**16 for example
 
         MAX_SIGMA: constant(uint256) = 10**18
@@ -229,7 +229,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event SetSigma:
             sigma: uint256
 
@@ -262,7 +262,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         MAX_TARGET_DEBT_FRACTION: constant(uint256) = 10**18
 
         target_debt_fraction: public(uint256)
@@ -304,7 +304,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event SetTargetDebtFraction:
             target_debt_fraction: uint256
 
@@ -345,7 +345,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         interface PegKeeper:
             def debt() -> uint256: view
 
@@ -393,7 +393,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event AddPegKeeper:
             peg_keeper: indexed(address)
 
@@ -435,7 +435,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event RemovePegKeeper:
             peg_keeper: indexed(address)
 
@@ -476,7 +476,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         admin: public(address)
 
         @external
@@ -516,7 +516,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event SetAdmin:
             admin: address
 
@@ -547,7 +547,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         PRICE_ORACLE: public(immutable(PriceOracle))
 
         @external
@@ -582,7 +582,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         CONTROLLER_FACTORY: public(immutable(ControllerFactory))
 
         @external
@@ -615,7 +615,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def rate_write() -> uint256:
             # Not needed here but useful for more automated policies

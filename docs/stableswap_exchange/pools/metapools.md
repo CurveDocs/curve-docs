@@ -33,7 +33,7 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 6 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59"
+        ```vyper hl_lines="2 6 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59"
         # Token corresponding to the pool is always the last one
         BASE_POOL_COINS: constant(int128) = 3
 
@@ -118,7 +118,7 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 12 22 29 30 31"
+        ```vyper hl_lines="1 5 12 22 29 30 31"
         N_COINS: constant(int128) = 2
 
         ...
@@ -199,7 +199,7 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 10 20 36 40"
+        ```vyper hl_lines="1 10 20 36 40"
         base_pool: public(address)
 
         ...
@@ -271,7 +271,7 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 37"
+        ```vyper hl_lines="1 37"
         base_virtual_price: public(uint256)
 
         ...
@@ -348,7 +348,7 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 42 64 67 75"
+        ```vyper hl_lines="1 5 42 64 67 75"
         base_cache_updated: public(uint256)
 
         ...
@@ -476,7 +476,7 @@ Underlying coins: ``GUSD``, ``DAI``, ``USDC``, ``USDT``
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @nonreentrant('lock')
         def exchange(i: int128, j: int128, dx: uint256, min_dy: uint256) -> uint256:
@@ -549,7 +549,7 @@ Underlying coins: ``GUSD``, ``DAI``, ``USDC``, ``USDT``
 
     ??? quote "Source code"  
     
-        ```python
+        ```vyper
         @external
         @nonreentrant('lock')
         def exchange_underlying(i: int128, j: int128, dx: uint256, min_dy: uint256) -> uint256:

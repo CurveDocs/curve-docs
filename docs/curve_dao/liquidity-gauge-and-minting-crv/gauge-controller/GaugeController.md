@@ -23,7 +23,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         gauge_types_: HashMap[address, int128]
 
         @external
@@ -56,7 +56,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         n_gauge_types: public(int128)
 
         @external
@@ -95,7 +95,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         gauge_type_names: public(HashMap[int128, String[64]])
 
         @external
@@ -134,7 +134,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @view
         def get_type_weight(type_id: int128) -> uint256:
@@ -195,7 +195,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @internal
         @view
         def _gauge_relative_weight(addr: address, time: uint256) -> uint256:
@@ -253,7 +253,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @view
         def get_gauge_weight(addr: address) -> uint256:
@@ -281,7 +281,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         points_total: public(HashMap[uint256, uint256])  # time -> total weight
 
         @external
@@ -315,7 +315,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         points_sum: public(HashMap[int128, HashMap[uint256, Point]])  # type_id -> time -> Point
 
         @external
@@ -347,7 +347,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         n_gauges: public(int128)
 
         @external
@@ -407,7 +407,7 @@ More on gauge types see [here](../gauges/overview.md).
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         gauges: public(address[1000000000])
 
         @external
@@ -458,7 +458,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event VoteForGauge:
             time: uint256
             user: address
@@ -557,7 +557,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         vote_user_power: public(HashMap[address, uint256])  # Total vote power used by user
         
         @external
@@ -653,7 +653,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         last_user_vote: public(HashMap[address, HashMap[address, uint256]])  # Last user vote's timestamp for each gauge address
         
         @external
@@ -749,7 +749,7 @@ Vote weight power is expressed as an `integer` in bps (units of 0.01%). `10000` 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         vote_user_slopes: public(HashMap[address, HashMap[address, VotedSlope]])  # user -> gauge_addr -> VotedSlope
 
         @external
@@ -845,7 +845,7 @@ Admin ownership can be commited by calling [`commit_transfer_ownership`](../gaug
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         admin: public(address)  # Can and will be a smart contract
 
         @external
@@ -878,7 +878,7 @@ Admin ownership can be commited by calling [`commit_transfer_ownership`](../gaug
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         future_admin: public(address)  # Can and will be a smart contract
         ```
 
@@ -900,7 +900,7 @@ Admin ownership can be commited by calling [`commit_transfer_ownership`](../gaug
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         token: public(address)  # CRV token
 
         @external
@@ -935,7 +935,7 @@ Admin ownership can be commited by calling [`commit_transfer_ownership`](../gaug
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         voting_escrow: public(address)  # Voting escrow
 
         @external

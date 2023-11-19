@@ -31,7 +31,7 @@ pools may be viewed on
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8 17 23 24 25"
+        ```vyper hl_lines="1 8 17 23 24 25"
         coins: public(address[N_COINS])
 
         ...
@@ -102,7 +102,7 @@ pools may be viewed on
 
     ??? quote "Source code"
     
-        ```python hl_lines="1 7 16 30"
+        ```vyper hl_lines="1 7 16 30"
         owner: public(address)
 
         ...
@@ -172,7 +172,7 @@ pools may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         A_PRECISION: constant(uint256) = 100
         
         ...
@@ -203,7 +203,7 @@ pools may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def A_precise() -> uint256:
@@ -225,7 +225,7 @@ pools may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_virtual_price() -> uint256:
@@ -262,7 +262,7 @@ pools may be viewed on
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 11 20 28"
+        ```vyper hl_lines="1 11 20 28"
         fee: public(uint256)  # fee * 1e10
 
         ...
@@ -316,7 +316,7 @@ pools may be viewed on
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 12 21 29"
+        ```vyper hl_lines="1 12 21 29"
         admin_fee: public(uint256)  # admin_fee * 1e10
 
         ...
@@ -380,7 +380,7 @@ pools may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_dy(i: int128, j: int128, dx: uint256) -> uint256:
@@ -427,7 +427,7 @@ pools may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @nonreentrant('lock')
         def exchange(i: int128, j: int128, dx: uint256, min_dy: uint256) -> uint256:
@@ -520,7 +520,7 @@ pools may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def calc_token_amount(amounts: uint256[N_COINS], is_deposit: bool) -> uint256:
@@ -572,7 +572,7 @@ pools may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @nonreentrant('lock')
         def add_liquidity(amounts: uint256[N_COINS], min_mint_amount: uint256) -> uint256:
@@ -683,7 +683,7 @@ pools may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @nonreentrant('lock')
         def remove_liquidity(_amount: uint256, min_amounts: uint256[N_COINS]) -> uint256[N_COINS]:
@@ -744,7 +744,7 @@ pools may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @nonreentrant('lock')
         def remove_liquidity_imbalance(amounts: uint256[N_COINS], max_burn_amount: uint256) -> uint256:
@@ -829,7 +829,7 @@ pools may be viewed on
 
     ??? quote "Source code"
         
-        ```python
+        ```vyper
         @view
         @internal
         def _calc_withdraw_one_coin(_token_amount: uint256, i: int128) -> (uint256, uint256, uint256):
@@ -896,7 +896,7 @@ pools may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @nonreentrant('lock')
         def remove_liquidity_one_coin(_token_amount: uint256, i: int128, _min_amount: uint256) -> uint256:

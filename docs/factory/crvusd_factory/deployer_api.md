@@ -33,7 +33,7 @@
 
         === "ControllerFactory.vy"
 
-            ```python hl_lines="12 44 51 70"
+            ```vyper hl_lines="12 44 51 70"
             # Limits
             MIN_A: constant(uint256) = 2
             MAX_A: constant(uint256) = 10000
@@ -108,7 +108,7 @@
 
         === "MonetaryPolicy.vy"
 
-            ```python hl_lines="25 28"
+            ```vyper hl_lines="25 28"
             @internal
             @view
             def calculate_rate() -> uint256:
@@ -142,7 +142,7 @@
 
         === "PriceOracle.vy"
 
-            ```python hl_lines="3"
+            ```vyper hl_lines="3"
             @external
             @view
             def price() -> uint256:
@@ -189,7 +189,7 @@
 
         === "AMM.vy"
 
-            ```python hl_lines="2"
+            ```vyper hl_lines="2"
             @external
             def set_admin(_admin: address):
                 """
