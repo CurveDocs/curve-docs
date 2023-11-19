@@ -7,7 +7,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 
 ??? quote "Initializing the Pool"
 
-    ```python
+    ```vyper
     @external
     def initialize(
         A: uint256,
