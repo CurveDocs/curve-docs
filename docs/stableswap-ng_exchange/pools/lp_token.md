@@ -21,7 +21,7 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Transfer:
             sender: indexed(address)
             receiver: indexed(address)
@@ -72,7 +72,7 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Transfer:
             sender: indexed(address)
             receiver: indexed(address)
@@ -127,7 +127,7 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         allowance: public(HashMap[address, HashMap[address, uint256]])
         ```
 
@@ -156,7 +156,7 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Approval:
             owner: indexed(address)
             spender: indexed(address)
@@ -207,7 +207,7 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def permit(
             _owner: address,
@@ -277,7 +277,7 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         name: public(immutable(String[64]))
 
         @external
@@ -318,7 +318,7 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         symbol: public(immutable(String[32]))
 
         @external
@@ -359,7 +359,7 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         decimals: public(constant(uint8)) = 18
         ```
 
@@ -380,7 +380,7 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         version: public(constant(String[8])) = "v7.0.0"
         ```
 
@@ -405,7 +405,7 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         balanceOf: public(HashMap[address, uint256])
         ```
 
@@ -430,7 +430,7 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         nonces: public(HashMap[address, uint256])
         ```
 
@@ -451,7 +451,7 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         salt: public(immutable(bytes32))
 
         @external
@@ -505,7 +505,7 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         CACHED_DOMAIN_SEPARATOR: immutable(bytes32)
 
         @view

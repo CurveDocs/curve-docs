@@ -29,7 +29,7 @@ The template source code for a metapool deposit “zap” may be viewed on
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 12"
+        ```vyper hl_lines="1 12"
         pool: public(address)
 
         ...        
@@ -60,7 +60,7 @@ The template source code for a metapool deposit “zap” may be viewed on
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 15"
+        ```vyper hl_lines="1 15"
         base_pool: public(address)
 
         ...        
@@ -98,7 +98,7 @@ The template source code for a metapool deposit “zap” may be viewed on
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 35"
+        ```vyper hl_lines="1 35"
         base_coins: public(address[BASE_N_COINS])
 
         ...        
@@ -163,7 +163,7 @@ The template source code for a metapool deposit “zap” may be viewed on
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 13"
+        ```vyper hl_lines="1 13"
         token: public(address)
 
         ...        
@@ -211,7 +211,7 @@ The template source code for a metapool deposit “zap” may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def add_liquidity(_amounts: uint256[N_ALL_COINS], _min_mint_amount: uint256) -> uint256:
             """
@@ -299,7 +299,7 @@ The template source code for a metapool deposit “zap” may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def remove_liquidity(_amount: uint256, _min_amounts: uint256[N_ALL_COINS]) -> uint256[N_ALL_COINS]:
             """
@@ -375,7 +375,7 @@ The template source code for a metapool deposit “zap” may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def remove_liquidity_one_coin(_token_amount: uint256, i: int128, _min_amount: uint256) -> uint256:
             """
@@ -442,7 +442,7 @@ The template source code for a metapool deposit “zap” may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def remove_liquidity_imbalance(_amounts: uint256[N_ALL_COINS], _max_burn_amount: uint256) -> uint256:
             """
@@ -542,7 +542,7 @@ The template source code for a metapool deposit “zap” may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def calc_withdraw_one_coin(_token_amount: uint256, i: int128) -> uint256:
@@ -579,7 +579,7 @@ The template source code for a metapool deposit “zap” may be viewed on
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def calc_token_amount(_amounts: uint256[N_ALL_COINS], _is_deposit: bool) -> uint256:

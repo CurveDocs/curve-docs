@@ -31,7 +31,7 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
     | `sender` |  `address` | address to tranfer coins from |
     | `expect_optimistic_transfer` |  `bool` | `True` if the contract expect an optimistic coin transfer |
 
-    ```python
+    ```vyper
     stored_balances: DynArray[uint256, MAX_COINS]
 
     @internal
@@ -88,7 +88,7 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
     | `_amount` |  `uint256` | amount to transfer out |
     | `receiver` |  `address` | address to send the tokens to |
 
-    ```python hl_lines="2"
+    ```vyper hl_lines="2"
     stored_balances: DynArray[uint256, MAX_COINS]
 
     @internal
@@ -137,7 +137,7 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event TokenExchange:
             buyer: indexed(address)
             sold_id: int128
@@ -279,7 +279,7 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event TokenExchange:
             buyer: indexed(address)
             sold_id: int128
@@ -424,7 +424,7 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
 
         === "CurveStableSwapNG.vy"
 
-            ```python
+            ```vyper
             interface StableSwapViews:
                 def get_dx(i: int128, j: int128, dy: uint256, pool: address) -> uint256: view
                 def get_dy(i: int128, j: int128, dx: uint256, pool: address) -> uint256: view
@@ -451,7 +451,7 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
 
         === "CurveStableSwapNGViews.vy"
 
-            ```python
+            ```vyper
             @view
             @external
             def get_dx(i: int128, j: int128, dy: uint256, pool: address) -> uint256:
@@ -523,7 +523,7 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
 
         === "CurveStableSwapNG.vy"
 
-            ```python
+            ```vyper
             interface Factory:
                 def fee_receiver() -> address: view
                 def admin() -> address: view
@@ -545,7 +545,7 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
 
         === "CurveStableSwapNGViews.vy"
 
-            ```python
+            ```vyper
             @view
             @external
             def get_dy(i: int128, j: int128, dx: uint256, pool: address) -> uint256:
@@ -608,7 +608,7 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Transfer:
             sender: indexed(address)
             receiver: indexed(address)
@@ -765,7 +765,7 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event RemoveLiquidity:
             provider: indexed(address)
             token_amounts: DynArray[uint256, MAX_COINS]
@@ -868,7 +868,7 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event RemoveLiquidityOne:
             provider: indexed(address)
             token_id: int128
@@ -1000,7 +1000,7 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event RemoveLiquidityImbalance:
             provider: indexed(address)
             token_amounts: DynArray[uint256, MAX_COINS]
@@ -1109,7 +1109,7 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def calc_withdraw_one_coin(_burn_amount: uint256, i: int128) -> uint256:
@@ -1206,7 +1206,7 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
 
         === "CurveStableSwapNG.vy"
 
-            ```python
+            ```vyper
             interface Factory:
                 def fee_receiver() -> address: view
                 def admin() -> address: view
@@ -1229,7 +1229,7 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
 
         === "CurveStableSwapNGViews.vy"
 
-            ```python
+            ```vyper
             @view
             @external
             def calc_token_amount(
@@ -1333,7 +1333,7 @@ Stableswap-ng introduces a dynamic fee based on the imbalance of the coins withi
 
 ??? quote "`_dynamic_fee`"
 
-    ```python
+    ```vyper
     offpeg_fee_multiplier: public(uint256)  # * 1e10
 
     @view
@@ -1363,7 +1363,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         fee: public(uint256)  # fee * 1e10
 
         @external
@@ -1411,7 +1411,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
         === "CurveStableSwapNG.vy"
 
-            ```python
+            ```vyper
             @view
             @external
             def dynamic_fee(i: int128, j: int128) -> uint256:
@@ -1426,7 +1426,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
         === "CurveStableSwapNGViews.vy"
 
-            ```python
+            ```vyper
             @view
             @external
             def dynamic_fee(i: int128, j: int128, pool:address) -> uint256:
@@ -1499,7 +1499,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         admin_fee: public(constant(uint256)) = 5000000000
         ```
 
@@ -1520,7 +1520,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         offpeg_fee_multiplier: public(uint256)  # * 1e10
 
         @external
@@ -1565,7 +1565,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         admin_balances: public(DynArray[uint256, MAX_COINS])
         ```
 
@@ -1584,7 +1584,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         interface Factory:
             def fee_receiver() -> address: view
             def admin() -> address: view
@@ -1633,7 +1633,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
 ??? quote "`upkeep_oracles`"
 
-    ```python
+    ```vyper
     @internal
     def upkeep_oracles(xp: DynArray[uint256, MAX_COINS], amp: uint256, D: uint256):
         """
@@ -1705,7 +1705,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         last_prices_packed: DynArray[uint256, MAX_COINS]  #  packing: last_price, ma_price
 
         @view
@@ -1737,7 +1737,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         last_prices_packed: DynArray[uint256, MAX_COINS]  #  packing: last_price, ma_price
 
         @view
@@ -1770,7 +1770,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @view
         def get_p(i: uint256) -> uint256:
@@ -1840,7 +1840,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         last_prices_packed: DynArray[uint256, MAX_COINS]  #  packing: last_price, ma_price
         last_D_packed: uint256                            #  packing: last_D, ma_D
         ma_exp_time: public(uint256)
@@ -1897,7 +1897,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         ma_exp_time: public(uint256)
         ```
 
@@ -1918,7 +1918,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         last_prices_packed: DynArray[uint256, MAX_COINS]  #  packing: last_price, ma_price
         last_D_packed: uint256                            #  packing: last_D, ma_D
         ma_exp_time: public(uint256)
@@ -1976,7 +1976,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         D_ma_time: public(uint256)
         ```
 
@@ -1997,7 +1997,7 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         ma_last_time: public(uint256)                     # packing: ma_last_time_p, ma_last_time_D
         # ma_last_time has a distinction for p and D because p is _not_ updated if
         # users remove_liquidity, but D is.
@@ -2029,7 +2029,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         A_PRECISION: constant(uint256) = 100
         MAX_A: constant(uint256) = 10 ** 6
         MAX_A_CHANGE: constant(uint256) = 10
@@ -2083,7 +2083,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         A_PRECISION: constant(uint256) = 100
         MAX_A: constant(uint256) = 10 ** 6
         MAX_A_CHANGE: constant(uint256) = 10
@@ -2137,7 +2137,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         A_PRECISION: constant(uint256) = 100
         MAX_A: constant(uint256) = 10 ** 6
         MAX_A_CHANGE: constant(uint256) = 10
@@ -2187,7 +2187,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         A_PRECISION: constant(uint256) = 100
         MAX_A: constant(uint256) = 10 ** 6
         MAX_A_CHANGE: constant(uint256) = 10
@@ -2237,7 +2237,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         A_PRECISION: constant(uint256) = 100
         MAX_A: constant(uint256) = 10 ** 6
         MAX_A_CHANGE: constant(uint256) = 10
@@ -2287,7 +2287,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         A_PRECISION: constant(uint256) = 100
         MAX_A: constant(uint256) = 10 ** 6
         MAX_A_CHANGE: constant(uint256) = 10
@@ -2340,7 +2340,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         coins: public(immutable(DynArray[address, MAX_COINS]))
 
         @external
@@ -2384,7 +2384,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def balances(i: uint256) -> uint256:
@@ -2445,7 +2445,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_balances() -> DynArray[uint256, MAX_COINS]:
@@ -2500,7 +2500,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         rate_multipliers: immutable(DynArray[uint256, MAX_COINS])
         # [bytes4 method_id][bytes8 <empty>][bytes20 oracle]
         oracles: DynArray[uint256, MAX_COINS]
@@ -2575,7 +2575,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         MAX_COINS: constant(uint256) = 8  # max coins is 8 in the factory
 
         N_COINS: public(immutable(uint256))
@@ -2622,7 +2622,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         total_supply: uint256
 
         @view
@@ -2655,7 +2655,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         @nonreentrant('lock')

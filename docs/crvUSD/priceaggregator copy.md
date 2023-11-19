@@ -27,7 +27,7 @@ This function calculates the Exponential Moving Average (EMA) of the Total Value
 
 ??? quote "Source code"
 
-    ```python hl_lines="5 10 16 21"
+    ```vyper hl_lines="5 10 16 21"
     last_tvl: public(uint256[MAX_PAIRS])
 
     @internal
@@ -77,7 +77,7 @@ Calculates the weighted price, taking into account all price pairs.
 
 ??? quote "Source code"
 
-    ```python hl_lines="3"
+    ```vyper hl_lines="3"
     @internal
     @view
     def _price(tvls: DynArray[uint256, MAX_PAIRS]) -> uint256:
@@ -137,7 +137,7 @@ This function iterates through all the price pairs added to this contract.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @internal
         @view
         def _price(tvls: DynArray[uint256, MAX_PAIRS]) -> uint256:
@@ -174,7 +174,7 @@ This function iterates through all the price pairs added to this contract.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         p_avg: uint256 = DPsum / Dsum
         e: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
         e_min: uint256 = max_value(uint256)
@@ -203,7 +203,7 @@ This function iterates through all the price pairs added to this contract.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         wp_sum: uint256 = 0
         w_sum: uint256 = 0
         for i in range(MAX_PAIRS):
@@ -232,7 +232,7 @@ This function iterates through all the price pairs added to this contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         interface Stableswap:
             def price_oracle() -> uint256: view
             def coins(i: uint256) -> address: view
@@ -309,7 +309,7 @@ This function iterates through all the price pairs added to this contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         TVL_MA_TIME: public(constant(uint256)) = 50000  # s
 
         @internal
@@ -359,7 +359,7 @@ This function iterates through all the price pairs added to this contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         last_timestamp: public(uint256)
         ```
 
@@ -384,7 +384,7 @@ This function iterates through all the price pairs added to this contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         last_tvl: public(uint256[MAX_PAIRS])
         ```
 
@@ -405,7 +405,7 @@ This function iterates through all the price pairs added to this contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         TVL_MA_TIME: public(constant(uint256)) = 50000  # s
         ```
 
@@ -429,7 +429,7 @@ This function iterates through all the price pairs added to this contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8 23"
+        ```vyper hl_lines="1 8 23"
         last_price: public(uint256)
 
         @external
@@ -473,7 +473,7 @@ This function iterates through all the price pairs added to this contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 13 14"
+        ```vyper hl_lines="2 13 14"
         @external
         def price_w() -> uint256:
             if self.last_timestamp == block.timestamp:
@@ -512,7 +512,7 @@ This function iterates through all the price pairs added to this contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         price_pairs: public(PricePair[MAX_PAIRS])
         ```
 
@@ -535,7 +535,7 @@ This function iterates through all the price pairs added to this contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 20"
+        ```vyper hl_lines="1 7 20"
         event AddPricePair:
             n: uint256
             pool: Stableswap
@@ -577,7 +577,7 @@ This function iterates through all the price pairs added to this contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 9 16 18"
+        ```vyper hl_lines="1 4 9 16 18"
         event RemovePricePair:
             n: uint256
 
@@ -616,7 +616,7 @@ This function iterates through all the price pairs added to this contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 6"
+        ```vyper hl_lines="1 4 6"
         admin: public(address)
 
         @external
@@ -645,7 +645,7 @@ This function iterates through all the price pairs added to this contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 7 12"
+        ```vyper hl_lines="1 4 7 12"
         event SetAdmin:
             admin: address
 
@@ -679,7 +679,7 @@ This function iterates through all the price pairs added to this contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 6 11"
+        ```vyper hl_lines="1 4 6 11"
         SIGMA: immutable(uint256)
 
         @external
@@ -711,7 +711,7 @@ This function iterates through all the price pairs added to this contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 5 11"
+        ```vyper hl_lines="1 4 5 11"
         STABLECOIN: immutable(address)
 
         @external

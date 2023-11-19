@@ -96,7 +96,7 @@ Collateral is put into bands by calling `deposit_range()` whenever someone creat
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event Deposit:
             provider: indexed(address)
             amount: uint256
@@ -211,7 +211,7 @@ Collateral is put into bands by calling `deposit_range()` whenever someone creat
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event Withdraw:
             provider: indexed(address)
             amount_borrowed: uint256
@@ -338,7 +338,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @internal
         def _exchange(i: uint256, j: uint256, amount: uint256, minmax_amount: uint256, _for: address, use_in_amount: bool) -> uint256[2]:
             """
@@ -469,7 +469,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @internal
         def _exchange(i: uint256, j: uint256, amount: uint256, minmax_amount: uint256, _for: address, use_in_amount: bool) -> uint256[2]:
             """
@@ -596,7 +596,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         struct DetailedTrade:
             in_amount: uint256
             out_amount: uint256
@@ -674,7 +674,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         struct DetailedTrade:
             in_amount: uint256
             out_amount: uint256
@@ -753,7 +753,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         struct DetailedTrade:
             in_amount: uint256
             out_amount: uint256
@@ -833,7 +833,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         struct DetailedTrade:
             in_amount: uint256
             out_amount: uint256
@@ -917,7 +917,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @view
         @nonreentrant('lock')
@@ -1039,7 +1039,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @pure
         def coins(i: uint256) -> address:
@@ -1063,7 +1063,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @internal
         @view
         def limit_p_o(p: uint256) -> uint256[2]:
@@ -1147,7 +1147,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @view
         @nonreentrant('lock')
@@ -1176,7 +1176,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         admin: public(address)
         ```
 
@@ -1199,7 +1199,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @internal
         def approve_max(token: ERC20, _admin: address):
             """
@@ -1245,7 +1245,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         fee: public(uint256)
 
         @external
@@ -1328,7 +1328,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event SetFee:
             fee: uint256
 
@@ -1362,7 +1362,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         admin_fee: public(uint256)
 
         @external
@@ -1438,7 +1438,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         admin_fees_x: public(uint256)
         ```
 
@@ -1459,7 +1459,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         admin_fees_y: public(uint256)
         ```
 
@@ -1487,7 +1487,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event SetAdminFee:
             fee: uint256
 
@@ -1527,7 +1527,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @nonreentrant('lock')
         def reset_admin_fees():
@@ -1559,7 +1559,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         A: public(immutable(uint256))
 
         @external
@@ -1635,7 +1635,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         rate: public(uint256)
         ```
 
@@ -1657,7 +1657,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         rate: public(uint256)
         rate_time: uint256
         rate_mul: uint256
@@ -1706,7 +1706,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @nonreentrant('lock')
         def set_rate(rate: uint256) -> uint256:
@@ -1743,7 +1743,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         active_band: public(int256)
         ```
 
@@ -1764,7 +1764,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         min_band: public(int256)
         ```
 
@@ -1785,7 +1785,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         max_band: public(int256)
         ```
 
@@ -1810,7 +1810,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         bands_x: public(HashMap[int256, uint256])
         ```
 
@@ -1835,7 +1835,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         bands_y: public(HashMap[int256, uint256])
         ```
 
@@ -1859,7 +1859,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         user_shares: HashMap[address, UserTicks]
     
         @internal
@@ -1911,7 +1911,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @internal
         @view
         def get_xy_up(user: address, use_y: bool) -> uint256:
@@ -2074,7 +2074,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @internal
         @view
         def get_xy_up(user: address, use_y: bool) -> uint256:
@@ -2236,7 +2236,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @view
         @nonreentrant('lock')
@@ -2285,7 +2285,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @view
         @nonreentrant('lock')
@@ -2322,7 +2322,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         BASE_PRICE: immutable(uint256)
         rate: public(uint256)
         rate_time: uint256
@@ -2377,7 +2377,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @internal
         @view
         def _p_current_band(n: int256) -> uint256:
@@ -2426,7 +2426,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @internal
         @view
         def _p_current_band(n: int256) -> uint256:
@@ -2475,7 +2475,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @internal
         @view
         def _p_oracle_up(n: int256) -> uint256:
@@ -2555,7 +2555,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @internal
         @view
         def _p_oracle_up(n: int256) -> uint256:
@@ -2631,7 +2631,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @internal
         @view
         def _get_p(n: int256, x: uint256, y: uint256) -> uint256:
@@ -2698,7 +2698,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         price_oracle_contract: public(PriceOracle)
 
         @external
@@ -2753,7 +2753,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @internal
         @view
         def limit_p_o(p: uint256) -> uint256[2]:
@@ -2837,7 +2837,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @internal
         @view
         def _get_xy(user: address, is_sum: bool) -> DynArray[uint256, MAX_TICKS_UINT][2]:
@@ -2904,7 +2904,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         liquidity_mining_callback: public(LMGauge)
         ```
 
@@ -2931,7 +2931,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         interface LMGauge:
             def callback_collateral_shares(n: int256, collateral_per_share: DynArray[uint256, MAX_TICKS_UINT]): nonpayable
             def callback_user_shares(user: address, n: int256, user_shares: DynArray[uint256, MAX_TICKS_UINT]): nonpayable

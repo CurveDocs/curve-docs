@@ -5,7 +5,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "_pack()"
 
-        ```python hl_lines="1 3 8 13"
+        ```vyper hl_lines="1 3 8 13"
         @internal
         @view
         def _pack(x: uint256[3]) -> uint256:
@@ -20,7 +20,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "_unpack()"
 
-        ```python hl_lines="1 3 8 13"
+        ```vyper hl_lines="1 3 8 13"
         @internal
         @view
         def _unpack(_packed: uint256) -> uint256[3]:
@@ -58,7 +58,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="4 21"
+        ```vyper hl_lines="4 21"
         event TokenExchange:
             buyer: indexed(address)
             sold_id: uint256
@@ -232,7 +232,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="4"
+        ```vyper hl_lines="4"
         event TokenExchange:
             buyer: indexed(address)
             sold_id: uint256
@@ -400,7 +400,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "CurveTricryptoOptimizedWETH.vy"
 
-            ```python hl_lines="3 9 13 16 17"
+            ```vyper hl_lines="3 9 13 16 17"
             @external
             @view
             def fee_calc(xp: uint256[N_COINS]) -> uint256:  # <----- For by view contract.
@@ -424,7 +424,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "Math.vy"
 
-            ```python hl_lines="1"
+            ```vyper hl_lines="1"
             @external
             @view
             def reduction_coefficient(x: uint256[N_COINS], fee_gamma: uint256) -> uint256:
@@ -484,7 +484,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "CurveTricryptoOptimizedWETH.vy"
 
-            ```python hl_lines="0"
+            ```vyper hl_lines="0"
             interface Factory:
                 def admin() -> address: view
                 def fee_receiver() -> address: view
@@ -518,7 +518,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "CurveCryptoViews3Optimized.vy"
 
-            ```python hl_lines="3"
+            ```vyper hl_lines="3"
             @external
             @view
             def get_dy(
@@ -596,7 +596,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "CurveTricryptoOptimizedWETH.vy"
 
-            ```python hl_lines="0"
+            ```vyper hl_lines="0"
             interface Factory:
                 def admin() -> address: view
                 def fee_receiver() -> address: view
@@ -653,7 +653,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "CurveCryptoViews3Optimized.vy"
 
-            ```python hl_lines="3"
+            ```vyper hl_lines="3"
             @view
             @external
             def get_dx(
@@ -745,7 +745,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
             === "Math.vy"
 
-                ```python hl_lines="3"
+                ```vyper hl_lines="3"
                 @external
                 @view
                 def reduction_coefficient(x: uint256[N_COINS], fee_gamma: uint256) -> uint256:
@@ -811,7 +811,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "CurveTricryptoOptimizedWETH.vy"
 
-            ```python hl_lines="1"
+            ```vyper hl_lines="1"
             event AddLiquidity:
                 provider: indexed(address)
                 token_amounts: uint256[N_COINS]
@@ -961,7 +961,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "Math.vy"
 
-            ```python hl_lines="1"
+            ```vyper hl_lines="1"
             @external
             @view
             def newton_D(
@@ -1187,7 +1187,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 3 4 5 12 16 36"
+        ```vyper hl_lines="1 3 4 5 12 16 36"
         @external
         @view
         def calc_token_fee(
@@ -1254,7 +1254,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         event RemoveLiquidity:
             provider: indexed(address)
             token_amounts: uint256[N_COINS]
@@ -1362,7 +1362,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "CurveTricryptoOptimizedWETH.vy"
 
-            ```python hl_lines="1"
+            ```vyper hl_lines="1"
             @external
             @nonreentrant("lock")
             def remove_liquidity_one_coin(
@@ -1497,7 +1497,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "Math.vy"
 
-            ```python hl_lines="1"
+            ```vyper hl_lines="1"
             @external
             @view
             def newton_D(
@@ -1925,7 +1925,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "TriCrypto Pool"
 
-            ```python hl_lines="0"
+            ```vyper hl_lines="0"
             interface Factory:
                 def admin() -> address: view
                 def fee_receiver() -> address: view
@@ -1996,7 +1996,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "Views Contract"
 
-            ```python hl_lines="3"
+            ```vyper hl_lines="3"
             @view
             @external
             def calc_token_amount(
@@ -2052,7 +2052,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "CurveTricryptoOptimizedWETH.vy"
 
-            ```python hl_lines="1"
+            ```vyper hl_lines="1"
             @view
             @external
             def calc_withdraw_one_coin(token_amount: uint256, i: uint256) -> uint256:
@@ -2146,7 +2146,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "Math.vy"
 
-            ```python hl_lines="1"
+            ```vyper hl_lines="1"
             @external
             @view
             def newton_D(
@@ -2571,7 +2571,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "CurveTricryptoOptimizedWETH.vy"
 
-            ```python hl_lines="3 11 15 18 19 20"
+            ```vyper hl_lines="3 11 15 18 19 20"
             @external
             @view
             def fee() -> uint256:
@@ -2597,7 +2597,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "Math.vy"
 
-            ```python hl_lines="3 10 14 31"
+            ```vyper hl_lines="3 10 14 31"
             @external
             @view
             def reduction_coefficient(x: uint256[N_COINS], fee_gamma: uint256) -> uint256:
@@ -2648,7 +2648,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 10"
+        ```vyper hl_lines="1 5 10"
         packed_fee_params: public(uint256)  # <---- Packs mid_fee, out_fee, fee_gamma.
 
         @view
@@ -2679,7 +2679,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 10"
+        ```vyper hl_lines="1 5 10"
         packed_fee_params: public(uint256)  # <---- Packs mid_fee, out_fee, fee_gamma.
 
         @view
@@ -2709,7 +2709,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 10"
+        ```vyper hl_lines="1 5 10"
         packed_fee_params: public(uint256)  # <---- Packs mid_fee, out_fee, fee_gamma.
 
         @view
@@ -2739,7 +2739,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         packed_fee_params: public(uint256)  # <---- Packs mid_fee, out_fee, fee_gamma.
         ```
 
@@ -2760,7 +2760,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 3 8 13"
+        ```vyper hl_lines="1 3 8 13"
         interface Factory:
             def admin() -> address: view
             def fee_receiver() -> address: view
@@ -2794,7 +2794,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         xcp_profit: public(uint256)
         ```
 
@@ -2815,7 +2815,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         xcp_profit_a: public(uint256)  # <--- Full profit at last claim of admin fees.
         ```
 
@@ -2836,7 +2836,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         ADMIN_FEE: public(constant(uint256)) = 5 * 10**9  # <----- 50% of earned fees.        ```
         ```
 
@@ -2859,7 +2859,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "CurveTricryptoOptimizedWETH.vy"
 
-            ```python hl_lines="1 7 11 14 58"
+            ```vyper hl_lines="1 7 11 14 58"
             event ClaimAdminFee:
                 admin: indexed(address)
                 tokens: uint256
@@ -2948,7 +2948,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
             === "Math.vy"
 
-                ```python hl_lines="3 4 5 6 7 8"
+                ```vyper hl_lines="3 4 5 6 7 8"
                 @external
                 @view
                 def newton_D(
@@ -3166,7 +3166,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
 ??? quote "_unpack_prices()"
 
-    ```python hl_lines="3 15"
+    ```vyper hl_lines="3 15"
     @internal
     @view
     def _unpack_prices(_packed_prices: uint256) -> uint256[2]:
@@ -3194,7 +3194,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 3 4 9 19 20 21 25 37"
+        ```vyper hl_lines="1 3 4 9 19 20 21 25 37"
         price_oracle_packed: uint256  # <------- Price target given by moving average.
 
         PRICE_SIZE: constant(uint128) = 256 / (N_COINS - 1)
@@ -3253,7 +3253,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "CurveTricryptoOptimizedWETH.vy"
 
-            ```python hl_lines="4 11"
+            ```vyper hl_lines="4 11"
             D: public(uint256)
 
             PRICE_SIZE: constant(uint128) = 256 / (N_COINS - 1)
@@ -3289,7 +3289,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
         === "Math.vy"
 
-            ```python hl_lines="1"
+            ```vyper hl_lines="1"
             @external
             @view
             def geometric_mean(_x: uint256[3]) -> uint256:
@@ -3338,7 +3338,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="4"
+        ```vyper hl_lines="4"
         @external
         @view
         @nonreentrant("lock")
@@ -3604,7 +3604,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 18"
+        ```vyper hl_lines="1 6 18"
         last_prices_packed: uint256
         last_prices_timestamp: public(uint256)
 
@@ -3853,7 +3853,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         price_scale_packed: uint256  # <------------------------ Internal price scale.
 
         @external
@@ -4093,7 +4093,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 13"
+        ```vyper hl_lines="1 6 13"
         packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
         #               parameters allowed_extra_profit, adjustment_step, and ma_time.
 
@@ -4126,7 +4126,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         last_prices_timestamp: public(uint256)
         ```
 
@@ -4150,7 +4150,7 @@ Tricrypto-NG pool contanins of volatile assets.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         virtual_price: public(uint256)  # <------ Cached (fast to read) virtual price.
         #                          The cached `virtual_price` is also used internally.
         ```
@@ -4181,7 +4181,7 @@ The price scaling parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 11"
+        ```vyper hl_lines="1 6 11"
         packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
         #               parameters allowed_extra_profit, adjustment_step, and ma_time.
 
@@ -4212,7 +4212,7 @@ The price scaling parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 11"
+        ```vyper hl_lines="1 6 11"
         packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
         #               parameters allowed_extra_profit, adjustment_step, and ma_time.
 
@@ -4243,7 +4243,7 @@ The price scaling parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 11"
+        ```vyper hl_lines="1 6 11"
         packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
         #               parameters allowed_extra_profit, adjustment_step, and ma_time.
         ```
@@ -4273,7 +4273,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         @view
         @external
         def A() -> uint256:
@@ -4326,7 +4326,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         @view
         @external
         def gamma() -> uint256:
@@ -4385,7 +4385,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         coins: public(immutable(address[N_COINS]))
         ```
 
@@ -4410,7 +4410,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         balances: public(uint256[N_COINS])
         ```
 
@@ -4431,7 +4431,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python hl_lines="4 8 13"
+        ```vyper hl_lines="4 8 13"
         N_COINS: constant(uint256) = 3
         PRECISION: constant(uint256) = 10**18  # <------- The precision to convert to.
         A_MULTIPLIER: constant(uint256) = 10000
@@ -4464,7 +4464,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         factory: public(address)
         ```
 
@@ -4485,7 +4485,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         factory: public(address)
         ```
 
@@ -4506,7 +4506,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         WETH20: public(immutable(address))
         ```
 

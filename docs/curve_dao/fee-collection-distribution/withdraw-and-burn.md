@@ -26,7 +26,7 @@ Fees are initially claimed via `PoolProxy.withdraw_many`. This withdraws fees fr
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"    
+        ```vyper hl_lines="3"    
         @view
         @external
         def admin_balances(i: uint256) -> uint256:
@@ -51,7 +51,7 @@ Fees are initially claimed via `PoolProxy.withdraw_many`. This withdraws fees fr
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 6"
+        ```vyper hl_lines="2 6"
         interface Curve:
             def withdraw_admin_fees(): nonpayable
 
@@ -83,7 +83,7 @@ Fees are initially claimed via `PoolProxy.withdraw_many`. This withdraws fees fr
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 6"
+        ```vyper hl_lines="2 6"
         interface Curve:
             def withdraw_admin_fees(): nonpayable
 
@@ -121,7 +121,7 @@ Fees are mostly claimed directly from the pool.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event ClaimAdminFee:
             admin: indexed(address)
             tokens: uint256
@@ -224,7 +224,7 @@ crvUSD fees are based on the borrow rate of the corresponding markets. Fees are 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @view
         def admin_fees() -> uint256:
@@ -253,7 +253,7 @@ crvUSD fees are based on the borrow rate of the corresponding markets. Fees are 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @nonreentrant('lock')
         def collect_fees() -> uint256:
@@ -318,7 +318,7 @@ These functions need to be called from the 0xECB contract.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         interface Burner:
             def burn(_coin: address) -> bool: payable
 
@@ -364,7 +364,7 @@ These functions need to be called from the 0xECB contract.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @nonreentrant('burn')
         def burn_many(_coins: address[20]):
@@ -411,7 +411,7 @@ These functions need to be called from the 0xECB contract.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         interface Curve:
             def donate_admin_fees(): nonpayable
 
@@ -454,7 +454,7 @@ These functions need to be called from the 0xECB contract.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # pool -> caller -> can call `donate_admin_fees`
         donate_approval: public(HashMap[address, HashMap[address, bool]])
 

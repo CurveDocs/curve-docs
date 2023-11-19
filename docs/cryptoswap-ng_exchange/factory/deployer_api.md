@@ -69,7 +69,7 @@ Limitations when deploying tricrypto crypto pools:
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         event TricryptoPoolDeployed:
             pool: address
             name: String[64]
@@ -279,7 +279,7 @@ Limitations when deploying tricrypto crypto pools:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def deploy_gauge(_pool: address) -> address:
             """

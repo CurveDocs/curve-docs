@@ -40,10 +40,10 @@ Integrators find it quite challenging to integrate a protocol into their dapp if
 
 
 ## **Setup**
-Set up the Python environment using the following steps: Please visit [Github](https://github.com/curvefi/metaregistry) for more details.
+Set up the vyper environment using the following steps: Please visit [Github](https://github.com/curvefi/metaregistry) for more details.
 
 ```shell
-> python -m venv venv
+> vyper -m venv venv
 > source ./venv/bin/active
 > pip install --upgrade pip
 > pip install -r ./requirements.txt

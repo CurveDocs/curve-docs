@@ -16,7 +16,7 @@ New pairs can be added via [`add_price_pair`](#add_price_pair).
 
 ??? quote "Source code"
 
-    ```python
+    ```vyper
     last_tvl: public(uint256[MAX_PAIRS])
 
     @internal
@@ -57,7 +57,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         TVL_MA_TIME: public(constant(uint256)) = 50000  # s
 
         last_tvl: public(uint256[MAX_PAIRS])
@@ -108,7 +108,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         interface Stableswap:
             def price_oracle() -> uint256: view
             def coins(i: uint256) -> address: view
@@ -191,7 +191,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         price_pairs: public(PricePair[MAX_PAIRS])
         ```
 
@@ -219,7 +219,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event AddPricePair:
             n: uint256
             pool: Stableswap
@@ -265,7 +265,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event RemovePricePair:
             n: uint256
 
@@ -303,7 +303,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         admin: public(address)
 
         @external
@@ -337,7 +337,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event SetAdmin:
             admin: address
 
@@ -371,7 +371,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         SIGMA: immutable(uint256)
 
         @external
@@ -397,7 +397,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         STABLECOIN: immutable(address)
 
         @external
@@ -423,7 +423,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         last_timestamp: public(uint256)
         ```
 
@@ -448,7 +448,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         last_tvl: public(uint256[MAX_PAIRS])
         ```
 
@@ -469,7 +469,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         TVL_MA_TIME: public(constant(uint256)) = 50000  # s
         ```
 
@@ -490,7 +490,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         last_price: public(uint256)
 
         @external
@@ -534,7 +534,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def price_w() -> uint256:
             if self.last_timestamp == block.timestamp:

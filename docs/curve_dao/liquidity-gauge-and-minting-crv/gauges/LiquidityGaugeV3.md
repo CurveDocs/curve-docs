@@ -31,7 +31,7 @@ As this gauge maintains a similar API to `LiquidityGaugeV2`, the documentation o
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         rewards_receiver: public(HashMap[address, address])
         ```
 
@@ -54,7 +54,7 @@ As this gauge maintains a similar API to `LiquidityGaugeV2`, the documentation o
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 10"
+        ```vyper hl_lines="1 4 10"
         rewards_receiver: public(HashMap[address, address])
 
         @external
@@ -84,7 +84,7 @@ As this gauge maintains a similar API to `LiquidityGaugeV2`, the documentation o
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 8"
+        ```vyper hl_lines="3 8"
         @view
         @external
         def last_claim() -> uint256:
@@ -120,7 +120,7 @@ Unlike LiquidityGaugeV2, rewards are not automatically claimed each time a user 
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 13 16"
+        ```vyper hl_lines="3 13 16"
         @external
         @nonreentrant('lock')
         def claim_rewards(_addr: address = msg.sender, _receiver: address = ZERO_ADDRESS):
@@ -241,7 +241,7 @@ Unlike LiquidityGaugeV2, rewards are not automatically claimed each time a user 
 
     ??? quote "Source code"
 
-        ```python hl_lines="6 13"
+        ```vyper hl_lines="6 13"
         # user -> [uint128 claimable amount][uint128 claimed amount]
         claim_data: HashMap[address, HashMap[address, uint256]]
 
@@ -279,7 +279,7 @@ Unlike LiquidityGaugeV2, rewards are not automatically claimed each time a user 
 
     ??? quote "Source code"
 
-        ```python hl_lines="6 16"
+        ```vyper hl_lines="6 16"
         # user -> [uint128 claimable amount][uint128 claimed amount]
         claim_data: HashMap[address, HashMap[address, uint256]]
 
@@ -315,7 +315,7 @@ Unlike LiquidityGaugeV2, rewards are not automatically claimed each time a user 
 
     ??? quote "Source code"
 
-        ```python hl_lines="6 17"
+        ```vyper hl_lines="6 17"
         # user -> [uint128 claimable amount][uint128 claimed amount]
         claim_data: HashMap[address, HashMap[address, uint256]]
 

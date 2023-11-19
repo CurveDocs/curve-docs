@@ -24,7 +24,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 14"
+        ```vyper hl_lines="3 14"
         @external
         @view
         def get_dy(
@@ -68,7 +68,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 17"
+        ```vyper hl_lines="3 17"
         @view
         @external
         def get_dx(
@@ -112,7 +112,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 7 11 64"
+        ```vyper hl_lines="3 7 11 64"
         @view
         @external
         def calc_withdraw_one_coin(
@@ -203,7 +203,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 16 19"
+        ```vyper hl_lines="3 16 19"
         @view
         @external
         def calc_token_amount(
@@ -294,7 +294,7 @@ Methods to calculate fees for `get_dy`, `withdraw_one_coin` and `calc_token_amou
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 8 10 14"
+        ```vyper hl_lines="3 8 10 14"
         @external
         @view
         def calc_fee_get_dy(i: uint256, j: uint256, dx: uint256, swap: address
@@ -366,7 +366,7 @@ Methods to calculate fees for `get_dy`, `withdraw_one_coin` and `calc_token_amou
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 7 11"
+        ```vyper hl_lines="3 7 11"
         @external
         @view
         def calc_fee_withdraw_one_coin(
@@ -457,7 +457,7 @@ Methods to calculate fees for `get_dy`, `withdraw_one_coin` and `calc_token_amou
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 12 16"
+        ```vyper hl_lines="3 12 16"
         @view
         @external
         def calc_fee_token_amount(

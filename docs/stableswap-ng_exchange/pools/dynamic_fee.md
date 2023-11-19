@@ -3,7 +3,7 @@ dynamic fee
 
 ??? quote "`upkeep_oracles`"
 
-    ```python
+    ```vyper
     @view
     @internal
     def _dynamic_fee(xpi: uint256, xpj: uint256, _fee: uint256) -> uint256:

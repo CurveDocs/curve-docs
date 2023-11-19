@@ -20,7 +20,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         gauge_data: public(HashMap[address, uint256])
 
         @view
@@ -54,7 +54,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         gauge_data: public(HashMap[address, uint256])
 
         @view
@@ -92,7 +92,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event UpdateMirrored:
             _gauge: indexed(address)
             _mirrored: bool
@@ -139,7 +139,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         gauge_data: public(HashMap[address, uint256])
 
         @view
@@ -173,7 +173,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         gauge_data: public(HashMap[address, uint256])
         ```
 
@@ -198,7 +198,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         get_gauge_from_lp_token: public(HashMap[address, address])
 
         @external
@@ -260,7 +260,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         get_gauge_count: public(uint256)
 
         @external
@@ -326,7 +326,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         get_gauge: public(address[MAX_INT128])
         ```
 
@@ -353,7 +353,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Minted:
             _user: indexed(address)
             _gauge: indexed(address)
@@ -422,7 +422,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Minted:
             _user: indexed(address)
             _gauge: indexed(address)
@@ -495,7 +495,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # user -> gauge -> value
         minted: public(HashMap[address, HashMap[address, uint256]])
 
@@ -569,7 +569,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event DeployedGauge:
             _implementation: indexed(address)
             _lp_token: indexed(address)
@@ -643,7 +643,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         voting_escrow: public(address)
         ```
 
@@ -671,7 +671,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event UpdateVotingEscrow:
             _old_voting_escrow: address
             _new_voting_escrow: address
@@ -706,7 +706,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         get_implementation: public(address)
         ```
 
@@ -734,7 +734,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event UpdateImplementation:
             _old_implementation: address
             _new_implementation: address
@@ -771,7 +771,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         owner: public(address)
         ```
 
@@ -792,7 +792,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         future_owner: public(address)
         ```
 
@@ -818,7 +818,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         owner: public(address)
         future_owner: public(address)
 
@@ -852,7 +852,7 @@ The `ChildGaugeFactory` is used to claim CRV emissions from. The `RootChainGauge
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event TransferOwnership:
             _old_owner: address
             _new_owner: address

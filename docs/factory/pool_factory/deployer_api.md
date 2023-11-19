@@ -75,7 +75,7 @@ Limitations when deploying plain pools:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event PlainPoolDeployed:
             coins: address[MAX_PLAIN_COINS]
             A: uint256
@@ -239,7 +239,7 @@ Limitations when deploying meta pools:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event MetaPoolDeployed:
             coin: address
             base_pool: address
@@ -361,7 +361,7 @@ Limitations when deploying meta pools:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event BasePoolAdded:
             base_pool: address
 
@@ -520,7 +520,7 @@ Limitations when deploying plain crypto pools:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event CryptoPoolDeployed:
             token: address
             coins: address[2]
@@ -723,7 +723,7 @@ Limitations when deploying tricrypto crypto pools:
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         event TricryptoPoolDeployed:
             pool: address
             name: String[64]
@@ -933,7 +933,7 @@ Limitations when deploying tricrypto crypto pools:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def deploy_gauge(_pool: address) -> address:
             """

@@ -30,7 +30,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 17"
+        ```vyper hl_lines="1 17"
         admin: public(address)
 
         @external
@@ -64,7 +64,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 7 12"
+        ```vyper hl_lines="1 4 7 12"
         name: public(String[64])
 
         @external
@@ -97,7 +97,7 @@ pie title Tokenomics
     
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 8 13"
+        ```vyper hl_lines="1 4 8 13"
         symbol: public(String[32])
 
         @external
@@ -131,7 +131,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 8 12"
+        ```vyper hl_lines="3 8 12"
         @internal
         @view
         def _available_supply() -> uint256:
@@ -161,7 +161,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def totalSupply() -> uint256:
@@ -187,7 +187,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 9 14"
+        ```vyper hl_lines="1 4 9 14"
         decimals: public(uint256)
 
         @external
@@ -226,7 +226,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         balanceOf: public(HashMap[address, uint256])
         ```
 
@@ -258,7 +258,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
@@ -308,7 +308,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
@@ -357,7 +357,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5"
+        ```vyper hl_lines="1 5"
         allowances: HashMap[address, HashMap[address, uint256]]
 
         @external
@@ -395,7 +395,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event Approval:
             _owner: indexed(address)
             _spender: indexed(address)
@@ -440,7 +440,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         minter: public(address)
         ```
 
@@ -468,7 +468,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 9"
+        ```vyper hl_lines="1 7 9"
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
@@ -521,7 +521,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 17 18"
+        ```vyper hl_lines="1 7 17 18"
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
@@ -563,7 +563,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def mintable_in_timeframe(start: uint256, end: uint256) -> uint256:
@@ -642,7 +642,7 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 21 34"
+        ```vyper hl_lines="1 21 34"
         mining_epoch: public(int128)
 
         @external
@@ -699,7 +699,7 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 20"
+        ```vyper hl_lines="1 20"
         start_epoch_time: public(uint256)
 
         @external
@@ -736,7 +736,7 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 22"
+        ```vyper hl_lines="1 22"
         rate: public(uint256)
 
         @external
@@ -775,7 +775,7 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 22 45"
+        ```vyper hl_lines="1 22 45"
         event UpdateMiningParameters:
             time: uint256
             rate: uint256
@@ -845,7 +845,7 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
 
     ??? quote "Source code"
 
-        ```python hl_lines="4 13 15"
+        ```vyper hl_lines="4 13 15"
         start_epoch_time: public(uint256)
 
         @external
@@ -878,7 +878,7 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```vyper hl_lines="2"
         @external
         def future_epoch_time_write() -> uint256:
             """

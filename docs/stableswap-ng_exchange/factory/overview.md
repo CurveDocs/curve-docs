@@ -14,7 +14,7 @@ All deployed pools share the same fee receiver. A new address can be designated 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # fee receiver for all pools
         fee_receiver: public(address)
         ```
@@ -43,7 +43,7 @@ A pool can contain different asset types. All avalaible types can be queried wit
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         asset_types: public(HashMap[uint8, String[20]])
         ```
 
@@ -75,7 +75,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # index -> implementation address
         pool_implementations: public(HashMap[uint256, address])
         ```
@@ -102,7 +102,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # index -> implementation address
         metapool_implementations: public(HashMap[uint256, address])
         ```
@@ -124,7 +124,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # index -> implementation address
         math_implementation: public(address)
         ```
@@ -146,7 +146,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # index -> implementation address
         gauge_implementation: public(address)
         ```
@@ -168,7 +168,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # index -> implementation address
         views_implementation: public(address)
         ```
@@ -195,7 +195,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         admin: public(address)
         ```
 
@@ -215,7 +215,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         future_admin: public(address)
         ```
 

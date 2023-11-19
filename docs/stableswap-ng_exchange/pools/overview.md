@@ -40,7 +40,7 @@ Stableswap-NG pools supports the following asset types:
 
 ??? quote "`_balances`"
 
-    ```python
+    ```vyper
     @view
     @internal
     def _balances() -> DynArray[uint256, MAX_COINS]:
@@ -107,7 +107,7 @@ $$\text{dynamic fee} = \frac{{fee_{m} \times fee}}{\frac{(fee_{m} - 10^{18}) \ti
 
 ??? quote "`Dynamic Fee`"
 
-    ```python
+    ```vyper
     A_PRECISION: constant(uint256) = 100
     MAX_COINS: constant(uint256) = 8
     PRECISION: constant(uint256) = 10 ** 18
@@ -190,7 +190,7 @@ Oracles are updated when users perform a swap or when liquidity is added or remo
 
 ??? quote "`upkeep_oracles`"
 
-    ```python
+    ```vyper
     @internal
     def upkeep_oracles(xp: DynArray[uint256, MAX_COINS], amp: uint256, D: uint256):
         """
@@ -275,7 +275,7 @@ Users of this method are dex aggregators, arbitrageurs, or other users who **do 
 
 ??? quote "Logic of transfers when using `exchange_received`"
 
-    ```python hl_lines="6 15 21 22 23 24"
+    ```vyper hl_lines="6 15 21 22 23 24"
     @internal
     def _transfer_in(
         coin_idx: int128,

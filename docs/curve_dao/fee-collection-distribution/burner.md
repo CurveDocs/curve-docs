@@ -93,7 +93,7 @@ LP burner calls to `StableSwap.remove_liquidity_one_coin` to unwrap the LP token
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         struct SwapData:
             pool: address
             coin: address
@@ -129,7 +129,7 @@ LP burner calls to `StableSwap.remove_liquidity_one_coin` to unwrap the LP token
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```vyper hl_lines="2"
         @external
         def set_swap_data(_lp_token: address, _coin: address, _burner: address) -> bool:
             """
@@ -237,7 +237,7 @@ The burner is configurable via the following functions:
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```vyper hl_lines="2"
         @external
         def set_swap_for(_coins: address[10], _targets: address[10]) -> bool:
             """
@@ -286,7 +286,7 @@ The burner is configurable via the following functions:
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @nonreentrant("lock")
         def add_synths(_synths: address[10]) -> bool:
@@ -334,7 +334,7 @@ Once the entire burn process has been completed you must call `execute` as the f
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         def execute() -> bool:
             """
             @notice Add liquidity to 3pool and transfer 3CRV to the fee distributor
@@ -370,7 +370,7 @@ This burner converts DAI, USDC and USDT into 3CRV by adding liquidity to the 3po
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         def burn(_coin: ERC20) -> bool:
             """
@@ -414,7 +414,7 @@ This is not a burner contract in itself. Some metapools transfer 'coin 0' of the
 
 ??? quote "Source code"
 
-    ```python
+    ```vyper
     @external
     def withdraw_admin_fees():
         # transfer coin 0 to Factory and call `convert_fees` to swap it for coin 1
@@ -475,7 +475,7 @@ Burners are configured within the 0xECB (PoolOwner) contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         burners: public(HashMap[address, address])
         ```
 
@@ -503,7 +503,7 @@ Burners are configured within the 0xECB (PoolOwner) contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 12 14 17"
+        ```vyper hl_lines="1 6 12 14 17"
         event AddBurner:
             burner: address
 
@@ -581,7 +581,7 @@ Burners are configured within the 0xECB (PoolOwner) contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 38 42"
+        ```vyper hl_lines="1 5 38 42"
         event AddBurner:
             burner: address
 
@@ -661,7 +661,7 @@ Burners are configured within the 0xECB (PoolOwner) contract.
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 2 5 10 11"
+        ```vyper hl_lines="1 2 5 10 11"
         ownership_admin: public(address)
         emergency_admin: public(address)
 

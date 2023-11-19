@@ -14,7 +14,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         debt_ceiling: public(HashMap[address, uint256])
         ```
 
@@ -38,7 +38,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         debt_ceiling: public(HashMap[address, uint256])
         ```
 
@@ -59,7 +59,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @nonreentrant('lock')
         def rug_debt_ceiling(_to: address):
@@ -91,7 +91,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 17"
+        ```vyper hl_lines="1 6 17"
         fee_receiver: public(address)
 
         @external
@@ -130,7 +130,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         collaterals: public(address[MAX_CONTROLLERS])
         ```
 
@@ -154,7 +154,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         amm_implementation: public(address)
         ```
 
@@ -178,7 +178,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 15"
+        ```vyper hl_lines="1 4 15"
         STABLECOIN: immutable(ERC20)
 
         @external
@@ -215,7 +215,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def total_debt() -> uint256:
@@ -253,7 +253,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_controller(collateral: address, i: uint256 = 0) -> address:
@@ -287,7 +287,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_amm(collateral: address, i: uint256 = 0) -> address:
@@ -320,7 +320,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```vyper hl_lines="2"
         MAX_CONTROLLERS: constant(uint256) = 50000
         controllers: public(address[MAX_CONTROLLERS])
         ```
@@ -346,7 +346,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         amms: public(address[MAX_CONTROLLERS])
         ```
 
@@ -365,7 +365,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         n_collaterals: public(uint256)
         ```
 
@@ -389,7 +389,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         collaterals: public(address[MAX_CONTROLLERS])
         ```
 
@@ -417,7 +417,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         collaterals_index: public(HashMap[address, uint256[1000]])
         ```
 
@@ -436,7 +436,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 18"
+        ```vyper hl_lines="1 7 18"
         WETH: public(immutable(address))
 
         @external

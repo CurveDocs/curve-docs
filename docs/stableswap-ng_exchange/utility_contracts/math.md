@@ -24,7 +24,7 @@ The Math Contract provides AMM Math for StableSwap-NG Pools.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         MAX_COINS: constant(uint256) = 8
         MAX_COINS_128: constant(int128) = 8
         A_PRECISION: constant(uint256) = 100
@@ -125,7 +125,7 @@ The Math Contract provides AMM Math for StableSwap-NG Pools.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @pure
         def get_D(
@@ -205,7 +205,7 @@ The Math Contract provides AMM Math for StableSwap-NG Pools.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @pure
         def get_y_D(
@@ -288,7 +288,7 @@ The Math Contract provides AMM Math for StableSwap-NG Pools.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @pure
         def exp(x: int256) -> uint256:

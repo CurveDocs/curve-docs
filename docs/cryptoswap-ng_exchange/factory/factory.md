@@ -71,7 +71,7 @@ with:
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         event TricryptoPoolDeployed:
             pool: address
             name: String[64]
@@ -260,7 +260,7 @@ with:
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         event LiquidityGaugeDeployed:
             pool: address
             gauge: address
@@ -306,7 +306,7 @@ The contract contains the typical admin controls. Ownership can be transferred, 
 
     ??? quote "Source code"
 
-        ```python hl_lines"1"
+        ```vyper hl_lines"1"
         admin: public(address)
 
         @external
@@ -335,7 +335,7 @@ The contract contains the typical admin controls. Ownership can be transferred, 
 
     ??? quote "Source code"
 
-        ```python hl_lines"1"
+        ```vyper hl_lines"1"
         admin: public(address)
 
         @external
@@ -364,7 +364,7 @@ The contract contains the typical admin controls. Ownership can be transferred, 
 
     ??? quote "Source code"
 
-        ```python hl_lines"1"
+        ```vyper hl_lines"1"
         admin: public(address)
 
         @external
@@ -400,7 +400,7 @@ The contract contains the typical admin controls. Ownership can be transferred, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         event UpdateFeeReceiver:
             _old_fee_receiver: address
             _new_fee_receiver: address
@@ -441,7 +441,7 @@ The contract contains the typical admin controls. Ownership can be transferred, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         future_admin: public(address)    
 
         @external
@@ -478,7 +478,7 @@ The contract contains the typical admin controls. Ownership can be transferred, 
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         event TransferOwnership:
             _old_owner: address
             _new_owner: address
