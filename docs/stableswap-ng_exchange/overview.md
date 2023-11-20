@@ -1,7 +1,7 @@
 <h1> </h1>
 
-!!!deploy "Contract Source"
-    This documentation is anchored to the [stableswap-ng repository](https://github.com/curvefi/stableswap-ng) repository at a specific commit hash [bff1522b30819b7b240af17ccfb72b0effbf6c47](https://github.com/curvefi/stableswap-ng/tree/bff1522b30819b7b240af17ccfb72b0effbf6c47), and it does not reflect any modifications made after this commit.
+!!!deploy "Contract Source & Deployment"
+    Source code available on [Github](https://github.com/curvefi/stableswap-ng).
 
 For an in-depth understanding of the StableSwap invariant design, please refer to the official [StableSwap whitepaper](../pdf/stableswap-paper.pdf).
 

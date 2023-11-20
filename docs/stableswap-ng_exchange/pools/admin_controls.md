@@ -1,4 +1,4 @@
-The following methods are guarded and may only be called by the `admin` of the Stableswap-NG Factory.
+The following methods are guarded and may only be called by the **`admin`** of the Stableswap-NG Factory.
 
 
 ### `ramp_A`

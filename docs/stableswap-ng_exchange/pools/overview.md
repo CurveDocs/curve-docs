@@ -28,7 +28,7 @@ Stableswap-NG pools supports the following asset types:
 - ERC20 support for return True/revert, return True/False, return None  
 - ERC20 tokens can have arbitrary decimals (<=18)  
 - ERC20 tokens that rebase (either positive or fee on transfer)  
-- ERC20 tokens that have a rate oracle (e.g. wstETH, cbETH, sDAI, etc.) Oracle precision *must* be $10^{18}$  
+- ERC20 tokens that have a rate oracle (e.g. wstETH, cbETH, sDAI, etc.) Oracle precision *must* be 10^18  
 - ERC4626 tokens with arbitrary percision (<=18) of Vault token and underlying asset
 
 
@@ -36,7 +36,7 @@ Stableswap-NG pools supports the following asset types:
 
 !!!warning "Rebasing Tokens"
     Pools including rebasing tokens work a bit differently compared to others. 
-    The internal `_balance()` function - which is used to calculate the coin balances within the pool - makes sure that **LP's keep all rebases**.
+    The internal `**_balance()**` function - which is used to calculate the coin balances within the pool - makes sure that **LP's keep all rebases**.
 
 ??? quote "`_balances`"
 
@@ -73,9 +73,9 @@ Stableswap-NG pools supports the following asset types:
 
 ## **Dynamic Fees**
 
-Stableswap-NG introduces dynamic fees. The use of the `offpeg_fee_multiplier` allows the system to dynamically adjust fees based on the pool's state. 
+Stableswap-NG introduces dynamic fees. The use of the **`offpeg_fee_multiplier`** allows the system to dynamically adjust fees based on the pool's state. 
 
-The internal `_dynamic_fee()` function calculates the fee **based on the balances and rates** of the tokens being exchanged. If the balances of the tokens being exchanged are highly imbalanced or significantly differ from its peg, the fee is adjusted using the `offpeg_fee_multiplier`.
+The internal **`_dynamic_fee()`** function calculates the fee **based on the balances and rates** of the tokens being exchanged. If the balances of the tokens being exchanged are highly imbalanced or significantly differ from its peg, the fee is adjusted using the **`offpeg_fee_multiplier`**.
 
 
 ### **Dynamic Fee Formula**
@@ -85,8 +85,8 @@ The internal `_dynamic_fee()` function calculates the fee **based on the balance
 
 *Let's define some terms and variables for clarity:*
 
-- Let $fee$ represent the fee, as retrieved by the method `StableSwap.fee()`
-- Let $fee_m$ denote the off-peg fee multiplier, sourced from `StableSwap.offpeg_fee_multiplier()`
+- Let $fee$ represent the fee, as retrieved by the method **`StableSwap.fee()`**
+- Let $fee_m$ denote the off-peg fee multiplier, sourced from **`StableSwap.offpeg_fee_multiplier()`**
 - The terms $rate_{i}$ and $balance{i}$ refer to the specific rate and balance for coin $i$, respectively, and similarly, $rate_j$ and $balance_j$ for coin $j$ 
 - $PRECISION_{i}$ and $PRECISION_{j}$ are the precision constants for the respective coins
 
@@ -183,10 +183,10 @@ The new generation (NG) of stableswap introduces oracles based on AMM State Pric
 - **price oracle** (spot and ema price)
 - moving average **D oracle**
 
-Oracles are updated when users perform a swap or when liquidity is added or removed from the pool. Most updates are carried out by the internal `upkeep_oracles()` function, which is called in those instances. In some cases, such as when removing liquidity in a balanced ratio, the `D` oracle is updated directly within the `remove_liquidity()` function, as there is no need to update the price oracles (removing balanced does not have a price impact).
+Oracles are updated when users perform a swap or when liquidity is added or removed from the pool. Most updates are carried out by the internal **`upkeep_oracles()`** function, which is called in those instances. In some cases, such as when removing liquidity in a balanced ratio, the **`D`** oracle is updated directly within the **`remove_liquidity()`** function, as there is no need to update the price oracles (removing balanced does not have a price impact).
 
 !!!danger "Oracle Manipulation"
-    The spot price cannot immediately be used for the calculation of the moving average, as this would allow for single block oracle manipulation. Consequently, `_calc_moving_average` uses `last_prices_packed`, which retains prices from previous actions.
+    The spot price cannot immediately be used for the calculation of the moving average, as this would allow for single block oracle manipulation. Consequently, **`_calc_moving_average`** uses **`last_prices_packed`**, which retains prices from previous actions.
 
 ??? quote "`upkeep_oracles`"
 
@@ -268,14 +268,14 @@ Oracles are updated when users perform a swap or when liquidity is added or remo
 ## **`exchange_received`**
 
 This new function **allows the exchange of tokens without actually transfering tokens in**, as the exchange is based on the change of the coins balances within the pool (see code below).    
-Users of this method are dex aggregators, arbitrageurs, or other users who **do not wish to grant approvals to the contract**. They can instead send tokens directly to the contract and call `exchange_received`.
+Users of this method are dex aggregators, arbitrageurs, or other users who **do not wish to grant approvals to the contract**. They can instead send tokens directly to the contract and call **`exchange_received()`**.
 
 !!!warning
     This function will revert if called on pools that contain rebasing tokens.
 
-??? quote "Logic of transfers when using `exchange_received`"
+??? quote "Transfer logic when using `exchange_received()`"
 
-    ```vyper hl_lines="6 15 21 22 23 24"
+    ```vyper
     @internal
     def _transfer_in(
         coin_idx: int128,
@@ -321,7 +321,7 @@ Users of this method are dex aggregators, arbitrageurs, or other users who **do 
 ### **Example** 
 
 !!!example
-    Lets say the user wants to swap **`GOV-TOKEN<>USDC`** through an aggregator. For simplicity we assume, **`GOV-TOKEN<>USDT`** exchange is done via a uniswap pool, **`USDT<>USDC`** via a curve pool.
+    Lets say a user wants to swap **`GOV-TOKEN<>USDC`** through an aggregator. For simplicity we assume, **`GOV-TOKEN<>USDT`** exchange is done via a uniswap pool, **`USDT<>USDC`** via a Curve pool.
 
 ``` mermaid
 graph LR
@@ -334,13 +334,13 @@ graph LR
     linkStyle 0 stroke-width:0, fill:none;
 ```
 
-1. User approves the *AGGREGATOR*, which then transfers tokens into the aggregator contract
-2. Aggregator exchanges GOV-TOKEN for USDT using *Uniswap* 
-3. Transfers the USDT directly from Uniswap into the *Curve* pool
-4. Perform a swap on the Curve pool (USDT<>USDC) via **`exchange_received`**
-5. Transfer USDC to the user
+1. User gives approval the **AGGREGATOR**, which then transfers tokens into the aggregator contract
+2. Aggregator exchanges `GOV-TOKEN` for `USDT` using Uniswap  
+3. Transfers the `USDT` directly from Uniswap into the Curve pool
+4. Perform a swap on the Curve pool (`USDT<>USDC`) via **`exchange_received`**
+5. Transfer `USDC` to the user
 
 
 !!!info 
     This method saves aggregators one redundant ERC-20 transfer and eliminates the need to grant approval to a curve pool. Without this function, the aggregator would have to conduct an additional transaction, transferring USDT from the Uniswap pool to their aggregator contract after the exchange, and then sending it to the Curve pool for another exchange (USDT<>USDC).
-    However, with this method in place, the aggregator can transfer the output tokens directly into the next pool and perform an exchange (`exchange_received`).
+    However, with this method in place, the aggregator can transfer the output tokens directly into the next pool and perform an exchange.
