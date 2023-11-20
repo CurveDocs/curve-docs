@@ -9,6 +9,9 @@ The AggregatorStablePrice contract is designed to **aggregate the prices of crvU
 
 ## **Calculating Prices**
 
+!!!bug
+    If the formulas below do not render, please make sure to refresh the site. A solution is being worked on.
+
 ### **Exponential Moving Average of TVL**
 
 **`_ema_tvl()`** calculates the Exponential Moving Average (EMA) of the Total Value Locked (TVL) for multiple Curve StableSwap pools. There is a maximum of 20 pairs to consider, and each price pair (pool) must have at least 100k TVL. 

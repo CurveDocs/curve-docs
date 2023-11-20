@@ -1,10 +1,10 @@
 ## **Concept of PegKeepers**  
 
 PegKeepers are contracts that help stabilize the peg of crvUSD. Each Keeper is allocated a specific amount of crvUSD to secure the peg. 
-The DAO decides this balance and can be **raised or lowered** by calling `set_debt_ceiling` in the [Factory](../crvUSD/factory.md).
+The DAO decides this balance and can be **raised or lowered** by calling **`set_debt_ceiling()`** in the [Factory](../crvUSD/factory.md).
 
 
-The underlying actions of the PegKeepers can be divided into two actions, which get executed when calling [`update`](#update):
+The underlying actions of the PegKeepers can be divided into two actions, which get executed when calling [**`update()`**](#update):
 
 - **crvUSD price > 1**: The PegKeeper mints and deposits crvUSD single-sidedly into the pool to which it is "linked", and receives LP tokens in exchange. This increases the balance of crvUSD in the pool and therefore decreases the price. It is important to note that the LP tokens are not staked in the gauge (if there is one). Thus, the PegKeeper does not receive CRV emissions.
 
@@ -437,7 +437,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
 
 ## **Admin and Receiver**
-PegKeepers have an `admin` and a `receiver`. Both of these variables can be altered by calling the respective admin-guarded functions, but such changes must first be approved by a DAO vote. After approval, the newly designated admin or receiver is required to apply these changes within a timeframe of `3 * 86400` seconds, which equates to a window of *three days*. Should there be an attempt to implement these changes after this period, the function to apply the changes will revert.
+PegKeepers have an **`admin`** and a **`receiver`.** Both of these variables can be altered by calling the respective admin-guarded functions, but such changes must first be approved by a DAO vote. After approval, the newly designated admin or receiver is required to apply these changes within a timeframe of `3 * 86400` seconds, which equates to a window of *three days*. Should there be an attempt to implement these changes after this period, the function to apply the changes will revert.
 
 
 ### `admin`
