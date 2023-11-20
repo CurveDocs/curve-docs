@@ -33,10 +33,11 @@ flowchart LR
   ub --> |burn for 3CRV| fd
 ```
 
-!!!success
+!!!success ""
     Efficiency within the intermediate conversions is the reason it is important to run the burn process in a specific order. For example, if you burn stETH prior to burning wstETH, you will have to burn stETH a second time!
 
-**There are multiple burner contracts, each of which handles a different category of fee coin. The following list also outlines the rough sequence in which burners should be executed:** 
+
+**There are multiple burner contracts, each of which handles a different category of fee coin.** 
 
 ## **Deployed Burner Contracts**
 
