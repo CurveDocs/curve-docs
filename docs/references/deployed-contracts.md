@@ -26,7 +26,7 @@ Here is a list of contract deployments that are used in the Curve DAO:
 
 ### **Aragon**
 
-Main documentation: [Ownership Proxies](/docs/curve_dao/ownership-proxy/overview.md)
+Main documentation: [Ownership Proxies](../curve_dao/ownership-proxy/Agents.md)
 
 Aragon [Voting App](https://wiki.aragon.org/archive/dev/apps/voting/) deployments are the main entry points used to create new votes, vote, check the status of a vote, and execute a successful vote.
 
