@@ -10,9 +10,9 @@ Ownership is handled via a series of proxy contracts. At a high level, the flow 
 
 ``` mermaid
 graph LR
-  A[DAO] --> B[Aragon Agent];
-  B --> C[Ownership Proxy];
-  C --> D[Contract];
+  A(DAO) --> B(Aragon Agent);
+  B --> COwnership Proxy);
+  C --> D(Contract);
 ```
 
 </div>
