@@ -45,7 +45,7 @@ All members of the EmergencyDAO may propose new votes. A vote *lasts for 24 hour
 
 
 !!!tip
-    To obtain the current members' addresses, query `getOwners` within the [EmergencyDAO contract]((https://etherscan.io/address/0x467947EE34aF926cF1DCac093870f613C96B1E0c)).
+    To obtain the current members' addresses, query `getOwners` within the [EmergencyDAO contract](https://etherscan.io/address/0x467947EE34aF926cF1DCac093870f613C96B1E0c).
 
 
 ### **Killing Pools**

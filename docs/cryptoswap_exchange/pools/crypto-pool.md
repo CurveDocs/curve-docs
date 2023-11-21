@@ -1576,7 +1576,7 @@ Curve v2 pools adaptively adjust liquidity to optimize depth near prevailing mar
 
 You can envision this mechanism as "resetting" the bonding curve to align the peak liquidity concentration (the curve's center) with the EMA. The price with the highest liquidity focus is termed the "price scale", while the ongoing EMA is labeled as the "price oracle."
 
-The price scaling parameters can be adjusted by the admin of the pool, see [here](../pools/admin_controls.md).
+The price scaling parameters can be adjusted by the admin of the pool, see [here](../pools/admin-controls.md).
 
 
 ### `allowed_extra_profit`
@@ -1627,7 +1627,7 @@ The price scaling parameters can be adjusted by the admin of the pool, see [here
 
 Similar to many AMMs, Curve v2 employs a bonding curve to determine asset prices based on the pool's availability of each asset. To centralize liquidity near the bonding curve's midpoint, Curve v2 utilizes an invariant that sits between the StableSwap (Curve v1) and the constant-product models (like Uniswap, Balancer, and others).
 
-The bonding curve parameters can be adjusted by the admin of the pool, see [here](../pools/admin_controls.md).
+The bonding curve parameters can be adjusted by the admin of the pool, see [here](../pools/admin-controls.md).
 
 
 ### `A`

@@ -1,4 +1,4 @@
-The following methods are guarded and may only be called by the `admin` of the Stableswap-NG Factory.
+The following methods are guarded and may only be called by the **`admin`** of the Stableswap-NG Factory.
 
 
 ### `ramp_A`
@@ -81,7 +81,7 @@ The following methods are guarded and may only be called by the `admin` of the S
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         event StopRampA:
             A: uint256
             t: uint256

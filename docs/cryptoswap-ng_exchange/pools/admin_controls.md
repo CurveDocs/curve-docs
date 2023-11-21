@@ -1,13 +1,13 @@
 
 ## **Pool Ownership**
-Pools created through the Factory are "owned" by the factory `admin` (DAO). Ownership can only be changed within the factory contract via `commit_transfer_ownership` and `accept_transfer_ownership`. 
+Pools created through the Factory are "owned" by the factory **`admin`** (DAO). Ownership can only be changed within the factory contract via **`commit_transfer_ownership`** and **`accept_transfer_ownership`**. 
 
 
 ## **Amplification Coefficient / Gamma Admin Controls**
 
 More informations about the parameters [here](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).
 
-The appropriate value for `A` and `gamma` is dependent upon the type of coin being used within the pool, and is subject to optimisation and pool-parameter update based on the market history of the trading pair. It is possible to modify the parameters for a pool after it has been deployed. However, it requires a vote within the Curve DAO and must reach a 15% quorum.
+The appropriate value for **`A`** and **`gamma`** is dependent upon the type of coin being used within the pool, and is subject to optimisation and pool-parameter update based on the market history of the trading pair. It is possible to modify the parameters for a pool after it has been deployed. However, it requires a vote within the Curve DAO and must reach a 15% quorum.
 
 
 ### `ramp_A_gamma`
@@ -28,7 +28,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 10 39"
+        ```vyper
         event RampAgamma:
             initial_A: uint256
             future_A: uint256
@@ -106,7 +106,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 7 24"
+        ```vyper
         event StopRampA:
             current_A: uint256
             current_gamma: uint256
@@ -164,7 +164,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 16 89"
+        ```vyper
         event CommitNewParameters:
             deadline: indexed(uint256)
             mid_fee: uint256
@@ -282,7 +282,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 18 37"
+        ```vyper
         event NewParameters:
             mid_fee: uint256
             out_fee: uint256
@@ -346,7 +346,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="2"
+        ```vyper
         @external
         def revert_new_parameters():
             """
@@ -377,7 +377,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 3"
+        ```vyper
         admin_actions_deadline: public(uint256)
 
         ADMIN_ACTIONS_DELAY: constant(uint256) = 3 * 86400
@@ -400,7 +400,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         initial_A_gamma: public(uint256)
         ```
 
@@ -421,7 +421,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         initial_A_gamma_time: public(uint256)
         ```
 
@@ -442,7 +442,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         future_A_gamma: public(uint256)
         ```
 
@@ -462,7 +462,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         future_A_gamma_time: public(uint256)
         ```
 

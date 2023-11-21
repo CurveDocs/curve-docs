@@ -9,11 +9,11 @@ Admin functions for the RootChainFactory or RootChainGauges must be invoked thro
 
 Additionally, there is a contract `manager` who can call functions like `set_bridger`, `set_implementation`, and `set_call_proxy`. *The manager CANNOT kill gauges or alter the admins of this contract*!
 
-For more details on what the admin functions do, please refer to the [`RootChainGaugeFactory`](../LiquidityGaugesAndMintingCRV/evm-sidechains/RootChainGaugeFactory.md) documentation.
+For more details on what the admin functions do, please refer to the [`RootChainGaugeFactory`](../liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md) documentation.
 
 
 
-## Admin and Manager Ownership
+## **Admin and Manager Ownership**
 
 The Proxy has the usual ownersip and emergency admins and the usual functions to changes those variables.
 

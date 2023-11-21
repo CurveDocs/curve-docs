@@ -23,4 +23,4 @@ LiquidityGauges V4 and later versions introduce the capability for a `distributo
 
 To deposit reward tokens, the `distributor` must call the `deposit_reward_token` function within the specific gauge.
 
-For more technical details, please refere to [this](../LiquidityGaugesAndMintingCRV/gauges/PermissionlessRewards.md).
+For more technical details, please refere to [this](../liquidity-gauge-and-minting-crv/gauges/PermissionlessRewards.md).

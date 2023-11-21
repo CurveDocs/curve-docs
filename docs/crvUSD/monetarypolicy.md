@@ -22,11 +22,13 @@ Markets have a **dynamic rate**, depending on the following components:
 * TargetFraction  
 * DebtFraction of PegKeepers  
 
-For the price of crvUSD, an aggregated oracle price of multiple Curve Stablwswap pools is used ([see here](../crvUSD/priceaggregator.md)).
+*For the price of crvUSD, an aggregated oracle price of multiple Curve Stablwswap pools is used ([see here](../crvUSD/priceaggregator.md)).*
 
 !!! tip
     Useful tool by [0xreviews](https://twitter.com/0xreviews_xyz) to play around with rates: https://crvusd-rate.0xreviews.xyz/
 
+!!!bug
+    If the formulas below do not render, please make sure to refresh the site. A solution is being worked on.
 
 $$r = rate0 * e^{power}$$
 

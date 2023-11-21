@@ -1,25 +1,27 @@
-Plain pools are curve liquidity exchange contracts which contain at least 2 and up to 8 coins. 
+Plain pools are liquidity exchange contracts which contain at least 2 and up to 8 coins. 
 
 !!!deploy "Contract Source & Deployment"
     Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNG.vy).  
+
+The deployment of plain pools is permissionless and can be done via the **`deploy_plain_pool`** function within the StableSwap-NG Factory.
 
 
 ## **Exchange Methods**
 
 The AMM contract utilizes two internal functions to transfer tokens/coins in and out of the pool and then accordingly update `stored_balances`:
 
-- `_transfer_in()`
-- `_transfer_out()`
+- **`_transfer_in()`**
+- **`_transfer_out()`**
 
 These functions contain the basic ERC-20 token transfer logic.
 
 
 ### **Transfer Token In**
 
-Transfering tokens to the pool occurs via the internal `_transfer_in()` function.   
-The function takes the index value of the coin (`coin_idx`), amount (`dx`), sender address (`sender`) and if a optimistic transfer is expected (`expect_optimistic_transfer`) as input.
+Transfering tokens to the pool occurs via the internal **`_transfer_in()`** function.   
+The function takes the index value of the coin (**`coin_idx`**), amount (**`dx`**), sender address (**`sender`**) and if a optimistic transfer is expected (**`expect_optimistic_transfer`**) as input.
 
-`expect_optimistic_transfer` is relevant when using the [`exchange_received`](#exchange_received) function.
+**`expect_optimistic_transfer`** is relevant when using the [**`exchange_received()`**](#exchange_received) function.
 
 
 ??? quote "`_transfer_in`"
@@ -78,7 +80,7 @@ The function takes the index value of the coin (`coin_idx`), amount (`dx`), send
 
 ### **Transfer Token Out**
 
-`_transfer_out()` is used to transfer tokens out of the pool.
+**`_transfer_out()`** is used to transfer tokens out of the pool.
 
 ??? quote "`_transfer_out`"
 

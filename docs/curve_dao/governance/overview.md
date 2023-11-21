@@ -1,3 +1,7 @@
+!!!info
+    This section is still using [Brownie](https://eth-brownie.readthedocs.io/en/stable/).
+
+
 # **The Curve DAO: Governance and Voting**  
 
 Curve uses [Aragon](https://aragon.org/) for governance and control of the protocol admin functionality. Interaction with Aragon occurs through a [modified implementation](https://github.com/curvefi/curve-aragon-voting) of the Aragon [Voting App](https://github.com/aragon/aragon-apps/tree/master/apps/voting).

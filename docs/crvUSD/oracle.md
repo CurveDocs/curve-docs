@@ -11,9 +11,13 @@ As crvusd markets use interal oracles, they utilizes in-house liquidity pools to
 
 
 ## **EMA of TVL**
-`_ema_tvl()` calculates the *exponential moving average* (**EMA**) of the *total value locked* (**TVL**) for `TRICRYPTO` pools.
 
-This value is subsequently used in the internal function `_raw_price()` to compute the *weighted price of ETH*.
+!!!bug
+    If the formulas below do not render, please make sure to refresh the site. A solution is being worked on.
+
+**`_ema_tvl()`** calculates the *exponential moving average* (**EMA**) of the *total value locked* (**TVL**) for `TRICRYPTO` pools.
+
+This value is subsequently used in the internal function **`_raw_price()`** to compute the *weighted price of ETH*.
 
 
 ??? quote "`_ema_tvl() -> uint256[N_POOLS]:`"
@@ -117,7 +121,8 @@ $\text{last_tvl}_i = \text{smoothed TVL of i-th pool}$ in `TRICRYPTO[N_POOLS]`
 
 
 ## **Calculate Raw Price**
-`_raw_price()` calculates the *raw price of the collateral token*. The function requires the inputs `tvls` (from `_ema_tvl()`) and `agg_price` (from `STABLESWAP_AGGREGATOR.price()`).
+
+**`_raw_price()`** calculates the *raw price of the collateral token*. The function requires the inputs **`tvls`** (from **`_ema_tvl()`**) and **`agg_price`** (from **`STABLESWAP_AGGREGATOR.price()`**).
 
 ??? quote "`_raw_price(tvls: uint256[N_POOLS], agg_price: uint256) -> uint256:`"
 
@@ -251,9 +256,9 @@ $rate_{wstETH} =$ amount of stETH for 1 wstETH
         ```
 
 ## **Chainlink Limits**
-The oracle contracts have the option to utilize Chainlink prices, which serve as safety limits. When enabled, these limits are triggered if the Chainlink price deviates by more than 1.5% (represented by `BOUND_SIZE`) from the internal price oracles.
+The oracle contracts have the option to utilize Chainlink prices, which serve as safety limits. When enabled, these limits are triggered if the Chainlink price deviates by more than 1.5% (represented by **`BOUND_SIZE`**) from the internal price oracles.
 
-Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: bool)`, which can only be done by the admin of the factory contract.
+Chainlink limits can be turned on and off by calling **`set_use_chainlink(do_it: bool)`**, which can only be done by the admin of the factory contract.
 
 <figure markdown>
   ![](../images/chainlink_oracle.png){ width="400" }

@@ -2,6 +2,9 @@ LLAMMA is the market-making contract that rebalances the collateral. As the name
 
 When creating a new loan, the controller evenly distributes the collateral put up by the user across a specified number of bands in the AMM and mints stablecoins for the user, each representing a range of collateral prices. 
 
+!!!bug
+    If the formulas below do not render, please make sure to refresh the site. A solution is being worked on.
+
 The **loan-to-value (LTV)** ratio depends on the number of bands:
 
 $$LTV = 1 - \text{loan_discount} - 1 * \frac{N}{2*A}$$
@@ -25,9 +28,9 @@ When the `health` drops below 0%, the user is eligible for **hard-liquidation**.
 
 *There are **three possible compositions** of bands:*   
 
-- `active_band` consists of both crvUSD and the collateral asset, depending on the oracle price within the band  
-- Bands < `active_band`: fully in crvUSD as the bands above have already gone through soft-liquidation  
-- Bands > `active_band`: fully in the collateral asset as the bands have not been in soft-liquidation mode
+- **`active_band`** consists of both crvUSD and the collateral asset, depending on the oracle price within the band  
+- Bands < **`active_band`**: fully in crvUSD as the bands above have already gone through soft-liquidation  
+- Bands > **`active_band`**: fully in the collateral asset as the bands have not been in soft-liquidation mode
 
 <figure markdown>
   ![](../images/amm1.png)
@@ -35,15 +38,15 @@ When the `health` drops below 0%, the user is eligible for **hard-liquidation**.
 </figure>
 
 
-To ensure assets are liquidated or de-liquidated, the AMM adjusts its price (`get_p`) to create arbitrage opportunities. Every trade within the AMM that arbitrages the price difference between `oracle_price` and `get_p` is essentially soft-liquidating users.
+To ensure assets are liquidated or de-liquidated, the AMM adjusts its price (**`get_p`**) to create arbitrage opportunities. Every trade within the AMM that arbitrages the price difference between **`oracle_price`** and **`get_p`** is essentially soft-liquidating users.
 
 *The system relies on **two different prices**:*
 
-- `price_oracle`: collateral price fetched from an external OracleContract  
-- `get_p`: oracle price of the AMM itself
+- **`price_oracle`:** collateral price fetched from an external OracleContract  
+- **`get_p`:** oracle price of the AMM itself
 
 When $\text{price_oracle} = \text{get_p}$, the external oracle price and the AMM price are identical, making arbitrage impossible.
-Generally, when the price oracle begins to change, the AMM price is adjusted (the AMM price is more sensitive than the regular `price_oracle`) to enable arbitrage opportunities.
+Generally, when the price oracle begins to change, the AMM price is adjusted (the AMM price is more sensitive than the regular **`price_oracle`**) to enable arbitrage opportunities.
 
 When the price of the collateral starts to rise, then $\text{price_oracle} < \text{get_p}$, and therefore, arbitrage is possible by swapping the collateral asset into crvUSD until $\text{price_oracle} = \text{get_p}$.  
 Conversely, when the price starts to decrease, $\text{price_oracle} > \text{get_p}$, and therefore, arbitrage is possible by swapping crvUSD into the collateral asset until both prices reach equilibrium. 
@@ -70,10 +73,10 @@ Conversely, when the price starts to decrease, $\text{price_oracle} > \text{get_
 
 
 ## **Depositing and Removing Collateral**
-Depositing and removing collateral can only be done by the `admin` of the AMM, the Controller. 
-Therefore the controller contract must be granted max approval to call these functions successfully. Max approval is given when `set_admin()` is called.
+Depositing and removing collateral can only be done by the **`admin`** of the AMM, the Controller. 
+Therefore the controller contract must be granted max approval to call these functions successfully. Max approval is given when **`set_admin()`** is called.
 
-Collateral is put into bands by calling `deposit_range()` whenever someone creates a new loan or adds collateral to the existing position. Collateral is removed by calling `withdraw()`.
+Collateral is put into bands by calling **`deposit_range()`** whenever someone creates a new loan or adds collateral to the existing position. Collateral is removed by calling **`withdraw()`**.
 
 
 

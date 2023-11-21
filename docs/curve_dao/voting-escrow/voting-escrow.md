@@ -7,9 +7,8 @@ Participating in Curve DAO governance requires that an account have a balance of
     [0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2](https://etherscan.io/address/0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2).  
     Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/VotingEscrow.vy). 
 
-To calculate the veCRV output when locking, ensure to multiply the amount of CRV tokens by $\frac{locktime}{4}$.
 
-`locktime (n)` is denominated in years. The *maximum lock duration is four years* and the *minimum lock is one week*.
+`locktime` is denominated in years. The *maximum lock duration is four years* and the *minimum is one week*.
 
 | CRV      | veCRV  | Locktime|
 | -------- | -------| --------|
@@ -18,7 +17,6 @@ To calculate the veCRV output when locking, ensure to multiply the amount of CRV
 | `1`      |  `0.5` | 2 years |
 | `1`      |  `0.25`| 1 year  |
 | $x$      |  $x * \frac{n}{4}$| $n$  |
-
 
 !!!warning "Transferability"
     veCRV cannot be transferred. The only way to obtain veCRV is by locking CRV.  
