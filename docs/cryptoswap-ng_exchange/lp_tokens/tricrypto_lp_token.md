@@ -1,10 +1,10 @@
-**LP Token and liquidity pool is the same smart contract.**
+**LP Token and liquidity pool share the same smart contract.**
 
 !!!deploy "Contract Source"
     Source code available on [Github](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveTricryptoOptimizedWETH.vy).
 
 
-## **LP Token Info Methods**
+## **Info Methods**
 
 ### `name`
 !!! description "`LPToken.name() -> String[64]: view`"
@@ -15,7 +15,7 @@
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 4 5 23"
+        ```vyper
         name: public(immutable(String[64]))
 
         @external
@@ -100,7 +100,7 @@
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 4 6 24"
+        ```vyper
         symbol: public(immutable(String[32]))
 
         @external
@@ -188,7 +188,7 @@
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         decimals: public(constant(uint8)) = 18
         ```
 
@@ -213,7 +213,7 @@
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         version: public(constant(String[8])) = "v2.0.0"
         ```
 
@@ -238,7 +238,7 @@
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         balanceOf: public(HashMap[address, uint256])
         ```
 
@@ -259,7 +259,7 @@
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         totalSupply: public(uint256)
         ```
 
@@ -289,7 +289,7 @@
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 7 15 18 24"
+        ```vyper
         event Transfer:
             sender: indexed(address)
             receiver: indexed(address)
@@ -341,7 +341,7 @@
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 7 19 20 23 29"
+        ```vyper
         event Transfer:
             sender: indexed(address)
             receiver: indexed(address)
@@ -395,7 +395,7 @@
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 7 19 20 23 26"
+        ```vyper
         event Approval:
             owner: indexed(address)
             spender: indexed(address)
@@ -446,7 +446,7 @@
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         allowance: public(HashMap[address, HashMap[address, uint256]])
         ```
 
@@ -472,7 +472,7 @@
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 4 20 22"
+        ```vyper
         allowance: public(HashMap[address, HashMap[address, uint256]])
 
         @external
@@ -520,7 +520,7 @@
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 4 20 22"
+        ```vyper
         allowance: public(HashMap[address, HashMap[address, uint256]])
 
         @external
@@ -572,7 +572,7 @@
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="2 45 46"
+        ```vyper
         @external
         def permit(
             _owner: address,

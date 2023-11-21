@@ -1,4 +1,4 @@
-This contract contains view-only external methods which can be gas-inefficient when called from smart contracts.
+This contract contains **view-only external methods** which can be gas-inefficient when called from smart contracts.
 
 !!!deploy "Contract Source & Deployment"
     **ViewMethodContract** is deployed to the Ethereum mainnet at: [0x064253915b8449fdEFac2c4A74aA9fdF56691a31](https://etherscan.io/address/0x064253915b8449fdEFac2c4A74aA9fdF56691a31#code).
@@ -6,7 +6,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
 
 
-## Token Exchange Methods
+## **Exchange Methods**
 
 ### `get_dy`
 !!! description "`ViewMethodContract.get_dy(i: uint256, j: uint256, dx: uint256, swap: address) -> uint256:`"
@@ -24,7 +24,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3 14"
+        ```vyper
         @external
         @view
         def get_dy(
@@ -68,7 +68,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3 17"
+        ```vyper
         @view
         @external
         def get_dx(
@@ -112,7 +112,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3 7 11 64"
+        ```vyper
         @view
         @external
         def calc_withdraw_one_coin(
@@ -203,7 +203,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3 16 19"
+        ```vyper
         @view
         @external
         def calc_token_amount(
@@ -274,9 +274,9 @@ This contract contains view-only external methods which can be gas-inefficient w
 
 
 
-## Calculating Fees Methods
+## **Calculating Fees Methods**
 
-Methods to calculate fees for `get_dy`, `withdraw_one_coin` and `calc_token_amount`.
+Methods to calculate fees for **`get_dy`**, **`withdraw_one_coin`** and **`calc_token_amount`**.
 
 ### `calc_fee_get_dy`
 !!! description "`ViewMethodContract.calc_fee_get_dy(i: uint256, j: uint256, dx: uint256, swap: address) -> uint256:`"
@@ -294,7 +294,7 @@ Methods to calculate fees for `get_dy`, `withdraw_one_coin` and `calc_token_amou
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3 8 10 14"
+        ```vyper
         @external
         @view
         def calc_fee_get_dy(i: uint256, j: uint256, dx: uint256, swap: address
@@ -366,7 +366,7 @@ Methods to calculate fees for `get_dy`, `withdraw_one_coin` and `calc_token_amou
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3 7 11"
+        ```vyper
         @external
         @view
         def calc_fee_withdraw_one_coin(
@@ -457,7 +457,7 @@ Methods to calculate fees for `get_dy`, `withdraw_one_coin` and `calc_token_amou
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3 12 16"
+        ```vyper
         @view
         @external
         def calc_fee_token_amount(
