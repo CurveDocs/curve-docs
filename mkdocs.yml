@@ -101,6 +101,11 @@ nav:
     - Utility Contracts: 
       - Math: cryptoswap-ng_exchange/utility_contracts/math.md
       - Views: cryptoswap-ng_exchange/utility_contracts/ViewMethodContract.md
+    - Pool Factory:
+      - Overview: cryptoswap-ng_exchange/factory/overview.md
+      - Deployer API: cryptoswap-ng_exchange/factory/deployer-api.md
+      - Implementations: cryptoswap-ng_exchange/factory/implementations.md
+      - Admin Controls: cryptoswap-ng_exchange/factory/admin-controls.md
 
   - Stableswap Exchange:    
     - Overview: stableswap_exchange/overview.md 
