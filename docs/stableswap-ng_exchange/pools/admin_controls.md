@@ -81,7 +81,7 @@ The following methods are guarded and may only be called by the **`admin`** of t
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         event StopRampA:
             A: uint256
             t: uint256
