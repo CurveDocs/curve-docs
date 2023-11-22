@@ -1,5 +1,10 @@
 The StableSwapNG-Factory serves as a permissionless pool deployer and registry. For further information regarding the registry, please refer to this [section](../../registry/overview.md).
 
+!!!deploy "Contract Source & Deployment"
+    **Stableswap-NG Factory** contract is deployed to the Ethereum mainnet at: [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://etherscan.io/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf#code).
+    Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapFactoryNG.vy).  
+    A list of all deployments can be found [here](../../references/deployed-contracts.md#stableswap-ng).
+
 
 ## **Fee Receiver**
 
