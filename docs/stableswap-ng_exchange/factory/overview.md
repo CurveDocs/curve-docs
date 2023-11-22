@@ -8,7 +8,7 @@ The StableSwapNG-Factory serves as a permissionless pool deployer and registry. 
 
 ## **Fee Receiver**
 
-All deployed pools share the same fee receiver. A new address can be designated by using the [`set_fee_receiver`](../factory/admin_controls.md#set_fee_receiver) function.
+All deployed pools share the same fee receiver. A new address can be designated by using the [**`set_fee_receiver`**](../factory/admin_controls.md#set_fee_receiver) function.
 
 ### `fee_receiver`
 !!! description "`Factory.fee_receiver() -> address: view`"
@@ -64,7 +64,7 @@ A pool can contain different asset types. All avalaible types can be queried wit
 
 Pools and gauges are created through blueprint contracts based on the implementation chosen during deployment.
 
-Additionally, there are utility contracts for Math  (`math_implementation`) and Views (`views_implementation`).
+Additionally, there are utility contracts for Math  (**`math_implementation`**) and Views (**`views_implementation`**).
 
 
 ### `pool_implementations`
@@ -189,7 +189,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
 ## **Ownership**
 
-`Admin` is the owner of the contract and has exclusive possibility to call admin-only functions. Ownership can be transferred; for details, see [here](../factory/admin_controls.md#commit_transfer_ownership).
+**`Admin`** is the owner of the contract and has exclusive possibility to call admin-only functions. Ownership can be transferred; for details, see [here](../factory/admin_controls.md#commit_transfer_ownership).
 
 ### `admin`
 !!! description "`Factory.admin() -> address: view`"

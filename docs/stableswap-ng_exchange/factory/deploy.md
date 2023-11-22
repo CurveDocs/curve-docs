@@ -8,8 +8,8 @@ Limitations when deploying stableswap-ng pools:
 
 - minimum of 2 and maximum of 8 coins
 - all coin arrays should be same length
-- `_fee` <= 100000000 (1%)
-- `_offpeg_fee_multiplier` * `_fee` <= `MAX_FEE` * `FEE_DENOMINATOR`
+- **`_fee`** <= 100000000 (1%)
+- **`_offpeg_fee_multiplier`** * **`_fee`** <= **`MAX_FEE`** * **`FEE_DENOMINATOR`**
 - maximum of 18 decimals for a coin
 - no duplicate coins
 - valid implementation index
@@ -199,8 +199,8 @@ Limitations when deploying stableswap-ng pools:
 Limitations when deploying meta pools:
 
 - cannot pair against a token that is included in the base pool
-- `_fee` <= 100000000 (1%)
-- `_offpeg_fee_multiplier` * `_fee` <= `MAX_FEE` * `FEE_DENOMINATOR`
+- **`_fee`** <= 100000000 (1%)
+- **`_offpeg_fee_multiplier`** * **`_fee`** <= **`MAX_FEE`** * **`FEE_DENOMINATOR`**
 - valid implementation index
 - maximum of 18 decimals for a coin
 
