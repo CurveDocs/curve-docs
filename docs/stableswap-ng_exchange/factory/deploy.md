@@ -35,7 +35,7 @@ Limitations when deploying stableswap-ng pools:
     | `_offpeg_fee_multiplier` |  `uint256` | off-peg multiplier |
     | `_ma_exp_time` |  `uint256` | ma time; set as time_in_seconds / ln(2) |
     | `_implementation_idx` |  `uint256` | index of the implementation to use; more [here](../factory/overview.md#implementations) |
-    | `_asset_type` |  `DynArray[uint8, MAX_COINS]` | asset type of the pool as an integer |
+    | `_asset_type` |  `DynArray[uint8, MAX_COINS]` | asset type of the pool as an integer; more [here](../pools/overview.md#supported-assets)|
     | `_methods_id` |  `DynArray[bytes4, MAX_COINS]` | array of first four bytes of the Keccak-256 hash of the function signatures of the oracle addresses that give rate oracles |
     | `_oracles` |  `DynArray[address, MAX_COINS]` | array of rate oracle addresses |
 
