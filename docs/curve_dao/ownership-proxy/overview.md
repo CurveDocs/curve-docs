@@ -64,7 +64,7 @@ Pool and Gauge proxies usually have three different admins (representing the dif
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 20"
+        ```vyper hl_lines="1 7 20"
         event CommitAdmins:
             ownership_admin: address
             parameter_admin: address
@@ -111,7 +111,7 @@ Pool and Gauge proxies usually have three different admins (representing the dif
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 20"
+        ```vyper hl_lines="1 7 20"
         event ApplyAdmins:
             ownership_admin: address
             parameter_admin: address
@@ -152,7 +152,7 @@ Pool and Gauge proxies usually have three different admins (representing the dif
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5"
+        ```vyper hl_lines="1 5"
         ownership_admin: public(address)
 
         @external
@@ -181,7 +181,7 @@ Pool and Gauge proxies usually have three different admins (representing the dif
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6"
+        ```vyper hl_lines="1 6"
         parameter_admin: public(address)
 
         @external
@@ -210,7 +210,7 @@ Pool and Gauge proxies usually have three different admins (representing the dif
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7"
+        ```vyper hl_lines="1 7"
         emergency_admin: public(address)
 
         @external
@@ -240,7 +240,7 @@ Pool and Gauge proxies usually have three different admins (representing the dif
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 13"
+        ```vyper hl_lines="1 13"
         future_ownership_admin: public(address)
 
         @external
@@ -276,7 +276,7 @@ Pool and Gauge proxies usually have three different admins (representing the dif
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 14"
+        ```vyper hl_lines="1 14"
         future_parameter_admin: public(address)
 
         @external
@@ -312,7 +312,7 @@ Pool and Gauge proxies usually have three different admins (representing the dif
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 15"
+        ```vyper hl_lines="1 15"
         future_emergency_admin: public(address)
 
         @external

@@ -66,7 +66,7 @@ A pool can be unkilled by calling the function `unkill_me()`.
 
 ??? quote "kill_me()"
 
-    ```python
+    ```vyper
     is_killed: bool
     kill_deadline: uint256
     KILL_DEADLINE_DT: constant(uint256) = 2 * 30 * 86400
@@ -92,7 +92,7 @@ A killed gauge has a rate of 0, effectively stopping all CRV emissions.
 
 ??? quote "set_killed(_is_killed: bool)"
   
-    ```python
+    ```vyper
     is_killed: public(bool)
 
     @external

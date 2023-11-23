@@ -25,7 +25,7 @@ As these proxies serve as the admins/owners of the exchange contracts, they are 
 
         === "PoolProxy.vy"
 
-            ```python hl_lines="3 21"
+            ```vyper hl_lines="3 21"
             interface Curve:
                 def withdraw_admin_fees(): nonpayable
                 def kill_me(): nonpayable
@@ -45,7 +45,7 @@ As these proxies serve as the admins/owners of the exchange contracts, they are 
 
         === "Pool.vy"
 
-            ```python hl_lines="1 4"
+            ```vyper hl_lines="1 4"
             is_killed: bool
 
             @external

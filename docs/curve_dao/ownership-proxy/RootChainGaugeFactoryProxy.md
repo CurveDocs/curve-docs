@@ -41,7 +41,7 @@ The Proxy has the usual ownersip and emergency admins and the usual functions to
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 9 15 17 18 20"
+        ```vyper hl_lines="1 9 15 17 18 20"
         event CommitAdmins:
             ownership_admin: indexed(address)
             emergency_admin: indexed(address)
@@ -86,7 +86,7 @@ The Proxy has the usual ownersip and emergency admins and the usual functions to
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 9 14 17 18 20"
+        ```vyper hl_lines="1 9 14 17 18 20"
         event ApplyAdmins:
             ownership_admin: indexed(address)
             emergency_admin: indexed(address)
@@ -128,7 +128,7 @@ The Proxy has the usual ownersip and emergency admins and the usual functions to
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         manager: public(address)
         ```
 
@@ -159,7 +159,7 @@ The Proxy has the usual ownersip and emergency admins and the usual functions to
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 7 12 13 14"
+        ```vyper hl_lines="1 4 7 12 13 14"
         event SetManager:
             _manager: indexed(address)
 
