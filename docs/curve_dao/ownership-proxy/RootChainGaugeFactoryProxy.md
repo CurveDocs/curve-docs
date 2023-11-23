@@ -1,4 +1,4 @@
-ProxyOwnership contracct for the [RootChainGaugeFactory](https://etherscan.io/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5#code).
+ProxyOwnership contract for the [RootChainGaugeFactory](https://etherscan.io/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5#code).
 
 !!!deploy "Contract Source & Deployment"
     **`RootChainGaugeFactoryProxy`** contract is deployed on the Ethereum mainnet at: [0x017dB2B92233018973902858B31269Ed071E1D39](https://etherscan.io/address/0x017dB2B92233018973902858B31269Ed071E1D39#code).  
@@ -7,7 +7,9 @@ ProxyOwnership contracct for the [RootChainGaugeFactory](https://etherscan.io/ad
 
 Admin functions for the RootChainFactory or RootChainGauges must be invoked through the RootChainGaugeFactoryProxy, necessitating a successful DAO vote.
 
-Additionally, there is a contract `manager` who can call functions like `set_bridger`, `set_implementation`, and `set_call_proxy`. *The manager CANNOT kill gauges or alter the admins of this contract*!
+Additionally, there is a contract **`manager`** who can call functions like **`set_bridger`**, **`set_implementation`**, and **`set_call_proxy`**. 
+
+*The manager CANNOT kill gauges or alter the admins of this contract*!
 
 For more details on what the admin functions do, please refer to the [`RootChainGaugeFactory`](../liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md) documentation.
 
@@ -36,12 +38,9 @@ The Proxy has the usual ownersip and emergency admins and the usual functions to
     | `_o_admin` |  `address` | New Ownership Admin Address |
     | `_e_admin` |  `address` | New Emergency Admin Address |
 
-    !!!note
-        This function can only be called by the `ownership_admin`.
-
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 9 15 17 18 20"
+        ```vyper
         event CommitAdmins:
             ownership_admin: indexed(address)
             emergency_admin: indexed(address)
@@ -81,12 +80,9 @@ The Proxy has the usual ownersip and emergency admins and the usual functions to
 
     Emits: `ApplyAdmins`
 
-    !!!note
-        This function can only be called by the `future_ownership_admin`.
-
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 9 14 17 18 20"
+        ```vyper
         event ApplyAdmins:
             ownership_admin: indexed(address)
             emergency_admin: indexed(address)
@@ -123,12 +119,9 @@ The Proxy has the usual ownersip and emergency admins and the usual functions to
 
     Emits: `ApplyAdmins`
 
-    !!!note
-        This function can only be called by the `future_ownership_admin`.
-
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         manager: public(address)
         ```
 
@@ -154,12 +147,9 @@ The Proxy has the usual ownersip and emergency admins and the usual functions to
     | ----------- | -------| ----|
     | `_new_manager` |  `address` | New Manager Address |
 
-    !!!note
-        This function can only be called by the `ownership_admin`, `emergency_admin` or `manager`.
-
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 4 7 12 13 14"
+        ```vyper
         event SetManager:
             _manager: indexed(address)
 
