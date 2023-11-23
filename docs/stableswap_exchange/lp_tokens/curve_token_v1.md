@@ -8,7 +8,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8"
+        ```vyper hl_lines="1 8"
         name: public(string[64])
 
         ...
@@ -40,7 +40,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 9"
+        ```vyper hl_lines="1 9"
         symbol: public(string[32])
 
         ...
@@ -72,7 +72,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 10"
+        ```vyper hl_lines="1 10"
         decimals: public(uint256)
 
         ...
@@ -108,7 +108,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="5 11 15"
+        ```vyper hl_lines="5 11 15"
         # NOTE: By declaring `balanceOf` as public, vyper automatically generates a 'balanceOf()' getter
         #       method to allow access to account balances.
         #       The _KeyType will become a required parameter for the getter and it will return _ValueType.
@@ -144,7 +144,7 @@
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @public
         @constant
         def totalSupply() -> uint256:
@@ -174,7 +174,7 @@
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @public
         @constant
         def allowance(_owner : address, _spender : address) -> uint256:
@@ -203,12 +203,16 @@
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
             _value: uint256
 
+=======
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @public
         def transfer(_to : address, _value : uint256) -> bool:
             """
@@ -241,12 +245,16 @@
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
             _value: uint256
 
+=======
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @public
         def transferFrom(_from : address, _to : address, _value : uint256) -> bool:
             """
@@ -294,12 +302,16 @@
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
         event Approval:
             _owner: indexed(address)
             _spender: indexed(address)
             _value: uint256
 
+=======
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @public
         def approve(_spender : address, _value : uint256) -> bool:
             """
@@ -339,7 +351,7 @@ The following methods are only callable by the ``minter`` (private attribute).
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @public
         def mint(_to: address, _value: uint256):
             """
@@ -370,12 +382,16 @@ The following methods are only callable by the ``minter`` (private attribute).
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
             _value: uint256
 
+=======
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @private
         def _burn(_to: address, _value: uint256):
             """
@@ -414,12 +430,16 @@ The following methods are only callable by the ``minter`` (private attribute).
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
             _value: uint256
 
+=======
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @private
         def _burn(_to: address, _value: uint256):
             """
@@ -456,7 +476,7 @@ The following methods are only callable by the ``minter`` (private attribute).
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @public
         def set_minter(_minter: address):
             assert msg.sender == self.minter

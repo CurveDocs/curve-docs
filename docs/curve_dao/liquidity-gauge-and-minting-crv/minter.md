@@ -21,7 +21,7 @@ The `Minter` contract is responsible for the issuance and distribution of CRV. I
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # minter -> user -> can mint?
         allowed_to_mint_for: public(HashMap[address, HashMap[address, bool]])
         ```
@@ -44,7 +44,7 @@ The `Minter` contract is responsible for the issuance and distribution of CRV. I
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # minter -> user -> can mint?
         allowed_to_mint_for: public(HashMap[address, HashMap[address, bool]])
 
@@ -77,7 +77,7 @@ The `Minter` contract is responsible for the issuance and distribution of CRV. I
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Minted:
             recipient: indexed(address)
             gauge: address
@@ -130,7 +130,7 @@ The `Minter` contract is responsible for the issuance and distribution of CRV. I
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Minted:
             recipient: indexed(address)
             gauge: address
@@ -187,7 +187,7 @@ The `Minter` contract is responsible for the issuance and distribution of CRV. I
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Minted:
             recipient: indexed(address)
             gauge: address
@@ -241,7 +241,7 @@ The `Minter` contract is responsible for the issuance and distribution of CRV. I
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Minted:
             recipient: indexed(address)
             gauge: address
@@ -268,7 +268,7 @@ The `Minter` contract is responsible for the issuance and distribution of CRV. I
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         token: public(address)
 
         @external
@@ -293,7 +293,7 @@ The `Minter` contract is responsible for the issuance and distribution of CRV. I
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         controller: public(address)
 
         @external

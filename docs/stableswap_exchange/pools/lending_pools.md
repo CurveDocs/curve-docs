@@ -53,7 +53,11 @@ of wrapped tokens that are used by lending pools:
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
+=======
+        ```vyper hl_lines="1 9 19 25 26 27 29 30 31 32 33 34 35 36 37 38 39 40 43"
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         underlying_coins: public(address[N_COINS])
 
         ...
@@ -144,6 +148,7 @@ For example, calling ``exchange`` on the Compound Pool, would result in a swap b
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
         event TokenExchangeUnderlying:
             buyer: indexed(address)
@@ -152,6 +157,9 @@ For example, calling ``exchange`` on the Compound Pool, would result in a swap b
             bought_id: int128
             tokens_bought: uint256
 
+=======
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @external
         @nonreentrant('lock')
         def exchange_underlying(i: int128, j: int128, dx: uint256, min_dy: uint256) -> uint256:
@@ -240,6 +248,7 @@ Some newer pools (e.g., [IB](https://github.com/curvefi/curve-contract/blob/mast
     
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
         event AddLiquidity:
             provider: indexed(address)
@@ -248,6 +257,9 @@ Some newer pools (e.g., [IB](https://github.com/curvefi/curve-contract/blob/mast
             invariant: uint256
             token_supply: uint256
 
+=======
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @external
         @nonreentrant('lock')
         def add_liquidity(_amounts: uint256[N_COINS], _min_mint_amount: uint256, _use_underlying: bool = False) -> uint256:

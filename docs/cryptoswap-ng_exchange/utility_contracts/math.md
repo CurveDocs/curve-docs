@@ -24,7 +24,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper
         N_COINS: constant(uint256) = 3
         A_MULTIPLIER: constant(uint256) = 10000
 
@@ -259,7 +259,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper
         @external
         @view
         def newton_D(
@@ -485,7 +485,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper
         @external
         @view
         def get_p(
@@ -571,7 +571,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 9 13 "
+        ```vyper
         @external
         @view
         def cbrt(x: uint256) -> uint256:
@@ -706,11 +706,11 @@
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_x` |  `uint256` | List of three numbers |
+    | `_x` |  `uint256` | list of three numbers |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper
         @external
         @view
         def geometric_mean(_x: uint256[3]) -> uint256:
@@ -814,7 +814,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper
         @external
         @view
         def reduction_coefficient(x: uint256[N_COINS], fee_gamma: uint256) -> uint256:
@@ -872,7 +872,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper
         @external
         @view
         def wad_exp(_power: int256) -> uint256:
@@ -970,7 +970,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper
         version: public(constant(String[8])) = "v2.0.0"
         ```
 

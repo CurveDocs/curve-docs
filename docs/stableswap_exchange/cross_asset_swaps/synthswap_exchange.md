@@ -20,7 +20,7 @@ In general, any asset that is within a Curve pool also containing a Synth may be
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def add_synth(_synth: address, _pool: address):
             """
@@ -71,7 +71,7 @@ In general, any asset that is within a Curve pool also containing a Synth may be
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # synth -> curve pool where it can be traded
         synth_pools: public(HashMap[address, address])
 
@@ -97,7 +97,7 @@ In general, any asset that is within a Curve pool also containing a Synth may be
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # synth -> curve pool where it can be traded
         synth_pools: public(HashMap[address, address])
 
@@ -126,7 +126,7 @@ In general, any asset that is within a Curve pool also containing a Synth may be
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @internal
         def _get_swap_into(_from: address, _synth: address, _amount: uint256) -> uint256:
@@ -196,7 +196,7 @@ In general, any asset that is within a Curve pool also containing a Synth may be
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @internal
         def _get_swap_from(_synth: address, _to: address, _amount: uint256) -> uint256:
@@ -250,8 +250,13 @@ In general, any asset that is within a Curve pool also containing a Synth may be
     | `_amount`       |  `uint256` | Amount of `_from` to swap |
 
     ??? quote "Source code"
+<<<<<<< HEAD
 
         ```python
+=======
+    
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @view
         @internal
         def _get_swap_into(_from: address, _synth: address, _amount: uint256) -> uint256:
@@ -353,7 +358,7 @@ In general, any asset that is within a Curve pool also containing a Synth may be
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @payable
         @external
         def swap_into_synth(
@@ -531,7 +536,7 @@ In general, any asset that is within a Curve pool also containing a Synth may be
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def token_info(_token_id: uint256) -> TokenInfo:
@@ -599,7 +604,7 @@ In general, any asset that is within a Curve pool also containing a Synth may be
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def swap_from_synth(
             _token_id: uint256,
@@ -697,7 +702,7 @@ In general, any asset that is within a Curve pool also containing a Synth may be
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def withdraw(_token_id: uint256, _amount: uint256, _receiver: address = msg.sender) -> uint256:
             """
@@ -776,8 +781,13 @@ In general, any asset that is within a Curve pool also containing a Synth may be
     | `_token_id` |  `uint256` | The identifier for an NFT |
     
     ??? quote "Source code"
+<<<<<<< HEAD
 
         ```python
+=======
+    
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @external
         def settle(_token_id: uint256) -> bool:
             """

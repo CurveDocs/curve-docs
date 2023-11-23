@@ -47,7 +47,7 @@ Metapool can have different implementations depending on the paired token and ba
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 5 12"
+        ```vyper hl_lines="1 5 12"
         base_pool_data: HashMap[address, BasePoolArray]
 
         @view
@@ -94,7 +94,7 @@ Metapool can have different implementations depending on the paired token and ba
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```vyper hl_lines="2"
         @external
         def set_metapool_implementations(
             _base_pool: address,
@@ -174,7 +174,7 @@ Plain pool implementations:
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```vyper hl_lines="2"
         @external
         def set_plain_implementations(
             _n_coins: uint256,

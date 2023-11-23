@@ -17,7 +17,7 @@ The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a c
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         future_smart_wallet_checker: public(address)
 
         @external
@@ -46,7 +46,7 @@ The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a c
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         future_smart_wallet_checker: public(address)
         smart_wallet_checker: public(address)
 
@@ -84,7 +84,7 @@ The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a c
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event CommitOwnership:
             admin: address
 
@@ -120,7 +120,7 @@ The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a c
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event ApplyOwnership:
             admin: address
 

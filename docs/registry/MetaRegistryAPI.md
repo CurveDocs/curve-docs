@@ -10,7 +10,7 @@ The following getter methods are available for finding pools that were deployed 
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def pool_count() -> uint256:
@@ -47,7 +47,7 @@ The following getter methods are available for finding pools that were deployed 
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def pool_list(_index: uint256) -> address:
@@ -89,7 +89,7 @@ The following getter methods are available for finding pools that were deployed 
 
     ??? quote "Source code"
 
-        ```python hl_lines="4"
+        ```vyper hl_lines="4"
         @view
         @external
         def find_pools_for_coins(_from: address, _to: address) -> DynArray[address, 1000]:
@@ -150,7 +150,7 @@ The following getter methods are available for finding pools that were deployed 
 
     ??? quote "Source code"
 
-        ```python hl_lines="4"
+        ```vyper hl_lines="4"
         @view
         @external
         def find_pool_for_coins(_from: address, _to: address, i: uint256 = 0) -> address:
@@ -211,7 +211,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_pool_name(_pool: address, _handler_id: uint256 = 0) -> String[64]:
@@ -247,7 +247,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def is_meta(_pool: address, _handler_id: uint256 = 0) -> bool:
@@ -284,7 +284,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_base_pool(_pool: address, _handler_id: uint256 = 0) -> address:
@@ -324,7 +324,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_fees(_pool: address, _handler_id: uint256 = 0) -> uint256[10]:
@@ -372,7 +372,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_pool_params(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_POOL_PARAMS]:
@@ -423,7 +423,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_lp_token(_pool: address, _handler_id: uint256 = 0) -> address:
@@ -457,7 +457,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_pool_asset_type(_pool: address, _handler_id: uint256 = 0) -> uint256:
@@ -491,7 +491,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_pool_from_lp_token(_token: address, _handler_id: uint256 = 0) -> address:
@@ -524,7 +524,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_virtual_price_from_lp_token(_token: address, _handler_id: uint256 = 0) -> uint256:
@@ -560,7 +560,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 2"
+        ```vyper hl_lines="1 2"
         @external
         @view
         def is_registered(_pool: address, _handler_id: uint256 = 0) -> bool:
@@ -594,7 +594,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_gauge(_pool: address, gauge_idx: uint256 = 0, _handler_id: uint256 = 0) -> address:
@@ -632,7 +632,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_gauge_type(_pool: address, gauge_idx: uint256 = 0, _handler_id: uint256 = 0) -> int128:
@@ -671,7 +671,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_coins(_pool: address, _handler_id: uint256 = 0) -> address[MAX_COINS]:
@@ -709,7 +709,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_underlying_coins(_pool: address, _handler_id: uint256 = 0) -> address[MAX_COINS]:
@@ -749,7 +749,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_n_coins(_pool: address, _handler_id: uint256 = 0) -> uint256:
@@ -783,7 +783,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_n_underlying_coins(_pool: address, _handler_id: uint256 = 0) -> uint256:
@@ -816,7 +816,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_decimals(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:
@@ -851,7 +851,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_underlying_decimals(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:
@@ -886,7 +886,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @view
         @external
         def get_coin_indices(_pool: address, _from: address, _to: address, _handler_id: uint256 = 0) -> (int128, int128, bool):
@@ -922,7 +922,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_balances(_pool: address, _handler_id: uint256 = 0)  -> uint256[MAX_COINS]:
@@ -957,7 +957,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_underlying_balances(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:
@@ -994,7 +994,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_admin_balances(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:
@@ -1029,7 +1029,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 32"
+        ```vyper hl_lines="3 32"
         @internal
         @view
         def _get_registry_handlers_from_pool(_pool: address) -> address[MAX_REGISTRIES]:
@@ -1091,7 +1091,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         @external
         @view
         def get_base_registry(registry_handler: address) -> address:
@@ -1123,7 +1123,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 2"
+        ```vyper hl_lines="1 2"
         # get registry/registry_handler by index, index starts at 0:
         get_registry: public(HashMap[uint256, address])
         registry_length: public(uint256)
@@ -1145,7 +1145,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 3"
+        ```vyper hl_lines="1 3"
         # get registry/registry_handler by index, index starts at 0:
         get_registry: public(HashMap[uint256, address])
         registry_length: public(uint256)
@@ -1166,7 +1166,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 5"
+        ```vyper hl_lines="1 4 5"
         address_provider: public(AddressProvider)
 
         @external
@@ -1190,7 +1190,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6"
+        ```vyper hl_lines="1 6"
         owner: public(address)
 
         @external

@@ -3,7 +3,7 @@
 ### `add_market`
 !!! description "`ControllerFactory.add_market(token: address, A: uint256, fee: uint256, admin_fee: uint256, _price_oracle_contract: address, monetary_policy: address, loan_discount: uint256, liquidation_discount: uint256, debt_ceiling: uint256) -> address[2]:`"
 
-    Function to add a new market and automatically deploy an AMM-Contract and a Controller-Contract from the implemented blueprint contracts (see [Implementations](../crvusd_factory/factory_contract.md#implementations)). 
+    Function to add a new market and automatically deploy an AMM-Contract and a Controller-Contract from the implemented blueprint contracts (see [Implementations](../../crvUSD/factory.md#implementations)). 
     When initializing, `rate_write()` from the MonetaryPolicy contract is called to check if it has a correct ABI.
 
     Returns: deployed contract (`address`) of AMM and Controller.
@@ -33,7 +33,7 @@
 
         === "ControllerFactory.vy"
 
-            ```python hl_lines="12 44 51 70"
+            ```vyper
             # Limits
             MIN_A: constant(uint256) = 2
             MAX_A: constant(uint256) = 10000
@@ -108,7 +108,7 @@
 
         === "MonetaryPolicy.vy"
 
-            ```python hl_lines="25 28"
+            ```vyper hl_lines="25 28"
             @internal
             @view
             def calculate_rate() -> uint256:
@@ -142,7 +142,7 @@
 
         === "PriceOracle.vy"
 
-            ```python hl_lines="3"
+            ```vyper hl_lines="3"
             @external
             @view
             def price() -> uint256:
@@ -189,7 +189,7 @@
 
         === "AMM.vy"
 
-            ```python hl_lines="2"
+            ```vyper hl_lines="2"
             @external
             def set_admin(_admin: address):
                 """

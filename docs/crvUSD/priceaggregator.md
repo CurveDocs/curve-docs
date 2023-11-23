@@ -9,6 +9,9 @@ The AggregatorStablePrice contract is designed to **aggregate the prices of crvU
 
 ## **Calculating Prices**
 
+!!!bug
+    If the formulas below do not render, please make sure to refresh the site. A solution is being worked on.
+
 ### **Exponential Moving Average of TVL**
 
 **`_ema_tvl()`** calculates the Exponential Moving Average (EMA) of the Total Value Locked (TVL) for multiple Curve StableSwap pools. There is a maximum of 20 pairs to consider, and each price pair (pool) must have at least 100k TVL. 
@@ -16,7 +19,7 @@ New pairs can be added via [`add_price_pair`](#add_price_pair).
 
 ??? quote "Source code"
 
-    ```python
+    ```vyper
     last_tvl: public(uint256[MAX_PAIRS])
 
     @internal
@@ -57,7 +60,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         TVL_MA_TIME: public(constant(uint256)) = 50000  # s
 
         last_tvl: public(uint256[MAX_PAIRS])
@@ -108,7 +111,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         interface Stableswap:
             def price_oracle() -> uint256: view
             def coins(i: uint256) -> address: view
@@ -191,7 +194,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         price_pairs: public(PricePair[MAX_PAIRS])
         ```
 
@@ -219,7 +222,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event AddPricePair:
             n: uint256
             pool: Stableswap
@@ -265,7 +268,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event RemovePricePair:
             n: uint256
 
@@ -303,7 +306,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         admin: public(address)
 
         @external
@@ -337,7 +340,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event SetAdmin:
             admin: address
 
@@ -371,7 +374,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         SIGMA: immutable(uint256)
 
         @external
@@ -397,7 +400,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         STABLECOIN: immutable(address)
 
         @external
@@ -423,7 +426,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         last_timestamp: public(uint256)
         ```
 
@@ -448,7 +451,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         last_tvl: public(uint256[MAX_PAIRS])
         ```
 
@@ -469,7 +472,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         TVL_MA_TIME: public(constant(uint256)) = 50000  # s
         ```
 
@@ -490,7 +493,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         last_price: public(uint256)
 
         @external
@@ -534,7 +537,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def price_w() -> uint256:
             if self.last_timestamp == block.timestamp:

@@ -8,7 +8,7 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
 
 ??? quote "Interfaces"
 
-    ```python
+    ```vyper
     interface StablePool:
         def exchange(i: int128, j: int128, dx: uint256, min_dy: uint256): payable
         def exchange_underlying(i: int128, j: int128, dx: uint256, min_dy: uint256): payable
@@ -163,7 +163,7 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Exchange:
             sender: indexed(address)
             receiver: indexed(address)
@@ -416,7 +416,7 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Exchange:
             sender: indexed(address)
             receiver: indexed(address)
@@ -642,7 +642,7 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event Exchange:
             sender: indexed(address)
             receiver: indexed(address)

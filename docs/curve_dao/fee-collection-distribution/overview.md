@@ -6,11 +6,11 @@ Curve exchange contracts have the capability to charge an **admin fee**, claimab
 
 **There are multiple ways on how fees are obtained:**
 
-- For **stableswap exchanges** the *fee is taken in the output currency* and calculated against the final amount received. For example, if swapping from USDT to USDC, the fee is taken in USDC.  
-- For **cryptoswap exchanges** (volatile assets) the *fee is taken in the LP token of the pool*. For these kind of pools additional mechanisms like auto-rebalancing parameters need to be taken into consideration.  
-- **Curve Stablecoin** borrow *fee is taken in crvUSD*. All of crvUSD borrow rate fees are "admin fees".
+- For **stableswap exchanges** the **fee is taken in the output token** of the swap and calculated against the final amount received. For example, if swapping from USDT to USDC, the fee is taken in USDC.  
+- For **cryptoswap exchanges** the **fee is taken in the LP token of the pool**. For these kind of pools additional mechanisms like auto-rebalancing parameters need to be taken into consideration.  
+- **Curve Stablecoin** borrow **fee is taken in crvUSD**. 100% of crvUSD borrow rate fees are "admin fees".
 
-Liquidity providers also incur fees when adding or removing liquidity. The fee is applied such that, for example, a swap between USDC and USDT would pay roughly the same amount of fees as depositing USDC into the pool and then withdrawing USDT. The only case where a fee is not applied on withdrawal is when removing liquidity via `remove_liquidity`, as this method does not change the imbalance of the pool in any way.
+Liquidity providers also incur fees when adding or removing liquidity. The fee is applied such that, for example, a swap between USDC and USDT would pay roughly the same amount of fees as depositing USDC into the pool and then withdrawing USDT. The only case where a fee is not applied on withdrawal is when removing liquidity, as this does not change the imbalance of the pool in any way.
 
 Exchange contracts are indirectly owned by the Curve DAO via a proxy ownership contract. This contract includes functionality to withdraw the fees, convert them to 3CRV, and forward them into the fee distributor contract. Collectively, this process is referred to as “burning”.
 

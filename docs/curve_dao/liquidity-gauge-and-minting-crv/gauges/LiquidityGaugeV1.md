@@ -22,7 +22,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 10 29 31"
+        ```vyper hl_lines="1 10 29 31"
         event Deposit:
             provider: indexed(address)
             value: uint256
@@ -78,7 +78,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 23"
+        ```vyper hl_lines="1 7 23"
         event Withdraw:
             provider: indexed(address)
             value: uint256
@@ -127,7 +127,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 11"
+        ```vyper hl_lines="2 11"
         # caller -> recipient -> can deposit?
         approved_to_deposit: public(HashMap[address, HashMap[address, bool]])
 
@@ -163,7 +163,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 5 11"
+        ```vyper hl_lines="2 5 11"
         # caller -> recipient -> can deposit?
         approved_to_deposit: public(HashMap[address, HashMap[address, bool]])
 
@@ -198,7 +198,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 6 9 20"
+        ```vyper hl_lines="1 6 9 20"
         interface Minter:
             def token() -> address: view
             def controller() -> address: view
@@ -246,7 +246,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 15 16"
+        ```vyper hl_lines="1 15 16"
         crv_token: public(address)
 
         @external
@@ -288,7 +288,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 4 13"
+        ```vyper hl_lines="1 4 13"
         lp_token: public(address)
 
         @external
@@ -330,7 +330,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 17 18"
+        ```vyper hl_lines="1 17 18"
         controller: public(address)
 
         @external
@@ -372,7 +372,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 19"
+        ```vyper hl_lines="1 19"
         controller: public(address)
 
         @external
@@ -414,7 +414,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         totalSupply: public(uint256)
         ```
 
@@ -437,7 +437,7 @@
 
         === "LiquidityGauge.vy"
 
-            ```python hl_lines="2 5 26"
+            ```vyper hl_lines="2 5 26"
             interface CRV20:
                 def future_epoch_time_write() -> uint256: nonpayable
                 def rate() -> uint256: view
@@ -468,7 +468,7 @@
 
         === "ERC20CRV.vy"
 
-            ```python hl_lines="2 11 13"
+            ```vyper hl_lines="2 11 13"
             @external
             def future_epoch_time_write() -> uint256:
                 """
@@ -500,7 +500,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         working_supply: public(uint256)
         ```
 
@@ -521,7 +521,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 10 68 69"
+        ```vyper hl_lines="2 10 68 69"
         interface Controller:
             def period() -> int128: view
             def period_write() -> int128: nonpayable
@@ -620,7 +620,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 21"
+        ```vyper hl_lines="1 21"
         period_timestamp: public(uint256[100000000000000000000000000000])
 
         @external
@@ -662,7 +662,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 5 25"
+        ```vyper hl_lines="3 5 25"
         interface CRV20:
             def future_epoch_time_write() -> uint256: nonpayable
             def rate() -> uint256: view
@@ -713,7 +713,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         balanceOf: public(HashMap[address, uint256])
         ```
 
@@ -741,7 +741,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper hl_lines="1"
         working_balances: public(HashMap[address, uint256])
         ```
 
@@ -767,7 +767,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```vyper hl_lines="2"
         @external
         def user_checkpoint(addr: address) -> bool:
             """
@@ -805,7 +805,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```vyper hl_lines="2"
         @external
         def kick(addr: address):
             """
@@ -851,7 +851,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"
+        ```vyper hl_lines="3"
         # ∫(balance * rate(t) / totalSupply(t) dt) from 0 till checkpoint
         # Units: rate * t = already number of coins per address to issue
         integrate_fraction: public(HashMap[address, uint256])
@@ -878,7 +878,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```vyper hl_lines="2"
         # 1e18 * ∫(rate(t) / totalSupply(t) dt) from 0 till checkpoint
         integrate_inv_supply: public(uint256[100000000000000000000000000000])  # bump epoch when rate() changes
         ```
@@ -904,7 +904,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```vyper hl_lines="2"
         # 1e18 * ∫(rate(t) / totalSupply(t) dt) from (last_action) till checkpoint
         integrate_inv_supply_of: public(HashMap[address, uint256])
         ```
@@ -930,7 +930,7 @@
 
     ??? quote "Source code"
 
-        ```python hl_lines="2"
+        ```vyper hl_lines="2"
         # 1e18 * ∫(rate(t) / totalSupply(t) dt) from (last_action) till checkpoint
         integrate_checkpoint_of: public(HashMap[address, uint256])
         ```

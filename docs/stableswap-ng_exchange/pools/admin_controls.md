@@ -1,4 +1,4 @@
-The following methods are guarded and may only be called by the `admin` of the Stableswap-NG Factory.
+The following methods are guarded and may only be called by the **`admin`** of the Stableswap-NG Factory.
 
 
 ### `ramp_A`
@@ -25,7 +25,7 @@ The following methods are guarded and may only be called by the `admin` of the S
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         A_PRECISION: constant(uint256) = 100
         MAX_A: constant(uint256) = 10 ** 6
         MAX_A_CHANGE: constant(uint256) = 10
@@ -81,7 +81,7 @@ The following methods are guarded and may only be called by the `admin` of the S
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper
         event StopRampA:
             A: uint256
             t: uint256
@@ -129,7 +129,7 @@ The following methods are guarded and may only be called by the `admin` of the S
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         MAX_FEE: constant(uint256) = 5 * 10 ** 9
         FEE_DENOMINATOR: constant(uint256) = 10 ** 10
 
@@ -180,7 +180,7 @@ The following methods are guarded and may only be called by the `admin` of the S
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         def set_ma_exp_time(_ma_exp_time: uint256, _D_ma_time: uint256):
             """

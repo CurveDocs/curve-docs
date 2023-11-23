@@ -19,7 +19,7 @@ Additionally, some admin methods require a two-phase transaction process, whereb
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         ADMIN_ACTIONS_DELAY: constant(uint256) = 3 * 86400
 
         ...
@@ -57,7 +57,7 @@ Additionally, some admin methods require a two-phase transaction process, whereb
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def apply_transfer_ownership():
             assert msg.sender == self.owner  # dev: only owner
@@ -91,7 +91,7 @@ Additionally, some admin methods require a two-phase transaction process, whereb
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def revert_transfer_ownership():
             assert msg.sender == self.owner  # dev: only owner
@@ -130,7 +130,7 @@ The appropriate value for A is dependent upon the type of coin being used within
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         MIN_RAMP_TIME: constant(uint256) = 86400
         MAX_A_CHANGE: constant(uint256) = 10
         MAX_A: constant(uint256) = 10 ** 6
@@ -177,7 +177,7 @@ The appropriate value for A is dependent upon the type of coin being used within
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def stop_ramp_A():
             assert msg.sender == self.owner  # dev: only owner
@@ -222,6 +222,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
         Both the pool ``fee`` and the ``admin_fee`` are capped by the constants ``MAX_FEE`` and ``MAX_ADMIN_FEE``, respectively. By default ``MAX_FEE`` is set at 50% and ``MAX_ADMIN_FEE`` at 100% (which is charged on the ``MAX_FEE`` amount).
 
     ??? quote "Source code"
+<<<<<<< HEAD
 
         ```python
         event CommitNewFee:
@@ -229,6 +230,10 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
             fee: uint256
             admin_fee: uint256
 
+=======
+    
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         MAX_ADMIN_FEE: constant(uint256) = 10 * 10 ** 9
         MAX_FEE: constant(uint256) = 5 * 10 ** 9
         ADMIN_ACTIONS_DELAY: constant(uint256) = 3 * 86400
@@ -265,11 +270,15 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
         event NewFee:
             fee: uint256
             admin_fee: uint256
 
+=======
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @external
         def apply_new_fee():
             assert msg.sender == self.owner  # dev: only owner
@@ -304,7 +313,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def revert_new_parameters():
             assert msg.sender == self.owner  # dev: only owner
@@ -332,8 +341,13 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
     | `i`       |  `uint256` | index of the coin to get admin balance for |
 
     ??? quote "Source code"
+<<<<<<< HEAD
 
         ```python
+=======
+    
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @view
         @external
         def admin_balances(i: uint256) -> uint256:
@@ -353,7 +367,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
     
     Function to withdraw and transfer admin fees of the pool to the pool owner.
 
-    ```python
+    ```vyper
     @external
     def withdraw_admin_fees():
         assert msg.sender == self.owner  # dev: only owner
@@ -383,7 +397,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def donate_admin_fees():
             assert msg.sender == self.owner  # dev: only owner
@@ -420,8 +434,13 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
         Pools can only be killed within the first 30 days after deployment.
 
     ??? quote "Source code"
+<<<<<<< HEAD
 
         ```python
+=======
+    
+        ```vyper hl_lines="10 26 39 53 61"
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @external
         @nonreentrant('lock')
         def add_liquidity(amounts: uint256[N_COINS], min_mint_amount: uint256) -> uint256:

@@ -1,10 +1,10 @@
 ## **Concept of PegKeepers**  
 
 PegKeepers are contracts that help stabilize the peg of crvUSD. Each Keeper is allocated a specific amount of crvUSD to secure the peg. 
-The DAO decides this balance and can be **raised or lowered** by calling `set_debt_ceiling` in the [Factory](../crvUSD/factory.md).
+The DAO decides this balance and can be **raised or lowered** by calling **`set_debt_ceiling()`** in the [Factory](../crvUSD/factory.md).
 
 
-The underlying actions of the PegKeepers can be divided into two actions, which get executed when calling [`update`](#update):
+The underlying actions of the PegKeepers can be divided into two actions, which get executed when calling [**`update()`**](#update):
 
 - **crvUSD price > 1**: The PegKeeper mints and deposits crvUSD single-sidedly into the pool to which it is "linked", and receives LP tokens in exchange. This increases the balance of crvUSD in the pool and therefore decreases the price. It is important to note that the LP tokens are not staked in the gauge (if there is one). Thus, the PegKeeper does not receive CRV emissions.
 
@@ -56,7 +56,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
     ??? quote "Source code: **Mint and Deposit**"
 
-        ```python
+        ```vyper
         event Provide:
             amount: uint256
 
@@ -117,7 +117,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
     ??? quote "Source code: **Withdraw and Burn**"
 
-        ```python
+        ```vyper
         event Withdraw:
             amount: uint256
         
@@ -196,7 +196,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         PRECISION: constant(uint256) = 10 ** 18
         # Calculation error for profit
         PROFIT_THRESHOLD: constant(uint256) = 10 ** 18
@@ -244,7 +244,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         ACTION_DELAY: constant(uint256) = 15 * 60
 
         @external
@@ -303,7 +303,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         SHARE_PRECISION: constant(uint256) = 10 ** 5
         caller_share: public(uint256)
 
@@ -368,7 +368,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event SetNewCallerShare:
             caller_share: uint256
 
@@ -409,7 +409,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event Profit:
             lp_amount: uint256
 
@@ -437,7 +437,7 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
 
 ## **Admin and Receiver**
-PegKeepers have an `admin` and a `receiver`. Both of these variables can be altered by calling the respective admin-guarded functions, but such changes must first be approved by a DAO vote. After approval, the newly designated admin or receiver is required to apply these changes within a timeframe of `3 * 86400` seconds, which equates to a window of *three days*. Should there be an attempt to implement these changes after this period, the function to apply the changes will revert.
+PegKeepers have an **`admin`** and a **`receiver`.** Both of these variables can be altered by calling the respective admin-guarded functions, but such changes must first be approved by a DAO vote. After approval, the newly designated admin or receiver is required to apply these changes within a timeframe of `3 * 86400` seconds, which equates to a window of *three days*. Should there be an attempt to implement these changes after this period, the function to apply the changes will revert.
 
 
 ### `admin`
@@ -449,7 +449,7 @@ PegKeepers have an `admin` and a `receiver`. Both of these variables can be alte
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         admin: public(address)
 
         @external
@@ -488,7 +488,7 @@ PegKeepers have an `admin` and a `receiver`. Both of these variables can be alte
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         future_admin: public(address)
         ```
 
@@ -515,7 +515,7 @@ PegKeepers have an `admin` and a `receiver`. Both of these variables can be alte
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event CommitNewAdmin:
             admin: address
 
@@ -555,7 +555,7 @@ PegKeepers have an `admin` and a `receiver`. Both of these variables can be alte
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event ApplyNewAdmin:
             admin: address
 
@@ -593,7 +593,7 @@ PegKeepers have an `admin` and a `receiver`. Both of these variables can be alte
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         new_admin_deadline: public(uint256)
         ```
 
@@ -614,7 +614,7 @@ PegKeepers have an `admin` and a `receiver`. Both of these variables can be alte
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         receiver: public(address)
 
         @external
@@ -654,7 +654,7 @@ PegKeepers have an `admin` and a `receiver`. Both of these variables can be alte
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         future_admin: public(address)
         ```
 
@@ -682,7 +682,7 @@ PegKeepers have an `admin` and a `receiver`. Both of these variables can be alte
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event CommitNewReceiver:
             receiver: address
 
@@ -719,7 +719,7 @@ PegKeepers have an `admin` and a `receiver`. Both of these variables can be alte
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event ApplyNewReceiver:
             receiver: address
 
@@ -755,7 +755,7 @@ PegKeepers have an `admin` and a `receiver`. Both of these variables can be alte
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         new_receiver_deadline: public(uint256)
         ```
 
@@ -779,7 +779,7 @@ PegKeepers have an `admin` and a `receiver`. Both of these variables can be alte
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event ApplyNewReceiver:
             receiver: address
 
@@ -819,7 +819,7 @@ PegKeepers have an `admin` and a `receiver`. Both of these variables can be alte
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         debt: public(uint256)
         ```
 
@@ -840,7 +840,7 @@ PegKeepers have an `admin` and a `receiver`. Both of these variables can be alte
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         FACTORY: immutable(address)
 
         @external
@@ -882,7 +882,7 @@ PegKeepers have an `admin` and a `receiver`. Both of these variables can be alte
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         PEGGED: immutable(address)
 
         @external
@@ -921,7 +921,7 @@ PegKeepers have an `admin` and a `receiver`. Both of these variables can be alte
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         POOL: immutable(CurvePool)
 
         @external
@@ -960,7 +960,7 @@ PegKeepers have an `admin` and a `receiver`. Both of these variables can be alte
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         AGGREGATOR: immutable(StableAggregator)
 
         @external
@@ -999,7 +999,7 @@ PegKeepers have an `admin` and a `receiver`. Both of these variables can be alte
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         last_change: public(uint256)
         ```
 

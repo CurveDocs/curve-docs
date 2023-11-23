@@ -1,4 +1,4 @@
-`GaugeProxy` is used for indirect ownership of [liquidity gauges](../LiquidityGaugesAndMintingCRV/overview.md).
+`GaugeProxy` is used for indirect ownership of [liquidity gauges](../liquidity-gauge-and-minting-crv/overview.md).
 
 !!!deploy "Contract Source & Deployment"
     For a overview of all actively used proxies, see [here](../../references/deployed-contracts.md#proxies).  

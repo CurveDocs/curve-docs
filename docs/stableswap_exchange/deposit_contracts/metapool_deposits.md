@@ -22,7 +22,7 @@ Metapool deposit zaps contain the following private and hardcoded constants:
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 12"
+        ```vyper hl_lines="1 12"
         pool: public(address)
 
         ...        
@@ -52,7 +52,7 @@ Metapool deposit zaps contain the following private and hardcoded constants:
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 15"
+        ```vyper hl_lines="1 15"
         base_pool: public(address)
 
         ...        
@@ -89,7 +89,7 @@ Metapool deposit zaps contain the following private and hardcoded constants:
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 35"
+        ```vyper hl_lines="1 35"
         base_coins: public(address[BASE_N_COINS])
 
         ...        
@@ -153,7 +153,7 @@ Metapool deposit zaps contain the following private and hardcoded constants:
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 13"
+        ```vyper hl_lines="1 13"
         token: public(address)
 
         ...        
@@ -198,7 +198,7 @@ For methods taking the index argument `i`, a number in the range from `0` to `N_
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def add_liquidity(_amounts: uint256[N_ALL_COINS], _min_mint_amount: uint256) -> uint256:
             """
@@ -286,7 +286,7 @@ For methods taking the index argument `i`, a number in the range from `0` to `N_
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def remove_liquidity(_amount: uint256, _min_amounts: uint256[N_ALL_COINS]) -> uint256[N_ALL_COINS]:
             """
@@ -361,7 +361,7 @@ For methods taking the index argument `i`, a number in the range from `0` to `N_
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def remove_liquidity_one_coin(_token_amount: uint256, i: int128, _min_amount: uint256) -> uint256:
             """
@@ -427,7 +427,7 @@ For methods taking the index argument `i`, a number in the range from `0` to `N_
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def remove_liquidity_imbalance(_amounts: uint256[N_ALL_COINS], _max_burn_amount: uint256) -> uint256:
             """
@@ -526,7 +526,7 @@ For methods taking the index argument `i`, a number in the range from `0` to `N_
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def calc_withdraw_one_coin(_token_amount: uint256, i: int128) -> uint256:
@@ -562,7 +562,7 @@ For methods taking the index argument `i`, a number in the range from `0` to `N_
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def calc_token_amount(_amounts: uint256[N_ALL_COINS], _is_deposit: bool) -> uint256:

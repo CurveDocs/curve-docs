@@ -33,7 +33,11 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
+=======
+        ```vyper hl_lines="2 6 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59"
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         # Token corresponding to the pool is always the last one
         BASE_POOL_COINS: constant(int128) = 3
     
@@ -103,7 +107,11 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
+=======
+        ```vyper hl_lines="1 5 12 22 29 30 31"
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         N_COINS: constant(int128) = 2
 
         coins: public(address[N_COINS])
@@ -153,7 +161,11 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
+=======
+        ```vyper hl_lines="1 10 20 36 40"
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         base_pool: public(address)
 
         @external
@@ -201,7 +213,11 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
+=======
+        ```vyper hl_lines="1 37"
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         base_virtual_price: public(uint256)
 
         @external
@@ -246,7 +262,11 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
+=======
+        ```vyper hl_lines="1 5 42 64 67 75"
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         base_cache_updated: public(uint256)
 
         BASE_CACHE_EXPIRES: constant(int128) = 10 * 60  # 10 min
@@ -334,6 +354,7 @@ Underlying coins: `GUSD`, `DAI`, `USDC`, `USDT`
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
         event TokenExchange:
             buyer: indexed(address)
@@ -342,6 +363,9 @@ Underlying coins: `GUSD`, `DAI`, `USDC`, `USDT`
             bought_id: int128
             tokens_bought: uint256
 
+=======
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @external
         @nonreentrant('lock')
         def exchange(i: int128, j: int128, dx: uint256, min_dy: uint256) -> uint256:
@@ -412,6 +436,7 @@ Underlying coins: `GUSD`, `DAI`, `USDC`, `USDT`
     | `_min_dy`      |  `uint256` | Minimum amount of ``j`` to receive |
 
     ??? quote "Source code"  
+<<<<<<< HEAD
 
         ```python
         event TokenExchangeUnderlying:
@@ -421,6 +446,10 @@ Underlying coins: `GUSD`, `DAI`, `USDC`, `USDT`
             bought_id: int128
             tokens_bought: uint256
 
+=======
+    
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @external
         @nonreentrant('lock')
         def exchange_underlying(i: int128, j: int128, dx: uint256, min_dy: uint256) -> uint256:

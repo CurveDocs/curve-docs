@@ -25,12 +25,16 @@ Compared to the Curve Token V2 API, there have been the following changes:
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
         event Approval:
             _owner: indexed(address)
             _spender: indexed(address)
             _value: uint256
 
+=======
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @external
         def approve(_spender : address, _value : uint256) -> bool:
             """
@@ -92,12 +96,16 @@ Compared to the Curve Token V2 API, there have been the following changes:
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
         event Approval:
             _owner: indexed(address)
             _spender: indexed(address)
             _value: uint256
     
+=======
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @external
         def approve(_spender : address, _value : uint256) -> bool:
             """

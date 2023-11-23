@@ -24,7 +24,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_dx(i: int128, j: int128, dy: uint256, pool: address) -> uint256:
@@ -96,7 +96,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_dy(i: int128, j: int128, dx: uint256, pool: address) -> uint256:
@@ -274,7 +274,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_dx_underlying(
@@ -372,7 +372,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def get_dy_underlying(
@@ -482,7 +482,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def calc_token_amount(
@@ -594,7 +594,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @view
         @external
         def calc_withdraw_one_coin(_burn_amount: uint256, i: int128, pool: address) -> uint256:
@@ -672,7 +672,7 @@ This contract contains view-only external methods which can be gas-inefficient w
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def dynamic_fee(i: int128, j: int128, pool:address) -> uint256:

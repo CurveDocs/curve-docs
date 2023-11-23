@@ -46,7 +46,7 @@ The following Brownie console interaction examples are using the
 
     ??? quote "Source code"
 
-        ```python hl_lines="3 13"
+        ```vyper hl_lines="3 13"
         coins: public(address[N_COINS])
         underlying_coins: public(address[N_COINS])
         curve: public(address)
@@ -81,7 +81,7 @@ The following Brownie console interaction examples are using the
 
     ??? quote "Source code"
 
-        ```python hl_lines="6 16"
+        ```vyper hl_lines="6 16"
         N_COINS: constant(int128) = 4
         
         ...
@@ -122,7 +122,7 @@ The following Brownie console interaction examples are using the
 
     ??? quote "Source code"
 
-        ```python hl_lines="5 15"
+        ```vyper hl_lines="5 15"
         N_COINS: constant(int128) = 4
         
         ...
@@ -160,7 +160,7 @@ The following Brownie console interaction examples are using the
 
     ??? quote "Source code"
 
-        ```python hl_lines="4 14"
+        ```vyper hl_lines="4 14"
         coins: public(address[N_COINS])
         underlying_coins: public(address[N_COINS])
         curve: public(address)
@@ -206,7 +206,7 @@ The following Brownie console interaction examples are using the
 
         === "Zap Contract Methods"
 
-            ```python
+            ```vyper
             USE_LENDING: constant(bool[N_COINS]) = [True, True]
 
             ...
@@ -250,7 +250,7 @@ The following Brownie console interaction examples are using the
 
         === "Pool Methods"
 
-            ```python
+            ```vyper
             @public
             @nonreentrant('lock')
             def add_liquidity(amounts: uint256[N_COINS], min_mint_amount: uint256):
@@ -326,7 +326,7 @@ The following Brownie console interaction examples are using the
 
         === "Pool Token Methods"
 
-            ```python
+            ```vyper
             @public
             def mint(_to: address, _value: uint256):
                 """
@@ -366,7 +366,7 @@ The following Brownie console interaction examples are using the
 
         === "Zap Contract Methods"
 
-            ```python
+            ```vyper
             @private
             def _send_all(_addr: address, min_uamounts: uint256[N_COINS], one: int128):
                 use_lending: bool[N_COINS] = USE_LENDING
@@ -408,7 +408,7 @@ The following Brownie console interaction examples are using the
 
         === "Pool Methods"
 
-            ```python
+            ```vyper
             @public
             @nonreentrant('lock')
             def remove_liquidity(_amount: uint256, min_amounts: uint256[N_COINS]):
@@ -436,7 +436,7 @@ The following Brownie console interaction examples are using the
 
         === "Pool Token Methods"
 
-            ```python
+            ```vyper
             @private
             def _burn(_to: address, _value: uint256):
                 """
@@ -487,7 +487,7 @@ The following Brownie console interaction examples are using the
 
         === "Zap Contract Methods"
 
-            ```python
+            ```vyper
             @private
             def _send_all(_addr: address, min_uamounts: uint256[N_COINS], one: int128):
                 use_lending: bool[N_COINS] = USE_LENDING
@@ -551,7 +551,7 @@ The following Brownie console interaction examples are using the
 
         === "Pool Methods"
 
-            ```python
+            ```vyper
             @public
             @nonreentrant('lock')
             def remove_liquidity_imbalance(amounts: uint256[N_COINS], max_burn_amount: uint256):
@@ -600,7 +600,7 @@ The following Brownie console interaction examples are using the
 
         === "Pool Token Methods"
 
-            ```python
+            ```vyper
             @private
             def _burn(_to: address, _value: uint256):
                 """
@@ -653,7 +653,7 @@ The following Brownie console interaction examples are using the
 
         === "Zap Contract Methods"
 
-            ```python
+            ```vyper
             @public
             @nonreentrant('lock')
             def remove_liquidity_one_coin(_token_amount: uint256, i: int128, min_uamount: uint256, donate_dust: bool = False):
@@ -695,7 +695,7 @@ The following Brownie console interaction examples are using the
 
         === "Pool Methods"
 
-            ```python
+            ```vyper
             @public
             @nonreentrant('lock')
             def remove_liquidity_imbalance(amounts: uint256[N_COINS], max_burn_amount: uint256):
@@ -744,7 +744,7 @@ The following Brownie console interaction examples are using the
 
         === "Pool Token Methods"
 
-            ```python
+            ```vyper
             @private
             def _burn(_to: address, _value: uint256):
                 """
@@ -797,7 +797,7 @@ The following Brownie console interaction examples are using the
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @private
         @constant
         def _calc_withdraw_one_coin(_token_amount: uint256, i: int128, rates: uint256[N_COINS]) -> uint256:
@@ -875,7 +875,7 @@ The following Brownie console interaction examples are using the
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @public
         @nonreentrant('lock')
         def withdraw_donated_dust():
@@ -906,7 +906,7 @@ Compared to the older deposit zaps, the newer zaps mainly optimize for gas effic
 
     ??? quote "Source code"
 
-        ```python hl_lines="5 14 47" 
+        ```vyper hl_lines="5 14 47" 
         @external
         def __init__(
             _coins: address[N_COINS],
@@ -975,7 +975,7 @@ Compared to the older deposit zaps, the newer zaps mainly optimize for gas effic
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 8 17 23 27 50"
+        ```vyper hl_lines="1 8 17 23 27 50"
         underlying_coins: public(address[N_COINS])
         
         ...        
@@ -1050,7 +1050,7 @@ Compared to the older deposit zaps, the newer zaps mainly optimize for gas effic
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 7 16 22 30 38 49"
+        ```vyper hl_lines="1 7 16 22 30 38 49"
         coins: public(address[N_COINS])
         
         ...        
@@ -1121,7 +1121,7 @@ Compared to the older deposit zaps, the newer zaps mainly optimize for gas effic
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 10 19 52"
+        ```vyper hl_lines="1 10 19 52"
         lp_token: public(address)
         
         ...        
@@ -1205,7 +1205,7 @@ Compared to the older deposit zaps, the newer zaps mainly optimize for gas effic
 
         === "Zap Contract Methods"
 
-            ```python
+            ```vyper
             @public
             @nonreentrant('lock')
             def add_liquidity(uamounts: uint256[N_COINS], min_mint_amount: uint256):
@@ -1237,7 +1237,7 @@ Compared to the older deposit zaps, the newer zaps mainly optimize for gas effic
             ```
         === "Pool Methods"
 
-            ```python
+            ```vyper
             @external
             @nonreentrant('lock')
             def add_liquidity(amounts: uint256[N_COINS], min_mint_amount: uint256) -> uint256:
@@ -1350,7 +1350,7 @@ Compared to the older deposit zaps, the newer zaps mainly optimize for gas effic
 
         === "Zap Contract Methods"
 
-            ```python
+            ```vyper
             @internal
             def _unwrap_and_transfer(_addr: address, _min_amounts: uint256[N_COINS]) -> uint256[N_COINS]:
                 # unwrap coins and transfer them to the sender
@@ -1407,7 +1407,7 @@ Compared to the older deposit zaps, the newer zaps mainly optimize for gas effic
 
         === "Pool Methods"
 
-            ```python
+            ```vyper
             @external
             @nonreentrant('lock')
             def remove_liquidity(_amount: uint256, min_amounts: uint256[N_COINS]) -> uint256[N_COINS]:
@@ -1472,7 +1472,7 @@ Compared to the older deposit zaps, the newer zaps mainly optimize for gas effic
 
         === "Zap Contract Methods"
 
-            ```python
+            ```vyper
             @internal
             def _unwrap_and_transfer(_addr: address, _min_amounts: uint256[N_COINS]) -> uint256[N_COINS]:
                 # unwrap coins and transfer them to the sender
@@ -1552,7 +1552,7 @@ Compared to the older deposit zaps, the newer zaps mainly optimize for gas effic
 
         === "Pool Methods"
 
-            ```python
+            ```vyper
             @external
             @nonreentrant('lock')
             def remove_liquidity_imbalance(amounts: uint256[N_COINS], max_burn_amount: uint256) -> uint256:
@@ -1642,7 +1642,7 @@ Compared to the older deposit zaps, the newer zaps mainly optimize for gas effic
 
         === "Zap Contract Methods"
 
-            ```python
+            ```vyper
             @external
             @nonreentrant('lock')
             def remove_liquidity_one_coin(
@@ -1688,7 +1688,7 @@ Compared to the older deposit zaps, the newer zaps mainly optimize for gas effic
 
         === "Pool Methods"
 
-            ```python
+            ```vyper
             @external
             @nonreentrant('lock')
             def remove_liquidity_one_coin(_token_amount: uint256, i: int128, _min_amount: uint256) -> uint256:

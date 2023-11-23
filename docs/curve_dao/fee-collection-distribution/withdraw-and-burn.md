@@ -1,16 +1,16 @@
 # **Withdrawing Admin Fees**
 
-In order to be able to burn admin fees into the fee token, those fees have to be claimed prior. Admin fees can be claimed by anyone. Somethimes, the function to claim the fees is guarded and therefore only called by the proxy contract (admin or owner of the pool). If thats the case, users can just call the claim function via the proxy contract (as the function is not guarded there).
+In order to be able to burn admin fees into the fee token, those fees have to be claimed prior. **Admin fees can be claimed by anyone.** Somethimes, the function to claim the fees is guarded and therefore only called by the proxy contract (admin or owner of the pool). If thats the case, users can just call the claim function via the proxy contract (as the function is not guarded there).
 
 Claiming fees can differ based on which source they are claimed from:
 
 ## **StableSwap Pools**
-Admin fees are stored within each exchange contract and viewable via the `admin_balances` public getter method. The contract owner may call to claim the fees at any time using `withdraw_admin_fees`.
+Admin fees are stored within each exchange contract and viewable via the public getter method **`admin_balances`**. Users may call **`withdraw_admin_fees`** to claim the fees at any time.
 
-Fees are initially claimed via `PoolProxy.withdraw_many`. This withdraws fees from many pools at once, pulling them into the [PoolProxy](https://etherscan.io/address/0xeCb456EA5365865EbAb8a2661B0c503410e9B347#writeContract) contract.
+Fees are usually claimed via the **`withdraw_many`** function of the PoolProxy. This withdraws fees from multiple pools at once, pulling them into the [PoolProxy](https://etherscan.io/address/0xeCb456EA5365865EbAb8a2661B0c503410e9B347#writeContract) contract.
 
 !!!tip
-    Admin fees can either be claimed through the corresponding PoolProxy or directly by calling the `withdraw_admin_fees` function on the pool contract itself (if the function is not guarded).
+    Admin fees can either be claimed through the corresponding PoolProxy or directly by calling the **`withdraw_admin_fees`** function on the pool contract itself (if the function is not guarded).
 
 
 ### `admin_balances`
@@ -26,7 +26,7 @@ Fees are initially claimed via `PoolProxy.withdraw_many`. This withdraws fees fr
 
     ??? quote "Source code"
 
-        ```python hl_lines="3"    
+        ```vyper
         @view
         @external
         def admin_balances(i: uint256) -> uint256:
@@ -43,6 +43,9 @@ Fees are initially claimed via `PoolProxy.withdraw_many`. This withdraws fees fr
 ### `withdraw_admin_fees`
 !!! description "`PoolProxy.withdraw_admin_fees(_pool: address):`"
 
+    !!!info
+        This function is called from the PoolProxy.
+
     Function to claim admin fees from `pool` into this contract. This is the first step in the fee burning process. 
 
     | Input      | Type   | Description |
@@ -51,7 +54,7 @@ Fees are initially claimed via `PoolProxy.withdraw_many`. This withdraws fees fr
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 6"
+        ```vyper
         interface Curve:
             def withdraw_admin_fees(): nonpayable
 
@@ -75,7 +78,10 @@ Fees are initially claimed via `PoolProxy.withdraw_many`. This withdraws fees fr
 ### `withdraw_many`
 !!! description "`PoolProxy.withdraw_many(_pools: address[20]):`"
 
-    Withdraw fees from multiple pools in a single call.
+    !!!info
+        This function is called from the PoolProxy.
+
+    Function to withdraw fees from multiple pools in a single call.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -83,7 +89,7 @@ Fees are initially claimed via `PoolProxy.withdraw_many`. This withdraws fees fr
 
     ??? quote "Source code"
 
-        ```python hl_lines="2 6"
+        ```vyper
         interface Curve:
             def withdraw_admin_fees(): nonpayable
 
@@ -109,7 +115,7 @@ Fees are initially claimed via `PoolProxy.withdraw_many`. This withdraws fees fr
 
 
 ## **CryptoSwap Pools**
-Admin fees of crypto pools are a bit different from stableswap pools. These pools have an auto-rebalancing mechanism which uses parts of the admin fees for rebalancing purposes. After taking this into consideration, fees are claimed by minting the admin's share (which essentially is the admin fee) of the pool as LP tokens.
+Fees of crypto pools are a bit different from stableswap pools. These pools have an auto-rebalancing mechanism which uses parts of the admin fees for rebalancing purposes. After taking this into consideration, fees are claimed by minting the admin's share (which essentially is the admin fee) of the pool as LP tokens.
 
 Fees are mostly claimed directly from the pool.
 
@@ -121,7 +127,7 @@ Fees are mostly claimed directly from the pool.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event ClaimAdminFee:
             admin: indexed(address)
             tokens: uint256
@@ -215,7 +221,7 @@ Fees are mostly claimed directly from the pool.
 
 
 ## **Curve Stablecoin**
-crvUSD fees are based on the borrow rate of the corresponding markets. Fees are accurred in crvUSD token. They can be claimed from the according Controller contract.
+crvUSD fees are based on the borrow rate of the corresponding markets. Fees are accurred in crvUSD token. They can be claimed from the according Controller.
 
 ### `admin_fees`
 !!! description "`Controller.admin_fees() -> uint256:`"
@@ -224,7 +230,7 @@ crvUSD fees are based on the borrow rate of the corresponding markets. Fees are 
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @view
         def admin_fees() -> uint256:
@@ -249,11 +255,11 @@ crvUSD fees are based on the borrow rate of the corresponding markets. Fees are 
 ### `collect_fees`
 !!! description "`Controller.collect_fees():`"
 
-    Function to collects all fees, including Borrwing-based fees (interest rate) and AMM-based fees (swap fee, if applicable).
+    Function to collects all fees, including borrowing-based fees (interest rate) and AMM-based fees (swap fee, if applicable).
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         @nonreentrant('lock')
         def collect_fees() -> uint256:
@@ -301,8 +307,9 @@ crvUSD fees are based on the borrow rate of the corresponding markets. Fees are 
 
 # **Burning Admin Fees**
 
-All admin fees are accumulated in the [0xECB](https://etherscan.io/address/0xeCb456EA5365865EbAb8a2661B0c503410e9B347) :material-information-outline:{ title="shhhh!! don't tell Christine Lagarde" } contract and are burned according to the fee-burner settings designated for each specific coin.   
-These functions need to be called from the 0xECB contract.
+All admin fees are accumulated in the [0xECB](https://etherscan.io/address/0xeCb456EA5365865EbAb8a2661B0c503410e9B347) :material-information-outline:{ title="shhhh!! don't tell Christine Lagarde!" } contract and are burned according to the fee-burner settings designated for each specific coin.   
+*These functions need to be called from the 0xECB contract.*
+
 
 ### `burn`
 !!! description "`0xECB.burn(_coin: address):`"
@@ -318,7 +325,7 @@ These functions need to be called from the 0xECB contract.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         interface Burner:
             def burn(_coin: address) -> bool: payable
 
@@ -364,7 +371,7 @@ These functions need to be called from the 0xECB contract.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         @nonreentrant('burn')
         def burn_many(_coins: address[20]):
@@ -411,7 +418,7 @@ These functions need to be called from the 0xECB contract.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         interface Curve:
             def donate_admin_fees(): nonpayable
 
@@ -454,7 +461,7 @@ These functions need to be called from the 0xECB contract.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # pool -> caller -> can call `donate_admin_fees`
         donate_approval: public(HashMap[address, HashMap[address, bool]])
 

@@ -1,9 +1,9 @@
 
 **The CryptoSwap market-making algorithm contains of three different classes of parameters:**
 
-- *Bonding Curve:* `A` and `gamma`  
-- *Price Scaling:* `ma_time`, `allowed_extra_profit` and `adjustment_step`  
-- *Fees:* `mid_fee`, `out_fee` and `fee_gamma` 
+- *Bonding Curve:* **`A`** and **`gamma`**  
+- *Price Scaling:* **`ma_time`**, **`allowed_extra_profit`** and **`adjustment_step`**  
+- *Fees:* **`mid_fee`**, **`out_fee`** and **`fee_gamma`** 
 
 !!!tip
     An excellent deep-dive artilce on the parameters: [https://nagaking.substack.com/p/deep-dive-curve-v2-parameters](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).

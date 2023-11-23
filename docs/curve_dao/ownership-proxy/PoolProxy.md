@@ -6,6 +6,13 @@ As these proxies serve as the admins/owners of the exchange contracts, they are 
 !!!deploy "Contract Source & Deployment"
     There are multiple deployed **`PoolProxy`** contracts. For a overview of all actively used proxies, see [here](../../references/deployed-contracts.md#proxies).
 
+# **Deploying Pools**
+Pool deployment is permissionless, with the exception of base pools. Thus, the `deploy_pool` function can be directly called on the Factory contract. For more information about Factory contracts and their usage, see [here](../../factory/pool_factory/overview.md).
+
+
+# **Parameter Changes**
+Parameter changes need to be done through the proxy, as those relevant functions can only be called by the parameter admin.
+
 
 # **Killing Pools**
 
@@ -65,11 +72,12 @@ As these proxies serve as the admins/owners of the exchange contracts, they are 
 # **Modifying Pool Parameters**
 Parameter changes mostly need to be done through the corresponding Proxy of the pool, as those relevant functions can only be called by the parameter admin.
 Visit the 'admin control' sections of the pools.
+# **PoolProxy**
 
 
 # **Burners**
-For configuration of burners please refer to [Burner](/docs/curve_dao/FeeCollection%26Distribution/burner.md).
+For configuration of burners please refer to [Burner](../fee-collection-distribution/burner.md).
 
 
 # **Admin Fees**
-For withdrawing and burning admin fees please refer to [Withdrawing and Burning Admin Fees](/docs/curve_dao/FeeCollection%26Distribution/withdraw-and-burn.md).
+For withdrawing and burning admin fees please refer to [Withdrawing and Burning Admin Fees](../fee-collection-distribution/withdraw-and-burn.md).

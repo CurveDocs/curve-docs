@@ -90,6 +90,22 @@ nav:
       - Deployer API: stableswap-ng_exchange/factory/deploy.md
       - Admin Controls: stableswap-ng_exchange/factory/admin_controls.md
 
+  - Tricrypto-NG:
+    - Overview: cryptoswap-ng_exchange/overview.md
+    - Pools:
+      - Overview: cryptoswap-ng_exchange/pools/overview.md
+      - TriCrypto Pool: cryptoswap-ng_exchange/pools/tricrypto_pool.md
+      - LP Token Method: cryptoswap-ng_exchange/lp_tokens/tricrypto_lp_token.md
+      - Admin Controls: cryptoswap-ng_exchange/pools/admin_controls.md
+    - Utility Contracts: 
+      - Math: cryptoswap-ng_exchange/utility_contracts/math.md
+      - Views: cryptoswap-ng_exchange/utility_contracts/ViewMethodContract.md
+    - Pool Factory:
+      - Overview: cryptoswap-ng_exchange/factory/overview.md
+      - Deployer API: cryptoswap-ng_exchange/factory/deployer-api.md
+      - Implementations: cryptoswap-ng_exchange/factory/implementations.md
+      - Admin Controls: cryptoswap-ng_exchange/factory/admin-controls.md
+
   - Stableswap Exchange:    
     - Overview: stableswap_exchange/overview.md 
     - Pools:
@@ -111,16 +127,19 @@ nav:
       - Overview: stableswap_exchange/cross_asset_swaps/overview.md
       - SynthSwap: stableswap_exchange/cross_asset_swaps/synthswap_exchange.md
 
-  - Tricrypto-NG:
-    - Overview: cryptoswap-ng_exchange/overview.md
+  - CryptoSwap Exchange:
+    - Overview: cryptoswap_exchange/overview.md
     - Pools:
-      - Overview: cryptoswap-ng_exchange/pools/overview.md
-      - TriCrypto Pool: cryptoswap-ng_exchange/pools/tricrypto_pool.md
-      - LP Token Method: cryptoswap-ng_exchange/lp_tokens/tricrypto_lp_token.md
-      - Admin Controls: cryptoswap-ng_exchange/pools/admin_controls.md
-    - Utility Contracts: 
-      - Math: cryptoswap-ng_exchange/utility_contracts/math.md
-      - ViewMethodContract: cryptoswap-ng_exchange/utility_contracts/ViewMethodContract.md
+      - Overview: cryptoswap_exchange/pools/overview.md
+      - Crypto Pool: cryptoswap_exchange/pools/crypto-pool.md
+      - Admin Controls: cryptoswap_exchange/pools/admin-controls.md
+    - Liquidity Pool Tokens:
+      - Overview: cryptoswap_exchange/lp_tokens/overview.md
+      - Curve Token V5: cryptoswap_exchange/lp_tokens/lp-token-V5.md
+    - Pool Factory: 
+      - Overview: cryptoswap_exchange/factory/overview.md
+      - Deployer API: cryptoswap_exchange/factory/deployer-api.md
+      - Admin Controls: cryptoswap_exchange/factory/admin-controls.md
 
   - Registry:
     - Overview: registry/overview.md

@@ -24,7 +24,11 @@ Compared to Curve Token v1, the following changes have been made to the API:
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
+=======
+        ```vyper hl_lines="1 11"
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         minter: public(address)
 
         @external
@@ -59,7 +63,11 @@ Compared to Curve Token v1, the following changes have been made to the API:
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
+=======
+        ```vyper hl_lines="1 11"
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @external
         def set_name(_name: String[64], _symbol: String[32]):
             assert Curve(self.minter).owner() == msg.sender
@@ -91,12 +99,16 @@ Compared to Curve Token v1, the following changes have been made to the API:
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
             _value: uint256
 
+=======
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @external
         def mint(_to: address, _value: uint256) -> bool:
             """
@@ -138,12 +150,16 @@ Compared to Curve Token v1, the following changes have been made to the API:
 
     ??? quote "Source code"
 
+<<<<<<< HEAD
         ```python
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
             _value: uint256
 
+=======
+        ```vyper
+>>>>>>> a27909d5f421a1329ee4ba7044091ebfd75305e3
         @external
         def burnFrom(_to: address, _value: uint256) -> bool:
             """

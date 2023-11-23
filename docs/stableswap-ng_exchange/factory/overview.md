@@ -1,9 +1,14 @@
 The StableSwapNG-Factory serves as a permissionless pool deployer and registry. For further information regarding the registry, please refer to this [section](../../registry/overview.md).
 
+!!!deploy "Contract Source & Deployment"
+    **Stableswap-NG Factory** contract is deployed to the Ethereum mainnet at: [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://etherscan.io/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf#code).
+    Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapFactoryNG.vy).  
+    A list of all deployments can be found [here](../../references/deployed-contracts.md#stableswap-ng).
+
 
 ## **Fee Receiver**
 
-All deployed pools share the same fee receiver. A new address can be designated by using the [`set_fee_receiver`](../factory/admin_controls.md#set_fee_receiver) function.
+All deployed pools share the same fee receiver. A new address can be designated by using the [**`set_fee_receiver`**](../factory/admin_controls.md#set_fee_receiver) function.
 
 ### `fee_receiver`
 !!! description "`Factory.fee_receiver() -> address: view`"
@@ -14,7 +19,7 @@ All deployed pools share the same fee receiver. A new address can be designated 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # fee receiver for all pools
         fee_receiver: public(address)
         ```
@@ -43,7 +48,7 @@ A pool can contain different asset types. All avalaible types can be queried wit
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         asset_types: public(HashMap[uint8, String[20]])
         ```
 
@@ -59,7 +64,7 @@ A pool can contain different asset types. All avalaible types can be queried wit
 
 Pools and gauges are created through blueprint contracts based on the implementation chosen during deployment.
 
-Additionally, there are utility contracts for Math  (`math_implementation`) and Views (`views_implementation`).
+Additionally, there are utility contracts for Math  (**`math_implementation`**) and Views (**`views_implementation`**).
 
 
 ### `pool_implementations`
@@ -75,7 +80,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # index -> implementation address
         pool_implementations: public(HashMap[uint256, address])
         ```
@@ -102,7 +107,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # index -> implementation address
         metapool_implementations: public(HashMap[uint256, address])
         ```
@@ -124,7 +129,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # index -> implementation address
         math_implementation: public(address)
         ```
@@ -146,7 +151,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # index -> implementation address
         gauge_implementation: public(address)
         ```
@@ -168,7 +173,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # index -> implementation address
         views_implementation: public(address)
         ```
@@ -184,7 +189,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
 ## **Ownership**
 
-`Admin` is the owner of the contract and has exclusive possibility to call admin-only functions. Ownership can be transferred; for details, see [here](../factory/admin_controls.md#commit_transfer_ownership).
+**`Admin`** is the owner of the contract and has exclusive possibility to call admin-only functions. Ownership can be transferred; for details, see [here](../factory/admin_controls.md#commit_transfer_ownership).
 
 ### `admin`
 !!! description "`Factory.admin() -> address: view`"
@@ -195,7 +200,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         admin: public(address)
         ```
 
@@ -215,7 +220,7 @@ Additionally, there are utility contracts for Math  (`math_implementation`) and 
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         future_admin: public(address)
         ```
 

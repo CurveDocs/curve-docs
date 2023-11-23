@@ -49,7 +49,7 @@ The factory has several core components:
 A metapool pairs a coin against the LP token of another pool. This other pool is referred to as the “base pool”.   
 By using LP tokens, metapools allow swaps against any asset within their base pool, without diluting the base pool’s liquidity.  
 
-Existing base pools can be obtained by querying `base_pool_list` within the [MetaRegistry API](../registry/overview.md) or the MetaPoolFactory Contract itself.
+Existing base pools can be obtained by querying `base_pool_list` within the [MetaRegistry API](../../registry/overview.md) or the MetaPoolFactory Contract itself.
 
 ```shell
 >>> MetaRegistry.base_pool_list(0):
@@ -64,17 +64,17 @@ Existing base pools can be obtained by querying `base_pool_list` within the [Met
 | `fraxBP` |  `FRAX <> USDC` |[0xDcEF968d416a41Cdac0ED8702fAC8128A64241A2](https://etherscan.io/address/0xDcEF968d416a41Cdac0ED8702fAC8128A64241A2) |
 | `sBTC2` |  `sBTC <> wBTC` | [0xf253f83AcA21aAbD2A20553AE0BF7F65C755A07F](https://etherscan.io/address/0xf253f83AcA21aAbD2A20553AE0BF7F65C755A07F) |
 
-It is possible to add additional base pools through a DAO vote. See [`add_base_pool`](../pool_factory/admin_controls.md#add_base_pool).
+It is possible to add additional base pools through a DAO vote. See [`add_base_pool`](../pool_factory/deployer_api.md#add_base_pool).
 
 
 ## **Meta Pool** 
 A metapool pairs a coin against the LP token of a base pool. Deployment via [`deploy_metapool`](../pool_factory/deployer_api.md#deploy_metapool).
 
 ## **Plain Pool**
-A plain pool pairs a minimum of 2 and a maximum of 4 coins. These coins are not paired with another pool. However, a plain pool can only pair assets not included in any base pool. Deployment via [`deploy_plain_pool`](../factory/deployer_api.md#deploy_plain_pool).
+A plain pool pairs a minimum of 2 and a maximum of 4 coins. These coins are not paired with another pool. However, a plain pool can only pair assets not included in any base pool. Deployment via [`deploy_plain_pool`](../pool_factory/deployer_api.md#deploy_plain_pool).
 
 ## **Two-Coin Crypto Pool** 
-A crypto pool with two volatile coins. Deplyment via [`deploy_pool`](../factory/deployer_api.md#deploy_pool).
+A crypto pool with two volatile coins. Deplyment via [`deploy_pool`](../pool_factory/deployer_api.md#deploy_pool).
 
 ## **Three-Coin Crypto Pool** 
-A crypto pool with three volatile coins, also called "Tricrypto" pool. Deplyment via [`deploy_pool`](../factory/deployer_api.md#deploy_pool-1).
+A crypto pool with three volatile coins, also called "Tricrypto" pool. Deplyment via [`deploy_pool`](../pool_factory/deployer_api.md#deploy_pool-1).

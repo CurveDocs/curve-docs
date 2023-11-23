@@ -19,7 +19,7 @@ Allocated CRV emissions are bridged from this contract to the `ChildGauge` on th
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def transmit_emissions():
             """
@@ -52,7 +52,7 @@ Allocated CRV emissions are bridged from this contract to the `ChildGauge` on th
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         bridger: public(address)
 
         @external
@@ -86,7 +86,7 @@ Allocated CRV emissions are bridged from this contract to the `ChildGauge` on th
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         bridger: public(address)
 
         @external
@@ -119,7 +119,7 @@ Allocated CRV emissions are bridged from this contract to the `ChildGauge` on th
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         WEEK: constant(uint256) = 604800
         YEAR: constant(uint256) = 86400 * 365
         RATE_DENOMINATOR: constant(uint256) = 10 ** 18
@@ -195,7 +195,7 @@ Allocated CRV emissions are bridged from this contract to the `ChildGauge` on th
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def initialize(_bridger: address, _chain_id: uint256):
             """
@@ -239,7 +239,7 @@ RootGauges can be killed by the owner of the RootChainGaugeFactory.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         is_killed: public(bool)
         ```
 
@@ -265,7 +265,7 @@ RootGauges can be killed by the owner of the RootChainGaugeFactory.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         inflation_params: public(InflationParams)
 
         @external
@@ -309,7 +309,7 @@ RootGauges can be killed by the owner of the RootChainGaugeFactory.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @view
         @external
         def integrate_fraction(_user: address) -> uint256:
@@ -339,7 +339,7 @@ RootGauges can be killed by the owner of the RootChainGaugeFactory.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         chain_id: public(uint256)
 
         @external
@@ -374,7 +374,7 @@ RootGauges can be killed by the owner of the RootChainGaugeFactory.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         factory: public(address)
 
         @external
@@ -417,7 +417,7 @@ RootGauges can be killed by the owner of the RootChainGaugeFactory.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         struct InflationParams:
             rate: uint256
             finish_time: uint256
@@ -442,7 +442,7 @@ RootGauges can be killed by the owner of the RootChainGaugeFactory.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         last_period: public(uint256)
         ```
 
@@ -463,7 +463,7 @@ RootGauges can be killed by the owner of the RootChainGaugeFactory.
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         total_emissions: public(uint256)
 
         @external

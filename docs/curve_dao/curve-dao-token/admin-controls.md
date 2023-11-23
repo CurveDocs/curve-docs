@@ -1,4 +1,4 @@
-The controls within the ERC-20 Curve DAO Token are limited. The **admin** of the contract can only modify the *`name`, `admin`, or `minter`*. Since the [**CurveOwnershipAgent**](../ownership-proxy/Agents.md#community-dao) is the current admin of the contract, any changes to these parameters would require a successfully passed DAO vote.
+The controls within the ERC-20 Curve DAO Token are limited. The admin of the contract can only modify the **`name`, `admin`, or `minter`**. Since the [**CurveOwnershipAgent**](../ownership-proxy/Agents.md#community-dao) is the current admin of the contract, any changes to these parameters would require a successfully passed DAO vote.
 
 ## **Admin Ownership**
 
@@ -18,7 +18,7 @@ The controls within the ERC-20 Curve DAO Token are limited. The **admin** of the
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 2 4 7"
+        ```vyper hl_lines="1 2 4 7"
         event SetAdmin:
             admin: address
         
@@ -53,7 +53,7 @@ The controls within the ERC-20 Curve DAO Token are limited. The **admin** of the
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 2 5 12 13 14"
+        ```vyper hl_lines="1 2 5 12 13 14"
         name: public(String[64])
         symbol: public(String[32])
 
@@ -92,7 +92,7 @@ The controls within the ERC-20 Curve DAO Token are limited. The **admin** of the
 
     ??? quote "Source code"
 
-        ```python hl_lines="1 2 4 7 13 16"
+        ```vyper hl_lines="1 2 4 7 13 16"
         event SetMinter:
             minter: address
         

@@ -20,7 +20,7 @@ Current implementations can be queried using the corresponding getter methods:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # index -> implementation address
         pool_implementations: public(HashMap[uint256, address])
         metapool_implementations: public(HashMap[uint256, address])
@@ -65,7 +65,7 @@ Current implementations can be queried using the corresponding getter methods:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # index -> implementation address
         pool_implementations: public(HashMap[uint256, address])
         metapool_implementations: public(HashMap[uint256, address])
@@ -109,7 +109,7 @@ Current implementations can be queried using the corresponding getter methods:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # index -> implementation address
         pool_implementations: public(HashMap[uint256, address])
         metapool_implementations: public(HashMap[uint256, address])
@@ -149,7 +149,7 @@ Current implementations can be queried using the corresponding getter methods:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # index -> implementation address
         pool_implementations: public(HashMap[uint256, address])
         metapool_implementations: public(HashMap[uint256, address])
@@ -189,7 +189,7 @@ Current implementations can be queried using the corresponding getter methods:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # index -> implementation address
         pool_implementations: public(HashMap[uint256, address])
         metapool_implementations: public(HashMap[uint256, address])
@@ -233,7 +233,7 @@ Current implementations can be queried using the corresponding getter methods:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         # fee receiver for all pools
         fee_receiver: public(address)
 
@@ -273,7 +273,7 @@ Current implementations can be queried using the corresponding getter methods:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         asset_types: public(HashMap[uint8, String[20]])
 
         @external
@@ -319,7 +319,7 @@ Limitations when adding new base pools:
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         @external
         def add_base_pool(
             _base_pool: address,
@@ -378,7 +378,7 @@ Limitations when adding new base pools:
 
 Current admin and future admin can be queried via:
 
-```python
+```vyper
 Factory.admin()
 Factory.future_admin()
 ```
@@ -397,7 +397,7 @@ Factory.future_admin()
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         admin: public(address)
         future_admin: public(address)
 
@@ -428,7 +428,7 @@ Factory.future_admin()
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         admin: public(address)
         future_admin: public(address)
 

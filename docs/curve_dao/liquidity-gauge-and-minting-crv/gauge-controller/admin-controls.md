@@ -1,4 +1,6 @@
-**Admin guarded functions of the GaugeController.**
+<h1> </h1>
+
+These functions are guarded, meaning they can only be executed by the contract's **`admmin`**.
 
 ## **Adding New Gauges and Types**
 
@@ -11,7 +13,7 @@ In order for a liquidity gauge to be elegible to receive CRV emission, its addre
         This function is only callable by the `admin` of the contract.
 
     !!!warning
-        Once a gauge has been added it cannot be removed. New gauges should be very carefully verified prior to adding them to the gauge controller.
+        Once a gauge has been added, it cannot be removed. Therefore, new gauges should undergo thorough verification by the community before being added to the GaugeController. It is possible, however, to 'kill' a gauge, which sets its emission rate to zero. As a result, a 'killed' gauge becomes ineligible for any CRV emissions.
 
     Function to add a new gauge to the GaugeController.
 
@@ -25,7 +27,7 @@ In order for a liquidity gauge to be elegible to receive CRV emission, its addre
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event NewGauge:
             addr: address
             gauge_type: int128
@@ -94,7 +96,7 @@ In order for a liquidity gauge to be elegible to receive CRV emission, its addre
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event AddType:
             name: String[64]
             type_id: int128
@@ -140,7 +142,7 @@ In order for a liquidity gauge to be elegible to receive CRV emission, its addre
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event NewTypeWeight:
             type_id: int128
             time: uint256
@@ -205,7 +207,7 @@ In order for a liquidity gauge to be elegible to receive CRV emission, its addre
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event CommitOwnership:
             admin: address
 
@@ -241,7 +243,7 @@ In order for a liquidity gauge to be elegible to receive CRV emission, its addre
 
     ??? quote "Source code"
 
-        ```python
+        ```vyper
         event ApplyOwnership:
             admin: address
 

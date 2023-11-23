@@ -1,15 +1,17 @@
+<h1> </h1>
+
 # **Collecting and Burning Fees on Sidechains**
 
-Fee collection on sidechains works similarly to that on the Ethereum mainnet. Collected fees are sent to a proxy contract and then burned. On most sidechains, tokens are burnt for [MIM](https://etherscan.io/address/0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3), as it's a favorable asset to bridge back to the mainnet. These proxy contracts have a `bridge()` function to bridge the tokens to the Ethereum mainnet. 
+Fee collection on sidechains works similarly to that on the Ethereum mainnet. Collected fees are sent to a fee receiver contract and then burned. On most sidechains, tokens are burnt for [MIM](https://etherscan.io/address/0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3), as it's an easy asset to bridge back to the mainnet. These proxy contracts have a `bridge()` function to bridge the tokens to the Ethereum mainnet. 
 
-MIM is then burnt for 3CRV and sent to the FeeDistributor.
+MIM is then burnt on for 3CRV on Ethereum and sent to the FeeDistributor.
 
 !!!note
     The contract owner can bridge any token in any quantity, other accounts can only bridge approved tokens, where the balance exceeds a minimum amount defined by the owner. This prevents bridging tokens when the amount is so small that claiming on the root chain becomes economically unfeasible.
 
 ??? quote "Proxy Source Code"
 
-    ```python
+    ```vyper
     @external
     def bridge(_coin: address):
         """
@@ -39,13 +41,14 @@ MIM is then burnt for 3CRV and sent to the FeeDistributor.
     ```
 
 
-# **Bridge Contract**
 
-!!!info
-    The methods to burn and bridge assets might slightly vary based on the chain. The examples down below are taken from [Optimism](https://www.optimism.io/).
 
 
 ## **Bridging**
+
+
+!!!warning
+    The methods to burn and bridge assets *might slightly vary based on the chain*. The examples down below are taken from [Optimism](https://www.optimism.io/).
 
 ### `brigde`
 !!! description "`Bridge.bridge(coin: address) -> bool:`"
@@ -65,7 +68,7 @@ MIM is then burnt for 3CRV and sent to the FeeDistributor.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         event AssetBridged:
             token: indexed(address)
             amount: uint256
@@ -133,7 +136,7 @@ MIM is then burnt for 3CRV and sent to the FeeDistributor.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         PROXY_OFT: public(immutable(address))
 
         @external
@@ -161,7 +164,7 @@ MIM is then burnt for 3CRV and sent to the FeeDistributor.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         TOKEN: public(immutable(address))
 
         @external
@@ -197,7 +200,7 @@ Receiver of the bridged funds is the 0xECB contract on Ethereum Mainnet.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         PROXY_OFT: public(immutable(address))
 
         @external
@@ -232,7 +235,7 @@ Receiver of the bridged funds is the 0xECB contract on Ethereum Mainnet.
 
     ??? quote "Source code"
 
-        ```python 
+        ```vyper 
         @external
         def set_root_receiver(receiver: address):
             assert msg.sender == self.owner
@@ -245,4 +248,3 @@ Receiver of the bridged funds is the 0xECB contract on Ethereum Mainnet.
         ```shell
         >>> Bridge.set_root_receiver('0x0000000000000000000000000000000000000000')
         ```
-

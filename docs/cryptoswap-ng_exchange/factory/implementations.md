@@ -1,166 +1,4 @@
-Implementations are used to deploy pool contracts whenever a new pool is deployed through a Factory.
-
-*There are two ways to deploy pools:*
-
-- Utilizing blueprint contract as per [https://eips.ethereum.org/EIPS/eip-5202](https://eips.ethereum.org/EIPS/eip-5202)
-- regular implementation contract with a `initialize` function
-
-!!!info
-    Newer Factory versions will only used the deployment via **Blueprint-Contracts**. At the time the CryptoSwapFactory was deployed, the option to create contracts from a blueprint did not exist yet.
-
-
-# **Cryptoswap Implementations**
-
-!!!deploy "Contract Source & Deployment"
-    **CryptoswapFactory** contract is deployed to the Ethereum mainnet at: [0xF18056Bbd320E96A48e3Fbf8bC061322531aac99](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99).
-
-
-??? quote "CryptoswapFactory.deploy_pool()"
-
-    ```python hl_lines="2"
-    @external
-    def deploy_pool(
-        _name: String[32],
-        _symbol: String[10],
-        _coins: address[2],
-        A: uint256,
-        gamma: uint256,
-        mid_fee: uint256,
-        out_fee: uint256,
-        allowed_extra_profit: uint256,
-        fee_gamma: uint256,
-        adjustment_step: uint256,
-        admin_fee: uint256,
-        ma_half_time: uint256,
-        initial_price: uint256
-    ) -> address:
-        """
-        @notice Deploy a new pool
-        @param _name Name of the new plain pool
-        @param _symbol Symbol for the new plain pool - will be concatenated with factory symbol
-        Other parameters need some description
-        @return Address of the deployed pool
-        """
-        # Validate parameters
-        assert A > MIN_A-1
-        assert A < MAX_A+1
-        assert gamma > MIN_GAMMA-1
-        assert gamma < MAX_GAMMA+1
-        assert mid_fee > MIN_FEE-1
-        assert mid_fee < MAX_FEE-1
-        assert out_fee >= mid_fee
-        assert out_fee < MAX_FEE-1
-        assert admin_fee < 10**18+1
-        assert allowed_extra_profit < 10**16+1
-        assert fee_gamma < 10**18+1
-        assert fee_gamma > 0
-        assert adjustment_step < 10**18+1
-        assert adjustment_step > 0
-        assert ma_half_time < 7 * 86400
-        assert ma_half_time > 0
-        assert initial_price > 10**6
-        assert initial_price < 10**30
-        assert _coins[0] != _coins[1], "Duplicate coins"
-
-        decimals: uint256[2] = empty(uint256[2])
-        for i in range(2):
-            d: uint256 = ERC20(_coins[i]).decimals()
-            assert d < 19, "Max 18 decimals for coins"
-            decimals[i] = d
-        precisions: uint256 = (18 - decimals[0]) + shift(18 - decimals[1], 8)
-
-
-        name: String[64] = concat("Curve.fi Factory Crypto Pool: ", _name)
-        symbol: String[32] = concat(_symbol, "-f")
-
-        token: address = create_forwarder_to(self.token_implementation)
-        pool: address = create_forwarder_to(self.pool_implementation)
-
-        Token(token).initialize(name, symbol, pool)
-        CryptoPool(pool).initialize(
-            A, gamma, mid_fee, out_fee, allowed_extra_profit, fee_gamma,
-            adjustment_step, admin_fee, ma_half_time, initial_price,
-            token, _coins, precisions)
-
-        length: uint256 = self.pool_count
-        self.pool_list[length] = pool
-        self.pool_count = length + 1
-        self.pool_data[pool].token = token
-        self.pool_data[pool].decimals = shift(decimals[0], 8) + decimals[1]
-        self.pool_data[pool].coins = _coins
-
-        key: uint256 = bitwise_xor(convert(_coins[0], uint256), convert(_coins[1], uint256))
-        length = self.market_counts[key]
-        self.markets[key][length] = pool
-        self.market_counts[key] = length + 1
-
-        log CryptoPoolDeployed(
-            token, _coins,
-            A, gamma, mid_fee, out_fee, allowed_extra_profit, fee_gamma,
-            adjustment_step, admin_fee, ma_half_time, initial_price,
-            msg.sender)
-        return pool
-    ```
-
-This contract *does not utilize blueprints* to deploy pools created via `deploy_pool()`. It uses a external `initialize` function instead which sets the variables according to the ones when deploying the pool through the factory.
-
-??? quote "initialize()"
-
-    ``` python hl_lines="2"
-    @external
-    def initialize(
-        A: uint256,
-        gamma: uint256,
-        mid_fee: uint256,
-        out_fee: uint256,
-        allowed_extra_profit: uint256,
-        fee_gamma: uint256,
-        adjustment_step: uint256,
-        admin_fee: uint256,
-        ma_half_time: uint256,
-        initial_price: uint256,
-        _token: address,
-        _coins: address[N_COINS],
-        _precisions: uint256,
-    ):
-        assert self.mid_fee == 0  # dev: check that we call it from factory
-
-        self.factory = msg.sender
-
-        # Pack A and gamma:
-        # shifted A + gamma
-        A_gamma: uint256 = shift(A, 128)
-        A_gamma = bitwise_or(A_gamma, gamma)
-        self.initial_A_gamma = A_gamma
-        self.future_A_gamma = A_gamma
-
-        self.mid_fee = mid_fee
-        self.out_fee = out_fee
-        self.allowed_extra_profit = allowed_extra_profit
-        self.fee_gamma = fee_gamma
-        self.adjustment_step = adjustment_step
-        self.admin_fee = admin_fee
-
-        self.price_scale = initial_price
-        self._price_oracle = initial_price
-        self.last_prices = initial_price
-        self.last_prices_timestamp = block.timestamp
-        self.ma_half_time = ma_half_time
-
-        self.xcp_profit_a = 10**18
-
-        self.token = _token
-        self.coins = _coins
-        self.PRECISIONS = _precisions
-    ```
-
-
-
-
-
-# **Tricrypto Implementations**
-
-Implementations are blueprint contracts from which pools are created. For more information regarding blueprint contracts, check [ERC-5202](https://eips.ethereum.org/EIPS/eip-5202).
+Implementations are represented by **blueprint contracts** from which pools and gauges are created. For more information regarding blueprint contracts, check [ERC-5202](https://eips.ethereum.org/EIPS/eip-5202).
 
 
 !!!deploy "Contract Source & Deployment"
@@ -170,7 +8,7 @@ Implementations are blueprint contracts from which pools are created. For more i
 
 ??? quote "TricryptoFactory.deploy_pool()"
 
-    ```python hl_lines="2 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104"
+    ```vyper hl_lines="2 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104"
     @external
     def deploy_pool(
         _name: String[64],
@@ -329,11 +167,11 @@ The TricryptoFactory utilizes four different implementations:
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `uint256` | Index |
+    | `arg0` |  `uint256` | index |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper
         pool_implementations: public(HashMap[uint256, address])
         ```
 
@@ -354,7 +192,7 @@ The TricryptoFactory utilizes four different implementations:
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper
         gauge_implementation: public(address)
         ```
 
@@ -375,7 +213,7 @@ The TricryptoFactory utilizes four different implementations:
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper
         views_implementation: public(address)
         ```
 
@@ -396,7 +234,7 @@ The TricryptoFactory utilizes four different implementations:
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper
         math_implementation: public(address)
         ```
 
@@ -425,12 +263,12 @@ These implementations can be changed by the `admin` of the contract, which is th
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool_implementation` |  `address` | Pool Blueprint Contract |
-    | `_implementation_index` |  `uint256` | Index |
+    | `_pool_implementation` |  `address` | pool blueprint contract |
+    | `_implementation_index` |  `uint256` | index |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper
         event UpdatePoolImplementation:
             _implemention_id: uint256
             _old_pool_implementation: address
@@ -478,11 +316,11 @@ These implementations can be changed by the `admin` of the contract, which is th
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_gauge_implementation` |  `address` | Gauge Blueprint Contract |
+    | `_gauge_implementation` |  `address` | gauge blueprint contract |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper
         event UpdateGaugeImplementation:
             _old_gauge_implementation: address
             _new_gauge_implementation: address
@@ -521,11 +359,11 @@ These implementations can be changed by the `admin` of the contract, which is th
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_views_implementation` |  `address` | Views Blueprint Contract |
+    | `_views_implementation` |  `address` | views blueprint contract |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper
         event UpdateViewsImplementation:
             _old_views_implementation: address
             _new_views_implementation: address
@@ -563,11 +401,11 @@ These implementations can be changed by the `admin` of the contract, which is th
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_math_implementation` |  `address` | Math Blueprint Contract |
+    | `_math_implementation` |  `address` | math blueprint contract |
 
     ??? quote "Source code"
 
-        ```python hl_lines="1"
+        ```vyper
         event UpdateMathImplementation:
             _old_math_implementation: address
             _new_math_implementation: address

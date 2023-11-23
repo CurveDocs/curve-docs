@@ -24,7 +24,7 @@ LiquidityGauge V5 adds support for EIP-20 approvals via EIP-712 secp256k1 signat
 
     ??? quote "Source code"
 
-        ```python hl_lines="9"
+        ```vyper hl_lines="9"
         # keccak256("isValidSignature(bytes32,bytes)")[:4] << 224
         ERC1271_MAGIC_VAL: constant(bytes32) = 0x1626ba7e00000000000000000000000000000000000000000000000000000000
         VERSION: constant(String[8]) = "v5.0.0"
