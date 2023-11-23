@@ -6,15 +6,15 @@ There are multiple deployed **`PoolProxy`** contracts.
 For a overview of all actively used proxies, see [here](../ownership-proxy/overview.md).
 
 
-# **Deploying Pools**
+## **Deploying Pools**
 Pool deployment is permissionless, with the exception of base pools. Thus, the `deploy_pool` function can be directly called on the Factory contract. For more information about Factory contracts and their usage, see [here](../../factory/pool_factory/overview.md).
 
 
-# **Parameter Changes**
+## **Parameter Changes**
 Parameter changes need to be done through the proxy, as those relevant functions can only be called by the parameter admin.
 
 
-# **Killing Pools**
+## **Killing Pools**
 
 ### `kill_me`
 !!! description "`PoolProxy.kill_me(_pool: address):`"
@@ -32,7 +32,7 @@ Parameter changes need to be done through the proxy, as those relevant functions
 
         === "PoolProxy.vy"
 
-            ```vyper hl_lines="3 21"
+            ```vyper
             interface Curve:
                 def withdraw_admin_fees(): nonpayable
                 def kill_me(): nonpayable
@@ -64,7 +64,7 @@ Parameter changes need to be done through the proxy, as those relevant functions
 
         === "Pool.vy"
 
-            ```vyper hl_lines="1 4"
+            ```vyper
             is_killed: bool
 
             @external
@@ -80,14 +80,9 @@ Parameter changes need to be done through the proxy, as those relevant functions
         todo
         ```
 
-
-# **PoolProxy**
-
-There is an old pool proxy which was the owner of early deployed curve liquitity pools before pool factories were created. That proxy was also used as the `fee_receiver` of admin fees and to send those to burners and the FeeDistributor.
-
-# **Burners**
+## **Burners**
 For configuration of burners please refer to [Burner](../fee-collection-distribution/burner.md).
 
 
-# **Admin Fees**
+## **Admin Fees**
 For withdrawing and burning admin fees please refer to [Withdrawing and Burning Admin Fees](../fee-collection-distribution/withdraw-and-burn.md).
