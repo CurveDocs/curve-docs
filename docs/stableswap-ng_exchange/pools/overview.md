@@ -102,7 +102,7 @@ $xps2 = (xp_{i} + xp_{j})^2$
 
 **The dynamic fee is calculated by the following formula:**
 
-$$\text{dynamic fee} = \frac{{fee_{m} \times fee}}{\frac{(fee_{m} - 10^{18}) \times 4 \times xp_{i} \times xp_{j}}{xps2}+ 10^{18}}$$
+$$\text{dynamic fee} = \frac{{fee_{m} \times fee}}{\frac{(fee_{m} - 10^{10}) \times 4 \times xp_{i} \times xp_{j}}{xps2}+ 10^{10}}$$
 
 
 ??? quote "`Dynamic Fee`"
