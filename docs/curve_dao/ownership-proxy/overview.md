@@ -17,18 +17,6 @@ graph LR
 
 </div>
 
-**At the ownership proxy level there are a few main contracts:**
-
-!!!info
-    Some proxy contracts act as both a PoolProxy and a GaugeProxy.
-
-- [**`PoolProxy:`**](https://etherscan.io/address/0xeCb456EA5365865EbAb8a2661B0c503410e9B347) old PoolProxy; This contract is a proxy for some old pools but it's mostly used as a fee receiver for admin fees
-- [**`GaugeProxy`**](https://etherscan.io/address/0x519AFB566c05E00cfB9af73496D00217A630e4D5) GaugeProxy for early liquidity gauges.
-- [**`StableSwapOwnerProxy:`**](../ownership-proxy/StableSwapOwnerProxy.md) Admin functionality for StableSwap pools deployed by the [*MetaFactory*](https://etherscan.io/address/0xb9fc157394af804a3578134a6585c0dc9cc990d4)
-- [**`Old GaugeManagerProxy`**](https://etherscan.io/address/0x201798B679859DDF129651d6B58a5C32527EA04c) Old ManagerProxy for StableSwap pools to migrate from via `migrate_gauge_manager` -> migrates to StableSwapOwnerProxy
-- [**`CurveCryptoSwapOwnerProxy`**](https://etherscan.io/address/0x5a8fdC979ba9b6179916404414F7BA4D8B77C8A1) Admin functionality for two-coin Cryptoswap pools deployed by the [*CryptoSwapFactory*](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99)
-- [**`GaugeManagerProxy (two-coin crypto pools)`**](https://etherscan.io/address/0x9f99FDe2ED3997EAfE52b78E3981b349fD2Eb8C9#code) Gauge manager to add permissionless rewards
-
 
 *The DAO is capable of replacing the ownership proxies via a vote*.
 
@@ -38,7 +26,7 @@ graph LR
 Pool and Gauge proxies usually have three different admins (representing the different [agents](../ownership-proxy/Agents.md) of curve):
 
 - **`ownership_admin`**: controls most functionality; requires a 30% quorum with 51% support  
-- **`parameter_admin`**: authority to modify parameters on pools; requries a 15% quorum with 51% support  
+- **`parameter_admin`**: authority to modify parameters on pools; requries a 15% quorum with 60% support  
 - **`emergency_admin`**: limited authority to kill pools and gauges under certain circumstances  
 
 
@@ -63,7 +51,7 @@ Pool and Gauge proxies usually have three different admins (representing the dif
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 7 20"
+        ```vyper
         event CommitAdmins:
             ownership_admin: address
             parameter_admin: address
@@ -110,7 +98,7 @@ Pool and Gauge proxies usually have three different admins (representing the dif
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 7 20"
+        ```vyper
         event ApplyAdmins:
             ownership_admin: address
             parameter_admin: address
@@ -151,7 +139,7 @@ Pool and Gauge proxies usually have three different admins (representing the dif
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 5"
+        ```vyper
         ownership_admin: public(address)
 
         @external
@@ -180,7 +168,7 @@ Pool and Gauge proxies usually have three different admins (representing the dif
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 6"
+        ```vyper
         parameter_admin: public(address)
 
         @external
@@ -209,7 +197,7 @@ Pool and Gauge proxies usually have three different admins (representing the dif
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 7"
+        ```vyper
         emergency_admin: public(address)
 
         @external
@@ -239,7 +227,7 @@ Pool and Gauge proxies usually have three different admins (representing the dif
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 13"
+        ```vyper
         future_ownership_admin: public(address)
 
         @external
@@ -275,7 +263,7 @@ Pool and Gauge proxies usually have three different admins (representing the dif
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 14"
+        ```vyper
         future_parameter_admin: public(address)
 
         @external
@@ -311,7 +299,7 @@ Pool and Gauge proxies usually have three different admins (representing the dif
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 15"
+        ```vyper
         future_emergency_admin: public(address)
 
         @external
