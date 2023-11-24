@@ -11,7 +11,7 @@ These functions are guarded and may only be called by the **`admin`** of the con
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to set a new pool implementation.
+    Function to set/add a new pool implementation.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -56,7 +56,7 @@ These functions are guarded and may only be called by the **`admin`** of the con
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to set a new metapool implementation.
+    Function to set/add a new metapool implementation.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -101,7 +101,7 @@ These functions are guarded and may only be called by the **`admin`** of the con
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to set a new math implementation.
+    Function to set a new math implementation. There can only be one math implementation.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -139,7 +139,7 @@ These functions are guarded and may only be called by the **`admin`** of the con
 !!! description "`Factory.set_gauge_implementation(_gauge_implementation: address):`"
 
     !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the contract.
+        This function is only callable by the `admin` of the contract. There can only be one gauge implementation.
 
     Function to set a new gauge implementation.
 
@@ -179,7 +179,7 @@ These functions are guarded and may only be called by the **`admin`** of the con
 !!! description "`Factory.set_views_implementation(_views_implementation: address):`"
 
     !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the contract.
+        This function is only callable by the `admin` of the contract. There can only be one views implementation.
 
     Function to set a new views implementation.
 
