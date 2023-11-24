@@ -1930,7 +1930,6 @@ Stableswap-ng introduces a dynamic fee based on the imbalance of the coins withi
     ```
 
 More on dynamic fees [here](../pools/overview.md#dynamic-fees).
-For an overview of how fees are distributed, please refer to [Fee Collection and Distribution](../../curve_dao/FeeCollection%26Distribution/overview.md).
 
 ### `fee`
 !!! description "`StableSwap.fee() -> uint256: view`"
@@ -2208,9 +2207,9 @@ For an overview of how fees are distributed, please refer to [Fee Collection and
 
 ## **Oracle Methods**
 
-Oracles are updated whenever the `upkeep_oracles()` function is called. This update is triggered by any of the following functions: `add_liquidity()`, `remove_liquidity_one_coin()`, `remove_liquidity_imbalanced()`, `exchange()` or `exchanged_received()`.
+Oracles are updated whenever the **`upkeep_oracles()`** function is called. This update is triggered by any of the following functions: **`add_liquidity()`**, **`remove_liquidity_one_coin()`**, **`remove_liquidity_imbalanced()`**, **`exchange()`** or **`exchanged_received()`**.
 
-When removing liquidity in a balanced portion (`remove_liquidity()`), oracles are not updated as it does not change the price within the AMM, as it does not mess with the coin balance ratio of the pool.
+When removing liquidity in a balanced portion (**`remove_liquidity()`**), oracles are not updated as it does not change the price within the AMM, as it does not mess with the coin balance ratio of the pool.
 
 ??? quote "`upkeep_oracles`"
 
@@ -2581,9 +2580,9 @@ When removing liquidity in a balanced portion (`remove_liquidity()`), oracles ar
 
 The amplification coefficient **`A`** determines a pool’s tolerance for imbalance between the assets within it. A higher value means that trades will incur slippage sooner as the assets within the pool become imbalanced.
 
-The appropriate value for A is dependent upon the type of coin being used within the pool, and is subject to optimisation. It is possible to modify the amplification coefficient for a pool via the `ramp_A` function. See [admin controls](../pools/admin_controls.md#ramp_a).
+The appropriate value for A is dependent upon the type of coin being used within the pool, and is subject to optimisation. It is possible to modify the amplification coefficient for a pool via the **`ramp_A`** function. See [admin controls](../pools/admin_controls.md#ramp_a).
 
-When a ramping of A has been initialized, the process can be stopped by calling the function [`stop_ramp_A()`](../pools/admin_controls.md#stop_ramp_a).
+When a ramping of A has been initialized, the process can be stopped by calling the function [**`stop_ramp_A()`**](../pools/admin_controls.md#stop_ramp_a).
 
 ### `A`
 !!! description "`StableSwap.A() -> uint256: view`"

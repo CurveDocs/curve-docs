@@ -335,7 +335,7 @@ graph LR
     linkStyle 0 stroke-width:0, fill:none;
 ```
 
-1. User gives approval the **AGGREGATOR**, which then transfers tokens into the aggregator contract
+1. User gives approval the `AGGREGATOR`, which then transfers tokens into the aggregator contract
 2. Aggregator exchanges `GOV-TOKEN` for `USDT` using Uniswap  
 3. Transfers the `USDT` directly from Uniswap into the Curve pool
 4. Perform a swap on the Curve pool (`USDT<>USDC`) via **`exchange_received`**

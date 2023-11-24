@@ -8,7 +8,7 @@ The deployment of plain pools is permissionless and can be done via the **`deplo
 
 ## **Exchange Methods**
 
-The AMM contract utilizes two internal functions to transfer tokens/coins in and out of the pool and then accordingly update `stored_balances`:
+The AMM contract utilizes two internal functions to transfer tokens/coins in and out of the pool and then accordingly update **`stored_balances`**:
 
 - **`_transfer_in()`**
 - **`_transfer_out()`**
@@ -24,7 +24,7 @@ The function takes the index value of the coin (**`coin_idx`**), amount (**`dx`*
 **`expect_optimistic_transfer`** is relevant when using the [**`exchange_received()`**](#exchange_received) function.
 
 
-??? quote "`_transfer_in`"
+??? quote "`_transfer_in(coin_idx: int128, dx: uint256, sender: address, expect_optimistic_transfer: bool) -> uint256:`"
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -82,7 +82,7 @@ The function takes the index value of the coin (**`coin_idx`**), amount (**`dx`*
 
 **`_transfer_out()`** is used to transfer tokens out of the pool.
 
-??? quote "`_transfer_out`"
+??? quote "`_transfer_out(_coin_idx: int128, _amount: uint256, receiver: address):`"
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -90,7 +90,7 @@ The function takes the index value of the coin (**`coin_idx`**), amount (**`dx`*
     | `_amount` |  `uint256` | amount to transfer out |
     | `receiver` |  `address` | address to send the tokens to |
 
-    ```vyper hl_lines="2"
+    ```vyper
     stored_balances: DynArray[uint256, MAX_COINS]
 
     @internal
@@ -1629,9 +1629,9 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
 ## **Oracle Methods**
 
-Oracles are updated whenever `upkeep_oracles()` was called. This occurrs when calling `add_liquidity`, `remove_liquidity_one_coin`, `remove_liquidity_imbalanced`, `exchange` or `exchanged_received`.
+Oracles are updated whenever **`upkeep_oracles()`** was called. This occurrs when calling **`add_liquidity`**, **`remove_liquidity_one_coin`**, **`remove_liquidity_imbalanced`**, **`exchange`** or **`exchanged_received`**.
 
-When removing liquidity in a balanced portion (`remove_liquidity`), oracles are not updated as it does not change the price within the AMM, as it does not mess with the coin balance ratio of the pool.
+When removing liquidity in a balanced portion (**`remove_liquidity`**), oracles are not updated as it does not change the price within the AMM, as it does not mess with the coin balance ratio of the pool.
 
 ??? quote "`upkeep_oracles`"
 
@@ -2018,9 +2018,9 @@ When removing liquidity in a balanced portion (`remove_liquidity`), oracles are 
 
 The amplification coefficient **`A`** determines a pool’s tolerance for imbalance between the assets within it. A higher value means that trades will incur slippage sooner as the assets within the pool become imbalanced.
 
-The appropriate value for A is dependent upon the type of coin being used within the pool, and is subject to optimisation and pool-parameter update based on the market history of the trading pair. It is possible to modify the amplification coefficient for a pool after it has been deployed. This can be done via the `ramp_A` function. See [admin controls](../pools/admin_controls.md#ramp_a).
+The appropriate value for A is dependent upon the type of coin being used within the pool, and is subject to optimisation and pool-parameter update based on the market history of the trading pair. It is possible to modify the amplification coefficient for a pool after it has been deployed. This can be done via the **`ramp_A`** function. See [admin controls](../pools/admin_controls.md#ramp_a).
 
-When a ramping of A has been initialized, the process can be stopped by calling the function [`stop_ramp_A()`](../pools/admin_controls.md#stop_ramp_a).
+When a ramping of A has been initialized, the process can be stopped by calling the function [**`stop_ramp_A()`**](../pools/admin_controls.md#stop_ramp_a).
 
 ### `A`
 !!! description "`StableSwap.A() -> uint256:`"
