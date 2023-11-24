@@ -1,8 +1,8 @@
-<h1> </h1>
+These functions are guarded and may only be called by the **`admin`** of the contract.
 
 ## **Implementations**
 
-Current implementations can be queried using the corresponding getter methods:
+*New implementations can be set via the following functions:*
 
 
 ### `set_pool_implementations`
@@ -11,7 +11,7 @@ Current implementations can be queried using the corresponding getter methods:
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to set a new pool implementation.
+    Function to set/add a new pool implementation.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -56,7 +56,7 @@ Current implementations can be queried using the corresponding getter methods:
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to set a new metapool implementation.
+    Function to set/add a new metapool implementation.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -101,7 +101,7 @@ Current implementations can be queried using the corresponding getter methods:
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to set a new math implementation.
+    Function to set a new math implementation. There can only be one math implementation.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -139,7 +139,7 @@ Current implementations can be queried using the corresponding getter methods:
 !!! description "`Factory.set_gauge_implementation(_gauge_implementation: address):`"
 
     !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the contract.
+        This function is only callable by the `admin` of the contract. There can only be one gauge implementation.
 
     Function to set a new gauge implementation.
 
@@ -179,7 +179,7 @@ Current implementations can be queried using the corresponding getter methods:
 !!! description "`Factory.set_views_implementation(_views_implementation: address):`"
 
     !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the contract.
+        This function is only callable by the `admin` of the contract. There can only be one views implementation.
 
     Function to set a new views implementation.
 
@@ -267,8 +267,8 @@ Current implementations can be queried using the corresponding getter methods:
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_id` |  `uint8` | this variable has no use; insert a random address, otherwise the tx will fail. |
-    | `_name` |  `String[10]` | address of the new fee receiver |
+    | `_id` |  `uint8` | asset type id |
+    | `_name` |  `String[10]` | name of the new asset type |
 
 
     ??? quote "Source code"
@@ -314,7 +314,7 @@ Limitations when adding new base pools:
     | ----------- | -------| ----|
     | `_base_pool` |  `address` | pool address to add as a basepool |
     | `_base_lp_token` |  `address` | lp token address of the pool |
-    | `_asset_types` |  `DynArray[uint8, MAX_COINS]` | asset type of the pool |
+    | `_asset_types` |  `DynArray[uint8, MAX_COINS]` | array of asset types of the pool |
     | `_n_coins` |  `uint256` | number of coins in the base pool |
 
     ??? quote "Source code"
@@ -375,13 +375,6 @@ Limitations when adding new base pools:
 
 
 ## **Contract Ownership**
-
-Current admin and future admin can be queried via:
-
-```vyper
-Factory.admin()
-Factory.future_admin()
-```
 
 ### `commit_transfer_ownership`
 !!! description "`Factory.commit_transfer_ownership(_addr: address):`"

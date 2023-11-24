@@ -87,6 +87,7 @@ The internal **`_dynamic_fee()`** function calculates the fee **based on the bal
 
 - Let $fee$ represent the fee, as retrieved by the method **`StableSwap.fee()`**
 - Let $fee_m$ denote the off-peg fee multiplier, sourced from **`StableSwap.offpeg_fee_multiplier()`**
+- **`FEE_DENOMINATOR`** is a constant with a value of $10^{10}$, representing the precision of the fee
 - The terms $rate_{i}$ and $balance{i}$ refer to the specific rate and balance for coin $i$, respectively, and similarly, $rate_j$ and $balance_j$ for coin $j$ 
 - $PRECISION_{i}$ and $PRECISION_{j}$ are the precision constants for the respective coins
 
@@ -334,7 +335,7 @@ graph LR
     linkStyle 0 stroke-width:0, fill:none;
 ```
 
-1. User gives approval the **AGGREGATOR**, which then transfers tokens into the aggregator contract
+1. User gives approval the `AGGREGATOR`, which then transfers tokens into the aggregator contract
 2. Aggregator exchanges `GOV-TOKEN` for `USDT` using Uniswap  
 3. Transfers the `USDT` directly from Uniswap into the Curve pool
 4. Perform a swap on the Curve pool (`USDT<>USDC`) via **`exchange_received`**

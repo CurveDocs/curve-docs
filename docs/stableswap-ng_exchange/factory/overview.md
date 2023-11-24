@@ -182,9 +182,8 @@ Additionally, there are utility contracts for Math  (**`math_implementation`**) 
 
         ```shell
         >>> Factory.views_implementation()
-       '0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD' 
+        '0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD' 
         ```
-
 
 
 ## **Ownership**
