@@ -2,7 +2,7 @@ These functions are guarded and may only be called by the **`admin`** of the con
 
 ## **Implementations**
 
-Current implementations can be queried using the corresponding getter methods:
+*New implementations can be set via the following functions:*
 
 
 ### `set_pool_implementations`
