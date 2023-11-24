@@ -186,7 +186,6 @@ Additionally, there are utility contracts for Math  (**`math_implementation`**) 
         ```
 
 
-
 ## **Ownership**
 
 **`Admin`** is the owner of the contract and has exclusive possibility to call admin-only functions. Ownership can be transferred; for details, see [here](../factory/admin_controls.md#commit_transfer_ownership).

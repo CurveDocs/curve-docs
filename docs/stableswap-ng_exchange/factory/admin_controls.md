@@ -1,4 +1,4 @@
-<h1> </h1>
+These functions are guarded and may only be called by the **`admin`** of the contract.
 
 ## **Implementations**
 
@@ -267,8 +267,8 @@ Current implementations can be queried using the corresponding getter methods:
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_id` |  `uint8` | this variable has no use; insert a random address, otherwise the tx will fail. |
-    | `_name` |  `String[10]` | address of the new fee receiver |
+    | `_id` |  `uint8` | asset type id |
+    | `_name` |  `String[10]` | name of the new asset type |
 
 
     ??? quote "Source code"
@@ -314,7 +314,7 @@ Limitations when adding new base pools:
     | ----------- | -------| ----|
     | `_base_pool` |  `address` | pool address to add as a basepool |
     | `_base_lp_token` |  `address` | lp token address of the pool |
-    | `_asset_types` |  `DynArray[uint8, MAX_COINS]` | asset type of the pool |
+    | `_asset_types` |  `DynArray[uint8, MAX_COINS]` | array of asset types of the pool |
     | `_n_coins` |  `uint256` | number of coins in the base pool |
 
     ??? quote "Source code"
@@ -375,13 +375,6 @@ Limitations when adding new base pools:
 
 
 ## **Contract Ownership**
-
-Current admin and future admin can be queried via:
-
-```vyper
-Factory.admin()
-Factory.future_admin()
-```
 
 ### `commit_transfer_ownership`
 !!! description "`Factory.commit_transfer_ownership(_addr: address):`"

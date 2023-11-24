@@ -29,10 +29,10 @@ Limitations when deploying stableswap-ng pools:
     | ----------- | -------| ----|
     | `_name` |  `String[32]` | name of the new plain pool |
     | `_symbol` |  `String[10]` | symbol for the new metapool’s LP token; this value will be concatenated with the factory symbol |
-    | `_coins` |  `DynArray[address, MAX_COINS]` | list of addresses of the coins being used in the pool |
+    | `_coins` |  `DynArray[address, MAX_COINS]` | array of addresses of the coins being used in the pool |
     | `_A` |  `uint256` | amplification coefficient |
     | `_fee` |  `uint256` | trade fee, given as an integer with `1e10` precision |
-    | `_offpeg_fee_multiplier` |  `uint256` | off-peg multiplier |
+    | `_offpeg_fee_multiplier` |  `uint256` | off-peg fee multiplier |
     | `_ma_exp_time` |  `uint256` | ma time; set as time_in_seconds / ln(2) |
     | `_implementation_idx` |  `uint256` | index of the implementation to use; more [here](../factory/overview.md#implementations) |
     | `_asset_type` |  `DynArray[uint8, MAX_COINS]` | asset type of the pool as an integer; more [here](../pools/overview.md#supported-assets)|
@@ -40,7 +40,7 @@ Limitations when deploying stableswap-ng pools:
     | `_oracles` |  `DynArray[address, MAX_COINS]` | array of rate oracle addresses |
 
     !!!info "Implementation ID"
-        There might be multiple pool implementations. To query all available ones, see [here](../factory/overview.md#pool_implementations). As of the current date (31.10.2023), there is only one pool implementation available. Since the `_implementation_idx` starts at 0, users need to input "0" when deploying a pool.
+        There might be multiple pool implementations. To query all available ones, see [here](../factory/overview.md#pool_implementations). As of the current date (31.10.2023), there is only one pool implementation available. Since the **`_implementation_idx`** starts at 0, users need to input "0" when deploying a pool.
 
     ??? quote "Source code"
 
@@ -227,12 +227,12 @@ Limitations when deploying meta pools:
     | `_offpeg_fee_multiplier` |  `uint256` | off-peg multiplier |
     | `_ma_exp_time` |  `uint256` | ma time; set as time_in_seconds / ln(2) |
     | `_implementation_idx` |  `uint256` | index of the implementation to use; more [here](../factory/overview.md#implementations) |
-    | `_asset_type` |  `uint8` | asset type for the token |
+    | `_asset_type` |  `uint8` | asset type of the pool as an integer; more [here](../pools/overview.md#supported-assets) |
     | `_method_id` |  `bytes4` | first four bytes of the Keccak-256 hash of the function signatures of the oracle addresses that give rate oracles |
     | `_oracle` |  `address` | rate oracle address |
 
     !!!info "Implementation ID"
-        There might be multiple metapool implementations. To query all available ones, see [here](../factory/overview.md#metapool_implementations). As of the current date (31.10.2023), there is only one metapool implementation available. Since the `_implementation_idx` starts at 0, users need to input "0" when deploying a pool.
+        There might be multiple metapool implementations. To query all available ones, see [here](../factory/overview.md#metapool_implementations). As of the current date (31.10.2023), there is only one metapool implementation available. Since the **`_implementation_idx`** starts at 0, users need to input "0" when deploying a pool.
 
     ??? quote "Source code"
 
@@ -399,6 +399,9 @@ Limitations when deploying meta pools:
 ### `deploy_gauge`
 !!! description "`Factory.deploy_gauge(_pool: address) -> address:`"
 
+    !!!warning
+        Deploying a gauge using this function will only be successful if the pool has been deployed from this Factory.
+
     Function to deploy a gauge. The Factory utilizes the `gauge_implementation` to create the contract from a blueprint.
 
     Returns: deployed gauge (`address`).
@@ -408,9 +411,6 @@ Limitations when deploying meta pools:
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_pool` |  `address` | pool address to deploy the gauge for |
-
-    !!!info
-        Deploying a gauge using this function will only be successful if the pool has been deployed from this Factory.
 
     ??? quote "Source code"
 
