@@ -87,6 +87,7 @@ The internal **`_dynamic_fee()`** function calculates the fee **based on the bal
 
 - Let $fee$ represent the fee, as retrieved by the method **`StableSwap.fee()`**
 - Let $fee_m$ denote the off-peg fee multiplier, sourced from **`StableSwap.offpeg_fee_multiplier()`**
+- **`FEE_DENOMINATOR`** is a constant with a value of $10^{10}$, representing the precision of the fee
 - The terms $rate_{i}$ and $balance{i}$ refer to the specific rate and balance for coin $i$, respectively, and similarly, $rate_j$ and $balance_j$ for coin $j$ 
 - $PRECISION_{i}$ and $PRECISION_{j}$ are the precision constants for the respective coins
 
@@ -102,7 +103,7 @@ $xps2 = (xp_{i} + xp_{j})^2$
 
 **The dynamic fee is calculated by the following formula:**
 
-$$\text{dynamic fee} = \frac{{fee_{m} \times fee}}{\frac{(fee_{m} - 10^{18}) \times 4 \times xp_{i} \times xp_{j}}{xps2}+ 10^{18}}$$
+$$\text{dynamic fee} = \frac{{fee_{m} \times fee}}{\frac{(fee_{m} - 10^{10}) \times 4 \times xp_{i} \times xp_{j}}{xps2}+ 10^{10}}$$
 
 
 ??? quote "`Dynamic Fee`"
