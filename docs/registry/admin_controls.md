@@ -1,9 +1,12 @@
-The following are methods that may only be called by the owner of the contract.
+The following methods are guarded and may only be called by the **`owner`** of the MetaRegistry.
 
 ### `add_registry_handler`
 !!! description "`MetaRegistry.add_registry_handler(_registry_handler: address):`"
+ 
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the contract.
 
-    Function to add a registry handler.
+    Function to add a registry handler to the MetaRegistry.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -11,7 +14,7 @@ The following are methods that may only be called by the owner of the contract.
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="2 9 12"
+        ```vyper
         @external
         def add_registry_handler(_registry_handler: address):
             """
@@ -41,16 +44,19 @@ The following are methods that may only be called by the owner of the contract.
 ### `update_registry_handler`
 !!! description "`MetaRegistry.update_registry_handler(_index: uint256, _registry_handler: address):`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the contract.
+
     Function to update the registry handler for a registry.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_index` |  `uint256` | Index of Registry according to `get_registry` |
-    | `registry_handler` |  `address` | Address of the new handler contract |
+    | `_index` |  `uint256` | index of registry according to `get_registry` |
+    | `registry_handler` |  `address` | address of the new handler contract |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         def update_registry_handler(_index: uint256, _registry_handler: address):
             """
