@@ -1195,7 +1195,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `owner`
 !!! description "`MetaRegistry.owner() -> address:`"
 
-    Getter for the owner of the contract. This EOA can perfom [owner-guarded](./admin-controls.md) functions.
+    Getter for the owner of the contract. This address can perfom [owner-guarded](./admin-controls.md) functions.
 
     Returns: owner (`address`).
 

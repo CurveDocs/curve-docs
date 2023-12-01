@@ -9,7 +9,7 @@ If a ChildRegistry already meets these standards, it doesn't require a handler. 
 
 
 | Description | Registry Handler | Base Registry | 
-| --------- | :--------------: | :-----------: |
+| :---------: | :--------------: | :-----------: |
 | `Curve Registry for v1` | [0x46a8a9CF4Fc8e99EC3A14558ACABC1D93A27de68](https://etherscan.io/address/0x46a8a9CF4Fc8e99EC3A14558ACABC1D93A27de68#code) | [0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5](https://etherscan.io/address/0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5#code) |
 | `Curve Registry for v1 (latest)` | [0x127db66E7F0b16470Bec194d0f496F9Fa065d0A9](https://etherscan.io/address/0x127db66E7F0b16470Bec194d0f496F9Fa065d0A9#code) | [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4#code) |
 | `Curve Registry for v2 Crypto` | [0x5f493fEE8D67D3AE3bA730827B34126CFcA0ae94](https://etherscan.io/address/0x5f493fEE8D67D3AE3bA730827B34126CFcA0ae94#code) | [0x9a32aF1A11D9c937aEa61A3790C2983257eA8Bc0](https://etherscan.io/address/0x9a32aF1A11D9c937aEa61A3790C2983257eA8Bc0#code) |
