@@ -68,7 +68,7 @@ nav:
   - Registry:
     - Overview: registry/overview.md
     - MetaRegistryAPI: registry/MetaRegistryAPI.md
-    - Admin Controls: registry/admin_controls.md
+    - Admin Controls: registry/admin-controls.md
 
 
   - Curve Stablecoin (crvUSD):
