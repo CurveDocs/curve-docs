@@ -82,6 +82,41 @@ nav:
     - PriceAggregator: crvUSD/priceaggregator.md
     - Oracle: crvUSD/oracle.md
 
+
+  - CryptoSwap Exchange:
+    - Overview: cryptoswap-exchange/overview.md
+    
+    - CryptoSwap:
+      - Overview: cryptoswap-exchange/cryptoswap/overview.md
+      - Pools:
+        - Crypto Pool: cryptoswap-exchange/cryptoswap/pools/crypto-pool.md
+        - Admin Controls: cryptoswap-exchange/cryptoswap/pools/admin-controls.md
+      - Liquidity Pool Tokens:
+        - Overview: cryptoswap-exchange/cryptoswap/lp_tokens/overview.md
+        - Curve Token V5: cryptoswap-exchange/cryptoswap/lp_tokens/lp-token-V5.md
+      - Pool Factory: 
+        - Overview: cryptoswap-exchange/cryptoswap/factory/overview.md
+        - Deployer API: cryptoswap-exchange/cryptoswap/factory/deployer-api.md
+        - Admin Controls: cryptoswap-exchange/cryptoswap/factory/admin-controls.md
+
+
+    - Tricrypto-NG:
+      - Overview: cryptoswap-exchange/tricrypto-ng/overview.md
+      - Pools:
+        - TriCrypto Pool: cryptoswap-exchange/tricrypto-ng/pools/tricrypto_pool.md
+        - LP Token Method: cryptoswap-exchange/tricrypto-ng/lp_tokens/tricrypto_lp_token.md
+        - Admin Controls: cryptoswap-exchange/tricrypto-ng/pools/admin_controls.md
+      - Utility Contracts: 
+        - Math: cryptoswap-exchange/tricrypto-ng/utility_contracts/math.md
+        - Views: cryptoswap-exchange/tricrypto-ng/utility_contracts/ViewMethodContract.md
+      - Pool Factory:
+        - Overview: cryptoswap-exchange/tricrypto-ng/factory/overview.md
+        - Deployer API: cryptoswap-exchange/tricrypto-ng/factory/deployer-api.md
+        - Implementations: cryptoswap-exchange/tricrypto-ng/factory/implementations.md
+        - Admin Controls: cryptoswap-exchange/tricrypto-ng/factory/admin-controls.md
+
+
+
   - Stableswap-NG:
     - Overview: stableswap-ng_exchange/overview.md
     - Pools:
@@ -97,22 +132,6 @@ nav:
       - Overview: stableswap-ng_exchange/factory/overview.md
       - Deployer API: stableswap-ng_exchange/factory/deploy.md
       - Admin Controls: stableswap-ng_exchange/factory/admin_controls.md
-
-  - Tricrypto-NG:
-    - Overview: cryptoswap-ng_exchange/overview.md
-    - Pools:
-      - Overview: cryptoswap-ng_exchange/pools/overview.md
-      - TriCrypto Pool: cryptoswap-ng_exchange/pools/tricrypto_pool.md
-      - LP Token Method: cryptoswap-ng_exchange/lp_tokens/tricrypto_lp_token.md
-      - Admin Controls: cryptoswap-ng_exchange/pools/admin_controls.md
-    - Utility Contracts: 
-      - Math: cryptoswap-ng_exchange/utility_contracts/math.md
-      - Views: cryptoswap-ng_exchange/utility_contracts/ViewMethodContract.md
-    - Pool Factory:
-      - Overview: cryptoswap-ng_exchange/factory/overview.md
-      - Deployer API: cryptoswap-ng_exchange/factory/deployer-api.md
-      - Implementations: cryptoswap-ng_exchange/factory/implementations.md
-      - Admin Controls: cryptoswap-ng_exchange/factory/admin-controls.md
 
   - Stableswap Exchange:    
     - Overview: stableswap_exchange/overview.md 
@@ -135,19 +154,6 @@ nav:
       - Overview: stableswap_exchange/cross_asset_swaps/overview.md
       - SynthSwap: stableswap_exchange/cross_asset_swaps/synthswap_exchange.md
 
-  - CryptoSwap Exchange:
-    - Overview: cryptoswap_exchange/overview.md
-    - Pools:
-      - Overview: cryptoswap_exchange/pools/overview.md
-      - Crypto Pool: cryptoswap_exchange/pools/crypto-pool.md
-      - Admin Controls: cryptoswap_exchange/pools/admin-controls.md
-    - Liquidity Pool Tokens:
-      - Overview: cryptoswap_exchange/lp_tokens/overview.md
-      - Curve Token V5: cryptoswap_exchange/lp_tokens/lp-token-V5.md
-    - Pool Factory: 
-      - Overview: cryptoswap_exchange/factory/overview.md
-      - Deployer API: cryptoswap_exchange/factory/deployer-api.md
-      - Admin Controls: cryptoswap_exchange/factory/admin-controls.md
 
   - Factory:
     - Pool Factory:
