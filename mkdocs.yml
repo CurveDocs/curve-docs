@@ -64,6 +64,13 @@ nav:
       
     - Exchange Router: curve_dao/router/router.md
 
+
+  - Registry:
+    - Overview: registry/overview.md
+    - MetaRegistryAPI: registry/MetaRegistryAPI.md
+    - Admin Controls: registry/admin-controls.md
+
+
   - Curve Stablecoin (crvUSD):
     - Overview: crvUSD/overview.md
     - crvUSD Token: crvUSD/crvUSD.md
@@ -141,12 +148,6 @@ nav:
       - Overview: cryptoswap_exchange/factory/overview.md
       - Deployer API: cryptoswap_exchange/factory/deployer-api.md
       - Admin Controls: cryptoswap_exchange/factory/admin-controls.md
-
-  - Registry:
-    - Overview: registry/overview.md
-    - MetaRegistryAPI: registry/MetaRegistryAPI.md
-    - Admin Controls: registry/admin_controls.md
-
 
   - Factory:
     - Pool Factory:

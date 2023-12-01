@@ -1,95 +1,24 @@
-## Find pools
-The following getter methods are available for finding pools that were deployed via the factory:
+The MetaRegistry offers an on-chain API for various properties of Curve pools.  
 
-### `pool_count`
-!!! description "`MetaRegistry.pool_count() -> uint256:`"
+## **Finding Pools**
 
-    Getter for the total number of pools under all registries registered in the metaregistry.
-
-    Returns: number of pools (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper hl_lines="3"
-        @external
-        @view
-        def pool_count() -> uint256:
-            """
-            @notice Return the total number of pools tracked by the metaregistry
-            @return uint256 The number of pools in the metaregistry
-            """
-            total_pools: uint256 = 0
-            for i in range(MAX_REGISTRIES):
-                if i == self.registry_length:
-                    break
-                handler: address = self.get_registry[i]
-                total_pools += RegistryHandler(handler).pool_count()
-            return total_pools
-        ```
-
-    === "Example"
-        ```shell
-        >>> MetaRegistry.pool_count()
-        49
-        ```
-
-
-### `pool_list`
-!!! description "`MetaRegistry.pool_list(_index: uint256) -> address:`"
-
-    Getter for the pool at `_index`.
-
-    Returns: pool (`address`)
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_index` |  `uint256` | Index |
-
-    ??? quote "Source code"
-
-        ```vyper hl_lines="3"
-        @external
-        @view
-        def pool_list(_index: uint256) -> address:
-            """
-            @notice Return the pool at a given index in the metaregistry
-            @param _index The index of the pool in the metaregistry
-            @return The address of the pool at the given index
-            """
-            pools_skip: uint256 = 0
-            for i in range(MAX_REGISTRIES):
-                if i == self.registry_length:
-                    break
-                handler: address = self.get_registry[i]
-                count: uint256 = RegistryHandler(handler).pool_count()
-                if _index - pools_skip < count:
-                    return RegistryHandler(handler).pool_list(_index - pools_skip)
-                pools_skip += count
-            return empty(address)
-        ```
-
-    === "Example"
-        ```shell
-        >>> MetaRegistry.pool_list(0)
-        '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7'
-        ```
-
+The following getter methods are available for finding pools containing a specific set of coins:
 
 ### `find_pools_for_coins`
 !!! description "`MetaRegistry.find_pools_for_coins(_from: address, _to: address) -> DynArray[address, 1000]:`"
 
-    Getter method for a list of pools that holds two coins (even if the pool is a metapool).
+    Getter method for a list of pools that holds `_from` and `_to` coins.
 
     Returns: pool list (`DynArray[address, 1000]`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_from` |  `address` |  Coin Address |
-    | `_to` |  `address` |  Coin Address |
+    | `_from` |  `address` |  address of coin to be sent |
+    | `_to` |  `address` |  address of coin to be received |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="4"
+        ```vyper
         @view
         @external
         def find_pools_for_coins(_from: address, _to: address) -> DynArray[address, 1000]:
@@ -144,13 +73,13 @@ The following getter methods are available for finding pools that were deployed 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_from` |  `address` |  Pool Address |
-    | `_to` |  `address` |  Pool Address |
-    | `i` |  `uint256` |  Index |
+    | `_from` |  `address` |  address of coin to be sent |
+    | `_to` |  `address` |  address of coin to be received |
+    | `i` |  `uint256` |  index of the pool to return |
 
-    ??? quote "Source code"
+    ??? quote "Source code" 
 
-        ```vyper hl_lines="4"
+        ```vyper
         @view
         @external
         def find_pool_for_coins(_from: address, _to: address, i: uint256 = 0) -> address:
@@ -187,15 +116,88 @@ The following getter methods are available for finding pools that were deployed 
         ```shell
         >>> MetaRegistry.find_pool_for_coins("0x6B175474E89094C44Da98b954EedeAC495271d0F", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", 0)
         '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7'
-        ```
-        ```shell
+
         >>> MetaRegistry.find_pool_for_coins("0x6B175474E89094C44Da98b954EedeAC495271d0F", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", 1)
         '0xDeBF20617708857ebe4F679508E7b7863a8A8EeE'
         ```
 
 
-## Get Pool Info
+## **Pool Informations**
 The factory has a similar API to that of the main Registry, which can be used to query information about existing pools.
+
+### `pool_count`
+!!! description "`MetaRegistry.pool_count() -> uint256:`"
+
+    Getter for the total number of pools of all registries registered in the metaregistry.
+
+    Returns: number of pools (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        @external
+        @view
+        def pool_count() -> uint256:
+            """
+            @notice Return the total number of pools tracked by the metaregistry
+            @return uint256 The number of pools in the metaregistry
+            """
+            total_pools: uint256 = 0
+            for i in range(MAX_REGISTRIES):
+                if i == self.registry_length:
+                    break
+                handler: address = self.get_registry[i]
+                total_pools += RegistryHandler(handler).pool_count()
+            return total_pools
+        ```
+
+    === "Example"
+        ```shell
+        >>> MetaRegistry.pool_count()
+        49
+        ```
+
+
+### `pool_list`
+!!! description "`MetaRegistry.pool_list(_index: uint256) -> address:`"
+
+    Getter for the pool at `_index`.
+
+    Returns: pool (`address`)
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_index` |  `uint256` | index of pool |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @external
+        @view
+        def pool_list(_index: uint256) -> address:
+            """
+            @notice Return the pool at a given index in the metaregistry
+            @param _index The index of the pool in the metaregistry
+            @return The address of the pool at the given index
+            """
+            pools_skip: uint256 = 0
+            for i in range(MAX_REGISTRIES):
+                if i == self.registry_length:
+                    break
+                handler: address = self.get_registry[i]
+                count: uint256 = RegistryHandler(handler).pool_count()
+                if _index - pools_skip < count:
+                    return RegistryHandler(handler).pool_list(_index - pools_skip)
+                pools_skip += count
+            return empty(address)
+        ```
+
+    === "Example"
+        ```shell
+        >>> MetaRegistry.pool_list(0)
+        '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7'
+        ```
+
 
 ### `get_pool_name`
 !!! description "`MetaRegistry.get_pool_name(_pool: address, _handler_id: uint256 = 0) -> String[64]:`"
@@ -206,12 +208,12 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` | Pool Address |
-    | `_handler_id` |  `uint256` | Handler ID |
+    | `_pool` |  `address` | pool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_pool_name(_pool: address, _handler_id: uint256 = 0) -> String[64]:
@@ -235,19 +237,19 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     Getter method to check if a pool is a metapool. Metapools are pools that pair a coin to a base pool comprising of multiple coins.
 
-    Returns: True or False (`bool`).
+    Returns: true or false (`bool`).
 
     !!!example
         An example is the [LUSD-3CRV](https://etherscan.io/address/0xed279fdd11ca84beef15af5d39bb4d4bee23f0ca) pool which pairs [Liquity's](https://www.liquity.org/) [LUSD](https://etherscan.io/address/0x5f98805a4e8be255a32880fdec7f6728c6568ba0) against [3CRV](https://etherscan.io/address/0x6c3f90f043a72fa612cbac8115ee7e52bde6e490), where 3CRV is a liquidity pool token that represents a share of a pool containing DAI, USDC and USDT:
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` | Pool Address |
-    | `_handler_id` |  `uint256` | Handler ID |
+    | `_pool` |  `address` | pool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def is_meta(_pool: address, _handler_id: uint256 = 0) -> bool:
@@ -263,14 +265,14 @@ The factory has a similar API to that of the main Registry, which can be used to
     === "Example"
         ```shell
         >>> MetaRegistry.is_meta("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA")
-        'True'        
+        'true'        
         ```
 
 
 ### `get_base_pool`
 !!! description "`MetaRegistry.get_base_pool(_pool: address, _handler_id: uint256 = 0) -> address:`"
 
-    Getter for the base pool of a pool.
+    Getter for the base pool of a metapool. If there is no base pool, it will return **`ZERO_ADDRESS`**.
 
     Returns: base pool (`address`).
 
@@ -279,12 +281,12 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` | Pool Address |
-    | `_handler_id` |  `uint256` | Handler ID |
+    | `_pool` |  `address` | metapool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_base_pool(_pool: address, _handler_id: uint256 = 0) -> address:
@@ -304,11 +306,6 @@ The factory has a similar API to that of the main Registry, which can be used to
         '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7'
         ```
 
-    It returns **`ZERO_ADDRESS`** if the pool has no base pool:
-        ```shell
-        >>> MetaRegistry.get_base_pool("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7")
-        '0x0000000000000000000000000000000000000000'
-        ```
 
 ### `get_fees`
 !!! description "`MetaRegistry.get_fees(_pool: address, _handler_id: uint256 = 0) -> uint256[10]:`"
@@ -319,12 +316,12 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` |  Pool Address |
-    | `_handler_id` |  `uint256` | Handler ID |
+    | `_pool` |  `address` |  pool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_fees(_pool: address, _handler_id: uint256 = 0) -> uint256[10]:
@@ -363,16 +360,18 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     Getter for a pool's parameters.
 
+    Returns: parameters (`uint256[MAX_POOL_PARAMS]`).
+
     For **StableSwap**, the getter returns the pool's amplification coefficient (`A`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` |  Pool Address |
-    | `_handler_id` |  `uint256` | Handler ID |
+    | `_pool` |  `address` |  pool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_pool_params(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_POOL_PARAMS]:
@@ -409,6 +408,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         1707629, 213185652730133888176923598, 11809167828997, 2000000000000, 500000000000000, 490000000000000, 600, ...
         ```
 
+
 ### `get_lp_token`
 !!! description "`MetaRegistry.get_lp_token(_pool: address, _handler_id: uint256 = 0) -> address:`"
 
@@ -418,12 +418,12 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` |  Pool Address |
-    | `_handler_id` |  `uint256` | Handler ID |
+    | `_pool` |  `address` |  pool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_lp_token(_pool: address, _handler_id: uint256 = 0) -> address:
@@ -446,18 +446,18 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `get_pool_asset_type`
 !!! description "`MetaRegistry.get_pool_asset_type(_pool: address, _handler_id: uint256 = 0) -> uint256:`"
 
-    Getter for the asset type of a pool. `0 = USD`, `1 = ETH`, `2 = BTC`, `3 = Other`, `4 = CryptoPool` token. The asset type is a property of StableSwaps, and is not enforced in CryptoSwap pools (which always return 4).
+    Getter for the asset type of a pool. **`0 = USD`, `1 = ETH`, `2 = BTC`, `3 = Other`, `4 = CryptoPool`** token. The asset type is a property of StableSwaps, and is not enforced in CryptoSwap pools (which always return 4).
 
     Returns: asset type id (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` |  Pool Address |
-    | `_handler_id` |  `uint256` | Handler ID |
+    | `_pool` |  `address` |  pool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_pool_asset_type(_pool: address, _handler_id: uint256 = 0) -> uint256:
@@ -486,12 +486,12 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_lp_token` |  `address` |  LP Token Address |
-    | `_handler_id` |  `uint256` | Handler ID |
+    | `_lp_token` |  `address` |  lp token address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_pool_from_lp_token(_token: address, _handler_id: uint256 = 0) -> address:
@@ -519,12 +519,12 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_lp_token` |  `address` |  LP Token Address |
-    | `_handler_id` |  `uint256` | Handler ID |
+    | `_lp_token` |  `address` |  lp token address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_virtual_price_from_lp_token(_token: address, _handler_id: uint256 = 0) -> uint256:
@@ -549,18 +549,18 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `is_registered`
 !!! description "`MetaRegistry.is_registered(_pool: address, _handler_id: uint256 = 0) -> bool:`"
 
-    Method to check if a pool is in the metaregistry using `get_n_coins`.
+    Method to check if a pool is in the metaregistry using **`get_n_coins`**.
 
-    Returns: True or False (`bool`).
+    Returns: true or false (`bool`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` | Index |
-    | `_handler_id` |  `uint256` | Handler ID; by default 0 |
+    | `_pool` |  `address` | pool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 2"
+        ```vyper
         @external
         @view
         def is_registered(_pool: address, _handler_id: uint256 = 0) -> bool:
@@ -589,12 +589,12 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` |  Pool Address |
-    | `_handler_id` |  `uint256` | Handler ID |
+    | `_pool` |  `address` | pool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_gauge(_pool: address, gauge_idx: uint256 = 0, _handler_id: uint256 = 0) -> address:
@@ -612,8 +612,8 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     === "Example"
         ```shell
-        >>> MetaRegistry.metaregistry.get_coin_indices("0xd51a44d3fae010294c616388b506acda1bfaae46")
-        '0xDeFd8FdD20e0f34115C7018CCfb655796F6B2168'
+        >>> MetaRegistry.get_gauge("0xd51a44d3fae010294c616388b506acda1bfaae46")
+        '0xdefd8fdd20e0f34115c7018ccfb655796f6b2168'
         ```
 
 
@@ -626,13 +626,13 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` |  Pool Address |
-    | `gauge_idx` |  `uint256` |  --- |
-    | `_handler_id` |  `uint256` | Handler ID |
+    | `_pool` |  `address` |  pool address |
+    | `gauge_idx` |  `uint256` | index of gauge to return; defaults to 0 |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_gauge_type(_pool: address, gauge_idx: uint256 = 0, _handler_id: uint256 = 0) -> int128:
@@ -650,12 +650,12 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     === "Example"
         ```shell
-        >>> MetaRegistry.metaregistry.get_gauge_type("0xd51a44d3fae010294c616388b506acda1bfaae46")
+        >>> MetaRegistry.get_gauge_type("0xd51a44d3fae010294c616388b506acda1bfaae46")
         5
         ```
 
 
-## Coins and Coin Info
+## **Coin Informations**
 
 ### `get_coins`
 !!! description "`MetaRegistry.get_coins(_pool: address, _handler_id: uint256 = 0) -> address[MAX_COINS]:`"
@@ -666,12 +666,12 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` |  Pool Address |
-    | `_handler_id` |  `uint256` | Handler ID |
+    | `_pool` |  `address` |  pool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_coins(_pool: address, _handler_id: uint256 = 0) -> address[MAX_COINS]:
@@ -690,48 +690,12 @@ The factory has a similar API to that of the main Registry, which can be used to
         >>> MetaRegistry.get_coins("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA")
         [[0x5f98805A4E8be255a32880FDeC7F6728C6568bA0]
         [0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490]
-        ...
-        ]
-        ```
-
-
-### `get_underlying_coins`
-!!! description "`MetaRegistry.get_underlying_coins(_pool: address, _handler_id: uint256 = 0) -> address[MAX_COINS]:`"
-
-    Getter for the underlying coins in a pool.
-    
-    Returns: underlying coins (if the pools is a metapool) (`address[MAX_COINS]`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` |  Pool Address |
-    | `_handler_id` |  `uint256` | Handler ID |
-
-    ??? quote "Source code"
-
-        ```vyper hl_lines="3"
-        @external
-        @view
-        def get_underlying_coins(_pool: address, _handler_id: uint256 = 0) -> address[MAX_COINS]:
-            """
-            @notice Get the underlying coins within a pool
-            @dev For non-metapools, returns the same value as `get_coins`
-            @param _pool Pool address
-            @param _handler_id id of registry handler
-            @return List of coin addresses
-            """
-            return RegistryHandler(self._get_registry_handlers_from_pool(_pool)[_handler_id]).get_underlying_coins(_pool)
-        ```
-
-    === "Example"
-        ```shell
-        >>> MetaRegistry.get_underlying_coins("0xed279fdd11ca84beef15af5d39bb4d4bee23f0ca")
-        [[0x5f98805A4E8be255a32880FDeC7F6728C6568bA0]
-        [0x6B175474E89094C44Da98b954EedeAC495271d0F]
-        [0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48]
-        [0xdAC17F958D2ee523a2206206994597C13D831ec7]
-        ...
-        ]
+        [0x0000000000000000000000000000000000000000]
+        [0x0000000000000000000000000000000000000000]
+        [0x0000000000000000000000000000000000000000]
+        [0x0000000000000000000000000000000000000000]
+        [0x0000000000000000000000000000000000000000]
+        [0x0000000000000000000000000000000000000000]]
         ```
 
 
@@ -744,12 +708,12 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` |  Pool Address |
-    | `_handler_id` |  `uint256` | Handler ID |
+    | `_pool` |  `address` |  pool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_n_coins(_pool: address, _handler_id: uint256 = 0) -> uint256:
@@ -769,39 +733,6 @@ The factory has a similar API to that of the main Registry, which can be used to
         ```
 
 
-### `get_n_underlying_coins`
-!!! description "`MetaRegistry.get_n_underlying_coins(_pool: address, _handler_id: uint256 = 0) -> uint256:`"
-
-    Getter for the total number of underlying coins in a pool.
-
-    Returns: number of underlying coins (`uin256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` |  Pool Address |
-    | `_handler_id` |  `uint256` | Handler ID |
-
-    ??? quote "Source code"
-
-        ```vyper hl_lines="3"
-        @external
-        @view
-        def get_n_underlying_coins(_pool: address, _handler_id: uint256 = 0) -> uint256:
-            """
-            @notice Get the number of underlying coins in a pool
-            @dev For non-metapools, returns the same as get_n_coins
-            @param _pool Pool address
-            @return Number of coins
-            """
-            return RegistryHandler(self._get_registry_handlers_from_pool(_pool)[_handler_id]).get_n_underlying_coins(_pool)
-        ```
-
-    === "Example"
-        ```shell
-        >>> MetaRegistry.get_n_underlying_coins("0xed279fdd11ca84beef15af5d39bb4d4bee23f0ca")
-        4
-        ```
-
 ### `get_decimals`
 !!! description "`MetaRegistry.get_decimals(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:`"
 
@@ -811,12 +742,12 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` |  Pool Address |
-    | `_handler_id` |  `uint256` | Handler ID |
+    | `_pool` |  `address` |  pool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_decimals(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:
@@ -836,93 +767,21 @@ The factory has a similar API to that of the main Registry, which can be used to
         18, 6, 6, 0, 0, 0, 0, 0
         ```
 
-
-### `get_underlying_decimals`
-!!! description "`MetaRegistry.get_underlying_decimals(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:`"
-
-    Getter for the decimals of coins returned by `MetaRegistry.get_underlying_coins`.
-
-    Returns: number of decimals (`uint256[MAX_COINS]`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` |  Pool Address |
-    | `_handler_id` |  `uint256` | Handler ID |
-
-    ??? quote "Source code"
-
-        ```vyper hl_lines="3"
-        @external
-        @view
-        def get_underlying_decimals(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:
-            """
-            @notice Get decimal places for each underlying coin within a pool
-            @dev For non-metapools, returns the same value as `get_decimals`
-            @param _pool Pool address
-            @param _handler_id id of registry handler
-            @return uint256 list of decimals
-            """
-            return RegistryHandler(self._get_registry_handlers_from_pool(_pool)[_handler_id]).get_underlying_decimals(_pool)
-        ```
-
-    === "Example"
-        ```shell
-        >>> MetaRegistry.get_decimals("0xed279fdd11ca84beef15af5d39bb4d4bee23f0ca")
-        18, 18, 6, 6, 0, 0, 0, 0
-        ```
-
-
-### `get_coin_indices`
-!!! description "`MetaRegistry.get_coin_indices(_pool: address, _from: address, _to: address, _handler_id: uint256 = 0) -> (int128, int128, bool):`"
-
-    Given a `_from` coin, a `_to` coin, and a `_pool`, this getter returns coin indices and a bool that indicates if the coin swap involves an underlying market. In case of a non-metapool, the following is returned:
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` |  Pool Address |
-    | `_from` |  `address` |  Coin Address |
-    | `_to` |  `address` |  Coin Address |
-    | `_handler_id` |  `uint256` | Handler ID |
-
-    ??? quote "Source code"
-
-        ```vyper hl_lines="3"
-        @view
-        @external
-        def get_coin_indices(_pool: address, _from: address, _to: address, _handler_id: uint256 = 0) -> (int128, int128, bool):
-            """
-            @notice Convert coin addresses to indices for use with pool methods
-            @param _pool Pool address
-            @param _from Coin address to be used as `i` within a pool
-            @param _to Coin address to be used as `j` within a pool
-            @param _handler_id id of registry handler
-            @return from index, to index, is the market underlying ?
-            """
-            return RegistryHandler(self._get_registry_handlers_from_pool(_pool)[_handler_id]).get_coin_indices(_pool, _from, _to)
-        ```
-
-    === "Example"
-        ```shell
-        >>> MetaRegistry.metaregistry.get_coin_indices("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7", "0x6B175474E89094C44Da98b954EedeAC495271d0F", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48")
-        0, 1, False
-        ```
-
-
 ### `get_balances`
 !!! description "`MetaRegistry.get_balances(_pool: address, _handler_id: uint256 = 0)  -> uint256[MAX_COINS]:`"
 
-    Getter for the balances of each coin in a Curve pool.
+    Getter for the balance of each coin within a pool.
 
     Returns: balances (`uint256[MAX_COINS]`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` |  Pool Address |
-    | `_handler_id` |  `uint256` | Handler ID |
+    | `_pool` |  `address` | pool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_balances(_pool: address, _handler_id: uint256 = 0)  -> uint256[MAX_COINS]:
@@ -943,21 +802,132 @@ The factory has a similar API to that of the main Registry, which can be used to
         ```
 
 
+### `get_underlying_coins`
+!!! description "`MetaRegistry.get_underlying_coins(_pool: address, _handler_id: uint256 = 0) -> address[MAX_COINS]:`"
+
+    Getter for the underlying coins in a metapool. For non-metapools it returns the same value as **`get_coins`**.
+    
+    Returns: underlying coins (`address[MAX_COINS]`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_pool` |  `address` | pool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @external
+        @view
+        def get_underlying_coins(_pool: address, _handler_id: uint256 = 0) -> address[MAX_COINS]:
+            """
+            @notice Get the underlying coins within a pool
+            @dev For non-metapools, returns the same value as `get_coins`
+            @param _pool Pool address
+            @param _handler_id id of registry handler
+            @return List of coin addresses
+            """
+            return RegistryHandler(self._get_registry_handlers_from_pool(_pool)[_handler_id]).get_underlying_coins(_pool)
+        ```
+
+    === "Example"
+        ```shell
+        >>> MetaRegistry.get_underlying_coins("0xed279fdd11ca84beef15af5d39bb4d4bee23f0ca")
+        [[0x5f98805A4E8be255a32880FDeC7F6728C6568bA0]
+        [0x6B175474E89094C44Da98b954EedeAC495271d0F]
+        [0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48]
+        [0xdAC17F958D2ee523a2206206994597C13D831ec7]
+        [0x0000000000000000000000000000000000000000]
+        [0x0000000000000000000000000000000000000000]
+        [0x0000000000000000000000000000000000000000]
+        [0x0000000000000000000000000000000000000000]]
+        ```
+
+
+### `get_n_underlying_coins`
+!!! description "`MetaRegistry.get_n_underlying_coins(_pool: address, _handler_id: uint256 = 0) -> uint256:`"
+
+    Getter for the total number of underlying coins in a pool. For non-metapools it returns the same value as **`get_n_coins`**.
+
+    Returns: number of underlying coins (`uin256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_pool` |  `address` |  pool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @external
+        @view
+        def get_n_underlying_coins(_pool: address, _handler_id: uint256 = 0) -> uint256:
+            """
+            @notice Get the number of underlying coins in a pool
+            @dev For non-metapools, returns the same as get_n_coins
+            @param _pool Pool address
+            @return Number of coins
+            """
+            return RegistryHandler(self._get_registry_handlers_from_pool(_pool)[_handler_id]).get_n_underlying_coins(_pool)
+        ```
+
+    === "Example"
+        ```shell
+        >>> MetaRegistry.get_n_underlying_coins("0xed279fdd11ca84beef15af5d39bb4d4bee23f0ca")
+        4
+        ```
+
+
+### `get_underlying_decimals`
+!!! description "`MetaRegistry.get_underlying_decimals(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:`"
+
+    Getter for the decimal of each underlying coin within a pool.
+
+    Returns: number of decimals (`uint256[MAX_COINS]`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_pool` |  `address` |  pool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @external
+        @view
+        def get_underlying_decimals(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:
+            """
+            @notice Get decimal places for each underlying coin within a pool
+            @dev For non-metapools, returns the same value as `get_decimals`
+            @param _pool Pool address
+            @param _handler_id id of registry handler
+            @return uint256 list of decimals
+            """
+            return RegistryHandler(self._get_registry_handlers_from_pool(_pool)[_handler_id]).get_underlying_decimals(_pool)
+        ```
+
+    === "Example"
+        ```shell
+        >>> MetaRegistry.get_decimals("0xed279fdd11ca84beef15af5d39bb4d4bee23f0ca")
+        18, 18, 6, 6, 0, 0, 0, 0
+        ```
+
+
 ### `get_underlying_balances`
 !!! description "`MetaRegistry.get_underlying_balances(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:`"
 
-    Getter for a pool's balances of coins returned by `get_underlying_coins`.
+    Getter for a pool's balances of the underlying coins which are returned by **`get_underlying_coins`**.
 
     Returns: balances (`uint256[MAX_COINS]`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` |  Pool Address |
-    | `_handler_id` |  `uint256` | Handler ID |
+    | `_pool` |  `address` | pool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_underlying_balances(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:
@@ -981,20 +951,18 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `get_admin_balances`
 !!! description "`MetaRegistry.get_admin_balances(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:`"
 
-    Getter for the pool's admin balances. These admin balances accrue per swap, since a part of the fees that are generated by Curve pools go to the admin (an external contract, controlled by the Curve DAO). The amount of fees that go to admin and LPs can be set at the time of pool's creation, and for some pools this can be changed later.  
-
-    The balances represent the balances per coin, and retain the coin's precision.
+    Getter for the pool's admin balances. The balances represent the balances per coin, and retain the coin's precision.
 
     Returns: admin balances (`uint256[MAX_COINS]`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` |  Pool Address |
-    | `_handler_id` |  `uint256` | Handler ID |
+    | `_pool` |  `address` | pool address |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_admin_balances(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:
@@ -1015,7 +983,47 @@ The factory has a similar API to that of the main Registry, which can be used to
         ```
 
 
-## Handlers/Registry
+### `get_coin_indices`
+!!! description "`MetaRegistry.get_coin_indices(_pool: address, _from: address, _to: address, _handler_id: uint256 = 0) -> (int128, int128, bool):`"
+
+    Getter method which converts coin addresses to indices for use with pool methods.
+
+    Returns: from index (`int128`), to index (`int128`) and whether the market is underlying or not (`bool`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_pool` |  `address` |  pool address |
+    | `_from` |  `address` |  coin address to be used as `i` within the pool |
+    | `_to` |  `address` |  coin address to be used as `j` within the pool |
+    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @view
+        @external
+        def get_coin_indices(_pool: address, _from: address, _to: address, _handler_id: uint256 = 0) -> (int128, int128, bool):
+            """
+            @notice Convert coin addresses to indices for use with pool methods
+            @param _pool Pool address
+            @param _from Coin address to be used as `i` within a pool
+            @param _to Coin address to be used as `j` within a pool
+            @param _handler_id id of registry handler
+            @return from index, to index, is the market underlying ?
+            """
+            return RegistryHandler(self._get_registry_handlers_from_pool(_pool)[_handler_id]).get_coin_indices(_pool, _from, _to)
+        ```
+
+    === "Example"
+        ```shell
+        >>> MetaRegistry.metaregistry.get_coin_indices("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7", "0x6B175474E89094C44Da98b954EedeAC495271d0F", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48")
+        0, 1, false
+        ```
+
+
+
+## **Handler and Registry**
+
 ### `get_registry_handerls_from_pool`
 !!! description "`MetaRegistry.get_registry_handlers_from_pool(_pool: address) -> address[MAX_REGISTRIES]:`"
 
@@ -1025,11 +1033,11 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` | Pool Address |
+    | `_pool` |  `address` | pool address |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3 32"
+        ```vyper
         @internal
         @view
         def _get_registry_handlers_from_pool(_pool: address) -> address[MAX_REGISTRIES]:
@@ -1077,21 +1085,20 @@ The factory has a similar API to that of the main Registry, which can be used to
         ```
 
 
-
 ### `get_base_registry`
 !!! description "`MetaRegistry.get_base_registry(registry_handler: address) -> address:`"
 
-    Getter for registries that a pool has been registered in. Usually, each pool is registered in a single registry.
+    Getter for the registry associated with a registry handler.
 
-    Returns: BaseRegistry (`address`).
+    Returns: base registry (`address`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `registry_handler` |  `address` | RegistryHandler |
+    | `registry_handler` |  `address` | registry handler |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_base_registry(registry_handler: address) -> address:
@@ -1113,17 +1120,17 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `get_registry`
 !!! description "`MetaRegistry.get_registry(arg0: uint256) -> address:`"
 
-    Getter for the registry handler at index `arg0`. New handlers can be added with [`add_registry_handlers`](#add_registry_handler).
+    Getter for the registry handler at index `arg0`. New handlers can be added with [**`add_registry_handler`**](./admin-controls.md#add_registry_handler).
 
-    Returns: Registry (`address`).
+    Returns: registry (`address`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `uint256` | Index |
+    | `arg0` |  `uint256` | index (starts with 0) |
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 2"
+        ```vyper
         # get registry/registry_handler by index, index starts at 0:
         get_registry: public(HashMap[uint256, address])
         registry_length: public(uint256)
@@ -1145,7 +1152,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 3"
+        ```vyper
         # get registry/registry_handler by index, index starts at 0:
         get_registry: public(HashMap[uint256, address])
         registry_length: public(uint256)
@@ -1157,16 +1164,17 @@ The factory has a similar API to that of the main Registry, which can be used to
         6
         ```
 
+
 ### `address_provider`
 !!! description "`MetaRegistry.address_provider() -> address:`"
 
     Getter for the address provider contract.
 
-    Returns: address provider contract (`address`).
+    Returns: address provider (`address`).
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 4 5"
+        ```vyper
         address_provider: public(AddressProvider)
 
         @external
@@ -1181,16 +1189,19 @@ The factory has a similar API to that of the main Registry, which can be used to
         '0x0000000022D53366457F9d5E68Ec105046FC4383'
         ```
 
+
+## **Contract Ownership**
+
 ### `owner`
 !!! description "`MetaRegistry.owner() -> address:`"
 
-    Getter for the owner of the contract.
+    Getter for the owner of the contract. This address can perfom [owner-guarded](./admin-controls.md) functions.
 
     Returns: owner (`address`).
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 6"
+        ```vyper
         owner: public(address)
 
         @external
