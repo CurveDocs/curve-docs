@@ -31,7 +31,7 @@ Integrators often find it challenging to incorporate a protocol into their dapp 
 ## **Setup**
 Set up the python environment using the following steps: Please visit [Github](https://github.com/curvefi/metaregistry) for more details.
 
-```shell
+```
 > python -m venv venv
 > source ./venv/bin/active
 > pip install --upgrade pip
