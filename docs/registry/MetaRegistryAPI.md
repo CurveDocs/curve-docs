@@ -1,13 +1,13 @@
-The MetaRegistry offers an on-chain API for various properties of Curve pools. The various getters in the MetaRegistry are explained in the following.
+The MetaRegistry offers an on-chain API for various properties of Curve pools.  
 
-## **Finding pools**
+## **Finding Pools**
 
 The following getter methods are available for finding pools containing a specific set of coins:
 
 ### `find_pools_for_coins`
 !!! description "`MetaRegistry.find_pools_for_coins(_from: address, _to: address) -> DynArray[address, 1000]:`"
 
-    Getter method for a list of pools that holds two coins (even if the pool is a metapool).
+    Getter method for a list of pools that holds `_from` and `_to` coins.
 
     Returns: pool list (`DynArray[address, 1000]`).
 
@@ -77,7 +77,7 @@ The following getter methods are available for finding pools containing a specif
     | `_to` |  `address` |  address of coin to be received |
     | `i` |  `uint256` |  index of the pool to return |
 
-    ??? quote "Source code"
+    ??? quote "Source code" 
 
         ```vyper
         @view
@@ -237,7 +237,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     Getter method to check if a pool is a metapool. Metapools are pools that pair a coin to a base pool comprising of multiple coins.
 
-    Returns: True or False (`bool`).
+    Returns: true or false (`bool`).
 
     !!!example
         An example is the [LUSD-3CRV](https://etherscan.io/address/0xed279fdd11ca84beef15af5d39bb4d4bee23f0ca) pool which pairs [Liquity's](https://www.liquity.org/) [LUSD](https://etherscan.io/address/0x5f98805a4e8be255a32880fdec7f6728c6568ba0) against [3CRV](https://etherscan.io/address/0x6c3f90f043a72fa612cbac8115ee7e52bde6e490), where 3CRV is a liquidity pool token that represents a share of a pool containing DAI, USDC and USDT:
@@ -265,7 +265,7 @@ The factory has a similar API to that of the main Registry, which can be used to
     === "Example"
         ```shell
         >>> MetaRegistry.is_meta("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA")
-        'True'        
+        'true'        
         ```
 
 
@@ -655,7 +655,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         ```
 
 
-## **Coin(s) Informations**
+## **Coin Informations**
 
 ### `get_coins`
 !!! description "`MetaRegistry.get_coins(_pool: address, _handler_id: uint256 = 0) -> address[MAX_COINS]:`"
@@ -1017,7 +1017,7 @@ The factory has a similar API to that of the main Registry, which can be used to
     === "Example"
         ```shell
         >>> MetaRegistry.metaregistry.get_coin_indices("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7", "0x6B175474E89094C44Da98b954EedeAC495271d0F", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48")
-        0, 1, False
+        0, 1, false
         ```
 
 
@@ -1120,7 +1120,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `get_registry`
 !!! description "`MetaRegistry.get_registry(arg0: uint256) -> address:`"
 
-    Getter for the registry handler at index `arg0`. New handlers can be added with [**`add_registry_handler`**](./admin_controls.md#add_registry_handler).
+    Getter for the registry handler at index `arg0`. New handlers can be added with [**`add_registry_handler`**](./admin-controls.md#add_registry_handler).
 
     Returns: registry (`address`).
 
@@ -1195,7 +1195,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `owner`
 !!! description "`MetaRegistry.owner() -> address:`"
 
-    Getter for the owner of the contract. This EOA can perfom [owner-guarded](./admin_controls.md) functions.
+    Getter for the owner of the contract. This EOA can perfom [owner-guarded](./admin-controls.md) functions.
 
     Returns: owner (`address`).
 

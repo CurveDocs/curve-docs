@@ -1,4 +1,4 @@
-The following methods are guarded and may only be called by the **`owner`** of the MetaRegistry.
+The following methods are guarded and may only be called by the [**`owner`**](./MetaRegistryAPI.md#owner) of the MetaRegistry.
 
 ### `add_registry_handler`
 !!! description "`MetaRegistry.add_registry_handler(_registry_handler: address):`"
@@ -10,7 +10,7 @@ The following methods are guarded and may only be called by the **`owner`** of t
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_registry_handler` |  `address` | Registry Handler Address |
+    | `_registry_handler` |  `address` | RegistryHandler address to add |
 
     ??? quote "Source code"
 
