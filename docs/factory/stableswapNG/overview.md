@@ -1,4 +1,4 @@
-The StableSwapNG-Factory serves as a permissionless pool deployer and registry. For further information regarding the registry, please refer to this [section](../../registry/overview.md).
+The [StableSwap-NG](../../stableswap-exchange/stableswap-ng/overview.md) Factory allows the permissionless deployment of up to eight-coin pools, aswell as gauges. **Liquidity pool and LP token share the same contract.**
 
 !!!deploy "Contract Source & Deployment"
     **Stableswap-NG Factory** contract is deployed to the Ethereum mainnet at: [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://etherscan.io/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf#code).  
@@ -14,10 +14,11 @@ Stableswap-NG pool can contain different [asset types](../../stableswap-exchange
 
     Getter for the asset types.
 
+    Returns: asset type (`String[20]`)
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `arg0` |  `uint8` | index value of the asset type |
-
 
     ??? quote "Source code"
 
@@ -31,6 +32,7 @@ Stableswap-NG pool can contain different [asset types](../../stableswap-exchange
         >>> Factory.asset_types(2)
         'Rebasing'    
         ```
+
 
 ### `add_asset_type`
 !!! description "`Factory.add_asset_type(_id: uint8, _name: String[10])`"
@@ -153,4 +155,4 @@ Limitations when adding new base pools:
 
 ## **Implementations**
 
-More on [implementations](./implementations.md).
+More on [implementations](./implementations.md). 

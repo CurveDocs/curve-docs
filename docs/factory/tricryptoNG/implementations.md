@@ -7,7 +7,7 @@ It utilizes four different implementations:
 - **`views_implementation`** containing a view methods contract relevant for integrators and users looking to interact with the AMMs 
 - **`math_implementation`** containing math functions used in the AMM
 
-*More on the [**Math Implementation**](../../cryptoswap-exchange/tricrypto-ng/utility_contracts/math.md) and [**Views Implementation**](../../cryptoswap-exchange/tricrypto-ng/utility_contracts/views.md).*
+*More on the [**Math Implementation**](../../cryptoswap-exchange/tricrypto-ng/utility_contracts/math.md) and [**Views Implementation**](../../cryptoswap-exchange/tricrypto-ng/utility_contracts/views.md).* 
 
 
 ## **Query Implementations**

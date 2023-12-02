@@ -1,5 +1,17 @@
-## **Implementations**
+**The CryptoSwap Factory makes use of the `create_forwarder_to` function to deploy its contracts from the implementations.**
 
+It utilizes three different implementations:
+
+- **`pool_implementation`** containing a contract which are utilized to deploy the pools
+- **`token_implementation`** containing a contract which is utilized when deploying LP tokens
+- **`gauge_implementation`** containing a blueprint contract which is utilized when deploying gauges for pools
+
+!!!note
+    The implementations are only capable of "holding" one contract. There can not be multiple implementation contracts for one implementation.
+
+
+## **Implementations**
+ 
 ### `pool_implementations`
 !!! description "`Factory.pool_implementations() -> address: view`"
 

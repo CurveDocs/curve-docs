@@ -1,6 +1,14 @@
-## **Implementations**
+**The StableSwap-NG Factory makes use of blueprint contracts to deploy its contracts from the implementations.**
 
-Additionally to other Factories, the stableswap-ng uses utility contracts for Math  (**`math_implementation`**) and Views (**`views_implementation`**).
+It utilizes five different implementations:
+
+- **`pool_implementation`** containing multiple blueprint contracts which are utilized to deploy plain pools
+- **`metapool_implementation`** containing multiple blueprint contracts which are utilized to deploy metapools
+- **`math_implementation`** containing math functions used in the AMM
+- **`gauge_implementation`** containing a blueprint contract which is utilized when deploying gauges for pools
+- **`views_implementation`** containing a view methods contract relevant for integrators and users looking to interact with the AMMs 
+ 
+*More on the [**Math Implementation**](../../stableswap-exchange/stableswap-ng/utility_contracts/math.md) and [**Views Implementation**](../../stableswap-exchange/stableswap-ng/utility_contracts/views.md).* 
 
 
 ### `pool_implementations`

@@ -2,14 +2,22 @@
 
 Curve Pool Factories allow the **permissionless deployment of liquidity pools, gauges, and LP tokens**.
 
+Every Factory contract from Curve comes with built-in functions designed to feed the [MetaRegistry](../../registry/MetaRegistryAPI.md) with informations about the created pools. These functions will not be documented in this section. For more information, please read [here](../../registry/overview.md).
+
 !!!deploy "Contract Source & Deployment"
     Factories are deployed on the Ethereum Mainnet as well as on Sidechains/L2.  
     A list of all deployed contracts can be found [here](../references/deployed-contracts.md#pool-factory).
 
-Every Factory contract from Curve comes with built-in functions designed to feed the [MetaRegistry](../../registry/MetaRegistryAPI.md) with informations about the created pools. These functions will not be documented in this section. For more information, please read [here](../../registry/overview.md).
-
 !!!warning
     The methods below might slightly vary depending on the Factory contract being examined. If there are any abnormalities or important standouts, they will be detailed as accurately as possible within the appropriate section!
+
+
+
+
+TODO:
+what pools are there? which factory to deploy which pool?
+
+For an easy, non-technical explaination: https://resources.curve.fi/lp/pools/
 
 
 
@@ -29,6 +37,12 @@ The contracts then need to be initialized, which is done automatically.
 ### **`Blueprint Contracts`**
 Newer factories make use of blueprints ([EIP-5202](https://eips.ethereum.org/EIPS/eip-5202)). The contracts are directly created from their corresponding blueprint implementations. This is the most desired and used method for all newly deployed factories.
 
+
+## **Implementations**
+Technical documentation was done separately for each factory, as they partially vary from each other. Please refer to the corresponding section.
+
+!!!note
+    **Implementation contracts are upgradable.** They can either be replaced or additional implementation contracts can be added. Therefore, please always make sure to check the most recent ones.
 
 
 ## **Fee Receiver**
@@ -93,13 +107,6 @@ The fee receiver is set within the Factory. All pools deployed from a Factory sh
         ```shell
         >>> Factory.set_fee_receiver('0x0000000000000000000000000000000000000000')    
         ```
-
-
-## **Implementations**
-Technical documentation was done separately for each factory, as they partially vary from each other. Please refer to the corresponding section.
-
-!!!note
-    **Implementation contracts are upgradable.** They can either be replaced or additional implementation contracts can be added. Therefore, please always make sure to check the most recent ones.
 
 
 ## **Factory Contract Ownership**
