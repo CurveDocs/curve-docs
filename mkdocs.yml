@@ -148,15 +148,15 @@ nav:
 
 
   - Pool Factory:
-    - Overview: factory_new/overview.md
+    - Overview: factory/overview.md
     - StableSwap: 
       - Overview: factory/stableswap/overview.md
-      - Deployer API: factory_new/stableswap/deployer-api.md
-      - Admin Controls: factory_new/stableswap/admin-controls.md
+      - Deployer API: factory/stableswap/deployer-api.md
+      - Admin Controls: factory/stableswap/admin-controls.md
     - StableSwap-NG:
       - Overview: factory/stableswapNG/overview.md
-      - Deployer API: factory_new/stableswapNG/deployer-api.md
-      - Admin Controls: factory_new/stableswapNG/admin-controls.md
+      - Deployer API: factory/stableswapNG/deployer-api.md
+      - Admin Controls: factory/stableswapNG/admin-controls.md
     - CryptoSwap:
       - Overview: factory/cryptoswap/overview.md
       - Deployer API: factory/cryptoswap/deployer-api.md
@@ -166,18 +166,6 @@ nav:
       - Deployer API: factory/tricryptoNG/deployer-api.md
       - Implementations: factory/tricryptoNG/implementations.md
       - Admin Controls: factory/tricryptoNG/admin-controls.md
-
-
-  - Factory (old):
-    - Pool Factory:
-      - Overview: factory/pool_factory/overview.md
-      - Deployer API: factory/pool_factory/deployer_api.md
-      - Registry API: factory/pool_factory/registry_api.md
-    - crvUSD Market Factory:
-      - Overview: factory/crvusd_factory/overview.md
-      - Deployer API: factory/crvusd_factory/deployer_api.md
-      - Contract Methods: factory/crvusd_factory/contract_methods.md
-      - Admin Controls: factory/crvusd_factory/admin_controls.md
     
   - References:
     - Audits: references/audits/audits_pdf.md
