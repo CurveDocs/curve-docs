@@ -152,20 +152,20 @@ nav:
     - StableSwap: 
       - Overview: factory/stableswap/overview.md
       - Deployer API: factory/stableswap/deployer-api.md
+      - Implementations: factory/stableswap/implementations.md
       - Admin Controls: factory/stableswap/admin-controls.md
     - StableSwap-NG:
       - Overview: factory/stableswapNG/overview.md
       - Deployer API: factory/stableswapNG/deployer-api.md
-      - Admin Controls: factory/stableswapNG/admin-controls.md
+      - Implementations: factory/stableswapNG/implementations.md
     - CryptoSwap:
       - Overview: factory/cryptoswap/overview.md
       - Deployer API: factory/cryptoswap/deployer-api.md
-      - Admin Controls: factory/cryptoswap/admin-controls.md
+      - Implementations: factory/cryptoswap/implementations.md
     - Tricrypto-NG:
       - Overview: factory/tricryptoNG/overview.md
       - Deployer API: factory/tricryptoNG/deployer-api.md
       - Implementations: factory/tricryptoNG/implementations.md
-      - Admin Controls: factory/tricryptoNG/admin-controls.md
     
   - References:
     - Audits: references/audits/audits_pdf.md

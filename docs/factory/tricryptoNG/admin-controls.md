@@ -123,4 +123,4 @@
 
 ## **Implementations**
 
-More on implementations [here](../factory/implementations.md).
+More on implementations [here](./implementations.md).

@@ -6,7 +6,7 @@ finding deployed curve pools and gauges. It is deployed to the mainnet at the fo
     Pools can be deployed via the [Curve UI](https://curve.fi/#/ethereum/create-pool). More information [here](https://resources.curve.fi/factory-pools/pool-factory/).
 
 
-| Mainnet Factory | Contract Address |
+| Factory | Contract Address |
 | ----------- | ------- |
 | crvUSD Pool Factory | [0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d](https://etherscan.io/address/0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d) | 
 | MetaPool Factory (meta pools) | [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4) |  

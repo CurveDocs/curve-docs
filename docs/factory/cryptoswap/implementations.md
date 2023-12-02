@@ -1,3 +1,65 @@
+## **Implementations**
+
+### `pool_implementations`
+!!! description "`Factory.pool_implementations() -> address: view`"
+
+    Getter for the pool implementation contract.
+
+    Returns: pool implementation (`address`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        pool_implementation: public(address)
+        ```
+
+    === "Example"
+        ```shell
+        >>> Factory.pool_implementations()
+        '0xa85461AFc2DEEC01bDA23b5cd267d51F765fba10'
+        ```
+
+
+### `token_implementation`
+!!! description "`Factory.token_implementation() -> address: view`"
+
+    Getter for the token implementation contract.
+
+    Returns: token implementation (`address`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        token_implementation: public(address)
+        ```
+
+    === "Example"
+        ```shell
+        >>> Factory.token_implementation()
+        '0xc08550A4cc5333f40e593eCc4C4724808085D304'
+        ```
+
+
+### `gauge_implementation`
+!!! description "`Factory.gauge_implementation() -> address: view`"
+
+    Getter for the gauge implementation contract.
+
+    Returns: gauge implementation (`address`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        gauge_implementation: public(address)
+        ```
+
+    === "Example"
+        ```shell
+        >>> Factory.gauge_implementation()
+        '0xdc892358d55d5Ae1Ec47a531130D62151EBA36E5'
+        ```
+
+
 ## **Set New Implementation Contracts**
 
 ### `set_pool_implementation`
@@ -126,125 +188,4 @@
         ```shell
         >>> Factory.set_gauge_implementation("todo")
         'todo'
-        ```
-
-
-## **Set Fee Receiver**
-
-### `set_fee_receiver`
-!!! description "`Factory.set_fee_receiver(_fee_receiver: address):`"
-
-    !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the contract.
-
-    Function to set a new `fee_receiver` address.
-
-    Emits event: `UpdateFeeReceiver`
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_fee_receiver` |  `address` | new fee receiver address |
-
-    ??? quote "Source code"
-
-        ```vyper
-        event UpdateFeeReceiver:
-            _old_fee_receiver: address
-            _new_fee_receiver: address
-
-        admin: public(address) 
-        fee_receiver: public(address)
-
-        @external
-        def set_fee_receiver(_fee_receiver: address):
-            """
-            @notice Set fee receiver
-            @param _fee_receiver Address that fees are sent to
-            """
-            assert msg.sender == self.admin  # dev: admin only
-
-            log UpdateFeeReceiver(self.fee_receiver, _fee_receiver)
-            self.fee_receiver = _fee_receiver
-        ```
-
-    === "Example"
-        ```shell
-        >>> Factory.set_fee_receiver("todo")
-        'todo'
-        ```
-
-
-
-## **Transfer Contract Ownership**
-
-### `commit_transfer_ownership`
-!!! description "`Factory.commit_transfer_ownership(_addr: address):`"
-
-    !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the contract.
-
-    Function to commit the transfer of ownership of the contract to `_addr`. Calling this function sets `future_admin` to `_addr` which then needs to be accepted by calling `accept_transfer_ownership`.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_addr` |  `address` | address to commit the transfer of ownership to |
-
-    ??? quote "Source code"
-
-        ```vyper hl_lines="1"
-        future_admin: public(address)    
-
-        @external
-        def commit_transfer_ownership(_addr: address):
-            """
-            @notice Transfer ownership of this contract to `addr`
-            @param _addr Address of the new owner
-            """
-            assert msg.sender == self.admin, "dev: admin only"
-
-            self.future_admin = _addr
-        ```
-
-    === "Example"
-        ```shell
-        >>> Factory.commit_transfer_ownership("todo")
-        'todo'
-        ```
-
-
-### `accept_transfer_ownership`
-!!! description "`Factory.accept_transfer_ownership(_addr: address):`"
-
-    !!!guard "Guarded Method"
-        This function is only callable by the `future_admin` of the contract.
-
-    Function to accept ownership changes and set `future_admin` to `msg.sender` (which is `future_admin`).
-
-    Emits event: `TransferOwnership`
-
-    ??? quote "Source code"
-
-        ```vyper
-        event TransferOwnership:
-            _old_owner: address
-            _new_owner: address
-
-        admin: public(address) 
-        future_admin: public(address)    
-
-        @external
-        def accept_transfer_ownership():
-            """
-            @notice Accept a pending ownership transfer
-            @dev Only callable by the new owner
-            """
-            assert msg.sender == self.future_admin, "dev: future admin only"
-
-            log TransferOwnership(self.admin, msg.sender)
-            self.admin = msg.sender
-        ```
-
-    === "Example"
-        ```shell
-        >>> Factory.accept_transfer_ownership()
         ```

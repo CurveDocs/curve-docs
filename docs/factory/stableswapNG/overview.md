@@ -1,40 +1,13 @@
 The StableSwapNG-Factory serves as a permissionless pool deployer and registry. For further information regarding the registry, please refer to this [section](../../registry/overview.md).
 
 !!!deploy "Contract Source & Deployment"
-    **Stableswap-NG Factory** contract is deployed to the Ethereum mainnet at: [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://etherscan.io/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf#code).
-    Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapFactoryNG.vy).  
-    A list of all deployments can be found [here](../../references/deployed-contracts.md#stableswap-ng).
-
-
-## **Fee Receiver**
-
-All deployed pools share the same fee receiver. A new address can be designated by using the [**`set_fee_receiver`**](../factory/admin_controls.md#set_fee_receiver) function.
-
-### `fee_receiver`
-!!! description "`Factory.fee_receiver() -> address: view`"
-
-    Getter for the fee receiver of the pools admin fees.
-
-    Returns: fee receiver (`address`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        # fee receiver for all pools
-        fee_receiver: public(address)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> Factory.fee_receiver()
-        '0xeCb456EA5365865EbAb8a2661B0c503410e9B347'
-        ```
+    **Stableswap-NG Factory** contract is deployed to the Ethereum mainnet at: [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://etherscan.io/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf#code).  
+    Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapFactoryNG.vy). A list of all deployments can be found [here](../../references/deployed-contracts.md#stableswap-ng).
 
 
 ## **Asset Types**
 
-A pool can contain different asset types. All avalaible types can be queried with the following getter method: 
+Stableswap-NG pool can contain different [asset types](../../stableswap-exchange/stableswap-ng/pools/overview.md#supported-assets). New asset types can be added via the **`add_asset_type`** function.
 
 ### `asset_types`
 !!! description "`Factory.asset_types(arg0: uint8) -> String[20]`"
@@ -59,172 +32,125 @@ A pool can contain different asset types. All avalaible types can be queried wit
         'Rebasing'    
         ```
 
+### `add_asset_type`
+!!! description "`Factory.add_asset_type(_id: uint8, _name: String[10])`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
+    Function to add a new asset type.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_id` |  `uint8` | asset type id |
+    | `_name` |  `String[10]` | name of the new asset type |
+
+
+    ??? quote "Source code"
+
+        ```vyper
+        asset_types: public(HashMap[uint8, String[20]])
+
+        @external
+        def add_asset_type(_id: uint8, _name: String[10]):
+            """
+            @notice Admin only method that adds a new asset type.
+            @param _id asset type id.
+            @param _name Name of the asset type.
+            """
+            assert msg.sender == self.admin  # dev: admin only
+            self.asset_types[_id] = _name
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> Factory.add_asset_type(4, "whatever")
+        ```
+
+
+## **Base Pools**
+
+StableSwap pools allow the deployment of metapools (asset paried against a base pool; [more here](https://resources.curve.fi/lp/pools/?h=base)). When deploying a new Factory, the already existing base pools must manually be added to the contract in order to be used for metapools.
+
+Limitations when adding new base pools:
+
+- Rebasing tokens are not allowed in the base pool
+- Do not add base pool which contains native tokens (e.g. ETH)
+- As much as possible: use standard ERC20 tokens
+
+
+### `add_base_pool`
+!!! description "`Factory.add_base_pool(_base_pool: address, _base_lp_token: address, _asset_types: DynArray[uint8, MAX_COINS], _n_coins: uint256):`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
+    Function to add a new base pool.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_base_pool` |  `address` | pool address to add as a basepool |
+    | `_base_lp_token` |  `address` | lp token address of the pool |
+    | `_asset_types` |  `DynArray[uint8, MAX_COINS]` | array of asset types of the pool |
+    | `_n_coins` |  `uint256` | number of coins in the base pool |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @external
+        def add_base_pool(
+            _base_pool: address,
+            _base_lp_token: address,
+            _asset_types: DynArray[uint8, MAX_COINS],
+            _n_coins: uint256,
+        ):
+            """
+            @notice Add a base pool to the registry, which may be used in factory metapools
+            @dev 1. Only callable by admin
+                2. Rebasing tokens are not allowed in the base pool.
+                3. Do not add base pool which contains native tokens (e.g. ETH).
+                4. As much as possible: use standard ERC20 tokens.
+                Should you choose to deviate from these recommendations, audits are advised.
+            @param _base_pool Pool address to add
+            @param _asset_types Asset type for pool, as an integer
+            """
+            assert msg.sender == self.admin  # dev: admin-only function
+            assert 2 not in _asset_types  # dev: rebasing tokens cannot be in base pool
+            assert len(self.base_pool_data[_base_pool].coins) == 0  # dev: pool exists
+            assert _n_coins < MAX_COINS  # dev: base pool can only have (MAX_COINS - 1) coins.
+
+            # add pool to pool_list
+            length: uint256 = self.base_pool_count
+            self.base_pool_list[length] = _base_pool
+            self.base_pool_count = length + 1
+            self.base_pool_data[_base_pool].lp_token = _base_lp_token
+            self.base_pool_data[_base_pool].n_coins = _n_coins
+            self.base_pool_data[_base_pool].asset_types = _asset_types
+
+            decimals: uint256 = 0
+            coins: DynArray[address, MAX_COINS] = empty(DynArray[address, MAX_COINS])
+            coin: address = empty(address)
+            for i in range(MAX_COINS):
+                if i == _n_coins:
+                    break
+                coin = CurvePool(_base_pool).coins(i)
+                assert coin != 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE  # dev: native token is not supported
+                self.base_pool_data[_base_pool].coins.append(coin)
+                self.base_pool_assets[coin] = True
+                decimals += (ERC20(coin).decimals() << i*8)
+            self.base_pool_data[_base_pool].decimals = decimals
+
+            log BasePoolAdded(_base_pool)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> Factory.add_base_pool("whatever")
+        ```
+
 
 ## **Implementations**
 
-Pools and gauges are created through blueprint contracts based on the implementation chosen during deployment.
-
-Additionally, there are utility contracts for Math  (**`math_implementation`**) and Views (**`views_implementation`**).
-
-
-### `pool_implementations`
-!!! description "`Factory.pool_implementations(arg0: uint256) -> address: view`"
-
-    Getter for the pool implementations. There might be multiple pool implementations base on various circumstances. 
-
-    Returns: implementation (`address`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `uint256` | index value of the implementation |
-
-    ??? quote "Source code"
-
-        ```vyper
-        # index -> implementation address
-        pool_implementations: public(HashMap[uint256, address])
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> Factory.pool_implementation(0)
-        '0x3E3B5F27bbf5CC967E074b70E9f4046e31663181'
-        ```
-
-
-### `metapool_implementations`
-!!! description "`Factory.metapool_implementations(arg0: uint256) -> address: view`"
-
-    Getter for the pool implementations. There might be multiple metapool implementations base on various circumstances. 
-
-
-    Returns: implementation (`address`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `uint256` | index value of the implementation |
-
-    ??? quote "Source code"
-
-        ```vyper
-        # index -> implementation address
-        metapool_implementations: public(HashMap[uint256, address])
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> Factory.metapool_implementation(0)
-        '0x19bd1AB34d6ABB584b9C1D5519093bfAA7f6c7d2'
-        ```
-
-
-### `math_implementations`
-!!! description "`Factory.math_implementations() -> address: view`"
-
-    Getter for the math implementations.
-
-    Returns: implementation (`address`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        # index -> implementation address
-        math_implementation: public(address)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> Factory.math_implementation()
-        '0x20D1c021525C85D9617Ccc64D8f547d5f730118A'
-        ```
-
-
-### `gauge_implementations`
-!!! description "`Factory.gauge_implementations() -> address: view`"
-
-    Getter for the gauge implementations.
-
-    Returns: implementation (`address`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        # index -> implementation address
-        gauge_implementation: public(address)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> Factory.gauge_implementation()
-        '0xF5617D4f7514bE35fce829a1C19AE7f6c9106979'
-        ```
-
-
-### `views_implementation`
-!!! description "`Factory.views_implementations() -> address: view`"
-
-    Getter for the views implementations.
-
-    Returns: implementation (`address`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        # index -> implementation address
-        views_implementation: public(address)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> Factory.views_implementation()
-        '0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD' 
-        ```
-
-
-## **Ownership**
-
-**`Admin`** is the owner of the contract and has exclusive possibility to call admin-only functions. Ownership can be transferred; for details, see [here](../factory/admin_controls.md#commit_transfer_ownership).
-
-### `admin`
-!!! description "`Factory.admin() -> address: view`"
-
-    Getter for the admin.
-
-    Returns: 
-
-    ??? quote "Source code"
-
-        ```vyper
-        admin: public(address)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> Factory.admin()
-
-        ```
-
-### `future_admin`
-!!! description "`Factory.future_admin() -> address: view`"
-
-    Getter for the future admin.
-
-    Returns: future admin (`address`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        future_admin: public(address)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> Factory.future_admin()
-        ```
+More on [implementations](./implementations.md).

@@ -374,7 +374,7 @@ Limitations when adding new base pools:
 
 
 
-## **Contract Ownership**
+## **Transfer Contract Ownership**
 
 ### `commit_transfer_ownership`
 !!! description "`Factory.commit_transfer_ownership(_addr: address):`"
