@@ -128,7 +128,6 @@ nav:
     - Overview: cryptoswap-exchange/overview.md
     
     - CryptoSwap:
-      - Overview
       - Pools:
         - Crypto Pool: cryptoswap-exchange/cryptoswap/pools/crypto-pool.md
         - Admin Controls: cryptoswap-exchange/cryptoswap/pools/admin-controls.md
