@@ -7,18 +7,19 @@ The [StableSwap-NG](../../stableswap-exchange/stableswap-ng/overview.md) Factory
 
 ## **Asset Types**
 
-A Stableswap-NG pool can contain different [asset types](../../stableswap-exchange/stableswap-ng/pools/overview.md#supported-assets). New asset types can be added via the **`add_asset_type`** function.
+A Stableswap-NG pool can contain different [asset types](../../stableswap-exchange/stableswap-ng/pools/overview.md#supported-assets). New asset types can be added throught the **`add_asset_type`** method.
+
 
 ### `asset_types`
 !!! description "`Factory.asset_types(arg0: uint8) -> String[20]`"
 
     Getter for the asset types.
 
-    Returns: asset type (`String[20]`)
+    Returns: Asset type (`String[20]`)
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `uint8` | index value of the asset type |
+    | Input   | Type     | Description                     |
+    | ------- | -------- | ------------------------------- |
+    | `arg0`  | `uint8`  | Index value of the asset type   |
 
     ??? quote "Source code"
 
@@ -42,10 +43,11 @@ A Stableswap-NG pool can contain different [asset types](../../stableswap-exchan
 
     Function to add a new asset type.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_id` |  `uint8` | asset type id |
-    | `_name` |  `String[10]` | name of the new asset type |
+    | Input   | Type         | Description              |
+    | ------- | ------------ | ------------------------ |
+    | `_id`   | `uint8`      | Asset type ID            |
+    | `_name` | `String[10]` | Name of the new asset type |
+
 
 
     ??? quote "Source code"
@@ -90,12 +92,13 @@ StableSwap pools also allow the deployment of metapools (an asset paired against
 
     Function to add a new base pool.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_base_pool` |  `address` | pool address to add as a basepool |
-    | `_base_lp_token` |  `address` | lp token address of the pool |
-    | `_asset_types` |  `DynArray[uint8, MAX_COINS]` | array of asset types of the pool |
-    | `_n_coins` |  `uint256` | number of coins in the base pool |
+    | Input            | Type                         | Description                      |
+    | ---------------- | ---------------------------- | -------------------------------- |
+    | `_base_pool`     | `address`                    | Pool address to add as a base pool |
+    | `_base_lp_token` | `address`                    | LP token address of the pool     |
+    | `_asset_types`   | `DynArray[uint8, MAX_COINS]` | Array of asset types of the pool |
+    | `_n_coins`       | `uint256`                    | Number of coins in the base pool |
+
 
     ??? quote "Source code"
 
@@ -150,6 +153,32 @@ StableSwap pools also allow the deployment of metapools (an asset paired against
 
         ```shell
         >>> Factory.add_base_pool("whatever")
+        ```
+
+
+### `base_pool_list`
+!!! description "`Factory.base_pool_list(arg0: uint256) -> address: view`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
+    Getter for the base pool at index `arg0`.
+
+    | Input            | Type                         | Description                      |
+    | ---------------- | ---------------------------- | -------------------------------- |
+    | `arg0`           | `uint256`                    | Index of the base pool           |
+
+    ??? quote "Source code"
+
+        ```vyper
+        base_pool_list: public(address[4294967296])   # list of base pools
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> Factory.base_pool_list(0)
+        '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7'
         ```
 
 

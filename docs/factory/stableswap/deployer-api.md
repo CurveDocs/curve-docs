@@ -3,6 +3,8 @@
 !!!warning
     Transaction will fail if the requirements are not met.
 
+### `deploy_plain_pool`
+
 The pool **deployment is permissionless**, but it must adhere to certain parameter limitations:
 
 | Parameter | Limitation |
@@ -166,7 +168,6 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
         ```
 
 
-
 ### `deploy_metapool`
 
 Limitations when deploying meta pools:
@@ -177,9 +178,6 @@ Limitations when deploying meta pools:
 
 - Valid **`_implementation_idx`** (cannot be **`ZERO_ADDRESS`**).
 - Maximum of 18 decimals for the coins.
-
-!!!warning
-    Transaction will fail if the requirements are not met.
 
 
 !!! description "`Factory.deploy_metapool(_base_pool: address, _name: String[32], _symbol: String[10], _coin: address, _A: uint256, _fee: uint256, _implementation_idx: uint256 = 0) -> address:`"
@@ -310,6 +308,8 @@ Limitations when deploying meta pools:
 
 !!!info
     Liquidity gauges can only be successfully deployed from the same contract from which the pool was deployed!
+
+### `deploy_gauge`
 
 !!! description "`Factory.deploy_gauge(_pool: address) -> address:`"
 

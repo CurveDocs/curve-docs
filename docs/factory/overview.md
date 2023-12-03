@@ -12,12 +12,13 @@ Every Factory contract from Curve comes with **built-in functions designed to fe
     The methods below might slightly vary depending on the Factory contract being examined. If there are any abnormalities or important standouts, they will be detailed as accurately as possible within the appropriate section!
 
 ## **Supported Pools**
-The various Curve Factories allow the deployment of pools with virtually any kind of asset combination, whether they are stable or volatile, rebasing or not, etc...
+The various Curve Factories allow the deployment of pools with virtually any kind of asset combination, whether they are stable or volatile, rebasing or not, etc... Some pool variations (e.g., cryptoswap pool) might not be supported on sidechains/L2s yet.
+
 
 | Factory | Description | Supported Pools |
 | ------- | ----------- | --------------- |
 | `StableSwap` | Regular StableSwap | Plain and metapools |
-| `StableSwap-NG` | Improved StableSwap version | Plain pools (up to eight coins) and metapools (two coins) ([more here](../stableswap-exchange/stableswap-ng/pools/overview.md#supported-assets)) |
+| `StableSwap-NG` | Improved StableSwap version | Plain pools with up to eight coins and metapools ([more here](../stableswap-exchange/stableswap-ng/pools/overview.md#supported-assets)) |
 | `CryptoSwap` | Regular CryptoSwap | Two-coin volatile assets (e.g., CRV<>ETH) |
 | `Tricrypto-NG` | Improved Tricrypto version ([here](../cryptoswap-exchange/tricrypto-ng/overview.md)) | Three-coin volatile assets (e.g., ETH<>BTC<>crvUSD) |
 
@@ -76,10 +77,11 @@ The fee receiver is set within the Factory and is a **uniform address** for all 
 
     Function to set a new fee receiver.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | this variable has no use; insert a random address, otherwise the tx will fail. |
-    | `_fee_receiver` |  `address` | address of the new fee receiver |
+    | Input           | Type      | Description |
+    | --------------- | --------- | ----------- |
+    | `_pool`         | `address` | This variable has no real use; insert a random address, otherwise the transaction will fail. |
+    | `_fee_receiver` | `address` | Address of the new fee receiver |
+
 
 
     ??? quote "Source code"
@@ -109,7 +111,7 @@ The fee receiver is set within the Factory and is a **uniform address** for all 
 ## **Factory Contract Ownership**
 The **`admin`** is the owner of the Factory contract and has the ability to call admin-only functions. Ownership can be transferred by first committing to the transfer of ownership (**`commit_transfer_ownership`**), which then needs to be accepted by the **`future_admin`** (**`accept_transfer_ownership`**). 
 
-Most contracts are 'owned' by a proxy, which in turn is owned by the DAO. For some factories, the DAO is directly the owner.
+Most contracts are **'owned' by a proxy**, which in turn is owned by the DAO. For some factories, the DAO is directly the owner.
 
 
 ### `admin`
@@ -159,9 +161,9 @@ Most contracts are 'owned' by a proxy, which in turn is owned by the DAO. For so
 
     Function to commit a transfer of ownership. This function sets `_addr` as the future admin of the contract. These changes need to be applied via `accept_transfer_ownership` by the future admin itself.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_addr` |  `address` | address of the future admin |
+    | Input    | Type      | Description                         |
+    | -------- | --------- | ----------------------------------- |
+    | `_addr`  | `address` | Address of the future admin         |
 
     ??? quote "Source code"
 

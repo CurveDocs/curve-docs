@@ -86,9 +86,10 @@ It utilizes three different implementations:
 
     Emits event: `UpdatePoolImplementation`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool_implementation` |  `address` | new pool implementation |
+    | Input                 | Type      | Description               |
+    | --------------------- | --------- | ------------------------- |
+    | `_pool_implementation`| `address` | New pool implementation   |
+
 
     ??? quote "Source code"
 
@@ -129,9 +130,10 @@ It utilizes three different implementations:
 
     Emits event: `UpdateTokenImplementation`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_token_implementation` |  `address` | new token implementation |
+    | Input                  | Type      | Description               |
+    | ---------------------- | --------- | ------------------------- |
+    | `_token_implementation`| `address` | New token implementation  |
+
 
     ??? quote "Source code"
 
@@ -172,9 +174,10 @@ It utilizes three different implementations:
 
     Emits event: `UpdateGaugeImplementation`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_gauge_implementation` |  `address` | new gauge implementation |
+    | Input                   | Type      | Description              |
+    | ----------------------- | --------- | ------------------------ |
+    | `_gauge_implementation` | `address` | New gauge implementation |
+
 
     ??? quote "Source code"
 

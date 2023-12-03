@@ -18,13 +18,14 @@ It utilizes four different implementations:
 ### `pool_implementation`
 !!! description "`Factory.pool_implementations(arg0: uint256) -> address: view`"
 
-    Getter for the current pool implementation contract. hashamp because two-coin and three-pool pools?
+    Getter for the current pool implementation contract. This accounts for variations such as two-coin and three-pool pools.
 
-    Returns: pool blueprint contract (`address`).
+    Returns: Pool blueprint contract (`address`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `uint256` | index |
+    | Input   | Type      | Description   |
+    | ------- | --------- | ------------- |
+    | `arg0`  | `uint256` | Index         |
+
 
     ??? quote "Source code"
 
@@ -45,7 +46,7 @@ It utilizes four different implementations:
 
     Getter for the current gauge implementation contract.
 
-    Returns: gauge blueprint contract (`address`).
+    Returns: Gauge blueprint contract (`address`).
 
     ??? quote "Source code"
 
@@ -66,7 +67,7 @@ It utilizes four different implementations:
 
     Getter for the current views implementation contract.
 
-    Returns: views blueprint contract (`address`).
+    Returns: Views blueprint contract (`address`).
 
     ??? quote "Source code"
 
@@ -87,7 +88,7 @@ It utilizes four different implementations:
 
     Getter for the current pool implementation contract.
 
-    Returns: math blueprint contract (`address`).
+    Returns: Math blueprint contract (`address`).
 
     ??? quote "Source code"
 
@@ -114,14 +115,15 @@ It utilizes four different implementations:
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to set a `_pool_implementation` for `_implementation_index`. Index for the pool implementation is needed as there can be multiple different versions of pools (two-coin and three-coin).
+    Function to set a `_pool_implementation` for `_implementation_index`. An index for the pool implementation is needed as there can be multiple different versions of pools (such as two-coin and three-coin pools).
 
     Emits event: `UpdatePoolImplementation`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool_implementation` |  `address` | pool blueprint contract |
-    | `_implementation_index` |  `uint256` | index |
+    | Input                   | Type      | Description               |
+    | ----------------------- | --------- | ------------------------- |
+    | `_pool_implementation`  | `address` | Pool blueprint contract   |
+    | `_implementation_index` | `uint256` | Index                     |
+
 
     ??? quote "Source code"
 
@@ -171,9 +173,9 @@ It utilizes four different implementations:
 
     Emits event: `UpdateGaugeImplementation`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_gauge_implementation` |  `address` | gauge blueprint contract |
+    | Input                    | Type      | Description               |
+    | ------------------------ | --------- | ------------------------- |
+    | `_gauge_implementation`  | `address` | Gauge blueprint contract  |
 
     ??? quote "Source code"
 
@@ -214,9 +216,9 @@ It utilizes four different implementations:
 
     Emits event: `UpdateViewsImplementation`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_views_implementation` |  `address` | views blueprint contract |
+    | Input                     | Type      | Description              |
+    | ------------------------- | --------- | ------------------------ |
+    | `_views_implementation`   | `address` | Views blueprint contract |
 
     ??? quote "Source code"
 
@@ -256,9 +258,9 @@ It utilizes four different implementations:
 
     Emits event: `UpdateMathImplementation`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_math_implementation` |  `address` | math blueprint contract |
+    | Input                    | Type      | Description              |
+    | ------------------------ | --------- | ------------------------ |
+    | `_math_implementation`   | `address` | Math blueprint contract  |
 
     ??? quote "Source code"
 

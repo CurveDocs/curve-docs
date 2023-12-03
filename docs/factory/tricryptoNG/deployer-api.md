@@ -1,9 +1,9 @@
 ## **Liquidity Pools**
 
-### `deploy_pool`
-
 !!!warning
     The transaction will revert if the following requirements are not met.
+
+### `deploy_pool`
 
 The pool **deployment is permissionless**, but it must adhere to certain parameter limitations:
 
@@ -250,8 +250,6 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
 
         'returns address of the deployed pool'
         ```
-
-
 
 
 ## **Liquidity Gauge**

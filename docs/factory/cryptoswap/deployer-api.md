@@ -1,9 +1,9 @@
 ## **Liquidity Pools**
 
-### `deploy_pool`
-
 !!!warning
     The transaction will revert if the following requirements are not met.
+
+### `deploy_pool`
 
 The pool **deployment is permissionless**, but it must adhere to certain parameter limitations:
 
@@ -208,9 +208,6 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
 ### `deploy_gauge`
 
 !!! description "`deploy_gauge(_pool: address) -> address`"
-
-    !!!warning
-        When deploying a gauge using the factory contract, it is necessary to use the same factory that deployed the pool; otherwise, the function will revert.
 
     Function to deploy a liquidity gauge for a factory pool. The deployed gauge is created from the `gauge_implementation`.
 

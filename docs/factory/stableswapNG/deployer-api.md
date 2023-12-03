@@ -3,10 +3,10 @@
 
 ## **Liquidity Pools**
 
-### `deploy_plain_pool`
-
 !!!warning
     Transaction will fail if the requirements are not met.
+
+### `deploy_plain_pool`
 
 The pool **deployment is permissionless**, but it must adhere to certain parameter limitations:
 
@@ -202,9 +202,6 @@ Limitations when deploying meta pools:
 - **`_offpeg_fee_multiplier`** * **`_fee`** ≤ **`MAX_FEE`** * **`FEE_DENOMINATOR`**.
 - Valid implementation index.
 - Maximum of 18 decimals for a coin.
-
-!!!warning
-    Transaction will fail when the requirements are not met.
 
 !!! description "`Factory.deploy_metapool(_base_pool: address, _name: String[32], _symbol: String[10], _coin: address, _A: uint256, _fee: uint256, _offpeg_fee_multiplier: uint256, _ma_exp_time: uint256, _implementation_idx: uint256, _asset_type: uint8, _method_id: bytes4, _oracle: address) -> address:`"
 

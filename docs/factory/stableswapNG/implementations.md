@@ -14,6 +14,8 @@ It utilizes five different implementations:
 *More on the [**Math Implementation**](../../stableswap-exchange/stableswap-ng/utility_contracts/math.md) and [**Views Implementation**](../../stableswap-exchange/stableswap-ng/utility_contracts/views.md).* 
 
 
+## **Query Implementations**
+
 ### `pool_implementations`
 !!! description "`Factory.pool_implementations(arg0: uint256) -> address: view`"
 

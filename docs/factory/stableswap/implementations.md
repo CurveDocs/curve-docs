@@ -19,9 +19,10 @@ It utilizes three different implementations:
 
     Returns: metapool implementation contracts (`address[10]`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_base_pool` |  `address` | base pool |
+    | Input        | Type      | Description |
+    | ------------ | --------- | ----------- |
+    | `_base_pool` | `address` | Base pool   |
+
 
     ??? quote "Source code"
 
@@ -62,12 +63,13 @@ It utilizes three different implementations:
 
     Getter for the plain implementations index `arg1` for a plain pool with a number of `arg0` coins.
 
-    Returns: plain implementation (`address`).
+    Returns: Plain implementation (`address`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `address` | number of coins in pool |
-    | `arg1` |  `address` | index of implementation |
+    | Input    | Type      | Description                |
+    | -------- | --------- | -------------------------- |
+    | `arg0`   | `uint256` | Number of coins in pool    |
+    | `arg1`   | `uint256` | Index of implementation    |
+
 
     ??? quote "Source code"
 
@@ -112,11 +114,12 @@ It utilizes three different implementations:
 
     Getter for the address of the implementation contract used for a factory pool.
 
-    Returns: implementation (`address`).
+    Returns: Implementation (`address`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | factory pool address |
+    | Input    | Type      | Description              |
+    | -------- | --------- | ------------------------ |
+    | `_pool`  | `address` | Factory pool address     |
+
 
     ??? quote "Source code"
 
@@ -152,10 +155,11 @@ It utilizes three different implementations:
 
     Function to set new metapool implementations.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_base_pool` |  `address` | base pool to add implementations for |
-    | `_implementations` |  `address[10]` | new metapool implementations |
+    | Input               | Type            | Description                          |
+    | ------------------- | --------------- | ------------------------------------ |
+    | `_base_pool`        | `address`       | Base pool to add implementations for |
+    | `_implementations`  | `address[10]`   | New metapool implementations         |
+
 
     ??? quote "Source code"
 
@@ -201,10 +205,10 @@ It utilizes three different implementations:
 
     Function to set new plain pool implementations.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_n_coins` |  `uint256` | number of coins in pool to set implementations for |
-    | `_pool_implementation` |  `address` | new plain pool implementations |
+    | Input                  | Type       | Description                                   |
+    | ---------------------- | ---------- | --------------------------------------------- |
+    | `_n_coins`             | `uint256`  | Number of coins in pool to set implementations for |
+    | `_pool_implementation` | `address`  | New plain pool implementations                |
 
     ??? quote "Source code"
 
@@ -246,9 +250,9 @@ It utilizes three different implementations:
 
     Function to set a new gauge implementation contract.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_gauge_implementation` |  `address` | new gauge implementation |
+    | Input                   | Type      | Description                |
+    | ----------------------- | --------- | -------------------------- |
+    | `_gauge_implementation` | `address` | New gauge implementation   |
 
     ??? quote "Source code"
 
