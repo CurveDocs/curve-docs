@@ -1,5 +1,8 @@
 **The StableSwap Factory utilizes the `create_forwarder_to` function to deploy its contracts from the implementations.**
 
+!!!warning
+    **Implementation contracts are upgradable.** They can either be replaced, or additional implementation contracts can be added. Therefore, please always make sure to check the most recent ones.
+
 It utilizes three different implementations: 
 
 - **`metapool_implementations`**, containing multiple contracts that are used to deploy metapools.

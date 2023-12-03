@@ -1,5 +1,8 @@
 **The Tricrypto-NG Factory makes use of blueprint contracts to deploy its contracts from the implementations.**
 
+!!!warning
+    **Implementation contracts are upgradable.** They can either be replaced, or additional implementation contracts can be added. Therefore, please always make sure to check the most recent ones.
+
 It utilizes four different implementations:
 
 - **`pool_implementations`**, containing multiple blueprint contracts that are used to deploy the pools.
