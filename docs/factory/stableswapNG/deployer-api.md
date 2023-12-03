@@ -1,43 +1,44 @@
 !!!info 
     When deploying pools that include coins not requiring a rate oracle, **`b""`** should be included in the `_methods_id` array and the **`ZERO_ADDRESS`** should be used in the `_oracles` array as placeholders for each coin.
 
-## **Plain Pools**
+## **Liquidity Pools**
 
 ### `deploy_plain_pool`
-Limitations when deploying stableswap-ng pools:
-
-- minimum of 2 and maximum of 8 coins
-- all coin arrays should be same length
-- **`_fee`** <= 100000000 (1%)
-- **`_offpeg_fee_multiplier`** * **`_fee`** <= **`MAX_FEE`** * **`FEE_DENOMINATOR`**
-- maximum of 18 decimals for a coin
-- no duplicate coins
-- valid implementation index
 
 !!!warning
-    Transaction will fail when the requirements are not met.
+    Transaction will fail if the requirements are not met.
+
+The pool **deployment is permissionless**, but it must adhere to certain parameter limitations:
+
+- Minimum of 2 and maximum of 8 coins.
+- All coin arrays should be the same length.
+- **`_fee`** ≤ 100000000 (1%).
+- **`_offpeg_fee_multiplier`** * **`_fee`** ≤ **`MAX_FEE`** * **`FEE_DENOMINATOR`**.
+- Maximum of 18 decimals for a coin.
+- No duplicate coins.
+- Valid implementation index.
 
 !!! description "`Factory.deploy_plain_pool(_name: String[32], _symbol: String[10], _coins: DynArray[address, MAX_COINS], _A: uint256, _fee: uint256, _offpeg_fee_multiplier: uint256, _ma_exp_time: uint256, _implementation_idx: uint256, _asset_types: DynArray[uint8, MAX_COINS], _method_ids: DynArray[bytes4, MAX_COINS], _oracles: DynArray[address, MAX_COINS], ) -> address:`"
 
     Function to deploy a stableswap-ng plain pool. The pool is created from a blueprint contract.
 
-    Returns: deployed pool (`address`).
+    Returns: Deployed pool (`address`).
 
     Emits: `PlainPoolDeployed`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_name` |  `String[32]` | name of the new plain pool |
-    | `_symbol` |  `String[10]` | symbol for the new metapool’s LP token; this value will be concatenated with the factory symbol |
-    | `_coins` |  `DynArray[address, MAX_COINS]` | array of addresses of the coins being used in the pool |
-    | `_A` |  `uint256` | amplification coefficient |
-    | `_fee` |  `uint256` | trade fee, given as an integer with `1e10` precision |
-    | `_offpeg_fee_multiplier` |  `uint256` | off-peg fee multiplier |
-    | `_ma_exp_time` |  `uint256` | ma time; set as time_in_seconds / ln(2) |
-    | `_implementation_idx` |  `uint256` | index of the implementation to use; more [here](../factory/overview.md#implementations) |
-    | `_asset_type` |  `DynArray[uint8, MAX_COINS]` | asset type of the pool as an integer; more [here](../pools/overview.md#supported-assets)|
-    | `_methods_id` |  `DynArray[bytes4, MAX_COINS]` | array of first four bytes of the Keccak-256 hash of the function signatures of the oracle addresses that give rate oracles |
-    | `_oracles` |  `DynArray[address, MAX_COINS]` | array of rate oracle addresses |
+    | Input                | Type                         | Description |
+    | -------------------- | ---------------------------- | ----------- |
+    | `_name`              | `String[32]`                 | Name of the new plain pool |
+    | `_symbol`            | `String[10]`                 | Symbol for the new pool's LP token; this value will be concatenated with the factory symbol |
+    | `_coins`             | `DynArray[address, MAX_COINS]` | Array of addresses of the coins being used in the pool |
+    | `_A`                 | `uint256`                    | Amplification coefficient |
+    | `_fee`               | `uint256`                    | Trade fee, given as an integer with `1e10` precision |
+    | `_offpeg_fee_multiplier` | `uint256`               | Off-peg fee multiplier |
+    | `_ma_exp_time`       | `uint256`                    | MA time; set as time_in_seconds / ln(2) |
+    | `_implementation_idx` | `uint256`                  | Index of the implementation to use; more [here](../factory/overview.md#implementations) |
+    | `_asset_types`       | `DynArray[uint8, MAX_COINS]` | Asset type of the pool as an integer; more [here](../pools/overview.md#supported-assets) |
+    | `_method_ids`        | `DynArray[bytes4, MAX_COINS]` | Array of first four bytes of the Keccak-256 hash of the function signatures of the oracle addresses that give rate oracles |
+    | `_oracles`           | `DynArray[address, MAX_COINS]` | Array of rate oracle addresses |
 
     !!!info "Implementation ID"
         There might be multiple pool implementations. To query all available ones, see [here](../factory/overview.md#pool_implementations). As of the current date (31.10.2023), there is only one pool implementation available. Since the **`_implementation_idx`** starts at 0, users need to input "0" when deploying a pool.
@@ -193,46 +194,44 @@ Limitations when deploying stableswap-ng pools:
         ```
 
 
-## **Metapools**
-
 ### `deploy_metapool`
 Limitations when deploying meta pools:
 
-- cannot pair against a token that is included in the base pool
-- **`_fee`** <= 100000000 (1%)
-- **`_offpeg_fee_multiplier`** * **`_fee`** <= **`MAX_FEE`** * **`FEE_DENOMINATOR`**
-- valid implementation index
-- maximum of 18 decimals for a coin
+- Cannot pair against a token that is included in the base pool.
+- **`_fee`** ≤ 100000000 (1%).
+- **`_offpeg_fee_multiplier`** * **`_fee`** ≤ **`MAX_FEE`** * **`FEE_DENOMINATOR`**.
+- Valid implementation index.
+- Maximum of 18 decimals for a coin.
 
 !!!warning
     Transaction will fail when the requirements are not met.
-
 
 !!! description "`Factory.deploy_metapool(_base_pool: address, _name: String[32], _symbol: String[10], _coin: address, _A: uint256, _fee: uint256, _offpeg_fee_multiplier: uint256, _ma_exp_time: uint256, _implementation_idx: uint256, _asset_type: uint8, _method_id: bytes4, _oracle: address) -> address:`"
 
     Function to deploy a stableswap-ng metapool.
 
-    Returns: deployed metapool (`address`).
+    Returns: Deployed metapool (`address`).
 
     Emits: `MetaPoolDeployed`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_base_pool` |  `address` | address of the base pool to pair the token with |
-    | `_name` |  `String[32]` | name of the new metapool |
-    | `_symbol` |  `String[10]` | symbol for the new metapool’s LP token - will be concatenated with the base pool symbol |
-    | `_coin` |  `address` | address of the coin being used in the metapool |
-    | `_A` |  `uint256` | amplification coefficient |
-    | `_fee` |  `uint256` | trade fee, given as an integer with `1e10` precision |
-    | `_offpeg_fee_multiplier` |  `uint256` | off-peg multiplier |
-    | `_ma_exp_time` |  `uint256` | ma time; set as time_in_seconds / ln(2) |
-    | `_implementation_idx` |  `uint256` | index of the implementation to use; more [here](../factory/overview.md#implementations) |
-    | `_asset_type` |  `uint8` | asset type of the pool as an integer; more [here](../pools/overview.md#supported-assets) |
-    | `_method_id` |  `bytes4` | first four bytes of the Keccak-256 hash of the function signatures of the oracle addresses that give rate oracles |
-    | `_oracle` |  `address` | rate oracle address |
+    | Input                | Type          | Description |
+    | -------------------- | ------------- | ----------- |
+    | `_base_pool`         | `address`     | Address of the base pool to pair the token with |
+    | `_name`              | `String[32]`  | Name of the new metapool |
+    | `_symbol`            | `String[10]`  | Symbol for the new metapool’s LP token - will be concatenated with the base pool symbol |
+    | `_coin`              | `address`     | Address of the coin being used in the metapool |
+    | `_A`                 | `uint256`     | Amplification coefficient |
+    | `_fee`               | `uint256`     | Trade fee, given as an integer with `1e10` precision |
+    | `_offpeg_fee_multiplier` | `uint256` | Off-peg multiplier |
+    | `_ma_exp_time`       | `uint256`     | MA time; set as time_in_seconds / ln(2) |
+    | `_implementation_idx` | `uint256`    | Index of the implementation to use; more [here](../factory/overview.md#implementations) |
+    | `_asset_type`        | `uint8`       | Asset type of the pool as an integer; more [here](../pools/overview.md#supported-assets) |
+    | `_method_id`         | `bytes4`      | First four bytes of the Keccak-256 hash of the function signatures of the oracle addresses that give rate oracles |
+    | `_oracle`            | `address`     | Rate oracle address |
 
     !!!info "Implementation ID"
         There might be multiple metapool implementations. To query all available ones, see [here](../factory/overview.md#metapool_implementations). As of the current date (31.10.2023), there is only one metapool implementation available. Since the **`_implementation_idx`** starts at 0, users need to input "0" when deploying a pool.
+
 
     ??? quote "Source code"
 
@@ -394,23 +393,24 @@ Limitations when deploying meta pools:
         ```
 
 
-## **Gauges**
+## **Liquidity Gauge**
+
+!!!info
+    Liquidity gauges can only be successfully deployed from the same contract from which the pool was deployed!
 
 ### `deploy_gauge`
 !!! description "`Factory.deploy_gauge(_pool: address) -> address:`"
 
-    !!!warning
-        Deploying a gauge using this function will only be successful if the pool has been deployed from this Factory.
-
     Function to deploy a gauge. The Factory utilizes the `gauge_implementation` to create the contract from a blueprint.
 
-    Returns: deployed gauge (`address`).
+    Returns: Deployed gauge (`address`).
 
     Emits: `LiquidityGaugeDeployed`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | pool address to deploy the gauge for |
+    | Input    | Type      | Description                           |
+    | -------- | --------- | ------------------------------------- |
+    | `_pool`  | `address` | Pool address to deploy the gauge for  |
+
 
     ??? quote "Source code"
 

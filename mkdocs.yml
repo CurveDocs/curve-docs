@@ -153,7 +153,6 @@ nav:
       - Overview: factory/stableswap/overview.md
       - Deployer API: factory/stableswap/deployer-api.md
       - Implementations: factory/stableswap/implementations.md
-      - Admin Controls: factory/stableswap/admin-controls.md
     - StableSwap-NG:
       - Overview: factory/stableswapNG/overview.md
       - Deployer API: factory/stableswapNG/deployer-api.md

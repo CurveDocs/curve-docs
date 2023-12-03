@@ -1,40 +1,39 @@
-## **Plain Pools**
+## **Liquidity Pools**
 
-### `deploy_plain_pool`
+!!!warning
+    Transaction will fail if the requirements are not met.
 
-Limitations when deploying plain pools:
+The pool **deployment is permissionless**, but it must adhere to certain parameter limitations:
 
 | Parameter | Limitation |
 | --------- | ---------- |
-|`_fee`| 4000000 (0.04%) $\leq$ `_fee` $\leq$ 100000000 (0.1%) |
+| `_fee` | 4000000 (0.04%) ≤ `_fee` ≤ 100000000 (1%) |
 
-- valid `_implementation_idx` (can not be `ZERO_ADDRESS`)
-- minimum of 2 coins and maximum of 4 coins
-- can not pair with a coin which is included in a basepool
-- if paired against plain eth (0xE...EeE), eth mus be first coin of the pool (`_coins[0] = plain eth`)
-- maximum of 18 decimals for the coins
-- no duplicate coins
-
-!!!warning
-    Transaction will fail when the requirements are not met.
+- Valid **`_implementation_idx`** (cannot be **`ZERO_ADDRESS`**).
+- Minimum of 2 coins and maximum of 4 coins.
+- Cannot pair with a coin which is included in a basepool.
+- If paired against plain ETH (0xE...EeE), ETH must be the first coin of the pool (**`_coins[0] = plain ETH`**).
+- Maximum of 18 decimals for the coins.
+- No duplicate coins.
 
 !!! description "`Factory.deploy_plain_pool(_name: String[32], _symbol: String[10], _coins: address[4], _A: uint256, _fee: uint256, _asset_type: uint256 = 0, _implementation_idx: uint256 = 0) → address: nonpayable`"
 
     Function to deploy a plain pool.
 
-    Returns: deployed pool (`address`).
+    Returns: Deployed pool (`address`).
 
     Emits: `PlainPoolDeployed`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_name` |  `String[32]` | Name of the new plain pool |
-    | `_symbol` |  `String[10]` | Symbol for the new metapool’s LP token. This value will be concatenated with the factory symbol. |
-    | `_coins` |  `address[4]` | List of addresses of the coins being used in the pool |
-    | `_A` |  `uint256` | Amplification coefficient |
-    | `_fee` |  `uint256` | Trade fee, given as an integer with `1e10` precision |
-    | `_asset_type` |  `uint256` | Asset type of the pool as an integer. 0 = `USD`, 1 = `ETH`, 2 = `BTC`, 3 = Other. |
-    | `_implementation_idx` |  `uint256` | Index of the implementation to use. All possible implementations for a pool of N_COINS can be publicly accessed via `plain_implementations(N_COINS)`. |
+    | Input                | Type          | Description |
+    | -------------------- | ------------- | ----------- |
+    | `_name`              | `String[32]`  | Name of the new plain pool |
+    | `_symbol`            | `String[10]`  | Symbol for the new pool’s LP token. This value will be concatenated with the factory symbol |
+    | `_coins`             | `address[4]`  | List of addresses of the coins being used in the pool |
+    | `_A`                 | `uint256`     | Amplification coefficient |
+    | `_fee`               | `uint256`     | Trade fee, given as an integer with `1e10` precision |
+    | `_asset_type`        | `uint256`     | Asset type of the pool as an integer. 0 = `USD`, 1 = `ETH`, 2 = `BTC`, 3 = Other |
+    | `_implementation_idx`| `uint256`     | Index of the implementation to use. All possible implementations for a pool of N_COINS can be publicly accessed via `plain_implementations(N_COINS)` |
+
 
     ??? quote "Source code"
 
@@ -163,11 +162,10 @@ Limitations when deploying plain pools:
             _implementation_idx: 0,
             )    
 
-        >>> 'returns address of deployed pool'
+        'returns address of deployed pool'
         ```
 
 
-## **Metapools**
 
 ### `deploy_metapool`
 
@@ -175,32 +173,33 @@ Limitations when deploying meta pools:
 
 | Parameter | Limitation |
 | --------- | ---------- |
-|`_fee`| 4000000 (0.04%) $\leq$ `_fee` $\leq$ 100000000 (0.1%) |
+| `_fee` | 4000000 (0.04%) ≤ `_fee` ≤ 100000000 (0.1%) |
 
-- valid `_implementation_idx` (can not be `ZERO_ADDRESS`)
-- maximum of 18 decimals for the coins
-
+- Valid **`_implementation_idx`** (cannot be **`ZERO_ADDRESS`**).
+- Maximum of 18 decimals for the coins.
 
 !!!warning
-    Transaction will fail when the requirements are not met.
+    Transaction will fail if the requirements are not met.
+
 
 !!! description "`Factory.deploy_metapool(_base_pool: address, _name: String[32], _symbol: String[10], _coin: address, _A: uint256, _fee: uint256, _implementation_idx: uint256 = 0) -> address:`"
 
     Function to deploy a metapool.
 
-    Returns: deployed metapool (`address`).
+    Returns: Deployed metapool (`address`).
 
     Emits: `MetaPoolDeployed`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_base_pool` |  `address` | address of the base pool to pair the token with |
-    | `_name` |  `String[32]` | Name of the new metapool |
-    | `_symbol` |  `String[10]` | Symbol for the new metapool’s LP token. This value will be concatenated with the base pool symbol. |
-    | `_coin` |  `address` | Address of the coin being used in the metapool |
-    | `_A` |  `uint256` | Amplification coefficient |
-    | `_fee` |  `uint256` | Trade fee, given as an integer with `1e10` precision |
-    | `_implementation_idx` |  `uint256` | Index of the implementation to use. All possible implementations for a pool of N_COINS can be publicly accessed via `plain_implementations(N_COINS)` |
+    | Input                | Type          | Description |
+    | -------------------- | ------------- | ----------- |
+    | `_base_pool`         | `address`     | Address of the base pool to pair the token with |
+    | `_name`              | `String[32]`  | Name of the new metapool |
+    | `_symbol`            | `String[10]`  | Symbol for the new metapool’s LP token. This value will be concatenated with the base pool symbol. |
+    | `_coin`              | `address`     | Address of the coin being used in the metapool |
+    | `_A`                 | `uint256`     | Amplification coefficient |
+    | `_fee`               | `uint256`     | Trade fee, given as an integer with `1e10` precision |
+    | `_implementation_idx`| `uint256`     | Index of the implementation to use. All possible implementations for a pool of N_COINS can be publicly accessed via `plain_implementations(N_COINS)` |
+
 
     ??? quote "Source code"
 
@@ -303,91 +302,58 @@ Limitations when deploying meta pools:
             _implementation_idx: uint256 = 0,
             )
 
-        >>> 'returns address of the deployed pool'
+        'returns address of the deployed pool'
         ```
 
 
-### `add_base_pool`
-!!! description "`Factory.add_base_pool(_base_pool: address, _fee_receiver: address, _asset_type: uint256, _implementations: address[10])`"
+## **Liquidity Gauge**
 
-    !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the contract.
+!!!info
+    Liquidity gauges can only be successfully deployed from the same contract from which the pool was deployed!
 
-    Function to add a base pool to the registry, which may be used in factory metapools.
+!!! description "`Factory.deploy_gauge(_pool: address) -> address:`"
 
-    Emits: `BasePoolAdded`
+    Function to deploy a liquidity gauge for a factory pool.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_base_pool` |  `address` | Pool address to add |
-    | `_fee_receiver` |  `address` | Admin fee receiver address for metapools using this base pool |
-    | `_asset_type` |  `uint256` | Asset type for pool, as an integer  `0` = USD, `1` = ETH, `2` = BTC, `3` = Other |
-    | `implementations` | `address` | List of implementation addresses that can be used with this base pool |
+    Returns: Deployed gauge (`address`).
+
+    Emits: `LiquidityGaugeDeployed`
+
+    | Input    | Type      | Description                                  |
+    | -------- | --------- | -------------------------------------------- |
+    | `_pool`  | `address` | Factory pool address to deploy a gauge for   |
+
 
     ??? quote "Source code"
 
         ```vyper
-        event BasePoolAdded:
-            base_pool: address
+        event LiquidityGaugeDeployed:
+            pool: address
+            gauge: address
 
         @external
-        def add_base_pool(
-            _base_pool: address,
-            _fee_receiver: address,
-            _asset_type: uint256,
-            _implementations: address[10],
-        ):
+        def deploy_gauge(_pool: address) -> address:
             """
-            @notice Add a base pool to the registry, which may be used in factory metapools
-            @dev Only callable by admin
-            @param _base_pool Pool address to add
-            @param _fee_receiver Admin fee receiver address for metapools using this base pool
-            @param _asset_type Asset type for pool, as an integer  0 = USD, 1 = ETH, 2 = BTC, 3 = Other
-            @param _implementations List of implementation addresses that can be used with this base pool
+            @notice Deploy a liquidity gauge for a factory pool
+            @param _pool Factory pool address to deploy a gauge for
+            @return Address of the deployed gauge
             """
-            assert msg.sender == self.admin  # dev: admin-only function
-            assert self.base_pool_data[_base_pool].coins[0] == ZERO_ADDRESS  # dev: pool exists
-        
-            registry: address = AddressProvider(ADDRESS_PROVIDER).get_registry()
-            n_coins: uint256 = Registry(registry).get_n_coins(_base_pool)
-        
-            # add pool to pool_list
-            length: uint256 = self.base_pool_count
-            self.base_pool_list[length] = _base_pool
-            self.base_pool_count = length + 1
-            self.base_pool_data[_base_pool].lp_token = Registry(registry).get_lp_token(_base_pool)
-            self.base_pool_data[_base_pool].n_coins = n_coins
-            self.base_pool_data[_base_pool].fee_receiver = _fee_receiver
-            if _asset_type != 0:
-                self.base_pool_data[_base_pool].asset_type = _asset_type
-        
-            for i in range(10):
-                implementation: address = _implementations[i]
-                if implementation == ZERO_ADDRESS:  
-                    break
-                self.base_pool_data[_base_pool].implementations[i] = implementation
-        
-            decimals: uint256 = 0
-            coins: address[MAX_COINS] = Registry(registry).get_coins(_base_pool)
-            for i in range(MAX_COINS):
-                if i == n_coins:
-                    break
-                coin: address = coins[i]
-                self.base_pool_data[_base_pool].coins[i] = coin
-                self.base_pool_assets[coin] = True
-                decimals += shift(ERC20(coin).decimals(), convert(i*8, int128))
-            self.base_pool_data[_base_pool].decimals = decimals
-        
-            log BasePoolAdded(_base_pool)
+            assert self.pool_data[_pool].coins[0] != ZERO_ADDRESS, "Unknown pool"
+            assert self.pool_data[_pool].liquidity_gauge == ZERO_ADDRESS, "Gauge already deployed"
+            implementation: address = self.gauge_implementation
+            assert implementation != ZERO_ADDRESS, "Gauge implementation not set"
+
+            gauge: address = create_forwarder_to(implementation)
+            LiquidityGauge(gauge).initialize(_pool)
+            self.pool_data[_pool].liquidity_gauge = gauge
+
+            log LiquidityGaugeDeployed(_pool, gauge)
+            return gauge
         ```
 
     === "Example"
 
         ```shell
-        >>> Factory.add_base_pool(
-            _base_pool: '0x390f3595bca2df7d23783dfd126427cceb997bf4',
-            _fee_receiver: '0xeCb456EA5365865EbAb8a2661B0c503410e9B347',
-            _asset_type: 0,
-            _implementations: ['0x213be373FDff327658139C7df330817DAD2d5bBE', '0x55Aa9BF126bCABF0bDC17Fa9E39Ec9239e1ce7A9'],
-            ):
+        >>> Factory.deploy_gauge("pool address")
+        'deployed gauge address'
         ```

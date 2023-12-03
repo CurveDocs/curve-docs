@@ -1,74 +1,65 @@
-Exchange and LP token contracts are created using Vyper's built-in function [**`create_forwarder_to()`**](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=create_forwarder_to#chain-interaction) (renamed to **`create_minimal_proxy_to`** starting from version 0.3.4). These contracts are based on the **`pool_implementations`** and **`token_implementation`** contracts. This method is also used for the deployment of liquidity gauges.
-
-The deployed contracts then need to be initialized. For further details visit the according sections.
-
-
-## **Deploy Liquidity Pool**
+## **Liquidity Pools**
 
 ### `deploy_pool`
 
 !!!warning
-    The transaction will revert if the following requirements are not met:
-    If the tables below appear empty, please refresh the site to view the content.
+    The transaction will revert if the following requirements are not met.
 
 The pool **deployment is permissionless**, but it must adhere to certain parameter limitations:
 
-| Parameter | Limitation |
-| --------- | ---------- |
-|`A`| $A_{min} - 1 < A < A_{max} + 1$ |
-|`gamma`| $gamma_{min} - 1 < gamma < gamma_{max} + 1$ |
-|`mid_fee`| $fee_{min} - 1 < fee_{mid} < fee_{max} - 1$ |
-|`out_fee`| $fee_{out} >= fee_{mid}$ AND $fee_{out} < fee_{max} - 1$ |
-|`admin_fee`| $< 10^{18} + 1$
-|`allowed_extra_profit`| $\text{allowed_extra_profit} < 10^{16} + 1$ |
-|`fee_gamma`| $0 < gamma_{fee} < 10^{18} + 1$ |
-|`adjustment_step`| $0 < \text{adjustment_step} < 10^{18} + 1$ |
-|`ma_half_time`| $0 < \text{ma_half_time} < 604800$ |
-|`initial_price`| $10^{6} < \text{initial_price} < 10^{30}$ |
+| Parameter            | Limitation                                           |
+| -------------------- | ---------------------------------------------------- |
+| `A`                  | A_min - 1 < A < A_max + 1                            |
+| `gamma`              | gamma_min - 1 < gamma < gamma_max + 1                |
+| `mid_fee`            | fee_min - 1 < mid_fee < fee_max - 1                  |
+| `out_fee`            | out_fee >= mid_fee AND out_fee < fee_max - 1         |
+| `admin_fee`          | < 10^18 + 1                                          |
+| `allowed_extra_profit` | allowed_extra_profit < 10^16 + 1                   |
+| `fee_gamma`          | 0 < fee_gamma < 10^18 + 1                            |
+| `adjustment_step`    | 0 < adjustment_step < 10^18 + 1                      |
+| `ma_half_time`       | 0 < ma_half_time < 604800                            |
+| `initial_price`      | 10^6 < initial_price < 10^30                         |
 
-- no duplicate coins
-- only two coins
-- maximum of 18 decimals of a coin
+- No duplicate coins.
+- Only two coins.
+- Maximum of 18 decimals of a coin.
 
+*With:*
 
-*with:*
-
-| Parameters    | Value |
-|---------------|-------|
-|$n_{coins}$    | $2$ |
-|$A_{multiplier}$ | $10000$ |
-|$A_{min}$      | $\frac{n_{coins}^{n_{coins}} * A_{multiplier}}{10} = 4000$ |
-|$A_{max}$      | $n_{coins}^{n_{coins}} * A_{multiplier} * 100000 = 4000000000$|  
-|$gamma_{min}$  | $10^{10} = 10000000000$|  
-|$gamma_{max}$  | $2 * 10^{16} = 20000000000000000$ |
-|$fee_{min}$    | $5 * 10^{5} = 500000$ |
-|$fee_{max}$    | $10 * 10^{9} = 10000000000$ |
-
+| Parameters        | Value                                   |
+| ----------------- | --------------------------------------- |
+| n_coins           | 2                                       |
+| A_multiplier      | 10000                                   |
+| A_min             | (n_coins^n_coins * A_multiplier) / 10 = 4000 |
+| A_max             | n_coins^n_coins * A_multiplier * 100000 = 4000000000 |
+| gamma_min         | 10^10 = 10000000000                     |
+| gamma_max         | 2 * 10^16 = 20000000000000000           |
+| fee_min           | 5 * 10^5 = 500000                       |
+| fee_max           | 10 * 10^9 = 10000000000                 |
 
 !!! description "`Factory.deploy_pool(_name: String[32], _symbol: String[10], _coins: address[2], A: uint256, gamma: uint256, mid_fee: uint256, out_fee: uint256, allowed_extra_profit: uint256, fee_gamma: uint256, adjustment_step: uint256, admin_fee: uint256, ma_half_time: uint256, initial_price: uint256) -> address:`"
 
-    Function to deploy a cryptoswap pool.
+    Function to deploy a cryptoswap pool form the `pool_implementations`. This function will also deploy the according LP token from the `token_implementation`.
 
-    Returns: deployed pool (`address`).
+    Returns: Deployed pool (`address`).
 
     Emits: `CryptoPoolDeployed`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_name` |  `String[32]` | Name of the new plain pool |
-    | `_symbol` |  `String[10]` | Symbol for the new metapool’s LP token. This value will be concatenated with the factory symbol. |
-    | `_coins` |  `address[2]` | List of addresses of the coins being used in the pool |
-    | `A` |  `uint256` | Amplification coefficient |
-    | `gamma` |  `uint256` | Gamma |
-    | `mid_fee` |  `uint256` | Mid fee |
-    | `out_fee` |  `uint256` | Out fee |
-    | `allowed_extra_profit` |  `uint256` | Allowed extra profit |
-    | `fee_gamma` |  `uint256` | Fee Gamma |
-    | `adjustment_step` |  `uint256` | Adjustment step |
-    | `admin_fee` |  `uint256` | Admin fee |
-    | `ma_half_time` |  `uint256` | Moving-Average half time |
-    | `initial_price` |  `uint256` | Initial price |
-
+    | Input                  | Type          | Description |
+    | ---------------------- | ------------- | ----------- |
+    | `_name`                | `String[32]`  | Name of the new plain pool |
+    | `_symbol`              | `String[10]`  | Symbol for the new metapool’s LP token. This value will be concatenated with the factory symbol. |
+    | `_coins`               | `address[2]`  | List of addresses of the coins being used in the pool |
+    | `A`                    | `uint256`     | Amplification coefficient |
+    | `gamma`                | `uint256`     | Gamma |
+    | `mid_fee`              | `uint256`     | Mid fee |
+    | `out_fee`              | `uint256`     | Out fee |
+    | `allowed_extra_profit` | `uint256`     | Allowed extra profit |
+    | `fee_gamma`            | `uint256`     | Fee Gamma |
+    | `adjustment_step`      | `uint256`     | Adjustment step |
+    | `admin_fee`            | `uint256`     | Admin fee |
+    | `ma_half_time`         | `uint256`     | Moving-Average half time |
+    | `initial_price`        | `uint256`     | Initial price |
 
     ??? quote "Source code"
 
@@ -205,26 +196,29 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
             initial_price: todo,
             ) 
 
-        >>> 'returns address of the deployed pool'
+        'returns address of the deployed pool'
         ```
 
 
-## **Deploy Liquidity Gauge**
+## **Liquidity Gauge**
+
+!!!info
+    Liquidity gauges can only be successfully deployed from the same contract from which the pool was deployed!
 
 ### `deploy_gauge`
 
 !!! description "`deploy_gauge(_pool: address) -> address`"
 
     !!!warning
-        When deploying a gauge using the factory contract, one needs to use the same factory that deployed the pool, otherwise the function will revert.
+        When deploying a gauge using the factory contract, it is necessary to use the same factory that deployed the pool; otherwise, the function will revert.
 
     Function to deploy a liquidity gauge for a factory pool. The deployed gauge is created from the `gauge_implementation`.
 
     Emits: `LiquidityGaugeDeployed`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | factory pool address to deploy a gauge for |
+    | Input      | Type      | Description                                   |
+    | -----------| --------- | --------------------------------------------- |
+    | `_pool`    | `address` | Factory pool address to deploy a gauge for    |
 
     ??? quote "Source code"
 
@@ -258,5 +252,5 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
         ```shell
         Factory.deploy_gauge('0x...')
 
-        >>> 'returns address of the deployed gauge' 
+        'returns address of the deployed gauge' 
         ```

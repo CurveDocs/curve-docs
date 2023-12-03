@@ -1,3 +1,12 @@
+**The StableSwap Factory utilizes the `create_forwarder_to` function to deploy its contracts from the implementations.**
+
+It utilizes three different implementations: 
+
+- **`metapool_implementations`**, containing multiple contracts that are used to deploy metapools.
+- **`plain_implementations`**, containing multiple contracts that are used to deploy plain pools.
+- **`gauge_implementation`**, containing a contract which is used when deploying liquidity gauges for pools.
+
+
 ## **Query Implementations**
 
 ### `metapool_implementations`
@@ -128,9 +137,9 @@
         ```
 
 
-## **Set New Implementation Contracts**
+## **Set New Implementation**
 
-These implementations can be changed by the **`admin`** of the contract.
+*New implementations can be set via these admin-only functions:*
 
 ### `set_metapool_implementation`
 !!! description "`Factory.set_metapool_implementations(_base_pool: address, _implementations: address[10]):`"

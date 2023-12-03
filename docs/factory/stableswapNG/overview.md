@@ -1,4 +1,4 @@
-The [StableSwap-NG](../../stableswap-exchange/stableswap-ng/overview.md) Factory allows the permissionless deployment of up to eight-coin pools, aswell as gauges. **Liquidity pool and LP token share the same contract.**
+The [StableSwap-NG](../../stableswap-exchange/stableswap-ng/overview.md) Factory allows the permissionless deployment of up to eight-coin plain pools and metapools, as well as gauges. **Liquidity pool and LP token share the same contract.**
 
 !!!deploy "Contract Source & Deployment"
     **Stableswap-NG Factory** contract is deployed to the Ethereum mainnet at: [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://etherscan.io/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf#code).  
@@ -7,7 +7,7 @@ The [StableSwap-NG](../../stableswap-exchange/stableswap-ng/overview.md) Factory
 
 ## **Asset Types**
 
-Stableswap-NG pool can contain different [asset types](../../stableswap-exchange/stableswap-ng/pools/overview.md#supported-assets). New asset types can be added via the **`add_asset_type`** function.
+A Stableswap-NG pool can contain different [asset types](../../stableswap-exchange/stableswap-ng/pools/overview.md#supported-assets). New asset types can be added via the **`add_asset_type`** function.
 
 ### `asset_types`
 !!! description "`Factory.asset_types(arg0: uint8) -> String[20]`"
@@ -73,13 +73,13 @@ Stableswap-NG pool can contain different [asset types](../../stableswap-exchange
 
 ## **Base Pools**
 
-StableSwap pools allow the deployment of metapools (asset paried against a base pool; [more here](https://resources.curve.fi/lp/pools/?h=base)). When deploying a new Factory, the already existing base pools must manually be added to the contract in order to be used for metapools.
+StableSwap pools also allow the deployment of metapools (an asset paired against a base pool). When deploying a new Factory, the existing base pools must be manually added to the contract for them to be used for metapools.
 
-Limitations when adding new base pools:
+*Limitations when adding new base pools:*
 
-- Rebasing tokens are not allowed in the base pool
-- Do not add base pool which contains native tokens (e.g. ETH)
-- As much as possible: use standard ERC20 tokens
+- Rebasing tokens are not allowed in the base pool.
+- Do not add a base pool that contains native tokens (e.g., ETH).
+- As much as possible, use standard ERC20 tokens.
 
 
 ### `add_base_pool`

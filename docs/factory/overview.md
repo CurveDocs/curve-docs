@@ -2,23 +2,26 @@
 
 Curve Pool Factories allow the **permissionless deployment of liquidity pools, gauges, and LP tokens**.
 
-Every Factory contract from Curve comes with built-in functions designed to feed the [MetaRegistry](../../registry/MetaRegistryAPI.md) with informations about the created pools. These functions will not be documented in this section. For more information, please read [here](../../registry/overview.md).
+Every Factory contract from Curve comes with **built-in functions designed to feed the [MetaRegistry](../../registry/MetaRegistryAPI.md)** with information about the created pools. These functions will not be documented in this section. For more information, please read [here](../../registry/overview.md).
 
 !!!deploy "Contract Source & Deployment"
-    Factories are deployed on the Ethereum Mainnet as well as on Sidechains/L2.  
+    Factories are deployed on the Ethereum Mainnet as well as on Sidechains/L2. Although it might be the case that some pool types (e.g., cryptoswap pools) are not supported there yet.  
     A list of all deployed contracts can be found [here](../references/deployed-contracts.md#pool-factory).
 
 !!!warning
     The methods below might slightly vary depending on the Factory contract being examined. If there are any abnormalities or important standouts, they will be detailed as accurately as possible within the appropriate section!
 
+## **Supported Pools**
+The various Curve Factories allow the deployment of pools with virtually any kind of asset combination, whether they are stable or volatile, rebasing or not, etc...
 
+| Factory | Description | Supported Pools |
+| ------- | ----------- | --------------- |
+| `StableSwap` | Regular StableSwap | Plain and metapools |
+| `StableSwap-NG` | Improved StableSwap version | Plain pools (up to eight coins) and metapools (two coins) ([more here](../stableswap-exchange/stableswap-ng/pools/overview.md#supported-assets)) |
+| `CryptoSwap` | Regular CryptoSwap | Two-coin volatile assets (e.g., CRV<>ETH) |
+| `Tricrypto-NG` | Improved Tricrypto version ([here](../cryptoswap-exchange/tricrypto-ng/overview.md)) | Three-coin volatile assets (e.g., ETH<>BTC<>crvUSD) |
 
-
-TODO:
-what pools are there? which factory to deploy which pool?
-
-For an easy, non-technical explaination: https://resources.curve.fi/lp/pools/
-
+For an easy, non-technical explanation of the pool variations, visit: https://resources.curve.fi/lp/pools/
 
 
 ## **How are contracts deployed?**
@@ -26,7 +29,6 @@ For an easy, non-technical explaination: https://resources.curve.fi/lp/pools/
 Pool, gauge, or LP token contracts are created according to their implementation contracts set within the Factory contract. Contracts deployed by newer factories combine both liquidity pool and LP token, whereas for older ones, they are separate contracts.
 
 *There are two ways the contracts are deployed:*
-
 
 ### **`create_forwarder_to`**
 Earlier factories like the regular [stableswap](./stableswap/deployer-api.md) or [cryptoswap](./cryptoswap/deployer-api.md) one use Vyper's built-in [**`create_forwarder_to()`**](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=create_forwarder_to#chain-interaction) function (renamed to **`create_minimal_proxy_to`** starting from Vyper version 0.3.4) to deploy liquidity pools, LP tokens, or gauge contracts.
@@ -38,15 +40,10 @@ The contracts then need to be initialized, which is done automatically.
 Newer factories make use of blueprints ([EIP-5202](https://eips.ethereum.org/EIPS/eip-5202)). The contracts are directly created from their corresponding blueprint implementations. This is the most desired and used method for all newly deployed factories.
 
 
-## **Implementations**
-Technical documentation was done separately for each factory, as they partially vary from each other. Please refer to the corresponding section.
-
-!!!note
-    **Implementation contracts are upgradable.** They can either be replaced or additional implementation contracts can be added. Therefore, please always make sure to check the most recent ones.
 
 
 ## **Fee Receiver**
-The fee receiver is set within the Factory. All pools deployed from a Factory share the same fee receiver address. The address can be changed by the **`admin`** of the contract by calling the [**`set_fee_receiver`**](#set_fee_receiver) method and setting a new address.
+The fee receiver is set within the Factory and is a **uniform address** for all the deployed pools through a factory. The address can be changed by the **`admin`** of the contract by calling the [**`set_fee_receiver`**](#set_fee_receiver) method and setting a new address.
 
 
 ### `fee_receiver`
@@ -132,7 +129,6 @@ Most contracts are 'owned' by a proxy, which in turn is owned by the DAO. For so
 
         ```shell
         >>> Factory.admin()
-        
         ```
 
 ### `future_admin`
@@ -223,3 +219,9 @@ Most contracts are 'owned' by a proxy, which in turn is owned by the DAO. For so
         >>> Factory.accept_transfer_ownership()
         ```
 
+
+## **Implementations**
+Technical documentation was done separately for each factory, as they partially vary from each other. Please refer to the corresponding section.
+
+!!!warning
+    **Implementation contracts are upgradable.** They can either be replaced, or additional implementation contracts can be added. Therefore, please always make sure to check the most recent ones.

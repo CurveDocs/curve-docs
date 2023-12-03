@@ -1,72 +1,64 @@
-<h1> </h1>
-
-
-## **Deploy Pools**
-
-!!!bug
-    If the formulas below do not render, please make sure to refresh the site. A solution is being worked on.
-
+## **Liquidity Pools**
 
 ### `deploy_pool`
 
-Limitations when deploying tricrypto crypto pools:
-
-| Parameter | Limitation |
-| --------- | ---------- |
-|`A`| $A_{min} - 1 < A < A_{max} + 1$ |
-|`gamma`| $gamma_{min} - 1 < gamma < gamma_{max} + 1$ |
-|`mid_fee`| $fee_{mid} < fee_{max} - 1$; (`mid_fee` can be 0) |
-|`out_fee`| $fee_{out} >= fee_{mid}$ AND $fee_{out} < fee_{max} - 1$ |
-|`fee_gamma`| $0 < gamma_{fee} < 10^{18} + 1$ |
-|`allowed_extra_profit`| $\text{allowed_extra_profit} < 10^{18} + 1$|
-|`adjustment_step`| $0 < \text{adjustment_step} < 10^{18} + 1$ |
-|`ma_exp_time`| $86 < \text{ma_exp_time} < 872542$ |
-|`initial_prices`| $10^{6} < \text{initial_prices[0] and initial_prices[1]} < 10^{30}$ |
-
-- three coins; no duplicate coins possible 
-- `implemention_id` cannot be `ZERO_ADDRESS`
-
-*with:*
-
-| Parameters    | Value |
-|---------------|-------|
-|$n_{coins}$ | $3$ |
-|$A_{multiplier}$ | $10000$ |
-|$A_{min}$      | $n_{coins}^{n_{coins}} * A_{multiplier} = 270000$ |
-|$A_{max}$      | $1000 * A_{multiplier} * n_{coins}^{n_{coins}} = 270000000$|  
-|$gamma_{min}$  | $10^{10} = 10000000000$|  
-|$gamma_{max}$  | $5 * 10^{16} = 50000000000000000$ |
-|$fee_{max}$   | $10 * 10^{9} = 10000000000$ |
-
-
 !!!warning
-    Transaction will fail when the requirements are not met.
+    The transaction will revert if the following requirements are not met.
 
+The pool **deployment is permissionless**, but it must adhere to certain parameter limitations:
+
+| Parameter            | Limitation                                           |
+| -------------------- | ---------------------------------------------------- |
+| `A`                  | A_min - 1 < A < A_max + 1                            |
+| `gamma`              | gamma_min - 1 < gamma < gamma_max + 1                |
+| `mid_fee`            | mid_fee < fee_max - 1; (mid_fee can be 0)            |
+| `out_fee`            | out_fee >= mid_fee AND out_fee < fee_max - 1         |
+| `fee_gamma`          | 0 < fee_gamma < 10^18 + 1                            |
+| `allowed_extra_profit` | allowed_extra_profit < 10^18 + 1                  |
+| `adjustment_step`    | 0 < adjustment_step < 10^18 + 1                      |
+| `ma_exp_time`        | 86 < ma_exp_time < 872542                            |
+| `initial_prices`     | 10^6 < initial_prices[0] and initial_prices[1] < 10^30 |
+
+- Three coins; no duplicate coins possible.
+- **`implementation_id`** cannot be **`ZERO_ADDRESS`**.
+
+*With:*
+
+| Parameters       | Value                                    |
+| ---------------- | ---------------------------------------- |
+| n_coins          | 3                                        |
+| A_multiplier     | 10000                                    |
+| A_min            | n_coins^n_coins * A_multiplier = 270000  |
+| A_max            | 1000 * A_multiplier * n_coins^n_coins = 270000000 |
+| gamma_min        | 10^10 = 10000000000                      |
+| gamma_max        | 5 * 10^16 = 50000000000000000            |
+| fee_max          | 10 * 10^9 = 10000000000                  |
 
 !!! description "`Factory.deploy_pool(_name: String[64], _symbol: String[32], _coins: address[N_COINS], _weth: address, implementation_id: uint256, A: uint256, gamma: uint256, mid_fee: uint256, out_fee: uint256, fee_gamma: uint256, allowed_extra_profit: uint256, adjustment_step: uint256, ma_exp_time: uint256, initial_prices: uint256[N_COINS-1],) -> address:`"   
 
     Function to deploy a tricrypto pool.
 
-    Returns: deployed pool (`address`).
+    Returns: Deployed pool (`address`).
 
     Emits event: `TricryptoPoolDeployed`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_name` |  `String[64]` | Pool Name |
-    | `_symbol` |  `String[32]` | Pool Symbol |
-    | `_coins` |  `address[N_COINS]` | Included Coins |
-    | `_weth` |  `address` | WETH Address |
-    | `implementation_id` |  `uint256` | Index of Pool Implementation |
-    | `A` |  `uint256` | Amplification Factor |
-    | `gamma` |  `uint256` | Gamma |
-    | `mid_fee` |  `uint256` | Mid Fee |
-    | `out_fee` |  `uint256` | Out Fee |
-    | `fee_gamma` |  `uint256` | Fee Gamma |
-    | `allowed_extra_profit` |  `uint256` | Allowed Extra Profit |
-    | `adjustment_step` |  `uint256` | Adjustment Step |
-    | `ma_exp_time` |  `uint256` | Exponention Moving Average Time |
-    | `initial_prices` |  `uint256[N_COINS-1]` | Initial Prices |
+    | Input               | Type                  | Description |
+    | ------------------- | --------------------- | ----------- |
+    | `_name`             | `String[64]`          | Pool Name |
+    | `_symbol`           | `String[32]`          | Pool Symbol |
+    | `_coins`            | `address[N_COINS]`    | Included Coins |
+    | `_weth`             | `address`             | WETH Address |
+    | `implementation_id` | `uint256`             | Index of Pool Implementation |
+    | `A`                 | `uint256`             | Amplification Factor |
+    | `gamma`             | `uint256`             | Gamma |
+    | `mid_fee`           | `uint256`             | Mid Fee |
+    | `out_fee`           | `uint256`             | Out Fee |
+    | `fee_gamma`         | `uint256`             | Fee Gamma |
+    | `allowed_extra_profit` | `uint256`          | Allowed Extra Profit |
+    | `adjustment_step`   | `uint256`             | Adjustment Step |
+    | `ma_exp_time`       | `uint256`             | Exponential Moving Average Time |
+    | `initial_prices`    | `uint256[N_COINS-1]`  | Initial Prices |
+
 
     ??? quote "Source code"
 
@@ -256,27 +248,27 @@ Limitations when deploying tricrypto crypto pools:
             initial_prices: todo,
             )
 
-        >>> 'returns address of the deployed pool'
+        'returns address of the deployed pool'
         ```
 
 
 
 
-## **Deploy Gauge**
+## **Liquidity Gauge**
+
+!!!info
+    Liquidity gauges can only be successfully deployed from the same contract from which the pool was deployed!
 
 ### `deploy_gauge`
 
 !!! description "`deploy_gauge(_pool: address) -> address`"
 
-    Deploy a liquidity gauge for a factory pool. The deployed gauge implementation is whatever the factory admin
-    has set `gauge_implementation` to.
+    Deploy a liquidity gauge for a factory pool. The deployed gauge implementation is based on what the factory admin has set for `gauge_implementation`.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | pool address to deploy a gauge for |
+    | Input    | Type      | Description                          |
+    | -------- | --------- | ------------------------------------ |
+    | `_pool`  | `address` | Pool address to deploy a gauge for   |
 
-    !!!info
-        When deploying a gauge using the factory contract, the same factory needs to be used that deployed the pool.
 
     ??? quote "Source code"
 
@@ -306,5 +298,5 @@ Limitations when deploying tricrypto crypto pools:
         ```shell
         >>> Factory.deploy_gauge('0x...')
 
-        >>> 'returns address of the deployed gauge' 
+        'returns address of the deployed gauge' 
         ```

@@ -2,11 +2,11 @@
 
 It utilizes five different implementations:
 
-- **`pool_implementation`** containing multiple blueprint contracts which are utilized to deploy plain pools
-- **`metapool_implementation`** containing multiple blueprint contracts which are utilized to deploy metapools
-- **`math_implementation`** containing math functions used in the AMM
-- **`gauge_implementation`** containing a blueprint contract which is utilized when deploying gauges for pools
-- **`views_implementation`** containing a view methods contract relevant for integrators and users looking to interact with the AMMs 
+- **`pool_implementations`**, containing multiple blueprint contracts that are used to deploy plain pools.
+- **`metapool_implementations`**, containing multiple blueprint contracts that are used to deploy metapools.
+- **`math_implementation`**, containing math functions used in the AMM.
+- **`gauge_implementation`**, containing a blueprint contract that is used when deploying gauges for pools.
+- **`views_implementation`**, containing a view methods contract relevant for integrators and users looking to interact with the AMMs.
  
 *More on the [**Math Implementation**](../../stableswap-exchange/stableswap-ng/utility_contracts/math.md) and [**Views Implementation**](../../stableswap-exchange/stableswap-ng/utility_contracts/views.md).* 
 
@@ -129,9 +129,9 @@ It utilizes five different implementations:
         '0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD' 
         ```
 
-## **Implementations**
+## **Set New Implementations**
 
-*New implementations can be set via the following functions:*
+*New implementations can be set via these admin-only functions:*
 
 
 ### `set_pool_implementations`

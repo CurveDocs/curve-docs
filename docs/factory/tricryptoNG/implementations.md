@@ -2,10 +2,10 @@
 
 It utilizes four different implementations:
 
-- **`pool_implementation`** containing multiple blueprint contracts which are utilized to deploy the pools
-- **`gauge_implementation`** containing a blueprint contract which is utilized when deploying gauges for pools
-- **`views_implementation`** containing a view methods contract relevant for integrators and users looking to interact with the AMMs 
-- **`math_implementation`** containing math functions used in the AMM
+- **`pool_implementations`**, containing multiple blueprint contracts that are used to deploy the pools.
+- **`gauge_implementation`**, containing a blueprint contract that is used when deploying gauges for pools.
+- **`views_implementation`**, containing a view methods contract relevant for integrators and users looking to interact with the AMMs.
+- **`math_implementation`**, containing math functions used in the AMM.
 
 *More on the [**Math Implementation**](../../cryptoswap-exchange/tricrypto-ng/utility_contracts/math.md) and [**Views Implementation**](../../cryptoswap-exchange/tricrypto-ng/utility_contracts/views.md).* 
 
@@ -13,7 +13,7 @@ It utilizes four different implementations:
 ## **Query Implementations**
 
 ### `pool_implementation`
-!!! description "`Factory.pool_implementation(arg0: uint256) -> address: view`"
+!!! description "`Factory.pool_implementations(arg0: uint256) -> address: view`"
 
     Getter for the current pool implementation contract. hashamp because two-coin and three-pool pools?
 
@@ -101,9 +101,9 @@ It utilizes four different implementations:
 
 
 
-## **Changing Implementations** 
+## **Set New Implementations** 
 
-These implementations can be changed by the `admin` of the contract, which is the DAO.
+*New implementations can be set via these admin-only functions:*
 
 ### `set_pool_implementation`
 !!! description "`Factory.set_pool_implementation(_pool_implementation: address, _implementation_index: uint256):`"
