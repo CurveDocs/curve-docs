@@ -95,7 +95,7 @@ nav:
         - Overview: stableswap-exchange/stableswap/pools/overview.md
         - Plain Pools: stableswap-exchange/stableswap/pools/plain_pools.md
         - Lending Pools: stableswap-exchange/stableswap/pools/lending_pools.md
-        - Metapools: stableswap-exchange/pools/stableswap/metapools.md
+        - Metapools: stableswap-exchange/stableswap/pools/metapools.md
         - Admin Controls: stableswap-exchange/stableswap/pools/admin_pool_settings.md
       - Liquidity Pool Tokens:
         - Overview: stableswap-exchange/stableswap/lp_tokens/overview.md
@@ -135,11 +135,11 @@ nav:
       - Overview: cryptoswap-exchange/tricrypto-ng/overview.md
       - Pools:
         - Tricrypto Pool: cryptoswap-exchange/tricrypto-ng/pools/tricrypto_pool.md
-        - LP Token Method: cryptoswap-exchange/tricrypto-ng/lp_tokens/tricrypto_lp_token.md
+        - LP Token Method: cryptoswap-exchange/tricrypto-ng/lp_tokens/tricrypto-lp-token.md
         - Admin Controls: cryptoswap-exchange/tricrypto-ng/pools/admin_controls.md
       - Utility Contracts: 
         - Math: cryptoswap-exchange/tricrypto-ng/utility_contracts/math.md
-        - Views: cryptoswap-exchange/tricrypto-ng/utility_contracts/ViewMethodContract.md
+        - Views: cryptoswap-exchange/tricrypto-ng/utility_contracts/views.md
 
 
   - Pool Factory:
@@ -161,7 +161,7 @@ nav:
       - Deployer API: factory/tricryptoNG/deployer-api.md
       - Implementations: factory/tricryptoNG/implementations.md
     
-    
+
   - References:
     - Audits: references/audits/audits_pdf.md
     - Whitepapers: 
