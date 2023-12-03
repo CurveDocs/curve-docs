@@ -90,7 +90,6 @@ nav:
 
   - StableSwap Exchange:
     - Overview: stableswap-exchange/overview.md
-
     - Stableswap:    
       - Pools:
         - Overview: stableswap-exchange/stableswap/pools/overview.md
@@ -110,7 +109,6 @@ nav:
       - Cross Asset Swaps:
         - Overview: stableswap-exchange/stableswap/cross_asset_swaps/overview.md
         - SynthSwap: stableswap-exchange/stableswap/cross_asset_swaps/synthswap_exchange.md
-
     - Stableswap-NG:
       - Overview: stableswap-exchange/stableswap-ng/overview.md
       - Pools:
@@ -126,7 +124,6 @@ nav:
 
   - CryptoSwap Exchange:
     - Overview: cryptoswap-exchange/overview.md
-    
     - CryptoSwap:
       - Pools:
         - Crypto Pool: cryptoswap-exchange/cryptoswap/pools/crypto-pool.md
@@ -134,7 +131,6 @@ nav:
       - Liquidity Pool Tokens:
         - Overview: cryptoswap-exchange/cryptoswap/lp_tokens/overview.md
         - Curve Token V5: cryptoswap-exchange/cryptoswap/lp_tokens/lp-token-V5.md
-
     - Tricrypto-NG:
       - Overview: cryptoswap-exchange/tricrypto-ng/overview.md
       - Pools:
@@ -164,6 +160,7 @@ nav:
       - Overview: factory/tricryptoNG/overview.md
       - Deployer API: factory/tricryptoNG/deployer-api.md
       - Implementations: factory/tricryptoNG/implementations.md
+    
     
   - References:
     - Audits: references/audits/audits_pdf.md
