@@ -35,13 +35,13 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
     | `_fee`               | `uint256`                    | Trade fee, given as an integer with `1e10` precision |
     | `_offpeg_fee_multiplier` | `uint256`               | Off-peg fee multiplier |
     | `_ma_exp_time`       | `uint256`                    | MA time; set as time_in_seconds / ln(2) |
-    | `_implementation_idx` | `uint256`                  | Index of the implementation to use; more [here](../factory/overview.md#implementations) |
-    | `_asset_types`       | `DynArray[uint8, MAX_COINS]` | Asset type of the pool as an integer; more [here](../pools/overview.md#supported-assets) |
+    | `_implementation_idx` | `uint256`                  | Index of the implementation to use |
+    | `_asset_types`       | `DynArray[uint8, MAX_COINS]` | Asset type of the pool as an integer; more [here](../../stableswap-exchange/stableswap-ng/pools/overview.md#supported-assets) |
     | `_method_ids`        | `DynArray[bytes4, MAX_COINS]` | Array of first four bytes of the Keccak-256 hash of the function signatures of the oracle addresses that give rate oracles |
     | `_oracles`           | `DynArray[address, MAX_COINS]` | Array of rate oracle addresses |
 
     !!!info "Implementation ID"
-        There might be multiple pool implementations. To query all available ones, see [here](../factory/overview.md#pool_implementations). As of the current date (31.10.2023), there is only one pool implementation available. Since the **`_implementation_idx`** starts at 0, users need to input "0" when deploying a pool.
+        There might be multiple pool implementations. To query all available ones, see [here](./implementations.md#pool_implementations). As of the current date (31.10.2023), there is only one pool implementation available. Since the **`_implementation_idx`** starts at 0, users need to input "0" when deploying a pool.
 
     ??? quote "Source code"
 
@@ -221,13 +221,13 @@ Limitations when deploying meta pools:
     | `_fee`               | `uint256`     | Trade fee, given as an integer with `1e10` precision |
     | `_offpeg_fee_multiplier` | `uint256` | Off-peg multiplier |
     | `_ma_exp_time`       | `uint256`     | MA time; set as time_in_seconds / ln(2) |
-    | `_implementation_idx` | `uint256`    | Index of the implementation to use; more [here](../factory/overview.md#implementations) |
-    | `_asset_type`        | `uint8`       | Asset type of the pool as an integer; more [here](../pools/overview.md#supported-assets) |
+    | `_implementation_idx` | `uint256`    | Index of the implementation to use |
+    | `_asset_type`        | `uint8`       | Asset type of the pool as an integer; more [here](../../stableswap-exchange/stableswap-ng/pools/overview.md#supported-assets) |
     | `_method_id`         | `bytes4`      | First four bytes of the Keccak-256 hash of the function signatures of the oracle addresses that give rate oracles |
     | `_oracle`            | `address`     | Rate oracle address |
 
     !!!info "Implementation ID"
-        There might be multiple metapool implementations. To query all available ones, see [here](../factory/overview.md#metapool_implementations). As of the current date (31.10.2023), there is only one metapool implementation available. Since the **`_implementation_idx`** starts at 0, users need to input "0" when deploying a pool.
+        There might be multiple metapool implementations. To query all available ones, see [here](./implementations.md#metapool_implementations). As of the current date (31.10.2023), there is only one metapool implementation available. Since the **`_implementation_idx`** starts at 0, users need to input "0" when deploying a pool.
 
 
     ??? quote "Source code"

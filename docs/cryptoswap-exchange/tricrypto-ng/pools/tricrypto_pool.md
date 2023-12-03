@@ -1,6 +1,6 @@
 **Tricrypto-NG pool contanins of three non-pegged assets.**
 
-The LP token ([more here](../lp_tokens/lp_token_overview.md)) is integrated into the pool and shares the same contract address.
+The LP token ([more here](../lp_tokens/tricrypto-lp-token.md)) is integrated into the pool and shares the same contract address.
 
 !!!tip
     For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored as a single unsigned integer. This consolidation reduces storage read and write operations, leading to more cost-efficient calls. When these parameters are accessed, they are subsequently unpacked.

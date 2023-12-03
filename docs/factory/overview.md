@@ -2,7 +2,7 @@
 
 Curve Pool Factories allow the **permissionless deployment of liquidity pools, gauges, and LP tokens**.
 
-Every Factory contract from Curve comes with **built-in functions designed to feed the [MetaRegistry](../../registry/MetaRegistryAPI.md)** with information about the created pools. These functions will not be documented in this section. For more information, please read [here](../../registry/overview.md).
+Every Factory contract from Curve comes with **built-in functions designed to feed the [MetaRegistry](../registry/MetaRegistryAPI.md)** with information about the created pools. These functions will not be documented in this section. For more information, please read [here](../registry/overview.md).
 
 !!!deploy "Contract Source & Deployment"
     Factories are deployed on the Ethereum Mainnet as well as on Sidechains/L2. Although it might be the case that some pool types (e.g., cryptoswap pools) are not supported there yet.  

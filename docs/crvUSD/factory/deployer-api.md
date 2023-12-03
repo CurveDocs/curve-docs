@@ -3,31 +3,30 @@
 ### `add_market`
 !!! description "`ControllerFactory.add_market(token: address, A: uint256, fee: uint256, admin_fee: uint256, _price_oracle_contract: address, monetary_policy: address, loan_discount: uint256, liquidation_discount: uint256, debt_ceiling: uint256) -> address[2]:`"
 
-    Function to add a new market and automatically deploy an AMM-Contract and a Controller-Contract from the implemented blueprint contracts (see [Implementations](../../crvUSD/factory.md#implementations)). 
-    When initializing, `rate_write()` from the MonetaryPolicy contract is called to check if it has a correct ABI.
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
 
-    Returns: deployed contract (`address`) of AMM and Controller.
+    Function to add a new market and automatically deploy an AMM-Contract and a Controller-Contract from the implemented blueprint contracts (see [Implementations](./overview.md#implementations)). When initializing, **`rate_write()`** from the MonetaryPolicy contract is called to check if it has a correct ABI.
+
+    Returns: Deployed contract (`address`) of AMM and Controller.
 
     Emits event: `AddNewMarket`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `token` |  `address` | Collateral token address|
-    | `A` |  `uint256` | Amplification coefficient. One band size is $\frac{1}{n}$ |
-    | `fee` |  `uint256` | AMM fee in the market's AMM |
-    | `admin_fee` |  `uint256` | AMM admin fee |
-    | `_price_oracle_contract` |  `address` | Address of the price oracle contract for the market |
-    | `monetary_policy` |  `address` | Monetary policy for the market |
-    | `loan_discount` |  `uint256` | Loan Discount: allowed to borrow only up to `x_down * (1 - loan_discount)` |
-    | `liquidation_discount` |  `uin256` | Discount which defines a bad liquidation threshold |
-    | `debt_ceiling` |  `uint256` | Debt ceiling for the market |
+    | Input                    | Type      | Description                                                  |
+    | ------------------------ | --------- | ------------------------------------------------------------ |
+    | `token`                  | `address` | Collateral token address                                     |
+    | `A`                      | `uint256` | Amplification coefficient. One band size is 1/n              |
+    | `fee`                    | `uint256` | AMM fee in the market's AMM                                  |
+    | `admin_fee`              | `uint256` | AMM admin fee                                                |
+    | `_price_oracle_contract` | `address` | Address of the price oracle contract for the market          |
+    | `monetary_policy`        | `address` | Monetary policy for the market                               |
+    | `loan_discount`          | `uint256` | Loan Discount: allowed to borrow only up to x_down * (1 - loan_discount) |
+    | `liquidation_discount`   | `uint256` | Discount defining a bad liquidation threshold                |
+    | `debt_ceiling`           | `uint256` | Debt ceiling for the market                                  |
 
 
     !!!warning
         There are some limitation values for adding new markets regarding `fee`, `A` and `liquidation_discount`.
-
-    !!!note
-        **`add_market`** can only be called by the admin of the contract. 
 
     ??? quote "Source code"
 

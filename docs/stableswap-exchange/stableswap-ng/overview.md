@@ -3,7 +3,7 @@
 !!!deploy "Contract Source & Deployment"
     Source code available on [Github](https://github.com/curvefi/stableswap-ng).
 
-For an in-depth understanding of the StableSwap invariant design, please refer to the official [StableSwap whitepaper](../pdf/stableswap-paper.pdf).
+For an in-depth understanding of the StableSwap invariant design, please refer to the official [StableSwap whitepaper](../../pdf/stableswap-paper.pdf).
 
 **The Stableswap-NG AMM infrastructure represents a technically enhanced iteration of the previous stableswap implementation. It comprises the following key components:**
 
