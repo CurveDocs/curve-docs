@@ -1,6 +1,6 @@
 <h1> Curve CryptoSwap Exchange: Overview </h1>
 
-The "Automatic Market-Making with Dynamic Peg" (CryptoSwap) algorithm, developed by Michael Egorov from Curve Finance, introduces a new approach to liquidity provision in decentralized finance. It aims to improve liquidity for assets that are not directly pegged to each other, differentiating itself from the traditional x·y = k model. 
+The "Automatic Market-Making with Dynamic Peg" (CryptoSwap) algorithm introduces a new approach to liquidity provision in decentralized finance. It aims to improve liquidity for assets that are not directly pegged to each other, differentiating itself from the traditional x·y = k model. 
 
 The core of this algorithm lies in its ability to concentrate liquidity around a price point determined by an internal oracle, adjusting this price in a way that balances potential losses and system profits. 
 
@@ -9,7 +9,7 @@ Key features include the use of transformed pegged invariants, a method for quan
 The algorithm also incorporates a dynamic fee structure that responds to changing market conditions. This approach seeks to enhance liquidity provision and optimize returns for liquidity providers within the decentralized finance ecosystem.
 
 !!!pdf "CryptoSwap Whitepaper"
-    For a detailed overview of the CryptoSwap design, please read the official [ whitepaper](../pdf/crypto-pools-paper.pdf).
+    For a detailed overview of the CryptoSwap design, please read the official [whitepaper](../pdf/crypto-pools-paper.pdf).
 
 
 

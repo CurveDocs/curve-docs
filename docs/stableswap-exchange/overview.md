@@ -11,4 +11,7 @@ In its simplest form, a Curve pool is an implementation of the StableSwap invari
 
 Curve also integrates with Synthetix to offer cross-asset swaps.
 
-All exchange functionality that Curve supports, as well as noteworthy implementation details, are explained in technical depth in this section.
+
+<h2>StableSwap-NG</h2>
+
+The Stableswap-NG AMM infrastructure represents a technically enhanced iteration of the previous stableswap implementation.

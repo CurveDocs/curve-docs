@@ -27,7 +27,7 @@ For an easy, non-technical explanation of the pool variations, visit: https://re
 
 ## **How are contracts deployed?**
 
-Pool, gauge, or LP token contracts are created according to their implementation contracts set within the Factory contract. Contracts deployed by newer factories combine both liquidity pool and LP token, whereas for older ones, they are separate contracts.
+Pool, gauge, or LP token contracts are **created according to their implementation contracts set within the Factory**. Contracts deployed by newer factories combine both liquidity pool and LP token, whereas for older ones, they are separate contracts.
 
 *There are two ways the contracts are deployed:*
 
@@ -223,6 +223,8 @@ Most contracts are **'owned' by a proxy**, which in turn is owned by the DAO. Fo
 
 
 ## **Implementations**
+Pool, gauge, or LP token contracts are **created according to their implementation contracts set within the Factory**.
+
 Technical documentation was done separately for each factory, as they partially vary from each other. Please refer to the corresponding section.
 
 !!!warning

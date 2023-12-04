@@ -135,7 +135,7 @@ nav:
       - Overview: cryptoswap-exchange/tricrypto-ng/overview.md
       - Pools:
         - Tricrypto Pool: cryptoswap-exchange/tricrypto-ng/pools/tricrypto_pool.md
-        - LP Token Method: cryptoswap-exchange/tricrypto-ng/lp_tokens/tricrypto-lp-token.md
+        - LP Token Methods: cryptoswap-exchange/tricrypto-ng/lp_tokens/tricrypto-lp-token.md
         - Admin Controls: cryptoswap-exchange/tricrypto-ng/pools/admin_controls.md
       - Utility Contracts: 
         - Math: cryptoswap-exchange/tricrypto-ng/utility_contracts/math.md
