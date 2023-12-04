@@ -1,7 +1,7 @@
 ## **Concept of PegKeepers**  
 
 PegKeepers are contracts that help stabilize the peg of crvUSD. Each Keeper is allocated a specific amount of crvUSD to secure the peg. 
-The DAO decides this balance and can be **raised or lowered** by calling **`set_debt_ceiling()`** in the [Factory](../crvUSD/factory.md).
+The DAO decides this balance and can be **raised or lowered** by calling **`set_debt_ceiling()`** in the [Factory](./factory/overview.md).
 
 
 The underlying actions of the PegKeepers can be divided into two actions, which get executed when calling [**`update()`**](#update):

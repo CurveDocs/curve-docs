@@ -2876,7 +2876,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
     Function to **collects all fees**, including **Borrwing-based fees (interest rate)** and **AMM-based fees (swap fee)**(if applicable). If there are any AMM-based fees (represented by `admin_fee_x` and/or `admin_fee_y`), the `reset_admin_fee()` method will be invoked, which resets these variables to zero.
 
     !!!note
-        The collected fees will be sent to the `fee_receiver` as specified in the [factory contract](../crvUSD/factory.md#fee_receiver).
+        The collected fees will be sent to the `fee_receiver` as specified in the [factory contract](./factory/overview.md#fee-receiver).
 
     ??? quote "Source code"
 

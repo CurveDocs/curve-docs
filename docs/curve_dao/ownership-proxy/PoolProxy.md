@@ -7,7 +7,7 @@ For a overview of all actively used proxies, see [here](../ownership-proxy/overv
 
 
 ## **Deploying Pools**
-Pool deployment is permissionless, with the exception of base pools. Thus, the `deploy_pool` function can be directly called on the Factory contract. For more information about Factory contracts and their usage, see [here](../../factory/pool_factory/overview.md).
+Pool deployment is permissionless, with the exception of base pools. Thus, the `deploy_pool` function can be directly called on the Factory contract. For more information about Factory contracts and their usage, see [here](../../factory/overview.md).
 
 
 ## **Parameter Changes**
