@@ -1,3 +1,5 @@
+<h1>Curve Stablecoin: Overview</h1>
+
 Curve Stablecoin ([crvUSD](../crvUSD/crvUSD.md)) infrastructure enables users to mint crvUSD using a selection of crypto collaterals (adding new ones is subject to DAO approval). 
 
 crvUSD is designed to provide a more capital-efficient stablecoin mechanism and smoother liquidations, while maintaining a decentralized design which the Curve DAO governs.
