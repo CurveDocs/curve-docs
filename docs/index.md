@@ -1,3 +1,8 @@
+---
+hide:
+  - toc
+---
+
 <h1>Curve Finance: Protocol Overview</h1>
 
 Curve is a **decentralized exchange and automated market maker on Ethereum and EVM sidechains/L2s**, designed for the efficient **trading of stablecoins and other assets**. 
