@@ -1,3 +1,5 @@
+<h1>MetaRegistry: Admin Controls </h1>
+
 The following methods are guarded and may only be called by the [**`owner`**](./MetaRegistryAPI.md#owner) of the MetaRegistry.
 
 ### `add_registry_handler`
