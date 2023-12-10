@@ -1,12 +1,12 @@
-The SmartWalletChecker is an external contract which checks if certain smart contracts are approved to lock CRV tokens into the VotingEscrow.    Permission can be granted via **`approveWallet`** and revoked via **`revokeWallet`**.
+The SmartWalletChecker is an external contract that checks if certain smart contracts are approved to lock CRV tokens into the VotingEscrow. **Permission can be granted via the `approveWallet` and revoked via `revokeWallet` methods.**
+
+!!! deploy "Contract Source & Deployment"
+    **SmartWalletChecker** contract is deployed to the Ethereum mainnet at: [0xca719728Ef172d0961768581fdF35CB116e0B7a4](https://etherscan.io/address/0xca719728Ef172d0961768581fdF35CB116e0B7a4).
 
 
-This contract can be replaced in its entirety with a new SmartWalletChecker through the VotingEscrow's [`commit_smart_wallet_checker`](../voting-escrow/admin-controls.md#commit_smart_wallet_checker) function. Alternatively, new smart contracts can be approved or revoked directly within the SmartWalletChecker itself.   
-*All these actions require a successful DAO vote.*
-    
+This **contract can be replaced in its entirety** with a new SmartWalletChecker through the VotingEscrow's [**`commit_smart_wallet_checker`**](../voting-escrow/admin-controls.md#commit_smart_wallet_checker) function.
 
-!!!deploy "Contract Source & Deployment"
-    **SmartWalletChecker** contract is deployed to the Ethereum mainnet at: [0xca719728Ef172d0961768581fdF35CB116e0B7a4](https://etherscan.io/address/0xca719728Ef172d0961768581fdF35CB116e0B7a4). 
+Once this happens, the previously approved smart contracts will **not be able to create a new lock, extend the lock duration, or add more CRV to the already existing lock** if the new `SmartWalletChecker` does not approve them again. This is because all those methods (`create_lock`, `increase_unlock_time`, and `increase_amount`) check if the caller is approved via the internal `assert_not_contract` function.
 
 
 ## **Approve/Revoke SmartContracts**
@@ -15,7 +15,7 @@ This contract can be replaced in its entirety with a new SmartWalletChecker thro
 !!! description "`SmartWalletChecker.approveWallet(address _wallet) public`"
 
     !!!guard "Guarded Method"
-        This function is only callable by the `dao`, which is the CurveOwnershipAdmin.
+        This function is only callable by the `dao`, which is the `CurveOwnershipAdmin`.
 
     Function to approve a smart contract to lock CRV.
 
@@ -48,7 +48,7 @@ This contract can be replaced in its entirety with a new SmartWalletChecker thro
 !!! description "`SmartWalletChecker.revokeWallet(address _wallet) external`"
 
     !!!guard "Guarded Method"
-        This function is only callable by the `dao`, which is the CurveOwnershipAdmin.
+        This function is only callable by the `dao`, which is the `CurveOwnershipAdmin`.
 
     Function to revoke the allowance of a smart contract to lock CRV.
 
