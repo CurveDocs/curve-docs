@@ -8,6 +8,21 @@ This **contract can be replaced in its entirety** with a new SmartWalletChecker 
 
 Once this happens, the previously approved smart contracts will **not be able to create a new lock, extend the lock duration, or add more CRV to the already existing lock** if the new `SmartWalletChecker` does not approve them again. This is because all those methods (`create_lock`, `increase_unlock_time`, and `increase_amount`) check if the caller is approved via the internal `assert_not_contract` function.
 
+??? quote "VotingEscrow: Internal `assert_not_contract` function"
+    ```vyper
+    @internal
+    def assert_not_contract(addr: address):
+        """
+        @notice Check if the call is from a whitelisted smart contract, revert if not
+        @param addr Address to be checked
+        """
+        if addr != tx.origin:
+            checker: address = self.smart_wallet_checker
+            if checker != ZERO_ADDRESS:
+                if SmartWalletChecker(checker).check(addr):
+                    return
+            raise "Smart contract depositors not allowed"
+    ```
 
 ## **Approve/Revoke SmartContracts**
 
