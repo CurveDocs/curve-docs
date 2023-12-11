@@ -1,4 +1,6 @@
-The controls within the ERC-20 Curve DAO Token are limited. The admin of the contract can only modify the **`name`, `admin`, or `minter`**. Since the [**CurveOwnershipAgent**](../ownership-proxy/Agents.md#community-dao) is the current admin of the contract, any changes to these parameters would require a successfully passed DAO vote.
+<h1>Curve DAO Token: Admin Controls</h1>
+
+The **controls within the Curve DAO Token are strictly limited**. The admin of the contract can only modify the `name`, `admin`, or `minter`. Since the [**CurveOwnershipAgent**](https://etherscan.io/address/0x40907540d8a6C65c637785e8f8B742ae6b0b9968) is the current admin of the contract, any changes to these parameters would require a successfully passed DAO vote.
 
 ## **Admin Ownership**
 
@@ -18,7 +20,7 @@ The controls within the ERC-20 Curve DAO Token are limited. The admin of the con
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 2 4 7"
+        ```vyper
         event SetAdmin:
             admin: address
         
@@ -53,7 +55,7 @@ The controls within the ERC-20 Curve DAO Token are limited. The admin of the con
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 2 5 12 13 14"
+        ```vyper
         name: public(String[64])
         symbol: public(String[32])
 
@@ -78,7 +80,7 @@ The controls within the ERC-20 Curve DAO Token are limited. The admin of the con
 
 ## **Minter**
 
-**`set_minter`** is technically an admin-only function. However, there's *no actual way to change the minter* of the contract using this function. This is because the code checks if the current minter is set to `ZERO_ADDRESS`, which was only true when the contract was initially deployed.
+`set_minter` is technically an admin-only function. However, there's **no actual way to change the minter** of the contract using this function, because the code checks if the current minter is set to `ZERO_ADDRESS`, which was only true when the contract was initially deployed.
 
 ### `set_minter`
 !!! description "`CRV.set_minter(_minter: address):`"
@@ -92,7 +94,7 @@ The controls within the ERC-20 Curve DAO Token are limited. The admin of the con
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 2 4 7 13 16"
+        ```vyper
         event SetMinter:
             minter: address
         
