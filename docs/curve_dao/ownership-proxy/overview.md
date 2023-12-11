@@ -159,7 +159,7 @@ Pool and Gauge proxies usually have three different admins (representing the dif
         '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
         ```
 
-#### `parameter_admin`
+### `parameter_admin`
 !!! description "`PoolProxy.parameter_admin() -> address: view`"
 
     Getter for the parameter admin of the contract.
