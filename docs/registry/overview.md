@@ -1,14 +1,34 @@
-The MetaRegistry is a Curve Finance **Pool Registry Aggregator** that consolidates different registries used at Curve Finance for a single chain into a single contract.
+<h1>MetaRegistry: Overview </h1>
+
+The MetaRegistry functions as a Curve Finance Pool Registry Aggregator and offers an on-chain API for various properties of Curve pools by **consolidating different registries into a single contract**.
+
+This is done by integrating multiple **`ChildRegistries`**, each accompanied by a **`RegistryHandler`**. This handler acts as a wrapper around its respective ChildRegistry, ensuring compatibility with the MetaRegistry's ABI standards.
+
 
 !!!deploy "Contract Source & Deployment"
-    Currently, a MetaRegistry does not exist on other chains. Source code available on [Github](https://github.com/curvefi/metaregistry/blob/main/contracts/mainnet/MetaRegistry.vy).  
+    **Currently, a MetaRegistry does only exist on Ethereum**. Source code is available on [Github](https://github.com/curvefi/metaregistry/blob/main/contracts/mainnet/MetaRegistry.vy).  
     The **MetaRegistry** contract is deployed to the Ethereum mainnet at: [0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC](https://etherscan.io/address/0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC#code).
 
-The current MetaRegistry version consolidates multiple ChildRegistries, each accompanied by a RegistryHandler. The handler acts as a wrapper around its respective ChildRegistry, ensuring compatibility with the MetaRegistry's ABI standards.  
-If a ChildRegistry already meets these standards, it doesn't require a handler. Nonetheless, wrappers can be used for hotfixing bugs in production, especially when direct modifications to the ChildRegistry would lead to significant breaking changes.
+
+<div align="center">
+```mermaid
+flowchart BT
+    mr[(MetaRegistry)]
+    cr1(ChildRegistry) -.- rh1([RegistryHandler])
+    cr2(ChildRegistry) -.- rh2([RegistryHandler])
+    cr3(ChildRegistry) -.- rh3([RegistryHandler])
+    rh1 -.-> mr
+    rh2 -.-> mr
+    rh3 -.-> mr
+```
+</div>
 
 
-| Description | Registry Handler | Base Registry | 
+!!!info
+    If a ChildRegistry already meets these standards, it doesn't require a handler. Nonetheless, wrappers can be **useful for hotfixing bugs in production**, especially when direct modifications to the ChildRegistry would lead to significant breaking changes.
+
+
+| Description | Registry Handler | Child Registry | 
 | :---------: | :--------------: | :-----------: |
 | `Curve Registry for v1` | [0x46a8a9CF4Fc8e99EC3A14558ACABC1D93A27de68](https://etherscan.io/address/0x46a8a9CF4Fc8e99EC3A14558ACABC1D93A27de68#code) | [0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5](https://etherscan.io/address/0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5#code) |
 | `Curve Registry for v1 (latest)` | [0x127db66E7F0b16470Bec194d0f496F9Fa065d0A9](https://etherscan.io/address/0x127db66E7F0b16470Bec194d0f496F9Fa065d0A9#code) | [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4#code) |

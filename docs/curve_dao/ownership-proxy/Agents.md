@@ -1,4 +1,4 @@
-The Curve DAO has a total of three [Aragon Agent](https://legacy-docs.aragon.org/aragon/readme) ownership addresses, which are governed by two independent DAOs:
+The Curve DAO has a total of **three [Aragon Agent](https://legacy-docs.aragon.org/aragon/readme) ownership addresses**, which are governed by two independent DAOs:
 
 ## **Community DAO** 
 The Community DAO (or just “the DAO”) governs the day-to-day operation of the protocol.
@@ -11,18 +11,17 @@ An account must have a *minimum balance of 2500 veCRV* to make a DAO vote. Each 
     **CurveOwnershipAgent** contract is deployed to the Ethereum mainnet at: [0x40907540d8a6C65c637785e8f8B742ae6b0b9968](https://etherscan.io/address/0x40907540d8a6C65c637785e8f8B742ae6b0b9968).  
     **CurveParameterAgent** contract is deployed to the Ethereum mainnet at: [0x4EEb3bA4f221cA16ed4A0cC7254E2E32DF948c5f](https://etherscan.io/address/0x4EEb3bA4f221cA16ed4A0cC7254E2E32DF948c5f).
 
-1. ### *Ownership Admin*
+1. ### **Ownership Admin**
 The ownership admin controls most functionality within the protocol. Performing an action via the ownership admin requires a 30% quorum with 51% support.
 
 
-2. ### *Parameter Admin*
-The parameter admin has authority to modify parameters on pools, such as adjusting the amplification co-efficient. Performing an action via the paramater admin requries a 15% quorum with 51% support.  
-
+2. ### **Parameter Admin**
+The parameter admin has authority to modify parameters on pools, such as adjusting the amplification co-efficient. Performing an action via the paramater admin requries a 15% quorum with 60% support.  
 
 
 
 ## **Emergency DAO**
-The EmergencyDAO has limited authority to kill non-factory pools and gauges during extraordinary circumstances.
+The EmergencyDAO has **limited authority to kill non-factory pools and gauges** during extraordinary circumstances.
 
 !!!deploy "Contract Source & Deployment"
     **EmergencyDAO** contract is deployed to the Ethereum mainnet at: [0x467947EE34aF926cF1DCac093870f613C96B1E0c](https://etherscan.io/address/0x467947EE34aF926cF1DCac093870f613C96B1E0c).

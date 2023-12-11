@@ -1,22 +1,38 @@
-<h1> </h1>
+<h1>Curve DAO Token</h1>
 
-**Curve DAO Token (CRV)** is based on the ERC-20 token standard as defined at [EIP-20](https://eips.ethereum.org/EIPS/eip-20).
+**Curve DAO Token (CRV)** is based on the ERC-20 token standard as defined at [**EIP-20**](https://eips.ethereum.org/EIPS/eip-20).
 
 !!!deploy "Contract Source & Deployment"
     **Curve DAO Token** contract is deployed to the Ethereum mainnet at: [0xD533a949740bb3306d119CC777fa900bA034cd52](https://etherscan.io/address/0xD533a949740bb3306d119CC777fa900bA034cd52#code).  
     Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/567927551903f71ce5a73049e077be87111963cc/contracts/ERC20CRV.vy).  
     Deployment hash: [0x5dc4a688b63cea09bf4d73a695175b77572792a2e2b3656297809ad3596d4bfe](https://etherscan.io/tx/0x5dc4a688b63cea09bf4d73a695175b77572792a2e2b3656297809ad3596d4bfe)
 
-For a broader understanding of the use case of the CRV token, check out [Understanding CRV](https://resources.curve.fi/crv-token/understanding-crv/).
+For a broader understanding of the use case of the CRV token, check out [**Understanding CRV**](https://resources.curve.fi/crv-token/understanding-crv/).
 
-```mermaid
-pie title Tokenomics
-    "Inflation": 57
-    "Shareholders": 30
-    "DAO-controller reserve": 5
-    "Early User": 5
-    "Employees": 3
-```
+<div id="highcharts-790fd468-1065-4292-97a0-953f69e6d14f"></div>  
+<script>
+(function(){ var files = ["https://code.highcharts.com/stock/highstock.js","https://code.highcharts.com/highcharts-more.js","https://code.highcharts.com/highcharts-3d.js","https://code.highcharts.com/modules/data.js","https://code.highcharts.com/modules/exporting.js","https://code.highcharts.com/modules/funnel.js","https://code.highcharts.com/modules/annotations.js","https://code.highcharts.com/modules/accessibility.js","https://code.highcharts.com/modules/solid-gauge.js"],loaded = 0; if (typeof window["HighchartsEditor"] === "undefined") {window.HighchartsEditor = {ondone: [cl],hasWrapped: false,hasLoaded: false};include(files[0]);} else {if (window.HighchartsEditor.hasLoaded) {cl();} else {window.HighchartsEditor.ondone.push(cl);}}function isScriptAlreadyIncluded(src){var scripts = document.getElementsByTagName("script");for (var i = 0; i < scripts.length; i++) {if (scripts[i].hasAttribute("src")) {if ((scripts[i].getAttribute("src") || "").indexOf(src) >= 0 || (scripts[i].getAttribute("src") === "http://code.highcharts.com/highcharts.js" && src === "https://code.highcharts.com/stock/highstock.js")) {return true;}}}return false;}function check() {if (loaded === files.length) {for (var i = 0; i < window.HighchartsEditor.ondone.length; i++) {try {window.HighchartsEditor.ondone[i]();} catch(e) {console.error(e);}}window.HighchartsEditor.hasLoaded = true;}}function include(script) {function next() {++loaded;if (loaded < files.length) {include(files[loaded]);}check();}if (isScriptAlreadyIncluded(script)) {return next();}var sc=document.createElement("script");sc.src = script;sc.type="text/javascript";sc.onload=function() { next(); };document.head.appendChild(sc);}function each(a, fn){if (typeof a.forEach !== "undefined"){a.forEach(fn);}else{for (var i = 0; i < a.length; i++){if (fn) {fn(a[i]);}}}}var inc = {},incl=[]; each(document.querySelectorAll("script"), function(t) {inc[t.src.substr(0, t.src.indexOf("?"))] = 1; }); function cl() {if(typeof window["Highcharts"] !== "undefined"){Highcharts.setOptions({lang:{}});var options={"title":{"text":"CRV Distribution"},"subtitle":{"text":""},"exporting":{},"chart":{"type":"pie","polar":false,"width":null,"height":null,"borderWidth":0,"borderRadius":0,"inverted":false,"style":{"fontFamily":"\"Lucida Grande\", \"Lucida Sans Unicode\", Verdana, Arial, Helvetica, sans-serif","color":"#333","fontSize":"12px","fontWeight":"normal","fontStyle":"normal"}},"plotOptions":{"pie":{"allowPointSelect":true,"cursor":true,"showInLegend":true,"dataLabels":{"enabled":false}},"series":{"animation":false,"dataLabels":{"enabled":false}}},"series":[{"lineWidth":2,"allowPointSelect":false,"crisp":true,"showCheckbox":false,"animation":false,"enableMouseTracking":true,"events":{},"point":{"events":{}},"dataLabels":{"animation":{},"align":"center","borderWidth":0,"defer":true,"formatter":"function(){let{numberFormatter:t}=this.series.chart;return\"number\"!=typeof this.y?\"\":t(this.y,-1)}","padding":5,"style":{"fontSize":"0.7em","fontWeight":"bold","color":"contrast","textOutline":"1px contrast"},"verticalAlign":"bottom","x":0,"y":0,"connectorPadding":5,"connectorShape":"crookedLine","distance":30,"enabled":false,"softConnector":true},"cropThreshold":300,"opacity":1,"pointRange":0,"softThreshold":true,"states":{"normal":{"animation":true},"hover":{"animation":{"duration":150},"lineWidthPlus":1,"marker":{},"halo":{"size":10,"opacity":0.25},"brightness":0.1},"select":{"animation":{"duration":0}},"inactive":{"animation":{"duration":150},"opacity":0.2}},"stickyTracking":true,"turboThreshold":0,"findNearestPointBy":"x","borderRadius":3,"center":[null,null],"clip":false,"colorByPoint":true,"ignoreHiddenPoint":true,"inactiveOtherPoints":true,"legendType":"point","size":null,"showInLegend":true,"slicedOffset":10,"tooltip":{"followPointer":true},"borderColor":"#ffffff","borderWidth":1,"cursor":true,"name":"Allocation in %","legendSymbol":"rectangle","threshold":0,"stacking":"normal","dataGrouping":{"groupPixelWidth":2,"dateTimeLabelFormats":{"millisecond":["%A, %e %b, %H:%M:%S.%L","%A, %e %b, %H:%M:%S.%L","-%H:%M:%S.%L"],"second":["%A, %e %b, %H:%M:%S","%A, %e %b, %H:%M:%S","-%H:%M:%S"],"minute":["%A, %e %b, %H:%M","%A, %e %b, %H:%M","-%H:%M"],"hour":["%A, %e %b, %H:%M","%A, %e %b, %H:%M","-%H:%M"],"day":["%A, %e %b %Y","%A, %e %b","-%A, %e %b %Y"],"week":["Week from %A, %e %b %Y","%A, %e %b","-%A, %e %b %Y"],"month":["%B %Y","%B","-%B %Y"],"year":["%Y","%Y","-%Y"]}},"marker":{"enabled":false,"symbol":"circle"},"type":"pie"}],"data":{"csv":"\"Column 1\";\"Allocation in %\"\n\"Community Liquidity Providers\";62\n\"Shareholders\";30\n\"Community Reserve\";5\n\"Employees\";3","googleSpreadsheetKey":false,"googleSpreadsheetWorksheet":false},"legend":{"layout":"horizontal","enabled":true,"align":"center","x":0,"verticalAlign":"bottom","floating":false},"tooltip":{"shared":false},"yAxis":[{"title":{"text":""},"labels":{}}],"colors":["#a34aa1","#688cbb","#aa4c48","#57a050"],"xAxis":[{"title":{"text":""},"labels":{}}],"lang":{},"credits":{"text":"","href":""}};/*
+// Sample of extending options:
+Highcharts.merge(true, options, {
+    chart: {
+        backgroundColor: "#bada55"
+    },
+    plotOptions: {
+        series: {
+            cursor: "pointer",
+            events: {
+                click: function(event) {
+                    alert(this.name + " clicked\n" +
+                          "Alt: " + event.altKey + "\n" +
+                          "Control: " + event.ctrlKey + "\n" +
+                          "Shift: " + event.shiftKey + "\n");
+                }
+            }
+        }
+    }
+});
+*/new Highcharts.Chart("highcharts-790fd468-1065-4292-97a0-953f69e6d14f", options);}}})();
+</script>
 
 
 ## **Contract Info Methods** 
@@ -30,7 +46,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 17"
+        ```vyper
         admin: public(address)
 
         @external
@@ -64,7 +80,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 4 7 12"
+        ```vyper
         name: public(String[64])
 
         @external
@@ -97,7 +113,7 @@ pie title Tokenomics
     
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 4 8 13"
+        ```vyper
         symbol: public(String[32])
 
         @external
@@ -131,7 +147,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3 8 12"
+        ```vyper
         @internal
         @view
         def _available_supply() -> uint256:
@@ -161,7 +177,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def totalSupply() -> uint256:
@@ -187,7 +203,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 4 9 14"
+        ```vyper
         decimals: public(uint256)
 
         @external
@@ -226,7 +242,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         balanceOf: public(HashMap[address, uint256])
         ```
 
@@ -357,7 +373,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 5"
+        ```vyper
         allowances: HashMap[address, HashMap[address, uint256]]
 
         @external
@@ -440,7 +456,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         minter: public(address)
         ```
 
@@ -468,7 +484,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 7 9"
+        ```vyper
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
@@ -521,7 +537,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 7 17 18"
+        ```vyper
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
@@ -563,7 +579,7 @@ pie title Tokenomics
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def mintable_in_timeframe(start: uint256, end: uint256) -> uint256:
@@ -619,7 +635,10 @@ pie title Tokenomics
 
 ## **CRV Emissions**
 
-Mining parameters are used to determine the token emissions. The emissions are based on epochs (one year). With every passing epoch, the `rate` will be reduced, thereby reducing the entire $CRV emissions.
+!!!bug
+    If the formulas below do not render, please make sure to refresh the site. A solution is being worked on.
+
+Mining parameters are used to determine the token emissions. The emissions are based on epochs (one year). With every passing epoch, the `rate` will be reduced, thereby reducing the entire CRV emissions.
 
 The rate can be reduced by invoking the `update_mining_parameters()` function. While this function is accessible to anyone, an attempt to call it will be reverted if a year hasn't elapsed since the last update. When the function is successfully executed, the `mining_epoch` increments by 1, and the `start_epoch_time` is updated to the timestamp of that function call. Moreover, the `update_mining_parameters()` function will be automatically triggered if someone tries to mint CRV before the scheduled rate reduction.
 
@@ -630,7 +649,7 @@ $$rate_{future} = rate_{current} * \frac{\text{RATE_DENOMINATOR}}{\text{RATE_RED
 $\text{RATE_DENOMINATOR} =  10^{18}$
 $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
 
-*Effectively, every rate reduction decreases the $CRV inflation by around 15.9%.*
+***Effectively, every rate reduction decreases the CRV inflation by around 15.9%.***
 
 
 ### `mining_epoch`
@@ -642,7 +661,7 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 21 34"
+        ```vyper
         mining_epoch: public(int128)
 
         @external
@@ -699,7 +718,7 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 20"
+        ```vyper
         start_epoch_time: public(uint256)
 
         @external
@@ -736,7 +755,7 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 22"
+        ```vyper
         rate: public(uint256)
 
         @external
@@ -775,7 +794,7 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 22 45"
+        ```vyper
         event UpdateMiningParameters:
             time: uint256
             rate: uint256
@@ -845,7 +864,7 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="4 13 15"
+        ```vyper
         start_epoch_time: public(uint256)
 
         @external
@@ -878,7 +897,7 @@ $\text{RATE_REDUCTION_COEFFICIENT} = 2^{\frac{1}{4}} * 10^{18}$
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="2"
+        ```vyper
         @external
         def future_epoch_time_write() -> uint256:
             """

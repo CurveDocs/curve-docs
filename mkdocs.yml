@@ -68,7 +68,7 @@ nav:
 
   - Registry:
     - Overview: registry/overview.md
-    - MetaRegistryAPI: registry/MetaRegistryAPI.md
+    - MetaRegistry API: registry/MetaRegistryAPI.md
     - Admin Controls: registry/admin-controls.md
 
 
@@ -255,7 +255,7 @@ theme:
         name: Switch to dark mode
 
 extra_css:
-  - 'stylesheets/extra.css'
+  - stylesheets/extra.css
 
 extra_javascript:
   - javascripts/mathjax.js

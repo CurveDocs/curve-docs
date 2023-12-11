@@ -1,4 +1,6 @@
-The MetaRegistry offers an on-chain API for various properties of Curve pools.  
+<h1>MetaRegistry: API </h1>
+
+The MetaRegistry offers an **on-chain API** for various properties of Curve pools.  
 
 ## **Finding Pools**
 

@@ -1,4 +1,4 @@
-The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a change to these parameters would require a successfully passed DAO vote.
+The ***CurveOwnershipAgent*** is the current `admin` of the VotingEscrow. As such, a change to these parameters would require a successfully passed DAO vote.
 
 
 ## **Changing SmartWalletChecker**
@@ -13,7 +13,7 @@ The *CurveOwnershipAgent* is the current admin of the VotingEscrow. As such, a c
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `addr`     |  `address` | new SmartWalletChecker contract address |
+    | `addr`     |  `address` | New SmartWalletChecker Contract |
 
     ??? quote "Source code"
 

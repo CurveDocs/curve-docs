@@ -1,14 +1,14 @@
 Fees are distributed to veCRV holders through the FeeDistributor contract in the form of 3CRV tokens.
 
-!!!info 
-    Changing the reward token from 3CRV to, for example, crvUSD, would require the creation of a new FeeDistributor, as the reward token cannot be configured within the existing contract.
+!!!deploy "Contract Source & Deployment"
+    **FeeDistributor** contract is deployed to the Ethereum mainnet at: [0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc](https://etherscan.io/address/0xa464e6dcda8ac41e03616f95f4bc98a13b8922dc).  
+    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/FeeDistributor.vy).  
 
 **Fees are distributed on a  weekly basis.** The porportional amount of fees that each user is to receive is calculated based on their veCRV balance relative to the total veCRV supply.This amount is calculated at the start of the week.  
 The actual distribution occurs at the end of the week based on the fees that were collected. As such, a user that creates a new vote-lock should expect to receive their first fee payout at the end of the following epoch week.
  
-!!!deploy "Contract Source & Deployment"
-    **FeeDistributor** contract is deployed to the Ethereum mainnet at: [0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc](https://etherscan.io/address/0xa464e6dcda8ac41e03616f95f4bc98a13b8922dc).  
-    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/FeeDistributor.vy).  
+!!!info "Changing the Reward Token"
+    Changing the reward token from 3CRV to, for example, crvUSD, would require the creation of a new FeeDistributor, as the reward token cannot be configured within the existing contract.
 
 The available 3CRV balance to distribute is tracked via the “**token checkpoint**”. This is updated at minimum every 24 hours. Fees that are received between the last checkpoint of the previous week and first checkpoint of the new week will be split evenly between the weeks.
 

@@ -10,16 +10,18 @@ Participating in Curve DAO governance requires that an account have a balance of
 
 `locktime` is denominated in years. The *maximum lock duration is four years* and the *minimum is one week*.
 
-| CRV      | veCRV  | Locktime|
-| -------- | -------| --------|
-| `1`      |  `1`   | 4 years |
-| `1`      |  `0.75`| 3 years |
-| `1`      |  `0.5` | 2 years |
-| `1`      |  `0.25`| 1 year  |
-| $x$      |  $x * \frac{n}{4}$| $n$  |
+| CRV  | veCRV  | Locktime |
+| :--: | :----: | :------: |
+| 1    | 1      | 4 years  |
+| 1    | 0.75   | 3 years  |
+| 1    | 0.5    | 2 years  |
+| 1    | 0.25   | 1 year   |
+| x    | x * n/4 | n       |
 
-!!!warning "Transferability"
-    veCRV cannot be transferred. The only way to obtain veCRV is by locking CRV.  
+!!!warning
+    When a user locks their CRV tokens for voting, they will receive veCRV based on the lock duration and the amount locked. Locking is **not reversible** and veCRV tokens are **non-transferable**. If a user decides to vote-lock their CRV tokens, they will only be able to **reclaim the CRV tokens after the lock duration has ended**.
+
+    Additionally, a user cannot have multiple locks with different expiry dates. However, a lock can be extended, or additional CRV can be added to it at any time.
 
 
 ## **Implemention Details**
@@ -31,8 +33,10 @@ Slopes and biases change both when a user deposits and locks governance tokens, 
 
 
 
-## **Smart Wallet Whitelist**
-The Smart Wallet Checker is an external contract which checks if certain contracts are whitelisted and therefore eligible to lock CRV tokens. More [here](../voting-escrow/smartwalletchecker.md).
+## **SmartWalletChecker**
+The `SmartWalletChecker` is an **external contract which checks if certain contracts are whitelisted and therefore eligible to lock CRV** tokens. More [here](../voting-escrow/smartwalletchecker.md).
+
+This contract can be changed via a successfuly DAO vote and therefore potentially fully a 
 
 ### `smart_wallet_checker`
 !!! description "`VotingEscrow.smart_wallet_checker() -> address: view`"
@@ -75,6 +79,24 @@ The Smart Wallet Checker is an external contract which checks if certain contrac
 
 
 ## **Working with VoteLocks**
+
+CRV tokens can be locked by any Externally Owned Account (EOA). When a smart contract wants to lock tokens, it needs to be approved by the `smart_wallet_checker`.
+
+??? quote "Internal function to check if the smart contract is approved"
+    ```vyper
+    @internal
+    def assert_not_contract(addr: address):
+        """
+        @notice Check if the call is from a whitelisted smart contract, revert if not
+        @param addr Address to be checked
+        """
+        if addr != tx.origin:
+            checker: address = self.smart_wallet_checker
+            if checker != ZERO_ADDRESS:
+                if SmartWalletChecker(checker).check(addr):
+                    return
+            raise "Smart contract depositors not allowed"
+    ```
 
 ### `create_lock`
 !!! description "`VotingEscrow.create_lock(_value: uint256, _unlock_time: uint256):`"
