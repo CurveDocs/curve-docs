@@ -323,7 +323,18 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
     Source code available on [Github](https://github.com/curvefi/stableswap-ng).
 
 !!!warning "Implementations"
-    **Implementation contracts are upgradable.** They can either be replaced, or additional implementation contracts can be added. Therefore, please **always make sure to check the most recent ones**. The ones below (`Plain AMM`, `Meta AMM` and `Gauge`) are the the ones added when the Factory was deployed.
+    Every Factory contract has plain- and metapool implementations. The Factory on Ethereum has an additional gauge implementation. **Implementation contracts are upgradable.** They can be either replaced or additional implementation contracts can be set. Therefore, please **always make sure to check the most recent ones**.
+
+    *To query the factory-specific implementations:*
+
+    ```shell
+    >>> Factory.pool_implementation(0)
+    '0xDCc91f930b42619377C200BA05b7513f2958b202'
+    >>> Factory.metapool_implementation(0)
+    '0xede71F77d7c900dCA5892720E76316C6E575F0F7'
+    >>> Factory.gauge_implementation() # ethereum mainnet only! 
+    '0x38D9BdA812da2C68dFC6aDE85A7F7a54E77F8325'
+    ```
 
 
 
@@ -331,34 +342,28 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Contract    | Address   | 
 | ----------- | -------| 
-| Math        | [0x20D1c021525C85D9617Ccc64D8f547d5f730118A](https://etherscan.io/address/0x20D1c021525C85D9617Ccc64D8f547d5f730118A#code) |
-| Views       | [0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD](https://etherscan.io/address/0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD#code) |
-| Plain AMM   | [0x933f4769DCC27fC7345D9d5975AE48EC4D0F829C](https://etherscan.io/address/0x933f4769DCC27fC7345D9d5975AE48EC4D0F829C#code) |
-| Meta AMM    | [0xDD7EBB1C49780519dD9755B8B1A23a6f42CE099E](https://etherscan.io/address/0xDD7EBB1C49780519dD9755B8B1A23a6f42CE099E#code) |
+| Math        | [0xc9CBC565A9F4120a2740ec6f64CC24AeB2bB3E5E](https://etherscan.io/address/0xc9CBC565A9F4120a2740ec6f64CC24AeB2bB3E5E#code) |
+| Views       | [0xe0B15824862f3222fdFeD99FeBD0f7e0EC26E1FA](https://etherscan.io/address/0xe0B15824862f3222fdFeD99FeBD0f7e0EC26E1FA#code) |
 | Factory     | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://etherscan.io/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf#code) |
-| Gauge       | [0xF5617D4f7514bE35fce829a1C19AE7f6c9106979](https://etherscan.io/address/0xF5617D4f7514bE35fce829a1C19AE7f6c9106979#code) |
+| Gauge       | [0x38D9BdA812da2C68dFC6aDE85A7F7a54E77F8325](https://etherscan.io/address/0x38D9BdA812da2C68dFC6aDE85A7F7a54E77F8325#code) |
 
 
 **Ethereum Sepolia**
 
 | Contract    | Address   | 
 | ----------- | -------| 
-| Math        | [0xbc7654d2dd901aaaa3be4cb5bc0f10dea9f96443](https://sepolia.etherscan.io/address/0xbc7654d2dd901aaaa3be4cb5bc0f10dea9f96443#code) |
-| Views       | [0x07920e98a66e462c2aa4c8fa6200bc68ca161ea0](https://sepolia.etherscan.io/address/0x07920e98a66e462c2aa4c8fa6200bc68ca161ea0#code) |
-| Plain AMM   | [0x296d2b5c23833a70d07c8fcbb97d846c1ff90ddd](https://sepolia.etherscan.io/address/0x296d2b5c23833a70d07c8fcbb97d846c1ff90ddd#code) |
-| Meta AMM    | [0xa12A87c73718a34CD8601b5022B2C6C359142585](https://sepolia.etherscan.io/address/0xa12A87c73718a34CD8601b5022B2C6C359142585#code) |
+| Math        | [0x2cad7b3e78e10bcbf2cc443ddd69ca8bcc09a758](https://sepolia.etherscan.io/address/0x2cad7b3e78e10bcbf2cc443ddd69ca8bcc09a758#code) |
+| Views       | [0x9d3975070768580f755D405527862ee126d0eA08](https://sepolia.etherscan.io/address/0x9d3975070768580f755D405527862ee126d0eA08#code) |
 | Factory     | [0xfb37b8D939FFa77114005e61CFc2e543d6F49A81](https://sepolia.etherscan.io/address/0xfb37b8D939FFa77114005e61CFc2e543d6F49A81#code) |
-| Gauge       | [0x64891ab20392a029c0f231656ff13c5ee64b730c](https://sepolia.etherscan.io/address/0x64891ab20392a029c0f231656ff13c5ee64b730c#code) |
+| Gauge       | [0xede71F77d7c900dCA5892720E76316C6E575F0F7](https://sepolia.etherscan.io/address/0xede71F77d7c900dCA5892720E76316C6E575F0F7#code) |
 
 
 **Arbitrum**
 
 | Contract    | Address   | 
 | ----------- | -------| 
-| Math        | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://arbiscan.io/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a#code) |
-| Views       | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://arbiscan.io/address/0xC1b393EfEF38140662b91441C6710Aa704973228#code) |
-| Plain AMM   | [0x0458ea5f4cd00e873264be2031ceb8f9d9b3116c](https://arbiscan.io/address/0x0458ea5f4cd00e873264be2031ceb8f9d9b3116c#code) |
-| Meta AMM    | [0xc6c09471ee39c7e30a067952fcc89c8922f9ab53](https://arbiscan.io/address/0xc6c09471ee39c7e30a067952fcc89c8922f9ab53#code) |
+| Math        | [0xD4a8bd4d59d65869E99f20b642023a5015619B34](https://arbiscan.io/address/0xD4a8bd4d59d65869E99f20b642023a5015619B34#code) |
+| Views       | [0x9293f068912bae932843a1bA01806c54f416019D](https://arbiscan.io/address/0x9293f068912bae932843a1bA01806c54f416019D#code) |
 | Factory     | [0x9AF14D26075f142eb3F292D5065EB3faa646167b](https://arbiscan.io/address/0x9AF14D26075f142eb3F292D5065EB3faa646167b#code) |
 
 
@@ -366,10 +371,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Contract    | Address   | 
 | ----------- | -------| 
-| Math        | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://optimistic.etherscan.io/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6#code) |
-| Views       | [0x506F594ceb4E33F5161139bAe3Ee911014df9f7f](https://optimistic.etherscan.io/address/0x506F594ceb4E33F5161139bAe3Ee911014df9f7f#code) |
-| Plain AMM   | [0x06452f9c013fc37169B57Eab8F50A7A48c9198A3](https://optimistic.etherscan.io/address/0x06452f9c013fc37169B57Eab8F50A7A48c9198A3#code) |
-| Meta AMM    | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://optimistic.etherscan.io/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B#code) |
+| Math        | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://optimistic.etherscan.io/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
+| Views       | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://optimistic.etherscan.io/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a#code) |
 | Factory     | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://optimistic.etherscan.io/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
 
 
@@ -377,10 +380,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Contract    | Address   | 
 | ----------- | -------| 
-| Math        | [0x506F594ceb4E33F5161139bAe3Ee911014df9f7f](https://basescan.org/address/0x506F594ceb4E33F5161139bAe3Ee911014df9f7f#code) |
-| Views       | [0x87FE17697D0f14A222e8bEf386a0860eCffDD617](https://basescan.org/address/0x87FE17697D0f14A222e8bEf386a0860eCffDD617#code) |
-| Plain AMM   | [0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22](https://basescan.org/address/0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22#code) |
-| Meta AMM    | [0x06452f9c013fc37169B57Eab8F50A7A48c9198A3](https://basescan.org/address/0x06452f9c013fc37169B57Eab8F50A7A48c9198A3#code) |
+| Math        | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://basescan.org/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
+| Views       | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://basescan.org/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
 | Factory     | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://basescan.org/address/0xd2002373543Ce3527023C75e7518C274A51ce712#code) |
 
 
@@ -388,10 +389,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Contract    | Address   | 
 | ----------- | -------| 
-| Math        | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://lineascan.build/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6#code) |
-| Views       | [0x506F594ceb4E33F5161139bAe3Ee911014df9f7f](https://lineascan.build/address/0x506F594ceb4E33F5161139bAe3Ee911014df9f7f#code) |
-| Plain AMM   | [0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8](https://lineascan.build/address/0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8#code) |
-| Meta AMM    | [0x604388bb1159afd21eb5191ce22b4decdee2ae22](https://lineascan.build/address/0x604388bb1159afd21eb5191ce22b4decdee2ae22#code) |
+| Math        | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://lineascan.build/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
+| Views       | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://lineascan.build/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
 | Factory     | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://lineascan.build/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
 
 
@@ -399,10 +398,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Contract    | Address   | 
 | ----------- | -------| 
-| Math        | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://scroll.l2scan.co/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6) |
-| Views       | [0x506F594ceb4E33F5161139bAe3Ee911014df9f7f](https://scroll.l2scan.co/address/0x506F594ceb4E33F5161139bAe3Ee911014df9f7f#code) |
-| Plain AMM   | [0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8](https://scroll.l2scan.co/address/0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8#code) |
-| Meta AMM    | [0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22](https://scroll.l2scan.co/address/0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22#code) |
+| Math        | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://scroll.l2scan.co/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8) |
+| Views       | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://scroll.l2scan.co/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
 | Factory     | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://scroll.l2scan.co/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
 
 
@@ -422,10 +419,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Contract    | Address   | 
 | ----------- | -------| 
-| Math        | [0x506F594ceb4E33F5161139bAe3Ee911014df9f7f](https://zkevm.polygonscan.com/address/0x506F594ceb4E33F5161139bAe3Ee911014df9f7f#code) |
-| Views       | [0x87fe17697d0f14a222e8bef386a0860ecffdd617](https://zkevm.polygonscan.com/address/0x87fe17697d0f14a222e8bef386a0860ecffdd617#code) |
-| Plain AMM   | [0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22](https://zkevm.polygonscan.com/address/0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22#code) |
-| Meta AMM    | [0x06452f9c013fc37169B57Eab8F50A7A48c9198A3](https://zkevm.polygonscan.com/address/0x06452f9c013fc37169B57Eab8F50A7A48c9198A3#code) |
+| Math        | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://zkevm.polygonscan.com/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
+| Views       | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://zkevm.polygonscan.com/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
 | Factory     | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://zkevm.polygonscan.com/address/0xd2002373543Ce3527023C75e7518C274A51ce712#code) |
 
 
@@ -433,10 +428,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Contract    | Address   | 
 | ----------- | -------| 
-| Math        | [0x87FE17697D0f14A222e8bEf386a0860eCffDD617](https://gnosisscan.io/address/0x87FE17697D0f14A222e8bEf386a0860eCffDD617#code) |
-| Views       | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://gnosisscan.io/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
-| Plain AMM   | [0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F](https://gnosisscan.io/address/0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F#code) |
-| Meta AMM    | [0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5](https://gnosisscan.io/address/0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5#code) |
+| Math        | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://gnosisscan.io/address/0xFAbC421e3368D158d802684A217a83c083c94CeB#code) |
+| Views       | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://gnosisscan.io/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf#code) |
 | Factory     | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://gnosisscan.io/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
 
 
@@ -444,10 +437,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Contract    | Address   | 
 | ----------- | -------| 
-| Math        | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://polygonscan.com//address/0xf3A431008396df8A8b2DF492C913706BDB0874ef#code) |
-| Views       | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://polygonscan.com/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6#code) |
-| Plain AMM   | [0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2](https://polygonscan.com/address/0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2#code) |
-| Meta AMM    | [0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8](https://polygonscan.com/address/0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8#code) |
+| Math        | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://polygonscan.com//address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B#code) |
+| Views       | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://polygonscan.com/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
 | Factory     | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://polygonscan.com/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#code) |
 
 
@@ -455,10 +446,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Contract    | Address   | 
 | ----------- | -------| 
-| Math        | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://snowtrace.io/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef#code) |
-| Views       | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://snowtrace.io/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6#code) |
-| Plain AMM   | [0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2](https://snowtrace.io/address/0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2#code) |
-| Meta AMM    | [0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8](https://snowtrace.io/address/0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8#code) |
+| Math        | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://snowtrace.io/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B#code) |
+| Views       | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://snowtrace.io/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
 | Factory     | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://snowtrace.io/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#code) |
 
 
@@ -466,10 +455,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Contract    | Address   | 
 | ----------- | -------| 
-| Math        | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://ftmscan.com/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6#code) |
-| Views       | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://ftmscan.com/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
-| Plain AMM   | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://ftmscan.com/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B#code) |
-| Meta AMM    | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://ftmscan.com/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
+| Math        | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://ftmscan.com/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a#code) |
+| Views       | [0x635742dCC8313DCf8c904206037d962c042EAfBd](https://ftmscan.com/address/0x635742dCC8313DCf8c904206037d962c042EAfBd#code) |
 | Factory     | [0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b](https://ftmscan.com/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b#code) |
 
 
@@ -477,10 +464,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Contract    | Address   | 
 | ----------- | -------| 
-| Math        | [0x506F594ceb4E33F5161139bAe3Ee911014df9f7f](https://bscscan.com/address/0x506F594ceb4E33F5161139bAe3Ee911014df9f7f#code) |
-| Views       | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://bscscan.com/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#code) |
-| Plain AMM   | [0x64379C265Fc6595065D7d835AAaa731c0584dB80](https://bscscan.com/address/0x64379C265Fc6595065D7d835AAaa731c0584dB80#code) |
-| Meta AMM    | [0xd3B17f862956464ae4403cCF829CE69199856e1e](https://bscscan.com/address/0xd3B17f862956464ae4403cCF829CE69199856e1e#code) |
+| Math        | [0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5](https://bscscan.com/address/0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5#code) |
+| Views       | [0x5Ea9DD3b6f042A34Df818C6c1324BC5A7c61427a](https://bscscan.com/address/0x5Ea9DD3b6f042A34Df818C6c1324BC5A7c61427a#code) |
 | Factory     | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://bscscan.com/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B#code) |
 
 
@@ -488,10 +473,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Contract    | Address   | 
 | ----------- | -------| 
-| Math        | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://celoscan.io/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef#code) |
-| Views       | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://celoscan.io/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6#code) |
-| Plain AMM   | [0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2](https://celoscan.io/address/0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2#code) |
-| Meta AMM    | [0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8](https://celoscan.io/address/0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8#code) |
+| Math        | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://celoscan.io/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B#code) |
+| Views       | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://celoscan.io/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
 | Factory     | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://celoscan.io/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#code) |
 
 
@@ -499,10 +482,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Contract    | Address   | 
 | ----------- | -------| 
-| Math        | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://kavascan.com/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef#contracts) |
-| Views       | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://kavascan.com/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6#contracts) |
-| Plain AMM   | [0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2](https://kavascan.com/address/0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2#contracts) |
-| Meta AMM    | [0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8](https://kavascan.com/address/0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8#contracts) |
+| Math        | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://kavascan.com/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B#contracts) |
+| Views       | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://kavascan.com/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#contracts) |
 | Factory     | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://kavascan.com/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#contracts) |
 
 
@@ -510,11 +491,18 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Contract    | Address   | 
 | ----------- | -------| 
-| Math        | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://explorer.aurora.dev/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6/contracts) |
-| Views       | [0x506F594ceb4E33F5161139bAe3Ee911014df9f7f](https://explorer.aurora.dev/address/0x506F594ceb4E33F5161139bAe3Ee911014df9f7f/contracts) |
-| Plain AMM   | [0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8](https://explorer.aurora.dev/address/0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8/contracts) |
-| Meta AMM    | [0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22](https://explorer.aurora.dev/address/0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22/contracts) |
+| Math        | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://explorer.aurora.dev/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8/contracts) |
+| Views       | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://explorer.aurora.dev/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3/contracts) |
 | Factory     | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://explorer.aurora.dev/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E/contracts) |
+
+
+**Mantle**
+
+| Contract    | Address   | 
+| ----------- | -------| 
+| Math        | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://mantlescan.info/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6#code-5000) |
+| Views       | [0x506F594ceb4E33F5161139bAe3Ee911014df9f7f](https://mantlescan.info/address/0x506F594ceb4E33F5161139bAe3Ee911014df9f7f#code-5000) |
+| Factory     | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://mantlescan.info/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E) |
 
 
 **Tron**
