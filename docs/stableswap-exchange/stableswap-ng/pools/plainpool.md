@@ -1,123 +1,115 @@
-Plain pools are liquidity exchange contracts which contain at least 2 and up to 8 coins. 
+Plain pools are liquidity **exchange contracts which contain at least 2 and up to 8 coins.** 
 
 !!!deploy "Contract Source & Deployment"
     Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNG.vy).  
 
-The deployment of plain pools is permissionless and can be done via the **`deploy_plain_pool`** function within the StableSwap-NG Factory.
+The deployment of plain pools is permissionless and can be done via the [**`deploy_plain_pool`**](../../../factory/stableswapNG/deployer-api.md#deploy_plain_pool) function within the StableSwap-NG Factory.
+
+!!!warning "Examples"
+    The examples following each code block of the corresponding functions provide a basic illustration of input/output values. **When using the function in production, ensure not to set `_min_dy`, `_min_amount`, etc., to zero or other arbitrary numbers**. Otherwise, MEV bots may frontrun or sandwich your transaction, leading to a potential loss of funds.
+
+    The examples are based on the crvUSD-USDV pool: [0xe1e77de32fb301ce55871ba095fd6b8e5d9abad8](https://etherscan.io/address/0xe1e77de32fb301ce55871ba095fd6b8e5d9abad8#code).
 
 
 ## **Exchange Methods**
 
-The AMM contract utilizes two internal functions to transfer tokens/coins in and out of the pool and then accordingly update **`stored_balances`**:
+The AMM contract utilizes two internal functions to transfer tokens/coins in and out of the pool and then accordingly update `stored_balances`:
 
 - **`_transfer_in()`**
+
+    ??? quote "`_transfer_in(coin_idx: int128, dx: uint256, sender: address, expect_optimistic_transfer: bool) -> uint256:`"
+
+        **`expect_optimistic_transfer`** is relevant when using the [`exchange_received()`](#exchange_received) function.
+
+        | Input      | Type   | Description |
+        | ----------- | -------| ----|
+        | `coin_idx` |  `int128` | index value of the token to transfer in |
+        | `dx` |  `uint256` | amount to transfer in |
+        | `sender` |  `address` | address to tranfer coins from |
+        | `expect_optimistic_transfer` |  `bool` | `True` if the contract expect an optimistic coin transfer |
+
+        ```vyper
+        stored_balances: DynArray[uint256, MAX_COINS]
+
+        @internal
+        def _transfer_in(
+            coin_idx: int128,
+            dx: uint256,
+            sender: address,
+            expect_optimistic_transfer: bool,
+        ) -> uint256:
+            """
+            @notice Contains all logic to handle ERC20 token transfers.
+            @param coin_idx Index of the coin to transfer in.
+            @param dx amount of `_coin` to transfer into the pool.
+            @param dy amount of `_coin` to transfer out of the pool.
+            @param sender address to transfer `_coin` from.
+            @param receiver address to transfer `_coin` to.
+            @param expect_optimistic_transfer True if contract expects an optimistic coin transfer
+            """
+            _dx: uint256 = ERC20(coins[coin_idx]).balanceOf(self)
+
+            # ------------------------- Handle Transfers -----------------------------
+
+            if expect_optimistic_transfer:
+
+                _dx = _dx - self.stored_balances[coin_idx]
+                assert _dx >= dx
+
+            else:
+
+                assert dx > 0  # dev : do not transferFrom 0 tokens into the pool
+                assert ERC20(coins[coin_idx]).transferFrom(
+                    sender, self, dx, default_return_value=True
+                )
+
+                _dx = ERC20(coins[coin_idx]).balanceOf(self) - _dx
+
+            # --------------------------- Store transferred in amount ---------------------------
+
+            self.stored_balances[coin_idx] += _dx
+
+            return _dx
+        ```
+
 - **`_transfer_out()`**
 
-These functions contain the basic ERC-20 token transfer logic.
+    ??? quote "`_transfer_out(_coin_idx: int128, _amount: uint256, receiver: address):`"
 
+        | Input      | Type   | Description |
+        | ----------- | -------| ----|
+        | `coin_idx` |  `int128` | index value of the token to transfer out |
+        | `_amount` |  `uint256` | amount to transfer out |
+        | `receiver` |  `address` | address to send the tokens to |
 
-### **Transfer Token In**
+        ```vyper
+        stored_balances: DynArray[uint256, MAX_COINS]
 
-Transfering tokens to the pool occurs via the internal **`_transfer_in()`** function.   
-The function takes the index value of the coin (**`coin_idx`**), amount (**`dx`**), sender address (**`sender`**) and if a optimistic transfer is expected (**`expect_optimistic_transfer`**) as input.
+        @internal
+        def _transfer_out(_coin_idx: int128, _amount: uint256, receiver: address):
+            """
+            @notice Transfer a single token from the pool to receiver.
+            @dev This function is called by `remove_liquidity` and
+                `remove_liquidity_one`, `_exchange` and `_withdraw_admin_fees` methods.
+            @param _coin_idx Index of the token to transfer out
+            @param _amount Amount of token to transfer out
+            @param receiver Address to send the tokens to
+            """
 
-**`expect_optimistic_transfer`** is relevant when using the [**`exchange_received()`**](#exchange_received) function.
+            # 'gulp' coin balance of the pool to stored_balances here to account for
+            # donations etc.
+            coin_balance: uint256 = ERC20(coins[_coin_idx]).balanceOf(self)
 
+            # ------------------------- Handle Transfers -----------------------------
 
-??? quote "`_transfer_in(coin_idx: int128, dx: uint256, sender: address, expect_optimistic_transfer: bool) -> uint256:`"
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `coin_idx` |  `int128` | index value of the token to transfer in |
-    | `dx` |  `uint256` | amount to transfer in |
-    | `sender` |  `address` | address to tranfer coins from |
-    | `expect_optimistic_transfer` |  `bool` | `True` if the contract expect an optimistic coin transfer |
-
-    ```vyper
-    stored_balances: DynArray[uint256, MAX_COINS]
-
-    @internal
-    def _transfer_in(
-        coin_idx: int128,
-        dx: uint256,
-        sender: address,
-        expect_optimistic_transfer: bool,
-    ) -> uint256:
-        """
-        @notice Contains all logic to handle ERC20 token transfers.
-        @param coin_idx Index of the coin to transfer in.
-        @param dx amount of `_coin` to transfer into the pool.
-        @param dy amount of `_coin` to transfer out of the pool.
-        @param sender address to transfer `_coin` from.
-        @param receiver address to transfer `_coin` to.
-        @param expect_optimistic_transfer True if contract expects an optimistic coin transfer
-        """
-        _dx: uint256 = ERC20(coins[coin_idx]).balanceOf(self)
-
-        # ------------------------- Handle Transfers -----------------------------
-
-        if expect_optimistic_transfer:
-
-            _dx = _dx - self.stored_balances[coin_idx]
-            assert _dx >= dx
-
-        else:
-
-            assert dx > 0  # dev : do not transferFrom 0 tokens into the pool
-            assert ERC20(coins[coin_idx]).transferFrom(
-                sender, self, dx, default_return_value=True
+            assert ERC20(coins[_coin_idx]).transfer(
+                receiver, _amount, default_return_value=True
             )
 
-            _dx = ERC20(coins[coin_idx]).balanceOf(self) - _dx
+            # ----------------------- Update Stored Balances -------------------------
 
-        # --------------------------- Store transferred in amount ---------------------------
-
-        self.stored_balances[coin_idx] += _dx
-
-        return _dx
-    ```
-
-
-### **Transfer Token Out**
-
-**`_transfer_out()`** is used to transfer tokens out of the pool.
-
-??? quote "`_transfer_out(_coin_idx: int128, _amount: uint256, receiver: address):`"
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `coin_idx` |  `int128` | index value of the token to transfer out |
-    | `_amount` |  `uint256` | amount to transfer out |
-    | `receiver` |  `address` | address to send the tokens to |
-
-    ```vyper
-    stored_balances: DynArray[uint256, MAX_COINS]
-
-    @internal
-    def _transfer_out(_coin_idx: int128, _amount: uint256, receiver: address):
-        """
-        @notice Transfer a single token from the pool to receiver.
-        @dev This function is called by `remove_liquidity` and
-            `remove_liquidity_one`, `_exchange` and `_withdraw_admin_fees` methods.
-        @param _coin_idx Index of the token to transfer out
-        @param _amount Amount of token to transfer out
-        @param receiver Address to send the tokens to
-        """
-
-        # 'gulp' coin balance of the pool to stored_balances here to account for
-        # donations etc.
-        coin_balance: uint256 = ERC20(coins[_coin_idx]).balanceOf(self)
-
-        # ------------------------- Handle Transfers -----------------------------
-
-        assert ERC20(coins[_coin_idx]).transfer(
-            receiver, _amount, default_return_value=True
-        )
-
-        # ----------------------- Update Stored Balances -------------------------
-
-        self.stored_balances[_coin_idx] = coin_balance - _amount
-    ```
+            self.stored_balances[_coin_idx] = coin_balance - _amount
+        ```
 
 
 ### `exchange`
@@ -253,10 +245,14 @@ The function takes the index value of the coin (**`coin_idx`**), amount (**`dx`*
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.exchange('todo')
-        'todo'
+        ```python
+        >>> expected_dy = pool.get_dy(0, 1, 10**18) * 0.99
+        >>> StableSwap.exchange(0, 1, 10**18, expected_dy)
+        999712
         ```
+
+    !!!note
+        This function exchanges one crvUSD for 0.999712 amount of USDV. `expected_dy` calculates the predicted input amount `j` to receive `dy` of coin `i`. This value can then be used as `_min_dy` in the `exchange` function. When using this function in production, please make sure **not to set `_min_dy` to 0 or other arbitrary values**, otherwise MEV bots will be able to frontrun/sandwich your transaction.
 
 
 ### `exchange_received`
@@ -403,9 +399,95 @@ The function takes the index value of the coin (**`coin_idx`**), amount (**`dx`*
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.exchange_received('todo')
-        'todo'
+        ```python
+        >>> crvusd.transfer("0xe1e77de32fb301ce55871ba095fd6b8e5d9abad8", 10**18)
+        >>> pool.exchange_received(0, 1, 10**18, 0)
+        999712
+        ```
+
+    !!!note
+        First, there needs to be a token transfer into the pool. Here, one crvUSD is transferred into the pool. Afterwards, `exchange_received` can be called to swap one crvUSD for `dy` USDV.
+
+        More information on this method [here](../pools/overview.md#exchange_received).
+
+
+### `get_dy`
+!!! description "`StableSwap.get_dx(i: int128, j: int128, dy: uint256) -> uint256:`"
+
+    Function to calculate the predicted input amount `j` to receive `dy` of coin `i`. This is just a getter method, the calculation logic is within the CurveStableSwapNGViews contract. See [here](../utility_contracts/views.md#get_dy).
+
+    Returns: predicted amount of `j` (`uint256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `i` |  `int128` | index value of input coin |
+    | `j` |  `int128` | index value of output coin |
+    | `dy` |  `uint256` | amount of input coin being exchanged |
+
+    ??? quote "Source code"
+
+        === "CurveStableSwapNG.vy"
+
+            ```vyper
+            interface Factory:
+                def fee_receiver() -> address: view
+                def admin() -> address: view
+                def views_implementation() -> address: view
+
+            @view
+            @external
+            def get_dy(i: int128, j: int128, dx: uint256) -> uint256:
+                """
+                @notice Calculate the current output dy given input dx
+                @dev Index values can be found via the `coins` public getter method
+                @param i Index value for the coin to send
+                @param j Index valie of the coin to recieve
+                @param dx Amount of `i` being exchanged
+                @return Amount of `j` predicted
+                """
+                return StableSwapViews(factory.views_implementation()).get_dy(i, j, dx, self)
+            ```
+
+        === "CurveStableSwapNGViews.vy"
+
+            ```vyper
+            @view
+            @external
+            def get_dy(i: int128, j: int128, dx: uint256, pool: address) -> uint256:
+                """
+                @notice Calculate the current output dy given input dx
+                @dev Index values can be found via the `coins` public getter method
+                @param i Index value for the coin to send
+                @param j Index valie of the coin to recieve
+                @param dx Amount of `i` being exchanged
+                @return Amount of `j` predicted
+                """
+                N_COINS: uint256 = StableSwapNG(pool).N_COINS()
+
+                rates: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+                balances: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+                xp: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+                rates, balances, xp = self._get_rates_balances_xp(pool, N_COINS)
+
+                amp: uint256 = StableSwapNG(pool).A() * A_PRECISION
+                D: uint256 = self.get_D(xp, amp, N_COINS)
+
+                x: uint256 = xp[i] + (dx * rates[i] / PRECISION)
+                y: uint256 = self.get_y(i, j, x, xp, amp, D, N_COINS)
+                dy: uint256 = xp[j] - y - 1
+
+                base_fee: uint256 = StableSwapNG(pool).fee()
+                fee_multiplier: uint256 = StableSwapNG(pool).offpeg_fee_multiplier()
+                fee: uint256 = self._dynamic_fee((xp[i] + x) / 2, (xp[j] + y) / 2, base_fee, fee_multiplier) * dy / FEE_DENOMINATOR
+
+                return (dy - fee) * PRECISION / rates[j]
+            ```
+
+    === "Example"
+
+        ```python
+        >>> StableSwap.get_dy(0, 1, 10**18)
+        999712
         ```
 
 
@@ -502,93 +584,10 @@ The function takes the index value of the coin (**`coin_idx`**), amount (**`dx`*
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.get_dx('todo')
-        'todo'
+        ```python
+        >>> StableSwap.get_dx(1, 0, 10**18)
+        999912
         ```
-
-
-### `get_dy`
-!!! description "`StableSwap.get_dx(i: int128, j: int128, dy: uint256) -> uint256:`"
-
-    Function to calculate the predicted input amount `j` to receive `dy` of coin `i`. This is just a getter method, the calculation logic is within the CurveStableSwapNGViews contract. See [here](../utility_contracts/views.md#get_dy).
-
-    Returns: predicted amount of `j` (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `int128` | index value of input coin |
-    | `j` |  `int128` | index value of output coin |
-    | `dy` |  `uint256` | amount of input coin being exchanged |
-
-    ??? quote "Source code"
-
-        === "CurveStableSwapNG.vy"
-
-            ```vyper
-            interface Factory:
-                def fee_receiver() -> address: view
-                def admin() -> address: view
-                def views_implementation() -> address: view
-
-            @view
-            @external
-            def get_dy(i: int128, j: int128, dx: uint256) -> uint256:
-                """
-                @notice Calculate the current output dy given input dx
-                @dev Index values can be found via the `coins` public getter method
-                @param i Index value for the coin to send
-                @param j Index valie of the coin to recieve
-                @param dx Amount of `i` being exchanged
-                @return Amount of `j` predicted
-                """
-                return StableSwapViews(factory.views_implementation()).get_dy(i, j, dx, self)
-            ```
-
-        === "CurveStableSwapNGViews.vy"
-
-            ```vyper
-            @view
-            @external
-            def get_dy(i: int128, j: int128, dx: uint256, pool: address) -> uint256:
-                """
-                @notice Calculate the current output dy given input dx
-                @dev Index values can be found via the `coins` public getter method
-                @param i Index value for the coin to send
-                @param j Index valie of the coin to recieve
-                @param dx Amount of `i` being exchanged
-                @return Amount of `j` predicted
-                """
-                N_COINS: uint256 = StableSwapNG(pool).N_COINS()
-
-                rates: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
-                balances: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
-                xp: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
-                rates, balances, xp = self._get_rates_balances_xp(pool, N_COINS)
-
-                amp: uint256 = StableSwapNG(pool).A() * A_PRECISION
-                D: uint256 = self.get_D(xp, amp, N_COINS)
-
-                x: uint256 = xp[i] + (dx * rates[i] / PRECISION)
-                y: uint256 = self.get_y(i, j, x, xp, amp, D, N_COINS)
-                dy: uint256 = xp[j] - y - 1
-
-                base_fee: uint256 = StableSwapNG(pool).fee()
-                fee_multiplier: uint256 = StableSwapNG(pool).offpeg_fee_multiplier()
-                fee: uint256 = self._dynamic_fee((xp[i] + x) / 2, (xp[j] + y) / 2, base_fee, fee_multiplier) * dy / FEE_DENOMINATOR
-
-                return (dy - fee) * PRECISION / rates[j]
-            ```
-
-    === "Example"
-
-        ```shell
-        >>> StableSwap.get_dy('todo')
-        'todo'
-        ```
-
-
-
 
 
 ## **Adding / Removing Liquidity**
@@ -739,11 +738,15 @@ The function takes the index value of the coin (**`coin_idx`**), amount (**`dx`*
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.add_liquidity('todo')
-        'todo'
+        ```python
+        >>> StableSwap.add_liquidity([10000000000000000000, 0], 0)
+        9997967030080774869        
         ```
 
+    !!!info
+        When adding liquidity in production, do not set `_min_amount` to zero or any other arbitrary value, otherwise you may get frontrun/sandwiched by MEV bots.
+
+        
 
 ### `remove_liquidity`
 !!! description "`StableSwap.remove_liquidity(_burn_amount: uint256, _min_amounts: DynArray[uint256, MAX_COINS], _receiver: address = msg.sender, _claim_admin_fees: bool = True) -> DynArray[uint256, MAX_COINS]:`"
@@ -847,10 +850,17 @@ The function takes the index value of the coin (**`coin_idx`**), amount (**`dx`*
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.remove_liquidity('todo')
-        'todo'
+        ```python
+        >>> StableSwap.get_balances()
+        [1156170050330410764719488, 1052703857490]
+        >>> StableSwap.remove_liquidity(10**18, [0, 0])
+        523455207306501616, 476610
         ```
+
+    !!!info todo
+        `remove_liquidity` removes liquidity in a balanced proportion according to the balances in the pool. Again, when conducting this transaction in production, do not set `_min_amount` to zero or any other arbitrary value; otherwise, you may get frontrun/sandwiched and lose money.
+
+
 
 ### `remove_liquidity_one_coin`
 !!! description "`StableSwap.remove_liquidity_one_coin(_burn_amount: uint256, i: int128, _min_received: uint256, _receiver: address = msg.sender) -> uint256:`"
@@ -979,10 +989,15 @@ The function takes the index value of the coin (**`coin_idx`**), amount (**`dx`*
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.remove_liquidity_one_coin('todo')
-        'todo'
+        ```python
+        >>> StableSwap.remove_liquidity_one_coin(10**18, 0, 9**18)
+        1000107995665331176
+        >>> StableSwap.remove_liquidity_one_coin(10**18, 1, 9**18)
+        999915
         ```
+
+    !!!note
+        Both examples involve removing one LP token. With `removing_liquidity_one_coin` targeted at the higher balanced coin of the pool, a small premium is received. Conversely, when removing liquidity in the form of the lower balance token in the pool, we receive slightly less.
 
 
 ### `remove_liquidity_imbalance`
@@ -1090,11 +1105,10 @@ The function takes the index value of the coin (**`coin_idx`**), amount (**`dx`*
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.remove_liquidity_imbalance('todo')
-        'todo'
+        ```python
+        >>> StableSwap.remove_liquidity_imbalance([10**18, 10**6] 10**19)
+        1999880816717294817
         ```
-
 
 
 ### `calc_withdraw_one_coin`
@@ -1186,9 +1200,13 @@ The function takes the index value of the coin (**`coin_idx`**), amount (**`dx`*
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.calc_withdraw_one_coin('todo')
-        'todo'
+        ```python
+        >>> StableSwap.calc_withdraw_one_coin(10**18, 0)
+        1000107987022361129
+        >>> StableSwap.calc_withdraw_one_coin(10**18, 1)
+        999915
+        >>> StableSwap.get_balances()
+        [1156160050449617680048138, 1052703857609] 
         ```
 
 
@@ -1197,7 +1215,7 @@ The function takes the index value of the coin (**`coin_idx`**), amount (**`dx`*
 
     Function to calculate the addition or reduction of token supply from a deposit (add liquidity) or withdrawal (remove liquidity). This function does take fees into consideration.
 
-    Returns: amount of LP tokens received (`uint256`).
+    Returns: amount of LP tokens (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1322,11 +1340,23 @@ The function takes the index value of the coin (**`coin_idx`**), amount (**`dx`*
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.calc_token_amount('todo')
-        'todo'
+        ```python
+        >>> StableSwap.calc_token_amount([10**18, 0], True) # deposit (coin[0])
+        999701503692424994
+        >>> StableSwap.calc_token_amount([0, 10**6], True) # deposit (coin[1])
+        999875942505458416
+        >>> StableSwap.calc_token_amount([10**18, 10**6], True) # deposit (coin[0] and coin[1])
+        1999863130101592370
+        >>> StableSwap.calc_token_amount([10**18, 0], False) # withdraw (coin[1])
+        999987187514411723
+        >>> StableSwap.calc_token_amount([10**18, 0], False) # withdraw (coin[0])
+        1000188312578139610
+        >>> StableSwap.calc_token_amount([10**18, 10**6], False) # withdraw (coin[0] and coin[1])
+        1999889816188803581
         ```
 
+    !!!note
+        If `_is_deposit` is True, the method calculates the increase in LP token supply when adding `_amounts` of tokens to the pool. Conversely, when `_is_deposit` is False, the method calculates the decrease in LP token supply when removing `_amounts` of tokens from the pool. This is a `view` function and does not actually alter any states.
 
 
 ## **Fee Methods**
@@ -1391,9 +1421,9 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.fee('todo')
-        'todo'
+        ```python
+        >>> StableSwap.fee()
+        1000000
         ```
 
 
@@ -1483,10 +1513,14 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.dynamic_fee('todo')
-        'todo'
+        ```python
+        >>> StableSwap.dynamic_fee(0, 1)
+        1001758
         ```
+
+    !!!note
+        Why is there there the same dynamic fee in both trade directions? does not make sense to me? why not higher fee when swapping form high balance into low balance and vice versa?
+
 
 
 ### `admin_fee`
@@ -1507,7 +1541,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     === "Example"
 
-        ```shell
+        ```python
         >>> StableSwap.admin_fee()
         5000000000
         ```
@@ -1548,9 +1582,9 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.offpeg_fee_multiplier('todo')
-        'todo'
+        ```python
+        >>> StableSwap.offpeg_fee_multiplier()
+        50000000000
         ```
 
 
@@ -1573,9 +1607,11 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.admin_balances('todo')
-        'todo'
+        ```python
+        >>> StableSwap.admin_balances(0)
+        38117658162246205676
+        >>> StableSwap.admin_balances(1)
+        10683574
         ```
 
 
@@ -1622,7 +1658,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     === "Example"
 
-        ```shell
+        ```python
         >>> StableSwap.withdraw_admin_fees()
         ```
 
@@ -1718,9 +1754,9 @@ When removing liquidity in a balanced portion (**`remove_liquidity`**), oracles 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.last_price('todo')
-        'todo'
+        ```python
+        >>> StableSwap.last_price(0)
+        1000187811171795736
         ```
 
 
@@ -1737,6 +1773,9 @@ When removing liquidity in a balanced portion (**`remove_liquidity`**), oracles 
     | ----------- | -------| ----|
     | `i` |  `uint256` | index value of coin |
 
+    !!!warning "Revert"
+        This function reverts if `i >= MAX_COINS`.
+
     ??? quote "Source code"
 
         ```vyper 
@@ -1750,16 +1789,16 @@ When removing liquidity in a balanced portion (**`remove_liquidity`**), oracles 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.ema_price('todo')
-        'todo'
+        ```python
+        >>> StableSwap.ema_price(0)
+        1000187824576102231
         ```
 
 
 ### `get_p`
 !!! description "`StableSwap.get_p(i: uint256) -> uint256:`"
 
-    Function to calculate the AMM state price for the coin at index value `i`.
+    Getter for the AMM state price for the coin at index value `i`.
 
     Returns: state price (`uint256`).
 
@@ -1823,9 +1862,9 @@ When removing liquidity in a balanced portion (**`remove_liquidity`**), oracles 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.get_p('todo')
-        'todo'
+        ```python
+        >>> StableSwap.get_p(0)
+        1000187811171795736
         ```
 
 
@@ -1885,10 +1924,11 @@ When removing liquidity in a balanced portion (**`remove_liquidity`**), oracles 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.price_oracle('todo')
-        'todo'
+        ```python
+        >>> StableSwap.price_oracle(0)
+        1000187813326452556
         ```
+
 
 ### `ma_exp_time`
 !!! description "`StableSwap.ma_exp_time() -> uint256: view`"
@@ -1905,9 +1945,9 @@ When removing liquidity in a balanced portion (**`remove_liquidity`**), oracles 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.ma_exp_time('todo')
-        'todo'
+        ```python
+        >>> StableSwap.ma_exp_time()
+        866
         ```
 
 
@@ -1963,9 +2003,9 @@ When removing liquidity in a balanced portion (**`remove_liquidity`**), oracles 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.D_oracle('todo')
-        'todo'
+        ```python
+        >>> StableSwap.D_oracle()
+        2183776033162328612308290
         ```
 
 
@@ -1984,9 +2024,9 @@ When removing liquidity in a balanced portion (**`remove_liquidity`**), oracles 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.D_ma_time('todo')
-        'todo'
+        ```python
+        >>> StableSwap.D_ma_time()
+        62324
         ```
 
 
@@ -2007,9 +2047,9 @@ When removing liquidity in a balanced portion (**`remove_liquidity`**), oracles 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.ma_last_time('todo')
-        'todo'
+        ```python
+        >>> StableSwap.ma_last_time()
+        579359617954437487117250992339883299967854142015
         ```
 
 
@@ -2070,9 +2110,9 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.A('todo')
-        'todo'
+        ```python
+        >>> StableSwap.A()
+        500
         ```
 
 
@@ -2124,9 +2164,9 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.A_precise('todo')
-        'todo'
+        ```python
+        >>> StableSwap.A_precise()
+        50000
         ```
 
 
@@ -2174,9 +2214,9 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.initial_A('todo')
-        'todo'
+        ```python
+        >>> StableSwap.initial_A()
+        50000
         ```
 
 
@@ -2224,9 +2264,9 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.future_A('todo')
-        'todo'
+        ```python
+        >>> StableSwap.future_A()
+        50000
         ```
 
 
@@ -2274,9 +2314,9 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.initial_A_time('todo')
-        'todo'
+        ```python
+        >>> StableSwap.initial_A_time()
+        0
         ```
 
 
@@ -2324,9 +2364,9 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.future_A_time('todo')
-        'todo'
+        ```python
+        >>> StableSwap.future_A_time()
+        0
         ```
 
 
@@ -2368,10 +2408,13 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.coins('todo')
-        'todo'
+        ```python
+        >>> StableSwap.coins(0)
+        '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
+        >>> StableSwap.coins(1)
+        '0x0E573Ce2736Dd9637A0b21058352e1667925C7a8'
         ```
+
 
 ### `balances`
 !!! description "`StableSwap.balances(i: uint256) -> uint256:`"
@@ -2429,9 +2472,11 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.balances('todo')
-        'todo'
+        ```python
+        >>> StableSwap.balances(0)
+        1156160050449617680048138
+        >>> StableSwap.balances(1)
+        1052703857609
         ```
 
 
@@ -2484,9 +2529,9 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.get_balances('todo')
-        'todo'
+        ```python
+        >>> StableSwap.get_balances()
+        [1156160050449617680048138, 1052703857609]
         ```
 
 
@@ -2559,9 +2604,9 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.stored_rates('todo')
-        'todo'
+        ```python
+        >>> StableSwap.stored_rates()
+        [1000000000000000000, 1000000000000000000000000000000]
         ```
 
 
@@ -2608,11 +2653,10 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.N_COINS('todo')
-        'todo'
+        ```python
+        >>> StableSwap.N_COINS()
+        2
         ```
-
 
 
 ### `totalSupply`
@@ -2640,10 +2684,11 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```shell
+        ```python
         >>> StableSwap.totalSupply()
-        'todo'
+        2208717767450789394892159
         ```
+
 
 ### `get_virtual_price`
 !!! description "`StableSwap.get_virtual_price() -> uint256:`"
@@ -2681,7 +2726,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```shell
-        >>> StableSwap.get_virtual_price('todo')
-        'todo'
+        ```python
+        >>> StableSwap.get_virtual_price()
+        1000063971106330426
         ```
