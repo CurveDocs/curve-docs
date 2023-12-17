@@ -15,6 +15,8 @@ crvUSD is designed to provide a more capital-efficient stablecoin mechanism and 
 </figure>
 
 
+
+
 # **Components of the Curve Stablecoin Infrastructure**
 
 ## **[Controller](./controller.md)**

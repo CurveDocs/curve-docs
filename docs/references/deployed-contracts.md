@@ -254,7 +254,7 @@ Here is a list of all burner contracts currently in use:
 Routers that performs up to 5 swaps in a single transaction and can do estimations with `get_dy` and `get_dx`.
 
 !!!deploy "Source Code"
-    Source code available on [Github](https://github.com/curvefi/curve-router-ng/tree/master/contracts).
+    Source code available on [GitHub](https://github.com/curvefi/curve-router-ng/tree/master/contracts).
 
 | Description | Address |
 | ----------- | ------- |
@@ -278,7 +278,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
     Multichain statement: https://twitter.com/MultichainOrg/status/1677180114227056641
 
 !!!deploy "Source Code"
-    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges/sidechain).
+    Source code available on [GitHub](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges/sidechain).
 
 | Type | Chain | Address |
 | ---- | ----- | ------- |
@@ -320,7 +320,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 ## **Stableswap-NG**
 
 !!!deploy "Source Code"
-    Source code available on [Github](https://github.com/curvefi/stableswap-ng).
+    Source code available on [GitHub](https://github.com/curvefi/stableswap-ng).
 
 !!!warning "Implementations"
     Every Factory contract has plain- and metapool implementations. The Factory on Ethereum has an additional gauge implementation. **Implementation contracts are upgradable.** They can be either replaced or additional implementation contracts can be set. Therefore, please **always make sure to check the most recent ones**.
@@ -515,7 +515,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 For testing in production purposes, several contract deployments have taken place. Please ensure that you are using the correct and latest version. The latest deployment logs can be found [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
 
 !!!deploy "Source Code"
-    Source code available on [Github](https://github.com/curvefi/curve-stablecoin).
+    Source code available on [GitHub](https://github.com/curvefi/curve-stablecoin).
 
 ### **General Infrastructure** 
 
