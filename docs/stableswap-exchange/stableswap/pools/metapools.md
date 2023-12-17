@@ -1,5 +1,3 @@
-## Overview
-
 A metapool is a pool where a stablecoin is paired against the LP token from another pool, a so-called _base_ pool.
 
 For example, a liquidity provider may deposit ``DAI`` into 
@@ -19,9 +17,9 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
     Metapools also implement the ABI from plain pools. The template source code for metapools may be viewed on 
     [GitHub](https://github.com/curvefi/curve-contract/blob/master/contracts/pool-templates/meta/SwapTemplateMeta.vy).
 
-## Pool Info Methods
+## **Pool Info Methods**
 
-### `StableSwap.base_coins`
+### `base_coins`
 
 !!! description "`StableSwap.base_coins(i: uint256) → address: view`"
     

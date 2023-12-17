@@ -41,9 +41,9 @@ The template source code for lending pools may be viewed on GitHub.
 
     Lending pools also implement the ABI from plain pools. Refer to the plan pools documentation for overlapping methods.
 
-## Pool Info Methods
+## **Pool Info Methods**
 
-### `StableSwap.underlying_coins`
+### `underlying_coins`
 
 !!! description "`StableSwap.underlying_coins(i: uint256) → address: view`"
 
@@ -117,14 +117,14 @@ The template source code for lending pools may be viewed on GitHub.
         '0x39AA39c021dfbaE8faC545936693aC917d5E7563'
         ```
 
-## Exchange Methods
+## **Exchange Methods**
 
 Like plain pools, lending pools have the ``exchange`` method. However, in the case of lending pools, calling ``exchange`` 
 performs a swap between two wrapped tokens in the pool.
 
 For example, calling ``exchange`` on the Compound Pool, would result in a swap between the wrapped tokens ``cDAI`` and ``cUSDC``.
 
-### `StableSwap.exchange_underlying`
+### `exchange_underlying`
 
 !!! description "`StableSwap.exchange_underlying(i: int128, j: int128, dx: uint256, min_dy: uint256) → uint256`"
 
@@ -206,7 +206,7 @@ For example, calling ``exchange`` on the Compound Pool, would result in a swap b
         Older Curve lending pools may not implement the same signature for ``exchange_underlying``. For instance, Compound 
         pool does not return anything for ``exchange_underlying`` and therefore costs more in terms of gas.
 
-## Add/Remove Liquidity Methods
+## **Add/Remove Liquidity Methods**
 
 The function signatures for adding and removing liquidity to a lending pool are mostly the same as for a plain pool. 
 However, for lending pools, liquidity is added and removed in the wrapped token, not the underlying.
@@ -223,7 +223,7 @@ Some newer pools (e.g., [IB](https://github.com/curvefi/curve-contract/blob/mast
 have a modified signature for ``add_liquidity`` and allow the caller to specify whether the deposited liquidity is in 
 the wrapped or underlying token.
 
-### `StableSwap.add_liquidity`
+### `add_liquidity`
 
 !!! description "`StableSwap.add_liquidity(_amounts: uint256[N_COINS], _min_mint_amount: uint256, _use_underlying: bool = False) → uint256`"
 
