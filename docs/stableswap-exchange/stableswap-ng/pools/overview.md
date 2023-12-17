@@ -1,3 +1,5 @@
+<h1>Pools: Overview</h1>
+
 A Curve pool is essentially a smart contract that implements the StableSwap invariant, housing the logic for exchanging stable tokens. While all Curve pools share this core implementation, they come in various pool flavors.
 
 In its simplest form, a Curve pool is an implementation of the StableSwap invariant involving two or more tokens, often referred to as a 'plain pool.' Alternatively, Curve offers more complex pool variants, including pools with rebasing tokens and metapools. Metapools facilitate the exchange of one or more tokens with those from one or more underlying tokens.
@@ -7,8 +9,8 @@ In its simplest form, a Curve pool is an implementation of the StableSwap invari
 
 - price and D oracles
 - dynamic fees
-- [`exchange_received`](../pools/plainpool.md#exchange_received)
-- [`get_dx`](../pools/plainpool.md#get_dx)
+- [**`exchange_received`**](../pools/plainpool.md#exchange_received)
+- [**`get_dx`**](../pools/plainpool.md#get_dx)
 
 
 ## **Supported Assets**
@@ -16,7 +18,7 @@ In its simplest form, a Curve pool is an implementation of the StableSwap invari
 Stableswap-NG pools supports the following asset types:
 
 | Asset Type  | Description            |
-| ----------- | ---------------------- |
+| :---------: | ---------------------- |
 | `0`         | **Standard ERC20** token with no additional features |
 | `1`         | **Oracle** - token with rate oracle (e.g. wstETH) |
 | `2`         | **Rebasing** - token with rebase (e.g. stETH) |
@@ -38,7 +40,7 @@ Stableswap-NG pools supports the following asset types:
     Pools including rebasing tokens work a bit differently compared to others. 
     The internal `**_balance()**` function - which is used to calculate the coin balances within the pool - makes sure that **LP's keep all rebases**.
 
-??? quote "`_balances`"
+??? quote "`_balances()`"
 
     ```vyper
     @view
@@ -106,7 +108,7 @@ $xps2 = (xp_{i} + xp_{j})^2$
 $$\text{dynamic fee} = \frac{{fee_{m} \times fee}}{\frac{(fee_{m} - 10^{10}) \times 4 \times xp_{i} \times xp_{j}}{xps2}+ 10^{10}}$$
 
 
-??? quote "`Dynamic Fee`"
+??? quote "`dynamic_fee` method"
 
     ```vyper
     A_PRECISION: constant(uint256) = 100
@@ -189,7 +191,7 @@ Oracles are updated when users perform a swap or when liquidity is added or remo
 !!!danger "Oracle Manipulation"
     The spot price cannot immediately be used for the calculation of the moving average, as this would allow for single block oracle manipulation. Consequently, **`_calc_moving_average`** uses **`last_prices_packed`**, which retains prices from previous actions.
 
-??? quote "`upkeep_oracles`"
+??? quote "`upkeep_oracles` method"
 
     ```vyper
     @internal

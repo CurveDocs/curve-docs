@@ -2074,7 +2074,6 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
     | ----------- | -------| ----|
     | `user` |  `address` |  User address |
     | `full` |  `bool` | Weather to take into account the price difference above the highest user's band |
-    | `liquidation_discount` |  `uint256` | Liquidation discount (defaults to 0) |
 
     ??? quote "Source code"
 

@@ -47,13 +47,6 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
             log Transfer(_from, _to, _value)
         ```
 
-    === "Example"
-
-        ```shell
-        >>> LPToken.transfer('todo')
-        'todo'
-        ```
-
 
 ### `transferFrom`
 !!! description "`LPToken.transferFrom(_from : address, _to : address, _value : uint256) -> bool:`"
@@ -104,12 +97,6 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
             log Transfer(_from, _to, _value)
         ```
 
-    === "Example"
-
-        ```shell
-        >>> LPToken.transferFrom('todo')
-        'todo'
-        ```
 
 ## **Allowance Methods**
 
@@ -129,13 +116,6 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
         ```vyper
         allowance: public(HashMap[address, HashMap[address, uint256]])
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> LPToken.allowance('todo')
-        'todo'
         ```
 
 
@@ -180,13 +160,6 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
             return True
         ```
 
-    === "Example"
-
-        ```shell
-        >>> LPToken.approve('todo')
-        'todo'
-        ```
-
 
 ### `permit`
 !!! description "`LPToken.permit(_owner: address, _spender: address, _value: uint256, _deadline: uint256, _v: uint8, _r: bytes32, _s: bytes32) -> bool:`"
@@ -194,6 +167,8 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
     Function to permit `spender` to spend up to `_value` amount of `_owner`'s tokens via a signature.
 
     Returns: true (`bool`).
+
+    Emits: `Approval`        
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -208,6 +183,11 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
     ??? quote "Source code"
 
         ```vyper
+        event Approval:
+            owner: indexed(address)
+            spender: indexed(address)
+            value: uint256
+
         @external
         def permit(
             _owner: address,
@@ -259,15 +239,10 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
             return True
         ```
 
-    === "Example"
-
-        ```shell
-        >>> LPToken.('todo')
-        'todo'
-        ```
 
 
 ## **Contract Info Methods**
+
 ### `name`
 !!! description "`LPToken.name() -> String[64]: view`"
 
@@ -305,7 +280,7 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
         ```shell
         >>> LPToken.name()
-        'todo'
+        'USDV-crvUSD'
         ```
 
 
@@ -345,8 +320,8 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
     === "Example"
 
         ```shell
-        >>> LPToken.symbol('todo')
-        'todo'
+        >>> LPToken.symbol()
+        'USDVcrvUSD'
         ```
 
 
@@ -412,8 +387,8 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
     === "Example"
 
         ```shell
-        >>> LPToken.balanceOf('todo')
-        'todo'
+        >>> LPToken.balanceOf("0x7a16fF8270133F063aAb6C9977183D9e72835428")
+        999808484451757093697730
         ```
 
 
@@ -491,12 +466,12 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
     === "Example"
 
         ```shell
-        >>> LPToken.salt('todo')
-        'todo'
+        >>> LPToken.salt()
+        HexBytes('0x814188b56f08130fe7b283343b64baa08f4d207229dc52776968b62b977c8f46')
         ```
 
 
-### `DOMAIN_SEPERATOR`
+### `DOMAIN_SEPARATOR`
 !!! description "`LPToken.DOMAIN_SEPERATOR() -> bytes32: view`"
 
     Getter for the domain seperator.
@@ -537,6 +512,6 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
     === "Example"
 
         ```shell
-        >>> LPToken.DOMAIN_SEPERATOR('todo')
-        'todo'
+        >>> LPToken.DOMAIN_SEPARATOR()
+        HexBytes('0xf60903716a331f2ad023b28477aceee88e5180cab4694c497f4f9cefac657989')
         ```
