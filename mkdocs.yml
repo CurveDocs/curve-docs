@@ -6,6 +6,7 @@ plugins:
   - search
   - autolinks
   - typeset
+  - swagger-ui-tag
   - git-revision-date-localized:
       type: timeago
   - minify:
@@ -13,8 +14,9 @@ plugins:
 
 
 nav:    
-  - Curve DAO:
+  - Curve API test: curve-api/overview.md 
 
+  - Curve DAO:
     - Curve DAO Token:
       - CRV Token: curve_dao/curve-dao-token/crv-token.md
       - Admin Controls: curve_dao/curve-dao-token/admin-controls.md
