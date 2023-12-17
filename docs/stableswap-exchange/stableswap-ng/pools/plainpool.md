@@ -252,7 +252,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
         ```
 
     !!!note
-        This function exchanges one crvUSD for 0.999712 amount of USDV. `expected_dy` calculates the predicted input amount `j` to receive `dy` of coin `i`. This value can then be used as `_min_dy` in the `exchange` function. When using this function in production, please make sure **not to set `_min_dy` to 0 or other arbitrary values**, otherwise MEV bots will be able to frontrun/sandwich your transaction.
+        This function exchanges one crvUSD for 0.999712 amount of USDV. `expected_dy` calculates the predicted input amount `j` to receive `dy` of coin `i`. This value can then be used as `_min_dy` in the `exchange` function.
 
 
 ### `exchange_received`
@@ -743,10 +743,6 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
         9997967030080774869        
         ```
 
-    !!!info
-        When adding liquidity in production, do not set `_min_amount` to zero or any other arbitrary value, otherwise you may get frontrun/sandwiched by MEV bots.
-
-        
 
 ### `remove_liquidity`
 !!! description "`StableSwap.remove_liquidity(_burn_amount: uint256, _min_amounts: DynArray[uint256, MAX_COINS], _receiver: address = msg.sender, _claim_admin_fees: bool = True) -> DynArray[uint256, MAX_COINS]:`"
@@ -857,9 +853,8 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
         523455207306501616, 476610
         ```
 
-    !!!info todo
-        `remove_liquidity` removes liquidity in a balanced proportion according to the balances in the pool. Again, when conducting this transaction in production, do not set `_min_amount` to zero or any other arbitrary value; otherwise, you may get frontrun/sandwiched and lose money.
-
+    !!!note
+        `remove_liquidity` removes liquidity in a balanced proportion according to the balances in the pool.
 
 
 ### `remove_liquidity_one_coin`
@@ -997,7 +992,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
         ```
 
     !!!note
-        Both examples involve removing one LP token. With `removing_liquidity_one_coin` targeted at the higher balanced coin of the pool, a small premium is received. Conversely, when removing liquidity in the form of the lower balance token in the pool, we receive slightly less.
+        Both examples involve removing one LP token. With `remove_liquidity_one_coin` targeted at the higher balanced coin of the pool, a small premium is received. Conversely, when removing liquidity in the form of the lower balance token in the pool, slightly less is received. An estimated value of the output can be obtained via `calc_withdraw_one_coin`.
 
 
 ### `remove_liquidity_imbalance`
@@ -1426,6 +1421,9 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
         1000000
         ```
 
+    !!!note
+        The method returns an integer with with 1e10 precision.
+
 
 ### `dynamic_fee`
 !!! description "`StableSwap.dynamic_fee(i: int128, j: int128) -> uint256:`"
@@ -1519,8 +1517,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
         ```
 
     !!!note
-        Why is there there the same dynamic fee in both trade directions? does not make sense to me? why not higher fee when swapping form high balance into low balance and vice versa?
-
+        The method returns an integer with with 1e10 precision.
 
 
 ### `admin_fee`
@@ -1529,9 +1526,6 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
     Getter for the admin fee.
 
     Returns: admin fee (`uint256`).
-
-    !!!info
-        This value is set at 50% (5000000000) and is a constant, meaning it cannot be changed.
 
     ??? quote "Source code"
 
@@ -1545,6 +1539,10 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
         >>> StableSwap.admin_fee()
         5000000000
         ```
+
+    !!!note
+        - The method returns an integer with with 1e10 precision.
+        - `admin_fee` is a constant and set at 50% (5000000000).
 
 
 ### `offpeg_fee_multiplier`
@@ -1586,6 +1584,9 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
         >>> StableSwap.offpeg_fee_multiplier()
         50000000000
         ```
+
+    !!!note
+        The method returns an integer with with 1e10 precision.
 
 
 ### `admin_balances`
@@ -2052,6 +2053,9 @@ When removing liquidity in a balanced portion (**`remove_liquidity`**), oracles 
         579359617954437487117250992339883299967854142015
         ```
 
+    !!!note
+        This value needs to be unpacked, as it contains two variables (`ma_last_time_p`, `ma_last_time_D`). The value 579359617954437487117250992339883299967854142015 is unpacked into two uint256 numbers. First, its lower 128 bits are isolated using a bitwise AND with 2**128 − 1, and then the value is shifted right by 128 bits to extract the upper 128 bits. It returns: [1702584895,1702584895].
+
 
 
 ## **Amplification Coefficient**
@@ -2488,7 +2492,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
     Returns: coin balances (`DynArray[uint256, MAX_COINS]`).
 
     !!!info
-        This getter method does not account for admin fees. 
+        This getter method does not account for admin fees (`admin_balances`). 
 
     ??? quote "Source code"
 
@@ -2730,3 +2734,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
         >>> StableSwap.get_virtual_price()
         1000063971106330426
         ```
+
+    !!!note
+        - The method returns `virtual_price` as an integer with 1e18 precision.
+        - `virtual_price` returns a price relative to the underlying.

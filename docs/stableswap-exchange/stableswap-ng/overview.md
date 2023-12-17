@@ -1,7 +1,8 @@
-<h1> </h1>
+<h1>StableSwap-NG: Overview </h1>
 
 !!!deploy "Contract Source & Deployment"
-    Source code available on [Github](https://github.com/curvefi/stableswap-ng).
+    Source code available on [GitHub](https://github.com/curvefi/stableswap-ng). The following documentation covers all commits up until [5f582a6](https://github.com/curvefi/stableswap-ng/commit/5f582a6b8f709d863825c5fbe026cd3b4fa2d840).  
+    All stableswap-ng deployments can be found in the [Deployment Addresses](../../references/deployed-contracts.md#stableswap-ng) section.
 
 For an in-depth understanding of the StableSwap invariant design, please refer to the official [StableSwap whitepaper](../../pdf/stableswap-paper.pdf).
 
