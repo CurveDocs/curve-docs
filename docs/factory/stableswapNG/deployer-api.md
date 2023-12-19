@@ -3,8 +3,12 @@
 
 ## **Liquidity Pools**
 
-!!!warning
-    Transaction will fail if the requirements are not met.
+!!!warning 
+    - **`ERC20:`** Users are advised to do careful due-diligence on ERC20 tokens that they interact with, as this contract **cannot differentiate between harmless and malicious** ERC20 tokens.
+    - **`Oracle:`** When using tokens with oracles, its important to know that they **may be controlled externally by an EOA**.
+    - **`Rebasing:`** Users and Integrators are advised to understand how the AMM contract works with rebasing balances.
+    - **`ERC4626:`** Some ERC4626 implementations **may be susceptible to Donation/Inflation attacks**. Users are advised to proceed with caution.
+
 
 ### `deploy_plain_pool`
 

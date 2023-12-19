@@ -1,5 +1,3 @@
-## Overview
-
 The simplest Curve pool is a plain pool, which is an implementation of the StableSwap invariant for two or more tokens. 
 The key characteristic of a plain pool is that the pool contract holds all deposited assets at **all** times.
 
@@ -7,7 +5,6 @@ An example of a Curve plain pool is [3Pool](https://github.com/curvefi/curve-con
 which contains the tokens ``DAI``, ``USDC`` and ``USDT``.
 
 !!! note
-
     The API of plain pools is also implemented by lending and metapools.
 
 The following Brownie console interaction examples are using 
@@ -15,9 +12,10 @@ The following Brownie console interaction examples are using
 pools may be viewed on 
 [GitHub](https://github.com/curvefi/curve-contract/blob/master/contracts/pool-templates/base/SwapTemplateBase.vy).
 
-## Pool Info Methods
 
-### `StableSwap.coins`
+## **Pool Info Methods**
+
+### `coins`
 
 !!! description "`StableSwap.coins(i: uint256) → address: view`"
 
@@ -73,7 +71,7 @@ pools may be viewed on
         '0xdB25f211AB05b1c97D595516F45794528a807ad8'
         ```
 
-### `StableSwap.balances`
+### `balances`
 
 !!! description "`StableSwap.balances(i: uint256) → uint256: view`"
 
@@ -92,7 +90,7 @@ pools may be viewed on
         2918187395
         ```
 
-### `StableSwap.owner`
+### `owner`
 
 !!! description "`StableSwap.owner() → address: view`"
 
@@ -144,7 +142,7 @@ pools may be viewed on
         '0xeCb456EA5365865EbAb8a2661B0c503410e9B347'
         ```
 
-### `StableSwap.lp_token`
+### `lp_token`
 
 !!! description "`StableSwap.lp_token() → address: view`"
 
@@ -164,7 +162,7 @@ pools may be viewed on
         In older Curve pools ``lp_token`` may not be ``public`` and thus not visible.
 
 
-### `StableSwap.A (Amplification factor)`
+### `A (Amplification factor)`
 
 !!! description "`StableSwap.A() → uint256: view`"
 
@@ -195,7 +193,7 @@ pools may be viewed on
         The amplification coefficient is scaled by ``A_PRECISION`` (``=100``)
 
 
-### `StableSwap.A_precise`
+### `A_precise`
 
 !!! description "`StableSwap.A_precise() → uint256: view`"
 
@@ -217,7 +215,7 @@ pools may be viewed on
         10000
         ```
 
-### `StableSwap.get_virtual_price`
+### `get_virtual_price`
 
 !!! description "`StableSwap.get_virtual_price() → uint256: view`"
 
@@ -254,7 +252,7 @@ pools may be viewed on
         - ``virtual_price`` returns a price relative to the underlying. You can get the absolute price
         by multiplying it with the price of the underlying assets.
 
-### `StableSwap.fee`
+### `fee`
 
 !!! description "`StableSwap.fee() → uint256: view`"
 
@@ -308,7 +306,7 @@ pools may be viewed on
 
         The method returns ``fee`` as an integer with ``1e10`` precision.
 
-### `StableSwap.admin_fee`
+### `admin_fee`
 
 !!! description "`StableSwap.admin_fee() → uint256: view`"
 
@@ -364,9 +362,9 @@ pools may be viewed on
         - Admin fee is set at 50% (``5000000000``) and is paid out to veCRV holders.
 
 
-## Exchange Methods
+## **Exchange Methods**
 
-### `StableSwap.get_dy`
+### `get_dy`
 
 !!! description "`StableSwap.get_dy(i: int128, j: int128, _dx: uint256) → uint256: view`"
 
@@ -407,7 +405,7 @@ pools may be viewed on
         ``2`` and ``18``, respectively.
 
 
-### `StableSwap.exchange`
+### `exchange`
 
 !!! description "`StableSwap.exchange(i: int128, j: int128, dx: uint256, min_dy: uint256) → uint256`"
 
@@ -502,9 +500,9 @@ pools may be viewed on
         >>> pool.exchange(0, 1, 10**2, expected, {"from": alice})
         ```
 
-## Add/Remove Liquidity Methods
+## **Add/Remove Liquidity Methods**
 
-### `StableSwap.calc_token_amount`
+### `calc_token_amount`
 
 !!! description "`StableSwap.calc_token_amount(_amounts: uint256[N_COINS], _: bool) → uint256: view`"
 
@@ -557,7 +555,7 @@ pools may be viewed on
         1996887509167925969
         ```
 
-### `StableSwap.add_liquidity`
+### `add_liquidity`
 
 !!! description "`StableSwap.add_liquidity(amounts: uint256[N_COINS], min_mint_amount: uint256) → uint256`"
 
@@ -668,7 +666,7 @@ pools may be viewed on
         >>> todo: add_liquidity console output example
         ```
 
-### `StableSwap.remove_liquidity`
+### `remove_liquidity`
 
 !!! description "`StableSwap.remove_liquidity(_amount: uint256, min_amounts: uint256[N_COINS]) → uint256[N_COINS]`"
 
@@ -729,7 +727,7 @@ pools may be viewed on
         >>> todo: remove_liquidity console output example
         ```
 
-### `StableSwap.remove_liquidity_imbalance`
+### `remove_liquidity_imbalance`
 
 !!! description "`StableSwap.remove_liquidity_imbalance(amounts: uint256[N_COINS], max_burn_amount: uint256) → uint256`"
 
@@ -816,7 +814,7 @@ pools may be viewed on
         >>> todo: remove_liquidity_imbalance console output example
         ```
 
-### `StableSwap.calc_withdraw_one_coin`
+### `calc_withdraw_one_coin`
 
 !!! description "`StableSwap.calc_withdraw_one_coin(_token_amount: uint256, i: int128) → uint256`"
 
@@ -880,7 +878,7 @@ pools may be viewed on
         >>> todo: calculate_withdraw_one_coin console output example
         ```
 
-### `StableSwap.remove_liquidity_one_coin`
+### `remove_liquidity_one_coin`
 
 !!! description "`StableSwap.remove_liquidity_one_coin(_token_amount: uint256, i: int128, _min_amount: uint256) → uint256`"
 
