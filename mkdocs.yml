@@ -62,7 +62,7 @@ nav:
 
     - Governance and Voting:  
       - Overview: curve_dao/governance/overview.md
-      - x-Gov: curve_dao/xgov/xgov.md
+      - Crosschain Governance: curve_dao/xgov/xgov.md
       
     - Exchange Router: curve_dao/router/router.md
 
