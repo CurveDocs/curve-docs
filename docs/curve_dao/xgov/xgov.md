@@ -9,13 +9,13 @@ Curve X-DAO handles cross-chain governance. This system enables the DAO to **per
 <div align="center">
 ```mermaid
 flowchart LR
-    l1-b([L1-Broadcaster]) --> l2-r([L2-Relayer])
-    l2-r --- o([Ownership Agent])
-    l2-r --- p([Parameter Agent])
-    l2-r --- e([Emergency Agent])
-    o --> vault([L2-Vault / Contract])
-    p --> vault
-    e --> vault
+    l1-b[(L1-Broadcaster)] --> |"broadcast"| l2-r[(L2-Relayer)]
+    l2-r --- |relay| o([Ownership Agent])
+    l2-r --- |relay| p([Parameter Agent])
+    l2-r --- |relay| e([Emergency Agent])
+    o --> |"execute"| vault[(L2-Vault / Contract)]
+    p --> |"execute"| vault
+    e --> |"execute"| vault
 ```
 </div>
 
@@ -25,7 +25,8 @@ The Broadcaster and Relay contracts **share the same contract address across dif
 
 Once the governance vote is concluded, the **sequence of messages need to be communicated to the Layer 2**. This is done via the Broadcaster's `broadcast` function.
 
-The `broadcast` functions might slightly vary based on the network the message is communicated to.
+!!!info
+    The `broadcast` functions might slightly vary based on the network the message is communicated to.
 
 
 ## **Arbitrum**
@@ -139,6 +140,8 @@ The `broadcast` functions might slightly vary based on the network the message i
 
     Function to set a new Arbitrum Inbox contract.
 
+    Emits: `SetArbInbox`
+
     | Input     | Type       | Description                  |
     | --------- | ---------- | ---------------------------- |
     | `_arb_inbox` | `address` | new arbitrum inbox address |
@@ -172,6 +175,8 @@ The `broadcast` functions might slightly vary based on the network the message i
 
     Function to set a new refund address.
 
+    Emits: `SetArbRefund`
+
     | Input     | Type       | Description                  |
     | --------- | ---------- | ---------------------------- |
     | `set_arb_refund` | `address` | new refund address |
@@ -196,11 +201,14 @@ The `broadcast` functions might slightly vary based on the network the message i
         '0x25877b9413Cc7832A6d142891b50bd53935feF82'
         ```
 
+    !!!note
+        The current refund address is the L2-Vault.
+
 
 
 ## **Optimism and Optimistic Rollups**
 
-Mantle and Base Broadcaster have the identical `broadcast` function as Optimism, since they are Optimistic Rollups.
+The [**Mantle**](https://www.mantle.xyz/) and [**Base**](https://base.org/) Broadcaster contract have the identical `broadcast` function as Optimism, since they are Optimistic Rollups.
 
 
 For a better understanding on how data is sent between L1 and L2 through Optimism read here: https://docs.optimism.io/builders/dapp-developers/bridging/messaging.
@@ -303,6 +311,8 @@ For a better understanding on how data is sent between L1 and L2 through Optimis
 
     Function to set a new OVM Canonical Transaction Chain contract.
 
+    Emits: `SetOVMChain`
+
     | Input     | Type       | Description                  |
     | --------- | ---------- | ---------------------------- |
     | `_ovm_chain`  |  `address` | new ovm chain address |
@@ -338,6 +348,8 @@ For a better understanding on how data is sent between L1 and L2 through Optimis
         This function is only callable by the `ownership admin`.
 
     Function to set a new OVM Cross Domain messenger contract.
+
+    Emits: `SetOVMMessenger`
 
     | Input     | Type       | Description                  |
     | --------- | ---------- | ---------------------------- |
@@ -511,17 +523,14 @@ The L2 Relayer contract acts as a middleman, receiving messages and relaying the
 
 The Relayer receives the broadcasted message and, using the `relay` function, forwards this message to the appropriate agent. The agents defined in the L2 Relayer contract (`OWNERSHIP_AGENT`, `PARAMETER_AGENT`, `EMERGENCY_AGENT`) are responsible for executing the instructions contained in the message.
 
-!!!info
-    The agent addresses cannot be altered.
+!!!warning
+    A Relayer's agent addresses cannot be altered.
 
 
 ## **Arbitrum**
 
 ### `relay`
 !!! description "`L2-Relayer.apply_admins():`"
-
-    !!!guard "Guarded Method"
-        This function is only callable by the `ownership admin`.
 
     Function to receive messages, relay them to the appropriate agent, and execute the messages by calling the `execute` function on the agent's contract.
 
@@ -597,7 +606,7 @@ Mantle and Base Relayer have the identical `relay` function as the one from Opti
 !!! description "`L2-Relayer.apply_admins():`"
 
     !!!guard "Guarded Method"
-        This function is only callable by the `ownership admin`.
+        This function is only callable by the `MESSENGER`.
 
     Function to receive messages, relay them to the appropriate agent, and execute the messages by calling the `execute` function on the agent's contract.
 
