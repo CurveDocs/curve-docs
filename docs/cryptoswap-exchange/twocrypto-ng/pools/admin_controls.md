@@ -1,4 +1,8 @@
-## admin controls
+<h1>Pool: Admin Controls</h1>
+
+## **Pool Ownership**
+Pools created through the Factory are "owned" by the factory **`admin`**. Ownership can therefore only be changed within the factory contract via **`commit_transfer_ownership`** and **`accept_transfer_ownership`**. 
+
 
 ## **Amplification Coefficient / Gamma Admin Controls**
 
