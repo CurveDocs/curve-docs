@@ -1,42 +1,200 @@
-todo:
-code block: change python to vyper
+A TwoCrypto-NG pool consists of **two non-pegged assets**. The [LP token](../pools/lp-token.md) methods are integrated into the liquidity pool, resulting in both sharing the same contract.
 
 
-### `last_timestamp`
-### `D`
+!!! tip  
+    In TwoCrypto-NG pools, price scaling and fee parameters are bundled and stored as a single unsigned integer. This consolidation reduces storage read and write operations, leading to more cost-efficient calls.
 
 
-## Exchange Methods
+    ??? quote "pack"
 
-todo:
-- transfer in
-- transfer out
+        This internal function packs two or three integers into a single uint256.
 
-exchange methods. tran
+        ```vyper 
+        @pure
+        @internal
+        def _pack_2(p1: uint256, p2: uint256) -> uint256:
+            return p1 | (p2 << 128)
+
+        @internal
+        @pure
+        def _pack_3(x: uint256[3]) -> uint256:
+            """
+            @notice Packs 3 integers with values <= 10**18 into a uint256
+            @param x The uint256[3] to pack
+            @return uint256 Integer with packed values
+            """
+            return (x[0] << 128) | (x[1] << 64) | x[2]
+        ```
+
+    ??? quote "unpack"
+
+        This internal function unpacks a single uin256 into two or three integers.
+
+        ```vyper
+        @pure
+        @internal
+        def _unpack_2(packed: uint256) -> uint256[2]:
+            return [packed & (2**128 - 1), packed >> 128]
+
+        @internal
+        @pure
+        def _unpack_3(_packed: uint256) -> uint256[3]:
+            """
+            @notice Unpacks a uint256 into 3 integers (values must be <= 10**18)
+            @param val The uint256 to unpack
+            @return uint256[3] A list of length 3 with unpacked integers
+            """
+            return [
+                (_packed >> 128) & 18446744073709551615,
+                (_packed >> 64) & 18446744073709551615,
+                _packed & 18446744073709551615,
+            ]
+        ```
+
+
+!!!warning "Examples"
+    The examples following each code block of the corresponding functions provide a basic illustration of input/output values. **When using the function in production, ensure not to set `_min_dy`, `_min_amount`, etc., to zero or other arbitrary numbers**. Otherwise, MEV bots may frontrun or sandwich your transaction, leading to a potential loss of funds.
+
+    The examples are based on the <todo> pool: [todo]().
+
+
+## **Exchange Methods**
+
+The AMM contract utilizes two internal functions to transfer tokens/coins in and out of the pool:
+
+
+- **Transfer tokens into the AMM**
+
+    ??? quote "`_transfer_in(_coin_idx: uint256, _dx: uint256, sender: address, expect_optimistic_transfer: bool) -> uint256:`"
+
+        Internal function to transfer tokens into the AMM, called by `exchange`, `exchange_received` or `add_liquidity`.
+
+        | Input                      | Type      | Description                                            |
+        | -------------------------- | --------- | ------------------------------------------------------ |
+        | `_coin_idx`                | `int128`  | Index of the token to transfer in.                     |
+        | `_dx`                      | `uint256` | Amount to transfer in.                                 |
+        | `sender`                   | `address` | Address to transfer coins from.                        |
+        | `expect_optimistic_transfer` | `bool`   | `True` if the contract expects an optimistic coin transfer. |
+
+        **`expect_optimistic_transfer`** is only `True` when using the `exchange_received` function.
+
+        ```vyper
+        balances: public(uint256[N_COINS])
+
+        @internal
+        def _transfer_in(
+            _coin_idx: uint256,
+            _dx: uint256,
+            sender: address,
+            expect_optimistic_transfer: bool,
+        ) -> uint256:
+            """
+            @notice Transfers `_coin` from `sender` to `self` and calls `callback_sig`
+                    if it is not empty.
+            @params _coin_idx uint256 Index of the coin to transfer in.
+            @params dx amount of `_coin` to transfer into the pool.
+            @params sender address to transfer `_coin` from.
+            @params expect_optimistic_transfer bool True if pool expects user to transfer.
+                    This is only enabled for exchange_received.
+            @return The amount of tokens received.
+            """
+            coin_balance: uint256 = ERC20(coins[_coin_idx]).balanceOf(self)
+
+            if expect_optimistic_transfer:  # Only enabled in exchange_received:
+                # it expects the caller of exchange_received to have sent tokens to
+                # the pool before calling this method.
+
+                # If someone donates extra tokens to the contract: do not acknowledge.
+                # We only want to know if there are dx amount of tokens. Anything extra,
+                # we ignore. This is why we need to check if received_amounts (which
+                # accounts for coin balances of the contract) is atleast dx.
+                # If we checked for received_amounts == dx, an extra transfer without a
+                # call to exchange_received will break the method.
+                dx: uint256 = coin_balance - self.balances[_coin_idx]
+                assert dx >= _dx  # dev: user didn't give us coins
+
+                # Adjust balances
+                self.balances[_coin_idx] += dx
+
+                return dx
+
+            # ----------------------------------------------- ERC20 transferFrom flow.
+
+            # EXTERNAL CALL
+            assert ERC20(coins[_coin_idx]).transferFrom(
+                sender,
+                self,
+                _dx,
+                default_return_value=True
+            )
+
+            dx: uint256 = ERC20(coins[_coin_idx]).balanceOf(self) - coin_balance
+            self.balances[_coin_idx] += dx
+            return dx
+        ```
+
+- **Transfer tokens out of the AMM**
+
+    ??? quote "`_transfer_out(_coin_idx: int128, _amount: uint256, receiver: address):`"
+
+        Internal function to transfer tokens out of the AMM, called by the `remove_liquidity`, `remove_liquidity_one`, `_claim_admin_fees`, and `_exchange` methods.
+
+        | Input        | Type     | Description                           |
+        | ------------ | -------- | ------------------------------------- |
+        | `_coin_idx`  | `int128` | Index of the token to transfer out.   |
+        | `_amount`    | `uint256`| Amount to transfer out.               |
+        | `receiver`   | `address`| Address to send the tokens to.        |
+
+
+        ```vyper
+        balances: public(uint256[N_COINS])
+
+        @internal
+        def _transfer_out(_coin_idx: uint256, _amount: uint256, receiver: address):
+            """
+            @notice Transfer a single token from the pool to receiver.
+            @dev This function is called by `remove_liquidity` and
+                `remove_liquidity_one`, `_claim_admin_fees` and `_exchange` methods.
+            @params _coin_idx uint256 Index of the token to transfer out
+            @params _amount Amount of token to transfer out
+            @params receiver Address to send the tokens to
+            """
+
+            # Adjust balances before handling transfers:
+            self.balances[_coin_idx] -= _amount
+
+            # EXTERNAL CALL
+            assert ERC20(coins[_coin_idx]).transfer(
+                receiver,
+                _amount,
+                default_return_value=True
+            )
+        ```
+
 
 ### `exchange`
 !!! description "`TwoCrypto.exchange(i: uint256, j: uint256, dx: uint256, min_dy: uint256, receiver: address = msg.sender) -> uint256:`"
 
-    todo: interal _exchange has all the calculations of fee, dy etc. passes values into exchange().
     Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`.
 
-    Returns:  Amount of tokens at index j received (uint256).
+    Returns: Amount of tokens at index `j` received (`uint256`).
 
-    Emits `TokenExchange`
+    Emits: `TokenExchange`
 
-    | Input      | Type      | Description |
-    | ---------- | --------- | ----------- |
-    | `i` | `uint256` | Index value for the input coin |
-    | `j` | `uint256` | Index value for the output coin |
-    | `dx` | `uint256` | Amount of input coin being swapped in |
-    | `min_dy` | `uint256` | Minimum amount of output coin to receive |
-    | `receiver` | `address` | Address to send output coin to. Defaults to `msg.sender` |
+    | Input       | Type      | Description                                                |
+    | ----------- | --------- | ---------------------------------------------------------- |
+    | `i`         | `uint256` | Index value for the input coin.                            |
+    | `j`         | `uint256` | Index value for the output coin.                           |
+    | `dx`        | `uint256` | Amount of input coin being swapped in.                     |
+    | `min_dy`    | `uint256` | Minimum amount of output coin to receive.                  |
+    | `receiver`  | `address` | Address to send output coin to. Defaults to `msg.sender`.  |
+
 
     ??? quote "Source code"
 
         === "CurveTwocryptoOptimized.vy"
 
-            ```python
+            ```vyper
             event TokenExchange:
                 buyer: indexed(address)
                 sold_id: uint256
@@ -159,7 +317,7 @@ exchange methods. tran
 
         === "CurveCryptoMathOptimized2.vy"
 
-            ```python
+            ```vyper
             @external
             @view
             def newton_D(ANN: uint256, gamma: uint256, x_unsorted: uint256[N_COINS], K0_prev: uint256 = 0) -> uint256:
@@ -407,25 +565,26 @@ exchange methods. tran
     !!! warning
         The transfer of coins into the pool and then calling `exchange_received` is highly advised to be done in the same transaction. If not, other users or MEV bots may call `exchange_received` before you, potentially *stealing* the coins.
 
-    Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`. This function requires a transfer of dx amount of coin i to the pool proior to calling this function, as this exchange is based on the change of token balances in the pool. The pool will not call transferFrom and will only check if a surplus of coins[i] is greater than or equal to `dx`.
+    Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`. This function requires a transfer of `dx` amount of coin `i` to the pool prior to calling this function, as this exchange is based on the change of token balances in the pool. The pool will not call `transferFrom` and will only check if a surplus of `coins[i]` is greater than or equal to `dx`.
 
-    Returns:  Amount of tokens at index j received (uint256).
+    Returns: Amount of tokens at index `j` received (`uint256`).
 
-    Emits `TokenExchange`
+    Emits: `TokenExchange`
 
-    | Input      | Type      | Description |
-    | ---------- | --------- | ----------- |
-    | `i` | `uint256` | Index value for the input coin |
-    | `j` | `uint256` | Index value for the output coin |
-    | `dx` | `uint256` | Amount of input coin being swapped in |
-    | `min_dy` | `uint256` | Minimum amount of output coin to receive |
-    | `receiver` | `address` | Address to send output coin to. Defaults to `msg.sender` |
+    | Input       | Type      | Description                                                |
+    | ----------- | --------- | ---------------------------------------------------------- |
+    | `i`         | `uint256` | Index value for the input coin.                            |
+    | `j`         | `uint256` | Index value for the output coin.                           |
+    | `dx`        | `uint256` | Amount of input coin being swapped in.                     |
+    | `min_dy`    | `uint256` | Minimum amount of output coin to receive.                  |
+    | `receiver`  | `address` | Address to send output coin to. Defaults to `msg.sender`.  |
+
 
     ??? quote "Source code"
 
         === "CurveTwocryptoOptimized.vy"
 
-            ```python
+            ```vyper
             event TokenExchange:
                 buyer: indexed(address)
                 sold_id: uint256
@@ -553,7 +712,7 @@ exchange methods. tran
 
         === "CurveCryptoMathOptimized2.vy"
 
-            ```python
+            ```vyper
             @external
             @view
             def newton_D(ANN: uint256, gamma: uint256, x_unsorted: uint256[N_COINS], K0_prev: uint256 = 0) -> uint256:
@@ -795,13 +954,13 @@ exchange methods. tran
 ### `fee_calc`
 !!! description "`TwoCrypto.fee_calc(xp: uint256[N_COINS]) -> uint256:`"
 
-    Getter for the charged fee by the pool at the current state.
+    Getter for the charged exchange fee by the pool at the current state.
 
-    Returns: fee value (uint256).
+    Returns: Fee value (`uint256`).
 
-    | Input      | Type      | Description |
-    | ---------- | --------- | ----------- |
-    | `xp` |  `uint256[N_COINS]` | pool balances multiplied by the coin precisions |
+    | Input | Type               | Description                                      |
+    | ----- | ------------------ | ------------------------------------------------ |
+    | `xp`  | `uint256[N_COINS]` | Pool balances multiplied by the coin precisions. |
 
     ??? quote "Source code"
 
@@ -845,13 +1004,13 @@ exchange methods. tran
 
     Getter for the received amount of coin `j` for swapping in `dx` amount of coin `i`. This method includes fees.
 
-    Returns: Exact amount of output `j` tokens (`uint256`). 
+    Returns: Exact amount of output `j` tokens (`uint256`).
 
-    | Input      | Type      | Description |
-    | ---------- | --------- | ----------- |
-    | `i` |  `uint256` | index of input token |
-    | `j` |  `uint256` | index of output token |
-    | `dx` |  `uint256` | amount of input tokens |
+    | Input | Type      | Description               |
+    | ----- | --------- | ------------------------- |
+    | `i`   | `uint256` | Index of input token.     |
+    | `j`   | `uint256` | Index of output token.    |
+    | `dx`  | `uint256` | Amount of input tokens.   |
 
     ??? quote "Source code"
 
@@ -1088,13 +1247,13 @@ exchange methods. tran
 
     Getter for the required amount of coin `i` to input for swapping out `dy` amount of token `j`.
 
-    Returns: amount of coins received (`uint256`).
+    Returns: Amount of coins received (`uint256`).
 
-    | Input      | Type      | Description |
-    | ---------- | --------- | ----------- |
-    | `i` |  `uint256` | index of input token |
-    | `j` |  `uint256` | index of output token |
-    | `dy`|  `uint256` | amount of input tokens |
+    | Input | Type      | Description               |
+    | ----- | --------- | ------------------------- |
+    | `i`   | `uint256` | Index of input token.     |
+    | `j`   | `uint256` | Index of output token.    |
+    | `dy`  | `uint256` | Amount of output tokens.  |
 
     ??? quote "Source code"
 
@@ -1334,30 +1493,28 @@ exchange methods. tran
 
 
 
-## Adding / Removing Liquidity
-
-adding removing liq
+## **Adding / Removing Liquidity**
 
 ### `add_liquidity`
 !!! description "`TwoCrypto.add_liquidity(amounts: uint256[N_COINS], min_mint_amount: uint256, receiver: address = msg.sender) -> uint256:`"
 
-    Function to add liquidity to the pool and mint the corresponding lp tokens.
+    Function to add liquidity to the pool and mint the corresponding LP tokens.
 
-    Returns: amount of lp tokens received (`uint256`).
+    Returns: Amount of LP tokens received (`uint256`).
 
-    Emits ``
+    Emits: `AddLiquidity`
 
-    | Input      | Type      | Description |
-    | ---------- | --------- | ----------- |
-    | `amounts` |  `uint256[N_COINS]` | amount of each coin to add |
-    | `min_mint_amount` |  `uint256` | minimum amount of lp tokens to mint |
-    | `receiver` |  `address` | receiver of the lp tokens; defaults to msg.sender|
+    | Input            | Type                | Description                                           |
+    | ---------------- | ------------------- | ----------------------------------------------------- |
+    | `amounts`        | `uint256[N_COINS]`  | Amount of each coin to add.                           |
+    | `min_mint_amount`| `uint256`           | Minimum amount of LP tokens to mint.                  |
+    | `receiver`       | `address`           | Receiver of the LP tokens; defaults to `msg.sender`.  |
 
     ??? quote "Source code"
 
         === "CurveTwocryptoOptimized.vy"
 
-            ```python
+            ```vyper
             event AddLiquidity:
                 provider: indexed(address)
                 token_amounts: uint256[N_COINS]
@@ -1488,7 +1645,7 @@ adding removing liq
 
         === "CurveCryptoMathOptimized2.vy"
 
-            ```python
+            ```vyper
             @external
             @view
             def newton_D(ANN: uint256, gamma: uint256, x_unsorted: uint256[N_COINS], K0_prev: uint256 = 0) -> uint256:
@@ -1590,12 +1747,12 @@ adding removing liq
 
     Function to calculate the charged fee on `amounts` when adding liquidity.
 
-    Returns: charged fee (`uint256`).
+    Returns: Charged fee (`uint256`).
 
-    | Input      | Type      | Description |
-    | ---------- | --------- | ----------- |
-    | `amounts` |  `uint256[N_COINS]` | amount of coins added to the pool |
-    | `xp` |  `uint256[N_COINS]` | pool balances multiplied by the coin precisions |
+    | Input    | Type                | Description                                      |
+    | -------- | ------------------- | ------------------------------------------------ |
+    | `amounts`| `uint256[N_COINS]`  | Amount of coins added to the pool.               |
+    | `xp`     | `uint256[N_COINS]`  | Pool balances multiplied by the coin precisions. |
 
     ??? quote "Source code"
 
@@ -1648,20 +1805,23 @@ adding removing liq
 ### `remove_liquidity`
 !!! description "`TwoCrypto.remove_liquidity(_amount: uint256, min_amounts: uint256[N_COINS], receiver: address = msg.sender) -> uint256[N_COINS]:`"
 
-    Function to remove liquidity from the pool and burn `_amount` of lp tokens. When removing liquidity with this function, no fees are charged as the coins are withdrawin in balanced proportions. This function also upkeeps the xcp_oracle since liquidity was removed.
+    !!! info
+        In case of any issues that result in a malfunctioning AMM state, users can safely withdraw liquidity using **`remove_liquidity`**. Withdrawal is based on balances proportional to the AMM balances, as this function does not perform complex math.
 
-    Returns: withdrawn balances (`uint256[N_COINS]`).
+    Function to remove liquidity from the pool and burn `_amount` of LP tokens. When removing liquidity with this function, no fees are charged as the coins are withdrawn in balanced proportions. This function also updates the `xcp_oracle` since liquidity was removed.
+
+    Returns: Withdrawn balances (`uint256[N_COINS]`).
 
     Emits: `RemoveLiquidity`
 
-    | Input      | Type      | Description |
-    | ---------- | --------- | ----------- |
-    | `_amount` |  `uint256` | amount of lp tokens to burn |
-    | `min_amounts` |  `uint256[N_COINS]` | minimum amounts of token to withdraw |
-    | `receiver` |  `address` | receiver of the coins; defaults to msg.sender |
+    | Input         | Type                | Description                                      |
+    | ------------- | ------------------- | ------------------------------------------------ |
+    | `_amount`     | `uint256`           | Amount of LP tokens to burn.                     |
+    | `min_amounts` | `uint256[N_COINS]`  | Minimum amounts of tokens to withdraw.           |
+    | `receiver`    | `address`           | Receiver of the coins; defaults to `msg.sender`. |
 
-    !!!info 
-        This withdrawal method is very safe, does no complex math since tokens are withdrawn in balanced proportions.
+    !!! info 
+        This withdrawal method is very safe, as it does not involve complex math, with tokens being withdrawn in balanced proportions.
 
     ??? quote "Source code"
 
@@ -1852,18 +2012,18 @@ adding removing liq
 ### `remove_liquidity_one_coin`
 !!! description "`TwoCrypto.remove_liquidity_one_coin(token_amount: uint256, i: uint256, min_amount: uint256, receiver: address = msg.sender) -> uint256:`"
 
-    Function to burn `token_amount` LP tokens and withdraw in a single token `i`.
+    Function to burn `token_amount` LP tokens and withdraw liquidity in a single token `i`.
 
-    Returns: amount of coins withdrawn (`uint256`).
+    Returns: Amount of coins withdrawn (`uint256`).
 
-    Emits `RemoveLiquidityOne`
+    Emits: `RemoveLiquidityOne`
 
-    | Input      | Type      | Description |
-    | ---------- | --------- | ----------- |
-    | `token_amount` |  `uint256` | amount of lp tokens to burn |
-    | `i` |  `uint256` | index of the token to withdraw |
-    | `min_amount` |  `uint256` | minimum amount of token to withdraw |
-    | `receiver` |  `address` | receiver of the coins; defaults to msg.sender |
+    | Input          | Type      | Description                                      |
+    | -------------- | --------- | ------------------------------------------------ |
+    | `token_amount` | `uint256` | Amount of LP tokens to burn.                     |
+    | `i`            | `uint256` | Index of the token to withdraw.                  |
+    | `min_amount`   | `uint256` | Minimum amount of token to withdraw.             |
+    | `receiver`     | `address` | Receiver of the coins; defaults to `msg.sender`. |
 
     ??? quote "Source code"
 
@@ -2281,10 +2441,10 @@ adding removing liq
 
     Returns: Amount of LP tokens deposited or withdrawn (`uint256`).
 
-    | Input      | Type      | Description |
-    | ---------- | --------- | ----------- |
-    | `amounts` |  `uint256[N_COINS]` | amounts of tokens being deposited or withdrawn |
-    | `deposit` |  `bool` | true = deposit, false = withdraw |
+    | Input      | Type               | Description                                     |
+    | ---------- | ------------------ | ----------------------------------------------- |
+    | `amounts`  | `uint256[N_COINS]` | Amounts of tokens being deposited or withdrawn. |
+    | `deposit`  | `bool`             | `true` for deposit, `false` for withdrawal.     |
 
     ??? quote "Source code"
 
@@ -2425,12 +2585,13 @@ adding removing liq
 
     Function to calculate the amount of output token `i` when burning `token_amount` of LP tokens. This method takes fees into consideration.
 
-    Returns: Amount of tokens receiving (`uint256`).
+    Returns: Amount of tokens received (`uint256`).
 
-    | Input      | Type      | Description |
-    | ---------- | --------- | ----------- |
-    | `token_amount` |  `uint256` | amount of lp tokens burned |
-    | `i` |  `uint256` | index of the coin to withdraw |
+    | Input         | Type      | Description                              |
+    | ------------- | --------- | ---------------------------------------- |
+    | `token_amount`| `uint256` | Amount of LP tokens burned.              |
+    | `i`           | `uint256` | Index of the coin to withdraw.           |
+
 
     ??? quote "Source code"
 
@@ -2767,36 +2928,14 @@ adding removing liq
 
 
 
-## Fee Methods
-
-fee params are packed and can be unpacked like this:
-
-```vyper
-@internal
-@pure
-def _unpack_3(_packed: uint256) -> uint256[3]:
-    """
-    @notice Unpacks a uint256 into 3 integers (values must be <= 10**18)
-    @param val The uint256 to unpack
-    @return uint256[3] A list of length 3 with unpacked integers
-    """
-    return [
-        (_packed >> 128) & 18446744073709551615,
-        (_packed >> 64) & 18446744073709551615,
-        _packed & 18446744073709551615,
-    ]
-```
-
-
-packed fee params
-packed rebalancing params
+## **Fee Methods**
 
 ### `fee`
 !!! description "`TwoCrypto.fee() -> uint256:`"
 
     Getter for the fee charged by the pool at the current state.
 
-    Returns: fee in bps (`uint256`).
+    Returns: Fee in bps (`uint256`).
 
     ??? quote "Source code"
 
@@ -2844,9 +2983,9 @@ packed rebalancing params
 ### `mid_fee`
 !!! description "`TwoCrypto.mid_fee() -> uint256:`"
 
-    Getter for the `mid_fee`. This is the minimum fee and is charged when the pool is completely balanced.
+    Getter for the `mid_fee`. This fee is the minimum fee and is charged when the pool is completely balanced.
 
-    Returns: mid fee (`uint255`).
+    Returns: Mid fee (`uint256`).
 
     ??? quote "Source code"
 
@@ -2875,9 +3014,9 @@ packed rebalancing params
 ### `out_fee`
 !!! description "`TwoCrypto.out_fee() -> uint256:`"
 
-    Getter for the `out_fee`. This is the maximum fee and is charged when the pool is completely imbalanced.
+    Getter for the `out_fee`. This fee is the maximum fee and is charged when the pool is completely imbalanced.
 
-    Returns: out fee (`uint255`).
+    Returns: Out fee (`uint256`).
 
     ??? quote "Source code"
 
@@ -2908,7 +3047,7 @@ packed rebalancing params
 
     Getter for the current `fee_gamma`. This parameter modifies the rate at which fees rise as imbalance intensifies. Smaller values result in rapid fee hikes with growing imbalances, while larger values lead to more gradual increments in fees as imbalance expands.
 
-    Returns: fee gamma (`uint256`).
+    Returns: Fee gamma (`uint256`).
 
     ??? quote "Source code"
 
@@ -2939,7 +3078,7 @@ packed rebalancing params
 
     Getter for the packed fee parameters.
 
-    Returns: packed fee params (`uint256`).
+    Returns: Packed fee params (`uint256`).
 
     ??? quote "Source code"
 
@@ -2980,7 +3119,7 @@ packed rebalancing params
 
     Getter for the admin fee of the pool. This value is hardcoded to 50% (5000000000) of the earned fees.
 
-    Returns: admin fee (`uint256`).
+    Returns: Admin fee (`uint256`).
 
     ??? quote "Source code"
 
@@ -3003,7 +3142,7 @@ packed rebalancing params
 
     Getter for the fee receiver of the admin fees. This address is set within the TwoCrypto-NG (todo: insert hyperlink here) Factory. Every pool created through the Factory has the same fee receiver.
 
-    Returns: fee receiver (`address`).
+    Returns: Fee receiver (`address`).
 
     ??? quote "Source code"
 
@@ -3035,7 +3174,7 @@ packed rebalancing params
 
     Getter for the current pool profits.
 
-    Returns: current profits (`uint256`).
+    Returns: Current profits (`uint256`).
 
     ??? quote "Source code"
 
@@ -3057,7 +3196,7 @@ packed rebalancing params
 
     Getter for the full profit at the last claim of admin fees.
 
-    Returns: profit at last claim (`uint256`).
+    Returns: Profit at last claim (`uint256`).
 
     ??? quote "Source code"
 
@@ -3094,9 +3233,9 @@ packed rebalancing params
 ### `last_xcp`
 !!! description "`TwoCrypto.last_xcp() -> uint256: view`"
 
-    todo: getter for the last xcp
+    Getter for the last xcp action. This variable is updated by calling `tweak_price` or `remove_liquidity`.
 
-    Returns: timestamp of last claim (`uint256`).
+    Returns: Timestamp of last xcp action (`uint256`).
 
     ??? quote "Source code"
 
@@ -3113,9 +3252,234 @@ packed rebalancing params
         ```
 
 
-## Price Oracle Methods
+## **Oracle Methods**
 
-todo: prices are updated via tweak_prices():
+Prices and their orcales are adjusted by when calling the internal `tweak_price` method, which happens at `add_liquidity`, `remove_liquidity_one_coin` and `_exchange`.
+
+It is not called when removing liquidity one sided with `remove_liquidity` as this function does not alter prices.
+
+??? quote "tweak_price(A_gamma: uint256[2], _xp: uint256[N_COINS], new_D: uint256, K0_prev: uint256 = 0) -> uint256:"
+
+    ```vyper
+    @internal
+    def tweak_price(
+        A_gamma: uint256[2],
+        _xp: uint256[N_COINS],
+        new_D: uint256,
+        K0_prev: uint256 = 0,
+    ) -> uint256:
+        """
+        @notice Updates price_oracle, last_price and conditionally adjusts
+                price_scale. This is called whenever there is an unbalanced
+                liquidity operation: _exchange, add_liquidity, or
+                remove_liquidity_one_coin.
+        @dev Contains main liquidity rebalancing logic, by tweaking `price_scale`.
+        @param A_gamma Array of A and gamma parameters.
+        @param _xp Array of current balances.
+        @param new_D New D value.
+        @param K0_prev Initial guess for `newton_D`.
+        """
+
+        # ---------------------------- Read storage ------------------------------
+
+        price_oracle: uint256 = self.cached_price_oracle
+        last_prices: uint256 = self.last_prices
+        price_scale: uint256 = self.cached_price_scale
+        rebalancing_params: uint256[3] = self._unpack_3(self.packed_rebalancing_params)
+        # Contains: allowed_extra_profit, adjustment_step, ma_time. -----^
+
+        total_supply: uint256 = self.totalSupply
+        old_xcp_profit: uint256 = self.xcp_profit
+        old_virtual_price: uint256 = self.virtual_price
+
+        # ----------------------- Update Oracles if needed -----------------------
+
+        last_timestamp: uint256[2] = self._unpack_2(self.last_timestamp)
+        alpha: uint256 = 0
+        if last_timestamp[0] < block.timestamp:  # 0th index is for price_oracle.
+
+            #   The moving average price oracle is calculated using the last_price
+            #      of the trade at the previous block, and the price oracle logged
+            #              before that trade. This can happen only once per block.
+
+            # ------------------ Calculate moving average params -----------------
+
+            alpha = MATH.wad_exp(
+                -convert(
+                    unsafe_div(
+                        unsafe_sub(block.timestamp, last_timestamp[0]) * 10**18,
+                        rebalancing_params[2]  # <----------------------- ma_time.
+                    ),
+                    int256,
+                )
+            )
+
+            # ---------------------------------------------- Update price oracles.
+
+            # ----------------- We cap state price that goes into the EMA with
+            #                                                 2 x price_scale.
+            price_oracle = unsafe_div(
+                min(last_prices, 2 * price_scale) * (10**18 - alpha) +
+                price_oracle * alpha,  # ^-------- Cap spot price into EMA.
+                10**18
+            )
+
+            self.cached_price_oracle = price_oracle
+            last_timestamp[0] = block.timestamp
+
+        # ----------------------------------------------------- Update xcp oracle.
+
+        if last_timestamp[1] < block.timestamp:
+
+            cached_xcp_oracle: uint256 = self.cached_xcp_oracle
+            alpha = MATH.wad_exp(
+                -convert(
+                    unsafe_div(
+                        unsafe_sub(block.timestamp, last_timestamp[1]) * 10**18,
+                        self.xcp_ma_time  # <---------- xcp ma time has is longer.
+                    ),
+                    int256,
+                )
+            )
+
+            self.cached_xcp_oracle = unsafe_div(
+                self.last_xcp * (10**18 - alpha) + cached_xcp_oracle * alpha,
+                10**18
+            )
+
+            # Pack and store timestamps:
+            last_timestamp[1] = block.timestamp
+
+        self.last_timestamp = self._pack_2(last_timestamp[0], last_timestamp[1])
+
+        #  `price_oracle` is used further on to calculate its vector distance from
+        # price_scale. This distance is used to calculate the amount of adjustment
+        # to be done to the price_scale.
+        # ------------------------------------------------------------------------
+
+        # ------------------ If new_D is set to 0, calculate it ------------------
+
+        D_unadjusted: uint256 = new_D
+        if new_D == 0:  #  <--------------------------- _exchange sets new_D to 0.
+            D_unadjusted = MATH.newton_D(A_gamma[0], A_gamma[1], _xp, K0_prev)
+
+        # ----------------------- Calculate last_prices --------------------------
+
+        self.last_prices = unsafe_div(
+            MATH.get_p(_xp, D_unadjusted, A_gamma) * price_scale,
+            10**18
+        )
+
+        # ---------- Update profit numbers without price adjustment first --------
+
+        xp: uint256[N_COINS] = [
+            unsafe_div(D_unadjusted, N_COINS),
+            D_unadjusted * PRECISION / (N_COINS * price_scale)  # <------ safediv.
+        ]  #                                                     with price_scale.
+
+        xcp_profit: uint256 = 10**18
+        virtual_price: uint256 = 10**18
+
+        if old_virtual_price > 0:
+
+            xcp: uint256 = isqrt(xp[0] * xp[1])
+            virtual_price = 10**18 * xcp / total_supply
+
+            xcp_profit = unsafe_div(
+                old_xcp_profit * virtual_price,
+                old_virtual_price
+            )  # <---------------- Safu to do unsafe_div as old_virtual_price > 0.
+
+            #       If A and gamma are not undergoing ramps (t < block.timestamp),
+            #         ensure new virtual_price is not less than old virtual_price,
+            #                                        else the pool suffers a loss.
+            if self.future_A_gamma_time < block.timestamp:
+                assert virtual_price > old_virtual_price, "Loss"
+
+            # -------------------------- Cache last_xcp --------------------------
+
+            self.last_xcp = xcp  # geometric_mean(D * price_scale)
+
+        self.xcp_profit = xcp_profit
+
+        # ------------ Rebalance liquidity if there's enough profits to adjust it:
+        if virtual_price * 2 - 10**18 > xcp_profit + 2 * rebalancing_params[0]:
+            #                          allowed_extra_profit --------^
+
+            # ------------------- Get adjustment step ----------------------------
+
+            #                Calculate the vector distance between price_scale and
+            #                                                        price_oracle.
+            norm: uint256 = unsafe_div(
+                unsafe_mul(price_oracle, 10**18), price_scale
+            )
+            if norm > 10**18:
+                norm = unsafe_sub(norm, 10**18)
+            else:
+                norm = unsafe_sub(10**18, norm)
+            adjustment_step: uint256 = max(
+                rebalancing_params[1], unsafe_div(norm, 5)
+            )  #           ^------------------------------------- adjustment_step.
+
+            if norm > adjustment_step:  # <---------- We only adjust prices if the
+                #          vector distance between price_oracle and price_scale is
+                #             large enough. This check ensures that no rebalancing
+                #           occurs if the distance is low i.e. the pool prices are
+                #                                     pegged to the oracle prices.
+
+                # ------------------------------------- Calculate new price scale.
+
+                p_new: uint256 = unsafe_div(
+                    price_scale * unsafe_sub(norm, adjustment_step) +
+                    adjustment_step * price_oracle,
+                    norm
+                )  # <---- norm is non-zero and gt adjustment_step; unsafe = safe.
+
+                # ---------------- Update stale xp (using price_scale) with p_new.
+
+                xp = [
+                    _xp[0],
+                    unsafe_div(_xp[1] * p_new, price_scale)
+                ]
+
+                # ------------------------------------------ Update D with new xp.
+                D: uint256 = MATH.newton_D(A_gamma[0], A_gamma[1], xp, 0)
+
+                for k in range(N_COINS):
+                    frac: uint256 = xp[k] * 10**18 / D  # <----- Check validity of
+                    assert (frac > 10**16 - 1) and (frac < 10**20 + 1)  #   p_new.
+
+                # ------------------------------------- Convert xp to real prices.
+                xp = [
+                    unsafe_div(D, N_COINS),
+                    D * PRECISION / (N_COINS * p_new)
+                ]
+
+                # ---------- Calculate new virtual_price using new xp and D. Reuse
+                #              `old_virtual_price` (but it has new virtual_price).
+                old_virtual_price = unsafe_div(
+                    10**18 * isqrt(xp[0] * xp[1]), total_supply
+                )  # <----- unsafe_div because we did safediv before (if vp>1e18)
+
+                # ---------------------------- Proceed if we've got enough profit.
+                if (
+                    old_virtual_price > 10**18 and
+                    2 * old_virtual_price - 10**18 > xcp_profit
+                ):
+
+                    self.D = D
+                    self.virtual_price = old_virtual_price
+                    self.cached_price_scale = p_new
+
+                    return p_new
+
+        # --------- price_scale was not adjusted. Update the profit counter and D.
+        self.D = D_unadjusted
+        self.virtual_price = virtual_price
+
+        return price_scale
+    ```
+
 
 ### `lp_price`
 !!! description "`TwoCrypto.lp_price() -> uint256:`"
@@ -3186,9 +3550,9 @@ todo: prices are updated via tweak_prices():
 ### `virtual_price`
 !!! description "`TwoCrypto.virtual_price -> uint256: view`"
 
-    Getter for the cached virtual price. This variable is fast as its only reading the cached one instead of re-calculating it.
+    Getter for the cached virtual price. This variable provides a fast read by accessing the cached value instead of recalculating it.
 
-    Returns: cached virtual price (`uint256`).
+    Returns: Cached virtual price (`uint256`).
 
     ??? quote "Source code"
 
@@ -3209,12 +3573,12 @@ todo: prices are updated via tweak_prices():
 ### `get_virtual_price`
 !!! description "`TwoCrypto.virtual_price -> uint256: view`"
 
-    !!!warning
-        `get_virtual_price` should not be confused with `virtual_price` which is a cached virtual price.
+    !!! warning
+        `get_virtual_price` should not be confused with `virtual_price`, which is a cached virtual price.
 
-    Function to calculate the current virtual price of the pools LP token.
+    Function to calculate the current virtual price of the pool's LP token.
 
-    Returns: virtual price (`uint256`).
+    Returns: Virtual price (`uint256`).
 
     ??? quote "Source code"
 
@@ -3244,12 +3608,12 @@ todo: prices are updated via tweak_prices():
 ### `price_oracle`
 !!! description "`TwoCrypto.price_oracle() -> uint256:`"
 
-    !!!info
-        The aggregated price are cached state prices (dx/dy) calculated **AFTER** the last trade.
+    !!! info
+        The aggregated prices are cached state prices (dx/dy) calculated **AFTER** the last trade.
 
     Getter for the oracle price of the coin at index 1 with regard to the coin at index 0. The price oracle is an exponential moving average with a periodicity determined by `ma_time`.
 
-    Returns: oracle price (`uint256`).
+    Returns: Oracle price (`uint256`).
 
     ??? quote "Source code"
 
@@ -3388,11 +3752,9 @@ todo: prices are updated via tweak_prices():
 ### `last_prices`
 !!! description "`TwoCrypto.last_prices -> uint256: view`"
 
-    todo: Getter for the last price. `last_prices` is updated when calling `tweak_oracle`.
+    Getter for the last price. This variable is used to calculate the moving average price oracle.
 
-    Returns: 
-
-    Emits ``
+    Returns: Last price (`uint256`).
 
     ??? quote "Source code"
 
@@ -3444,7 +3806,7 @@ todo: prices are updated via tweak_prices():
 
     Getter for the price scale of the coin at index 1 with regard to the coin at index 0. The price scale determines the price band around which liquidity is concentrated.
 
-    Returns: price scale (`uint256`).
+    Returns: Price scale (`uint256`).
 
     ??? quote "Source code"
 
@@ -3479,7 +3841,7 @@ todo: prices are updated via tweak_prices():
 
     Getter for the moving average time period.
 
-    Returns: moving average time (`uint256`).
+    Returns: Moving average time (`uint256`).
 
     ??? quote "Source code"
 
@@ -3511,9 +3873,9 @@ todo: prices are updated via tweak_prices():
 ### `xcp_oracle`
 !!! description "`TwoCrypto.xcp_oracle() -> uint256`"
 
-    Getter for the oracle value for xcp. The oracle is an exponential moving average, wich a periodocity determined by `xcp_ma_time`.
+    Getter for the oracle value for xcp. The oracle is an exponential moving average, with a periodicity determined by `xcp_ma_time`.
 
-    Returns: xcp oracle value (`uint256`).
+    Returns: XCP oracle value (`uint256`).
 
     ??? quote "Source code"
 
@@ -3563,12 +3925,14 @@ todo: prices are updated via tweak_prices():
         >>> TwoCrypto.xcp_oracle(todo)
         ```
 
+
 ### `xcp_ma_time`
 !!! description "`TwoCrypto.xcp_ma_time() -> uint256: view`"
 
-    todo: moving average time window for `xcp_oracle`.
+    Getter for the moving average time window for `xcp_oracle`.
 
-    Returns: moving average time window (`uint256`).
+    Returns: MA time window (`uint256`).
+
 
     ??? quote "Source code"
 
@@ -3602,13 +3966,58 @@ todo: prices are updated via tweak_prices():
         ```
 
 
-## Price Scaling
+### `D`
+!!! description "`TwoCrypto.D() -> uint256: view`"
+
+    Getter for the D invariant.
+
+    Returns: D (`uint256`).
+
+    ??? quote "Source code"
+
+        === "CurveTwocryptoOptimized.vy"
+
+            ```vyper
+            D: public(uint256)
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> TwoCrypto.D(todo)
+        ```
+
+
+### `last_timestamp`
+!!! description "`TwoCrypto.last_timestamp() -> uint256: view`"
+
+    Getter for the last timestamp of prices and xcp. The two values are packed into a `uint256`. Index 0 is for prices, index 1 is for xcp.
+
+    Returns: Last timestamp (`uint256`).
+
+    ??? quote "Source code"
+
+        === "CurveTwocryptoOptimized.vy"
+
+            ```vyper
+            last_timestamp: public(uint256)    # idx 0 is for prices, idx 1 is for xcp.
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> TwoCrypto.last_timestamp(todo)
+        ```
+
+
+## **Price Scaling**
+
 ### `allowed_extra_profit`
 !!! description "`TwoCrypto.allowed_extra_profit() -> uint256:`"
 
-    Getter for the allowed extra profit value. 
+    Getter for the allowed extra profit value.
 
-    Returns: allowed extra profit value (`uint256`).
+    Returns: Allowed extra profit value (`uint256`).
 
     ??? quote "Source code"
 
@@ -3640,7 +4049,7 @@ todo: prices are updated via tweak_prices():
 
     Getter for the adjustment step value.
 
-    Returns: adjustment step value (`uint256`).
+    Returns: Adjustment step value (`uint256`).
 
     ??? quote "Source code"
 
@@ -3670,9 +4079,9 @@ todo: prices are updated via tweak_prices():
 ### `packed_rebalancing_params`
 !!! description "`TwoCrypto.packed_rebalancing_params() -> uint256: view`"
 
-    Getter for the packed rebalancing parameters.
+    Getter for the packed rebalancing parameters, consisting of `allowed_extra_profit`, `adjustment_step`, and `ma_time`.
 
-    Returns: packed rebalancing parameters (`uint256`).
+    Returns: Packed rebalancing parameters (`uint256`).
 
     ??? quote "Source code"
 
@@ -3691,8 +4100,7 @@ todo: prices are updated via tweak_prices():
 
 
 
-## Bonding Curve Parameters
-
+## **Bonding Curve Parameters**
 
 ### `A`
 !!! description "`TwoCrypto.A() -> uint256:`"
@@ -3753,7 +4161,7 @@ todo: prices are updated via tweak_prices():
 
     Getter for the current pool gamma parameter.
 
-    Returns: gamma (`uint256`).
+    Returns: Gamma (`uint256`).
 
     ??? quote "Source code"
 
@@ -3802,13 +4210,14 @@ todo: prices are updated via tweak_prices():
         ```
 
 
-## Contract Info Methods
+## **Contract Info Methods**
+
 ### `admin`
 !!! description "`TwoCrypto.admin() -> address:`"
 
     Getter for the admin of the pool.
 
-    Returns: admin (`address`).
+    Returns: Admin (`address`).
 
     ??? quote "Source code"
 
@@ -3840,7 +4249,7 @@ todo: prices are updated via tweak_prices():
 
     Getter for the precisions of each coin in the pool.
 
-    Returns: precision of coins (`uint256[N_COINS]`).
+    Returns: Precision of coins (`uint256[N_COINS]`).
 
     ??? quote "Source code"
 
@@ -3870,9 +4279,9 @@ todo: prices are updated via tweak_prices():
 ### `MATH`
 !!! description "`TwoCrypto.MATH() -> address: view`"
 
-    Getter for the precisions of each coin in the pool.
+    Getter for the math contract.
 
-    Returns: precision of coins (`uint256[N_COINS]`).
+    Returns: Math contract (`address`).
 
     ??? quote "Source code"
 
@@ -3909,13 +4318,13 @@ todo: prices are updated via tweak_prices():
 ### `coins`
 !!! description "`TwoCrypto.coins(arg0: uint256) -> address: view`"
 
-    Getter for the coin at index arg0 in the pool.
+    Getter for the coin at index `arg0` in the pool.
 
-    Returns: precision of coins (`uint256[N_COINS]`).
+    Returns: Precision of coins (`uint256[N_COINS]`).
 
-    | Input      | Type      | Description |
-    | ---------- | --------- | ----------- |
-    | `arg0` | `uint256` | coin index |
+    | Input | Type      | Description  |
+    | ----- | --------- | ------------ |
+    | `arg0`| `uint256` | Coin index.  |
 
     ??? quote "Source code"
 
@@ -3957,9 +4366,9 @@ todo: prices are updated via tweak_prices():
 ### `factory`
 !!! description "`TwoCrypto.factory() -> address: view`"
 
-    Getter for the coin at index arg0 in the pool.
+    Getter for the pool factory contract.
 
-    Returns: precision of coins (`uint256[N_COINS]`).
+    Returns: Pool factory (`address`).
 
     ??? quote "Source code"
 
@@ -3981,9 +4390,7 @@ todo: prices are updated via tweak_prices():
                 packed_rebalancing_params: uint256,
                 initial_price: uint256,
             ):
-
-                MATH = Math(_math)
-
+                ...
                 factory = Factory(msg.sender)
                 ...
             ```
@@ -4000,7 +4407,11 @@ todo: prices are updated via tweak_prices():
 
     Getter for the current coin balances in the pool.
 
-    Returns: balances (`uint256`).
+    Returns: Coin balances (`uint256`).
+
+    | Input | Type      | Description  |
+    | ----- | --------- | ------------ |
+    | `arg0`| `uint256` | Coin index.  |
 
     ??? quote "Source code"
 
