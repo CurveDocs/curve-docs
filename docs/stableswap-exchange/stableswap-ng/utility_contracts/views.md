@@ -4,7 +4,7 @@ This contract contains **view-only external methods** which can be gas-inefficie
 
 !!!deploy "Contract Source & Deployment"
     Source code available on [GitHub](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNGViews.vy).  
-    All Views contract deployments can be found in the [Deployment Addresses](../../references/deployed-contracts.md#stableswap-ng) section.  
+    All Views contract deployments can be found in the [Deployment Addresses](../../../references/deployed-contracts.md#stableswap-ng) section.  
 
 
 ## **Token Exchange Methods**

@@ -25,7 +25,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
         | ----------- | -------| ----|
         | `coin_idx` |  `int128` | index value of the token to transfer in |
         | `dx` |  `uint256` | amount to transfer in |
-        | `sender` |  `address` | address to tranfer coins from |
+        | `sender` |  `address` | address to transfer coins from |
         | `expect_optimistic_transfer` |  `bool` | `True` if the contract expect an optimistic coin transfer |
 
         ```vyper
