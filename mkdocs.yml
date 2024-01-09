@@ -132,6 +132,22 @@ nav:
       - Liquidity Pool Tokens:
         - Overview: cryptoswap-exchange/cryptoswap/lp_tokens/overview.md
         - Curve Token V5: cryptoswap-exchange/cryptoswap/lp_tokens/lp-token-V5.md
+
+    - TwoCrypto-NG:
+      - Overview: cryptoswap-exchange/twocrypto-ng/overview.md
+      - Pools: 
+        - Overview: cryptoswap-exchange/twocrypto-ng/pools/overview.md
+        - Twocrypto Pool: cryptoswap-exchange/twocrypto-ng/pools/twocrypto.md
+        - LP Token Methods: cryptoswap-exchange/twocrypto-ng/pools/lp-token.md
+        - Admin Controls: cryptoswap-exchange/twocrypto-ng/pools/admin-controls.md
+      - Utility Contracts:
+        - Math: cryptoswap-exchange/twocrypto-ng/utility-contracts/math.md
+        - Views: cryptoswap-exchange/twocrypto-ng/utility-contracts/views.md
+      - Pool Factory:
+        - Overview: cryptoswap-exchange/twocrypto-ng/factory/overview.md
+        - Deployer API: cryptoswap-exchange/twocrypto-ng/factory/deployer-api.md
+
+
     - Tricrypto-NG:
       - Overview: cryptoswap-exchange/tricrypto-ng/overview.md
       - Pools:
@@ -235,8 +251,6 @@ theme:
     - content.code.annotate
     - content.tabs.link
     - navigation.indexes
-    - navigation.instant
-    - navigation.instant.prefetch
     - navigation.sections
     - navigation.path
     - navigation.top
