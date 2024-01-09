@@ -11,13 +11,13 @@ This contract contains **view-only external methods** which can be gas-inefficie
 ### `get_dy`
 !!! description "`ViewMethodContract.get_dy(i: uint256, j: uint256, dx: uint256, swap: address) -> uint256:`"
 
-    Getter method for the amount of coin[j] tokens received for swapping in dx amount of coin[i]. This function includes the fee.
+    Getter method for the amount of coin `j` tokens received for swapping in `dx` amount of coin `i`. This function includes the fee.
 
-    Returns: dy (`uint256`).
+    Returns: `dy` (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | Index of input token (check pool.coins(i) to get coin address at i-th index) |
+    | Input      | Type      | Description |
+    | ---------- | --------- | ----------- |
+    | `i` |  `uint256` | Index of input token (use `pool.coins(i)` to get coin address at i-th index) |
     | `j` |  `uint256` | Index of output token |
     | `dx` |  `uint256` | Amount of input coin[i] tokens |
     | `swap` |  `address` | Pool contract address  |

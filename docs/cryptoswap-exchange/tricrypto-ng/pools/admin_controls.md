@@ -13,6 +13,9 @@ The appropriate value for **`A`** and **`gamma`** is dependent upon the type of 
 ### `ramp_A_gamma`
 !!! description "`CryptoSwap.ramp_A_gamma(future_A: uint256, future_gamma: uint256, future_time: uint256):`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the Factory contract.
+
     Function to ramp A and gamma parameter values linearly. `A` and `gamma` are packed within the same variable.
 
     Emits: `RampAgamma`
@@ -22,9 +25,6 @@ The appropriate value for **`A`** and **`gamma`** is dependent upon the type of 
     | `future_A` | `uint256` | future A value |
     | `future_gamma` | `uint256` | future gamma value |
     | `future_time` | `uint256` | timestamp at which the ramping will end|
-
-    !!!note
-        This function is only callable by the `admin` of the factory contract. 
 
     ??? quote "Source code"
 
@@ -97,12 +97,12 @@ The appropriate value for **`A`** and **`gamma`** is dependent upon the type of 
 ### `stop_ramp_A_gamma`
 !!! description "`CryptoSwap.stop_ramp_A_gamma():`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the Factory contract.
+
     Function to immediately stop ramping A and gamma parameters and set them to the current value.
 
     Emits: `StopRampA`
-
-    !!!note
-        This function is only callable by the `admin` of the factory contract. 
 
     ??? quote "Source code"
 
@@ -146,6 +146,9 @@ The appropriate value for **`A`** and **`gamma`** is dependent upon the type of 
 ### `commit_new_parameters`
 !!! description "`CryptoSwap.commit_new_parameters(_new_mid_fee: uint256, _new_out_fee: uint256, _new_fee_gamma: uint256, _new_allowed_extra_profit: uint256, _new_adjustment_step: uint256, _new_ma_time: uint256):`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the Factory contract.
+
     Function to commit new parameters. The new parameters do not take immedaite effect.
 
     Emits: `CommitNewParameters`
@@ -158,9 +161,6 @@ The appropriate value for **`A`** and **`gamma`** is dependent upon the type of 
     | `_new_allowed_extra_profit` | `uint256` | new `allowed_extra_profit` value |
     | `_new_adjustment_step` | `uint256` |new `adjustment_step` value |
     | `_new_ma_time` | `uint256` | new `ma_time` value |
-
-    !!!note
-        This function is only callable by the `admin` of the factory contract. 
 
     ??? quote "Source code"
 
@@ -392,7 +392,7 @@ The appropriate value for **`A`** and **`gamma`** is dependent upon the type of 
 
 
 ### `initial_A_gamma`
-!!! description "`CryptoSwap.initial_A_gamma() -> uint256:`"
+!!! description "`CryptoSwap.initial_A_gamma() -> uint256: view`"
 
     Getter for the initial A/gamma.
 
@@ -413,7 +413,7 @@ The appropriate value for **`A`** and **`gamma`** is dependent upon the type of 
 
 
 ### `initial_A_gamma_time`
-!!! description "`CryptoSwap.initial_A_gamma_time() -> uint256:`"
+!!! description "`CryptoSwap.initial_A_gamma_time() -> uint256: view`"
 
     Getter for the initial A/gamma time.
 
@@ -434,7 +434,7 @@ The appropriate value for **`A`** and **`gamma`** is dependent upon the type of 
 
 
 ### `future_A_gamma`
-!!! description "`CryptoSwap.future_A_gamma() -> uint256:`"
+!!! description "`CryptoSwap.future_A_gamma() -> uint256: view`"
 
     Getter for the future A/gamma.
 
@@ -454,7 +454,7 @@ The appropriate value for **`A`** and **`gamma`** is dependent upon the type of 
         ```
 
 ### `future_A_gamma_time`
-!!! description "`CryptoSwap.future_A_gamma_time() -> uint256:`"
+!!! description "`CryptoSwap.future_A_gamma_time() -> uint256: view`"
 
     Getter for the future A/gamma time.
 

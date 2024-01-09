@@ -12,7 +12,7 @@
 
     Function to calculate x[i] given other balances x[0..N_COINS-1] and invariant D.
 
-    Returns: 
+    Returns: y (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -246,9 +246,9 @@
 ### `newton_D`
 !!! description "`Math.newton_D(ANN: uint256, gamma: uint256, x_unsorted: uint256[N_COINS],K0_prev: uint256 = 0,) -> uint256:`"
 
-    Function to calculate the invariant via newtons method using good initial guesses.
+    Function to calculate the invariant with Newtons method using good initial guesses.
 
-    Returns: invariant D (`uint256`).
+    Returns: D invariant (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|

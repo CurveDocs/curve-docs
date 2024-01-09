@@ -20,6 +20,7 @@ The various Curve Factories allow the deployment of pools with virtually any kin
 | `StableSwap` | Regular StableSwap | Plain and metapools |
 | `StableSwap-NG` | Improved StableSwap version | Plain pools with up to eight coins and metapools ([more here](../stableswap-exchange/stableswap-ng/pools/overview.md#supported-assets)) |
 | `CryptoSwap` | Regular CryptoSwap | Two-coin volatile assets (e.g., CRV<>ETH) |
+| `CryptoSwap-NG` | CryptoSwap New-Generation | Two-coin volatile assets (e.g., CRV<>ETH) |
 | `Tricrypto-NG` | Improved Tricrypto version ([here](../cryptoswap-exchange/tricrypto-ng/overview.md)) | Three-coin volatile assets (e.g., ETH<>BTC<>crvUSD) |
 
 For an easy, non-technical explanation of the pool variations, visit: https://resources.curve.fi/lp/pools/

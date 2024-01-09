@@ -115,13 +115,13 @@ It utilizes four different implementations:
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to set a `_pool_implementation` for `_implementation_index`. An index for the pool implementation is needed as there can be multiple different versions of pools (such as two-coin and three-coin pools).
+    Function to set a `_pool_implementation` for `_implementation_index`. 
 
     Emits event: `UpdatePoolImplementation`
 
     | Input                   | Type      | Description               |
     | ----------------------- | --------- | ------------------------- |
-    | `_pool_implementation`  | `address` | Pool blueprint contract   |
+    | `_pool_implementation`  | `address` | New pool implementation   |
     | `_implementation_index` | `uint256` | Index                     |
 
 
