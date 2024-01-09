@@ -2,15 +2,15 @@
 
 !!!deploy "Contract Source & Deployment"
     Source code for this contract is available on [Github](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/CurveCryptoViews2Optimized.vy). 
-    Full list of all deployments [here](../../../references/deployed-contracts.md#twocrypto-ng).
+    Full list of all deployments can be found [here](../../../references/deployed-contracts.md#twocrypto-ng).
 
 
 ### `get_dy`
 !!! description "`Views.get_dy(i: uint256, j: uint256, dx: uint256, swap: address) -> uint256:`"
 
-    Getter method for the amount of coin[j] tokens received for swapping in dx amount of coin[i]. This function includes the fee.
+    Getter method for the amount of coin `j` tokens received for swapping in `dx` amount of coin `i`. This function includes the fee.
 
-    Returns: dy (`uint256`).
+    Returns: `dy` (`uint256`).
 
     | Input      | Type      | Description |
     | ---------- | --------- | ----------- |
@@ -264,9 +264,9 @@
 ### `get_dx`
 !!! description "`Views.get_dx(i: uint256, j: uint256, dy: uint256, swap: address) -> uint256:`"
 
-    Getter method for the amount of coin[i] tokens to input for swapping out dy amount of coin[j]
+    Getter method for the amount of coin `i` tokens to input for swapping out `dy` amount of coin `j`.
 
-    Returns: dx (`uint256`).
+    Returns: `dx` (`uint256`).
 
     | Input      | Type      | Description |
     | ---------- | --------- | ----------- |
@@ -526,7 +526,7 @@
 
     Getter method for the output tokens (including fees) when withdrawing one coin.
 
-    Returns: amount of output tokens (`uint256`).
+    Returns: Amount of output tokens (`uint256`).
 
     | Input      | Type      | Description |
     | ---------- | --------- | ----------- |
@@ -1029,7 +1029,7 @@
 
     Function to calculate the fees for `get_dy`.
 
-    Returns: fee (`uint256`).
+    Returns: Fee (`uint256`).
 
     | Input      | Type      | Description |
     | ---------- | --------- | ----------- |
@@ -1282,7 +1282,7 @@
 
     Function to calculate the fees for `withdraw_one_coin`.
 
-    Returns: fee (`uint256`).
+    Returns: Fee (`uint256`).
 
     | Input      | Type      | Description |
     | ---------- | --------- | ----------- |
@@ -1604,7 +1604,7 @@
 
     Function to calculate the fees for `calc_token_amount`.
 
-    Returns: fee (`uint256`).
+    Returns: Fee (`uint256`).
 
     | Input      | Type      | Description |
     | ---------- | --------- | ----------- |

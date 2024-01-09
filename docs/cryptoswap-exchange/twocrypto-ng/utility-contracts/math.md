@@ -2,7 +2,7 @@
 
 !!!deploy "Contract Source & Deployment"
     Source code for this contract is available on [Github](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/CurveCryptoMathOptimized2.vy). 
-    Full list of all deployments [here](../../../references/deployed-contracts.md#twocrypto-ng).
+    Full list of all deployments can be found [here](../../../references/deployed-contracts.md#twocrypto-ng).
 
 
 ## **AMM Math Functions**
@@ -14,14 +14,15 @@
         This implementation is derived from Snekmate, which is authored by pcaversaccio ([Snekmate](https://github.com/pcaversaccio/snekmate)), distributed under the AGPL-3.0 license.  
         Note that it returns 0 if given 0. The implementation is inspired by OpenZeppelin's implementation here: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/math/Math.sol.
 
-    Function to calculate the log in base 2 of `x`, following the selected rounding direction.
+    Function to calculate the logarithm base 2 of `x`, following the selected rounding direction.
 
-    Returns: 
+    Returns: 32-byte calculation result (`uint256`).
 
-    | Input | Type | Description |
-    | ----- | ---- | ----------- |
-    | `x` |  `uint256` | 32-byte variable |
-    | `roundup` |  `bool` | Wheter to round up or not. Default `False` is round down |
+    | Input   | Type      | Description                                      |
+    | ------- | --------- | ------------------------------------------------ |
+    | `x`     | `uint256` | 32-byte variable                                 |
+    | `roundup` | `bool`    | Whether to round up or not. Default is `False` to round down |
+
 
     ??? quote "Source code"
 
@@ -85,6 +86,7 @@
         ```shell
         >>> Math.()
         ```
+
 
 ### `newton_y`
 !!! description "`Math.newton_y(ANN: uint256, gamma: uint256, x: uint256[N_COINS], D: uint256, i: uint256) -> uint256:`"
@@ -198,17 +200,17 @@
 ### `get_y`
 !!! description "`Math.get_y(_ANN: uint256, _gamma: uint256, _x: uint256[N_COINS], _D: uint256, i: uint256) -> uint256[2]:`"
 
-    todo
+    Function to calculate x[i] given other balances `_x` and invariant `_D`.
 
-    Returns: 
+    Returns: y (`uint256`).
 
-    | Input | Type | Description |
-    | ----- | ---- | ----------- |
-    | `ANN` |  `uint256` |  |
-    | `_gamma` |  `uint256` |  |
-    | `_x` |  `uint256[N_COINS]` |  |
-    | `_D` |  `uint256` |  |
-    | `i` |  `uint256` |  |
+    | Input      | Type   | Description |
+    | ----------- | -------| ----------- |
+    | `_ANN` |  `uint256` | ANN = A * N^N |
+    | `_gamma` |  `uint256` | AMM.gamma() value |
+    | `x` |  `uint256[N_COINS]` | Balances multiplied by prices and precisions of all coins |
+    | `_D` |  `uint256` | Invariant |
+    | `i` |  `uint256` | Index of the coin to calculate y |
 
     ??? quote "Source code"
 
@@ -368,16 +370,17 @@
 ### `newton_D`
 !!! description "`Math.newton_D(ANN: uint256, gamma: uint256, x_unsorted: uint256[N_COINS], K0_prev: uint256 = 0) -> uint256:`"
 
-    Function to find the invariant using Newton method.
+    Function to find the invariant using the Newton method.
 
     Returns: D invariant (`uint256`).
 
     | Input | Type | Description |
     | ----- | ---- | ----------- |
-    | `ANN` |  `uint256[N_COINS]` |  |
-    | `gamma` |  `uint256` | gamma value |
-    | `x_unsorted` |  `uint256[N_COINS]` | balances of the pool |
-    | `K0_prev` |  `uint256` | defaults to 0. |
+    | `ANN` |  `uint256[N_COINS]` | - |
+    | `gamma` |  `uint256` | Gamma value. |
+    | `x_unsorted` |  `uint256[N_COINS]` | Balances of the pool. |
+    | `K0_prev` |  `uint256` | Defaults to 0. |
+
 
     ??? quote "Source code"
 
@@ -490,9 +493,9 @@
 
     | Input | Type | Description |
     | ----- | ---- | ----------- |
-    | `_xp` |  `uint256[N_COINS]` | balances of the pool |
-    | `_D` |  `uint256` | current value of D |
-    | `_A_gamma` |  `uint256[N_COINS]` | amplification coefficient and gamma |
+    | `_xp` |  `uint256[N_COINS]` | Balances of the pool. |
+    | `_D` |  `uint256` | Current value of D. |
+    | `_A_gamma` |  `uint256[N_COINS]` | Amplification coefficient and gamma. |
 
     ??? quote "Source code"
 
