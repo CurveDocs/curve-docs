@@ -391,7 +391,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
     >>> Factory.gauge_implementation() # ethereum mainnet only! 
     '0x38D9BdA812da2C68dFC6aDE85A7F7a54E77F8325'
     ```
-    
+
 
 **:logos-ethereum: Ethereum Mainnet**
 
@@ -572,7 +572,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
     Source code available on [GitHub](https://github.com/curvefi/tricrypto-ng).
 
 !!!warning "Implementations"
-    Every Factory contract has plain- and metapool implementations. The Factory on Ethereum has an additional gauge implementation. **Implementation contracts are upgradable.** They can be either replaced or additional implementation contracts can be set. Therefore, please **always make sure to check the most recent ones**.
+    Every Factory contract has pool, math and views implementations. The Factory on Ethereum has an additional gauge implementation. **Implementation contracts are upgradable.** They can be either replaced or additional implementation contracts can be set. Therefore, please **always make sure to check the most recent ones**.
 
     *To query the factory-specific implementations:*
 
