@@ -4,7 +4,7 @@ The Math Contract provides **AMM Math** for StableSwap-NG Pools.
 
 !!!deploy "Contract Source & Deployment"
     Source code available on [GitHub](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNGMath.vy).  
-    All Math contract deployments can be found in the [Deployment Addresses](../../references/deployed-contracts.md#stableswap-ng) section.
+    All Math contract deployments can be found in the [Deployment Addresses](../../../references/deployed-contracts.md#stableswap-ng) section.
 
 
 ### `get_y`
