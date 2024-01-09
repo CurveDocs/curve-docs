@@ -383,7 +383,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
     *To query the factory-specific implementations:*
 
-    ```shell
+    ```vyper
     >>> Factory.pool_implementation(0)
     '0xDCc91f930b42619377C200BA05b7513f2958b202'
     >>> Factory.metapool_implementation(0)
@@ -391,8 +391,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
     >>> Factory.gauge_implementation() # ethereum mainnet only! 
     '0x38D9BdA812da2C68dFC6aDE85A7F7a54E77F8325'
     ```
-
-
+    
 
 **:logos-ethereum: Ethereum Mainnet**
 
@@ -567,13 +566,52 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `Factory`   | *soon* |
 
 
+## **Tricrypto-NG**
+
+!!!deploy "Source Code"
+    Source code available on [GitHub](https://github.com/curvefi/tricrypto-ng).
+
+!!!warning "Implementations"
+    Every Factory contract has plain- and metapool implementations. The Factory on Ethereum has an additional gauge implementation. **Implementation contracts are upgradable.** They can be either replaced or additional implementation contracts can be set. Therefore, please **always make sure to check the most recent ones**.
+
+    *To query the factory-specific implementations:*
+
+    ```vyper
+    >>> Factory.pool_implementation(0)
+    '0x66442B0C5260B92cAa9c234ECf2408CBf6b19a6f'
+    >>> Factory.views_implementation()
+    '0x064253915b8449fdEFac2c4A74aA9fdF56691a31'
+    >>> Factory.math_implementation()
+    '0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE'
+    >>> Factory.gauge_implementation() # ethereum mainnet only! 
+    '0x5fC124a161d888893529f67580ef94C2784e9233'
+    ```
+
+**:logos-ethereum: Ethereum Mainnet**
+
+| Contract    | Address   | 
+| :---------: | :-------: | 
+| `Math`      | [0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE](https://etherscan.io/address/0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE) |
+| `Views`     | [0x064253915b8449fdEFac2c4A74aA9fdF56691a31](https://etherscan.io/address/0x064253915b8449fdEFac2c4A74aA9fdF56691a31) |
+| `Factory`   | [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963) |
+| `Gauge`     | [0x5fC124a161d888893529f67580ef94C2784e9233](https://etherscan.io/address/0x5fC124a161d888893529f67580ef94C2784e9233) |
+
+
+**:logos-arbitrum: Arbitrum**
+
+| Contract    | Address   | 
+| :---------: | :-------: | 
+| `Math`      | [0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22](https://arbiscan.io/address/0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22) |
+| `Views`     | [0x06452f9c013fc37169B57Eab8F50A7A48c9198A3](https://arbiscan.io/address/0x06452f9c013fc37169B57Eab8F50A7A48c9198A3) |
+| `Factory`   | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://arbiscan.io/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8) |
+
+
+
 ## **Curve Stablecoin**
 For testing in production purposes, several contract deployments have taken place. Please ensure that you are using the correct and latest version. The latest deployment logs can be found [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
 
 !!!deploy "Source Code"
     Source code available on [GitHub](https://github.com/curvefi/curve-stablecoin).
-
-### **General Infrastructure** 
 
 | Type   | Description | Address  |
 | :----: | :--------:  | :------: |
