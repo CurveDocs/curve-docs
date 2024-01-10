@@ -110,7 +110,7 @@ repo_url: https://github.com/CurveDocs/curve-docs
 
 
 nav:    
-  - Protocol Overview: overview.md
+  - Protocol Overview: protocol-overview.md
 
   - Curve DAO:
     - Curve DAO Token:
