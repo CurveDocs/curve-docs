@@ -183,7 +183,8 @@ markdown_extensions:
   - toc:
       permalink: true
       baselevel: 2
-  - pymdownx.arithmatex
+  - pymdownx.arithmatex:
+      generic: true
   - pymdownx.betterem:
       smart_enable: all
   - pymdownx.caret
@@ -195,7 +196,6 @@ markdown_extensions:
       options:
         custom_icons:
           - overrides/.icons
-
   - pymdownx.inlinehilite
   - pymdownx.magiclink
   - pymdownx.mark
@@ -235,8 +235,6 @@ theme:
     - content.code.annotate
     - content.tabs.link
     - navigation.indexes
-    - navigation.instant
-    - navigation.instant.prefetch
     - navigation.sections
     - navigation.path
     - navigation.top
