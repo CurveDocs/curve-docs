@@ -151,9 +151,6 @@ th {
     padding-left: 75px;
 }
 
-body[data-md-color-scheme="light"] .md-main,
-body[data-md-color-scheme="dark"] .md-main {
-  background-color: transparent;
-  position: relative; /* Or absolute/fixed */
-  z-index: 10;
+body[data-md-page="index"] .md-header-logo {
+  display: none;
 }
