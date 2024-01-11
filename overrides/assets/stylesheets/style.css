@@ -9,7 +9,6 @@
     height: 100vh; /* Full viewport height */
     overflow: hidden; /* Prevents scrolling within the landing section */
     background: linear-gradient(0deg, #050000 3%, #5b4949 100%);
-    /* Other styles... */
 }
 
 .tx-hero {
@@ -26,9 +25,9 @@
 
 .tx-hero__image {
     position: absolute;
-    top: 50px; /* Adjust these values as needed */
+    top: 100px;
     right: 20px;
-    width: 400px;
+    width: 300px;
     height: auto;
 }
 
@@ -55,29 +54,6 @@
     background-color: var(--md-accent-fg-color);
     color: var(--md-default-bg-color);
     border-color: var(--md-accent-fg-color)
-}
-
-.feature-item h2 svg {
-    height: 30px;
-    float: left;
-    margin-right: 10px;
-    transform: translateY(10%);
-}
-
-.top-hr {
-    margin-top: 42px;
-}
-
-
-
-.feature-item p {
-    font-size: 16px;
-    line-height: 1.8em;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    color: #111;
-    margin: 0 0 10px;
-    display: block;
 }
 
 @media screen and (max-width:30em) {
