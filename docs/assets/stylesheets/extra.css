@@ -151,6 +151,6 @@ th {
     padding-left: 75px;
 }
 
-body[data-md-page="index"] .md-header-logo {
-  display: none;
+body.home .md-header__button.md-icon[title="Switch to dark mode"] {
+  display: none !important;
 }

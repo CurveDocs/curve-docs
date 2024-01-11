@@ -8,7 +8,7 @@
     width: 100vw;
     height: 100vh; /* Full viewport height */
     overflow: hidden; /* Prevents scrolling within the landing section */
-    background: linear-gradient(0deg, #050000 3%, #5b4949 100%);
+    background: linear-gradient(0deg, #14151a 3%, #5b4949 100%);
 }
 
 .tx-hero {
@@ -27,7 +27,7 @@
     position: absolute;
     top: 100px;
     right: 20px;
-    width: 300px;
+    width: 250px;
     height: auto;
 }
 
