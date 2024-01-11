@@ -6,4 +6,4 @@ social:
     title: Curve Docs
 ---
 
-Welcome to Material for MkDocs
+

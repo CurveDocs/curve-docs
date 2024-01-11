@@ -1,4 +1,4 @@
-site_name: Curve Docs
+site_name: Curve Technical Docs
 site_url: https://docs.curve.fi/
 site_author: CurveFi
 
@@ -65,7 +65,7 @@ theme:
   font:
     text: Roboto
     code: Roboto Mono
-  logo: "images/logo.png"
+  logo: "images/vecrv.svg"
   favicon: "images/lama/lama.png"
   icon:
     repo: simple/github
@@ -109,7 +109,8 @@ repo_url: https://github.com/CurveDocs/curve-docs
 
 
 
-nav:    
+nav:
+  - Home: index.md
   - Protocol Overview: protocol-overview.md
 
   - Curve DAO:

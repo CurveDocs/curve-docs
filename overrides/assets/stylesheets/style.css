@@ -1,0 +1,150 @@
+.md-header, .md-header * {
+    background-color: transparent !important;
+    position: relative; /* Or absolute/fixed */
+    z-index: 10;
+}
+
+.landing {
+    width: 100vw;
+    height: 100vh; /* Full viewport height */
+    overflow: hidden; /* Prevents scrolling within the landing section */
+    background: linear-gradient(0deg, #050000 3%, #5b4949 100%);
+    /* Other styles... */
+}
+
+.tx-hero {
+    min-height: 400px; /* Adjust as necessary */
+    position: relative;
+    /* Other styles... */
+}
+
+.tx-hero h1 {
+    margin-bottom: 1rem;
+    color: currentColor;
+    font-weight: 700
+}
+
+.tx-hero__image {
+    position: absolute;
+    top: 50px; /* Adjust these values as needed */
+    right: 20px;
+    width: 400px;
+    height: auto;
+}
+
+.tx-hero__content {
+    position: absolute;
+    top: 280px;
+    left: 10px;
+}
+
+.tx-hero .md-button {
+    margin-top: .5rem;
+    margin-right: .5rem;
+    color: var(--md-primary-bg-color)
+}
+
+.tx-hero .md-button--primary {
+    background-color: var(--md-primary-bg-color);
+    color: hsla(280deg, 37%, 48%, 1);
+    border-color: var(--md-primary-bg-color)
+}
+
+.tx-hero .md-button:focus,
+.tx-hero .md-button:hover {
+    background-color: var(--md-accent-fg-color);
+    color: var(--md-default-bg-color);
+    border-color: var(--md-accent-fg-color)
+}
+
+.feature-item h2 svg {
+    height: 30px;
+    float: left;
+    margin-right: 10px;
+    transform: translateY(10%);
+}
+
+.top-hr {
+    margin-top: 42px;
+}
+
+
+
+.feature-item p {
+    font-size: 16px;
+    line-height: 1.8em;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    color: #111;
+    margin: 0 0 10px;
+    display: block;
+}
+
+@media screen and (max-width:30em) {
+    .tx-hero h1 {
+        font-size: 1.4rem
+    }
+}
+
+@media screen and (min-width:60em) {
+    .md-sidebar--secondary {
+        display: none
+    }
+
+    .tx-hero {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .tx-hero__content {
+        max-width: 22rem;
+        margin-top: 3.5rem;
+        margin-bottom: 3.5rem;
+        margin-left: 1.0rem;
+        margin-right: 4.0rem;
+        align-items: center;
+    }
+}
+
+@media screen and (min-width:76.25em) {
+    .md-sidebar--primary {
+        display: none
+    }
+
+    .top-hr {
+        width: 100%;
+        display: flex;
+        max-width: 61rem;
+        margin-right: auto;
+        margin-left: auto;
+        padding: 0 .2rem;
+    }
+
+    .bottom-hr {
+        margin-top: 10px;
+        width: 100%;
+        display: flex;
+        max-width: 61rem;
+        margin-right: auto;
+        margin-left: auto;
+        padding: 0 .2rem;
+    }
+
+    .feature-item {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .feature-item:hover {
+        background-color: #526cfe47;
+        border-radius: 3px;
+    }
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* Full viewport height */
+    overflow: hidden; /* Prevents overall page scrolling */
+}
