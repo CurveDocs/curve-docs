@@ -73,7 +73,6 @@ theme:
     - content.code.annotate
     - content.tabs.link
     - navigation.indexes
-    - navigation.sections
     - navigation.path
     - navigation.top
     - navigation.tracking
@@ -166,7 +165,7 @@ nav:
     - Admin Controls: registry/admin-controls.md
 
 
-  - Curve Stablecoin (crvUSD):
+  - Curve Stablecoin:
     - Overview: crvUSD/overview.md
     - crvUSD Token: crvUSD/crvUSD.md
     - Controller: crvUSD/controller.md

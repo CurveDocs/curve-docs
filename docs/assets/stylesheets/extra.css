@@ -158,13 +158,6 @@ th {
   padding: 9px;
 }
 
-
-/* Hide shadow under navigation */
-.md-header[data-md-state="shadow"],
-.md-header--shadow {
-  box-shadow: none;
-}
-
 /* buttons */
 .md-typeset .md-button {
   color: var(--md-typeset-color);
@@ -283,32 +276,6 @@ h3 {
   background-color: rgba(9, 9, 9, 0.95);
 }
 
-@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
-
-  .md-header,
-  .md-tabs {
-    background-color: rgba(255, 255, 255, .6);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-  }
-
-  [data-md-color-scheme="slate"] .md-header,
-  [data-md-color-scheme="slate"] .md-tabs {
-    background-color: rgba(0, 0, 0, 0.5);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-  }
-}
-
-[data-md-color-scheme="slate"] .md-nav--primary .md-nav__title[for="__drawer"] {
-  color: var(--md-typeset-a-color)
-}
-
-header[class="md-header md-header--shadow"],
-nav[class="md-tabs"] {
-  border-bottom: 1px solid var(--pg-light-border);
-}
-
 @media screen and (min-width: 60em) {
   .md-search__overlay {
     background-color: transparent;
@@ -352,16 +319,6 @@ nav[class="md-tabs"] {
     width: .75rem;
     height: .75rem;
   }
-}
-
-.md-tabs__link--active {
-  background:
-    radial-gradient(farthest-side, var(--md-typeset-a-color) 98%, transparent 100%) bottom right/2px 2px,
-    radial-gradient(farthest-side, var(--md-typeset-a-color) 98%, transparent 100%) bottom left /2px 2px,
-    linear-gradient(var(--md-typeset-a-color), var(--md-typeset-a-color)) bottom/calc(100% - 2px) 2px;
-  background-repeat: no-repeat;
-  background-origin: padding-box;
-  padding-bottom: 2px;
 }
 
 .md-footer {
@@ -471,94 +428,3 @@ nav[class="md-tabs"] {
 .flex-item img {
   padding: 3rem 1rem;
 }
-
-/* Botcamp - 4 col grid */
-
-.botcamp>.flex-item {
-  flex-basis: calc(25% - 10px);
-  /* adjust this value for different screen sizes */
-  margin: 5px;
-}
-
-.botcamp>.flex-item img {
-  padding: 1rem 3rem;
-  width: 100%;
-  height: auto;
-}
-
-@media only screen and (min-width: 769px) {
-  .botcamp>.flex-item {
-    flex-basis: calc(25% - 10px);
-  }
-}
-
-@media (max-width: 768px) {
-  .flex-item {
-    flex-basis: calc(50% - 10px);
-  }
-
-  .botcamp>.flex-item img {
-    padding: 3rem 1rem;
-  }
-}
-
-/* Home - 3 col grid */
-
-.home>.flex-item {
-  flex-basis: calc(33% - 10px);
-  /* adjust this value for different screen sizes */
-  margin: 5px;
-}
-
-.home>.flex-item img {
-  padding: 1rem 3rem;
-  width: 100%;
-  height: auto;
-}
-
-@media only screen and (min-width: 769px) {
-  .home>.flex-item {
-    flex-basis: calc(33% - 10px);
-  }
-}
-
-@media (max-width: 768px) {
-  .home>.flex-item {
-    flex-basis: calc(50% - 10px);
-  }
-
-  .home>.flex-item img {
-    padding: 3rem 1rem;
-  }
-}
-
-
-[data-md-color-scheme="default"] .dark-logo {
-  display: none;
-}
-
-[data-md-color-scheme="slate"] .light-logo {
-  display: none;
-}
-
-/* Two Thirds Grids */
-.grid.two-thirds {
-  grid-template-columns: 2fr 1fr;
-  /* Default to 2/3 and 1/3 width columns */
-}
-
-@media (max-width: 768px) {
-  .grid.two-thirds {
-    grid-template-columns: 1fr;
-    /* All items will stack on top of each other */
-  }
-
-  /* Highlights text to link color */
-  .text-highlight {
-    color: var(--md-typeset-a-color);
-  }
-
-  /* Highlights 2nd card in a card grid to the hover state */
-  .highlight-second-card>ul>li:nth-child(2) {
-    border-color: var(--md-accent-fg-color) !important;
-  }
