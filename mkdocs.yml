@@ -83,15 +83,15 @@ theme:
     - toc.follow
     - content.code.copy
   palette:
+    # - media: "(prefers-color-scheme: dark)"
     - scheme: default
-      primary: black
-      accent: red
+      accent: deep purple
       toggle:
         icon: material/weather-sunny
-        name  : Switch to light mode
+        name: Switch to light mode
+    # - media: "(prefers-color-scheme: light)"
     - scheme: slate
-      primary: black
-      accent: red
+      accent: amber
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
@@ -113,25 +113,21 @@ repo_url: https://github.com/CurveDocs/curve-docs
 
 nav:
   - Protocol Overview: protocol-overview.md
-
   - Curve DAO:
     - Curve DAO Token:
       - CRV Token: curve_dao/curve-dao-token/crv-token.md
       - Admin Controls: curve_dao/curve-dao-token/admin-controls.md
-
     - Vote-Escrowed CRV:
       - VotingEscrow:
         - Contract Methods: curve_dao/voting-escrow/voting-escrow.md
         - Admin Controls: curve_dao/voting-escrow/admin-controls.md
       - SmartWalletChecker: curve_dao/voting-escrow/smartwalletchecker.md
-
     - Fee Collection and Distribution:
       - Overview: curve_dao/fee-collection-distribution/overview.md
       - Withdraw and Burn: curve_dao/fee-collection-distribution/withdraw-and-burn.md
       - Burners: curve_dao/fee-collection-distribution/burner.md
       - Fee Distribution: curve_dao/fee-collection-distribution/distributor.md
       - Sidechains: curve_dao/fee-collection-distribution/sidechains.md
-
     - Liquidity Gauges and Minting CRV:
       - Overview: curve_dao/liquidity-gauge-and-minting-crv/overview.md
       - GaugeController:
@@ -152,18 +148,15 @@ nav:
         - ChilChaindGauge: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/ChildGauge.md
         - ChildChainGaugeFactory: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/ChildGaugeFactory.md
       - Minter: curve_dao/liquidity-gauge-and-minting-crv/minter.md 
-
     - Ownership Proxies:
       - Overview: curve_dao/ownership-proxy/overview.md
       - Agents: curve_dao/ownership-proxy/Agents.md
       - PoolProxy: curve_dao/ownership-proxy/PoolProxy.md
       - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
       - RootChainGaugeProxy: curve_dao/ownership-proxy/RootChainGaugeFactoryProxy.md
-
     - Governance and Voting:  
       - Overview: curve_dao/governance/overview.md
       - Crosschain Governance: curve_dao/xgov/xgov.md
-      
     - Exchange Router: curve_dao/router/router.md
 
 

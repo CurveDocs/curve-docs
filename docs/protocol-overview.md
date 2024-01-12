@@ -5,6 +5,8 @@ hide:
 
 <h1>Curve Finance: Protocol Overview</h1>
 
+# What is Curve Finance?
+
 Curve is a **decentralized exchange and automated market maker on Ethereum and EVM sidechains/L2s**, designed for the efficient **trading of stablecoins and other assets**. 
 
 The platform is distinguished by its low-risk, supplemental fee income opportunities for liquidity providers, without an opportunity cost. Additionally, Curve has launched its own stablecoin, **crvUSD, featuring a unique liquidation mechanism known as LLAMMA**.
@@ -15,7 +17,7 @@ For non-technical users, the **[Resources](https://resources.curve.fi/)** site o
 
 
 
-**Curve can be broadly separated into the following categories:**
+# Curve can be broadly separated into the following categories:
 
 <div class="grid cards" markdown>
 
