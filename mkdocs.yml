@@ -1,4 +1,4 @@
-site_name: Curve Docs
+site_name: Curve Technical Docs
 site_url: https://docs.curve.fi/
 site_author: CurveFi
 
@@ -11,27 +11,122 @@ plugins:
   - minify:
       minify_html: true
 
+# extension
+markdown_extensions:
+  - def_list
+  - attr_list
+  - md_in_html
+  - admonition
+  - meta
+  - toc:
+      permalink: true
+      baselevel: 2
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      options:
+        custom_icons:
+          - overrides/.icons
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.snippets
+  - pymdownx.smartsymbols
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+      use_pygments: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.arithmatex:
+      generic: true
 
-nav:    
+theme:
+  name: material
+  custom_dir: overrides
+  include_search_page: false
+  search_index_only: true
+  font:
+    text: Roboto
+    code: Roboto Mono
+  logo: "images/lama/lama.png"
+  favicon: "images/lama/lama.png"
+  icon:
+    repo: simple/github
+  features:
+    - content.code.annotate
+    - content.tabs.link
+    - navigation.indexes
+    - navigation.path
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+    - content.code.copy
+  palette:
+    # - media: "(prefers-color-scheme: dark)"
+    - scheme: default
+      accent: deep purple
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+    # - media: "(prefers-color-scheme: light)"
+    - scheme: slate
+      accent: amber
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+extra_javascript:
+  - assets/javascripts/extra.js
+  - assets/javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+
+repo_name: CurveDocs/curve-docs
+repo_url: https://github.com/CurveDocs/curve-docs
+
+
+
+nav:
+  - Protocol Overview: protocol-overview.md
   - Curve DAO:
-
     - Curve DAO Token:
       - CRV Token: curve_dao/curve-dao-token/crv-token.md
       - Admin Controls: curve_dao/curve-dao-token/admin-controls.md
-
     - Vote-Escrowed CRV:
       - VotingEscrow:
         - Contract Methods: curve_dao/voting-escrow/voting-escrow.md
         - Admin Controls: curve_dao/voting-escrow/admin-controls.md
       - SmartWalletChecker: curve_dao/voting-escrow/smartwalletchecker.md
-
     - Fee Collection and Distribution:
       - Overview: curve_dao/fee-collection-distribution/overview.md
       - Withdraw and Burn: curve_dao/fee-collection-distribution/withdraw-and-burn.md
       - Burners: curve_dao/fee-collection-distribution/burner.md
       - Fee Distribution: curve_dao/fee-collection-distribution/distributor.md
       - Sidechains: curve_dao/fee-collection-distribution/sidechains.md
-
     - Liquidity Gauges and Minting CRV:
       - Overview: curve_dao/liquidity-gauge-and-minting-crv/overview.md
       - GaugeController:
@@ -52,18 +147,15 @@ nav:
         - ChilChaindGauge: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/ChildGauge.md
         - ChildChainGaugeFactory: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/ChildGaugeFactory.md
       - Minter: curve_dao/liquidity-gauge-and-minting-crv/minter.md 
-
     - Ownership Proxies:
       - Overview: curve_dao/ownership-proxy/overview.md
       - Agents: curve_dao/ownership-proxy/Agents.md
       - PoolProxy: curve_dao/ownership-proxy/PoolProxy.md
       - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
       - RootChainGaugeProxy: curve_dao/ownership-proxy/RootChainGaugeFactoryProxy.md
-
     - Governance and Voting:  
       - Overview: curve_dao/governance/overview.md
       - Crosschain Governance: curve_dao/xgov/xgov.md
-      
     - Exchange Router: curve_dao/router/router.md
 
 
@@ -73,7 +165,7 @@ nav:
     - Admin Controls: registry/admin-controls.md
 
 
-  - Curve Stablecoin (crvUSD):
+  - Curve Stablecoin:
     - Overview: crvUSD/overview.md
     - crvUSD Token: crvUSD/crvUSD.md
     - Controller: crvUSD/controller.md
@@ -172,99 +264,3 @@ nav:
       - Curve Stablecoin: references/whitepapers/curve-stablecoin.md
     - Useful Resources: references/useful.md
     - Deployment Addresses: references/deployed-contracts.md
-
-# extension
-markdown_extensions:
-  - def_list
-  - attr_list
-  - md_in_html
-  - admonition
-  - meta
-  - toc:
-      permalink: true
-      baselevel: 2
-  - pymdownx.arithmatex:
-      generic: true
-  - pymdownx.betterem:
-      smart_enable: all
-  - pymdownx.caret
-  - pymdownx.critic
-  - pymdownx.details
-  - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
-      options:
-        custom_icons:
-          - overrides/.icons
-  - pymdownx.inlinehilite
-  - pymdownx.magiclink
-  - pymdownx.mark
-  - pymdownx.snippets
-  - pymdownx.smartsymbols
-  - pymdownx.highlight:
-      anchor_linenums: true
-      line_spans: __span
-      pygments_lang_class: true
-      use_pygments: true
-  - pymdownx.superfences:
-      custom_fences:
-        - name: mermaid
-          class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
-  - pymdownx.tasklist:
-      custom_checkbox: true
-  - pymdownx.tilde
-  - pymdownx.tabbed:
-      alternate_style: true
-  - pymdownx.arithmatex:
-      generic: true
-
-theme:
-  name: material
-  custom_dir: overrides
-  include_search_page: false
-  search_index_only: true
-  font:
-    text: Roboto
-    code: Roboto Mono
-  logo: "images/logo.png"
-  favicon: "images/lama/lama.png"
-  icon:
-    repo: simple/github
-  features:
-    - content.code.annotate
-    - content.tabs.link
-    - navigation.indexes
-    - navigation.sections
-    - navigation.path
-    - navigation.top
-    - navigation.tracking
-    - search.highlight
-    - search.share
-    - search.suggest
-    - toc.follow
-    - content.code.copy
-  palette:
-    - scheme: default
-      primary: black
-      accent: red
-      toggle:
-        icon: material/weather-sunny
-        name  : Switch to light mode
-    - scheme: slate
-      primary: black
-      accent: red
-      toggle:
-        icon: material/weather-night
-        name: Switch to dark mode
-
-extra_css:
-  - stylesheets/extra.css
-
-extra_javascript:
-  - javascripts/mathjax.js
-  - https://polyfill.io/v3/polyfill.min.js?features=es6
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
-
-repo_name: CurveDocs/curve-docs
-repo_url: https://github.com/CurveDocs/curve-docs

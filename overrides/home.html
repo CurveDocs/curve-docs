@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block tabs %}
+{{ super() }}
+
+<!-- Additional styles for landing page -->
+<style>
+    body,
+    html {
+        max-height: 100vh;
+        /* Sets the maximum height to 100% of the viewport height */
+        overflow-y: hidden;
+        /* Disables vertical scrolling */
+    }
+
+    .mdx-container {
+        background: rgb(250, 250, 250);
+        background-size: contain;
+        padding-top: 1rem;
+        padding-bottom: 6rem;
+        /* Increase this value to push content down */
+    }
+
+    [data-md-color-scheme="slate"] .mdx-container {
+        background: rgb(26, 26, 27);
+        background-size: contain;
+    }
+
+    .md-source-file {
+        display: none;
+    }
+
+    .mdx-hero {
+        margin: 0 0.8rem;
+        padding-top: 0rem;
+    }
+
+    .mdx-hero h1 {
+        color: var(--hb-hero-color);
+        margin-bottom: 1rem;
+        font-size: 2.6rem;
+    }
+
+    .mdx-hero p {
+        margin-bottom: 0.5rem;
+        margin-right: 34rem;
+    }
+
+    .mdx-hero__content {
+        padding-top: 0rem;
+    }
+
+    .mdx-hero__logo {
+        padding-left: 45rem;
+        padding-top: 2rem;
+    }
+
+    .mdx-hero .md-button {
+        color: var(--hb-hero-color);
+        border-color: var(--hb-hero-color);
+    }
+
+    [data-md-color-scheme="slate"] .mdx-hero .md-button--primary {
+        color: var(--md-primary-fg-color);
+    }
+
+    .mdx-hero .md-button--primary {
+        color: var(--md-primary-fg-color);
+        background-color: var(--hb-hero-color);
+        border-color: transparent;
+        margin-right: 0.5rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .md-main .md-button--primary {
+        color: var(--md-primary-fg-color);
+        background-color: var(--hb-hero-color);
+        border-color: transparent;
+    }
+
+    nav[class="md-tabs"] {
+        border-bottom: none;
+    }
+</style>
+
+<section class="mdx-container">
+    <div class="md-grid md-typeset">
+        <div class="mdx-hero">
+            <div class="mdx-hero__logo">
+                <img src="/images/logo.svg" alt="" width="300" height="150" draggable="false">
+            </div>
+            <div class="mdx-hero__content">
+                <h1>Curve Technical Docs</h1>
+                <p>Comprehensive documentation detailing the architecture, functionality, and security aspects of
+                    Curve's core smart contracts, exchange contracts, and crvUSD stablecoin.</p>
+                <a href="/protocol-overview/" title="Protocol Overview" class="md-button md-button--primary">
+                    Protocol Overview
+                </a>
+                <a href="https://github.com/curvefi" title="GitHub" class="md-button">
+                    GitHub
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
