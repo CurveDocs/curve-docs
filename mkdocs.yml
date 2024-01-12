@@ -65,7 +65,7 @@ theme:
   font:
     text: Roboto
     code: Roboto Mono
-  logo: "images/vecrv.svg"
+  logo: "images/lama/lama.png"
   favicon: "images/lama/lama.png"
   icon:
     repo: simple/github

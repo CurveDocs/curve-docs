@@ -4,10 +4,10 @@
   --md-default-bg-color: rgb(250, 250, 250);
   --md-primary-fg-color: rgb(255, 255, 255);
   --md-primary-fg-color--light: #5FFFD7;
-  --md-primary-fg-color--dark: #E549FF;
+  --md-primary-fg-color--dark: #89CFF0;
   --md-primary-bg-color: rgba(0, 0, 0, .75);
   --md-primary-bg-color--light: rgba(0, 0, 0, .54);
-  --md-accent-fg-color: #E549FF;
+  --md-accent-fg-color: #89CFF0;
   --pg-light-border: rgb(229, 231, 235);
   --hb-hero-color: rgb(45, 45, 45);
 }
@@ -17,13 +17,12 @@
   --md-default-bg-color: rgb(26, 26, 27);
   --md-primary-fg-color: rgb(15, 15, 15);
   --md-primary-fg-color--light: #5FFFD7;
-  --md-primary-fg-color--dark: #FCDB17;
+  --md-primary-fg-color--dark: #50C878;
   --md-primary-bg-color: rgba(0, 0, 0, .75);
   --md-primary-bg-color--light: rgba(0, 0, 0, .54);
-  --md-accent-fg-color: #FCDB17;
+  --md-accent-fg-color: #50C878;
   --pg-light-border: rgb(47, 47, 47);
-  --hb-hero-color: #7FFFB5; /* Navy blue */
-  /* --md-footer-bg-color--dark: var(--md-default-bg-color); */
+  --hb-hero-color: #3B9E7F;
 }
 
 /* Better contrast link colors for light mode */
