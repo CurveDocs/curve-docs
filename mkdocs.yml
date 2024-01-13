@@ -14,8 +14,6 @@ plugins:
 
 
 nav:    
-  - Curve API test: curve-api/overview.md 
-
   - Curve DAO:
     - Curve DAO Token:
       - CRV Token: curve_dao/curve-dao-token/crv-token.md
@@ -73,6 +71,9 @@ nav:
     - MetaRegistry API: registry/MetaRegistryAPI.md
     - Admin Controls: registry/admin-controls.md
 
+  - Curve API:
+    - Overview: curve-api/overview.md 
+    - curve-prices: curve-api/curve-prices.md 
 
   - Curve Stablecoin (crvUSD):
     - Overview: crvUSD/overview.md
