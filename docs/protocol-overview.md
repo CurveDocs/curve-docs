@@ -7,7 +7,7 @@ hide:
 
 Curve is a **decentralized exchange and automated market maker on Ethereum and EVM sidechains/L2s**, designed for the **efficient trading of stablecoins and other volatile assets**. 
 
-The platform is distinguished by its low-risk, supplemental fee income opportunities for liquidity providers, without an opportunity cost. Additionally, Curve has launched its own stablecoin, crvUSD, featuring a unique liquidation mechanism known as LLAMMA.
+The platform is distinguished by its low-risk, supplemental fee income opportunities for liquidity providers, without an opportunity cost. Additionally, Curve has launched its own stablecoin, **crvUSD, featuring a unique liquidation mechanism known as LLAMMA**.
 
 This documentation outlines the technical implementation of the core Curve protocol and related smart contracts. It may be useful for contributors to the Curve codebase, third-party integrators, or technically proficient users of the protocol.
 
