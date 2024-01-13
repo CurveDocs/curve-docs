@@ -345,8 +345,8 @@ h3 {
 }
 
 .md-typeset hr {
-  margin-top: 5rem;
-  margin-bottom: 5rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 
@@ -426,4 +426,8 @@ h3 {
 
 .flex-item img {
   padding: 3rem 1rem;
+}
+
+.md-source-file {
+  display: none;
 }
