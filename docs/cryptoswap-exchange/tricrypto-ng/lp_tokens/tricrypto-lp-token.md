@@ -271,14 +271,14 @@
         ```
 
 
-## Allowance and Transfer Methods
+## **Allowance and Transfer Methods**
 
 ### `transfer`
 !!! description "`LPToken.transfer(_to: address, _value: uin256) -> bool:`"
 
     Function to transfer `_value` token from `msg.sender` to `_to`.
 
-    Returns: True or False (`bool`).
+    Returns: True (`bool`).
 
     Emits: `Transfer`
 
@@ -329,7 +329,7 @@
 
     Function to transfer `_value` token from `msg.sender` to `_to`. Needs [`allowance`](#allowance) to successfully transfer on behalf of someone else.
 
-    Returns: True or False (`bool`).
+    Returns: True (`bool`).
 
     Emits: `Transfer`
 
@@ -463,7 +463,9 @@
 
     Function to increase the allowance granted to `_spender`.
 
-    Returns: True or False (`bool`).
+    Returns: True (`bool`).
+
+    Emits: `Approval`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -473,6 +475,11 @@
     ??? quote "Source code"
 
         ```vyper
+        event Approval:
+            owner: indexed(address)
+            spender: indexed(address)
+            value: uint256
+
         allowance: public(HashMap[address, HashMap[address, uint256]])
 
         @external
@@ -496,6 +503,12 @@
                 self._approve(msg.sender, _spender, allowance)
 
             return True    
+
+        @internal
+        def _approve(_owner: address, _spender: address, _value: uint256):
+            self.allowance[_owner][_spender] = _value
+
+            log Approval(_owner, _spender, _value)
         ```
 
     === "Example"
@@ -511,7 +524,9 @@
 
     Function to decrease the allowance granted to `_spender`.
 
-    Returns: True or False (`bool`).
+    Returns: True (`bool`).
+
+    Emits: `Approval`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -521,6 +536,11 @@
     ??? quote "Source code"
 
         ```vyper
+        event Approval:
+            owner: indexed(address)
+            spender: indexed(address)
+            value: uint256
+
         allowance: public(HashMap[address, HashMap[address, uint256]])
 
         @external
@@ -543,6 +563,12 @@
                 self._approve(msg.sender, _spender, allowance)
 
             return True    
+        
+        @internal
+        def _approve(_owner: address, _spender: address, _value: uint256):
+            self.allowance[_owner][_spender] = _value
+
+            log Approval(_owner, _spender, _value)
         ```
 
     === "Example"
@@ -573,6 +599,11 @@
     ??? quote "Source code"
 
         ```vyper
+        event Approval:
+            owner: indexed(address)
+            spender: indexed(address)
+            value: uint256
+
         @external
         def permit(
             _owner: address,
@@ -619,6 +650,12 @@
             self.nonces[_owner] = unsafe_add(nonce, 1)  # <-- Unsafe add is safe here.
             self._approve(_owner, _spender, _value)
             return True  
+
+        @internal
+        def _approve(_owner: address, _spender: address, _value: uint256):
+            self.allowance[_owner][_spender] = _value
+
+            log Approval(_owner, _spender, _value)
         ```
 
     === "Example"

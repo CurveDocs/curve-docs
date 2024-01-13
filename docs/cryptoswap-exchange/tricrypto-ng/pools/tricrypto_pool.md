@@ -48,7 +48,7 @@ The pools according [LP token](../lp_tokens/tricrypto-lp-token.md) is integrated
 
     Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`.
 
-    Returns:  Amount of tokens at index j received by the `receiver
+    Returns:  Amount of tokens at index j received (uint256).
     
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -56,7 +56,7 @@ The pools according [LP token](../lp_tokens/tricrypto-lp-token.md) is integrated
     | `j` | `uint256` | Index value for the output coin |
     | `dx` | `uint256` | Amount of input coin being swapped in |
     | `min_dy` | `uint256` | Minimum amount of output coin to receive |
-    | `receiver` | `address` | Address to send output coin to. Deafaults to `msg.sender` |
+    | `receiver` | `address` | Address to send output coin to. Defaults to `msg.sender` |
 
     ??? quote "Source code"
 
@@ -392,7 +392,7 @@ The pools according [LP token](../lp_tokens/tricrypto-lp-token.md) is integrated
 
     Getter for the charged fee by the pool at the current state based on the pools balances.
 
-    Returns: charged fee (`uint256`).
+    Returns: fee value (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -583,7 +583,7 @@ The pools according [LP token](../lp_tokens/tricrypto-lp-token.md) is integrated
 ### `get_dx`
 !!! description "`TriCrypto.get_dx(i: uint256, j: uint256, dy: uint256) -> uint256:`"
 
-    Getter for the amount of coin `i` to input for swapping out `dy` amount of token `j`.
+    Getter for the required amount of coin `i` to input for swapping out `dy` amount of token `j`.
 
     Returns: amount of coins received (`uint256`).
 
@@ -805,7 +805,7 @@ The pools according [LP token](../lp_tokens/tricrypto-lp-token.md) is integrated
     | `amounts` |  `uint256[N_COINS]` | amount of each coin to add |
     | `min_mint_amount` |  `uint256` | minimum amount of lp tokens to mint |
     | `use_eth` |  `bool` | `True` if native token is being added to the pool; default to `False` |
-    | `receiver` |  `address` | receiver of the lp tokens |
+    | `receiver` |  `address` | receiver of the lp tokens; defaults to msg.sender |
 
 
     ??? quote "Source code"
@@ -1247,7 +1247,7 @@ The pools according [LP token](../lp_tokens/tricrypto-lp-token.md) is integrated
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_amount` |  `uint256[N_COINS]` | amount of lp tokens to burn |
+    | `_amount` |  `uint256` | amount of lp tokens to burn |
     | `min_amounts` |  `uint256[N_COINS]` | minimum amounts of token to withdraw |
     | `use_eth` |  `bool` | True = withdraw ETH, False = withdraw wETH |
     | `receiver` |  `address` | receiver of the coins; defaults to msg.sender |
@@ -1349,7 +1349,9 @@ The pools according [LP token](../lp_tokens/tricrypto-lp-token.md) is integrated
 
     Funtion to withdraw liquidity in a single token.
 
-    Returns: amount of withdrawn coin (`uint256`).
+    Returns: amount of coins withdrawn (`uint256`).
+
+    Emits: `RemoveLiquidityOne`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1915,7 +1917,7 @@ The pools according [LP token](../lp_tokens/tricrypto-lp-token.md) is integrated
 
     Function to calculate LP tokens minted or burned from depositing or removing `amounts`. This function does include fees.
 
-    Returns: amount of tokens (`uint256`).
+    Returns: Amount of LP tokens deposited or withdrawn (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2643,7 +2645,7 @@ The pools according [LP token](../lp_tokens/tricrypto-lp-token.md) is integrated
 ### `mid_fee`
 !!! description "`TriCrypto.mid_fee() -> uint256:`"
 
-    Getter for the current "mid-fee". This is the minimum fee and is charged when the pool is completely balanced.
+    Getter for the current `mid_fee`. This is the minimum fee and is charged when the pool is completely balanced.
 
     Returns: mid fee (`uint256`).
 
@@ -2736,7 +2738,7 @@ The pools according [LP token](../lp_tokens/tricrypto-lp-token.md) is integrated
 
     Getter for the packed fee parameters.
 
-    Returns: packed fee params (`address`).
+    Returns: packed fee params (`uint256`).
 
     ??? quote "Source code"
 
@@ -4207,9 +4209,9 @@ The price scaling parameters can be adjusted by the admin of the pool, see [here
 ### `adjustment_step`
 !!! description "`TriCrypto.adjustment_step() -> uint256:`"
 
-    Getter for the current allowed extra profit.
+    Getter for the current adjustment step.
 
-    Returns: allowed extra profit (`uint256`).
+    Returns: adjustment step (`uint256`).
 
     ??? quote "Source code"
 
