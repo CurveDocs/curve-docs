@@ -739,6 +739,14 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://explorer.aurora.dev/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F/contracts) |
 
 
+**Linea**
+
+| Contract    | Address   | 
+| :---------: | :-------: | 
+| `Math`      | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://lineascan.build/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
+| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://lineascan.build/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
+| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://lineascan.build/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
+
 **:logos-mantle: Mantle**
 
 | Contract    | Address   | 
