@@ -2,10 +2,9 @@
 
 The pools according [LP token](../lp_tokens/tricrypto-lp-token.md) is integrated into the pool and shares the same contract address.
 
-!!!tip  
-    For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored as a single unsigned integer. This consolidation reduces storage read and write operations, leading to more cost-efficient calls. When these parameters are accessed, they are subsequently unpacked.
+For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored as a single unsigned integer. This consolidation reduces storage read and write operations, leading to more cost-efficient calls. When these parameters are accessed, they are subsequently unpacked.
 
-    ??? quote "_pack()"
+-    ??? quote "_pack()"
 
         ```vyper
         @internal
@@ -20,7 +19,7 @@ The pools according [LP token](../lp_tokens/tricrypto-lp-token.md) is integrated
         ```
 
 
-    ??? quote "_unpack()"
+-    ??? quote "_unpack()"
 
         ```vyper
         @internal
