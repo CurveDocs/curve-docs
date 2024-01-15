@@ -11,7 +11,7 @@ plugins:
   - minify:
       minify_html: true
 
-# extension
+# extension 
 markdown_extensions:
   - def_list
   - attr_list

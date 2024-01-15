@@ -552,7 +552,8 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.
+        >>> TwoCrypto.exchange(0, 1, 100, 95)
+        returns token amount received (`y_out`)
         ```
 
     !!!note todo
@@ -947,7 +948,9 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.
+        >>> crv.transfer(pool, 10**18)
+        >>> pool.exchange_received(1, 0, 10**18, 0)
+        returns token amount received (`y_out`)
         ```
 
 
@@ -2975,9 +2978,8 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
 
         ```shell
         >>> TwoCrypto.fee()
-        'todo'
+        todo
         ```
-
 
 
 ### `mid_fee`
@@ -3007,7 +3009,8 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.(todo)
+        >>> TwoCrypto.mid_fee()
+        26000000
         ```
 
 
@@ -3038,7 +3041,8 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.(todo)
+        >>> TwoCrypto.out_fee()
+        45000000
         ```
 
 
@@ -3069,7 +3073,8 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.(todo)
+        >>> TwoCrypto.fee_gamma()
+        230000000000000
         ```
 
 
@@ -3110,14 +3115,15 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.packed_fee_params(todo)
+        >>> TwoCrypto.packed_fee_params()
+        8847341539944400050877843276543133320576000000
         ```
 
 
 ### `ADMIN_FEE`
 !!! description "`TwoCrypto.packed_fee_params() -> uint256: view`"
 
-    Getter for the admin fee of the pool. This value is hardcoded to 50% (5000000000) of the earned fees.
+    Getter for the admin fee of the pool. This value is hardcoded to 50% (5000000000) of the earned fees and can not be changed.
 
     Returns: Admin fee (`uint256`).
 
@@ -3165,7 +3171,8 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.fee_receiver(todo)
+        >>> TwoCrypto.fee_receiver()
+        '0xd4F94D0aaa640BBb72b5EEc2D85F6D114D81a88E'
         ```
 
 
@@ -3962,7 +3969,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.xcp_ma_time(todo)
+        >>> TwoCrypto.xcp_ma_time()
+        todo
         ```
 
 
@@ -3984,7 +3992,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.D(todo)
+        >>> TwoCrypto.D()
+        todo
         ```
 
 
@@ -4006,7 +4015,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.last_timestamp(todo)
+        >>> TwoCrypto.last_timestamp()
+        todo
         ```
 
 
@@ -4040,7 +4050,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.
+        >>> TwoCrypto.allowed_extra_profit()
+        todo
         ```
 
 
@@ -4072,7 +4083,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.adjustment_step(todo)
+        >>> TwoCrypto.adjustment_step()
+        todo
         ```
 
 
@@ -4095,7 +4107,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.packed_rebalancing_params(todo)
+        >>> TwoCrypto.packed_rebalancing_params()
+        todo
         ```
 
 
@@ -4152,7 +4165,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.A(todo)
+        >>> TwoCrypto.A()
+        todo
         ```
 
 
@@ -4206,7 +4220,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.gamma(todo)
+        >>> TwoCrypto.gamma()
+        todo
         ```
 
 
@@ -4240,7 +4255,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.admin(todo)
+        >>> TwoCrypto.admin()
+        '0x2d12D0907A388811e3AA855A550F959501d303EE'
         ```
 
 
@@ -4272,7 +4288,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.precisions(todo)
+        >>> TwoCrypto.precisions()
+        todo
         ```
 
 
@@ -4311,7 +4328,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.MATH(todo)
+        >>> TwoCrypto.MATH()
+        '0x2005995a71243be9FB995DaB4742327dc76564Df'
         ```
 
 
@@ -4359,7 +4377,10 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.coins(todo)
+        >>> TwoCrypto.coins(0)
+        '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1'
+        >>> TwoCrypto.coins(1)
+        '0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978'
         ```
 
 
@@ -4398,7 +4419,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.factory(todo)
+        >>> TwoCrypto.factory()
+        '0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F'
         ```
 
 
@@ -4424,5 +4446,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.balances(todo)
+        >>> TwoCrypto.balances(0)
+        todo
+        >>> TwoCrypto.balances(1)
+        todo
         ```

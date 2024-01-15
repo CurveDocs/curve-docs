@@ -11,6 +11,16 @@ The algorithm also incorporates a dynamic fee structure that responds to changin
 !!!pdf "CryptoSwap Whitepaper"
     For a detailed overview of the CryptoSwap design, please read the official [whitepaper](../pdf/crypto-pools-paper.pdf).
 
+# **Implementations**
+
+There are several implementations of the CryptoSwap invariant:
+
+| Name           | Description |
+| :------------: | ----------- |
+| **`CryptoSwap`** | The first two-coin volatile asset pool integration. |
+| **`Tricrypto`** | The first three-coin volatile asset pool integration. |
+| **`TwoCrypto-NG`** | An improved version of CryptoSwap, addressing gas efficiency and more. |
+| **`Tricrypto-NG`** | An improved version of Tricrypto, addressing gas efficiency and more. |
 
 
 # **Parameters**
