@@ -1,11 +1,15 @@
-A TwoCrypto-NG pool consists of **two non-pegged assets**. The [LP token](../pools/lp-token.md) methods are integrated into the liquidity pool, resulting in both sharing the same contract.
+A Twocrypto-NG pool consists of **two non-pegged assets**. The [LP token](../pools/lp-token.md) methods are integrated into the liquidity pool, resulting in both sharing the same contract.
+
+!!!notebook
+    A Jupyter Notebook detailing **basic functions**, such as **adding/removing liquidity or exchanging tokens**, can be found on [GitHub](https://github.com/CurveDocs/curve-notebook/blob/main/notebooks/cryptoswap/scripts/cryptoswap/twocrypto_admin_controls.ipynb).
+    
+    **Note:** In the future, these notebooks will be made more interactive and will be hosted to ensure quick and easy usage.
 
 
-!!! tip  
-    In TwoCrypto-NG pools, price scaling and fee parameters are bundled and stored as a single unsigned integer. This consolidation reduces storage read and write operations, leading to more cost-efficient calls.
+In Twocrypto-NG pools, price scaling and fee parameters are **bundled and stored as a single unsigned integer**. This consolidation reduces storage read and write operations, leading to more cost-efficient calls.
 
 
-    ??? quote "pack"
+- ??? quote "pack"
 
         This internal function packs two or three integers into a single uint256.
 
@@ -26,7 +30,7 @@ A TwoCrypto-NG pool consists of **two non-pegged assets**. The [LP token](../poo
             return (x[0] << 128) | (x[1] << 64) | x[2]
         ```
 
-    ??? quote "unpack"
+- ??? quote "unpack"
 
         This internal function unpacks a single uin256 into two or three integers.
 
@@ -564,7 +568,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
 !!! description "`TwoCrypto.exchange_received(i: uint256, j: uint256, dx: uint256, min_dy: uint256, receiver: address = msg.sender) -> uint256:`"
 
     !!! warning
-        The transfer of coins into the pool and then calling `exchange_received` is highly advised to be done in the same transaction. If not, other users or MEV bots may call `exchange_received` before you, potentially *stealing* the coins.
+        The transfer of coins into the pool and then calling `exchange_received` is highly advised to be done in the same transaction. If not, other users or MEV bots may frontrun `exchange_received`, potentially *stealing* the coins.
 
     Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`. This function requires a transfer of `dx` amount of coin `i` to the pool prior to calling this function, as this exchange is based on the change of token balances in the pool. The pool will not call `transferFrom` and will only check if a surplus of `coins[i]` is greater than or equal to `dx`.
 

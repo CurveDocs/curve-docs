@@ -455,9 +455,8 @@
         ```
 
 
-## todo
 ### `nonces`
-!!! description "`TwoCrypto.`"
+!!! description "`TwoCrypto.nonces(arg0: address) -> uint256: view`"
 
     Getter for the nonces.
 
@@ -504,17 +503,16 @@
 
         ```shell
         >>> TwoCrypto.salt()
+        '0x767a041fed80912408771cda7c58c87d48a3b88d374afabe93cdd456b60eaaf7'
         ```
 
 
 ### `DOMAIN_SEPERATOR`
-!!! description "`TwoCrypto.DOMAIN_SEPERATOR`"
+!!! description "`TwoCrypto.DOMAIN_SEPERATOR -> bytes32: view`"
 
-    Function to
+    Getter for the domain seperator.
 
     Returns: 
-
-    Emits ``
 
     | Input      | Type      | Description |
     | ---------- | --------- | ----------- |
@@ -556,5 +554,6 @@
     === "Example"
 
         ```shell
-        >>> TwoCrypto.
+        >>> TwoCrypto.DOMAIN_SEPERATOR()
+        '0xe7d0dfd044288a48770d5e29b857628b360a96e3f5301a2ba585201e1668768a'
         ```

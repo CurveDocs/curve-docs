@@ -1,9 +1,17 @@
 <h1>Pool: Admin Controls</h1>
 
+
+!!!notebook
+    A Jupyter Notebook regarding the admin-guarded functions of the pool can be found on [GitHub](https://github.com/CurveDocs/curve-notebook/blob/main/notebooks/cryptoswap/scripts/cryptoswap/twocrypto_admin_controls.ipynb).
+    
+    **Note:** In the future, these notebooks will be made more interactive and will be hosted for quick and easy usage.
+
+
+
 # **Pool Ownership**
 Pools created through the Factory are "owned" by the factory **`admin`**. Ownership can therefore only be changed within the factory contract via **`commit_transfer_ownership`** and **`accept_transfer_ownership`**. 
 
-[*Factory Contract Ownership*](../../../factory/overview.md#factory-contract-ownership)
+[Factory Contract Ownership](../../../factory/overview.md#factory-contract-ownership)
 
 # **Parameter Changes**
 
