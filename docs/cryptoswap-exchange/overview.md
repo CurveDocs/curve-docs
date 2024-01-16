@@ -1,3 +1,8 @@
+---
+hide:
+  - toc
+---
+
 <h1> Curve CryptoSwap Exchange: Overview </h1>
 
 The "Automatic Market-Making with Dynamic Peg" (CryptoSwap) algorithm introduces a new approach to liquidity provision in decentralized finance. It aims to improve liquidity for assets that are not directly pegged to each other, differentiating itself from the traditional x·y = k model. 

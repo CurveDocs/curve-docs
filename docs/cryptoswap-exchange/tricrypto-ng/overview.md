@@ -1,3 +1,8 @@
+---
+hide:
+  - toc
+---
+
 The Tricrypto-NG contract infrastructure represents an **optimised version of Curve Finance [Tricrypto pool](https://etherscan.io/address/0xd51a44d3fae010294c616388b506acda1bfaae46)**.
 
 

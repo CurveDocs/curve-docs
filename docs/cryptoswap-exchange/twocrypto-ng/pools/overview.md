@@ -4,6 +4,8 @@
 
 - New fee claiming approach
 - [**`exchange_received`**](#exchange_received)
+- Overall gas improvements
+
 
 ## **Fee Claiming**
 
@@ -196,8 +198,7 @@ Users of this method are dex aggregators, arbitrageurs, or other users who **do 
         return dx
     ```
 
-
-### **Example** 
+---
 
 !!!example
     Lets say a user wants to swap **`GOV-TOKEN<>USDC`** through an aggregator. For simplicity we assume, **`GOV-TOKEN<>USDT`** exchange is done via a uniswap pool, **`USDT<>USDC`** via a Curve pool.

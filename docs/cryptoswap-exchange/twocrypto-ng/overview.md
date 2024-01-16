@@ -1,3 +1,8 @@
+---
+hide:
+  - toc
+---
+
 The **TwoCrypto-NG contract infrastructure** represents an **optimized version of Curve Finance Crypto pools**.
 
 !!!deploy "Contract Source & Deployment"
@@ -23,5 +28,5 @@ The **`Math contract`** contains various **math functions used in the AMM**.
 
 The **`Views contract`** contains view methods relevant for integrators and users looking to interact with the AMMs.
 
-The Factory AMMs have a **hardcoded `ADMIN_FEE`**, set to 50% of the earned profits. Factory admins can also implement parameter changes to the AMMs, change the fee recipient, and upgrade/add blueprint contract addresses stored in the factory. **Factory pools cannot be 'terminated'** by an admin.
+The Factory AMMs have a **hardcoded `ADMIN_FEE`**, set to 50% of the earned profits. Factory admins can also implement parameter changes to the AMMs, change the fee recipient, and upgrade/add blueprint contract addresses stored in the factory. **Factory pools cannot be 'killed'** by an admin.
 

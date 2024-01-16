@@ -1,12 +1,6 @@
-A Twocrypto-NG pool consists of **two non-pegged assets**. The [LP token](../pools/lp-token.md) methods are integrated into the liquidity pool, resulting in both sharing the same contract.
+A Twocrypto-NG pool consists of **two non-pegged assets**. The [LP token](../pools/lp-token.md) methods are integrated into the liquidity pool.
 
-!!!notebook
-    A Jupyter Notebook detailing **basic functions**, such as **adding/removing liquidity or exchanging tokens**, can be found on [GitHub](https://github.com/CurveDocs/curve-notebook/blob/main/notebooks/cryptoswap/scripts/cryptoswap/twocrypto_admin_controls.ipynb).
-    
-    **Note:** In the future, these notebooks will be made more interactive and will be hosted to ensure quick and easy usage.
-
-
-In Twocrypto-NG pools, price scaling and fee parameters are **bundled and stored as a single unsigned integer**. This consolidation reduces storage read and write operations, leading to more cost-efficient calls.
+In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored as a single unsigned integer**. This consolidation reduces storage read and write operations, leading to more cost-efficient calls.
 
 
 - ??? quote "pack"
@@ -59,7 +53,7 @@ In Twocrypto-NG pools, price scaling and fee parameters are **bundled and stored
 !!!warning "Examples"
     The examples following each code block of the corresponding functions provide a basic illustration of input/output values. **When using the function in production, ensure not to set `_min_dy`, `_min_amount`, etc., to zero or other arbitrary numbers**. Otherwise, MEV bots may frontrun or sandwich your transaction, leading to a potential loss of funds.
 
-    The examples are based on the <todo> pool: [todo]().
+    The examples are based on the <tbd> pool: <tbd>.
 
 
 ## **Exchange Methods**
@@ -179,7 +173,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
 ### `exchange`
 !!! description "`TwoCrypto.exchange(i: uint256, j: uint256, dx: uint256, min_dy: uint256, receiver: address = msg.sender) -> uint256:`"
 
-    Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`.
+    Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`. Charged fee at current states is `Pool.fee()`.
 
     Returns: Amount of tokens at index `j` received (`uint256`).
 
@@ -561,16 +555,16 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
         ```
 
     !!!note todo
-        Token indices can be check by Pool.coins(i) which returns the token address of the token at index i.
+        Token indices can be check by `Pool.coins(i)` which returns the token address of the token at index `i`.
 
 
 ### `exchange_received`
 !!! description "`TwoCrypto.exchange_received(i: uint256, j: uint256, dx: uint256, min_dy: uint256, receiver: address = msg.sender) -> uint256:`"
 
     !!! warning
-        The transfer of coins into the pool and then calling `exchange_received` is highly advised to be done in the same transaction. If not, other users or MEV bots may frontrun `exchange_received`, potentially *stealing* the coins.
+        The transfer of coins into the pool and then calling `exchange_received` is highly advised to be done in the same transaction. If not, other users or MEV bots may frontrun `exchange_received`, potentially stealing the coins.
 
-    Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`. This function requires a transfer of `dx` amount of coin `i` to the pool prior to calling this function, as this exchange is based on the change of token balances in the pool. The pool will not call `transferFrom` and will only check if a surplus of `coins[i]` is greater than or equal to `dx`.
+    Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`. This function requires a transfer of `dx` amount of coin `i` to the pool prior to calling this function, as this exchange is based on the change of token balances in the pool. The pool will not call `transferFrom` and will only check if a surplus of `coins[i]` is greater than or equal to `dx`. Charged fee at current states is `Pool.fee()`.
 
     Returns: Amount of tokens at index `j` received (`uint256`).
 
@@ -955,54 +949,6 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
         >>> crv.transfer(pool, 10**18)
         >>> pool.exchange_received(1, 0, 10**18, 0)
         returns token amount received (`y_out`)
-        ```
-
-
-### `fee_calc`
-!!! description "`TwoCrypto.fee_calc(xp: uint256[N_COINS]) -> uint256:`"
-
-    Getter for the charged exchange fee by the pool at the current state.
-
-    Returns: Fee value (`uint256`).
-
-    | Input | Type               | Description                                      |
-    | ----- | ------------------ | ------------------------------------------------ |
-    | `xp`  | `uint256[N_COINS]` | Pool balances multiplied by the coin precisions. |
-
-    ??? quote "Source code"
-
-        ```vyper
-        @external
-        @view
-        def fee_calc(xp: uint256[N_COINS]) -> uint256:  # <----- For by view contract.
-            """
-            @notice Returns the fee charged by the pool at current state.
-            @param xp The current balances of the pool multiplied by coin precisions.
-            @return uint256 Fee value.
-            """
-            return self._fee(xp)
-
-        @internal
-        @view
-        def _fee(xp: uint256[N_COINS]) -> uint256:
-
-            fee_params: uint256[3] = self._unpack_3(self.packed_fee_params)
-            f: uint256 = xp[0] + xp[1]
-            f = fee_params[2] * 10**18 / (
-                fee_params[2] + 10**18 -
-                (10**18 * N_COINS**N_COINS) * xp[0] / f * xp[1] / f
-            )
-
-            return unsafe_div(
-                fee_params[0] * f + fee_params[1] * (10**18 - f),
-                10**18
-            )
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> TwoCrypto.fee_calc(todo)
         ```
 
 
@@ -1805,7 +1751,8 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.calc_token_fee
+        >>> TwoCrypto.calc_token_fee()
+        'todo'
         ```
 
 
@@ -1826,9 +1773,6 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     | `_amount`     | `uint256`           | Amount of LP tokens to burn.                     |
     | `min_amounts` | `uint256[N_COINS]`  | Minimum amounts of tokens to withdraw.           |
     | `receiver`    | `address`           | Receiver of the coins; defaults to `msg.sender`. |
-
-    !!! info 
-        This withdrawal method is very safe, as it does not involve complex math, with tokens being withdrawn in balanced proportions.
 
     ??? quote "Source code"
 
@@ -2437,7 +2381,8 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.
+        >>> TwoCrypto.remove_liquidity_one_coin()
+        'todo'
         ```
 
 
@@ -2583,7 +2528,8 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.calc_token_amount(todo)
+        >>> TwoCrypto.calc_token_amount()
+        'todo'
         ```
 
 
@@ -2930,7 +2876,8 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.
+        >>> TwoCrypto.calc_withdraw_one_coin()
+        'todo'
         ```
 
 
@@ -2983,6 +2930,54 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
         ```shell
         >>> TwoCrypto.fee()
         todo
+        ```
+
+
+### `fee_calc`
+!!! description "`TwoCrypto.fee_calc(xp: uint256[N_COINS]) -> uint256:`"
+
+    Getter for the charged exchange fee by the pool at the current state.
+
+    Returns: Fee value (`uint256`).
+
+    | Input | Type               | Description                                      |
+    | ----- | ------------------ | ------------------------------------------------ |
+    | `xp`  | `uint256[N_COINS]` | Pool balances multiplied by the coin precisions. |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @external
+        @view
+        def fee_calc(xp: uint256[N_COINS]) -> uint256:  # <----- For by view contract.
+            """
+            @notice Returns the fee charged by the pool at current state.
+            @param xp The current balances of the pool multiplied by coin precisions.
+            @return uint256 Fee value.
+            """
+            return self._fee(xp)
+
+        @internal
+        @view
+        def _fee(xp: uint256[N_COINS]) -> uint256:
+
+            fee_params: uint256[3] = self._unpack_3(self.packed_fee_params)
+            f: uint256 = xp[0] + xp[1]
+            f = fee_params[2] * 10**18 / (
+                fee_params[2] + 10**18 -
+                (10**18 * N_COINS**N_COINS) * xp[0] / f * xp[1] / f
+            )
+
+            return unsafe_div(
+                fee_params[0] * f + fee_params[1] * (10**18 - f),
+                10**18
+            )
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> TwoCrypto.fee_calc(todo)
         ```
 
 
@@ -3150,7 +3145,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
 ### `fee_receiver`
 !!! description "`TwoCrypto.fee_receiver() -> address:`"
 
-    Getter for the fee receiver of the admin fees. This address is set within the TwoCrypto-NG (todo: insert hyperlink here) Factory. Every pool created through the Factory has the same fee receiver.
+    Getter for the fee receiver of the admin fees. This address is set within the [TwoCrypto-NG Factory](../../../factory/twocrypto-ng/overview.md). Every pool created through the Factory has the same fee receiver.
 
     Returns: Fee receiver (`address`).
 

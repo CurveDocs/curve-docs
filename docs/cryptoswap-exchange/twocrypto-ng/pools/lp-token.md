@@ -1,4 +1,6 @@
-**LP Token and liquidity pool share the same smart contract.**
+<h1>LP Token Methods</h1>
+
+The LP Token methods are integrated within the exchange contract. They share the same contract address.
 
 
 ## **Contract Info Methods**
@@ -38,7 +40,7 @@
     === "Example"
 
         ```shell
-        >>> TwoCrypto.name()
+        >>> TwoCrypto.name(todo)
         ```
 
 
@@ -77,7 +79,7 @@
     === "Example"
 
         ```shell
-        >>> TwoCrypto.name()
+        >>> TwoCrypto.symbol(todo)
         ```
 
 
@@ -149,8 +151,8 @@
     === "Example"
 
         ```shell
-        >>> TwoCrypto.balanceOf()
-        'v2.0.0'
+        >>> TwoCrypto.balanceOf(todo)
+
         ```
 
 
@@ -172,9 +174,10 @@
     === "Example"
 
         ```shell
-        >>> TwoCrypto.totalSupply()
-        'v2.0.0'
+        >>> TwoCrypto.totalSupply(todo)
         ```
+
+
 
 ## **Allowance and Transfer Methods**
 
@@ -284,8 +287,8 @@
     === "Example"
 
         ```shell
-        >>> TwoCrypto.totalSupply()
-        'v2.0.0'
+        >>> TwoCrypto.(todo)
+
         ```
 
 
@@ -334,7 +337,7 @@
     === "Example"
 
         ```shell
-        >>> TwoCrypto.approve()
+        >>> TwoCrypto.approve(todo)
         ```
 
 
@@ -361,7 +364,7 @@
     === "Example"
 
         ```shell
-        >>> TwoCrypto.allowance()
+        >>> TwoCrypto.allowance(todo)
         ```
 
 
@@ -451,7 +454,7 @@
     === "Example"
 
         ```shell
-        >>> TwoCrypto.permit
+        >>> TwoCrypto.permit(todo)
         ```
 
 
@@ -460,7 +463,11 @@
 
     Getter for the nonces.
 
-    Returns: nonces (`uint256`).
+    Returns: Nonces (`uint256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `arg0` |  `address` | Address  |
 
     ??? quote "Source code"
 
@@ -473,7 +480,7 @@
     === "Example"
 
         ```shell
-        >>> TwoCrypto.
+        >>> TwoCrypto.(todo)
         ```
 
 
@@ -481,15 +488,9 @@
 ### `salt`
 !!! description "`TwoCrypto.salt -> bytes32`"
 
-    Getter for the salt.
+    Getter for the salt of the LP token.
 
-    Returns: salt (`bytes32`).
-
-    Emits ``
-
-    | Input      | Type      | Description |
-    | ---------- | --------- | ----------- |
-    | `future_A` | `uint256` | future A value |
+    Returns: Salt (`bytes32`).
 
     ??? quote "Source code"
 
@@ -512,11 +513,7 @@
 
     Getter for the domain seperator.
 
-    Returns: 
-
-    | Input      | Type      | Description |
-    | ---------- | --------- | ----------- |
-    | `future_A` | `uint256` | future A value |
+    Returns: Domain seperator (`bytes32`).
 
     ??? quote "Source code"
 

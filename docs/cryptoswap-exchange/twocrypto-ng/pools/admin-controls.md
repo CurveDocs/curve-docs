@@ -2,7 +2,7 @@
 
 
 !!!notebook
-    A Jupyter Notebook regarding the admin-guarded functions of the pool can be found on [GitHub](https://github.com/CurveDocs/curve-notebook/blob/main/notebooks/cryptoswap/scripts/cryptoswap/twocrypto_admin_controls.ipynb).
+    A Jupyter Notebook regarding the admin-guarded functions of the pool can be found on [GitHub](https://github.com/CurveDocs/curve-notebook/blob/main/notebooks/scripts/cryptoswap-ng/admin_controls.ipynb).
     
     **Note:** In the future, these notebooks will be made more interactive and will be hosted for quick and easy usage.
 
