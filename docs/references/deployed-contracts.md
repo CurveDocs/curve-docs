@@ -412,8 +412,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `Math`      | [0x2cad7b3e78e10bcbf2cc443ddd69ca8bcc09a758](https://sepolia.etherscan.io/address/0x2cad7b3e78e10bcbf2cc443ddd69ca8bcc09a758#code) |
 | `Views`     | [0x9d3975070768580f755D405527862ee126d0eA08](https://sepolia.etherscan.io/address/0x9d3975070768580f755D405527862ee126d0eA08#code) |
 | `Factory`   | [0xfb37b8D939FFa77114005e61CFc2e543d6F49A81](https://sepolia.etherscan.io/address/0xfb37b8D939FFa77114005e61CFc2e543d6F49A81#code) |
-| `Plain AMM` | 0xE12374F193f91f71CE40D53E0db102eBaA9098D5 |
-| `Meta AMM`  | 0xB00E89EaBD59cD3254c88E390103Cf17E914f678 |
+| `Plain AMM` | [0xE12374F193f91f71CE40D53E0db102eBaA9098D5](https://sepolia.etherscan.io/address/0xE12374F193f91f71CE40D53E0db102eBaA9098D5#code) |
+| `Meta AMM`  | [0xB00E89EaBD59cD3254c88E390103Cf17E914f678](https://sepolia.etherscan.io/address/0xB00E89EaBD59cD3254c88E390103Cf17E914f678#code) |
 
 
 **:logos-arbitrum: Arbitrum**
@@ -469,17 +469,6 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://scroll.l2scan.co/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
 | `Plain AMM`   | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://scroll.l2scan.co/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
 | `Meta AMM`   | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://scroll.l2scan.co/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a#code) |
-
-
-**:logos-zksync: zk-Sync**
-
-| Contract    | Address   | 
-| :---------: | :-------: | 
-| `Math`      | *soon* |
-| `Views`     | *soon* |
-| `Factory`   | *soon* |
-| `Plain AMM` | *soon* |
-| `Meta AMM`  | *soon* |
 
 
 **Polygon zk-EVM**
@@ -590,6 +579,17 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://mantlescan.info/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E) |
 | `Plain AMM` | [0x87FE17697D0f14A222e8bEf386a0860eCffDD617](https://mantlescan.info/address/0x87FE17697D0f14A222e8bEf386a0860eCffDD617) |
 | `Meta AMM`  | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://mantlescan.info/address/0x1764ee18e8B3ccA4787249Ceb249356192594585) |
+
+
+**:logos-zksync: zk-Sync**
+
+| Contract    | Address   | 
+| :---------: | :-------: | 
+| `Math`      | *soon* |
+| `Views`     | *soon* |
+| `Factory`   | *soon* |
+| `Plain AMM` | *soon* |
+| `Meta AMM`  | *soon* |
 
 
 **:logos-tron: Tron**
