@@ -859,8 +859,6 @@ For testing in production purposes, several contract deployments have taken plac
 |`PegKeeper (TUSD)`| PegKepper for crvUSD/TUSD | [0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae](https://etherscan.io/address/0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae#code)|
 
 
-### **Markets** 
-
 **sfrxETH**
 !!! description "[sfrxETH](https://crvusd.curve.fi/#/ethereum/markets/sfrxeth/create)"
 
