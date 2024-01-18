@@ -9,7 +9,32 @@
 
 ## **Fee Claiming**
 
-Admin fees of a Curve pool are usually claimed through an external function, callable by anyone. **Twocrypto-NG does not have any external function to directly claim fees**. Admin fees are claimed through an internal function—when liquidity is removed single-sidedly via the `_remove_liquidity_one_coin` function—and then sent to the fee receiver determined within the Factory contract.
+Admin fees of a Curve pool are usually claimed through an external function, callable by anyone. **Twocrypto-NG does not have any external function to directly claim fees**. Admin fees are claimed through an internal function — when liquidity is removed single-sidedly via the `_remove_liquidity_one_coin` function — and then sent to the fee receiver determined within the Factory contract.
+
+The flow is the following:
+
+1. Calculating admin's share of fees,
+2. minting LP tokens,
+3. claiming underlying tokens via `remove_liquidity`
+
+Disable fee claiming when:
+- Passed time since last claim is less than `MIN_ADMIN_FEE_CLAIM_INTERVAL` (86400).
+- Pool parameters (`A`, `gamma`) are being ramped.
+- Insufficient profits accrued since last claim.
+- Less than 10**18 (1 unit of) LP tokens, as it can lead to manipulated virtual prices.
+
+
+Admin fees are calculated as follows:
+
+1. Calculate accrued profit since last claim. `xcp_profit` is the current profits. `xcp_profit_a` is the profits at the previous claim.
+2. Take out admin's share, which is hardcoded at 5 * 10^9. (50% => half of 100% => 10^10 / 2 => 5 * 10**9).
+3. Since half of the profits go to rebalancing the pool, we are left with half; so divide by 2.
+
+
+fees when adding liquidity are charged in the lp token!! exchange fees are taken in coin `j`?
+
+
+
 
 ??? quote "`_claim_admin_fees()`"
 
