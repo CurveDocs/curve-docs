@@ -10,4 +10,6 @@
 | `CurveCryptoSwap2ETH` | **ChainSecurity**: Two Token CryptoSwap Audit | 1 April, 2022  |  [pdf](../../pdf/private_ChainSecurity_Curve_CurveCryptoSwap2ETH_audit_draft.pdf) |
 | `Curve Stablecoin (crvUSD)` | **MixBytes**: Audit report on Curve Stablecoin Smart Contracts | 5 June, 2023  | [pdf](../../pdf/Curve%20Stablecoin%20(crvUSD)%20Security%20Audit%20Report.pdf)  |
 | `Tricrypto-NG` | **ChainSecurity**: Tricrypto New Generation Audit | 23 June, 2023 |  [pdf](../../pdf/ChainSecurity_Curve_tricrypto-ng_audit.pdf) |
+| `crvUSD` | **ChainSecurity**: Curve Stablecoin Smart Contracts Audit | 24 January, 2024 |  [pdf](../../pdf/ChainSecurity_Curve_Curve_Stablecoin_audit-1.pdf) |
+| `crvUSD PegKeeper v2` | **ChainSecurity**: crvUSD PegKeepers Audit | 23 June, 2023 |  [pdf](../../pdf/ChainSecurity_Curve_PegKeeperV2_audit.pdf) |
 

@@ -258,6 +258,7 @@ nav:
   - References:
     - Audits: references/audits/audits_pdf.md
     - Whitepapers: 
+      - Overview: references/whitepapers/overview.md
       - DAO: references/whitepapers/dao.md
       - StableSwap: references/whitepapers/stableswap.md
       - CryptoSwap: references/whitepapers/cryptoswap.md
