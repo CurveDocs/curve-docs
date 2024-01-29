@@ -667,7 +667,7 @@ These function slightly differ to the ones from plain pools, as there needs to b
 ### `get_dy`
 !!! description "`StableSwap.get_dy(i: int128, j: int128, dx: uint256) -> uint256`"
 
-    Function to calculate the predicted output amount `j` to receive given a input of `dx` amount coin `i`.
+    Function to calculate the predicted output amount `j` to receive at the pool's current state given a input of `dx` amount coin `i`.
 
     Returns: predicted amount of `j` (`uint256`).
 
@@ -675,7 +675,7 @@ These function slightly differ to the ones from plain pools, as there needs to b
     | ----------- | -------| ----|
     | `i` |  `int128` | index value of input coin |
     | `j` |  `int128` | index value of output coin |
-    | `dy` |  `uint256` | amount of input coin being exchanged |
+    | `dx` |  `uint256` | amount of input coin being exchanged |
 
     ??? quote "Source code"
 
@@ -894,7 +894,7 @@ These function slightly differ to the ones from plain pools, as there needs to b
 
     Function to calculate the predicted input amount `i` to receive `dy` of coin `j`.
 
-    Returns: predicted amount of `i` (`uint256`).
+    Returns: predicted input amount of `i` (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
