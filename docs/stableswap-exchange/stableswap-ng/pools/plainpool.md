@@ -412,17 +412,17 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
 
 
 ### `get_dy`
-!!! description "`StableSwap.get_dx(i: int128, j: int128, dy: uint256) -> uint256:`"
+!!! description "`StableSwap.get_dy(i: int128, j: int128, dx: uint256) -> uint256:`"
 
-    Function to calculate the predicted input amount `j` to receive `dy` of coin `i`. This is just a getter method, the calculation logic is within the CurveStableSwapNGViews contract. See [here](../utility_contracts/views.md#get_dy).
+    Function to calculate the predicted output amount `j` to receive at the pool's current state given a input of `dx` amount coin `i`. This is just a getter method, the calculation logic is within the CurveStableSwapNGViews contract. See [here](../utility_contracts/views.md#get_dy).
 
-    Returns: predicted amount of `j` (`uint256`).
+    Returns: predicted output amount of `j` (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `i` |  `int128` | index value of input coin |
     | `j` |  `int128` | index value of output coin |
-    | `dy` |  `uint256` | amount of input coin being exchanged |
+    | `dx` |  `uint256` | amount of input coin being exchanged |
 
     ??? quote "Source code"
 
@@ -494,9 +494,9 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
 ### `get_dx`
 !!! description "`StableSwap.get_dx(i: int128, j: int128, dy: uint256) -> uint256:`"
 
-    Function to calculate the predicted input amount `i` to receive `dy` of coin `j`. This is just a getter method, the calculation logic is within the CurveStableSwapNGViews contract. See [here](../utility_contracts/views.md#get_dx).
+    Function to calculate the predicted input amount `i` to receive `dy` of coin `j` at the pool's current state. This is just a getter method, the calculation logic is within the CurveStableSwapNGViews contract. See [here](../utility_contracts/views.md#get_dx).
 
-    Returns: predicted amount of `i` (`uint256`).
+    Returns: predicted input amount of `i` (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
