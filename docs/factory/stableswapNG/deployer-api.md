@@ -39,8 +39,8 @@ _coins = ["0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", "0xae78736Cd615f374D3085
 
 ```shell
 _A = 200
-_fee = 1000000                                          # 0.0001 or 0.01%
-_offpeg_fee_multiplier = 50000000000                    # 5 or 500%
+_fee = 4000000                                          # 0.0001 or 0.01%
+_offpeg_fee_multiplier = 20000000000                    # 5 or 500%
 _ma_exp_time = 866                                      # ~600 seconds
 ```
 
@@ -102,7 +102,7 @@ Choosing asset types can sometimes be quite tricky. Asset types should be seen m
 
 
 ```shell
-_asset_types = [0, 2]   # coin(0) = asset type 0; coin(1) =   asset type 2
+_asset_types = [0, 2]   # coin(0) = asset type 0; coin(1) = asset type 2
 ```
 
 
