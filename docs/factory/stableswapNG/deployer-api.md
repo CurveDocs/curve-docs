@@ -19,7 +19,7 @@ Choosing the correct parameter value is trivial for the performance of the liqui
     ```shell
     _coins = ["0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", "0xae78736Cd615f374D3085123A210448E74Fc6393"]
     ```
-    
+
 
 - ## **A, Fee, Off-Peg Fee Multiplier, and MA-Exp-Time**
 
@@ -83,11 +83,11 @@ Choosing the correct parameter value is trivial for the performance of the liqui
         - [mETH](https://etherscan.io/address/0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa) is a token with a rate oracle (the underlying asset is ETH). The rate can be fetched by reading the `mETHToETH` method within the [staking contract](https://etherscan.io/address/0xe3cBd06D7dadB3F4e6557bAb7EdD924CD1489E8f).
         - rmETH is a rebasing token.
 
-        One might think that the asset types in this pool are straightforward, with asset_type 1 for mETH and asset_type 2 for rmETH. However, if the user deploying the pool wants rmETH and mETH to trade as close to 1:1 as possible, then one would choose asset type 0 for mETH.
+        Because the deployer wants rmETH and mETH to trade as close to 1:1 as possible, they need to treat mETH like a regular ERC-20 token (asset type 0), instead of a rate oraclized token (asset type 1).
 
 
     ```shell
-    _asset_types = [0, 2]   # coin(0) = asset_type 0; coin(1) =  asset_type 2
+    _asset_types = [0, 2]   # coin(0) = asset type 0; coin(1) =   asset type 2
     ```
 
 
@@ -125,10 +125,12 @@ Choosing the correct parameter value is trivial for the performance of the liqui
 
 | Pool | Asset Types | Method ID's | Rate Oracle |
 | :---: | :--------: | :---------: | :---------: |
-| [**mkUSD/USDC**](https://etherscan.io/tx/0xde904d1e285506a26452adb4d3e02d7a6ddb46aaf47d771d748da0b8eb866194) | `[0, 0]` | `['0x00000000', '0x00000000']` | `['0x0000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000']` | 
-| [**FRAX/sDAI**](https://etherscan.io/tx/0xf4ec2e31f1068608de9abf14a86532510111921ddec0bd7d7b3a05897242aaf0) | `[0, 3]` | `['0x00000000', '0x00000000']` | `['0x0000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000']` | 
-| [**wETH/rETH**](https://etherscan.io/tx/0x87c1fc0600aaa01b3d5ffd306a21411eb7ec79f37cdcbc4c5d010b5111eb0b5a) | `[0 , 1]` | `['0x00000000', '0xe6aa216c']` | `['0x0000000000000000000000000000000000000000', '0xae78736Cd615f374D3085123A210448E74Fc6393']` | 
+| [**mkUSD/USDC**](https://etherscan.io/tx/0xf980b4a4194694913af231de69ab4593f5e0fcdc) | `[0, 0]` | `['0x00000000', '0x00000000']` | `['0x0000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000']` | 
+| [**FRAX/sDAI**](https://etherscan.io/tx/0xce6431d21e3fb1036ce9973a3312368ed96f5ce7) | `[0, 3]` | `['0x00000000', '0x00000000']` | `['0x0000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000']` | 
+| [**wETH/rETH**](https://etherscan.io/tx/0x9efe1a1cbd6ca51ee8319afc4573d253c3b732af) | `[0 , 1]` | `['0x00000000', '0xe6aa216c']` | `['0x0000000000000000000000000000000000000000', '0xae78736Cd615f374D3085123A210448E74Fc6393']` | 
 | [**rmETH/mETH**](https://etherscan.io/address/0xdd4316c777a2295d899ba7ad92e0efa699865f43) | `[2 , 0]` | `['0x00000000', '0x00000000']` | `['0x0000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000']` | 
+
+
 
 ---
 
