@@ -1,9 +1,8 @@
-LLAMMA is the market-making contract that rebalances the collateral. As the name suggests, this contract is responsible for lending and liquidating collateral. Every market has its own AMM (created from a blueprint contract) containing the collateral asset and crvUSD.
+LLAMMA is the **market-making contract that rebalances the collateral**. As the name suggests, this contract is **responsible for liquidating collateral**. Every market has its own AMM (created from a blueprint contract) **containing the collateral asset and crvUSD**.
 
-When creating a new loan, the controller evenly distributes the collateral put up by the user across a specified number of bands in the AMM and mints stablecoins for the user, each representing a range of collateral prices. 
+When creating a new loan, the controller evenly **distributes the collateral put up by the user across a specified number of bands in the AMM**, each representing a range of collateral prices, and mints stablecoins for the user.
 
-!!!bug
-    If the formulas below do not render, please make sure to refresh the site. A solution is being worked on.
+---
 
 The **loan-to-value (LTV)** ratio depends on the number of bands:
 
@@ -17,14 +16,14 @@ $$ \text{starting_price} = \frac{debt} {collateral * LTV} $$
     The `starting_price` value is in percentage. To calculate the starting price, one must multiply the value by the `price_oracle` when creating the loan.
 
 
-Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p_oracle_down`](#p_oracle_down)) price bound. These prices are not real AMM prices, but rather tresholds for the bands! 
-It's worth noting, that because it is a continuous grid, the lower price-bound of let's say band 0 is the same as the upper price-bound of 1.
+Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p_oracle_down`](#p_oracle_down)) price bound. These prices are not actual AMM prices, but rather thresholds for the bands.  
+Therefore, because it is a continuous grid, the lower price bound of, let's say, band 0 is the same as the upper price bound of band 1.
 
-The concept of LLAMMA is to automatically convert collateral into crvUSD as the collateral price decreases, and vice versa, convert crvUSD back into the collateral asset when prices rise. When the collateral price is within a band that has deposited collateral, the position enters a so-called **soft-liquidation** mode and the health of the loan starts decreasing.    
-When the `health` drops below 0%, the user is eligible for **hard-liquidation**. The users collateral can be sold off and the position will be closed (just as in regular liquidations).
+The concept of LLAMMA is to **automatically convert collateral into crvUSD as the collateral price decreases, and vice versa, convert crvUSD back into the collateral asset when prices rise.** When the collateral price is within a band that has deposited collateral, the position enters a so-called **soft-liquidation mode** and the health of the loan starts decreasing as external arbitrage traders soft-liquidiate a users collateral. More on this later.
 
-!!!note
-    A position is in soft-liquidation mode only when the price oracle is within a band where the user has deposited collateral.
+When the **health drops below 0%,** the user is eligible for **hard-liquidation**. The users collateral can be sold off and the position will be closed (just as in regular liquidations).
+
+---
 
 *There are **three possible compositions** of bands:*   
 
@@ -34,22 +33,30 @@ When the `health` drops below 0%, the user is eligible for **hard-liquidation**.
 
 <figure markdown>
   ![](../images/amm1.png)
-  <figcaption>bands > -2: fully in collateral asset, bands < -2: fully in crvUSD and band -2: contains both (currently in soft-liquidation)</figcaption>
+  <figcaption>bands > -2: fully in collateral asset, bands < -2: fully in crvUSD and band -2: contains both</figcaption>
 </figure>
 
 
-To ensure assets are liquidated or de-liquidated, the AMM adjusts its price (**`get_p`**) to create arbitrage opportunities. Every trade within the AMM that arbitrages the price difference between **`oracle_price`** and **`get_p`** is essentially soft-liquidating users.
+To ensure assets are liquidated or de-liquidated, the AMM adjusts its price `get_p` to create arbitrage opportunities. Every trade within the AMM that arbitrages the price difference between `oracle_price` and `get_p` is essentially soft-liquidating users.
 
-*The system relies on **two different prices**:*
+---
 
-- **`price_oracle`:** collateral price fetched from an external OracleContract  
+*The AMM relies on **two different prices**:*
+
+- **`price_oracle`:** collateral price fetched from an internal price oracle  
 - **`get_p`:** oracle price of the AMM itself
 
-When $\text{price_oracle} = \text{get_p}$, the external oracle price and the AMM price are identical, making arbitrage impossible.
-Generally, when the price oracle begins to change, the AMM price is adjusted (the AMM price is more sensitive than the regular **`price_oracle`**) to enable arbitrage opportunities.
+When $\text{price_oracle} = \text{get_p}$, the external oracle price and the AMM price are identical. There is no need to arbitrage prices.
+When the price oracle begins to change, the AMM price is adjusted (AMM price is more sensitive than the regular **`price_oracle`**) to open up arbitrage opportunities.
 
-When the price of the collateral starts to rise, then $\text{price_oracle} < \text{get_p}$, and therefore, arbitrage is possible by swapping the collateral asset into crvUSD until $\text{price_oracle} = \text{get_p}$.  
-Conversely, when the price starts to decrease, $\text{price_oracle} > \text{get_p}$, and therefore, arbitrage is possible by swapping crvUSD into the collateral asset until both prices reach equilibrium. 
+When the **price of the collateral rises**, then $\text{price_oracle} < \text{get_p}$, arbitrage is possible by **swapping the collateral asset into crvUSD** until an price equilibrium is reached again.
+
+Conversely, when the **price starts to decrease**, $\text{price_oracle} > \text{get_p}$, arbitrage is possible by **swapping crvUSD into the collateral asset** until both prices reach equilibrium. 
+
+!!!info "todo"
+    A position enters soft-liquidation mode only when the price oracle falls within a band where the user has deposited collateral. 
+    For example, if a user has collateral deposited between bands 10 and 0, they will not enter soft-liquidation as long as the oracle price stays outside these bands. In this scenario, the only "loss" the user faces is the variable interest rate of the market.
+    Additionally, there is a rather rare possibility that a user's loan was fully soft-liquidated, resulting in all their collateral being converted to crvUSD. In such a case, the user would be out of soft-liquidation because the price oracle is below the lowest band.
 
 
 | Glossary      |  Description |
@@ -73,11 +80,10 @@ Conversely, when the price starts to decrease, $\text{price_oracle} > \text{get_
 
 
 ## **Depositing and Removing Collateral**
-Depositing and removing collateral can only be done by the **`admin`** of the AMM, the Controller. 
-Therefore the controller contract must be granted max approval to call these functions successfully. Max approval is given when **`set_admin()`** is called.
+Depositing and removing collateral can only be done by the `admin` of the AMM, the Controller.
 
-Collateral is put into bands by calling **`deposit_range()`** whenever someone creates a new loan or adds collateral to the existing position. Collateral is removed by calling **`withdraw()`**.
-
+- Collateral is put into bands by calling `deposit_range()` whenever someone creates a new loan or adds collateral to the existing position. 
+- Collateral is removed by calling `withdraw()`.
 
 
 ### `deposit_range`
@@ -127,6 +133,15 @@ Collateral is put into bands by calling **`deposit_range()`** whenever someone c
             assert n2 < 2**127
             assert n1 > -2**127
 
+            n_bands: uint256 = unsafe_add(convert(unsafe_sub(n2, n1), uint256), 1)
+            assert n_bands <= MAX_TICKS_UINT
+
+            y_per_band: uint256 = unsafe_div(amount * COLLATERAL_PRECISION, n_bands)
+            assert y_per_band > 100, "Amount too low"
+
+            assert self.user_shares[user].ticks[0] == 0  # dev: User must have no liquidity
+            self.user_shares[user].ns = unsafe_add(n1, unsafe_mul(n2, 2**128))
+
             lm: LMGauge = self.liquidity_mining_callback
 
             # Autoskip bands if we can
@@ -137,15 +152,6 @@ Collateral is put into bands by calling **`deposit_range()`** whenever someone c
                     break
                 assert self.bands_x[n0] == 0 and i < MAX_SKIP_TICKS, "Deposit below current band"
                 n0 -= 1
-
-            n_bands: uint256 = unsafe_add(convert(unsafe_sub(n2, n1), uint256), 1)
-            assert n_bands <= MAX_TICKS_UINT
-
-            y_per_band: uint256 = unsafe_div(amount * COLLATERAL_PRECISION, n_bands)
-            assert y_per_band > 100, "Amount too low"
-
-            assert self.user_shares[user].ticks[0] == 0  # dev: User must have no liquidity
-            self.user_shares[user].ns = unsafe_add(n1, unsafe_mul(n2, 2**128))
 
             for i in range(MAX_TICKS):
                 band: int256 = unsafe_add(n1, i)
@@ -180,9 +186,6 @@ Collateral is put into bands by calling **`deposit_range()`** whenever someone c
 
             self.save_user_shares(user, user_shares)
 
-            self.rate_mul = self._rate_mul()
-            self.rate_time = block.timestamp
-
             log Deposit(user, amount, n1, n2)
 
             if lm.address != empty(address):
@@ -196,6 +199,7 @@ Collateral is put into bands by calling **`deposit_range()`** whenever someone c
         >>> AMM.deposit_range(todo)
         todo
         ```
+
 
 ### `withdraw`
 !!! description "`AMM.withdraw(user: address, frac: uint256) -> uint256[2]:`"
@@ -224,7 +228,7 @@ Collateral is put into bands by calling **`deposit_range()`** whenever someone c
         @nonreentrant('lock')
         def withdraw(user: address, frac: uint256) -> uint256[2]:
             """
-            @notice Withdraw all liquidity for the user. Only admin contract can do it
+            @notice Withdraw liquidity for the user. Only admin contract can do it
             @param user User who owns liquidity
             @param frac Fraction to withdraw (1e18 being 100%)
             @return Amount of [stablecoins, collateral] withdrawn
@@ -243,30 +247,30 @@ Collateral is put into bands by calling **`deposit_range()`** whenever someone c
             total_y: uint256 = 0
             min_band: int256 = self.min_band
             old_min_band: int256 = min_band
-            max_band: int256 = self.max_band
-            old_max_band: int256 = max_band
+            old_max_band: int256 = self.max_band
+            max_band: int256 = n - 1
 
             for i in range(MAX_TICKS):
                 x: uint256 = self.bands_x[n]
                 y: uint256 = self.bands_y[n]
-                ds: uint256 = unsafe_div(frac * user_shares[i], 10**18)  # Can ONLY zero out when frac == 10**18
-                user_shares[i] = unsafe_sub(user_shares[i], ds)
+                ds: uint256 = unsafe_div(frac * user_shares[i], 10**18)
+                user_shares[i] = unsafe_sub(user_shares[i], ds)  # Can ONLY zero out when frac == 10**18
                 s: uint256 = self.total_shares[n]
                 new_shares: uint256 = s - ds
                 self.total_shares[n] = new_shares
-                s += DEAD_SHARES
-                dx: uint256 = (x + 1) * ds / s
+                s += DEAD_SHARES  # after this s is guaranteed to be bigger than 0
+                dx: uint256 = unsafe_div((x + 1) * ds, s)
                 dy: uint256 = unsafe_div((y + 1) * ds, s)
 
                 x -= dx
                 y -= dy
 
-                # If withdrawal is the last one - tranfer dust to admin fees
+                # If withdrawal is the last one - transfer dust to admin fees
                 if new_shares == 0:
                     if x > 0:
                         self.admin_fees_x += x
                     if y > 0:
-                        self.admin_fees_y += y / COLLATERAL_PRECISION
+                        self.admin_fees_y += unsafe_div(y, COLLATERAL_PRECISION)
                     x = 0
                     y = 0
 
@@ -301,9 +305,6 @@ Collateral is put into bands by calling **`deposit_range()`** whenever someone c
             total_y = unsafe_div(total_y, COLLATERAL_PRECISION)
             log Withdraw(user, total_x, total_y)
 
-            self.rate_mul = self._rate_mul()
-            self.rate_time = block.timestamp
-
             if lm.address != empty(address):
                 lm.callback_collateral_shares(0, [])  # collateral/shares ratio is unchanged
                 lm.callback_user_shares(user, ns[0], user_shares)
@@ -320,12 +321,13 @@ Collateral is put into bands by calling **`deposit_range()`** whenever someone c
 
 
 ## **Exchange Methods**
-The corresponding AMMs for the markets can be used to exchange tokens, just like in any other AMM. This is necessary, as positions in soft-liquidation are arbitrated by trades within the AMM.
+The AMM can be used to exchange tokens, just like in any other AMM. This is necessary, as positions in soft-liquidation are arbitrated by trades within the AMM.
+
 
 ### `exchange`
 !!! description "`AMM.exchange(i: uint256, j: uint256, in_amount: uint256, min_amount: uint256, _for: address = msg.sender) -> uint256[2]:`"
 
-    Function to exchange two coins.
+    Function to exchange an amount of `in_amount` of token `i` for a minimum amount of `_min_amount` of token `j`.
 
     Returns: amount of coins given in and out (`uint256`).
 
@@ -342,6 +344,27 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
     ??? quote "Source code"
 
         ```vyper 
+        event TokenExchange:
+            buyer: indexed(address)
+            sold_id: uint256
+            tokens_sold: uint256
+            bought_id: uint256
+            tokens_bought: uint256
+
+        @external
+        @nonreentrant('lock')
+        def exchange(i: uint256, j: uint256, in_amount: uint256, min_amount: uint256, _for: address = msg.sender) -> uint256[2]:
+            """
+            @notice Exchanges two coins, callable by anyone
+            @param i Input coin index
+            @param j Output coin index
+            @param in_amount Amount of input coin to swap
+            @param min_amount Minimal amount to get as output
+            @param _for Address to send coins to
+            @return Amount of coins given in/out
+            """
+            return self._exchange(i, j, in_amount, min_amount, _for, True)
+
         @internal
         def _exchange(i: uint256, j: uint256, amount: uint256, minmax_amount: uint256, _for: address, use_in_amount: bool) -> uint256[2]:
             """
@@ -376,13 +399,16 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
             if use_in_amount:
                 out = self.calc_swap_out(i == 0, amount * in_precision, p_o, in_precision, out_precision)
             else:
-                out = self.calc_swap_in(i == 0, amount * out_precision, p_o, in_precision, out_precision)
+                amount_to_swap: uint256 = max_value(uint256)
+                if amount < amount_to_swap:
+                    amount_to_swap = amount * out_precision
+                out = self.calc_swap_in(i == 0, amount_to_swap, p_o, in_precision, out_precision)
             in_amount_done: uint256 = unsafe_div(out.in_amount, in_precision)
             out_amount_done: uint256 = unsafe_div(out.out_amount, out_precision)
             if use_in_amount:
                 assert out_amount_done >= minmax_amount, "Slippage"
             else:
-                assert in_amount_done <= minmax_amount, "Slippage"
+                assert in_amount_done <= minmax_amount and (out_amount_done == amount or amount == max_value(uint256)), "Slippage"
             if out_amount_done == 0 or in_amount_done == 0:
                 return [0, 0]
 
@@ -391,9 +417,6 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
                 self.admin_fees_x += out.admin_fee
             else:
                 self.admin_fees_y += out.admin_fee
-
-            assert in_coin.transferFrom(msg.sender, self, in_amount_done, default_return_value=True)
-            assert out_coin.transfer(_for, out_amount_done, default_return_value=True)
 
             n: int256 = min(out.n1, out.n2)
             n_start: int256 = n
@@ -428,21 +451,10 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
             if lm.address != empty(address):
                 lm.callback_collateral_shares(n_start, collateral_shares)
 
-            return [in_amount_done, out_amount_done]
+            assert in_coin.transferFrom(msg.sender, self, in_amount_done, default_return_value=True)
+            assert out_coin.transfer(_for, out_amount_done, default_return_value=True)
 
-        @external
-        @nonreentrant('lock')
-        def exchange(i: uint256, j: uint256, in_amount: uint256, min_amount: uint256, _for: address = msg.sender) -> uint256[2]:
-            """
-            @notice Exchanges two coins, callable by anyone
-            @param i Input coin index
-            @param j Output coin index
-            @param in_amount Amount of input coin to swap
-            @param min_amount Minimal amount to get as output
-            @param _for Address to send coins to
-            @return Amount of coins given in/out
-            """
-            return self._exchange(i, j, in_amount, min_amount, _for, True)
+            return [in_amount_done, out_amount_done]
         ```
 
     === "Example"
@@ -473,6 +485,27 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
     ??? quote "Source code"
 
         ```vyper
+        event TokenExchange:
+            buyer: indexed(address)
+            sold_id: uint256
+            tokens_sold: uint256
+            bought_id: uint256
+            tokens_bought: uint256
+
+        @external
+        @nonreentrant('lock')
+        def exchange_dy(i: uint256, j: uint256, out_amount: uint256, max_amount: uint256, _for: address = msg.sender) -> uint256[2]:
+            """
+            @notice Exchanges two coins, callable by anyone
+            @param i Input coin index
+            @param j Output coin index
+            @param out_amount Desired amount of output coin to receive
+            @param max_amount Maximum amount to spend (revert if more)
+            @param _for Address to send coins to
+            @return Amount of coins given in/out
+            """
+            return self._exchange(i, j, out_amount, max_amount, _for, False)
+
         @internal
         def _exchange(i: uint256, j: uint256, amount: uint256, minmax_amount: uint256, _for: address, use_in_amount: bool) -> uint256[2]:
             """
@@ -507,13 +540,16 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
             if use_in_amount:
                 out = self.calc_swap_out(i == 0, amount * in_precision, p_o, in_precision, out_precision)
             else:
-                out = self.calc_swap_in(i == 0, amount * out_precision, p_o, in_precision, out_precision)
+                amount_to_swap: uint256 = max_value(uint256)
+                if amount < amount_to_swap:
+                    amount_to_swap = amount * out_precision
+                out = self.calc_swap_in(i == 0, amount_to_swap, p_o, in_precision, out_precision)
             in_amount_done: uint256 = unsafe_div(out.in_amount, in_precision)
             out_amount_done: uint256 = unsafe_div(out.out_amount, out_precision)
             if use_in_amount:
                 assert out_amount_done >= minmax_amount, "Slippage"
             else:
-                assert in_amount_done <= minmax_amount, "Slippage"
+                assert in_amount_done <= minmax_amount and (out_amount_done == amount or amount == max_value(uint256)), "Slippage"
             if out_amount_done == 0 or in_amount_done == 0:
                 return [0, 0]
 
@@ -522,9 +558,6 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
                 self.admin_fees_x += out.admin_fee
             else:
                 self.admin_fees_y += out.admin_fee
-
-            assert in_coin.transferFrom(msg.sender, self, in_amount_done, default_return_value=True)
-            assert out_coin.transfer(_for, out_amount_done, default_return_value=True)
 
             n: int256 = min(out.n1, out.n2)
             n_start: int256 = n
@@ -559,21 +592,10 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
             if lm.address != empty(address):
                 lm.callback_collateral_shares(n_start, collateral_shares)
 
-            return [in_amount_done, out_amount_done]
+            assert in_coin.transferFrom(msg.sender, self, in_amount_done, default_return_value=True)
+            assert out_coin.transfer(_for, out_amount_done, default_return_value=True)
 
-        @external
-        @nonreentrant('lock')
-        def exchange_dy(i: uint256, j: uint256, out_amount: uint256, max_amount: uint256, _for: address = msg.sender) -> uint256[2]:
-            """
-            @notice Exchanges two coins, callable by anyone
-            @param i Input coin index
-            @param j Output coin index
-            @param out_amount Desired amount of output coin to receive
-            @param max_amount Maximum amount to spend (revert if more)
-            @param _for Address to send coins to
-            @return Amount of coins given in/out
-            """
-            return self._exchange(i, j, out_amount, max_amount, _for, False)
+            return [in_amount_done, out_amount_done]
         ```
 
     === "Example"
@@ -609,6 +631,19 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
             last_tick_j: uint256
             admin_fee: uint256
 
+        @external
+        @view
+        @nonreentrant('lock')
+        def get_dy(i: uint256, j: uint256, in_amount: uint256) -> uint256:
+            """
+            @notice Method to use to calculate out amount
+            @param i Input coin index
+            @param j Output coin index
+            @param in_amount Amount of input coin to swap
+            @return Amount of coin j to give out
+            """
+            return self._get_dxdy(i, j, in_amount, True).out_amount
+
         @internal
         @view
         def _get_dxdy(i: uint256, j: uint256, amount: uint256, is_in: bool) -> DetailedTrade:
@@ -616,7 +651,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
             @notice Method to use to calculate out amount and spent in amount
             @param i Input coin index
             @param j Output coin index
-            @param amount Amount of input coin to swap
+            @param amount Amount of input or output coin to swap
             @param is_in Whether IN our OUT amount is known
             @return DetailedTrade with all swap results
             """
@@ -639,19 +674,6 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
             out.in_amount = unsafe_div(out.in_amount, in_precision)
             out.out_amount = unsafe_div(out.out_amount, out_precision)
             return out
-
-        @external
-        @view
-        @nonreentrant('lock')
-        def get_dy(i: uint256, j: uint256, in_amount: uint256) -> uint256:
-            """
-            @notice Method to use to calculate out amount
-            @param i Input coin index
-            @param j Output coin index
-            @param in_amount Amount of input coin to swap
-            @return Amount of coin j to give out
-            """
-            return self._get_dxdy(i, j, in_amount, True).out_amount
         ```
 
     === "Example"
@@ -667,7 +689,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
     Function to calculate `out_amount` and `in_amount` of the DetailedTrade.
 
-    Returns: in and out amounts (`uint256`).
+    Returns: in and out amount (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -687,6 +709,20 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
             last_tick_j: uint256
             admin_fee: uint256
 
+        @external
+        @view
+        @nonreentrant('lock')
+        def get_dxdy(i: uint256, j: uint256, in_amount: uint256) -> (uint256, uint256):
+            """
+            @notice Method to use to calculate out amount and spent in amount
+            @param i Input coin index
+            @param j Output coin index
+            @param in_amount Amount of input coin to swap
+            @return A tuple with in_amount used and out_amount returned
+            """
+            out: DetailedTrade = self._get_dxdy(i, j, in_amount, True)
+            return (out.in_amount, out.out_amount)
+
         @internal
         @view
         def _get_dxdy(i: uint256, j: uint256, amount: uint256, is_in: bool) -> DetailedTrade:
@@ -694,7 +730,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
             @notice Method to use to calculate out amount and spent in amount
             @param i Input coin index
             @param j Output coin index
-            @param amount Amount of input coin to swap
+            @param amount Amount of input or output coin to swap
             @param is_in Whether IN our OUT amount is known
             @return DetailedTrade with all swap results
             """
@@ -717,20 +753,6 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
             out.in_amount = unsafe_div(out.in_amount, in_precision)
             out.out_amount = unsafe_div(out.out_amount, out_precision)
             return out
-
-        @external
-        @view
-        @nonreentrant('lock')
-        def get_dxdy(i: uint256, j: uint256, in_amount: uint256) -> (uint256, uint256):
-            """
-            @notice Method to use to calculate out amount and spent in amount
-            @param i Input coin index
-            @param j Output coin index
-            @param in_amount Amount of input coin to swap
-            @return A tuple with in_amount used and out_amount returned
-            """
-            out: DetailedTrade = self._get_dxdy(i, j, in_amount, True)
-            return (out.in_amount, out.out_amount)
         ```
 
     === "Example"
@@ -766,6 +788,23 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
             last_tick_j: uint256
             admin_fee: uint256
 
+        @external
+        @view
+        @nonreentrant('lock')
+        def get_dx(i: uint256, j: uint256, out_amount: uint256) -> uint256:
+            """
+            @notice Method to use to calculate in amount required to receive the desired out_amount
+            @param i Input coin index
+            @param j Output coin index
+            @param out_amount Desired amount of output coin to receive
+            @return Amount of coin i to spend
+            """
+            # i = 0: borrowable (USD) in, collateral (ETH) out; going up
+            # i = 1: collateral (ETH) in, borrowable (USD) out; going down
+            trade: DetailedTrade = self._get_dxdy(i, j, out_amount, False)
+            assert trade.out_amount == out_amount
+            return trade.in_amount
+
         @internal
         @view
         def _get_dxdy(i: uint256, j: uint256, amount: uint256, is_in: bool) -> DetailedTrade:
@@ -773,7 +812,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
             @notice Method to use to calculate out amount and spent in amount
             @param i Input coin index
             @param j Output coin index
-            @param amount Amount of input coin to swap
+            @param amount Amount of input or output coin to swap
             @param is_in Whether IN our OUT amount is known
             @return DetailedTrade with all swap results
             """
@@ -796,21 +835,6 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
             out.in_amount = unsafe_div(out.in_amount, in_precision)
             out.out_amount = unsafe_div(out.out_amount, out_precision)
             return out
-
-        @external
-        @view
-        @nonreentrant('lock')
-        def get_dx(i: uint256, j: uint256, out_amount: uint256) -> uint256:
-            """
-            @notice Method to use to calculate in amount required to receive the desired out_amount
-            @param i Input coin index
-            @param j Output coin index
-            @param out_amount Desired amount of output coin to receive
-            @return Amount of coin i to spend
-            """
-            # i = 0: borrowable (USD) in, collateral (ETH) out; going up
-            # i = 1: collateral (ETH) in, borrowable (USD) out; going down
-            return self._get_dxdy(i, j, out_amount, False).in_amount
         ```
 
     === "Example"
@@ -846,6 +870,22 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
             last_tick_j: uint256
             admin_fee: uint256
 
+        @external
+        @view
+        @nonreentrant('lock')
+        def get_dydx(i: uint256, j: uint256, out_amount: uint256) -> (uint256, uint256):
+            """
+            @notice Method to use to calculate in amount required and out amount received
+            @param i Input coin index
+            @param j Output coin index
+            @param out_amount Desired amount of output coin to receive
+            @return A tuple with out_amount received and in_amount returned
+            """
+            # i = 0: borrowable (USD) in, collateral (ETH) out; going up
+            # i = 1: collateral (ETH) in, borrowable (USD) out; going down
+            out: DetailedTrade = self._get_dxdy(i, j, out_amount, False)
+            return (out.out_amount, out.in_amount)
+
         @internal
         @view
         def _get_dxdy(i: uint256, j: uint256, amount: uint256, is_in: bool) -> DetailedTrade:
@@ -853,7 +893,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
             @notice Method to use to calculate out amount and spent in amount
             @param i Input coin index
             @param j Output coin index
-            @param amount Amount of input coin to swap
+            @param amount Amount of input or output coin to swap
             @param is_in Whether IN our OUT amount is known
             @return DetailedTrade with all swap results
             """
@@ -875,23 +915,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
                 out = self.calc_swap_in(i == 0, amount * out_precision, p_o, in_precision, out_precision)
             out.in_amount = unsafe_div(out.in_amount, in_precision)
             out.out_amount = unsafe_div(out.out_amount, out_precision)
-            return out
-
-        @external
-        @view
-        @nonreentrant('lock')
-        def get_dydx(i: uint256, j: uint256, out_amount: uint256) -> (uint256, uint256):
-            """
-            @notice Method to use to calculate in amount required and out amount received
-            @param i Input coin index
-            @param j Output coin index
-            @param out_amount Desired amount of output coin to receive
-            @return A tuple with out_amount received and in_amount returned
-            """
-            # i = 0: borrowable (USD) in, collateral (ETH) out; going up
-            # i = 1: collateral (ETH) in, borrowable (USD) out; going down
-            out: DetailedTrade = self._get_dxdy(i, j, out_amount, False)
-            return (out.out_amount, out.in_amount)
+            return out    
         ```
 
     === "Example"
@@ -981,7 +1005,7 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
                         break
                     if j == MAX_TICKS_UINT - 1:
                         break
-                    if p_ratio < 10**36 / MAX_ORACLE_DN_POW:
+                    if p_ratio < unsafe_div(10**36, MAX_ORACLE_DN_POW):
                         # Don't allow to be away by more than ~50 ticks
                         break
                     n += 1
@@ -1029,6 +1053,8 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
 
 ## **Contract Info Methods**
+
+
 ### `coins`
 !!! description "`AMM.coins(i: uint256) -> address: pure`"
 
@@ -1043,6 +1069,9 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
     ??? quote "Source code"
 
         ```vyper
+        BORROWED_TOKEN: immutable(ERC20)    # x
+        COLLATERAL_TOKEN: immutable(ERC20)  # y
+
         @external
         @pure
         def coins(i: uint256) -> address:
@@ -1067,6 +1096,19 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
     ??? quote "Source code"
 
         ```vyper 
+        @external
+        @view
+        def price_oracle() -> uint256:
+            """
+            @notice Value returned by the external price oracle contract
+            """
+            return self._price_oracle_ro()[0]
+
+        @internal
+        @view
+        def _price_oracle_ro() -> uint256[2]:
+            return self.limit_p_o(price_oracle_contract.price())
+
         @internal
         @view
         def limit_p_o(p: uint256) -> uint256[2]:
@@ -1105,28 +1147,17 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
                         p_new = unsafe_div(old_p_o * 10**18, MAX_P_O_CHG)
                         ratio = 10**36 / MAX_P_O_CHG
 
-                # ratio is guaranteed to be less than 1e18
+                # ratio is lower than 1e18
                 # Also guaranteed to be limited, therefore can have all ops unsafe
-                ratio = unsafe_div(
-                    unsafe_mul(
-                        unsafe_sub(unsafe_add(10**18, old_ratio), unsafe_div(pow_mod256(ratio, 3), 10**36)),  # (f' + (1 - r**3))
-                        dt),                                                                                  # * dt / T
-                    PREV_P_O_DELAY)
+                ratio = min(
+                    unsafe_div(
+                        unsafe_mul(
+                            unsafe_sub(unsafe_add(10**18, old_ratio), unsafe_div(pow_mod256(ratio, 3), 10**36)),  # (f' + (1 - r**3))
+                            dt),                                                                                  # * dt / T
+                    PREV_P_O_DELAY),
+                10**18 - 1)
 
             return [p_new, ratio]
-
-        @internal
-        @view
-        def _price_oracle_ro() -> uint256[2]:
-            return self.limit_p_o(self.price_oracle_contract.price())
-
-        @external
-        @view
-        def price_oracle() -> uint256:
-            """
-            @notice Value returned by the external price oracle contract
-            """
-            return self._price_oracle_ro()[0]
         ```
 
     === "Example"
@@ -1151,6 +1182,8 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
     ??? quote "Source code"
 
         ```vyper
+        user_shares: HashMap[address, UserTicks]
+
         @external
         @view
         @nonreentrant('lock')
@@ -1170,6 +1203,8 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
 
 ## **Admin Ownership**
+
+
 ### `admin`
 !!! description "`AMM.admin() -> address: view`"
 
@@ -1203,14 +1238,6 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
     ??? quote "Source code"
 
         ```vyper 
-        @internal
-        def approve_max(token: ERC20, _admin: address):
-            """
-            Approve max in a separate function because it uses less bytespace than
-            calling directly, and gas doesn't matter in set_admin
-            """
-            assert token.approve(_admin, max_value(uint256), default_return_value=True)
-
         @external
         def set_admin(_admin: address):
             """
@@ -1221,6 +1248,14 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
             self.admin = _admin
             self.approve_max(BORROWED_TOKEN, _admin)
             self.approve_max(COLLATERAL_TOKEN, _admin)
+
+        @internal
+        def approve_max(token: ERC20, _admin: address):
+            """
+            Approve max in a separate function because it uses less bytespace than
+            calling directly, and gas doesn't matter in set_admin
+            """
+            assert token.approve(_admin, max_value(uint256), default_return_value=True)
         ```
 
     === "Example"
@@ -1232,11 +1267,15 @@ The corresponding AMMs for the markets can be used to exchange tokens, just like
 
 
 ## **Fees**
-As with all the curve pools, there are two different kinds of fees: **regular swap fees** and **admin fees**. Regular fees are charged when tokens within the AMM are exchanged. The admin fee determines the percentage of the "total fees", which are ultimately distributed to veCRV holders.
+Just like all Curve pools, there are three different kinds of fees: 
 
-Currently, the admin fees of the AMMs are set to 0 to incentivize borrowers, as all the fees are given to liquidity providers who are the borrowers.
+- **Regular swap fees** are charged when tokens within the AMM are exchanged.
+- **Admin fees** determine the percentage of the "total fees" that are ultimately distributed to veCRV holders.
+- **Interest rate** which is charged on the minted crvUSD tokens.
 
-If there are admin fees accumulated, they can't be claimed separately. Instead, they can only be claimed by also claiming the interest rate fees. This is done by calling `collect_fee()` on the controller contract
+Currently, the admin fees of the AMMs are set to 1 (1 / 1e18), making them virtually nonexistent. The reason for this is to increase oracle manipulation resistance.
+
+If there are accumulated admin fees, they cannot be claimed separately. Instead, they can only be claimed by also claiming the interest rate fees at the same time. This is accomplished by calling `collect_fee()` on the Controller.
 
 
 ### `fee`
@@ -1279,32 +1318,13 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
             @param _price_oracle_contract External price oracle which has price() and price_w() methods
                 which both return current price of collateral multiplied by 1e18
             """
-            BORROWED_TOKEN = ERC20(_borrowed_token)
-            BORROWED_PRECISION = _borrowed_precision
-            COLLATERAL_TOKEN = ERC20(_collateral_token)
-            COLLATERAL_PRECISION = _collateral_precision
-            A = _A
-            BASE_PRICE = _base_price
 
-            Aminus1 = unsafe_sub(A, 1)
-            A2 = pow_mod256(A, 2)
-            Aminus12 = pow_mod256(unsafe_sub(A, 1), 2)
+            ...
 
             self.fee = fee
-            self.admin_fee = admin_fee
-            self.price_oracle_contract = PriceOracle(_price_oracle_contract)
-            self.prev_p_o_time = block.timestamp
-            self.old_p_o = self.price_oracle_contract.price()
 
-            self.rate_mul = 10**18
+            ...
 
-            # sqrt(A / (A - 1)) - needs to be pre-calculated externally
-            SQRT_BAND_RATIO = _sqrt_band_ratio
-            # log(A / (A - 1)) - needs to be pre-calculated externally
-            LOG_A_RATIO = _log_A_ratio
-
-            # (A / (A - 1)) ** 50
-            MAX_ORACLE_DN_POW = unsafe_div(pow_mod256(unsafe_div(A**25 * 10**18, pow_mod256(Aminus1, 25)), 2), 10**18)
         ```
 
     === "Example"
@@ -1396,39 +1416,19 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
             @param _price_oracle_contract External price oracle which has price() and price_w() methods
                 which both return current price of collateral multiplied by 1e18
             """
-            BORROWED_TOKEN = ERC20(_borrowed_token)
-            BORROWED_PRECISION = _borrowed_precision
-            COLLATERAL_TOKEN = ERC20(_collateral_token)
-            COLLATERAL_PRECISION = _collateral_precision
-            A = _A
-            BASE_PRICE = _base_price
 
-            Aminus1 = unsafe_sub(A, 1)
-            A2 = pow_mod256(A, 2)
-            Aminus12 = pow_mod256(unsafe_sub(A, 1), 2)
+            ...
 
-            self.fee = fee
             self.admin_fee = admin_fee
-            self.price_oracle_contract = PriceOracle(_price_oracle_contract)
-            self.prev_p_o_time = block.timestamp
-            self.old_p_o = self.price_oracle_contract.price()
 
-            self.rate_mul = 10**18
-
-            # sqrt(A / (A - 1)) - needs to be pre-calculated externally
-            SQRT_BAND_RATIO = _sqrt_band_ratio
-            # log(A / (A - 1)) - needs to be pre-calculated externally
-            LOG_A_RATIO = _log_A_ratio
-
-            # (A / (A - 1)) ** 50
-            MAX_ORACLE_DN_POW = unsafe_div(pow_mod256(unsafe_div(A**25 * 10**18, pow_mod256(Aminus1, 25)), 2), 10**18)
+            ...
         ```
 
     === "Example"
 
         ```shell
         >>> AMM.admin_fee()
-        0
+        1
         ```
 
 
@@ -1517,16 +1517,12 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
 
 ### `reset_admin_fee`
-!!! description "`AMM.set_admin_fee(fee: uint256):`"
+!!! description "`AMM.reset_admin_fees():`"
 
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract.
 
-    Function to reset the accumulated admin fees (admin_fees_x and admin_fees_y) to zero. This function is automatically called when `collect_fees()` via the controller contract is called.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `fee` |  `uint256` | Admin Fee (1e18 == 100%) |
+    Function to reset the accumulated admin fees (`admin_fees_x` and `admin_fees_y`) to zero. This function is automatically called when `collect_fees()` via the Controller is called.
 
     ??? quote "Source code"
 
@@ -1545,13 +1541,13 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
     === "Example"
 
         ```shell
-        >>> AMM.set_admin_fee(todo)
-        'todo'
+        >>> AMM.reset_admin_fees()
         ```
 
 
-
 ## **Parameters**
+
+todo: parameters...
 
 ### `A`
 !!! description "`AMM.A() -> uint256: view`"
@@ -1593,32 +1589,12 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
             @param _price_oracle_contract External price oracle which has price() and price_w() methods
                 which both return current price of collateral multiplied by 1e18
             """
-            BORROWED_TOKEN = ERC20(_borrowed_token)
-            BORROWED_PRECISION = _borrowed_precision
-            COLLATERAL_TOKEN = ERC20(_collateral_token)
-            COLLATERAL_PRECISION = _collateral_precision
+
+            ...
+
             A = _A
-            BASE_PRICE = _base_price
 
-            Aminus1 = unsafe_sub(A, 1)
-            A2 = pow_mod256(A, 2)
-            Aminus12 = pow_mod256(unsafe_sub(A, 1), 2)
-
-            self.fee = fee
-            self.admin_fee = admin_fee
-            self.price_oracle_contract = PriceOracle(_price_oracle_contract)
-            self.prev_p_o_time = block.timestamp
-            self.old_p_o = self.price_oracle_contract.price()
-
-            self.rate_mul = 10**18
-
-            # sqrt(A / (A - 1)) - needs to be pre-calculated externally
-            SQRT_BAND_RATIO = _sqrt_band_ratio
-            # log(A / (A - 1)) - needs to be pre-calculated externally
-            LOG_A_RATIO = _log_A_ratio
-
-            # (A / (A - 1)) ** 50
-            MAX_ORACLE_DN_POW = unsafe_div(pow_mod256(unsafe_div(A**25 * 10**18, pow_mod256(Aminus1, 25)), 2), 10**18)
+            ...
         ```
 
     === "Example"
@@ -1665,15 +1641,6 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
         rate_time: uint256
         rate_mul: uint256
 
-        @internal
-        @view
-        def _rate_mul() -> uint256:
-            """
-            @notice Rate multiplier which is 1.0 + integral(rate, dt)
-            @return Rate multiplier in units where 1.0 == 1e18
-            """
-            return self.rate_mul + self.rate * (block.timestamp - self.rate_time)
-
         @external
         @view
         def get_rate_mul() -> uint256:
@@ -1682,6 +1649,15 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
             @return Rate multiplier in units where 1.0 == 1e18
             """
             return self._rate_mul()
+
+        @internal
+        @view
+        def _rate_mul() -> uint256:
+            """
+            @notice Rate multiplier which is 1.0 + integral(rate, dt)
+            @return Rate multiplier in units where 1.0 == 1e18
+            """
+            return unsafe_div(self.rate_mul * (10**18 + self.rate * (block.timestamp - self.rate_time)), 10**18)
         ```
 
     === "Example"
@@ -1690,7 +1666,6 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
         >>> AMM.get_rate_mul()
         1006642137417646444
         ```
-
 
 
 ### `set_rate`
@@ -1710,6 +1685,11 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
     ??? quote "Source code"
 
         ```vyper
+        event SetRate:
+            rate: uint256
+            rate_mul: uint256
+            time: uint256
+            
         @external
         @nonreentrant('lock')
         def set_rate(rate: uint256) -> uint256:
@@ -1849,6 +1829,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
         8119284311379011356
         ```
 
+
 ### `read_user_tick_numbers`
 !!! description "`AMM.read_user_tick_numbers(user: address) -> int256[2]:`"
 
@@ -1865,22 +1846,6 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
         ```vyper
         user_shares: HashMap[address, UserTicks]
     
-        @internal
-        @view
-        def _read_user_tick_numbers(user: address) -> int256[2]:
-            """
-            @notice Unpacks and reads user tick numbers
-            @param user User address
-            @return Lowest and highest band the user deposited into
-            """
-            ns: int256 = self.user_shares[user].ns
-            n2: int256 = unsafe_div(ns, 2**128)
-            n1: int256 = ns % 2**128
-            if n1 >= 2**127:
-                n1 = unsafe_sub(n1, 2**128)
-                n2 = unsafe_add(n2, 1)
-            return [n1, n2]
-
         @external
         @view
         @nonreentrant('lock')
@@ -1891,6 +1856,27 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
             @return Lowest and highest band the user deposited into
             """
             return self._read_user_tick_numbers(user)
+
+        @internal
+        @view
+        def _read_user_ticks(user: address, ns: int256[2]) -> DynArray[uint256, MAX_TICKS_UINT]:
+            """
+            @notice Unpacks and reads user ticks (shares) for all the ticks user deposited into
+            @param user User address
+            @param size Number of ticks the user deposited into
+            @return Array of shares the user has
+            """
+            ticks: DynArray[uint256, MAX_TICKS_UINT] = []
+            size: uint256 = convert(ns[1] - ns[0] + 1, uint256)
+            for i in range(MAX_TICKS / 2):
+                if len(ticks) == size:
+                    break
+                tick: uint256 = self.user_shares[user].ticks[i]
+                ticks.append(tick & (2**128 - 1))
+                if len(ticks) == size:
+                    break
+                ticks.append(shift(tick, -128))
+            return ticks
         ```
 
     === "Example"
@@ -1915,6 +1901,17 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
     ??? quote "Source code"
 
         ```vyper
+        @external
+        @view
+        @nonreentrant('lock')
+        def get_y_up(user: address) -> uint256:
+            """
+            @notice Measure the amount of y (collateral) in the band n if we adiabatically trade near p_oracle on the way up
+            @param user User the amount is calculated for
+            @return Amount of coins
+            """
+            return self.get_xy_up(user, True)
+
         @internal
         @view
         def get_xy_up(user: address, use_y: bool) -> uint256:
@@ -1967,7 +1964,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
                 # which is also more conservative
 
                 # Also this will revert if p_o_down is 0, and p_o_down is 0 if p_o_up is 0
-                p_current_mid: uint256 = unsafe_div(unsafe_div(p_o**2 / p_o_down * p_o, p_o_down) * Aminus1, A)
+                p_current_mid: uint256 = unsafe_div(p_o**2 / p_o_down * p_o, p_o_up)
 
                 # if p_o > p_o_up - we "trade" everything to y and then convert to the result
                 # if p_o < p_o_down - "trade" to x, then convert to result
@@ -2030,8 +2027,13 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
                         XY += unsafe_div(x_o * user_share, total_share)
 
                 else:
-                    y_o = unsafe_sub(max(self.sqrt_int(unsafe_div(Inv * 10**18, p_o)), g), g)
+                    # Equivalent from Chainsecurity (which also has less numerical errors):
+                    y_o = unsafe_div(A * y0 * unsafe_sub(p_o, p_o_down), p_o)
+                    # x_o = unsafe_div(A * y0 * p_o, p_o_up) * unsafe_sub(p_o_up, p_o)
+                    # Old math
+                    # y_o = unsafe_sub(max(self.sqrt_int(unsafe_div(Inv * 10**18, p_o)), g), g)
                     x_o = unsafe_sub(max(Inv / (g + y_o), f), f)
+
                     # Now adiabatic conversion from definitely in-band
                     if use_y:
                         XY += unsafe_div((y_o + x_o * 10**18 / self.sqrt_int(p_o_up * p_o)) * user_share, total_share)
@@ -2043,17 +2045,6 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
                 return unsafe_div(XY, COLLATERAL_PRECISION)
             else:
                 return unsafe_div(XY, BORROWED_PRECISION)
-
-        @external
-        @view
-        @nonreentrant('lock')
-        def get_y_up(user: address) -> uint256:
-            """
-            @notice Measure the amount of y (collateral) in the band n if we adiabatically trade near p_oracle on the way up
-            @param user User the amount is calculated for
-            @return Amount of coins
-            """
-            return self.get_xy_up(user, True)
         ```
 
     === "Example"
@@ -2078,6 +2069,17 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
     ??? quote "Source code"
 
         ```vyper 
+        @external
+        @view
+        @nonreentrant('lock')
+        def get_x_down(user: address) -> uint256:
+            """
+            @notice Measure the amount of x (stablecoin) if we trade adiabatically down
+            @param user User the amount is calculated for
+            @return Amount of coins
+            """
+            return self.get_xy_up(user, False)
+
         @internal
         @view
         def get_xy_up(user: address, use_y: bool) -> uint256:
@@ -2130,7 +2132,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
                 # which is also more conservative
 
                 # Also this will revert if p_o_down is 0, and p_o_down is 0 if p_o_up is 0
-                p_current_mid: uint256 = unsafe_div(unsafe_div(p_o**2 / p_o_down * p_o, p_o_down) * Aminus1, A)
+                p_current_mid: uint256 = unsafe_div(p_o**2 / p_o_down * p_o, p_o_up)
 
                 # if p_o > p_o_up - we "trade" everything to y and then convert to the result
                 # if p_o < p_o_down - "trade" to x, then convert to result
@@ -2193,8 +2195,13 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
                         XY += unsafe_div(x_o * user_share, total_share)
 
                 else:
-                    y_o = unsafe_sub(max(self.sqrt_int(unsafe_div(Inv * 10**18, p_o)), g), g)
+                    # Equivalent from Chainsecurity (which also has less numerical errors):
+                    y_o = unsafe_div(A * y0 * unsafe_sub(p_o, p_o_down), p_o)
+                    # x_o = unsafe_div(A * y0 * p_o, p_o_up) * unsafe_sub(p_o_up, p_o)
+                    # Old math
+                    # y_o = unsafe_sub(max(self.sqrt_int(unsafe_div(Inv * 10**18, p_o)), g), g)
                     x_o = unsafe_sub(max(Inv / (g + y_o), f), f)
+
                     # Now adiabatic conversion from definitely in-band
                     if use_y:
                         XY += unsafe_div((y_o + x_o * 10**18 / self.sqrt_int(p_o_up * p_o)) * user_share, total_share)
@@ -2206,17 +2213,6 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
                 return unsafe_div(XY, COLLATERAL_PRECISION)
             else:
                 return unsafe_div(XY, BORROWED_PRECISION)
-
-        @external
-        @view
-        @nonreentrant('lock')
-        def get_x_down(user: address) -> uint256:
-            """
-            @notice Measure the amount of x (stablecoin) if we trade adiabatically down
-            @param user User the amount is calculated for
-            @return Amount of coins
-            """
-            return self.get_xy_up(user, False)
         ```
 
     === "Example"
@@ -2226,10 +2222,11 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
         1563163804055324740128538
         ```
 
+
 ### `can_skip_bands`
 !!! description "`AMM.can_skip_bands(n_end: int256) -> bool:`"
 
-    Function to check if there is no liquidity between `active_band` and `n_end`.
+    Function to check if there is liquidity between `active_band` and `n_end`.
 
     Returns: true or flase (`boolean`).
 
@@ -2300,6 +2297,44 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
             """
             xy: DynArray[uint256, MAX_TICKS_UINT][2] = self._get_xy(user, True)
             return [xy[0][0], xy[1][0]]
+
+        @internal
+        @view
+        def _get_xy(user: address, is_sum: bool) -> DynArray[uint256, MAX_TICKS_UINT][2]:
+            """
+            @notice A low-gas function to measure amounts of stablecoins and collateral which user currently owns
+            @param user User address
+            @param is_sum Return sum or amounts by bands
+            @return Amounts of (stablecoin, collateral) in a tuple
+            """
+            xs: DynArray[uint256, MAX_TICKS_UINT] = []
+            ys: DynArray[uint256, MAX_TICKS_UINT] = []
+            if is_sum:
+                xs.append(0)
+                ys.append(0)
+            ns: int256[2] = self._read_user_tick_numbers(user)
+            ticks: DynArray[uint256, MAX_TICKS_UINT] = self._read_user_ticks(user, ns)
+            if ticks[0] != 0:
+                for i in range(MAX_TICKS):
+                    total_shares: uint256 = self.total_shares[ns[0]] + DEAD_SHARES
+                    ds: uint256 = ticks[i]
+                    dx: uint256 = unsafe_div((self.bands_x[ns[0]] + 1) * ds, total_shares)
+                    dy: uint256 = unsafe_div((self.bands_y[ns[0]] + 1) * ds, total_shares)
+                    if is_sum:
+                        xs[0] += dx
+                        ys[0] += dy
+                    else:
+                        xs.append(unsafe_div(dx, BORROWED_PRECISION))
+                        ys.append(unsafe_div(dy, COLLATERAL_PRECISION))
+                    if ns[0] == ns[1]:
+                        break
+                    ns[0] = unsafe_add(ns[0], 1)
+
+            if is_sum:
+                xs[0] = unsafe_div(xs[0], BORROWED_PRECISION)
+                ys[0] = unsafe_div(ys[0], COLLATERAL_PRECISION)
+
+            return [xs, ys]
         ```
 
     === "Example"
@@ -2312,6 +2347,9 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
 
 ## **Price Oracles**
+
+todo:
+
 ### `get_base_price`
 !!! description "`AMM.get_base_price() -> uint256:`"
 
@@ -2331,14 +2369,14 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
         rate_time: uint256
         rate_mul: uint256
 
-        @internal
+        @external
         @view
-        def _rate_mul() -> uint256:
+        def get_base_price() -> uint256:
             """
-            @notice Rate multiplier which is 1.0 + integral(rate, dt)
-            @return Rate multiplier in units where 1.0 == 1e18
+            @notice Price which corresponds to band 0.
+                    Base price grows with time to account for interest rate (which is 0 by default)
             """
-            return self.rate_mul + self.rate * (block.timestamp - self.rate_time)
+            return self._base_price()
 
         @internal
         @view
@@ -2349,14 +2387,14 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
             """
             return unsafe_div(BASE_PRICE * self._rate_mul(), 10**18)
 
-        @external
+        @internal
         @view
-        def get_base_price() -> uint256:
+        def _rate_mul() -> uint256:
             """
-            @notice Price which corresponds to band 0.
-                    Base price grows with time to account for interest rate (which is 0 by default)
+            @notice Rate multiplier which is 1.0 + integral(rate, dt)
+            @return Rate multiplier in units where 1.0 == 1e18
             """
-            return self._base_price()
+            return unsafe_div(self.rate_mul * (10**18 + self.rate * (block.timestamp - self.rate_time)), 10**18)
         ```
 
     === "Example"
@@ -2381,6 +2419,16 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
     ??? quote "Source code"
 
         ```vyper
+        @external
+        @view
+        def p_current_up(n: int256) -> uint256:
+            """
+            @notice Highest possible price of the band at current oracle price
+            @param n Band number (can be negative)
+            @return Price at 1e18 base
+            """
+            return self._p_current_band(n + 1)
+
         @internal
         @view
         def _p_current_band(n: int256) -> uint256:
@@ -2396,23 +2444,12 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
             # return self.p_oracle**3 / p_base**2
             p_oracle: uint256 = self._price_oracle_ro()[0]
             return unsafe_div(p_oracle**2 / p_base * p_oracle, p_base)
-
-        @external
-        @view
-        def p_current_up(n: int256) -> uint256:
-            """
-            @notice Highest possible price of the band at current oracle price
-            @param n Band number (can be negative)
-            @return Price at 1e18 base
-            """
-            return self._p_current_band(n + 1)
         ```
 
         === "Example"
 
             ```shell
-            >>> AMM.p_current_up()
-            
+            >>> AMM.p_current_up(todo)
             ```
 
 
@@ -2430,6 +2467,16 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
     ??? quote "Source code"
 
         ```vyper 
+        @external
+        @view
+        def p_current_down(n: int256) -> uint256:
+            """
+            @notice Lowest possible price of the band at current oracle price
+            @param n Band number (can be negative)
+            @return Price at 1e18 base
+            """
+            return self._p_current_band(n)
+
         @internal
         @view
         def _p_current_band(n: int256) -> uint256:
@@ -2445,16 +2492,6 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
             # return self.p_oracle**3 / p_base**2
             p_oracle: uint256 = self._price_oracle_ro()[0]
             return unsafe_div(p_oracle**2 / p_base * p_oracle, p_base)
-
-        @external
-        @view
-        def p_current_down(n: int256) -> uint256:
-            """
-            @notice Lowest possible price of the band at current oracle price
-            @param n Band number (can be negative)
-            @return Price at 1e18 base
-            """
-            return self._p_current_band(n)
         ```
 
         === "Example"
@@ -2479,6 +2516,16 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
     ??? quote "Source code"
 
         ```vyper 
+        @external
+        @view
+        def p_oracle_up(n: int256) -> uint256:
+            """
+            @notice Highest oracle price for the band to have liquidity when p = p_oracle
+            @param n Band number (can be negative)
+            @return Price at 1e18 base
+            """
+            return self._p_oracle_up(n)
+
         @internal
         @view
         def _p_oracle_up(n: int256) -> uint256:
@@ -2493,9 +2540,9 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
 
             power: int256 = -n * LOG_A_RATIO
 
-            # ((A - 1) / A) ** n = exp(-n * A / (A - 1)) = exp(-n * LOG_A_RATIO)
+            # ((A - 1) / A) ** n = exp(-n * ln(A / (A - 1))) = exp(-n * LOG_A_RATIO)
             ## Exp implementation based on solmate's
-            assert power > -42139678854452767551
+            assert power > -41446531673892821376
             assert power < 135305999368893231589
 
             x: int256 = unsafe_div(unsafe_mul(power, 2**96), 10**18)
@@ -2524,17 +2571,8 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
                 unsafe_mul(convert(unsafe_div(p, q), uint256), 3822833074963236453042738258902158003155416615667),
                 unsafe_sub(k, 195))
             ## End exp
+            assert exp_result > 1000  # dev: limit precision of the multiplier
             return unsafe_div(self._base_price() * exp_result, 10**18)
-
-        @external
-        @view
-        def p_oracle_up(n: int256) -> uint256:
-            """
-            @notice Highest oracle price for the band to have liquidity when p = p_oracle
-            @param n Band number (can be negative)
-            @return Price at 1e18 base
-            """
-            return self._p_oracle_up(n)
         ```
 
     === "Example"
@@ -2559,6 +2597,16 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
     ??? quote "Source code"
 
         ```vyper 
+        @external
+        @view
+        def p_oracle_down(n: int256) -> uint256:
+            """
+            @notice Lowest oracle price for the band to have liquidity when p = p_oracle
+            @param n Band number (can be negative)
+            @return Price at 1e18 base
+            """
+            return self._p_oracle_up(n + 1)
+
         @internal
         @view
         def _p_oracle_up(n: int256) -> uint256:
@@ -2605,16 +2653,6 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
                 unsafe_sub(k, 195))
             ## End exp
             return unsafe_div(self._base_price() * exp_result, 10**18)
-
-        @external
-        @view
-        def p_oracle_down(n: int256) -> uint256:
-            """
-            @notice Lowest oracle price for the band to have liquidity when p = p_oracle
-            @param n Band number (can be negative)
-            @return Price at 1e18 base
-            """
-            return self._p_oracle_up(n + 1)
         ```
 
     === "Example"
@@ -2635,6 +2673,17 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
     ??? quote "Source code"
 
         ```vyper
+        @external
+        @view
+        @nonreentrant('lock')
+        def get_p() -> uint256:
+            """
+            @notice Get current AMM price in active_band
+            @return Current price at 1e18 base
+            """
+            n: int256 = self.active_band
+            return self._get_p(n, self.bands_x[n], self.bands_y[n])
+
         @internal
         @view
         def _get_p(n: int256, x: uint256, y: uint256) -> uint256:
@@ -2647,14 +2696,15 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
             """
             p_o_up: uint256 = self._p_oracle_up(n)
             p_o: uint256 = self._price_oracle_ro()[0]
+            assert p_o_up != 0
 
             # Special cases
             if x == 0:
                 if y == 0:  # x and y are 0
                     # Return mid-band
-                    return unsafe_div((unsafe_div(p_o**2 / p_o_up * p_o, p_o_up) * A), Aminus1)
+                    return unsafe_div((unsafe_div(unsafe_div(p_o**2, p_o_up) * p_o, p_o_up) * A), Aminus1)
                 # if x == 0: # Lowest point of this band -> p_current_down
-                return unsafe_div(p_o**2 / p_o_up * p_o, p_o_up)
+                return unsafe_div(unsafe_div(p_o**2, p_o_up) * p_o, p_o_up)
             if y == 0: # Highest point of this band -> p_current_up
                 p_o_up = unsafe_div(p_o_up * Aminus1, A)  # now this is _actually_ p_o_down
                 return unsafe_div(p_o**2 / p_o_up * p_o, p_o_up)
@@ -2663,21 +2713,9 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
             # ^ that call also checks that p_o != 0
 
             # (f(y0) + x) / (g(y0) + y)
-            f: uint256 = A * y0 * p_o / p_o_up * p_o
+            f: uint256 = unsafe_div(A * y0 * p_o, p_o_up) * p_o
             g: uint256 = unsafe_div(Aminus1 * y0 * p_o_up, p_o)
             return (f + x * 10**18) / (g + y)
-
-
-        @external
-        @view
-        @nonreentrant('lock')
-        def get_p() -> uint256:
-            """
-            @notice Get current AMM price in active_band
-            @return Current price at 1e18 base
-            """
-            n: int256 = self.active_band
-            return self._get_p(n, self.bands_x[n], self.bands_y[n])
         ```
 
     === "Example"
@@ -2732,6 +2770,7 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
             @param _price_oracle_contract External price oracle which has price() and price_w() methods
                 which both return current price of collateral multiplied by 1e18
             """
+
             ...
 
             self.price_oracle_contract = PriceOracle(_price_oracle_contract)
@@ -2757,6 +2796,19 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
     ??? quote "Source code"
 
         ```vyper
+        @external
+        @view
+        def dynamic_fee() -> uint256:
+            """
+            @notice Dynamic fee which accounts for price_oracle shifts
+            """
+            return max(self.fee, self._price_oracle_ro()[1])
+
+        @internal
+        @view
+        def _price_oracle_ro() -> uint256[2]:
+            return self.limit_p_o(price_oracle_contract.price())
+
         @internal
         @view
         def limit_p_o(p: uint256) -> uint256[2]:
@@ -2795,28 +2847,17 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
                         p_new = unsafe_div(old_p_o * 10**18, MAX_P_O_CHG)
                         ratio = 10**36 / MAX_P_O_CHG
 
-                # ratio is guaranteed to be less than 1e18
+                # ratio is lower than 1e18
                 # Also guaranteed to be limited, therefore can have all ops unsafe
-                ratio = unsafe_div(
-                    unsafe_mul(
-                        unsafe_sub(unsafe_add(10**18, old_ratio), unsafe_div(pow_mod256(ratio, 3), 10**36)),  # (f' + (1 - r**3))
-                        dt),                                                                                  # * dt / T
-                    PREV_P_O_DELAY)
+                ratio = min(
+                    unsafe_div(
+                        unsafe_mul(
+                            unsafe_sub(unsafe_add(10**18, old_ratio), unsafe_div(pow_mod256(ratio, 3), 10**36)),  # (f' + (1 - r**3))
+                            dt),                                                                                  # * dt / T
+                    PREV_P_O_DELAY),
+                10**18 - 1)
 
             return [p_new, ratio]
-
-        @internal
-        @view
-        def _price_oracle_ro() -> uint256[2]:
-            return self.limit_p_o(self.price_oracle_contract.price())
-
-        @external
-        @view
-        def dynamic_fee() -> uint256:
-            """
-            @notice Dynamic fee which accounts for price_oracle shifts
-            """
-            return max(self.fee, self._price_oracle_ro()[1])
         ```
 
     === "Example"
@@ -2841,6 +2882,17 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
     ??? quote "Source code"
 
         ```vyper
+        @external
+        @view
+        @nonreentrant('lock')
+        def get_xy(user: address) -> DynArray[uint256, MAX_TICKS_UINT][2]:
+            """
+            @notice A low-gas function to measure amounts of stablecoins and collateral by bands which user currently owns
+            @param user User address
+            @return Amounts of (stablecoin, collateral) by bands in a tuple
+            """
+            return self._get_xy(user, False)
+
         @internal
         @view
         def _get_xy(user: address, is_sum: bool) -> DynArray[uint256, MAX_TICKS_UINT][2]:
@@ -2859,9 +2911,10 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
             ticks: DynArray[uint256, MAX_TICKS_UINT] = self._read_user_ticks(user, ns)
             if ticks[0] != 0:
                 for i in range(MAX_TICKS):
-                    total_shares: uint256 = self.total_shares[ns[0]]
-                    dx: uint256 = self.bands_x[ns[0]] * ticks[i] / total_shares
-                    dy: uint256 = unsafe_div(self.bands_y[ns[0]] * ticks[i], total_shares)
+                    total_shares: uint256 = self.total_shares[ns[0]] + DEAD_SHARES
+                    ds: uint256 = ticks[i]
+                    dx: uint256 = unsafe_div((self.bands_x[ns[0]] + 1) * ds, total_shares)
+                    dy: uint256 = unsafe_div((self.bands_y[ns[0]] + 1) * ds, total_shares)
                     if is_sum:
                         xs[0] += dx
                         ys[0] += dy
@@ -2877,17 +2930,6 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
                 ys[0] = unsafe_div(ys[0], COLLATERAL_PRECISION)
 
             return [xs, ys]
-
-        @external
-        @view
-        @nonreentrant('lock')
-        def get_xy(user: address) -> DynArray[uint256, MAX_TICKS_UINT][2]:
-            """
-            @notice A low-gas function to measure amounts of stablecoins and collateral by bands which user currently owns
-            @param user User address
-            @return Amounts of (stablecoin, collateral) by bands in a tuple
-            """
-            return self._get_xy(user, False)
         ```
 
     === "Example"
@@ -2897,7 +2939,11 @@ If there are admin fees accumulated, they can't be claimed separately. Instead, 
         ```
 
 
+
 ## **Callbacks**
+
+todo
+
 ### `liquidity_mining_callback`
 !!! description "`AMM.liquidity_mining_callback() -> address: view`"
 
