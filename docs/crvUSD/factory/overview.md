@@ -1,4 +1,4 @@
-The crvUSD Factory enables the creation of new markets and adjustments, including setting a new fee receiver, modifying the debt ceiling of an existing market, or updating blueprint implementations.
+The crvUSD Factory enables the **creation of new markets** and adjustments, including **setting a new fee receiver**, **modifying the debt ceiling** of an existing market, or **updating blueprint implementations**.
 
 Other than the pool factory, this factory **does not allow permissionless deployment of new markets**. Only its **`admin`**, the CurveOwnershipAgent, can call to add a market. Therefore, adding a new market requires a successfully passed DAO vote.
 
@@ -22,7 +22,7 @@ Other than the pool factory, this factory **does not allow permissionless deploy
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         debt_ceiling: public(HashMap[address, uint256])
         ```
 
@@ -46,7 +46,7 @@ Other than the pool factory, this factory **does not allow permissionless deploy
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         debt_ceiling: public(HashMap[address, uint256])
         ```
 
@@ -67,7 +67,7 @@ Other than the pool factory, this factory **does not allow permissionless deploy
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @nonreentrant('lock')
         def rug_debt_ceiling(_to: address):
@@ -99,7 +99,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 6 17"
+        ```vyper
         fee_receiver: public(address)
 
         @external
@@ -138,7 +138,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         collaterals: public(address[MAX_CONTROLLERS])
         ```
 
@@ -162,7 +162,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         amm_implementation: public(address)
         ```
 
@@ -186,7 +186,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 4 15"
+        ```vyper
         STABLECOIN: immutable(ERC20)
 
         @external
@@ -223,7 +223,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def total_debt() -> uint256:
@@ -261,7 +261,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_controller(collateral: address, i: uint256 = 0) -> address:
@@ -295,7 +295,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @view
         def get_amm(collateral: address, i: uint256 = 0) -> address:
@@ -328,7 +328,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="2"
+        ```vyper
         MAX_CONTROLLERS: constant(uint256) = 50000
         controllers: public(address[MAX_CONTROLLERS])
         ```
@@ -354,7 +354,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         amms: public(address[MAX_CONTROLLERS])
         ```
 
@@ -373,7 +373,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         n_collaterals: public(uint256)
         ```
 
@@ -397,7 +397,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         collaterals: public(address[MAX_CONTROLLERS])
         ```
 
@@ -425,7 +425,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         collaterals_index: public(HashMap[address, uint256[1000]])
         ```
 
@@ -444,7 +444,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 7 18"
+        ```vyper
         WETH: public(immutable(address))
 
         @external

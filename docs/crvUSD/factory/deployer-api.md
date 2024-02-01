@@ -107,7 +107,7 @@
 
         === "MonetaryPolicy.vy"
 
-            ```vyper hl_lines="25 28"
+            ```vyper
             @internal
             @view
             def calculate_rate() -> uint256:
@@ -141,7 +141,7 @@
 
         === "PriceOracle.vy"
 
-            ```vyper hl_lines="3"
+            ```vyper
             @external
             @view
             def price() -> uint256:
@@ -188,7 +188,7 @@
 
         === "AMM.vy"
 
-            ```vyper hl_lines="2"
+            ```vyper
             @external
             def set_admin(_admin: address):
                 """

@@ -1,4 +1,4 @@
-The following are methods that may only be called by the owner of the contract.
+The following are methods that **may only be called by the owner of the contract,** which is the **CurveOwnershipAgent**.
 
 
 ## **Adjusting Debt Ceilings**
@@ -24,7 +24,7 @@ The following are methods that may only be called by the owner of the contract.
 
         === "ControllerFactory.vy"
 
-            ```vyper hl_lines="1 5 9 14 23 25 26 27 29 31 32 33 35 36 37 41"
+            ```vyper
             event SetDebtCeiling:
                 addr: indexed(address)
                 debt_ceiling: uint256
@@ -77,7 +77,7 @@ The following are methods that may only be called by the owner of the contract.
 
         === "Stablecoin.vy"
 
-            ```vyper hl_lines="2 19"
+            ```vyper
             @external
             def mint(_to: address, _value: uint256) -> bool:
                 """
@@ -130,7 +130,7 @@ The following are methods that may only be called by the owner of the contract.
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 8 16"
+        ```vyper
         event SetFeeReceiver:
             fee_receiver: address
 
@@ -169,7 +169,7 @@ The following are methods that may only be called by the owner of the contract.
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 7 18"
+        ```vyper
         @external
         @nonreentrant('lock')
         def collect_fees_above_ceiling(_to: address):
@@ -218,7 +218,7 @@ The following are methods that may only be called by the owner of the contract.
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 5 6 10"
+        ```vyper
         event SetImplementations:
             amm: address
             controller: address
@@ -258,7 +258,7 @@ The following are methods that may only be called by the owner of the contract.
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 5 16"
+        ```vyper
         admin: public(address)
 
         @external
@@ -302,7 +302,7 @@ The following are methods that may only be called by the owner of the contract.
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 8"
+        ```vyper
         event SetAdmin:
             admin: address
 
