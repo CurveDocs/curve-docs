@@ -6,15 +6,10 @@ The AggregatorStablePrice contract is designed to **aggregate the prices of crvU
     Source code available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/price_oracles/AggregateStablePrice2.vy). 
 
 
+## **Exponential Moving Average of TVL**
 
-## **Calculating Prices**
+The internal `_ema_tvl()` calculates the Exponential Moving Average (EMA) of the Total Value Locked (TVL) for multiple Curve StableSwap pools. There is a maximum of 20 pairs to consider, and each price pair (pool) must have at least 100k TVL.
 
-!!!bug
-    If the formulas below do not render, please make sure to refresh the site. A solution is being worked on.
-
-### **Exponential Moving Average of TVL**
-
-**`_ema_tvl()`** calculates the Exponential Moving Average (EMA) of the Total Value Locked (TVL) for multiple Curve StableSwap pools. There is a maximum of 20 pairs to consider, and each price pair (pool) must have at least 100k TVL. 
 New pairs can be added via [`add_price_pair`](#add_price_pair).
 
 ??? quote "Source code"
@@ -54,7 +49,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 #### `ema_tvl`
 !!! description "`PriceAggregator.ema_tvl() -> DynArray[uint256, MAX_PAIRS]`"
 
-    Getter for the exponential moving average (EMA) of the total value locked (TVL) in `price_pairs`.
+    Getter for the exponential moving average of the TVL in `price_pairs`.
 
     Returns: array of ema tvls (`DynArray[uint256, MAX_PAIRS]`).
 
@@ -181,6 +176,8 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
 
 ## **Adding and Removing Price Pairs**
+
+
 ### `price_pairs`
 !!! description "`PriceAggregator.price_pairs(arg0: uint256) -> tuple: view`"
 
@@ -190,7 +187,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `uint256` | index |
+    | `arg0` |  `uint256` | Index of the price pair |
 
     ??? quote "Source code"
 
@@ -212,13 +209,13 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract.
 
-    Function to add a price pair to the contract.
+    Function to add a price pair to the PriceAggregator.
 
     Emits: `AddPricePair`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` | price pair to add |
+    | `_pool` |  `address` | Price pair to add |
 
     ??? quote "Source code"
 
@@ -264,7 +261,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `n` |  `uint256` | index of the price pair to remove |
+    | `n` |  `uint256` | Index of the price pair to remove |
 
     ??? quote "Source code"
 
@@ -300,7 +297,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 ### `admin`
 !!! description "`PriceAggregator.admin() -> address: view`"
 
-    Getter for the admin of the contract.
+    Getter for the admin of the contract, which is the Curve DAO OwnershipAgent.
     
     Returns: admin (`address`).
 
@@ -394,7 +391,7 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 ### `STABLECOIN`
 !!! description "`PriceAggregator.STABLECOIN() -> address: view`"
 
-    Getter for the stablecoin contract.
+    Getter for the stablecoin contract address.
     
     Returns: crvUSD contract (`address`).
 
@@ -441,13 +438,13 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 ### `last_tvl`
 !!! description "`PriceAggregator.last_tvl(arg0: uint256) -> uint256:`"
 
-    Getter for the total value locked in a liquidity pool.
+    Getter for the total value locked of price pair (pool).
     
     Returns: total value locked (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `uint256` | index of the pool |
+    | `arg0` |  `uint256` | Index of the price pair |
 
     ??? quote "Source code"
 
