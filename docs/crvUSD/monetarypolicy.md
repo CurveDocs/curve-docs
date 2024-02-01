@@ -1,4 +1,4 @@
-**MonetaryPolicy contracts are integrated into the crvUSD system and are responsible for the interest rate of crvUSD markets.**
+MonetaryPolicy contracts are integrated into the crvUSD system and are **responsible for the interest rate of crvUSD markets.**
 
 !!!deploy "Contract Source & Deployment"
     Source code available on [Github](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/mpolicies).
@@ -12,9 +12,9 @@
 
 
 
-## **Interest Rates**
+## **Interest Rate**
 
-Markets have a **dynamic rate**, depending on the following components:  
+Markets have a **dynamic rate**, depending on the following components:
 
 * crvUSD price  
 * sigma  
@@ -26,9 +26,6 @@ Markets have a **dynamic rate**, depending on the following components:
 
 !!! tip
     Useful tool by [0xreviews](https://twitter.com/0xreviews_xyz) to play around with rates: https://crvusd-rate.0xreviews.xyz/
-
-!!!bug
-    If the formulas below do not render, please make sure to refresh the site. A solution is being worked on.
 
 $$r = rate0 * e^{power}$$
 
@@ -150,7 +147,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `rate` |  `uint256` | new rate0 value |
+    | `rate` |  `uint256` | New rate0 value |
 
     ??? quote "Source code"
 
@@ -179,7 +176,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 ### `sigma`
 !!! description "`MonetaryPolicy.sigma() -> uint256: view`"
 
-    Getter for the sigma value: $10^{14} <= sigma <= 10^{18}$.
+    Getter for the sigma value. The following needs to hold: $10^{14} <= sigma <= 10^{18}$.
 
     Returns: sigma (`uint256`).
 
@@ -227,7 +224,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `sigma` |  `uint256` | new sigma value |
+    | `sigma` |  `uint256` | New sigma value |
 
     ??? quote "Source code"
 
@@ -261,6 +258,8 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 !!! description "`MonetaryPolicy.target_debt_fraction() -> uint256: view`"
 
     Getter for the debt fraction target.
+
+    Returns: target debt fraction (`uint256`).
 
     ??? quote "Source code"
 
@@ -302,7 +301,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `target_debt_fraction` |  `uint256` | new debt fraction target value |
+    | `target_debt_fraction` |  `uint256` | New debt fraction target value |
 
     ??? quote "Source code"
 
@@ -331,7 +330,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
 
 ## **PegKeepers**
-PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as it depends on the *DebtFraction*. They can be added by calling **`add_peg_keeper`** and removed with **`remove_peg_keeper`**.
+PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as it depends on the *DebtFraction*. They can be added by calling `add_peg_keeper` and removed via `remove_peg_keeper`.
 
 
 ### `peg_keepers`
@@ -343,7 +342,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `uint256` | index of the PegKeeper |
+    | `arg0` |  `uint256` | Index of the PegKeeper |
 
     ??? quote "Source code"
 
@@ -391,7 +390,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `pk` |  `PegKeeper` | PegKeeper address |
+    | `pk` |  `PegKeeper` | PegKeeper address to add |
 
     ??? quote "Source code"
 
@@ -433,7 +432,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `pk` |  `PegKeeper` | PegKeeper address |
+    | `pk` |  `PegKeeper` | PegKeeper address to remove |
 
     ??? quote "Source code"
 
@@ -472,7 +471,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 ### `admin`
 !!! description "`MonetaryPolicy.admin() -> address: view`"
 
-    Getter for the admin of the contract. ownership agent is the admin (cruvedao).
+    Getter for the admin of the contract, which is the Curve DAO OwnershipAgent.
 
     Returns: admin (`address`).
 
@@ -514,7 +513,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `admin` |  `address` | new admin address |
+    | `admin` |  `address` | New admin address |
 
     ??? quote "Source code"
 
