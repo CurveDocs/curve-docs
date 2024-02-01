@@ -1,17 +1,19 @@
 ## **Concept of PegKeepers**  
 
 PegKeepers are contracts that help stabilize the peg of crvUSD. Each Keeper is allocated a specific amount of crvUSD to secure the peg. 
-The DAO decides this balance and can be **raised or lowered** by calling **`set_debt_ceiling()`** in the [Factory](./factory/overview.md).
+The DAO decides this balance and can be **raised or lowered** by calling `set_debt_ceiling()` in the [Factory](./factory/overview.md).
 
 
-The underlying actions of the PegKeepers can be divided into two actions, which get executed when calling [**`update()`**](#update):
+The underlying actions of the PegKeepers can be divided into two actions, which get executed when calling [`update()`](#update):
 
-- **crvUSD price > 1**: The PegKeeper mints and deposits crvUSD single-sidedly into the pool to which it is "linked", and receives LP tokens in exchange. This increases the balance of crvUSD in the pool and therefore decreases the price. It is important to note that the LP tokens are not staked in the gauge (if there is one). Thus, the PegKeeper does not receive CRV emissions.
+- **crvUSD price > 1**: The PegKeeper mints and deposits crvUSD single-sidedly into the pool to which it is "linked", and receives LP tokens in exchange. This increases the balance of crvUSD in the pool and therefore decreases the price.  
+It is important to note that the LP tokens are not staked in the gauge (if there is one). Thus, the PegKeeper does not receive CRV emissions.
 
 - **crvUSD price < 1**: If PegKeepers hold a balance of the corresponding LP token, they can single-sidedly withdraw crvUSD from the liquidity pool and burn it. This action reduces the supply of crvUSD in the pool and should subsequently increase its price.
 
 !!!note
-    PegKeepers do not actually *mint or burn* crvUSD tokens. They have a defined allocated balance of crvUSD tokens they can use for deposits. It is important to note that **PegKeepers cannot do anything else apart from depositing and withdrawing**; therefore, crvUSD token balances of the PegKeepers that are not deposited into a pool should not be counted as circulating supply, although technically they are.
+    PegKeepers **do not actually mint or burn crvUSD tokens**. They have a defined allocated balance of crvUSD tokens that they can use for deposits. It is important to note that **PegKeepers cannot do anything else apart from depositing and withdrawing**. Therefore, crvUSD token balances of the PegKeepers that are not deposited into a pool may not be counted as circulating supply, although technically they are.
+
 
 
 !!!deploy "Contract Source & Deployment"
@@ -26,30 +28,24 @@ The underlying actions of the PegKeepers can be divided into two actions, which 
 
 
 ## **Stabilisation Method** 
-The most crucial function of the contract is the **`update()`** function. When invoked, the PegKeeper either mints and single-sidedly deposits crvUSD into the StableSwap pool, or it withdraws crvUSD from the pool by redeeming the LP tokens acquired from previous deposits.
+The most important function in the PegKeeper contract is the `update()` function. When invoked, the PegKeeper either mints and single-sidedly deposits crvUSD into the StableSwap pool, or it withdraws crvUSD from the pool by redeeming the LP tokens received from previous deposits.
 
-* **Deposit and Mint:** This mechanism is triggered when the price of crvUSD exceeds 1. Minting and depositing into the pool will increase the crvUSD supply and decrease its price. The LP tokens that the PegKeeper receives when depositing crvUSD into the pool are not staked in the gauge (if the pool has one), which means the PegKeeper does not receive CRV inflation rewards.
+- **Deposit and Mint:** This mechanism is triggered when the *price of crvUSD > 1*. Minting and depositing into the pool will increase the crvUSD supply and decrease its price. The LP tokens that the PegKeeper receives when depositing crvUSD into the pool are not staked in the gauge (if the pool has one), which means the PegKeeper does not receive CRV inflation rewards.
 
-* **Withdraw and Burn:** This mechanism is triggered when the price of crvUSD is less than 1. By withdrawing crvUSD from the pool, the supply of crvUSD decreases, which should increase its price.
+- **Withdraw and Burn:** This mechanism is triggered when the *price of crvUSD < 1*. By withdrawing crvUSD from the pool, the supply of crvUSD decreases, which increases its price.
 
-PegKeepers have unlimited approval for the liquidity pool, which allows them to deposit and withdraw crvUSD.
+PegKeepers have unlimited approval for the liquidity pool, allowing them to deposit and withdraw crvUSD.
 
 
 ### `update`
 !!! description "`PegKeeper.update(_beneficiary: address = msg.sender) -> uint256:`"
 
-    Function to either **mint and deposit** or **withdraw and burn** based on the balances within the pools.    
-
-    Emits: `Provide` or `Withdraw`
-
-    | Balances  | Action   | 
-    | ----------- | -------| 
-    | $balance_{crvUSD} < balance_{pairedCoin}$ |  mint and deposit |
-    | $balance_{crvUSD} > balance_{pairedCoin}$ | withdraw and burn |
-
+    Function to either **mint and deposit** or **withdraw and burn** based on the balances within the pools.  
     A share (`caller_share`) of the generated profit will be awarded to the function's caller. By default, this is set to `msg.sender`, but there is also the possibility to input a `_beneficiary` address to which the rewards will be sent. 
 
-    Returns: caller's profit (`uint256`).
+    Returns: caller profit (`uint256`).
+
+    Emits: `Provide` or `Withdraw`
 
     !!!note
         There is an `ACTION_DELAY` of 15 minutes before calling the function again.
@@ -59,21 +55,6 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
         ```vyper
         event Provide:
             amount: uint256
-
-        @internal
-        def _provide(_amount: uint256):
-            # We already have all reserves here
-            # ERC20(PEGGED).mint(self, _amount)
-            if _amount == 0:
-                return
-
-            amounts: uint256[2] = empty(uint256[2])
-            amounts[I] = _amount
-            POOL.add_liquidity(amounts, 0)
-
-            self.last_change = block.timestamp
-            self.debt += _amount
-            log Provide(_amount)
 
         @external
         @nonpayable
@@ -113,6 +94,21 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
                 POOL.transfer(_beneficiary, caller_profit)
 
             return caller_profit
+
+        @internal
+        def _provide(_amount: uint256):
+            # We already have all reserves here
+            # ERC20(PEGGED).mint(self, _amount)
+            if _amount == 0:
+                return
+
+            amounts: uint256[2] = empty(uint256[2])
+            amounts[I] = _amount
+            POOL.add_liquidity(amounts, 0)
+
+            self.last_change = block.timestamp
+            self.debt += _amount
+            log Provide(_amount)
         ```
 
     ??? quote "Source code: **Withdraw and Burn**"
@@ -120,7 +116,46 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
         ```vyper
         event Withdraw:
             amount: uint256
-        
+
+        @external
+        @nonpayable
+        def update(_beneficiary: address = msg.sender) -> uint256:
+            """
+            @notice Provide or withdraw coins from the pool to stabilize it
+            @param _beneficiary Beneficiary address
+            @return Amount of profit received by beneficiary
+            """
+            if self.last_change + ACTION_DELAY > block.timestamp:
+                return 0
+
+            balance_pegged: uint256 = POOL.balances(I)
+            balance_peg: uint256 = POOL.balances(1 - I) * PEG_MUL
+
+            initial_profit: uint256 = self._calc_profit()
+
+            p_agg: uint256 = AGGREGATOR.price()  # Current USD per stablecoin
+
+            # Checking the balance will ensure no-loss of the stabilizer, but to ensure stabilization
+            # we need to exclude "bad" p_agg, so we add an extra check for it
+
+            if balance_peg > balance_pegged:
+                assert p_agg >= 10**18
+                self._provide((balance_peg - balance_pegged) / 5)  # this dumps stablecoin
+
+            else:
+                assert p_agg <= 10**18
+                self._withdraw((balance_pegged - balance_peg) / 5)  # this pumps stablecoin
+
+            # Send generated profit
+            new_profit: uint256 = self._calc_profit()
+            assert new_profit >= initial_profit, "peg unprofitable"
+            lp_amount: uint256 = new_profit - initial_profit
+            caller_profit: uint256 = lp_amount * self.caller_share / SHARE_PRECISION
+            if caller_profit > 0:
+                POOL.transfer(_beneficiary, caller_profit)
+
+            return caller_profit
+
         @internal
         def _withdraw(_amount: uint256):
             if _amount == 0:
@@ -137,53 +172,35 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
             self.debt -= amount
 
             log Withdraw(amount)
-
-        @external
-        @nonpayable
-        def update(_beneficiary: address = msg.sender) -> uint256:
-            """
-            @notice Provide or withdraw coins from the pool to stabilize it
-            @param _beneficiary Beneficiary address
-            @return Amount of profit received by beneficiary
-            """
-            if self.last_change + ACTION_DELAY > block.timestamp:
-                return 0
-
-            balance_pegged: uint256 = POOL.balances(I)
-            balance_peg: uint256 = POOL.balances(1 - I) * PEG_MUL
-
-            initial_profit: uint256 = self._calc_profit()
-
-            p_agg: uint256 = AGGREGATOR.price()  # Current USD per stablecoin
-
-            # Checking the balance will ensure no-loss of the stabilizer, but to ensure stabilization
-            # we need to exclude "bad" p_agg, so we add an extra check for it
-
-            if balance_peg > balance_pegged:
-                assert p_agg >= 10**18
-                self._provide((balance_peg - balance_pegged) / 5)  # this dumps stablecoin
-
-            else:
-                assert p_agg <= 10**18
-                self._withdraw((balance_pegged - balance_peg) / 5)  # this pumps stablecoin
-
-            # Send generated profit
-            new_profit: uint256 = self._calc_profit()
-            assert new_profit >= initial_profit, "peg unprofitable"
-            lp_amount: uint256 = new_profit - initial_profit
-            caller_profit: uint256 = lp_amount * self.caller_share / SHARE_PRECISION
-            if caller_profit > 0:
-                POOL.transfer(_beneficiary, caller_profit)
-
-            return caller_profit
         ```
 
     === "Example"
 
         ```shell
-        >>> PegKepper.update():
+        >>> PegKepper.update()
         ```
-        
+
+
+### `last_change`
+!!! description "`PegKeeper.last_change() -> uint256: view`"
+
+    Function which retrieves the timestamp of when the balances of the PegKeeper were last altered. This variable is updated each time `update()` (`_provide` or `_withdraw`) is called. This variable is of importance for `update()`, as there is a mandatory delay of 15 * 60 seconds before the function can be called again.
+
+    Returns: timestamp (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper 
+        last_change: public(uint256)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> PegKepper.last_change()
+        1688794235
+        ```
+   
 
 ## **Calculating and Withdrawing Profits**
 
@@ -437,7 +454,9 @@ PegKeepers have unlimited approval for the liquidity pool, which allows them to 
 
 
 ## **Admin and Receiver**
-PegKeepers have an **`admin`** and a **`receiver`.** Both of these variables can be altered by calling the respective admin-guarded functions, but such changes must first be approved by a DAO vote. After approval, the newly designated admin or receiver is required to apply these changes within a timeframe of `3 * 86400` seconds, which equates to a window of *three days*. Should there be an attempt to implement these changes after this period, the function to apply the changes will revert.
+
+PegKeepers have an `admin` and a `receiver`. Both of these variables can be changed by calling the respective admin-guarded functions, but such changes must first be approved by a DAO vote.  
+After approval, the newly designated admin or receiver is required to apply these changes within a timeframe of `3 * 86400` seconds, which equates to a timespan of *three days*. Should there be an attempt to implement these changes after this period, the function will revert.
 
 
 ### `admin`
@@ -498,6 +517,7 @@ PegKeepers have an **`admin`** and a **`receiver`.** Both of these variables can
         >>> PegKepper.future_admin()
         '0x0000000000000000000000000000000000000000'
         ```
+
 
 ### `commit_new_admin`
 !!! description "`PegKeeper.commit_new_admin(_new_admin: address):`"
@@ -810,6 +830,8 @@ PegKeepers have an **`admin`** and a **`receiver`.** Both of these variables can
 
 
 ## **Contract Info Methods**
+
+
 ### `debt`
 !!! description "`PegKeeper.debt() -> uint256: view`"
 
@@ -876,9 +898,6 @@ PegKeepers have an **`admin`** and a **`receiver`.** Both of these variables can
     Getter for the address of the pegged token (crvUSD). Pegged asset is determined by the index of the token in the corresponding `pool`. Index value is stored in `I`.
 
     Returns: pegged token contract (`address`).
-
-    !!!note
-        `PEGGED` variable is **immutable**. It can not be changed.
 
     ??? quote "Source code"
 
@@ -987,25 +1006,4 @@ PegKeepers have an **`admin`** and a **`receiver`.** Both of these variables can
         ```shell
         >>> PegKepper.AGGREGATOR()
         '0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7'
-        ```
-
-
-### `last_change`
-!!! description "`PegKeeper.last_change() -> uint256: view`"
-
-    Function which retrieves the timestamp of when the balances of the PegKeeper were last altered. This variable is updated each time `update()` (`_provide` or `_withdraw`) is called. This variable is of importance for `update()` and `estimate_caller_profit()` , as there is a mandatory delay of 15 * 60 seconds before they can be called again.
-
-    Returns: timestamp (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper 
-        last_change: public(uint256)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PegKepper.last_change()
-        1688794235
         ```
