@@ -177,7 +177,6 @@ nav:
     - Factory: 
       - Overview: crvUSD/factory/overview.md
       - Deployer API: crvUSD/factory/deployer-api.md
-      - Contract Methods: crvUSD/factory/contract-methods.md
       - Admin Controls: crvUSD/factory/admin-controls.md
 
 
