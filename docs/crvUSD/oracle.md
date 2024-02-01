@@ -6,18 +6,14 @@ As crvusd markets use interal oracles, they utilizes in-house liquidity pools to
 
 !!!tip
     The formulas below use slightly different terminologies than the code to make them easier to read.  
-    For abbreviations, see [here](#terminology-used-in-code).
-
+    For abbreviations, see [here](./oracle.md#terminology-used-in-code).
 
 
 ## **EMA of TVL**
 
-!!!bug
-    If the formulas below do not render, please make sure to refresh the site. A solution is being worked on.
+`_ema_tvl()` calculates the *exponential moving average* (EMA) of the *total value locked* (TVL) for `TRICRYPTO` pools.
 
-**`_ema_tvl()`** calculates the *exponential moving average* (**EMA**) of the *total value locked* (**TVL**) for `TRICRYPTO` pools.
-
-This value is subsequently used in the internal function **`_raw_price()`** to compute the *weighted price of ETH*.
+This value is subsequently used in the internal function `_raw_price()` to compute the *weighted price of ETH*.
 
 
 ??? quote "`_ema_tvl() -> uint256[N_POOLS]:`"
@@ -122,7 +118,7 @@ $\text{last_tvl}_i = \text{smoothed TVL of i-th pool}$ in `TRICRYPTO[N_POOLS]`
 
 ## **Calculate Raw Price**
 
-**`_raw_price()`** calculates the *raw price of the collateral token*. The function requires the inputs **`tvls`** (from **`_ema_tvl()`**) and **`agg_price`** (from **`STABLESWAP_AGGREGATOR.price()`**).
+The internal `_raw_price()` function calculates the *raw price of the collateral token*.
 
 ??? quote "`_raw_price(tvls: uint256[N_POOLS], agg_price: uint256) -> uint256:`"
 
@@ -256,48 +252,14 @@ $rate_{wstETH} =$ amount of stETH for 1 wstETH
         ```
 
 ## **Chainlink Limits**
-The oracle contracts have the option to utilize Chainlink prices, which serve as safety limits. When enabled, these limits are triggered if the Chainlink price deviates by more than 1.5% (represented by **`BOUND_SIZE`**) from the internal price oracles.
+The oracle contracts have the option to utilize Chainlink prices, which serve as safety limits. When enabled, these limits are triggered if the Chainlink price deviates by more than 1.5% (represented by `BOUND_SIZE`) from the internal price oracles.
 
-Chainlink limits can be turned on and off by calling **`set_use_chainlink(do_it: bool)`**, which can only be done by the admin of the factory contract.
+Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: bool)`, which can only be done by the admin of the Factory contract.
 
 <figure markdown>
   ![](../images/chainlink_oracle.png){ width="400" }
   <figcaption>Chainlink vs Internal Orcale</figcaption>
 </figure>
-
-
-
-### **ETH Limit**
-
-??? quote "ETH Price Limit"
-
-    ```vyper
-    # Limit ETH price
-    if use_chainlink:
-        chainlink_lrd: ChainlinkAnswer = CHAINLINK_AGGREGATOR_ETH.latestRoundData()
-        if block.timestamp - min(chainlink_lrd.updated_at, block.timestamp) <= CHAINLINK_STALE_THRESHOLD:
-            chainlink_p: uint256 = convert(chainlink_lrd.answer, uint256) * 10**18 / CHAINLINK_PRICE_PRECISION_ETH
-            lower: uint256 = chainlink_p * (10**18 - BOUND_SIZE) / 10**18
-            upper: uint256 = chainlink_p * (10**18 + BOUND_SIZE) / 10**18
-            crv_p = min(max(crv_p, lower), upper)
-    ```
-
-
-
-### **stETH Limit**
-
-??? quote "stETH Price Limit"
-
-    ```vyper
-    # Limit STETH price
-    if use_chainlink:
-        chainlink_lrd: ChainlinkAnswer = CHAINLINK_AGGREGATOR_STETH.latestRoundData()
-        if block.timestamp - min(chainlink_lrd.updated_at, block.timestamp) <= CHAINLINK_STALE_THRESHOLD:
-            chainlink_p: uint256 = convert(chainlink_lrd.answer, uint256) * 10**18 / CHAINLINK_PRICE_PRECISION_STETH
-            lower: uint256 = chainlink_p * (10**18 - BOUND_SIZE) / 10**18
-            upper: uint256 = chainlink_p * (10**18 + BOUND_SIZE) / 10**18
-            p_staked = min(max(p_staked, lower), upper)
-    ```
 
 
 ### `use_chainlink`
@@ -324,14 +286,14 @@ Chainlink limits can be turned on and off by calling **`set_use_chainlink(do_it:
 ### `set_use_chainlink`
 !!! description "`Oracle.set_use_chainlink(do_it: bool):`"
 
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the Factory contract.
+
     Function to toggle the usage of chainlink limits. 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `do_it` |  `bool` | Bool to toggle the usage of chainlink oracles |
-
-    !!!note 
-        This function can only be called by the `admin` of the factory contract. 
 
     ??? quote "Source code"
 
@@ -414,6 +376,7 @@ Chainlink limits can be turned on and off by calling **`set_use_chainlink(do_it:
         >>> Oracle.TRICRYPTO(0)
         '0x7F86Bf177Dd4F3494b841a37e810A34dD56c829B'
         ```
+
 
 ### `TRICRYPTO_IX`
 !!! description "`Oracle.TRICRYPTO_IX(arg0: uint256) -> uint256:`"
