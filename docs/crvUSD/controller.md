@@ -1,6 +1,6 @@
-The Controller is the contract the user interacts with to create a loan and further manage the position. It holds all user debt information. External liquidations are also done through it.
+The Controller is the contract the user interacts with to **create a loan and further manage the position**. It holds all user debt information. External liquidations are also done through it.
 
-Each market has its own Controller, created from a blueprint contract, when a new market is successfully added via the `Factory`.
+**Each market has its own Controller**, automatically deployed from a blueprint contract, as soon as a new market is successfully added via the `add_market` function within the Factory.
 
 
 # **Loans**
@@ -18,7 +18,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Function to create a loan. The user must specify the amount of `collateral` to deposit into `N`-bands and the amount of `debt` to borrow. If a user already has an existing loan, the function will revert.
 
-    Emits: `UserState`, `Borrow`, `Deposit` and `SetRate`
+    Emits: `UserState`, `Borrow` and `Deposit`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -33,47 +33,23 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "Controller.vy"
 
-            ```vyper hl_lines="1 2 4 5 8 30 37 38 43 51"
-            log UserState(msg.sender, collateral, debt, n1, n2, liquidation_discount)
-            log Borrow(msg.sender, collateral, debt)
+            ```vyper
+            event UserState:
+                user: indexed(address)
+                collateral: uint256
+                debt: uint256
+                n1: int256
+                n2: int256
+                liquidation_discount: uint256
+
+            event Borrow:
+                user: indexed(address)
+                collateral_increase: uint256
+                loan_increase: uint256
 
             MAX_TICKS: constant(int256) = 50
             MIN_TICKS: constant(int256) = 4
 
-            @internal
-            def _create_loan(mvalue: uint256, collateral: uint256, debt: uint256, N: uint256, transfer_coins: bool):
-                assert self.loan[msg.sender].initial_debt == 0, "Loan already created"
-                assert N > MIN_TICKS-1, "Need more ticks"
-                assert N < MAX_TICKS+1, "Need less ticks"
-
-                n1: int256 = self._calculate_debt_n1(collateral, debt, N)
-                n2: int256 = n1 + convert(N - 1, int256)
-
-                rate_mul: uint256 = self._rate_mul_w()
-                self.loan[msg.sender] = Loan({initial_debt: debt, rate_mul: rate_mul})
-                liquidation_discount: uint256 = self.liquidation_discount
-                self.liquidation_discounts[msg.sender] = liquidation_discount
-
-                n_loans: uint256 = self.n_loans
-                self.loans[n_loans] = msg.sender
-                self.loan_ix[msg.sender] = n_loans
-                self.n_loans = unsafe_add(n_loans, 1)
-
-                total_debt: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul + debt
-                self._total_debt.initial_debt = total_debt
-                self._total_debt.rate_mul = rate_mul
-
-                AMM.deposit_range(msg.sender, collateral, n1, n2)
-                self.minted += debt
-
-                if transfer_coins:
-                    self._deposit_collateral(collateral, mvalue)
-                    STABLECOIN.transfer(msg.sender, debt)
-
-                log UserState(msg.sender, collateral, debt, n1, n2, liquidation_discount)
-                log Borrow(msg.sender, collateral, debt)
-
-            @payable
             @external
             @nonreentrant('lock')
             def create_loan(collateral: uint256, debt: uint256, N: uint256):
@@ -84,12 +60,52 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                 @param N Number of bands to deposit into (to do autoliquidation-deliquidation),
                     can be from MIN_TICKS to MAX_TICKS
                 """
-                self._create_loan(msg.value, collateral, debt, N, True)
+                self._create_loan(collateral, debt, N, True)
+
+            @internal
+            def _create_loan(collateral: uint256, debt: uint256, N: uint256, transfer_coins: bool):
+                assert self.loan[msg.sender].initial_debt == 0, "Loan already created"
+                assert N > MIN_TICKS-1, "Need more ticks"
+                assert N < MAX_TICKS+1, "Need less ticks"
+
+                n1: int256 = self._calculate_debt_n1(collateral, debt, N)
+                n2: int256 = n1 + convert(N - 1, int256)
+
+                rate_mul: uint256 = AMM.get_rate_mul()
+                self.loan[msg.sender] = Loan({initial_debt: debt, rate_mul: rate_mul})
+                liquidation_discount: uint256 = self.liquidation_discount
+                self.liquidation_discounts[msg.sender] = liquidation_discount
+
+                n_loans: uint256 = self.n_loans
+                self.loans[n_loans] = msg.sender
+                self.loan_ix[msg.sender] = n_loans
+                self.n_loans = unsafe_add(n_loans, 1)
+
+                self._total_debt.initial_debt = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul + debt
+                self._total_debt.rate_mul = rate_mul
+
+                AMM.deposit_range(msg.sender, collateral, n1, n2)
+                self.minted += debt
+
+                if transfer_coins:
+                    self.transferFrom(COLLATERAL_TOKEN, msg.sender, AMM.address, collateral)
+                    self.transfer(STABLECOIN, msg.sender, debt)
+
+                self._save_rate()
+
+                log UserState(msg.sender, collateral, debt, n1, n2, liquidation_discount)
+                log Borrow(msg.sender, collateral, debt)
             ```
         
         === "AMM.vy"
 
-            ```vyper hl_lines="3"
+            ```vyper
+            event Deposit:
+                provider: indexed(address)
+                amount: uint256
+                n1: int256
+                n2: int256
+
             @external
             @nonreentrant('lock')
             def deposit_range(user: address, amount: uint256, n1: int256, n2: int256):
@@ -111,6 +127,15 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                 assert n2 < 2**127
                 assert n1 > -2**127
 
+                n_bands: uint256 = unsafe_add(convert(unsafe_sub(n2, n1), uint256), 1)
+                assert n_bands <= MAX_TICKS_UINT
+
+                y_per_band: uint256 = unsafe_div(amount * COLLATERAL_PRECISION, n_bands)
+                assert y_per_band > 100, "Amount too low"
+
+                assert self.user_shares[user].ticks[0] == 0  # dev: User must have no liquidity
+                self.user_shares[user].ns = unsafe_add(n1, unsafe_mul(n2, 2**128))
+
                 lm: LMGauge = self.liquidity_mining_callback
 
                 # Autoskip bands if we can
@@ -121,15 +146,6 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                         break
                     assert self.bands_x[n0] == 0 and i < MAX_SKIP_TICKS, "Deposit below current band"
                     n0 -= 1
-
-                n_bands: uint256 = unsafe_add(convert(unsafe_sub(n2, n1), uint256), 1)
-                assert n_bands <= MAX_TICKS_UINT
-
-                y_per_band: uint256 = unsafe_div(amount * COLLATERAL_PRECISION, n_bands)
-                assert y_per_band > 100, "Amount too low"
-
-                assert self.user_shares[user].ticks[0] == 0  # dev: User must have no liquidity
-                self.user_shares[user].ns = unsafe_add(n1, unsafe_mul(n2, 2**128))
 
                 for i in range(MAX_TICKS):
                     band: int256 = unsafe_add(n1, i)
@@ -163,9 +179,6 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                 self.max_band = max(self.max_band, n2)
 
                 self.save_user_shares(user, user_shares)
-
-                self.rate_mul = self._rate_mul()
-                self.rate_time = block.timestamp
 
                 log Deposit(user, amount, n1, n2)
 
@@ -200,44 +213,23 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "Controller.vy"
 
-            ```vyper hl_lines="1 2 5 27 34 35 40 61"
-            log UserState(msg.sender, collateral, debt, n1, n2, liquidation_discount)
-            log Borrow(msg.sender, collateral, debt)
+            ```vyper
+            event UserState:
+                user: indexed(address)
+                collateral: uint256
+                debt: uint256
+                n1: int256
+                n2: int256
+                liquidation_discount: uint256
 
-            @internal
-            def _create_loan(mvalue: uint256, collateral: uint256, debt: uint256, N: uint256, transfer_coins: bool):
-                assert self.loan[msg.sender].initial_debt == 0, "Loan already created"
-                assert N > MIN_TICKS-1, "Need more ticks"
-                assert N < MAX_TICKS+1, "Need less ticks"
+            event Borrow:
+                user: indexed(address)
+                collateral_increase: uint256
+                loan_increase: uint256
 
-                n1: int256 = self._calculate_debt_n1(collateral, debt, N)
-                n2: int256 = n1 + convert(N - 1, int256)
+            MAX_TICKS: constant(int256) = 50
+            MIN_TICKS: constant(int256) = 4
 
-                rate_mul: uint256 = self._rate_mul_w()
-                self.loan[msg.sender] = Loan({initial_debt: debt, rate_mul: rate_mul})
-                liquidation_discount: uint256 = self.liquidation_discount
-                self.liquidation_discounts[msg.sender] = liquidation_discount
-
-                n_loans: uint256 = self.n_loans
-                self.loans[n_loans] = msg.sender
-                self.loan_ix[msg.sender] = n_loans
-                self.n_loans = unsafe_add(n_loans, 1)
-
-                total_debt: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul + debt
-                self._total_debt.initial_debt = total_debt
-                self._total_debt.rate_mul = rate_mul
-
-                AMM.deposit_range(msg.sender, collateral, n1, n2)
-                self.minted += debt
-
-                if transfer_coins:
-                    self._deposit_collateral(collateral, mvalue)
-                    STABLECOIN.transfer(msg.sender, debt)
-
-                log UserState(msg.sender, collateral, debt, n1, n2, liquidation_discount)
-                log Borrow(msg.sender, collateral, debt)
-
-            @payable
             @external
             @nonreentrant('lock')
             def create_loan_extended(collateral: uint256, debt: uint256, N: uint256, callbacker: address, callback_args: DynArray[uint256,5]):
@@ -259,14 +251,54 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                     callbacker, CALLBACK_DEPOSIT, msg.sender, 0, collateral, debt, callback_args).collateral
 
                 # After callback
-                self._deposit_collateral(collateral, msg.value)
-                assert COLLATERAL_TOKEN.transferFrom(callbacker, AMM.address, more_collateral, default_return_value=True)
-                self._create_loan(0, collateral + more_collateral, debt, N, False)
+                self._create_loan(collateral + more_collateral, debt, N, False)
+                self.transferFrom(COLLATERAL_TOKEN, msg.sender, AMM.address, collateral)
+                self.transferFrom(COLLATERAL_TOKEN, callbacker, AMM.address, more_collateral)
+
+            @internal
+            def _create_loan(collateral: uint256, debt: uint256, N: uint256, transfer_coins: bool):
+                assert self.loan[msg.sender].initial_debt == 0, "Loan already created"
+                assert N > MIN_TICKS-1, "Need more ticks"
+                assert N < MAX_TICKS+1, "Need less ticks"
+
+                n1: int256 = self._calculate_debt_n1(collateral, debt, N)
+                n2: int256 = n1 + convert(N - 1, int256)
+
+                rate_mul: uint256 = AMM.get_rate_mul()
+                self.loan[msg.sender] = Loan({initial_debt: debt, rate_mul: rate_mul})
+                liquidation_discount: uint256 = self.liquidation_discount
+                self.liquidation_discounts[msg.sender] = liquidation_discount
+
+                n_loans: uint256 = self.n_loans
+                self.loans[n_loans] = msg.sender
+                self.loan_ix[msg.sender] = n_loans
+                self.n_loans = unsafe_add(n_loans, 1)
+
+                self._total_debt.initial_debt = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul + debt
+                self._total_debt.rate_mul = rate_mul
+
+                AMM.deposit_range(msg.sender, collateral, n1, n2)
+                self.minted += debt
+
+                if transfer_coins:
+                    self.transferFrom(COLLATERAL_TOKEN, msg.sender, AMM.address, collateral)
+                    self.transfer(STABLECOIN, msg.sender, debt)
+
+                self._save_rate()
+
+                log UserState(msg.sender, collateral, debt, n1, n2, liquidation_discount)
+                log Borrow(msg.sender, collateral, debt)
             ```
         
         === "AMM.vy"
 
-            ```vyper hl_lines="3"
+            ```vyper
+            event Deposit:
+                provider: indexed(address)
+                amount: uint256
+                n1: int256
+                n2: int256
+
             @external
             @nonreentrant('lock')
             def deposit_range(user: address, amount: uint256, n1: int256, n2: int256):
@@ -288,6 +320,15 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                 assert n2 < 2**127
                 assert n1 > -2**127
 
+                n_bands: uint256 = unsafe_add(convert(unsafe_sub(n2, n1), uint256), 1)
+                assert n_bands <= MAX_TICKS_UINT
+
+                y_per_band: uint256 = unsafe_div(amount * COLLATERAL_PRECISION, n_bands)
+                assert y_per_band > 100, "Amount too low"
+
+                assert self.user_shares[user].ticks[0] == 0  # dev: User must have no liquidity
+                self.user_shares[user].ns = unsafe_add(n1, unsafe_mul(n2, 2**128))
+
                 lm: LMGauge = self.liquidity_mining_callback
 
                 # Autoskip bands if we can
@@ -298,15 +339,6 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                         break
                     assert self.bands_x[n0] == 0 and i < MAX_SKIP_TICKS, "Deposit below current band"
                     n0 -= 1
-
-                n_bands: uint256 = unsafe_add(convert(unsafe_sub(n2, n1), uint256), 1)
-                assert n_bands <= MAX_TICKS_UINT
-
-                y_per_band: uint256 = unsafe_div(amount * COLLATERAL_PRECISION, n_bands)
-                assert y_per_band > 100, "Amount too low"
-
-                assert self.user_shares[user].ticks[0] == 0  # dev: User must have no liquidity
-                self.user_shares[user].ns = unsafe_add(n1, unsafe_mul(n2, 2**128))
 
                 for i in range(MAX_TICKS):
                     band: int256 = unsafe_add(n1, i)
@@ -340,9 +372,6 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                 self.max_band = max(self.max_band, n2)
 
                 self.save_user_shares(user, user_shares)
-
-                self.rate_mul = self._rate_mul()
-                self.rate_time = block.timestamp
 
                 log Deposit(user, amount, n1, n2)
 
@@ -378,7 +407,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "Controller.vy"
 
-            ```vyper hl_lines="1 9 17"
+            ```vyper
             event UserState:
                 user: indexed(address)
                 collateral: uint256
@@ -392,7 +421,6 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                 collateral_decrease: uint256
                 loan_decrease: uint256
 
-            @payable
             @external
             @nonreentrant('lock')
             def repay(_d_debt: uint256, _for: address = msg.sender, max_active_band: int256 = 2**255-1, use_eth: bool = True):
@@ -420,1075 +448,17 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                     if xy[0] > 0:
                         # Only allow full repayment when underwater for the sender to do
                         assert _for == msg.sender
-                        STABLECOIN.transferFrom(AMM.address, _for, xy[0])
+                        self.transferFrom(STABLECOIN, AMM.address, _for, xy[0])
                     if xy[1] > 0:
-                        self._withdraw_collateral(_for, xy[1], use_eth)
+                        self.transferFrom(COLLATERAL_TOKEN, AMM.address, _for, xy[1])
                     log UserState(_for, 0, 0, 0, 0, 0)
                     log Repay(_for, xy[1], d_debt)
                     self._remove_from_list(_for)
-
-                else:
-                    active_band: int256 = AMM.active_band_with_skip()
-                    assert active_band <= max_active_band
-
-                    ns: int256[2] = AMM.read_user_tick_numbers(_for)
-                    size: uint256 = convert(unsafe_add(unsafe_sub(ns[1], ns[0]), 1), uint256)
-
-
-                    if ns[0] > active_band:
-                        # Not in liquidation - can move bands
-                        xy: uint256[2] = AMM.withdraw(_for, 10**18)
-                        n1: int256 = self._calculate_debt_n1(xy[1], debt, size)
-                        n2: int256 = n1 + unsafe_sub(ns[1], ns[0])
-                        AMM.deposit_range(_for, xy[1], n1, n2)
-                        liquidation_discount: uint256 = self.liquidation_discount
-                        self.liquidation_discounts[_for] = liquidation_discount
-                        log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
-                        log Repay(_for, 0, d_debt)
-                    else:
-                        # Underwater - cannot move band but can avoid a bad liquidation
-                        log UserState(_for, max_value(uint256), debt, ns[0], ns[1], self.liquidation_discounts[_for])
-                        log Repay(_for, 0, d_debt)
-
-                # If we withdrew already - will burn less!
-                STABLECOIN.transferFrom(msg.sender, self, d_debt)  # fail: insufficient funds
-                self.redeemed += d_debt
-
-                self.loan[_for] = Loan({initial_debt: debt, rate_mul: rate_mul})
-                total_debt: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul
-                self._total_debt.initial_debt = unsafe_sub(max(total_debt, d_debt), d_debt)
-                self._total_debt.rate_mul = rate_mul
             ```
         
         === "AMM.vy"
 
-            ```vyper hl_lines="1 9 84"
-            event Deposit:
-                provider: indexed(address)
-                amount: uint256
-                n1: int256
-                n2: int256
-
-            @external
-            @nonreentrant('lock')
-            def deposit_range(user: address, amount: uint256, n1: int256, n2: int256):
-                """
-                @notice Deposit for a user in a range of bands. Only admin contract (Controller) can do it
-                @param user User address
-                @param amount Amount of collateral to deposit
-                @param n1 Lower band in the deposit range
-                @param n2 Upper band in the deposit range
-                """
-                assert msg.sender == self.admin
-
-                user_shares: DynArray[uint256, MAX_TICKS_UINT] = []
-                collateral_shares: DynArray[uint256, MAX_TICKS_UINT] = []
-
-                n0: int256 = self.active_band
-
-                # We assume that n1,n2 area already sorted (and they are in Controller)
-                assert n2 < 2**127
-                assert n1 > -2**127
-
-                lm: LMGauge = self.liquidity_mining_callback
-
-                # Autoskip bands if we can
-                for i in range(MAX_SKIP_TICKS + 1):
-                    if n1 > n0:
-                        if i != 0:
-                            self.active_band = n0
-                        break
-                    assert self.bands_x[n0] == 0 and i < MAX_SKIP_TICKS, "Deposit below current band"
-                    n0 -= 1
-
-                n_bands: uint256 = unsafe_add(convert(unsafe_sub(n2, n1), uint256), 1)
-                assert n_bands <= MAX_TICKS_UINT
-
-                y_per_band: uint256 = unsafe_div(amount * COLLATERAL_PRECISION, n_bands)
-                assert y_per_band > 100, "Amount too low"
-
-                assert self.user_shares[user].ticks[0] == 0  # dev: User must have no liquidity
-                self.user_shares[user].ns = unsafe_add(n1, unsafe_mul(n2, 2**128))
-
-                for i in range(MAX_TICKS):
-                    band: int256 = unsafe_add(n1, i)
-                    if band > n2:
-                        break
-
-                    assert self.bands_x[band] == 0, "Band not empty"
-                    y: uint256 = y_per_band
-                    if i == 0:
-                        y = amount * COLLATERAL_PRECISION - y * unsafe_sub(n_bands, 1)
-
-                    total_y: uint256 = self.bands_y[band]
-
-                    # Total / user share
-                    s: uint256 = self.total_shares[band]
-                    ds: uint256 = unsafe_div((s + DEAD_SHARES) * y, total_y + 1)
-                    assert ds > 0, "Amount too low"
-                    user_shares.append(ds)
-                    s += ds
-                    assert s <= 2**128 - 1
-                    self.total_shares[band] = s
-
-                    total_y += y
-                    self.bands_y[band] = total_y
-
-                    if lm.address != empty(address):
-                        # If initial s == 0 - s becomes equal to y which is > 100 => nonzero
-                        collateral_shares.append(unsafe_div(total_y * 10**18, s))
-
-                self.min_band = min(self.min_band, n1)
-                self.max_band = max(self.max_band, n2)
-
-                self.save_user_shares(user, user_shares)
-
-                self.rate_mul = self._rate_mul()
-                self.rate_time = block.timestamp
-
-                log Deposit(user, amount, n1, n2)
-
-                if lm.address != empty(address):
-                    lm.callback_collateral_shares(n1, collateral_shares)
-                    lm.callback_user_shares(user, n1, user_shares)
-            ```
-
-    === "Example"
-        ```shell
-        >>> Controller.repay(_d_debt: uint256)
-        ```
-
-
-### `repay_extended`
-!!! description "`Controller.repay_extended(callbacker: address, callback_args: DynArray[uint256,5]):`"
-
-    Extended function to repay a loan but get a stablecoin for that from callback (to deleverage).
-
-    Emits: `UserState` and `Repay`
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `callbacker` |  `address` |  Address of the callback contract |
-    | `callback_args` |  `DynArray[uint256,5]` |  Extra arguments for the callback (up to 5) such as `min_amount` |
-
-
-    ??? quote "Source code"
-
-        === "Controller.vy"
-
-            ```vyper hl_lines="1 9 16"
-            event UserState:
-                user: indexed(address)
-                collateral: uint256
-                debt: uint256
-                n1: int256
-                n2: int256
-                liquidation_discount: uint256
-
-            event Repay:
-                user: indexed(address)
-                collateral_decrease: uint256
-                loan_decrease: uint256
-
-            @external
-            @nonreentrant('lock')
-            def repay_extended(callbacker: address, callback_args: DynArray[uint256,5]):
-                """
-                @notice Repay loan but get a stablecoin for that from callback (to deleverage)
-                @param callbacker Address of the callback contract
-                @param callback_args Extra arguments for the callback (up to 5) such as min_amount etc
-                """
-                # Before callback
-                ns: int256[2] = AMM.read_user_tick_numbers(msg.sender)
-                xy: uint256[2] = AMM.withdraw(msg.sender, 10**18)
-                debt: uint256 = 0
-                rate_mul: uint256 = 0
-                debt, rate_mul = self._debt(msg.sender)
-                COLLATERAL_TOKEN.transferFrom(AMM.address, callbacker, xy[1], default_return_value=True)
-
-                cb: CallbackData = self.execute_callback(
-                    callbacker, CALLBACK_REPAY, msg.sender, xy[0], xy[1], debt, callback_args)
-
-                # After callback
-                total_stablecoins: uint256 = cb.stablecoins + xy[0]
-                assert total_stablecoins > 0  # dev: no coins to repay
-
-                # d_debt: uint256 = min(debt, total_stablecoins)
-
-                d_debt: uint256 = 0
-
-                # If we have more stablecoins than the debt - full repayment and closing the position
-                if total_stablecoins >= debt:
-                    d_debt = debt
-                    debt = 0
-                    self._remove_from_list(msg.sender)
-
-                    # Transfer debt to self, everything else to sender
-                    if cb.stablecoins > 0:
-                        STABLECOIN.transferFrom(callbacker, self, cb.stablecoins)
-                    if xy[0] > 0:
-                        STABLECOIN.transferFrom(AMM.address, self, xy[0])
-                    if total_stablecoins > d_debt:
-                        STABLECOIN.transfer(msg.sender, unsafe_sub(total_stablecoins, d_debt))
-                    if cb.collateral > 0:
-                        assert COLLATERAL_TOKEN.transferFrom(callbacker, msg.sender, cb.collateral, default_return_value=True)
-
-                    log UserState(msg.sender, 0, 0, 0, 0, 0)
-
-                # Else - partial repayment -> deleverage, but only if we are not underwater
-                else:
-                    size: uint256 = convert(unsafe_add(unsafe_sub(ns[1], ns[0]), 1), uint256)
-                    assert ns[0] > cb.active_band
-                    d_debt = cb.stablecoins  # cb.stablecoins <= total_stablecoins < debt
-                    debt = unsafe_sub(debt, cb.stablecoins)
-
-                    # Not in liquidation - can move bands
-                    n1: int256 = self._calculate_debt_n1(cb.collateral, debt, size)
-                    n2: int256 = n1 + unsafe_sub(ns[1], ns[0])
-                    AMM.deposit_range(msg.sender, cb.collateral, n1, n2)
-                    liquidation_discount: uint256 = self.liquidation_discount
-                    self.liquidation_discounts[msg.sender] = liquidation_discount
-
-                    assert COLLATERAL_TOKEN.transferFrom(callbacker, AMM.address, cb.collateral, default_return_value=True)
-                    # Stablecoin is all spent to repay debt -> all goes to self
-                    STABLECOIN.transferFrom(callbacker, self, cb.stablecoins)
-                    # We are above active band, so xy[0] is 0 anyway
-
-                    log UserState(msg.sender, cb.collateral, debt, n1, n2, liquidation_discount)
-                    xy[1] = 0
-
-                # Common calls which we will do regardless of whether it's a full repay or not
-                log Repay(msg.sender, xy[1], d_debt)
-                self.redeemed += d_debt
-                self.loan[msg.sender] = Loan({initial_debt: debt, rate_mul: rate_mul})
-                total_debt: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul
-                self._total_debt.initial_debt = unsafe_sub(max(total_debt, d_debt), d_debt)
-                self._total_debt.rate_mul = rate_mul
-            ```
-        
-        === "AMM.vy"
-
-            ```vyper hl_lines="1 9 84"
-            event Deposit:
-                provider: indexed(address)
-                amount: uint256
-                n1: int256
-                n2: int256
-
-            @external
-            @nonreentrant('lock')
-            def deposit_range(user: address, amount: uint256, n1: int256, n2: int256):
-                """
-                @notice Deposit for a user in a range of bands. Only admin contract (Controller) can do it
-                @param user User address
-                @param amount Amount of collateral to deposit
-                @param n1 Lower band in the deposit range
-                @param n2 Upper band in the deposit range
-                """
-                assert msg.sender == self.admin
-
-                user_shares: DynArray[uint256, MAX_TICKS_UINT] = []
-                collateral_shares: DynArray[uint256, MAX_TICKS_UINT] = []
-
-                n0: int256 = self.active_band
-
-                # We assume that n1,n2 area already sorted (and they are in Controller)
-                assert n2 < 2**127
-                assert n1 > -2**127
-
-                lm: LMGauge = self.liquidity_mining_callback
-
-                # Autoskip bands if we can
-                for i in range(MAX_SKIP_TICKS + 1):
-                    if n1 > n0:
-                        if i != 0:
-                            self.active_band = n0
-                        break
-                    assert self.bands_x[n0] == 0 and i < MAX_SKIP_TICKS, "Deposit below current band"
-                    n0 -= 1
-
-                n_bands: uint256 = unsafe_add(convert(unsafe_sub(n2, n1), uint256), 1)
-                assert n_bands <= MAX_TICKS_UINT
-
-                y_per_band: uint256 = unsafe_div(amount * COLLATERAL_PRECISION, n_bands)
-                assert y_per_band > 100, "Amount too low"
-
-                assert self.user_shares[user].ticks[0] == 0  # dev: User must have no liquidity
-                self.user_shares[user].ns = unsafe_add(n1, unsafe_mul(n2, 2**128))
-
-                for i in range(MAX_TICKS):
-                    band: int256 = unsafe_add(n1, i)
-                    if band > n2:
-                        break
-
-                    assert self.bands_x[band] == 0, "Band not empty"
-                    y: uint256 = y_per_band
-                    if i == 0:
-                        y = amount * COLLATERAL_PRECISION - y * unsafe_sub(n_bands, 1)
-
-                    total_y: uint256 = self.bands_y[band]
-
-                    # Total / user share
-                    s: uint256 = self.total_shares[band]
-                    ds: uint256 = unsafe_div((s + DEAD_SHARES) * y, total_y + 1)
-                    assert ds > 0, "Amount too low"
-                    user_shares.append(ds)
-                    s += ds
-                    assert s <= 2**128 - 1
-                    self.total_shares[band] = s
-
-                    total_y += y
-                    self.bands_y[band] = total_y
-
-                    if lm.address != empty(address):
-                        # If initial s == 0 - s becomes equal to y which is > 100 => nonzero
-                        collateral_shares.append(unsafe_div(total_y * 10**18, s))
-
-                self.min_band = min(self.min_band, n1)
-                self.max_band = max(self.max_band, n2)
-
-                self.save_user_shares(user, user_shares)
-
-                self.rate_mul = self._rate_mul()
-                self.rate_time = block.timestamp
-
-                log Deposit(user, amount, n1, n2)
-
-                if lm.address != empty(address):
-                    lm.callback_collateral_shares(n1, collateral_shares)
-                    lm.callback_user_shares(user, n1, user_shares)
-            ```
-
-    === "Example"
-        ```shell
-        >>> Controller.repay_extended(callbacker: address, callback_args: DynArray[uint256,5])
-        ```
-
-
-## **Adjusting Existing Loans**
-
-### `add_collateral` 
-!!! description "`Controller.add_collateral(collateral: uint256, _for: address = msg.sender):`"
-
-    Function to add extra collateral to a position.
-
-    Emits: `UserState` and `Borrow`
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `collateral` |  `uint256` |  Amount of collateral to add |
-    | `_for` |  `address` | Address to add collateral for |
-
-
-    ??? quote "Source code"
-
-        === "Controller.vy"
-
-            ```vyper hl_lines="1 9 15 52 53 54 59 67 68 71"
-            event UserState:
-                user: indexed(address)
-                collateral: uint256
-                debt: uint256
-                n1: int256
-                n2: int256
-                liquidation_discount: uint256
-
-            event Borrow:
-                user: indexed(address)
-                collateral_increase: uint256
-                loan_increase: uint256
-
-            @internal
-            def _add_collateral_borrow(d_collateral: uint256, d_debt: uint256, _for: address, remove_collateral: bool):
-                """
-                @notice Internal method to borrow and add or remove collateral
-                @param d_collateral Amount of collateral to add
-                @param d_debt Amount of debt increase
-                @param _for Address to transfer tokens to
-                @param remove_collateral Remove collateral instead of adding
-                """
-                debt: uint256 = 0
-                rate_mul: uint256 = 0
-                debt, rate_mul = self._debt(_for)
-                assert debt > 0, "Loan doesn't exist"
-                debt += d_debt
-                ns: int256[2] = AMM.read_user_tick_numbers(_for)
-                size: uint256 = convert(unsafe_add(unsafe_sub(ns[1], ns[0]), 1), uint256)
-
-                xy: uint256[2] = AMM.withdraw(_for, 10**18)
-                assert xy[0] == 0, "Already in underwater mode"
-                if remove_collateral:
-                    xy[1] -= d_collateral
-                else:
-                    xy[1] += d_collateral
-                n1: int256 = self._calculate_debt_n1(xy[1], debt, size)
-                n2: int256 = n1 + unsafe_sub(ns[1], ns[0])
-
-                AMM.deposit_range(_for, xy[1], n1, n2)
-                self.loan[_for] = Loan({initial_debt: debt, rate_mul: rate_mul})
-                liquidation_discount: uint256 = self.liquidation_discount
-                self.liquidation_discounts[_for] = liquidation_discount
-
-                if d_debt != 0:
-                    total_debt: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul + d_debt
-                    self._total_debt.initial_debt = total_debt
-                    self._total_debt.rate_mul = rate_mul
-
-                if remove_collateral:
-                    log RemoveCollateral(_for, d_collateral)
-                else:
-                    log Borrow(_for, d_collateral, d_debt)
-                log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
-
-            @payable
-            @external
-            @nonreentrant('lock')
-            def add_collateral(collateral: uint256, _for: address = msg.sender):
-                """
-                @notice Add extra collateral to avoid bad liquidations
-                @param collateral Amount of collateral to add
-                @param _for Address to add collateral for
-                """
-                if collateral == 0:
-                    return
-                self._add_collateral_borrow(collateral, 0, _for, False)
-                self._deposit_collateral(collateral, msg.value)
-
-            @internal
-            def _deposit_collateral(amount: uint256, mvalue: uint256):
-                """
-                Deposits raw ETH, WETH or both at the same time
-                """
-                if not USE_ETH:
-                    assert mvalue == 0  # dev: Not accepting ETH
-                diff: uint256 = amount - mvalue  # dev: Incorrect ETH amount
-                if mvalue > 0:
-                    WETH(COLLATERAL_TOKEN.address).deposit(value=mvalue)
-                    assert COLLATERAL_TOKEN.transfer(AMM.address, mvalue)
-                if diff > 0:
-                    assert COLLATERAL_TOKEN.transferFrom(msg.sender, AMM.address, diff, default_return_value=True)
-            ```
-        
-        === "AMM.vy"
-
-            ```vyper hl_lines="1 9 84"
-            event Deposit:
-                provider: indexed(address)
-                amount: uint256
-                n1: int256
-                n2: int256
-
-            @external
-            @nonreentrant('lock')
-            def deposit_range(user: address, amount: uint256, n1: int256, n2: int256):
-                """
-                @notice Deposit for a user in a range of bands. Only admin contract (Controller) can do it
-                @param user User address
-                @param amount Amount of collateral to deposit
-                @param n1 Lower band in the deposit range
-                @param n2 Upper band in the deposit range
-                """
-                assert msg.sender == self.admin
-
-                user_shares: DynArray[uint256, MAX_TICKS_UINT] = []
-                collateral_shares: DynArray[uint256, MAX_TICKS_UINT] = []
-
-                n0: int256 = self.active_band
-
-                # We assume that n1,n2 area already sorted (and they are in Controller)
-                assert n2 < 2**127
-                assert n1 > -2**127
-
-                lm: LMGauge = self.liquidity_mining_callback
-
-                # Autoskip bands if we can
-                for i in range(MAX_SKIP_TICKS + 1):
-                    if n1 > n0:
-                        if i != 0:
-                            self.active_band = n0
-                        break
-                    assert self.bands_x[n0] == 0 and i < MAX_SKIP_TICKS, "Deposit below current band"
-                    n0 -= 1
-
-                n_bands: uint256 = unsafe_add(convert(unsafe_sub(n2, n1), uint256), 1)
-                assert n_bands <= MAX_TICKS_UINT
-
-                y_per_band: uint256 = unsafe_div(amount * COLLATERAL_PRECISION, n_bands)
-                assert y_per_band > 100, "Amount too low"
-
-                assert self.user_shares[user].ticks[0] == 0  # dev: User must have no liquidity
-                self.user_shares[user].ns = unsafe_add(n1, unsafe_mul(n2, 2**128))
-
-                for i in range(MAX_TICKS):
-                    band: int256 = unsafe_add(n1, i)
-                    if band > n2:
-                        break
-
-                    assert self.bands_x[band] == 0, "Band not empty"
-                    y: uint256 = y_per_band
-                    if i == 0:
-                        y = amount * COLLATERAL_PRECISION - y * unsafe_sub(n_bands, 1)
-
-                    total_y: uint256 = self.bands_y[band]
-
-                    # Total / user share
-                    s: uint256 = self.total_shares[band]
-                    ds: uint256 = unsafe_div((s + DEAD_SHARES) * y, total_y + 1)
-                    assert ds > 0, "Amount too low"
-                    user_shares.append(ds)
-                    s += ds
-                    assert s <= 2**128 - 1
-                    self.total_shares[band] = s
-
-                    total_y += y
-                    self.bands_y[band] = total_y
-
-                    if lm.address != empty(address):
-                        # If initial s == 0 - s becomes equal to y which is > 100 => nonzero
-                        collateral_shares.append(unsafe_div(total_y * 10**18, s))
-
-                self.min_band = min(self.min_band, n1)
-                self.max_band = max(self.max_band, n2)
-
-                self.save_user_shares(user, user_shares)
-
-                self.rate_mul = self._rate_mul()
-                self.rate_time = block.timestamp
-
-                log Deposit(user, amount, n1, n2)
-
-                if lm.address != empty(address):
-                    lm.callback_collateral_shares(n1, collateral_shares)
-                    lm.callback_user_shares(user, n1, user_shares)
-            ```
-
-    === "Example"
-        ```shell
-        >>> Controller.add_collateral(collateral: uint256)
-        ```
-
-
-### `remove_collateral`
-!!! description "`Controller.remove_collateral(collateral: uint256, use_eth: bool = True):`"
-
-    Function to remove collateral from a position.
-
-    Emits: `UserState` and `RemoveCollateral`
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `collateral` |  `uint256` |  Amount of collateral to remove |
-
-
-    ??? quote "Source code"
-
-        === "Controller.vy"
-
-            ```vyper hl_lines="1 9 14 49 50 53 57 65 66 69"
-            event UserState:
-                user: indexed(address)
-                collateral: uint256
-                debt: uint256
-                n1: int256
-                n2: int256
-                liquidation_discount: uint256
-
-            event RemoveCollateral:
-                user: indexed(address)
-                collateral_decrease: uint256
-
-            @internal
-            def _add_collateral_borrow(d_collateral: uint256, d_debt: uint256, _for: address, remove_collateral: bool):
-                """
-                @notice Internal method to borrow and add or remove collateral
-                @param d_collateral Amount of collateral to add
-                @param d_debt Amount of debt increase
-                @param _for Address to transfer tokens to
-                @param remove_collateral Remove collateral instead of adding
-                """
-                debt: uint256 = 0
-                rate_mul: uint256 = 0
-                debt, rate_mul = self._debt(_for)
-                assert debt > 0, "Loan doesn't exist"
-                debt += d_debt
-                ns: int256[2] = AMM.read_user_tick_numbers(_for)
-                size: uint256 = convert(unsafe_add(unsafe_sub(ns[1], ns[0]), 1), uint256)
-
-                xy: uint256[2] = AMM.withdraw(_for, 10**18)
-                assert xy[0] == 0, "Already in underwater mode"
-                if remove_collateral:
-                    xy[1] -= d_collateral
-                else:
-                    xy[1] += d_collateral
-                n1: int256 = self._calculate_debt_n1(xy[1], debt, size)
-                n2: int256 = n1 + unsafe_sub(ns[1], ns[0])
-
-                AMM.deposit_range(_for, xy[1], n1, n2)
-                self.loan[_for] = Loan({initial_debt: debt, rate_mul: rate_mul})
-                liquidation_discount: uint256 = self.liquidation_discount
-                self.liquidation_discounts[_for] = liquidation_discount
-
-                if d_debt != 0:
-                    total_debt: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul + d_debt
-                    self._total_debt.initial_debt = total_debt
-                    self._total_debt.rate_mul = rate_mul
-
-                if remove_collateral:
-                    log RemoveCollateral(_for, d_collateral)
-                else:
-                    log Borrow(_for, d_collateral, d_debt)
-                log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
-
-            @external
-            @nonreentrant('lock')
-            def remove_collateral(collateral: uint256, use_eth: bool = True):
-                """
-                @notice Remove some collateral without repaying the debt
-                @param collateral Amount of collateral to remove
-                @param use_eth Use wrapping/unwrapping if collateral is ETH
-                """
-                if collateral == 0:
-                    return
-                self._add_collateral_borrow(collateral, 0, msg.sender, True)
-                self._withdraw_collateral(msg.sender, collateral, use_eth)
-
-            @internal
-            def _withdraw_collateral(_for: address, amount: uint256, use_eth: bool):
-                if use_eth and USE_ETH:
-                    assert COLLATERAL_TOKEN.transferFrom(AMM.address, self, amount)
-                    WETH(COLLATERAL_TOKEN.address).withdraw(amount)
-                    raw_call(_for, b"", value=amount, gas=MAX_ETH_GAS)
-                else:
-                    assert COLLATERAL_TOKEN.transferFrom(AMM.address, _for, amount, default_return_value=True)
-            ```
-        
-        === "AMM.vy"
-
-            ```vyper hl_lines="1 9 84"
-            event Deposit:
-                provider: indexed(address)
-                amount: uint256
-                n1: int256
-                n2: int256
-
-            @external
-            @nonreentrant('lock')
-            def deposit_range(user: address, amount: uint256, n1: int256, n2: int256):
-                """
-                @notice Deposit for a user in a range of bands. Only admin contract (Controller) can do it
-                @param user User address
-                @param amount Amount of collateral to deposit
-                @param n1 Lower band in the deposit range
-                @param n2 Upper band in the deposit range
-                """
-                assert msg.sender == self.admin
-
-                user_shares: DynArray[uint256, MAX_TICKS_UINT] = []
-                collateral_shares: DynArray[uint256, MAX_TICKS_UINT] = []
-
-                n0: int256 = self.active_band
-
-                # We assume that n1,n2 area already sorted (and they are in Controller)
-                assert n2 < 2**127
-                assert n1 > -2**127
-
-                lm: LMGauge = self.liquidity_mining_callback
-
-                # Autoskip bands if we can
-                for i in range(MAX_SKIP_TICKS + 1):
-                    if n1 > n0:
-                        if i != 0:
-                            self.active_band = n0
-                        break
-                    assert self.bands_x[n0] == 0 and i < MAX_SKIP_TICKS, "Deposit below current band"
-                    n0 -= 1
-
-                n_bands: uint256 = unsafe_add(convert(unsafe_sub(n2, n1), uint256), 1)
-                assert n_bands <= MAX_TICKS_UINT
-
-                y_per_band: uint256 = unsafe_div(amount * COLLATERAL_PRECISION, n_bands)
-                assert y_per_band > 100, "Amount too low"
-
-                assert self.user_shares[user].ticks[0] == 0  # dev: User must have no liquidity
-                self.user_shares[user].ns = unsafe_add(n1, unsafe_mul(n2, 2**128))
-
-                for i in range(MAX_TICKS):
-                    band: int256 = unsafe_add(n1, i)
-                    if band > n2:
-                        break
-
-                    assert self.bands_x[band] == 0, "Band not empty"
-                    y: uint256 = y_per_band
-                    if i == 0:
-                        y = amount * COLLATERAL_PRECISION - y * unsafe_sub(n_bands, 1)
-
-                    total_y: uint256 = self.bands_y[band]
-
-                    # Total / user share
-                    s: uint256 = self.total_shares[band]
-                    ds: uint256 = unsafe_div((s + DEAD_SHARES) * y, total_y + 1)
-                    assert ds > 0, "Amount too low"
-                    user_shares.append(ds)
-                    s += ds
-                    assert s <= 2**128 - 1
-                    self.total_shares[band] = s
-
-                    total_y += y
-                    self.bands_y[band] = total_y
-
-                    if lm.address != empty(address):
-                        # If initial s == 0 - s becomes equal to y which is > 100 => nonzero
-                        collateral_shares.append(unsafe_div(total_y * 10**18, s))
-
-                self.min_band = min(self.min_band, n1)
-                self.max_band = max(self.max_band, n2)
-
-                self.save_user_shares(user, user_shares)
-
-                self.rate_mul = self._rate_mul()
-                self.rate_time = block.timestamp
-
-                log Deposit(user, amount, n1, n2)
-
-                if lm.address != empty(address):
-                    lm.callback_collateral_shares(n1, collateral_shares)
-                    lm.callback_user_shares(user, n1, user_shares)
-            ```
-
-    === "Example"
-        ```shell
-        >>> Controller.remove_collateral(collateral: uint256)
-        ```
-
-
-### `borrow_more`
-!!! description "`Controller.borrow_more(collateral: uint256, debt: uint256):`"
-
-    Function to borrow more stablecoins while adding more collateral (not necessary).
-
-    Emits: `UserState` and `Borrow`
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `collateral` |  `uint256` |  Amount of collateral to add |
-    | `debt` |  `uint256` |  Amount of debt to take |
-
-
-    ??? quote "Source code"
-
-        === "Controller.vy"
-
-            ```vyper hl_lines="1 9 14 49 50 53 58 66 68"
-            event UserState:
-                user: indexed(address)
-                collateral: uint256
-                debt: uint256
-                n1: int256
-                n2: int256
-                liquidation_discount: uint256
-
-            event RemoveCollateral:
-                user: indexed(address)
-                collateral_decrease: uint256
-
-            @internal
-            def _add_collateral_borrow(d_collateral: uint256, d_debt: uint256, _for: address, remove_collateral: bool):
-                """
-                @notice Internal method to borrow and add or remove collateral
-                @param d_collateral Amount of collateral to add
-                @param d_debt Amount of debt increase
-                @param _for Address to transfer tokens to
-                @param remove_collateral Remove collateral instead of adding
-                """
-                debt: uint256 = 0
-                rate_mul: uint256 = 0
-                debt, rate_mul = self._debt(_for)
-                assert debt > 0, "Loan doesn't exist"
-                debt += d_debt
-                ns: int256[2] = AMM.read_user_tick_numbers(_for)
-                size: uint256 = convert(unsafe_add(unsafe_sub(ns[1], ns[0]), 1), uint256)
-
-                xy: uint256[2] = AMM.withdraw(_for, 10**18)
-                assert xy[0] == 0, "Already in underwater mode"
-                if remove_collateral:
-                    xy[1] -= d_collateral
-                else:
-                    xy[1] += d_collateral
-                n1: int256 = self._calculate_debt_n1(xy[1], debt, size)
-                n2: int256 = n1 + unsafe_sub(ns[1], ns[0])
-
-                AMM.deposit_range(_for, xy[1], n1, n2)
-                self.loan[_for] = Loan({initial_debt: debt, rate_mul: rate_mul})
-                liquidation_discount: uint256 = self.liquidation_discount
-                self.liquidation_discounts[_for] = liquidation_discount
-
-                if d_debt != 0:
-                    total_debt: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul + d_debt
-                    self._total_debt.initial_debt = total_debt
-                    self._total_debt.rate_mul = rate_mul
-
-                if remove_collateral:
-                    log RemoveCollateral(_for, d_collateral)
-                else:
-                    log Borrow(_for, d_collateral, d_debt)
-                log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
-
-            @payable
-            @external
-            @nonreentrant('lock')
-            def borrow_more(collateral: uint256, debt: uint256):
-                """
-                @notice Borrow more stablecoins while adding more collateral (not necessary)
-                @param collateral Amount of collateral to add
-                @param debt Amount of stablecoin debt to take
-                """
-                if debt == 0:
-                    return
-                self._add_collateral_borrow(collateral, debt, msg.sender, False)
-                if collateral != 0:
-                    self._deposit_collateral(collateral, msg.value)
-                STABLECOIN.transfer(msg.sender, debt)
-                self.minted += debt
-            ```
-        
-        === "AMM.vy"
-
-            ```vyper hl_lines="1 9 84"
-            event Deposit:
-                provider: indexed(address)
-                amount: uint256
-                n1: int256
-                n2: int256
-
-            @external
-            @nonreentrant('lock')
-            def deposit_range(user: address, amount: uint256, n1: int256, n2: int256):
-                """
-                @notice Deposit for a user in a range of bands. Only admin contract (Controller) can do it
-                @param user User address
-                @param amount Amount of collateral to deposit
-                @param n1 Lower band in the deposit range
-                @param n2 Upper band in the deposit range
-                """
-                assert msg.sender == self.admin
-
-                user_shares: DynArray[uint256, MAX_TICKS_UINT] = []
-                collateral_shares: DynArray[uint256, MAX_TICKS_UINT] = []
-
-                n0: int256 = self.active_band
-
-                # We assume that n1,n2 area already sorted (and they are in Controller)
-                assert n2 < 2**127
-                assert n1 > -2**127
-
-                lm: LMGauge = self.liquidity_mining_callback
-
-                # Autoskip bands if we can
-                for i in range(MAX_SKIP_TICKS + 1):
-                    if n1 > n0:
-                        if i != 0:
-                            self.active_band = n0
-                        break
-                    assert self.bands_x[n0] == 0 and i < MAX_SKIP_TICKS, "Deposit below current band"
-                    n0 -= 1
-
-                n_bands: uint256 = unsafe_add(convert(unsafe_sub(n2, n1), uint256), 1)
-                assert n_bands <= MAX_TICKS_UINT
-
-                y_per_band: uint256 = unsafe_div(amount * COLLATERAL_PRECISION, n_bands)
-                assert y_per_band > 100, "Amount too low"
-
-                assert self.user_shares[user].ticks[0] == 0  # dev: User must have no liquidity
-                self.user_shares[user].ns = unsafe_add(n1, unsafe_mul(n2, 2**128))
-
-                for i in range(MAX_TICKS):
-                    band: int256 = unsafe_add(n1, i)
-                    if band > n2:
-                        break
-
-                    assert self.bands_x[band] == 0, "Band not empty"
-                    y: uint256 = y_per_band
-                    if i == 0:
-                        y = amount * COLLATERAL_PRECISION - y * unsafe_sub(n_bands, 1)
-
-                    total_y: uint256 = self.bands_y[band]
-
-                    # Total / user share
-                    s: uint256 = self.total_shares[band]
-                    ds: uint256 = unsafe_div((s + DEAD_SHARES) * y, total_y + 1)
-                    assert ds > 0, "Amount too low"
-                    user_shares.append(ds)
-                    s += ds
-                    assert s <= 2**128 - 1
-                    self.total_shares[band] = s
-
-                    total_y += y
-                    self.bands_y[band] = total_y
-
-                    if lm.address != empty(address):
-                        # If initial s == 0 - s becomes equal to y which is > 100 => nonzero
-                        collateral_shares.append(unsafe_div(total_y * 10**18, s))
-
-                self.min_band = min(self.min_band, n1)
-                self.max_band = max(self.max_band, n2)
-
-                self.save_user_shares(user, user_shares)
-
-                self.rate_mul = self._rate_mul()
-                self.rate_time = block.timestamp
-
-                log Deposit(user, amount, n1, n2)
-
-                if lm.address != empty(address):
-                    lm.callback_collateral_shares(n1, collateral_shares)
-                    lm.callback_user_shares(user, n1, user_shares)
-            ```
-
-    === "Example"
-        ```shell
-        >>> Controller.borrow_more(collateral: uint256, debt: uint256)
-        ```
-
-
-### `liquidate`
-!!! description "`Controller.liquidate(user: address, min_x: uint256, use_eth: bool = True):`"
-
-    Function to perform a bad liquidation (or self-liquidation) of `user` if `health` is not good.
-
-    Emits: `Repay` and `Liquidate` 
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` |  Address to be liquidated |
-    | `min_x` |  `uint256` |  Minimal amount of stablecoin to receive (to avoid liquidators being sandwiched) |
-    | `use_eth` |  `bool` | Use wrapping/unwrapping if collateral is ETH  |
-
-
-    ??? quote "Source code"
-
-        === "Controller.vy"
-
-            ```vyper hl_lines="1 9 14 22 52"
-            event UserState:
-                user: indexed(address)
-                collateral: uint256
-                debt: uint256
-                n1: int256
-                n2: int256
-                liquidation_discount: uint256
-
-            event Repay:
-                user: indexed(address)
-                collateral_decrease: uint256
-                loan_decrease: uint256
-
-            event Liquidate:
-                liquidator: indexed(address)
-                user: indexed(address)
-                collateral_received: uint256
-                stablecoin_received: uint256
-                debt: uint256
-
-            @internal
-            def _liquidate(user: address, min_x: uint256, health_limit: uint256, frac: uint256, use_eth: bool,
-                        callbacker: address, callback_args: DynArray[uint256,5]):
-                """
-                @notice Perform a bad liquidation of user if the health is too bad
-                @param user Address of the user
-                @param min_x Minimal amount of stablecoin withdrawn (to avoid liquidators being sandwiched)
-                @param health_limit Minimal health to liquidate at
-                @param frac Fraction to liquidate; 100% = 10**18
-                @param use_eth Use wrapping/unwrapping if collateral is ETH
-                @param callbacker Address of the callback contract
-                @param callback_args Extra arguments for the callback (up to 5) such as min_amount etc
-                """
-                debt: uint256 = 0
-                rate_mul: uint256 = 0
-                debt, rate_mul = self._debt(user)
-
-                if health_limit != 0:
-                    assert self._health(user, debt, True, health_limit) < 0, "Not enough rekt"
-
-                final_debt: uint256 = debt
-                debt = unsafe_div(debt * frac, 10**18)
-                assert debt > 0
-                final_debt = unsafe_sub(final_debt, debt)
-
-                # Withdraw sender's stablecoin and collateral to our contract
-                # When frac is set - we withdraw a bit less for the same debt fraction
-                # f_remove = ((1 + h/2) / (1 + h) * (1 - frac) + frac) * frac
-                # where h is health limit.
-                # This is less than full h discount but more than no discount
-                f_remove: uint256 = self._get_f_remove(frac, health_limit)
-                xy: uint256[2] = AMM.withdraw(user, f_remove)  # [stable, collateral]
-
-                # x increase in same block -> price up -> good
-                # x decrease in same block -> price down -> bad
-                assert xy[0] >= min_x, "Slippage"
-
-                min_amm_burn: uint256 = min(xy[0], debt)
-                if min_amm_burn != 0:
-                    STABLECOIN.transferFrom(AMM.address, self, min_amm_burn)
-
-                if debt > xy[0]:
-                    to_repay: uint256 = unsafe_sub(debt, xy[0])
-
-                    if callbacker == empty(address):
-                        # Withdraw collateral if no callback is present
-                        self._withdraw_collateral(msg.sender, xy[1], use_eth)
-                        # Request what's left from user
-                        STABLECOIN.transferFrom(msg.sender, self, to_repay)
-
-                    else:
-                        # Move collateral to callbacker, call it and remove everything from it back in
-                        if xy[1] > 0:
-                            assert COLLATERAL_TOKEN.transferFrom(AMM.address, callbacker, xy[1], default_return_value=True)
-                        # Callback
-                        cb: CallbackData = self.execute_callback(
-                            callbacker, CALLBACK_LIQUIDATE, user, xy[0], xy[1], debt, callback_args)
-                        assert cb.stablecoins >= to_repay, "not enough proceeds"
-                        if cb.stablecoins > to_repay:
-                            STABLECOIN.transferFrom(callbacker, msg.sender, unsafe_sub(cb.stablecoins, to_repay))
-                        STABLECOIN.transferFrom(callbacker, self, to_repay)
-                        if cb.collateral > 0:
-                            assert COLLATERAL_TOKEN.transferFrom(callbacker, msg.sender, cb.collateral)
-
-                else:
-                    # Withdraw collateral
-                    self._withdraw_collateral(msg.sender, xy[1], use_eth)
-                    # Return what's left to user
-                    if xy[0] > debt:
-                        STABLECOIN.transferFrom(AMM.address, msg.sender, unsafe_sub(xy[0], debt))
-
-                self.redeemed += debt
-                self.loan[user] = Loan({initial_debt: final_debt, rate_mul: rate_mul})
-                log Repay(user, xy[1], debt)
-                log Liquidate(msg.sender, user, xy[1], xy[0], debt)
-                if final_debt == 0:
-                    log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removeal b/c we have not enough info
-                    self._remove_from_list(user)
-
-                d: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul
-                self._total_debt.initial_debt = unsafe_sub(max(d, debt), debt)
-                self._total_debt.rate_mul = rate_mul
-
-            @external
-            @nonreentrant('lock')
-            def liquidate(user: address, min_x: uint256, use_eth: bool = True):
-                """
-                @notice Peform a bad liquidation (or self-liquidation) of user if health is not good
-                @param min_x Minimal amount of stablecoin to receive (to avoid liquidators being sandwiched)
-                @param use_eth Use wrapping/unwrapping if collateral is ETH
-                """
-                discount: uint256 = 0
-                if user != msg.sender:
-                    discount = self.liquidation_discounts[user]
-                self._liquidate(user, min_x, discount, 10**18, use_eth, empty(address), [])
-            ```
-        
-        === "AMM.vy"
-
-            ```vyper hl_lines="1 8"
+            ```vyper
             event Withdraw:
                 provider: indexed(address)
                 amount_borrowed: uint256
@@ -1498,7 +468,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
             @nonreentrant('lock')
             def withdraw(user: address, frac: uint256) -> uint256[2]:
                 """
-                @notice Withdraw all liquidity for the user. Only admin contract can do it
+                @notice Withdraw liquidity for the user. Only admin contract can do it
                 @param user User who owns liquidity
                 @param frac Fraction to withdraw (1e18 being 100%)
                 @return Amount of [stablecoins, collateral] withdrawn
@@ -1517,30 +487,30 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                 total_y: uint256 = 0
                 min_band: int256 = self.min_band
                 old_min_band: int256 = min_band
-                max_band: int256 = self.max_band
-                old_max_band: int256 = max_band
+                old_max_band: int256 = self.max_band
+                max_band: int256 = n - 1
 
                 for i in range(MAX_TICKS):
                     x: uint256 = self.bands_x[n]
                     y: uint256 = self.bands_y[n]
-                    ds: uint256 = unsafe_div(frac * user_shares[i], 10**18)  # Can ONLY zero out when frac == 10**18
-                    user_shares[i] = unsafe_sub(user_shares[i], ds)
+                    ds: uint256 = unsafe_div(frac * user_shares[i], 10**18)
+                    user_shares[i] = unsafe_sub(user_shares[i], ds)  # Can ONLY zero out when frac == 10**18
                     s: uint256 = self.total_shares[n]
                     new_shares: uint256 = s - ds
                     self.total_shares[n] = new_shares
-                    s += DEAD_SHARES
-                    dx: uint256 = (x + 1) * ds / s
+                    s += DEAD_SHARES  # after this s is guaranteed to be bigger than 0
+                    dx: uint256 = unsafe_div((x + 1) * ds, s)
                     dy: uint256 = unsafe_div((y + 1) * ds, s)
 
                     x -= dx
                     y -= dy
 
-                    # If withdrawal is the last one - tranfer dust to admin fees
+                    # If withdrawal is the last one - transfer dust to admin fees
                     if new_shares == 0:
                         if x > 0:
                             self.admin_fees_x += x
                         if y > 0:
-                            self.admin_fees_y += y / COLLATERAL_PRECISION
+                            self.admin_fees_y += unsafe_div(y, COLLATERAL_PRECISION)
                         x = 0
                         y = 0
 
@@ -1575,8 +545,1030 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                 total_y = unsafe_div(total_y, COLLATERAL_PRECISION)
                 log Withdraw(user, total_x, total_y)
 
-                self.rate_mul = self._rate_mul()
-                self.rate_time = block.timestamp
+                if lm.address != empty(address):
+                    lm.callback_collateral_shares(0, [])  # collateral/shares ratio is unchanged
+                    lm.callback_user_shares(user, ns[0], user_shares)
+
+                return [total_x, total_y]
+            ```
+
+    === "Example"
+        ```shell
+        >>> Controller.repay(_d_debt: uint256)
+        ```
+
+
+### `repay_extended`
+!!! description "`Controller.repay_extended(callbacker: address, callback_args: DynArray[uint256,5]):`"
+
+    Extended function to repay a loan but get a stablecoin for that from callback (to deleverage).
+
+    Emits: `UserState` and `Repay`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `callbacker` |  `address` |  Address of the callback contract |
+    | `callback_args` |  `DynArray[uint256,5]` |  Extra arguments for the callback (up to 5) such as `min_amount` |
+
+
+    ??? quote "Source code"
+
+        === "Controller.vy"
+
+            ```vyper
+            event UserState:
+                user: indexed(address)
+                collateral: uint256
+                debt: uint256
+                n1: int256
+                n2: int256
+                liquidation_discount: uint256
+
+            event Repay:
+                user: indexed(address)
+                collateral_decrease: uint256
+                loan_decrease: uint256
+
+            @external
+            @nonreentrant('lock')
+            def repay_extended(callbacker: address, callback_args: DynArray[uint256,5]):
+                """
+                @notice Repay loan but get a stablecoin for that from callback (to deleverage)
+                @param callbacker Address of the callback contract
+                @param callback_args Extra arguments for the callback (up to 5) such as min_amount etc
+                """
+                # Before callback
+                ns: int256[2] = AMM.read_user_tick_numbers(msg.sender)
+                xy: uint256[2] = AMM.withdraw(msg.sender, 10**18)
+                debt: uint256 = 0
+                rate_mul: uint256 = 0
+                debt, rate_mul = self._debt(msg.sender)
+                self.transferFrom(COLLATERAL_TOKEN, AMM.address, callbacker, xy[1])
+
+                cb: CallbackData = self.execute_callback(
+                    callbacker, CALLBACK_REPAY, msg.sender, xy[0], xy[1], debt, callback_args)
+
+                # After callback
+                total_stablecoins: uint256 = cb.stablecoins + xy[0]
+                assert total_stablecoins > 0  # dev: no coins to repay
+
+                # d_debt: uint256 = min(debt, total_stablecoins)
+
+                d_debt: uint256 = 0
+
+                # If we have more stablecoins than the debt - full repayment and closing the position
+                if total_stablecoins >= debt:
+                    d_debt = debt
+                    debt = 0
+                    self._remove_from_list(msg.sender)
+
+                    # Transfer debt to self, everything else to sender
+                    self.transferFrom(STABLECOIN, callbacker, self, cb.stablecoins)
+                    self.transferFrom(STABLECOIN, AMM.address, self, xy[0])
+                    if total_stablecoins > d_debt:
+                        self.transfer(STABLECOIN, msg.sender, unsafe_sub(total_stablecoins, d_debt))
+                    self.transferFrom(COLLATERAL_TOKEN, callbacker, msg.sender, cb.collateral)
+
+                    log UserState(msg.sender, 0, 0, 0, 0, 0)
+
+                # Else - partial repayment -> deleverage, but only if we are not underwater
+                else:
+                    size: uint256 = convert(unsafe_add(unsafe_sub(ns[1], ns[0]), 1), uint256)
+                    assert ns[0] > cb.active_band
+                    d_debt = cb.stablecoins  # cb.stablecoins <= total_stablecoins < debt
+                    debt = unsafe_sub(debt, cb.stablecoins)
+
+                    # Not in liquidation - can move bands
+                    n1: int256 = self._calculate_debt_n1(cb.collateral, debt, size)
+                    n2: int256 = n1 + unsafe_sub(ns[1], ns[0])
+                    AMM.deposit_range(msg.sender, cb.collateral, n1, n2)
+                    liquidation_discount: uint256 = self.liquidation_discount
+                    self.liquidation_discounts[msg.sender] = liquidation_discount
+
+                    self.transferFrom(COLLATERAL_TOKEN, callbacker, AMM.address, cb.collateral)
+                    # Stablecoin is all spent to repay debt -> all goes to self
+                    self.transferFrom(STABLECOIN, callbacker, self, cb.stablecoins)
+                    # We are above active band, so xy[0] is 0 anyway
+
+                    log UserState(msg.sender, cb.collateral, debt, n1, n2, liquidation_discount)
+                    xy[1] -= cb.collateral
+
+                    # No need to check _health() because it's the sender
+
+                # Common calls which we will do regardless of whether it's a full repay or not
+                log Repay(msg.sender, xy[1], d_debt)
+                self.redeemed += d_debt
+                self.loan[msg.sender] = Loan({initial_debt: debt, rate_mul: rate_mul})
+                total_debt: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul
+                self._total_debt.initial_debt = unsafe_sub(max(total_debt, d_debt), d_debt)
+                self._total_debt.rate_mul = rate_mul
+
+                self._save_rate()
+            ```
+        
+        === "AMM.vy"
+
+            ```vyper
+            event Withdraw:
+                provider: indexed(address)
+                amount_borrowed: uint256
+                amount_collateral: uint256
+
+            @external
+            @nonreentrant('lock')
+            def withdraw(user: address, frac: uint256) -> uint256[2]:
+                """
+                @notice Withdraw liquidity for the user. Only admin contract can do it
+                @param user User who owns liquidity
+                @param frac Fraction to withdraw (1e18 being 100%)
+                @return Amount of [stablecoins, collateral] withdrawn
+                """
+                assert msg.sender == self.admin
+                assert frac <= 10**18
+
+                lm: LMGauge = self.liquidity_mining_callback
+
+                ns: int256[2] = self._read_user_tick_numbers(user)
+                n: int256 = ns[0]
+                user_shares: DynArray[uint256, MAX_TICKS_UINT] = self._read_user_ticks(user, ns)
+                assert user_shares[0] > 0, "No deposits"
+
+                total_x: uint256 = 0
+                total_y: uint256 = 0
+                min_band: int256 = self.min_band
+                old_min_band: int256 = min_band
+                old_max_band: int256 = self.max_band
+                max_band: int256 = n - 1
+
+                for i in range(MAX_TICKS):
+                    x: uint256 = self.bands_x[n]
+                    y: uint256 = self.bands_y[n]
+                    ds: uint256 = unsafe_div(frac * user_shares[i], 10**18)
+                    user_shares[i] = unsafe_sub(user_shares[i], ds)  # Can ONLY zero out when frac == 10**18
+                    s: uint256 = self.total_shares[n]
+                    new_shares: uint256 = s - ds
+                    self.total_shares[n] = new_shares
+                    s += DEAD_SHARES  # after this s is guaranteed to be bigger than 0
+                    dx: uint256 = unsafe_div((x + 1) * ds, s)
+                    dy: uint256 = unsafe_div((y + 1) * ds, s)
+
+                    x -= dx
+                    y -= dy
+
+                    # If withdrawal is the last one - transfer dust to admin fees
+                    if new_shares == 0:
+                        if x > 0:
+                            self.admin_fees_x += x
+                        if y > 0:
+                            self.admin_fees_y += unsafe_div(y, COLLATERAL_PRECISION)
+                        x = 0
+                        y = 0
+
+                    if n == min_band:
+                        if x == 0:
+                            if y == 0:
+                                min_band += 1
+                    if x > 0 or y > 0:
+                        max_band = n
+                    self.bands_x[n] = x
+                    self.bands_y[n] = y
+                    total_x += dx
+                    total_y += dy
+
+                    if n == ns[1]:
+                        break
+                    else:
+                        n = unsafe_add(n, 1)
+
+                # Empty the ticks
+                if frac == 10**18:
+                    self.user_shares[user].ticks[0] = 0
+                else:
+                    self.save_user_shares(user, user_shares)
+
+                if old_min_band != min_band:
+                    self.min_band = min_band
+                if old_max_band <= ns[1]:
+                    self.max_band = max_band
+
+                total_x = unsafe_div(total_x, BORROWED_PRECISION)
+                total_y = unsafe_div(total_y, COLLATERAL_PRECISION)
+                log Withdraw(user, total_x, total_y)
+
+                if lm.address != empty(address):
+                    lm.callback_collateral_shares(0, [])  # collateral/shares ratio is unchanged
+                    lm.callback_user_shares(user, ns[0], user_shares)
+
+                return [total_x, total_y]
+            ```
+
+    === "Example"
+        ```shell
+        >>> Controller.repay_extended(callbacker: address, callback_args: DynArray[uint256,5])
+        ```
+
+
+## **Adjusting Existing Loans**
+
+### `add_collateral` 
+!!! description "`Controller.add_collateral(collateral: uint256, _for: address = msg.sender):`"
+
+    Function to add extra collateral to a position.
+
+    Emits: `UserState` and `Borrow`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `collateral` |  `uint256` |  Amount of collateral to add |
+    | `_for` |  `address` | Address to add collateral for |
+
+
+    ??? quote "Source code"
+
+        === "Controller.vy"
+
+            ```vyper
+            event UserState:
+                user: indexed(address)
+                collateral: uint256
+                debt: uint256
+                n1: int256
+                n2: int256
+                liquidation_discount: uint256
+
+            event Borrow:
+                user: indexed(address)
+                collateral_increase: uint256
+                loan_increase: uint256
+
+            @external
+            @nonreentrant('lock')
+            def add_collateral(collateral: uint256, _for: address = msg.sender):
+                """
+                @notice Add extra collateral to avoid bad liqidations
+                @param collateral Amount of collateral to add
+                @param _for Address to add collateral for
+                """
+                if collateral == 0:
+                    return
+                self._add_collateral_borrow(collateral, 0, _for, False)
+                self.transferFrom(COLLATERAL_TOKEN, msg.sender, AMM.address, collateral)
+
+            @internal
+            def _add_collateral_borrow(d_collateral: uint256, d_debt: uint256, _for: address, remove_collateral: bool):
+                """
+                @notice Internal method to borrow and add or remove collateral
+                @param d_collateral Amount of collateral to add
+                @param d_debt Amount of debt increase
+                @param _for Address to transfer tokens to
+                @param remove_collateral Remove collateral instead of adding
+                """
+                debt: uint256 = 0
+                rate_mul: uint256 = 0
+                debt, rate_mul = self._debt(_for)
+                assert debt > 0, "Loan doesn't exist"
+                debt += d_debt
+                ns: int256[2] = AMM.read_user_tick_numbers(_for)
+                size: uint256 = convert(unsafe_add(unsafe_sub(ns[1], ns[0]), 1), uint256)
+
+                xy: uint256[2] = AMM.withdraw(_for, 10**18)
+                assert xy[0] == 0, "Already in underwater mode"
+                if remove_collateral:
+                    xy[1] -= d_collateral
+                else:
+                    xy[1] += d_collateral
+                n1: int256 = self._calculate_debt_n1(xy[1], debt, size)
+                n2: int256 = n1 + unsafe_sub(ns[1], ns[0])
+
+                AMM.deposit_range(_for, xy[1], n1, n2)
+                self.loan[_for] = Loan({initial_debt: debt, rate_mul: rate_mul})
+
+                liquidation_discount: uint256 = 0
+                if _for == msg.sender:
+                    liquidation_discount = self.liquidation_discount
+                    self.liquidation_discounts[_for] = liquidation_discount
+                else:
+                    liquidation_discount = self.liquidation_discounts[_for]
+
+                if d_debt != 0:
+                    self._total_debt.initial_debt = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul + d_debt
+                    self._total_debt.rate_mul = rate_mul
+
+                if remove_collateral:
+                    log RemoveCollateral(_for, d_collateral)
+                else:
+                    log Borrow(_for, d_collateral, d_debt)
+
+                self._save_rate()
+
+                log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
+            ```
+        
+        === "AMM.vy"
+
+            ```vyper
+            event Deposit:
+                provider: indexed(address)
+                amount: uint256
+                n1: int256
+                n2: int256
+
+            @external
+            @nonreentrant('lock')
+            def deposit_range(user: address, amount: uint256, n1: int256, n2: int256):
+                """
+                @notice Deposit for a user in a range of bands. Only admin contract (Controller) can do it
+                @param user User address
+                @param amount Amount of collateral to deposit
+                @param n1 Lower band in the deposit range
+                @param n2 Upper band in the deposit range
+                """
+                assert msg.sender == self.admin
+
+                user_shares: DynArray[uint256, MAX_TICKS_UINT] = []
+                collateral_shares: DynArray[uint256, MAX_TICKS_UINT] = []
+
+                n0: int256 = self.active_band
+
+                # We assume that n1,n2 area already sorted (and they are in Controller)
+                assert n2 < 2**127
+                assert n1 > -2**127
+
+                n_bands: uint256 = unsafe_add(convert(unsafe_sub(n2, n1), uint256), 1)
+                assert n_bands <= MAX_TICKS_UINT
+
+                y_per_band: uint256 = unsafe_div(amount * COLLATERAL_PRECISION, n_bands)
+                assert y_per_band > 100, "Amount too low"
+
+                assert self.user_shares[user].ticks[0] == 0  # dev: User must have no liquidity
+                self.user_shares[user].ns = unsafe_add(n1, unsafe_mul(n2, 2**128))
+
+                lm: LMGauge = self.liquidity_mining_callback
+
+                # Autoskip bands if we can
+                for i in range(MAX_SKIP_TICKS + 1):
+                    if n1 > n0:
+                        if i != 0:
+                            self.active_band = n0
+                        break
+                    assert self.bands_x[n0] == 0 and i < MAX_SKIP_TICKS, "Deposit below current band"
+                    n0 -= 1
+
+                for i in range(MAX_TICKS):
+                    band: int256 = unsafe_add(n1, i)
+                    if band > n2:
+                        break
+
+                    assert self.bands_x[band] == 0, "Band not empty"
+                    y: uint256 = y_per_band
+                    if i == 0:
+                        y = amount * COLLATERAL_PRECISION - y * unsafe_sub(n_bands, 1)
+
+                    total_y: uint256 = self.bands_y[band]
+
+                    # Total / user share
+                    s: uint256 = self.total_shares[band]
+                    ds: uint256 = unsafe_div((s + DEAD_SHARES) * y, total_y + 1)
+                    assert ds > 0, "Amount too low"
+                    user_shares.append(ds)
+                    s += ds
+                    assert s <= 2**128 - 1
+                    self.total_shares[band] = s
+
+                    total_y += y
+                    self.bands_y[band] = total_y
+
+                    if lm.address != empty(address):
+                        # If initial s == 0 - s becomes equal to y which is > 100 => nonzero
+                        collateral_shares.append(unsafe_div(total_y * 10**18, s))
+
+                self.min_band = min(self.min_band, n1)
+                self.max_band = max(self.max_band, n2)
+
+                self.save_user_shares(user, user_shares)
+
+                log Deposit(user, amount, n1, n2)
+
+                if lm.address != empty(address):
+                    lm.callback_collateral_shares(n1, collateral_shares)
+                    lm.callback_user_shares(user, n1, user_shares)
+            ```
+
+    === "Example"
+        ```shell
+        >>> Controller.add_collateral(collateral: uint256)
+        ```
+
+
+### `remove_collateral`
+!!! description "`Controller.remove_collateral(collateral: uint256, use_eth: bool = True):`"
+
+    Function to remove collateral from a position.
+
+    Emits: `UserState` and `RemoveCollateral`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `collateral` |  `uint256` |  Amount of collateral to remove |
+
+
+    ??? quote "Source code"
+
+        === "Controller.vy"
+
+            ```vyper
+            event UserState:
+                user: indexed(address)
+                collateral: uint256
+                debt: uint256
+                n1: int256
+                n2: int256
+                liquidation_discount: uint256
+
+            event RemoveCollateral:
+                user: indexed(address)
+                collateral_decrease: uint256
+
+            @external
+            @nonreentrant('lock')
+            def remove_collateral(collateral: uint256, use_eth: bool = True):
+                """
+                @notice Remove some collateral without repaying the debt
+                @param collateral Amount of collateral to remove
+                @param use_eth Use wrapping/unwrapping if collateral is ETH
+                """
+                if collateral == 0:
+                    return
+                self._add_collateral_borrow(collateral, 0, msg.sender, True)
+                self.transferFrom(COLLATERAL_TOKEN, AMM.address, msg.sender, collateral)
+
+            @internal
+            def _add_collateral_borrow(d_collateral: uint256, d_debt: uint256, _for: address, remove_collateral: bool):
+                """
+                @notice Internal method to borrow and add or remove collateral
+                @param d_collateral Amount of collateral to add
+                @param d_debt Amount of debt increase
+                @param _for Address to transfer tokens to
+                @param remove_collateral Remove collateral instead of adding
+                """
+                debt: uint256 = 0
+                rate_mul: uint256 = 0
+                debt, rate_mul = self._debt(_for)
+                assert debt > 0, "Loan doesn't exist"
+                debt += d_debt
+                ns: int256[2] = AMM.read_user_tick_numbers(_for)
+                size: uint256 = convert(unsafe_add(unsafe_sub(ns[1], ns[0]), 1), uint256)
+
+                xy: uint256[2] = AMM.withdraw(_for, 10**18)
+                assert xy[0] == 0, "Already in underwater mode"
+                if remove_collateral:
+                    xy[1] -= d_collateral
+                else:
+                    xy[1] += d_collateral
+                n1: int256 = self._calculate_debt_n1(xy[1], debt, size)
+                n2: int256 = n1 + unsafe_sub(ns[1], ns[0])
+
+                AMM.deposit_range(_for, xy[1], n1, n2)
+                self.loan[_for] = Loan({initial_debt: debt, rate_mul: rate_mul})
+
+                liquidation_discount: uint256 = 0
+                if _for == msg.sender:
+                    liquidation_discount = self.liquidation_discount
+                    self.liquidation_discounts[_for] = liquidation_discount
+                else:
+                    liquidation_discount = self.liquidation_discounts[_for]
+
+                if d_debt != 0:
+                    self._total_debt.initial_debt = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul + d_debt
+                    self._total_debt.rate_mul = rate_mul
+
+                if remove_collateral:
+                    log RemoveCollateral(_for, d_collateral)
+                else:
+                    log Borrow(_for, d_collateral, d_debt)
+
+                self._save_rate()
+
+                log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
+            ```
+        
+        === "AMM.vy"
+
+            ```vyper
+            event Withdraw:
+                provider: indexed(address)
+                amount_borrowed: uint256
+                amount_collateral: uint256
+
+            @external
+            @nonreentrant('lock')
+            def withdraw(user: address, frac: uint256) -> uint256[2]:
+                """
+                @notice Withdraw liquidity for the user. Only admin contract can do it
+                @param user User who owns liquidity
+                @param frac Fraction to withdraw (1e18 being 100%)
+                @return Amount of [stablecoins, collateral] withdrawn
+                """
+                assert msg.sender == self.admin
+                assert frac <= 10**18
+
+                lm: LMGauge = self.liquidity_mining_callback
+
+                ns: int256[2] = self._read_user_tick_numbers(user)
+                n: int256 = ns[0]
+                user_shares: DynArray[uint256, MAX_TICKS_UINT] = self._read_user_ticks(user, ns)
+                assert user_shares[0] > 0, "No deposits"
+
+                total_x: uint256 = 0
+                total_y: uint256 = 0
+                min_band: int256 = self.min_band
+                old_min_band: int256 = min_band
+                old_max_band: int256 = self.max_band
+                max_band: int256 = n - 1
+
+                for i in range(MAX_TICKS):
+                    x: uint256 = self.bands_x[n]
+                    y: uint256 = self.bands_y[n]
+                    ds: uint256 = unsafe_div(frac * user_shares[i], 10**18)
+                    user_shares[i] = unsafe_sub(user_shares[i], ds)  # Can ONLY zero out when frac == 10**18
+                    s: uint256 = self.total_shares[n]
+                    new_shares: uint256 = s - ds
+                    self.total_shares[n] = new_shares
+                    s += DEAD_SHARES  # after this s is guaranteed to be bigger than 0
+                    dx: uint256 = unsafe_div((x + 1) * ds, s)
+                    dy: uint256 = unsafe_div((y + 1) * ds, s)
+
+                    x -= dx
+                    y -= dy
+
+                    # If withdrawal is the last one - transfer dust to admin fees
+                    if new_shares == 0:
+                        if x > 0:
+                            self.admin_fees_x += x
+                        if y > 0:
+                            self.admin_fees_y += unsafe_div(y, COLLATERAL_PRECISION)
+                        x = 0
+                        y = 0
+
+                    if n == min_band:
+                        if x == 0:
+                            if y == 0:
+                                min_band += 1
+                    if x > 0 or y > 0:
+                        max_band = n
+                    self.bands_x[n] = x
+                    self.bands_y[n] = y
+                    total_x += dx
+                    total_y += dy
+
+                    if n == ns[1]:
+                        break
+                    else:
+                        n = unsafe_add(n, 1)
+
+                # Empty the ticks
+                if frac == 10**18:
+                    self.user_shares[user].ticks[0] = 0
+                else:
+                    self.save_user_shares(user, user_shares)
+
+                if old_min_band != min_band:
+                    self.min_band = min_band
+                if old_max_band <= ns[1]:
+                    self.max_band = max_band
+
+                total_x = unsafe_div(total_x, BORROWED_PRECISION)
+                total_y = unsafe_div(total_y, COLLATERAL_PRECISION)
+                log Withdraw(user, total_x, total_y)
+
+                if lm.address != empty(address):
+                    lm.callback_collateral_shares(0, [])  # collateral/shares ratio is unchanged
+                    lm.callback_user_shares(user, ns[0], user_shares)
+
+                return [total_x, total_y]
+            ```
+
+    === "Example"
+        ```shell
+        >>> Controller.remove_collateral(collateral: uint256)
+        ```
+
+
+### `borrow_more`
+!!! description "`Controller.borrow_more(collateral: uint256, debt: uint256):`"
+
+    Function to borrow more stablecoins while adding more collateral (not necessary).
+
+    Emits: `UserState` and `Borrow`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `collateral` |  `uint256` |  Amount of collateral to add |
+    | `debt` |  `uint256` |  Amount of debt to take |
+
+
+    ??? quote "Source code"
+
+        === "Controller.vy"
+
+            ```vyper
+            event UserState:
+                user: indexed(address)
+                collateral: uint256
+                debt: uint256
+                n1: int256
+                n2: int256
+                liquidation_discount: uint256
+
+            event Borrow:
+                user: indexed(address)
+                collateral_increase: uint256
+                loan_increase: uint256
+
+            @external
+            @nonreentrant('lock')
+            def borrow_more(collateral: uint256, debt: uint256):
+                """
+                @notice Borrow more stablecoins while adding more collateral (not necessary)
+                @param collateral Amount of collateral to add
+                @param debt Amount of stablecoin debt to take
+                """
+                if debt == 0:
+                    return
+                self._add_collateral_borrow(collateral, debt, msg.sender, False)
+                self.minted += debt
+                if collateral != 0:
+                    self.transferFrom(COLLATERAL_TOKEN, msg.sender, AMM.address, collateral)
+                self.transfer(STABLECOIN, msg.sender, debt)
+
+            @internal
+            def _add_collateral_borrow(d_collateral: uint256, d_debt: uint256, _for: address, remove_collateral: bool):
+                """
+                @notice Internal method to borrow and add or remove collateral
+                @param d_collateral Amount of collateral to add
+                @param d_debt Amount of debt increase
+                @param _for Address to transfer tokens to
+                @param remove_collateral Remove collateral instead of adding
+                """
+                debt: uint256 = 0
+                rate_mul: uint256 = 0
+                debt, rate_mul = self._debt(_for)
+                assert debt > 0, "Loan doesn't exist"
+                debt += d_debt
+                ns: int256[2] = AMM.read_user_tick_numbers(_for)
+                size: uint256 = convert(unsafe_add(unsafe_sub(ns[1], ns[0]), 1), uint256)
+
+                xy: uint256[2] = AMM.withdraw(_for, 10**18)
+                assert xy[0] == 0, "Already in underwater mode"
+                if remove_collateral:
+                    xy[1] -= d_collateral
+                else:
+                    xy[1] += d_collateral
+                n1: int256 = self._calculate_debt_n1(xy[1], debt, size)
+                n2: int256 = n1 + unsafe_sub(ns[1], ns[0])
+
+                AMM.deposit_range(_for, xy[1], n1, n2)
+                self.loan[_for] = Loan({initial_debt: debt, rate_mul: rate_mul})
+
+                liquidation_discount: uint256 = 0
+                if _for == msg.sender:
+                    liquidation_discount = self.liquidation_discount
+                    self.liquidation_discounts[_for] = liquidation_discount
+                else:
+                    liquidation_discount = self.liquidation_discounts[_for]
+
+                if d_debt != 0:
+                    self._total_debt.initial_debt = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul + d_debt
+                    self._total_debt.rate_mul = rate_mul
+
+                if remove_collateral:
+                    log RemoveCollateral(_for, d_collateral)
+                else:
+                    log Borrow(_for, d_collateral, d_debt)
+
+                self._save_rate()
+
+                log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
+            ```
+        
+        === "AMM.vy"
+
+            ```vyper
+            event Deposit:
+                provider: indexed(address)
+                amount: uint256
+                n1: int256
+                n2: int256
+
+            @external
+            @nonreentrant('lock')
+            def deposit_range(user: address, amount: uint256, n1: int256, n2: int256):
+                """
+                @notice Deposit for a user in a range of bands. Only admin contract (Controller) can do it
+                @param user User address
+                @param amount Amount of collateral to deposit
+                @param n1 Lower band in the deposit range
+                @param n2 Upper band in the deposit range
+                """
+                assert msg.sender == self.admin
+
+                user_shares: DynArray[uint256, MAX_TICKS_UINT] = []
+                collateral_shares: DynArray[uint256, MAX_TICKS_UINT] = []
+
+                n0: int256 = self.active_band
+
+                # We assume that n1,n2 area already sorted (and they are in Controller)
+                assert n2 < 2**127
+                assert n1 > -2**127
+
+                n_bands: uint256 = unsafe_add(convert(unsafe_sub(n2, n1), uint256), 1)
+                assert n_bands <= MAX_TICKS_UINT
+
+                y_per_band: uint256 = unsafe_div(amount * COLLATERAL_PRECISION, n_bands)
+                assert y_per_band > 100, "Amount too low"
+
+                assert self.user_shares[user].ticks[0] == 0  # dev: User must have no liquidity
+                self.user_shares[user].ns = unsafe_add(n1, unsafe_mul(n2, 2**128))
+
+                lm: LMGauge = self.liquidity_mining_callback
+
+                # Autoskip bands if we can
+                for i in range(MAX_SKIP_TICKS + 1):
+                    if n1 > n0:
+                        if i != 0:
+                            self.active_band = n0
+                        break
+                    assert self.bands_x[n0] == 0 and i < MAX_SKIP_TICKS, "Deposit below current band"
+                    n0 -= 1
+
+                for i in range(MAX_TICKS):
+                    band: int256 = unsafe_add(n1, i)
+                    if band > n2:
+                        break
+
+                    assert self.bands_x[band] == 0, "Band not empty"
+                    y: uint256 = y_per_band
+                    if i == 0:
+                        y = amount * COLLATERAL_PRECISION - y * unsafe_sub(n_bands, 1)
+
+                    total_y: uint256 = self.bands_y[band]
+
+                    # Total / user share
+                    s: uint256 = self.total_shares[band]
+                    ds: uint256 = unsafe_div((s + DEAD_SHARES) * y, total_y + 1)
+                    assert ds > 0, "Amount too low"
+                    user_shares.append(ds)
+                    s += ds
+                    assert s <= 2**128 - 1
+                    self.total_shares[band] = s
+
+                    total_y += y
+                    self.bands_y[band] = total_y
+
+                    if lm.address != empty(address):
+                        # If initial s == 0 - s becomes equal to y which is > 100 => nonzero
+                        collateral_shares.append(unsafe_div(total_y * 10**18, s))
+
+                self.min_band = min(self.min_band, n1)
+                self.max_band = max(self.max_band, n2)
+
+                self.save_user_shares(user, user_shares)
+
+                log Deposit(user, amount, n1, n2)
+
+                if lm.address != empty(address):
+                    lm.callback_collateral_shares(n1, collateral_shares)
+                    lm.callback_user_shares(user, n1, user_shares)
+            ```
+
+    === "Example"
+        ```shell
+        >>> Controller.borrow_more(collateral: uint256, debt: uint256)
+        ```
+
+
+### `liquidate`
+!!! description "`Controller.liquidate(user: address, min_x: uint256, use_eth: bool = True):`"
+
+    Function to perform a bad liquidation (or self-liquidation) of `user` if `health` is not good.
+
+    Emits: `UserState`, `Repay` and `Liquidate` 
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `user` |  `address` |  Address to be liquidated |
+    | `min_x` |  `uint256` |  Minimal amount of stablecoin to receive (to avoid liquidators being sandwiched) |
+    | `use_eth` |  `bool` | Use wrapping/unwrapping if collateral is ETH  |
+
+
+    ??? quote "Source code"
+
+        === "Controller.vy"
+
+            ```vyper
+            event UserState:
+                user: indexed(address)
+                collateral: uint256
+                debt: uint256
+                n1: int256
+                n2: int256
+                liquidation_discount: uint256
+
+            event Repay:
+                user: indexed(address)
+                collateral_decrease: uint256
+                loan_decrease: uint256
+
+            event Liquidate:
+                liquidator: indexed(address)
+                user: indexed(address)
+                collateral_received: uint256
+                stablecoin_received: uint256
+                debt: uint256
+
+            @external
+            @nonreentrant('lock')
+            def liquidate(user: address, min_x: uint256, use_eth: bool = True):
+                """
+                @notice Peform a bad liquidation (or self-liquidation) of user if health is not good
+                @param min_x Minimal amount of stablecoin to receive (to avoid liquidators being sandwiched)
+                @param use_eth Use wrapping/unwrapping if collateral is ETH
+                """
+                discount: uint256 = 0
+                if user != msg.sender:
+                    discount = self.liquidation_discounts[user]
+                self._liquidate(user, min_x, discount, 10**18, use_eth, empty(address), [])
+
+            @internal
+            def _liquidate(user: address, min_x: uint256, health_limit: uint256, frac: uint256, use_eth: bool,
+                        callbacker: address, callback_args: DynArray[uint256,5]):
+                """
+                @notice Perform a bad liquidation of user if the health is too bad
+                @param user Address of the user
+                @param min_x Minimal amount of stablecoin withdrawn (to avoid liquidators being sandwiched)
+                @param health_limit Minimal health to liquidate at
+                @param frac Fraction to liquidate; 100% = 10**18
+                @param use_eth Use wrapping/unwrapping if collateral is ETH
+                @param callbacker Address of the callback contract
+                @param callback_args Extra arguments for the callback (up to 5) such as min_amount etc
+                """
+                debt: uint256 = 0
+                rate_mul: uint256 = 0
+                debt, rate_mul = self._debt(user)
+
+                if health_limit != 0:
+                    assert self._health(user, debt, True, health_limit) < 0, "Not enough rekt"
+
+                final_debt: uint256 = debt
+                debt = unsafe_div(debt * frac, 10**18)
+                assert debt > 0
+                final_debt = unsafe_sub(final_debt, debt)
+
+                # Withdraw sender's stablecoin and collateral to our contract
+                # When frac is set - we withdraw a bit less for the same debt fraction
+                # f_remove = ((1 + h/2) / (1 + h) * (1 - frac) + frac) * frac
+                # where h is health limit.
+                # This is less than full h discount but more than no discount
+                xy: uint256[2] = AMM.withdraw(user, self._get_f_remove(frac, health_limit))  # [stable, collateral]
+
+                # x increase in same block -> price up -> good
+                # x decrease in same block -> price down -> bad
+                assert xy[0] >= min_x, "Slippage"
+
+                min_amm_burn: uint256 = min(xy[0], debt)
+                self.transferFrom(STABLECOIN, AMM.address, self, min_amm_burn)
+
+                if debt > xy[0]:
+                    to_repay: uint256 = unsafe_sub(debt, xy[0])
+
+                    if callbacker == empty(address):
+                        # Withdraw collateral if no callback is present
+                        self.transferFrom(COLLATERAL_TOKEN, AMM.address, msg.sender, xy[1])
+                        # Request what's left from user
+                        self.transferFrom(STABLECOIN, msg.sender, self, to_repay)
+
+                    else:
+                        # Move collateral to callbacker, call it and remove everything from it back in
+                        self.transferFrom(COLLATERAL_TOKEN, AMM.address, callbacker, xy[1])
+                        # Callback
+                        cb: CallbackData = self.execute_callback(
+                            callbacker, CALLBACK_LIQUIDATE, user, xy[0], xy[1], debt, callback_args)
+                        assert cb.stablecoins >= to_repay, "not enough proceeds"
+                        if cb.stablecoins > to_repay:
+                            self.transferFrom(STABLECOIN, callbacker, msg.sender, unsafe_sub(cb.stablecoins, to_repay))
+                        self.transferFrom(STABLECOIN, callbacker, self, to_repay)
+                        self.transferFrom(COLLATERAL_TOKEN, callbacker, msg.sender, cb.collateral)
+
+                else:
+                    # Withdraw collateral
+                    self.transferFrom(COLLATERAL_TOKEN, AMM.address, msg.sender, xy[1])
+                    # Return what's left to user
+                    if xy[0] > debt:
+                        self.transferFrom(STABLECOIN, AMM.address, msg.sender, unsafe_sub(xy[0], debt))
+
+                self.redeemed += debt
+                self.loan[user] = Loan({initial_debt: final_debt, rate_mul: rate_mul})
+                log Repay(user, xy[1], debt)
+                log Liquidate(msg.sender, user, xy[1], xy[0], debt)
+                if final_debt == 0:
+                    log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removeal b/c we have not enough info
+                    self._remove_from_list(user)
+
+                d: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul
+                self._total_debt.initial_debt = unsafe_sub(max(d, debt), debt)
+                self._total_debt.rate_mul = rate_mul
+
+                self._save_rate()
+            ```
+        
+        === "AMM.vy"
+
+            ```vyper
+            event Withdraw:
+                provider: indexed(address)
+                amount_borrowed: uint256
+                amount_collateral: uint256
+
+            @external
+            @nonreentrant('lock')
+            def withdraw(user: address, frac: uint256) -> uint256[2]:
+                """
+                @notice Withdraw liquidity for the user. Only admin contract can do it
+                @param user User who owns liquidity
+                @param frac Fraction to withdraw (1e18 being 100%)
+                @return Amount of [stablecoins, collateral] withdrawn
+                """
+                assert msg.sender == self.admin
+                assert frac <= 10**18
+
+                lm: LMGauge = self.liquidity_mining_callback
+
+                ns: int256[2] = self._read_user_tick_numbers(user)
+                n: int256 = ns[0]
+                user_shares: DynArray[uint256, MAX_TICKS_UINT] = self._read_user_ticks(user, ns)
+                assert user_shares[0] > 0, "No deposits"
+
+                total_x: uint256 = 0
+                total_y: uint256 = 0
+                min_band: int256 = self.min_band
+                old_min_band: int256 = min_band
+                old_max_band: int256 = self.max_band
+                max_band: int256 = n - 1
+
+                for i in range(MAX_TICKS):
+                    x: uint256 = self.bands_x[n]
+                    y: uint256 = self.bands_y[n]
+                    ds: uint256 = unsafe_div(frac * user_shares[i], 10**18)
+                    user_shares[i] = unsafe_sub(user_shares[i], ds)  # Can ONLY zero out when frac == 10**18
+                    s: uint256 = self.total_shares[n]
+                    new_shares: uint256 = s - ds
+                    self.total_shares[n] = new_shares
+                    s += DEAD_SHARES  # after this s is guaranteed to be bigger than 0
+                    dx: uint256 = unsafe_div((x + 1) * ds, s)
+                    dy: uint256 = unsafe_div((y + 1) * ds, s)
+
+                    x -= dx
+                    y -= dy
+
+                    # If withdrawal is the last one - transfer dust to admin fees
+                    if new_shares == 0:
+                        if x > 0:
+                            self.admin_fees_x += x
+                        if y > 0:
+                            self.admin_fees_y += unsafe_div(y, COLLATERAL_PRECISION)
+                        x = 0
+                        y = 0
+
+                    if n == min_band:
+                        if x == 0:
+                            if y == 0:
+                                min_band += 1
+                    if x > 0 or y > 0:
+                        max_band = n
+                    self.bands_x[n] = x
+                    self.bands_y[n] = y
+                    total_x += dx
+                    total_y += dy
+
+                    if n == ns[1]:
+                        break
+                    else:
+                        n = unsafe_add(n, 1)
+
+                # Empty the ticks
+                if frac == 10**18:
+                    self.user_shares[user].ticks[0] = 0
+                else:
+                    self.save_user_shares(user, user_shares)
+
+                if old_min_band != min_band:
+                    self.min_band = min_band
+                if old_max_band <= ns[1]:
+                    self.max_band = max_band
+
+                total_x = unsafe_div(total_x, BORROWED_PRECISION)
+                total_y = unsafe_div(total_y, COLLATERAL_PRECISION)
+                log Withdraw(user, total_x, total_y)
 
                 if lm.address != empty(address):
                     lm.callback_collateral_shares(0, [])  # collateral/shares ratio is unchanged
@@ -1612,7 +1604,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "Controller.vy"
 
-            ```vyper hl_lines="1 9 14 22 52"
+            ```vyper
             event UserState:
                 user: indexed(address)
                 collateral: uint256
@@ -1632,6 +1624,23 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                 collateral_received: uint256
                 stablecoin_received: uint256
                 debt: uint256
+
+            @external
+            @nonreentrant('lock')
+            def liquidate_extended(user: address, min_x: uint256, frac: uint256, use_eth: bool,
+                                callbacker: address, callback_args: DynArray[uint256,5]):
+                """
+                @notice Peform a bad liquidation (or self-liquidation) of user if health is not good
+                @param min_x Minimal amount of stablecoin to receive (to avoid liquidators being sandwiched)
+                @param frac Fraction to liquidate; 100% = 10**18
+                @param use_eth Use wrapping/unwrapping if collateral is ETH
+                @param callbacker Address of the callback contract
+                @param callback_args Extra arguments for the callback (up to 5) such as min_amount etc
+                """
+                discount: uint256 = 0
+                if user != msg.sender:
+                    discount = self.liquidation_discounts[user]
+                self._liquidate(user, min_x, discount, min(frac, 10**18), use_eth, callbacker, callback_args)
 
             @internal
             def _liquidate(user: address, min_x: uint256, health_limit: uint256, frac: uint256, use_eth: bool,
@@ -1663,46 +1672,42 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                 # f_remove = ((1 + h/2) / (1 + h) * (1 - frac) + frac) * frac
                 # where h is health limit.
                 # This is less than full h discount but more than no discount
-                f_remove: uint256 = self._get_f_remove(frac, health_limit)
-                xy: uint256[2] = AMM.withdraw(user, f_remove)  # [stable, collateral]
+                xy: uint256[2] = AMM.withdraw(user, self._get_f_remove(frac, health_limit))  # [stable, collateral]
 
                 # x increase in same block -> price up -> good
                 # x decrease in same block -> price down -> bad
                 assert xy[0] >= min_x, "Slippage"
 
                 min_amm_burn: uint256 = min(xy[0], debt)
-                if min_amm_burn != 0:
-                    STABLECOIN.transferFrom(AMM.address, self, min_amm_burn)
+                self.transferFrom(STABLECOIN, AMM.address, self, min_amm_burn)
 
                 if debt > xy[0]:
                     to_repay: uint256 = unsafe_sub(debt, xy[0])
 
                     if callbacker == empty(address):
                         # Withdraw collateral if no callback is present
-                        self._withdraw_collateral(msg.sender, xy[1], use_eth)
+                        self.transferFrom(COLLATERAL_TOKEN, AMM.address, msg.sender, xy[1])
                         # Request what's left from user
-                        STABLECOIN.transferFrom(msg.sender, self, to_repay)
+                        self.transferFrom(STABLECOIN, msg.sender, self, to_repay)
 
                     else:
                         # Move collateral to callbacker, call it and remove everything from it back in
-                        if xy[1] > 0:
-                            assert COLLATERAL_TOKEN.transferFrom(AMM.address, callbacker, xy[1], default_return_value=True)
+                        self.transferFrom(COLLATERAL_TOKEN, AMM.address, callbacker, xy[1])
                         # Callback
                         cb: CallbackData = self.execute_callback(
                             callbacker, CALLBACK_LIQUIDATE, user, xy[0], xy[1], debt, callback_args)
                         assert cb.stablecoins >= to_repay, "not enough proceeds"
                         if cb.stablecoins > to_repay:
-                            STABLECOIN.transferFrom(callbacker, msg.sender, unsafe_sub(cb.stablecoins, to_repay))
-                        STABLECOIN.transferFrom(callbacker, self, to_repay)
-                        if cb.collateral > 0:
-                            assert COLLATERAL_TOKEN.transferFrom(callbacker, msg.sender, cb.collateral)
+                            self.transferFrom(STABLECOIN, callbacker, msg.sender, unsafe_sub(cb.stablecoins, to_repay))
+                        self.transferFrom(STABLECOIN, callbacker, self, to_repay)
+                        self.transferFrom(COLLATERAL_TOKEN, callbacker, msg.sender, cb.collateral)
 
                 else:
                     # Withdraw collateral
-                    self._withdraw_collateral(msg.sender, xy[1], use_eth)
+                    self.transferFrom(COLLATERAL_TOKEN, AMM.address, msg.sender, xy[1])
                     # Return what's left to user
                     if xy[0] > debt:
-                        STABLECOIN.transferFrom(AMM.address, msg.sender, unsafe_sub(xy[0], debt))
+                        self.transferFrom(STABLECOIN, AMM.address, msg.sender, unsafe_sub(xy[0], debt))
 
                 self.redeemed += debt
                 self.loan[user] = Loan({initial_debt: final_debt, rate_mul: rate_mul})
@@ -1716,27 +1721,12 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                 self._total_debt.initial_debt = unsafe_sub(max(d, debt), debt)
                 self._total_debt.rate_mul = rate_mul
 
-            @external
-            @nonreentrant('lock')
-            def liquidate_extended(user: address, min_x: uint256, frac: uint256, use_eth: bool,
-                                callbacker: address, callback_args: DynArray[uint256,5]):
-                """
-                @notice Peform a bad liquidation (or self-liquidation) of user if health is not good
-                @param min_x Minimal amount of stablecoin to receive (to avoid liquidators being sandwiched)
-                @param frac Fraction to liquidate; 100% = 10**18
-                @param use_eth Use wrapping/unwrapping if collateral is ETH
-                @param callbacker Address of the callback contract
-                @param callback_args Extra arguments for the callback (up to 5) such as min_amount etc
-                """
-                discount: uint256 = 0
-                if user != msg.sender:
-                    discount = self.liquidation_discounts[user]
-                self._liquidate(user, min_x, discount, min(frac, 10**18), use_eth, callbacker, callback_args)
+                self._save_rate()
             ```
         
         === "AMM.vy"
 
-            ```vyper hl_lines="1 8"
+            ```vyper
             event Withdraw:
                 provider: indexed(address)
                 amount_borrowed: uint256
@@ -1746,7 +1736,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
             @nonreentrant('lock')
             def withdraw(user: address, frac: uint256) -> uint256[2]:
                 """
-                @notice Withdraw all liquidity for the user. Only admin contract can do it
+                @notice Withdraw liquidity for the user. Only admin contract can do it
                 @param user User who owns liquidity
                 @param frac Fraction to withdraw (1e18 being 100%)
                 @return Amount of [stablecoins, collateral] withdrawn
@@ -1765,30 +1755,30 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                 total_y: uint256 = 0
                 min_band: int256 = self.min_band
                 old_min_band: int256 = min_band
-                max_band: int256 = self.max_band
-                old_max_band: int256 = max_band
+                old_max_band: int256 = self.max_band
+                max_band: int256 = n - 1
 
                 for i in range(MAX_TICKS):
                     x: uint256 = self.bands_x[n]
                     y: uint256 = self.bands_y[n]
-                    ds: uint256 = unsafe_div(frac * user_shares[i], 10**18)  # Can ONLY zero out when frac == 10**18
-                    user_shares[i] = unsafe_sub(user_shares[i], ds)
+                    ds: uint256 = unsafe_div(frac * user_shares[i], 10**18)
+                    user_shares[i] = unsafe_sub(user_shares[i], ds)  # Can ONLY zero out when frac == 10**18
                     s: uint256 = self.total_shares[n]
                     new_shares: uint256 = s - ds
                     self.total_shares[n] = new_shares
-                    s += DEAD_SHARES
-                    dx: uint256 = (x + 1) * ds / s
+                    s += DEAD_SHARES  # after this s is guaranteed to be bigger than 0
+                    dx: uint256 = unsafe_div((x + 1) * ds, s)
                     dy: uint256 = unsafe_div((y + 1) * ds, s)
 
                     x -= dx
                     y -= dy
 
-                    # If withdrawal is the last one - tranfer dust to admin fees
+                    # If withdrawal is the last one - transfer dust to admin fees
                     if new_shares == 0:
                         if x > 0:
                             self.admin_fees_x += x
                         if y > 0:
-                            self.admin_fees_y += y / COLLATERAL_PRECISION
+                            self.admin_fees_y += unsafe_div(y, COLLATERAL_PRECISION)
                         x = 0
                         y = 0
 
@@ -1823,9 +1813,6 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                 total_y = unsafe_div(total_y, COLLATERAL_PRECISION)
                 log Withdraw(user, total_x, total_y)
 
-                self.rate_mul = self._rate_mul()
-                self.rate_time = block.timestamp
-
                 if lm.address != empty(address):
                     lm.callback_collateral_shares(0, [])  # collateral/shares ratio is unchanged
                     lm.callback_user_shares(user, ns[0], user_shares)
@@ -1855,25 +1842,12 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 7 23"
+        ```vyper
         struct Loan:
             initial_debt: uint256
             rate_mul: uint256
 
-        @internal
-        @view
-        def _debt_ro(user: address) -> uint256:
-            """
-            @notice Get the value of debt without changing the state
-            @param user User address
-            @return Value of debt
-            """
-            rate_mul: uint256 = AMM.get_rate_mul()
-            loan: Loan = self.loan[user]
-            if loan.initial_debt == 0:
-                return 0
-            else:
-                return loan.initial_debt * rate_mul / loan.rate_mul
+        _total_debt: Loan
 
         @external
         @view
@@ -1884,8 +1858,22 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
             @param user User address
             @return Value of debt
             """
-            return self._debt_ro(user)
+            return self._debt(user)[0]
 
+        @internal
+        @view
+        def _debt(user: address) -> (uint256, uint256):
+            """
+            @notice Get the value of debt and rate_mul and update the rate_mul counter
+            @param user User address
+            @return (debt, rate_mul)
+            """
+            rate_mul: uint256 = AMM.get_rate_mul()
+            loan: Loan = self.loan[user]
+            if loan.initial_debt == 0:
+                return (0, rate_mul)
+            else:
+                return (loan.initial_debt * rate_mul / loan.rate_mul, rate_mul)
         ```
 
     === "Example"
@@ -1904,7 +1892,9 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
+        _total_debt: Loan
+
         @external
         @view
         def total_debt() -> uint256:
@@ -1936,7 +1926,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="4"
+        ```vyper
         @external
         @view
         @nonreentrant('lock')
@@ -1970,7 +1960,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "Controller.vy"
 
-            ```vyper hl_lines="4"
+            ```vyper
             @view
             @external
             @nonreentrant('lock')
@@ -1987,7 +1977,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "AMM.vy"
 
-            ```vyper hl_lines="3 50 60"
+            ```vyper
             @internal
             @view
             def _p_oracle_up(n: int256) -> uint256:
@@ -2077,7 +2067,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3 32"
+        ```vyper
         @internal
         @view
         def _health(user: address, debt: uint256, full: bool, liquidation_discount: uint256) -> int256:
@@ -2142,7 +2132,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "Controller.vy"
 
-            ```vyper hl_lines="4 12"
+            ```vyper
             @view
             @external
             @nonreentrant('lock')
@@ -2159,7 +2149,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         === "AMM.vy"
 
-            ```vyper hl_lines="4 15"
+            ```vyper
             @external
             @view
             @nonreentrant('lock')
@@ -2209,7 +2199,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         loans: public(address[2**64 - 1])  # Enumerate existing loans
         ```
 
@@ -2233,7 +2223,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         loan_ix: public(HashMap[address, uint256])  # Position of the loan in the list
         ```
 
@@ -2257,7 +2247,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         n_loans: public(uint256)  # Number of nonzero loans
         ```
 
@@ -2284,7 +2274,7 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3 28 33 58"
+        ```vyper
         @internal
         @view
         def get_y_effective(collateral: uint256, N: uint256, discount: uint256) -> uint256:
@@ -2366,7 +2356,7 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3 28 33 41 42"
+        ```vyper
         @internal
         @view
         def get_y_effective(collateral: uint256, N: uint256, discount: uint256) -> uint256:
@@ -2435,7 +2425,7 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3 52"
+        ```vyper
         @internal
         @view
         def _calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256) -> int256:
@@ -2524,7 +2514,7 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="4"
+        ```vyper
         @external
         @view
         @nonreentrant('lock')
@@ -2602,7 +2592,7 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="4"
+        ```vyper
         @view
         @external
         @nonreentrant('lock')
@@ -2647,7 +2637,7 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="4"
+        ```vyper
         @view
         @external
         @nonreentrant('lock')
@@ -2709,7 +2699,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
         === "Controller.vy"
 
-            ```vyper hl_lines="1 7 16"
+            ```vyper
             struct Loan:
                 initial_debt: uint256
                 rate_mul: uint256
@@ -2730,16 +2720,16 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
         === "AMM.vy"
 
-                ```vyper hl_lines="3 8"
-                @internal
-                @view
-                def _rate_mul() -> uint256:
-                    """
-                    @notice Rate multiplier which is 1.0 + integral(rate, dt)
-                    @return Rate multiplier in units where 1.0 == 1e18
-                    """
-                    return unsafe_div(self.rate_mul * (10**18 + self.rate * (block.timestamp - self.rate_time)), 10**18)
-                ```
+            ```vyper
+            @internal
+            @view
+            def _rate_mul() -> uint256:
+                """
+                @notice Rate multiplier which is 1.0 + integral(rate, dt)
+                @return Rate multiplier in units where 1.0 == 1e18
+                """
+                return unsafe_div(self.rate_mul * (10**18 + self.rate * (block.timestamp - self.rate_time)), 10**18)
+            ```
 
     === "Example"
         ```shell
@@ -2766,7 +2756,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
         === "Controller.vy"
 
-            ```vyper hl_lines="1 2 6 13"
+            ```vyper
             MIN_FEE: constant(uint256) = 10**6  # 1e-12, still needs to be above 0
             MAX_FEE: constant(uint256) = 10**17  # 10%
 
@@ -2784,7 +2774,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
         === "AMM.vy"
 
-            ```vyper hl_lines="1 4 6 10"
+            ```vyper
             event SetFee:
                 fee: uint256
             
@@ -2826,7 +2816,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
         === "Controller.vy"
 
-            ```vyper hl_lines="1 2 6 13"
+            ```vyper
             MIN_FEE: constant(uint256) = 10**6  # 1e-12, still needs to be above 0
             MAX_FEE: constant(uint256) = 10**17  # 10%
 
@@ -2844,7 +2834,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
         === "AMM.vy"
 
-            ```vyper hl_lines="1 4 6 10"
+            ```vyper
             event SetAdminFee:
                 fee: uint256
             
@@ -2881,7 +2871,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
         === "Controller.vy"
 
-            ```vyper hl_lines="3 7 13"
+            ```vyper
             @external
             @nonreentrant('lock')
             def collect_fees() -> uint256:
@@ -2923,7 +2913,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
         === "AMM.vy"
 
-            ```vyper hl_lines="1 2 6 10"
+            ```vyper
             admin_fees_x: public(uint256)
             admin_fees_y: public(uint256)
 
@@ -2956,7 +2946,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         monetary_policy: public(MonetaryPolicy)
         ```
 
@@ -2965,6 +2955,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
         >>> Controller.monetary_policy()
         '0xc684432FD6322c6D58b6bC5d28B18569aA0AD0A1'
         ```
+
 
 ### `set_monetary_policy`
 !!! description "`Controller.set_monetary_policy(monetary_policy: address):"
@@ -2984,7 +2975,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
         === "Controller.vy"
 
-            ```vyper hl_lines="1 4 8 16"
+            ```vyper
             event SetMonetaryPolicy:
                 monetary_policy: address
 
@@ -3005,7 +2996,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
         === "AMM.vy"
 
-            ```vyper hl_lines="1"
+            ```vyper
             @external
             def rate_write(_for: address = msg.sender) -> uint256:
                 # Not needed here but useful for more automated policies
@@ -3035,7 +3026,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 7 10 17 25"
+        ```vyper
         interface Factory:
             def stablecoin() -> address: view
             def admin() -> address: view
@@ -3107,7 +3098,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 4 9 17 30"
+        ```vyper
         AMM: immutable(LLAMMA)
 
         @external
@@ -3173,7 +3164,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 5 12"
+        ```vyper
         COLLATERAL_TOKEN: immutable(ERC20)
 
         @external
@@ -3243,7 +3234,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
         === "Controller.vy"
 
-            ```vyper hl_lines="4 8"
+            ```vyper
             # AMM has a nonreentrant decorator
             @view
             @external
@@ -3256,7 +3247,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
         === "AMM.vy"
 
-            ```vyper hl_lines="3 36"
+            ```vyper
             @internal
             @view
             def _get_p(n: int256, x: uint256, y: uint256) -> uint256:
@@ -3321,7 +3312,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         liquidation_discounts: public(HashMap[address, uint256])
         ```
 
@@ -3341,7 +3332,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         minted: public(uint256)
         ```
 
@@ -3361,7 +3352,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         redeemed: public(uint256)
         ```
 
@@ -3380,7 +3371,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 4 8 26"
+        ```vyper
         liquidation_discount: public(uint256)
 
         @external
@@ -3443,7 +3434,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 4 7 27"
+        ```vyper
         loan_discount: public(uint256)
 
         @external
@@ -3496,6 +3487,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
         90000000000000000
         ```
 
+
 # **Setting parameters** 
 
 ### `set_borrowing_discounts`
@@ -3512,7 +3504,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 7 19"
+        ```vyper
         event SetBorrowingDiscounts:
             loan_discount: uint256
             liquidation_discount: uint256
@@ -3549,7 +3541,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         liquidity_mining_callback: public(LMGauge)
         ```
 
@@ -3570,7 +3562,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="3"
+        ```vyper
         @external
         @nonreentrant('lock')
         def set_callback(cb: address):
