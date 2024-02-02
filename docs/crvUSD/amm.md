@@ -53,7 +53,7 @@ When the **price of the collateral rises**, then $\text{price_oracle} < \text{ge
 
 Conversely, when the **price starts to decrease**, $\text{price_oracle} > \text{get_p}$, arbitrage is possible by **swapping crvUSD into the collateral asset** until both prices reach equilibrium. 
 
-!!!info "todo"
+!!!info
     A position enters soft-liquidation mode only when the price oracle falls within a band where the user has deposited collateral. 
     For example, if a user has collateral deposited between bands 10 and 0, they will not enter soft-liquidation as long as the oracle price stays outside these bands. In this scenario, the only "loss" the user faces is the variable interest rate of the market.
     Additionally, there is a rather rare possibility that a user's loan was fully soft-liquidated, resulting in all their collateral being converted to crvUSD. In such a case, the user would be out of soft-liquidation because the price oracle is below the lowest band.
@@ -77,11 +77,16 @@ Conversely, when the **price starts to decrease**, $\text{price_oracle} > \text{
 | `p_current_up`, `p_current_down` | the value of p at constant p_oracle when y=0 or x=0 respectively for the band n  |
 | `p_oracle_up`, `p_oracle_down` |  edges of the band when p=p_oracle (steady state), happen when x=0 or y=0 respectively, for band n  |
 
+---
 
+*The code examples below are based on the [tbtc/crvusd](https://etherscan.io/address/0xf9bd9da2427a50908c4c6d1599d8e62837c2bcb0) AMM.*
 
 ```shell
+import ape
 
-tbtc.approve(controller.amm(), 2**256-1, sender=trader)
+>>> AMM = ape.Contract("0xf9bd9da2427a50908c4c6d1599d8e62837c2bcb0")
+>>> tbtc.approve(AMM, 2**256-1, sender=trader)
+>>> crvusd.approve(AMM, 2**256-1, sender=trader)
 ```
 
 
@@ -199,13 +204,6 @@ Depositing and removing collateral can only be done by the `admin` of the AMM, t
                 lm.callback_user_shares(user, n1, user_shares)
         ```
 
-    === "Example"
-
-        ```shell
-        >>> AMM.deposit_range(todo)
-        todo
-        ```
-
 
 ### `withdraw`
 !!! description "`AMM.withdraw(user: address, frac: uint256) -> uint256[2]:`"
@@ -316,13 +314,6 @@ Depositing and removing collateral can only be done by the `admin` of the AMM, t
                 lm.callback_user_shares(user, ns[0], user_shares)
 
             return [total_x, total_y]
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.withdraw(todo)
-        todo
         ```
 
 
@@ -477,9 +468,6 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
         41483257798652907646746
         ```
 
-    !!!info todo
-        The AMM uses bands.
-
 
 ### `exchange_dy`
 !!! description "`AMM.exchange_dy(i: uint256, j: uint256, out_amount: uint256, max_amount: uint256, _for: address = msg.sender) -> uint256[2]:`"
@@ -617,8 +605,8 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
     === "Example"
 
         ```shell
-        >>> AMM.exchange_dy(todo)
-        todo
+        >>> AMM.exchange_dy(1, 0, 41483257798652907646746, 0. trader)
+        1000000000000000000
         ```
 
 
@@ -1191,7 +1179,7 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
 
 
 ### `has_liquidity`
-!!! description "`AMM.has_liquidity(user_ address) -> bool:`"
+!!! description "`AMM.has_liquidity(user_: address) -> bool:`"
 
     Function to check if `user` has any liquidity in the AMM. Checks if `user_shares[user]` is not equal to zero.
 
@@ -1219,7 +1207,8 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
     === "Example"
 
         ```shell
-        >>> AMM.has_liquidity(todo)
+        >>> AMM.has_liquidity(trader)
+        'True'
         ```
 
 
@@ -1249,6 +1238,9 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
 
 ### `set_admin`
 !!! description "`AMM.set_admin(_admin: address):`"
+
+!!!guard "Guarded Method" 
+    This function is only callable when `admin` is set to `ZERO_ADDRESS`. This condition was met at deployment, but after setting the admin for the first time, it cannot be changed. Admin for the AMM is always the corresponding Controller.
 
     Function to set the admin of AMM. Approval needs to be given to the controller in order for it to effectively call functions such as `deposit_range` and `withdraw`. The implementation of `approve_max` as a separate function was chosen because it consumes less bytespace compared to calling it directly.  
 
@@ -1282,7 +1274,7 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
     === "Example"
 
         ```shell
-        >>> AMM.set_admin(todo)
+        >>> AMM.set_admin(vitalik.eth)
         ```
 
 
@@ -1574,8 +1566,6 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
 
 ## **Parameters**
 
-todo: parameters
-
 ### `A`
 !!! description "`AMM.A() -> uint256: view`"
 
@@ -1652,7 +1642,7 @@ todo: parameters
         2193424322
         ```
 
-    !!!info todo
+    !!!info
         Annualized interest rate is calculated by (1 + (rate/1e18))^(365*24*60*60)-1.
 
 
@@ -1741,7 +1731,7 @@ todo: parameters
     === "Example"
 
         ```shell
-        >>> AMM.set_rate(todo)
+        >>> AMM.set_rate(4386848644)
         ```
 
 
@@ -1764,7 +1754,7 @@ todo: parameters
     === "Example"
 
         ```shell
-        >>> AMM.active_band(todo)
+        >>> AMM.active_band()
         -48
         ```
 
@@ -1785,7 +1775,7 @@ todo: parameters
     === "Example"
 
         ```shell
-        >>> AMM.min_band(todo)
+        >>> AMM.min_band()
         -55
         ```
 
@@ -1806,7 +1796,7 @@ todo: parameters
     === "Example"
 
         ```shell
-        >>> AMM.max_band(todo)
+        >>> AMM.max_band()
         653
         ```
 
@@ -1839,8 +1829,9 @@ todo: parameters
         27556035453154780961521
         ```
 
-    !!!note todo
-        `active_band` currently is -48. Band -48 consists of crvUSD and collateral token, all bands below are fully in crvUSD, all bands above fully in the collateral tokens.
+    !!!note
+        `active_band` is currently set to -48. Band -48 consists of crvUSD and collateral token, with all bands below fully in crvUSD, and all bands above fully in the collateral tokens.
+
 
 
 ### `bands_y`
@@ -1871,8 +1862,9 @@ todo: parameters
         0
         ```
 
-    !!!note todo
-        `active_band` currently is -48. Band -48 consists of crvUSD and collateral token, all bands below are fully in crvUSD, all bands above fully in the collateral tokens.
+    !!!note
+        `active_band` is currently set to -48. Band -48 consists of crvUSD and collateral token, with all bands below fully in crvUSD, and all bands above fully in the collateral tokens.
+
 
 
 ### `read_user_tick_numbers`
@@ -2392,8 +2384,6 @@ todo: parameters
 
 
 ## **Price Oracles**
-
-todo:
 
 ### `get_base_price`
 !!! description "`AMM.get_base_price() -> uint256:`"
@@ -3004,8 +2994,6 @@ todo:
 
 
 ## **Callbacks**
-
-todo
 
 ### `liquidity_mining_callback`
 !!! description "`AMM.liquidity_mining_callback() -> address: view`"
