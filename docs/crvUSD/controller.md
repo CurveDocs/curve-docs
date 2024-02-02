@@ -2,8 +2,6 @@ The Controller is the contract the user interacts with to **create a loan and fu
 
 **Each market has its own Controller**, automatically deployed from a blueprint contract, as soon as a new market is successfully added via the `add_market` function within the Factory.
 
-test
-
 # **Loans**
 
 ## **Creating and Repaying Loans**
@@ -12,6 +10,25 @@ New loans are created via the **`ceate_loan`** function. When creating a loan th
 
 
 Before doing that, users can utilize some functions to pre-calculate metrics: [Loan calculations](#loan-calculations-borrowable-etc)
+
+
+for examples in this section a random EOA ("0x6daB3bCbFb336b29d06B9C793AEF7eaA57888922") was used.
+
+to replicate this in ape, do the following:
+
+```shell
+from ape import accounts
+
+controller = ape.Contract("0x1C91da0223c763d2e0173243eAdaA0A2ea47E704")
+tbtc = ape.Contract("0x18084fbA666a33d37592fA2633fD49a74DD93a88")
+trader = "0x3ee18B2214AFF97000D974cf647E7C347E8fa585"       # random addresss, in this case Wormhole bridge
+
+tbtc.approve(controller, 2**256-1, sender=trader)           # need to give approval to the Controller
+
+with accounts.use_sender(trader):
+    controller.create_loan(...)
+    ...
+```
 
 
 ### `create_loan`
@@ -190,7 +207,12 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> Controller.create_loan(43957348178625209816, 60000000000000000000000, 15)
+        >>> Controller.create_loan(10**18, 10**21, 10)
+        >>> Controller.debt(trader)
+        1000000000000000000000
+        >>> Controller.user_state(trader)
+        [1000000000000000000, 0, 1000000000000000000000, 10]
+        # [collateral, stablecoin, debt, bands]  
         ```
 
 
@@ -397,8 +419,8 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_d_debt` |  `uint256` |  Amount of debt to repay |
-    | `_for` |  `address` |  Address to repay the debt for |
-    | `max_active_band` |  `int256` |  Highest active band. Used to prevent front-running the repay |
+    | `_for` |  `address` |  Address to repay the debt for; defaults to `msg.sender` |
+    | `max_active_band` |  `int256` |  Highest active band. Used to prevent front-running the repay; defaults to `2**255-1` |
     | `use_eth` |  `bool` |  Use wrapping/unwrapping if collateral is ETH |
 
     !!! note
@@ -555,7 +577,10 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> Controller.repay(_d_debt: uint256)
+        >>> Controller.repay(10**20, trader, 2**255-1, False)
+        >>> Controller.debt(trader)
+
+
         ```
 
 
@@ -957,7 +982,10 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> Controller.add_collateral(collateral: uint256)
+        >>> Controller.add_collateral(10**18, trader)
+        >>> Controller.user_state(trader)
+        [2000000000000000000, 0, 1000000892890902175729, 10]   
+        # [collateral, stablecoin, debt, bands]
         ```
 
 
@@ -971,6 +999,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `collateral` |  `uint256` |  Amount of collateral to remove |
+    | `use_eth` |  `bool` |  Whether to use wrapping/unwrapping if collateral is ETH; defaults to `True` |
 
 
     ??? quote "Source code"
@@ -1151,7 +1180,9 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> Controller.remove_collateral(collateral: uint256)
+        >>> Controller.remove_collateral(10**18, False)
+        >>> Controller.user_state(trader)
+        [1000000000000000000, 0, 1000001403805330760116, 10]
         ```
 
 
@@ -1344,7 +1375,9 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> Controller.borrow_more(collateral: uint256, debt: uint256)
+        >>> Controller.borrow_more(10**18, 10**22)
+        >>> Controller.user_state(trader)
+        [2000000000000000000, 0, 11000001592726154783594, 10]
         ```
 
 
@@ -1824,7 +1857,6 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
     === "Example"
         ```shell
         >>> Controller.liquidate_extended(todo)
-        todo
         ```
 
 
@@ -1879,8 +1911,8 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> Controller.debt("0x7a16fF8270133F063aAb6C9977183D9e72835428")
-        1552311414080668514314009
+        >>> Controller.debt(trader)
+        11000001592726154783594
         ```
 
 
@@ -1910,7 +1942,7 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
     === "Example"
         ```shell
         >>> Controller.total_debt()
-        9045646634477681048071827
+        4047221089417662821708552
         ```
 
 
@@ -1940,9 +1972,11 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> Controller.loan_exists("0x7a16fF8270133F063aAb6C9977183D9e72835428")
-        'true'
-        ```
+        >>> Controller.loan_exists(trader)
+        'True'
+        >>> Controller.loan_exists("0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B")
+        'False'
+       ```
 
 
 ### `user_prices`
@@ -2049,8 +2083,8 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> Controller.users_price("0x7a16fF8270133F063aAb6C9977183D9e72835428"):
-        1975909341832570932896, 1786976990595821859153
+        >>> Controller.users_price(trader):
+        [6401870706098817273644, 5789737113118292909562]
         ```
 
 
@@ -2069,6 +2103,16 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
     ??? quote "Source code"
 
         ```vyper
+        @view
+        @external
+        @nonreentrant('lock')
+        def health(user: address, full: bool = False) -> int256:
+            """
+            @notice Returns position health normalized to 1e18 for the user.
+                    Liquidation starts when < 0, however devaluation of collateral doesn't cause liquidation
+            """
+            return self._health(user, self._debt_ro(user), full, self.liquidation_discounts[user])
+
         @internal
         @view
         def _health(user: address, debt: uint256, full: bool, liquidation_discount: uint256) -> int256:
@@ -2096,24 +2140,14 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
                         health += convert(unsafe_div((p - p_up) * AMM.get_sum_xy(user)[1] * COLLATERAL_PRECISION, debt), int256)
 
             return health
-
-        @view
-        @external
-        @nonreentrant('lock')
-        def health(user: address, full: bool = False) -> int256:
-            """
-            @notice Returns position health normalized to 1e18 for the user.
-                    Liquidation starts when < 0, however devaluation of collateral doesn't cause liquidation
-            """
-            return self._health(user, self._debt_ro(user), full, self.liquidation_discounts[user])
         ```
 
     === "Example"
         ```shell
-        >>> Controller.health("0x04d52e150E49c1bbc9Ddde258060A3bF28D9fD70")
-        33346624773659668
-        >>> Controller.health("0x04d52e150E49c1bbc9Ddde258060A3bF28D9fD70", 1)
-        493166314275207865
+        >>> Controller.health(trader, True)
+        6703636365754288577
+        >>> Controller.health(trader, False)
+        40947705194891925
         ```
 
 
@@ -2182,8 +2216,8 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> Controller.user_state("0x7a16fF8270133F063aAb6C9977183D9e72835428"):
-        523889507286953887976, 643761728367446923280941, 1455238676830152227963549, 10
+        >>> Controller.user_state(trader)
+        [2000000000000000000, 0, 11000001592726154783594, 10]
         ```
 
 
@@ -2207,7 +2241,9 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
     === "Example"
         ```shell
         >>> Controller.loans(0)
-        '0x7a16fF8270133F063aAb6C9977183D9e72835428'
+        '0x10E47fC06ede0CD8C43E2A7ea438BEfcF45BCAa8'
+        >>> Controller.loans(21)
+        '0x3ee18B2214AFF97000D974cf647E7C347E8fa585'
         ```
 
 
@@ -2230,8 +2266,8 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     === "Example"
         ```shell
-        >>> Controller.loans_ix("0x7a16fF8270133F063aAb6C9977183D9e72835428")
-        0
+        >>> Controller.loans_ix(trader)
+        21
         ```
 
      
@@ -2255,11 +2291,14 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
     === "Example"
         ```shell
         >>> Controller.n_loans()
-        136
+        22
         ```
+
+
 
 ## **Useful Loan Calculations**
 The following functions can be used to pre-calculate metrics before creating a loan.
+
 
 ### `max_borrowable`
 !!! description "`Controller.max_borrowable(collateral: uint256, N: uint256) -> uint256:`"
@@ -2338,9 +2377,17 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     === "Example"
         ```shell
-        >>> Controller.max_borrowable(1000000000000000000, 20)
-        1609245276829365771473
+        >>> Controller.max_borrowable(10**18, 5)
+        37965133715410776274198
+        >>> Controller.max_borrowable(10**18, 25)
+        34421752243813852608681
+        >>> Controller.max_borrowable(10**18, 50)
+        30597863183498027832984
         ```
+
+    !!!note
+        The maximum amount that can be borrowed is dependent on the number of bands (N) used. The more bands there are, the lower the maximum borrowable amount.
+        Fewer bands also result in higher losses when the position is in soft-liquidation.
 
 
 ### `min_collateral`
@@ -2403,8 +2450,12 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     === "Example"
         ```shell
-        >>> Controller.min_collateral(1609245276829365771473, 20)
-        999999846411950179
+        >>> Controller.min_collateral(10**22, 5)
+        263399572749066565
+        >>> Controller.min_collateral(10**22, 25)
+        290513972942760489
+        >>> Controller.min_collateral(10**22, 50)
+        326820207673727834
         ```
 
 
@@ -2492,8 +2543,10 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     === "Example"
         ```shell
-        >>> Controller.calculate_debt_n1(todo)
-        todo
+        >>> Controller.calculate_debt_n1(10**18, 10**22, 5)
+        85
+        >>> Controller.calculate_debt_n1(10**18, 10**22, 25)
+        76
         ```
 
 
@@ -2574,8 +2627,10 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     === "Example"
         ```shell
-        >>> Controller.health_calculator(todo)
-        todo
+        >>> Controller.health_calculator(trader, 10**18, 10**22, True, 0)
+        5026488624797598934
+        >>> Controller.health_calculator(trader, 10**18, 10**22, False, 0)
+        40995665483999083
         ```
 
 
@@ -2617,7 +2672,6 @@ The following functions can be used to pre-calculate metrics before creating a l
     === "Example"
         ```shell
         >>> Controller.tokens_to_liquidate(todo)
-        todo
         ```
 
 
@@ -2683,11 +2737,13 @@ The following functions can be used to pre-calculate metrics before creating a l
 
 
 # **Fees**
-There are two kinds of fees:
+
+There are two of fees:
 1. Borrowing-based fee: interest rate
 2. AMM-based fee: swap fee for trades within the AMM
 
 While the borrowing-based fee is determined by the MonetaryPolicy Contract, the AMM fee can be set by the DAO. Currently, the AMM fees are set to 0.6% with an admin_fee of 0, meaning all the generated fees from trades within the AMM go to the liquidity providers who are essentially the borrowers.
+
 
 ### `admin_fees`
 !!! description "`Controller.admin_fees() -> uint256:`"
@@ -2735,7 +2791,7 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
     === "Example"
         ```shell
         >>> Controller.admin_fees()
-        1412804120167468477413
+        1431079351921267396706
         ```
 
 
@@ -2795,9 +2851,11 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
     === "Example"
         ```shell
-        >>> Controller.set_amm_fee(todo):
-        todo
+        >>> Controller.set_amm_fee(6000000000000000):
         ```
+
+    !!!note
+        The current `fee` can be obtained by reading the `fee` variable on the corresponding AMM.
 
 
 ### `set_amm_admin_fee`
@@ -2855,9 +2913,11 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
     === "Example"
         ```shell
-        >>> Controller.set_amm_admin_fee(todo):
-        todo
+        >>> Controller.set_amm_admin_fee(1):
         ```
+
+    !!!note
+        The current AMM `admin_fee` can be obtained by reading the `admin_fee` variable on the corresponding AMM.
 
 
 ### `collect_fees`
@@ -2931,8 +2991,13 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
     === "Example"
         ```shell
-        >>> Controller.collect_fees():
+        >>> Controller.admin_fees()
+        1431079351921267396706
+        >>> Controller.collect_fees()
+        >>> Controller.admin_fees()
+        0
         ```
+
 
 
 # **Monetary Policy**
@@ -2954,12 +3019,15 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
     === "Example"
         ```shell
         >>> Controller.monetary_policy()
-        '0xc684432FD6322c6D58b6bC5d28B18569aA0AD0A1'
+        '0x8c5A7F011f733fBb0A6c969c058716d5CE9bc933'
         ```
 
 
 ### `set_monetary_policy`
 !!! description "`Controller.set_monetary_policy(monetary_policy: address):"
+
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract, which is the Factory.
 
     Function to set the monetary policy contract. Initially, the monetary policy contract is configured when a new market is added via the Factory. However, this function allows the contract address to be changed later. When setting the new address, the function calls `rate_write()` from the monetary policy contract to verify if the ABI is correct.
 
@@ -2968,9 +3036,6 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `monetary_policy` |  `address` |  Monetary policy contract |
-
-    !!! warning
-        This function can only be called by the `admin` of the contract.
 
     ??? quote "Source code"
 
@@ -3007,8 +3072,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> Controller.set_monetary_policy("todo")
-        todo
+        >>> Controller.set_monetary_policy("0xc684432FD6322c6D58b6bC5d28B18569aA0AD0A1")
         ```
 
 
@@ -3149,7 +3213,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
     === "Example"
         ```shell
         >>> Controller.amm()
-        '0x136e783846ef68C8Bd00a3369F787dF8d683a696'
+        '0xf9bD9da2427a50908C4c6D1599D8e62837C2BCB0'
         ```
 
 
@@ -3215,7 +3279,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
     === "Example"
         ```shell
         >>> Controller.collateral_token()
-        '0xac3E018457B222d93114458476f3E3416Abbe38F'
+        '0x18084fbA666a33d37592fA2633fD49a74DD93a88'
         ```
 
 
@@ -3296,7 +3360,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
     === "Example"
         ```shell
         >>> Controller.amm_price():
-        1894335198818887625018
+        42852102383927213434085
         ```
 
 
@@ -3305,7 +3369,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     Getter method for the liquidation discount of a user.
 
-    Returns: **liquidation discount** (`uint256`).
+    Returns: liquidation discount (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -3319,8 +3383,8 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> Controller.liquidation_discounts("0x7a16fF8270133F063aAb6C9977183D9e72835428")
-        60000000000000000
+        >>> Controller.liquidation_discounts(trader)
+        0
         ```
 
 
@@ -3329,7 +3393,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     Getter for the total amount of crvUSD minted from this controller. Increments by the amount of debt when calling `create_loan` or `borrow_more`.
 
-    Returns: **total minted** (`uint256`).
+    Returns: total minted (`uint256`).
 
     ??? quote "Source code"
 
@@ -3340,7 +3404,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
     === "Example"
         ```shell
         >>> Controller.minted()
-        17090918188139724484312313
+        20682637249975500380405996
         ```
 
 
@@ -3349,7 +3413,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     Getter for the total amount of crvUSD redeemed from this controller. Increments by the amount of debt that is repayed when calling `repay` or `repay_extended`.
 
-    Returns: **total redeemed** (`uint256`).
+    Returns: total redeemed (`uint256`).
 
     ??? quote "Source code"
 
@@ -3360,15 +3424,16 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
     === "Example"
         ```shell
         >>> Controller.redeemed()
-        7731390765158807406740136
+        16646401312086830122157869
         ```        
+
 
 ### `liquidation_discount`
 !!! description "`Controller.liquidation_discount() -> uint256: view`"
 
     Getter for the liquidation discount. This value is used to discount the collateral value when calculating the health for liquidation puroses in order to incentivize liquidators.
 
-    Returns: **liquidation discount** (`uint256`).
+    Returns: liquidation discount (`uint256`).
 
     ??? quote "Source code"
 
@@ -3431,7 +3496,7 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     Getter for the discount of the maximum loan size compared to `get_x_down()` value. This value defines the LTV.
 
-    Returns: **loan discount** (`uint256`).
+    Returns: loan discount (`uint256`).
 
     ??? quote "Source code"
 
@@ -3529,37 +3594,22 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     === "Example"
         ```shell
-        >>> Controller.set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256):
+        >>> Controller.set_borrowing_discounts(90000000000000000, 60000000000000000)
         ``` 
 
 
-### `liquidity_mining_callback`
-!!! description "`Controller.liquidity_mining_callback() -> uint256: view`"
-
-    Getter for the liquidity mining callback contract.
-
-    Returns: liquidity mining callback address (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        liquidity_mining_callback: public(LMGauge)
-        ```
-
-    === "Example"
-        ```shell
-        >>> Controller.liquidity_mining_callback()
-        '0x0000000000000000000000000000000000000000'
-        ```  
-
-
 ### `set_callback`
-!!! description "`Controller.redeemed() -> uint256: view`"
+!!! description "`Controller.set_callback(cb: address) -> uint256: view`"
 
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract.
 
     Function to set a callback for liquidity mining.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `cb` |  `address` | Callback |
+
 
     ??? quote "Source code"
 
@@ -3577,5 +3627,4 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
     === "Example"
         ```shell
         >>> Controller.set_callback('todo')
-        todo
         ```  
