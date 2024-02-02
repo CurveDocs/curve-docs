@@ -2,6 +2,26 @@ The Controller is the contract the user interacts with to **create a loan and fu
 
 **Each market has its own Controller**, automatically deployed from a blueprint contract, as soon as a new market is successfully added via the `add_market` function within the Factory.
 
+---
+
+*The code examples below are based on the [tbtc market](https://etherscan.io/address/0x1c91da0223c763d2e0173243eadaa0a2ea47e704) Controller.*
+
+```shell
+from ape
+
+>>> controller = ape.Contract("0x1C91da0223c763d2e0173243eAdaA0A2ea47E704")
+>>> tbtc = ape.Contract("0x18084fbA666a33d37592fA2633fD49a74DD93a88")
+>>> trader = "0x3ee18B2214AFF97000D974cf647E7C347E8fa585"       # random addresss, in this case Wormhole bridge
+
+>>> tbtc.approve(controller, 2**256-1, sender=trader)           # grant approval to the Controller
+
+>>> with ape.accounts.use_sender(trader):
+        controller.create_loan(...)
+        controller.repay(...)
+    ...
+```
+
+
 # **Loans**
 
 ## **Creating and Repaying Loans**
@@ -10,26 +30,6 @@ New loans are created via the **`ceate_loan`** function. When creating a loan th
 
 
 Before doing that, users can utilize some functions to pre-calculate metrics: [Loan calculations](#loan-calculations-borrowable-etc)
-
-
-for examples in this section a random EOA ("0x6daB3bCbFb336b29d06B9C793AEF7eaA57888922") was used.
-
-to replicate this in ape, do the following:
-
-```shell
-from ape import accounts
-
-controller = ape.Contract("0x1C91da0223c763d2e0173243eAdaA0A2ea47E704")
-tbtc = ape.Contract("0x18084fbA666a33d37592fA2633fD49a74DD93a88")
-trader = "0x3ee18B2214AFF97000D974cf647E7C347E8fa585"       # random addresss, in this case Wormhole bridge
-
-tbtc.approve(controller, 2**256-1, sender=trader)           # need to give approval to the Controller
-
-with accounts.use_sender(trader):
-    controller.create_loan(...)
-    ...
-```
-
 
 ### `create_loan`
 !!! description "`Controller.create_loan(collateral: uint256, debt: uint256, N: uint256):`"
@@ -1613,7 +1613,8 @@ with accounts.use_sender(trader):
 
     === "Example"
         ```shell
-        >>> Controller.liquidate(todo)
+        >>> Controller.(user: address, min_x: uint256, use_eth: bool = True)
+        return [total_x, total_y]
         ```
 
 
@@ -1856,7 +1857,8 @@ with accounts.use_sender(trader):
 
     === "Example"
         ```shell
-        >>> Controller.liquidate_extended(todo)
+        >>> Controller.liquidate_extended(user: address, min_x: uint256, frac: uint256, use_eth: bool, callbacker: address, callback_args: DynArray[uint256,5])
+        return [total_x, total_y]
         ```
 
 
@@ -2671,7 +2673,8 @@ The following functions can be used to pre-calculate metrics before creating a l
 
     === "Example"
         ```shell
-        >>> Controller.tokens_to_liquidate(todo)
+        >>> Controller.tokens_to_liquidate(trader)
+        10000067519253003373620
         ```
 
 
