@@ -1,20 +1,241 @@
-!!!deploy "Contract Source & Deployment"
-    **crvUSD Token** contract is deployed to the Ethereum mainnet at: [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/address/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E#code).  
-    Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/Stablecoin.vy).
+<h1>crvUSD Token</h1>
 
+!!!deploy "Contract Source & Deployment"
+    The **crvUSD contract** is deployed to the Ethereum mainnet at: [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/address/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E#code). Addresses of crvUSD on sidechains can be found [here](../references/deployed-contracts.md#curve-stablecoin).
+    Source code for this contract is available on [GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/Stablecoin.vy).
 
 !!!warning
     Due to some testing in production, there have been several deployments for the stablecoin and its components. Please always make sure you are using the latest deployment. See [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
 
 
 
+## **Mint and Burn**
+
+- crvUSD can only be minted by the `minter` of the contract, which is the Factory contract
+- crvUSD is minted in accordance with the `debt_ceiling`, either when **adding a new market** or when **raising its debt ceiling**. This is accomplished by calling the `set_new_debt_ceiling` function within the Factory contract.  
+- Burning crvUSD typically occurs when a **lower debt ceiling is set**, or if a user decides to burn their crvUSD for whatever reason.
+
+
+### `minter`
+!!! description "`crvUSD.minter() -> address: view`"
+
+    Getter for the minter contract.
+
+    Returns: minter (`address`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        minter: public(address)
+        ```
+
+    === "Example"
+        ```shell
+        >>> crvUSD.minter()
+        '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
+        ```
+
+
+### `mint`
+!!! description "`crvUSD.mint(_to: address, _value: uint256) -> bool:`"
+
+    !!!guard "Guarded Method" 
+        This function is only callable by the `minter` of the contract, which is the Factory.
+
+    Function to mint `_value` amount of tokens to `_to`.
+
+    Returns: true (`bool`).
+
+    Emits: `Transfer`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_to` |  `address` | Address newly minted tokens are credited to |
+    | `_value` |  `uint256` | Amount of tokens to mint |
+
+    ??? quote "Source code"
+
+        ```vyper
+        event Transfer:
+            sender: indexed(address)
+            receiver: indexed(address)
+            value: uint256
+
+        @external
+        def mint(_to: address, _value: uint256) -> bool:
+            """
+            @notice Mint `_value` amount of tokens to `_to`.
+            @dev Only callable by an account with minter privileges.
+            @param _to The account newly minted tokens are credited to.
+            @param _value The amount of tokens to mint.
+            """
+            assert msg.sender == self.minter
+            assert _to not in [self, empty(address)]
+
+            self.balanceOf[_to] += _value
+            self.totalSupply += _value
+
+            log Transfer(empty(address), _to, _value)
+            return True
+        ```
+
+    === "Example"
+        ```shell
+        >>> crvUSD.mint("0xec0820efafc41d8943ee8de495fc9ba8495b15cf", 10**22)
+        ```
+
+    !!!note
+        The `mint` function is only used when adding a new market or raising a market's debt ceiling. The function will revert if any EOA (Externally Owned Account) or contract other than the `admin` attempts to call it. Additionally, tokens cannot be minted to the `minter` itself or the `ZERO_ADDRESS`.
+
+
+### `set_minter`
+!!! description "`crvUSD.set_minter(_minter: address):`"
+
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract, which is the Factory.
+
+    Function to set the minter address of the token.
+
+    Emits: `SetMinter`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_minter` |  `address` | New minter address |
+
+    ??? quote "Source code"
+
+        ```vyper
+        event SetMinter:
+            minter: indexed(address)
+
+        minter: public(address)
+
+        @external
+        def set_minter(_minter: address):
+            assert msg.sender == self.minter
+
+            self.minter = _minter
+            log SetMinter(_minter)
+        ```
+
+    === "Example"
+        ```shell
+        >>> crvUSD.set_minter("")
+        ```
+
+    !!!note
+        The function will revert if any EOA (Externally Owned Account) or contract other than the `admin` attempts to call this function.
+
+
+### `burn` 
+!!! description "`crvUSD.burn(_value: uint256) -> bool:`"
+
+    Function to burn `_value` amount of tokens from `msg.sender`.
+
+    Returns: true (`bool`).
+
+    Emits: `Transfer`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_value` |  `uint256` | Amount of tokens to burn |
+
+    ??? quote "Source code"
+
+        ```vyper 
+        event Transfer:
+            sender: indexed(address)
+            receiver: indexed(address)
+            value: uint256
+
+        @external
+        def burn(_value: uint256) -> bool:
+            """
+            @notice Burn `_value` amount of tokens.
+            @param _value The amount of tokens to burn.
+            """
+            self._burn(msg.sender, _value)
+            return True
+
+        @internal
+        def _burn(_from: address, _value: uint256):
+            self.balanceOf[_from] -= _value
+            self.totalSupply -= _value
+
+            log Transfer(_from, empty(address), _value)
+        ```
+
+    === "Example"
+        ```shell
+        >>> crvUSD.burn(10**18)
+        'True'
+        ```
+
+
+### `burnFrom`
+!!! description "`crvUSD.burnFrom(_from: address, _value: uint256) -> bool:`"
+
+    Function to burn `_value` amount of tokens from `_from`.
+
+    Returns: true (`boolean`).
+
+    Emits: `Transfer`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_from` |  `address` | Address to burn tokens for |
+    | `_value` |  `uint256` | Amount of tokens to burn |
+
+    ??? quote "Source code"
+
+        ```vyper 
+        event Transfer:
+            sender: indexed(address)
+            receiver: indexed(address)
+            value: uint256
+
+        @external
+        def burnFrom(_from: address, _value: uint256) -> bool:
+            """
+            @notice Burn `_value` amount of tokens from `_from`.
+            @dev The caller must have previously been given an allowance by `_from`.
+            @param _from The account to burn the tokens from.
+            @param _value The amount of tokens to burn.
+            """
+            allowance: uint256 = self.allowance[_from][msg.sender]
+            if allowance != max_value(uint256):
+                self._approve(_from, msg.sender, allowance - _value)
+
+            self._burn(_from, _value)
+            return True
+
+        @internal
+        def _burn(_from: address, _value: uint256):
+            self.balanceOf[_from] -= _value
+            self.totalSupply -= _value
+
+            log Transfer(_from, empty(address), _value)
+        ```
+
+    === "Example"
+        ```shell
+        >>> crvUSD.burn("0xec0820efafc41d8943ee8de495fc9ba8495b15cf", "25000000000000000000000000")
+        'True'
+        ```
+
+    !!!note
+        The `burnFrom` function is called when the debt ceiling is reduced via `set_debt_ceiling` within the Factory.
+
+
 ## **Contract Info Methods**
+
+
 ### `decimals`
 !!! description "`crvUSD.decimals() -> uint8: view`"
 
     Getter for the decimals of the token.
 
-    Returns: decimals (`uint8`) of the token. 
+    Returns: decimals (`uint8`).
 
     ??? quote "Source code"
 
@@ -38,7 +259,7 @@
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         version: public(constant(String[8])) = "v1.0.0"
         ```
 
@@ -142,7 +363,7 @@
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `address` | address to check balance for |
+    | `arg0` |  `address` | Address to check balance for |
 
     ??? quote "Source code"
 
@@ -177,217 +398,8 @@
         ```
 
 
-## **Mint and Burn**
 
-- crvUSD can only be minted by the `minter` of the contract, which is the Factory itself
-- crvUSD is minted in accordance with the `debt_ceiling`, either when **adding a new market** or when **raising its debt ceiling**. This is accomplished by calling the `set_new_debt_ceiling` function within the FactoryContract.  
-- Burning crvUSD typically occurs when a lower debt ceiling is set, or if a user decides to burn their crvUSD for whatever reason.
-
-
-### `minter`
-!!! description "`crvUSD.minter() -> address: view`"
-
-    Getter for the minter contract.
-
-    Returns: minter (`address`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        minter: public(address)
-        ```
-
-    === "Example"
-        ```shell
-        >>> crvUSD.minter()
-        '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
-        ```
-
-
-### `mint`
-!!! description "`crvUSD.mint(_to: address, _value: uint256) -> bool:`"
-
-    !!!guard "Guarded Method" 
-        This function is only callable by the `minter` of the contract.
-
-    Function to mint `_value` amount of tokens to `_to`.
-
-    Returns: true (`bool`).
-
-    Emits: `Transfer`
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_to` |  `address` | address newly minted tokens are credited to |
-    | `_value` |  `uint256` | amount of tokens to mint |
-
-    ??? quote "Source code"
-
-        ```vyper hl_lines="1 7 20"
-        event Transfer:
-            sender: indexed(address)
-            receiver: indexed(address)
-            value: uint256
-
-        @external
-        def mint(_to: address, _value: uint256) -> bool:
-            """
-            @notice Mint `_value` amount of tokens to `_to`.
-            @dev Only callable by an account with minter privileges.
-            @param _to The account newly minted tokens are credited to.
-            @param _value The amount of tokens to mint.
-            """
-            assert msg.sender == self.minter
-            assert _to not in [self, empty(address)]
-
-            self.balanceOf[_to] += _value
-            self.totalSupply += _value
-
-            log Transfer(empty(address), _to, _value)
-            return True
-        ```
-
-    === "Example"
-        ```shell
-        >>> crvUSD.mint(todo)
-        todo
-        ```
-
-
-### `set_minter`
-!!! description "`crvUSD.set_minter(_minter: address):`"
-
-    !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract.
-
-    Function to set the minter address of the token.
-
-    Emits: `SetMinter`
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_minter` |  `address` | new minter address |
-
-    ??? quote "Source code"
-
-        ```vyper
-        event SetMinter:
-            minter: indexed(address)
-
-        minter: public(address)
-
-        @external
-        def set_minter(_minter: address):
-            assert msg.sender == self.minter
-
-            self.minter = _minter
-            log SetMinter(_minter)
-        ```
-
-    === "Example"
-        ```shell
-        >>> crvUSD.set_minter(todo)
-        ```
-
-
-### `burn` 
-!!! description "`crvUSD.burn(_value: uint256) -> bool:`"
-
-    Function to burn `_value` amount of tokens from `msg.sender`.
-
-    Returns: true (`bool`).
-
-    Emits: `Transfer`
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_value` |  `uint256` | Amount of tokens to burn |
-
-    ??? quote "Source code"
-
-        ```vyper 
-        event Transfer:
-            sender: indexed(address)
-            receiver: indexed(address)
-            value: uint256
-
-        @internal
-        def _burn(_from: address, _value: uint256):
-            self.balanceOf[_from] -= _value
-            self.totalSupply -= _value
-
-            log Transfer(_from, empty(address), _value)
-
-        @external
-        def burn(_value: uint256) -> bool:
-            """
-            @notice Burn `_value` amount of tokens.
-            @param _value The amount of tokens to burn.
-            """
-            self._burn(msg.sender, _value)
-            return True
-        ```
-
-    === "Example"
-        ```shell
-        >>> crvUSD.burn(todo)
-        todo
-        ```
-
-
-### `burnFrom`
-!!! description "`crvUSD.burnFrom(_from: address, _value: uint256) -> bool:`"
-
-    Function to burn `_value` amount of tokens from `_from`.
-
-    Returns: true (`boolean`).
-
-    Emits: `Transfer`
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_from` |  `address` | address to burn tokens for |
-    | `_value` |  `uint256` | amount of tokens to burn |
-
-    ??? quote "Source code"
-
-        ```vyper 
-        event Transfer:
-            sender: indexed(address)
-            receiver: indexed(address)
-            value: uint256
-
-        @internal
-        def _burn(_from: address, _value: uint256):
-            self.balanceOf[_from] -= _value
-            self.totalSupply -= _value
-
-            log Transfer(_from, empty(address), _value)
-
-        @external
-        def burnFrom(_from: address, _value: uint256) -> bool:
-            """
-            @notice Burn `_value` amount of tokens from `_from`.
-            @dev The caller must have previously been given an allowance by `_from`.
-            @param _from The account to burn the tokens from.
-            @param _value The amount of tokens to burn.
-            """
-            allowance: uint256 = self.allowance[_from][msg.sender]
-            if allowance != max_value(uint256):
-                self._approve(_from, msg.sender, allowance - _value)
-
-            self._burn(_from, _value)
-            return True
-        ```
-
-    === "Example"
-        ```shell
-        >>> crvUSD.burn(todo)
-        todo
-        ```
-
-
-## **Allowances**
+## **Allowances and Approvals**
 
 ### `allowance`
 !!! description "`crvUSD.allowance(arg0: address, arg1: address) -> uint256`"
@@ -398,8 +410,8 @@
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `address` | address of the spender |
-    | `arg1` |  `address` | address of the token owner |
+    | `arg0` |  `address` | Address of the spender |
+    | `arg1` |  `address` | Address of the token owner |
 
     ??? quote "Source code"
 
@@ -409,7 +421,8 @@
 
     === "Example"
         ```shell
-        >>> crvUSD.set_minter(todo)
+        >>> crvUSD.allowance("0x7a16fF8270133F063aAb6C9977183D9e72835428", "0x4dece678ceceb27446b35c672dc7d61f30bad69e")
+        115792089237316195423570985008687907853269984665640564039457584007913129639935
         ```
 
 
@@ -459,8 +472,8 @@
 
     === "Example"
         ```shell
-        >>> crvUSD.approve(todo)
-        todo
+        >>> crvUSD.approve("0x4dece678ceceb27446b35c672dc7d61f30bad69e", 10**22)
+        'True'
         ```
 
 
@@ -483,7 +496,7 @@
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="2"
+        ```vyper
         allowance: public(HashMap[address, HashMap[address, uint256]])
 
         @external
@@ -517,7 +530,8 @@
 
     === "Example"
         ```shell
-        >>> crvUSD.increaseAllowance(todo)
+        >>> crvUSD.increaseAllowance("0x4dece678ceceb27446b35c672dc7d61f30bad69e", 2**256-1)
+        'True'
         ```
 
 
@@ -540,7 +554,7 @@
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="2"
+        ```vyper
         allowance: public(HashMap[address, HashMap[address, uint256]])
 
         @external
@@ -573,7 +587,8 @@
 
     === "Example"
         ```shell
-        >>> crvUSD.decreaseAllowance(todo)
+        >>> crvUSD.decreaseAllowance("0x4dece678ceceb27446b35c672dc7d61f30bad69e", 2**256-1)
+        'True'
         ```
 
 
@@ -588,13 +603,13 @@
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_owner` |  `address` | address which generated the signature and is granting an allowance |
-    | `_spender` |  `uint256` | address which will be granted an allowance |
-    | `_value` |  `uint256` | approved amount |
-    | `_deadline` |  `uint256` | deadline by which the signature must be submitted |
-    | `_v` |  `uint256` | last byte of the ECDSA signature |
-    | `_r` |  `uint256` | first 32 bytes of the ECDSA signature |
-    | `_s` |  `uint256` | second 32 bytes of the ECDSA signature |
+    | `_owner` |  `address` | Address which generated the signature and is granting an allowance |
+    | `_spender` |  `uint256` | Address which will be granted an allowance |
+    | `_value` |  `uint256` | Approved amount |
+    | `_deadline` |  `uint256` | Deadline by which the signature must be submitted |
+    | `_v` |  `uint256` | Last byte of the ECDSA signature |
+    | `_r` |  `uint256` | First 32 bytes of the ECDSA signature |
+    | `_s` |  `uint256` | Second 32 bytes of the ECDSA signature |
 
     !!!note
         In the event of a chain fork, replay attacks are prevented as domain separator is recalculated.     
@@ -602,7 +617,7 @@
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="2"
+        ```vyper
         event Approval:
             owner: indexed(address)
             spender: indexed(address)
@@ -663,5 +678,4 @@
     === "Example"
         ```shell
         >>> crvUSD.permit(todo)
-        todo
         ```
