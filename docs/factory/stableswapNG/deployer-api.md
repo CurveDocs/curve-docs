@@ -1,7 +1,89 @@
-!!!info 
-    When deploying pools that include coins not requiring a rate oracle, **`b""`** should be included in the `_methods_id` array and the **`ZERO_ADDRESS`** should be used in the `_oracles` array as placeholders for each coin.
+Choosing the correct parameter value is trivial for the performance of the liquidity pool.
 
-## **Liquidity Pools**
+## **Name and Symbol**
+
+The input values of `_name` or `_symbol` are obviously non-trivial for the performance of the pool. These parameters should visualize, what kind of tokens are included in the pool.
+
+```shell
+_name = "rETH/wETH Pool"
+_symbol = "rETH/wETH"
+```
+
+
+## **Coins**
+
+`_coins` includes all tokens included in the pool as a `DynArray`.
+
+```shell
+_coins = ["0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", "0xae78736Cd615f374D3085123A210448E74Fc6393"]
+```
+
+
+## **A, Fee, Off-Peg Fee Multiplier, and MA-Exp-Time**
+
+- `_A` represents the amplification coefficient of the pool, signifying its density.
+- `_fee` is referred to as the "base fee."
+- The `offpeg_fee_multiplier` parameter enables the system to dynamically adjust fees according to the pool's state.
+- `ma_exp_time` denotes the time window for the moving average oracle.
+
+
+*Recommended Parameters*:
+
+| Parameter              | Fiat-Redeemable Stablecoin | Crypto-Collateralized Stablecoin |
+| :--------------------- | :------------------------: | :------------------------------: |
+| `A`                    |                        200 |                              100 |
+| `fee`                  |                      0.04% |                            0.04% |
+| `offpeg_fee_multiplier`|                          2 |                                2 |
+| `ma_exp_time`          |                        866 |                              866 |
+
+
+```shell
+_A = 200
+_fee = 4000000                                          # 0.0001 or 0.01%
+_offpeg_fee_multiplier = 20000000000                    # 5 or 500%
+_ma_exp_time = 866                                      # ~600 seconds
+```
+
+!!!note "Parameter Precision"
+    The precision of `_fee` and `_offpeg_fee_multiplier` is 1e10.  
+    The time window of the moving average exponential oracle is calculated using `time_in_seconds / ln(2)`.
+
+
+## **Implemention ID**
+
+Pools are **created from implementation contracts** (blueprints). These contracts are added to the Factory and must be choosen when deploying a pool.
+
+!!!warning
+    The Factory can have **multiple plain- and meta-pool implementations**. If there are multiple implementations for a plain or meta-pool, it's important to understand the differences and determine which one is suitable.  
+    Additionally, implementation contracts are **upgradable**. They can either be replaced or have additional implementation contracts set. Please always make sure to check the most recent ones.
+
+    To query the factory-specific implementations:
+    
+    ```shell
+    >>> Factory.pool_implementation(0)
+    '0xDCc91f930b42619377C200BA05b7513f2958b202'
+    >>> Factory.metapool_implementation(0)
+    '0xede71F77d7c900dCA5892720E76316C6E575F0F7'
+    ```
+
+## **Assets Types**
+
+Stableswap-NG infrastructure supports pools with the following asset types:
+
+| Asset Type  | Description            |
+| :---------: | ---------------------- |
+| `0`         | **Standard ERC-20** token with no additional features |
+| `1`         | **Oracle** - token with rate oracle (e.g. wstETH) |
+| `2`         | **Rebasing** - token with rebase (e.g. stETH) |
+| `3`         | **ERC4626** - token with *`convertToAssets`* method (e.g. sDAI) |
+
+*Consequently, supported tokens include:*
+
+- ERC-20 support for return `True/revert`, `True/False` or `None`  
+- ERC-20 tokens can have *arbitrary decimals (≤18)*  
+- ERC-20 tokens that *rebase* (either positive or fee on transfer)  
+- ERC-20 tokens that have a *rate oracle* (e.g. wstETH, cbETH) Oracle precision must be $10^{18}$
+- ERC-4626 tokens with *arbitrary percision* (≤18) of Vault token and underlying asset
 
 !!!warning 
     - **`ERC20:`** Users are advised to do careful due-diligence on ERC20 tokens that they interact with, as this contract **cannot differentiate between harmless and malicious** ERC20 tokens.
@@ -9,6 +91,65 @@
     - **`Rebasing:`** Users and Integrators are advised to understand how the AMM contract works with rebasing balances.
     - **`ERC4626:`** Some ERC4626 implementations **may be susceptible to Donation/Inflation attacks**. Users are advised to proceed with caution.
 
+Choosing asset types can sometimes be quite tricky. Asset types should be seen more as information for the AMM on **how to treat the assets under the hood**.
+
+!!!example
+    Let's consider the example of [rmETH/mETH](https://etherscan.io/address/0xdd4316c777a2295d899ba7ad92e0efa699865f43).
+    - [mETH](https://etherscan.io/address/0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa) is a token with a rate oracle (the underlying asset is ETH). The rate can be fetched by reading the `mETHToETH` method within the [staking contract](https://etherscan.io/address/0xe3cBd06D7dadB3F4e6557bAb7EdD924CD1489E8f).
+    - rmETH is a rebasing token.
+
+    Because the deployer wants rmETH and mETH to trade as close to 1:1 as possible, they need to treat mETH like a regular ERC-20 token (asset type 0), instead of a rate oraclized token (asset type 1).
+
+
+```shell
+_asset_types = [0, 2]   # coin(0) = asset type 0; coin(1) = asset type 2
+```
+
+
+## **Method IDs and Rate Oracles**
+
+`method_ids` and `_oracles` are required for rate oracles to function. ERC-4626 does not need either of these. The sole requirement for those is to have a `convertToAssets` method.
+
+
+!!!info 
+    When deploying pools that include coins not requiring a rate oracle, **`b""`** or **`0x00000000`** should be included in the `_methods_id` array and the **`ZERO_ADDRESS`** should be used in the `_oracles` array as placeholders for each coin.
+
+- `_method_ids` is the first four bytes of the Keccak-256 hash of the function signatures of the oracle addresses that give rate oracles.
+
+    As an example, lets look  at the [rETH](https://etherscan.io/token/0xae78736cd615f374d3085123a210448e74fc6393) token. The relevant function which returns the rate is `getExchangeRate`, the according first four bytes of the Keccak-256 hash of the functions signature is therefore `0xe6aa216c`. When calculating, its always important to include `"()"`, as they will change the bytes.
+
+    ```shell
+    getExchangeRate      ->  "0xb2fc0e3e"           # wrong
+    getExchangeRate()    ->  "0xe6aa216c"           # correct
+    ```
+
+    [Method ID Calculator](https://piyolab.github.io/playground/ethereum/getEncodedFunctionSignature/)
+
+- `_oracles` is simply the contract address which provides the rate oracle function.
+
+
+The input values are `DynArrays` with the length of tokens in the pool. Therefore, a rETH/wETH pool would have the following input values:
+
+```shell
+_method_id = [b"", "0xe6aa216c"]
+_oracles = ["0x0000000000000000000000000000000000000000", "0xae78736cd615f374d3085123a210448e74fc6393"]
+```
+
+
+## **Examples**
+
+| Pool | Asset Types | Method ID's | Rate Oracle |
+| :---: | :--------: | :---------: | :---------: |
+| [**mkUSD/USDC**](https://etherscan.io/tx/0xf980b4a4194694913af231de69ab4593f5e0fcdc) | `[0, 0]` | `['0x00000000', '0x00000000']` | `['0x0000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000']` | 
+| [**FRAX/sDAI**](https://etherscan.io/tx/0xce6431d21e3fb1036ce9973a3312368ed96f5ce7) | `[0, 3]` | `['0x00000000', '0x00000000']` | `['0x0000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000']` | 
+| [**wETH/rETH**](https://etherscan.io/tx/0x9efe1a1cbd6ca51ee8319afc4573d253c3b732af) | `[0 , 1]` | `['0x00000000', '0xe6aa216c']` | `['0x0000000000000000000000000000000000000000', '0xae78736Cd615f374D3085123A210448E74Fc6393']` | 
+| [**rmETH/mETH**](https://etherscan.io/address/0xdd4316c777a2295d899ba7ad92e0efa699865f43) | `[2 , 0]` | `['0x00000000', '0x00000000']` | `['0x0000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000']` | 
+
+
+
+---
+
+# **Deploying Liquidity Pools**
 
 ### `deploy_plain_pool`
 
@@ -394,7 +535,7 @@ Limitations when deploying meta pools:
         ```
 
 
-## **Liquidity Gauge**
+# **Deploying Liquidity Gauges**
 
 !!!info
     Liquidity gauges can only be successfully deployed from the same contract from which the pool was deployed!
