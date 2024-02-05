@@ -1,4 +1,5 @@
-## **Adding Markets**
+A new crvUSD market can be added by the CurveOwnershipAgent. Therefore, adding a new market requires a successfully passed DAO vote.
+
 
 ### `add_market`
 !!! description "`ControllerFactory.add_market(token: address, A: uint256, fee: uint256, admin_fee: uint256, _price_oracle_contract: address, monetary_policy: address, loan_discount: uint256, liquidation_discount: uint256, debt_ceiling: uint256) -> address[2]:`"
@@ -6,11 +7,11 @@
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to add a new market and automatically deploy an AMM-Contract and a Controller-Contract from the implemented blueprint contracts (see [Implementations](./overview.md#implementations)). When initializing, **`rate_write()`** from the MonetaryPolicy contract is called to check if it has a correct ABI.
+    Function to add a new market and automatically deploy a new AMM and a Controller from the implementation contracts (see [Implementations](./overview.md#implementations)). Additionally, when initializing a new market, **`rate_write()`** from the MonetaryPolicy contract is called to check if it has a correct ABI.
 
-    Returns: Deployed contract (`address`) of AMM and Controller.
+    Returns: AMM and Controller contracts (`address`).
 
-    Emits event: `AddNewMarket`
+    Emits: `AddNewMarket`
 
     | Input                    | Type      | Description                                                  |
     | ------------------------ | --------- | ------------------------------------------------------------ |

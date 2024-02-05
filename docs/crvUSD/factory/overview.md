@@ -56,10 +56,11 @@ Other than the pool factory, this factory **does not allow permissionless deploy
         10000000000000000000000000
         ```
 
+
 ### `rug_debt_ceiling`
 !!! description "`ControllerFactory.rug_debt_ceiling(_to: address):`"
 
-    Function to remove stablecoins above the debt seiling from a controller and burn them.
+    Function to remove stablecoins above the debt seiling from a controller and burn them. This function is used to burn residual crvUSD when the debt ceiling was lowered.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -76,19 +77,44 @@ Other than the pool factory, this factory **does not allow permissionless deploy
             @param _to Address to remove stablecoins from
             """
             self._set_debt_ceiling(_to, self.debt_ceiling[_to], False)
+
+        @internal
+        def _set_debt_ceiling(addr: address, debt_ceiling: uint256, update: bool):
+            """
+            @notice Set debt ceiling for a market
+            @param addr Controller address
+            @param debt_ceiling Value for stablecoin debt ceiling
+            @param update Whether to actually update the debt ceiling (False is used for burning the residuals)
+            """
+            old_debt_residual: uint256 = self.debt_ceiling_residual[addr]
+
+            if debt_ceiling > old_debt_residual:
+                to_mint: uint256 = debt_ceiling - old_debt_residual
+                STABLECOIN.mint(addr, to_mint)
+                self.debt_ceiling_residual[addr] = debt_ceiling
+                log MintForMarket(addr, to_mint)
+
+            if debt_ceiling < old_debt_residual:
+                diff: uint256 = min(old_debt_residual - debt_ceiling, STABLECOIN.balanceOf(addr))
+                STABLECOIN.burnFrom(addr, diff)
+                self.debt_ceiling_residual[addr] = old_debt_residual - diff
+                log RemoveFromMarket(addr, diff)
+
+            if update:
+                self.debt_ceiling[addr] = debt_ceiling
+                log SetDebtCeiling(addr, debt_ceiling)
         ```
 
     === "Example"
         ```shell
-        >>> ControllerFactory.rug_debt_ceiling("todo")
-        'todo'
+        >>> ControllerFactory.rug_debt_ceiling("controller address")
         ```
 
 
 
 ## **Fee Receiver**
 The fee receiver is the address that receives the claimed fees when calling `collect_fees()` on the Controller.
-A new receiver can be set by the `admin` of the contract (which is the DAO).
+A new receiver can be set by the `admin` of the contract, which is the CurveOwnershipAgent.
 
 ### `fee_receiver`
 !!! description "`ControllerFactory.fee_receiver() -> address: view`"
@@ -127,14 +153,18 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
         ```
 
 
+
 ## **Implementations**
+
+Implementations are blueprint contracts used to deploy new markets. When calling `add_market`, Controller and AMM are created from the current implementations.
+
 
 ### `controller_implementation`
 !!! description "`ControllerFactory.controller_implementation() -> address: view`"
 
     Getter for controller implementation address.
 
-    Returns: `address` of the controller implementation.
+    Returns: implementation (`address`).
 
     ??? quote "Source code"
 
@@ -145,7 +175,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
     === "Example"
         ```shell
         >>> ControllerFactory.controller_implementation()
-        '0x9DFbf2b2aF574cA8Ba6dD3fD397287944269f720'
+        '0x6340678b2bab22a37d781Cd8da958a3cD1d97cdD'
         ```
 
 
@@ -154,11 +184,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     Getter for amm implementation address.
 
-    Returns: `address` of the amm implementation.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `uint256` | Index |
+    Returns: implementation (`address`).
 
     ??? quote "Source code"
 
@@ -169,9 +195,8 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
     === "Example"
         ```shell
         >>> ControllerFactory.amm_implementation()
-        '0x23208cA4F2B30d8f7D54bf2D5A822D1a2F876501'
+        '0x3da7fF6C15C0c97D9C2dF4AF82a9910384b372FD'
         ```
-
 
 
 
@@ -258,7 +283,6 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
     | `collateral` |  `address` | Address of collateral token |
     | `i` |  `uint256` | Index to iterate over several controller for the same collateral if needed |
 
-
     ??? quote "Source code"
 
         ```vyper
@@ -292,7 +316,6 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
     | `collateral` |  `address` | Address of collateral token |
     | `i` |  `uint256` | Index to iterate over several amms for the same collateral if needed |
 
-
     ??? quote "Source code"
 
         ```vyper
@@ -325,7 +348,6 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
     | ----------- | -------| ----|
     | `arg0` |  `uint256` | Index |
 
-
     ??? quote "Source code"
 
         ```vyper
@@ -351,7 +373,6 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
     | ----------- | -------| ----|
     | `arg0` |  `uint256` | Index |
 
-
     ??? quote "Source code"
 
         ```vyper
@@ -363,6 +384,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
         >>> ControllerFactory.amms(0)
         '0x136e783846ef68C8Bd00a3369F787dF8d683a696'
         ```
+
 
 ### `n_collaterals`
 !!! description "`ControllerFactory.n_collaterals() -> uint256: view`"
@@ -435,6 +457,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
         340282366920938463463374607431768211456
         ```
 
+
 ### `WETH`
 !!! description "`ControllerFactory.WETH() -> address: view`"
 
@@ -470,5 +493,3 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
         >>> ControllerFactory.WETH()
         '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
         ```
-
-
