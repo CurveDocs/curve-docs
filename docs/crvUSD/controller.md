@@ -7,13 +7,13 @@ The Controller is the contract the user interacts with to **create a loan and fu
 *The code examples below are based on the [tbtc market](https://etherscan.io/address/0x1c91da0223c763d2e0173243eadaa0a2ea47e704) Controller.*
 
 ```shell
-from ape
+>>> import ape
 
 >>> controller = ape.Contract("0x1C91da0223c763d2e0173243eAdaA0A2ea47E704")
 >>> tbtc = ape.Contract("0x18084fbA666a33d37592fA2633fD49a74DD93a88")
->>> trader = "0x3ee18B2214AFF97000D974cf647E7C347E8fa585"       # random addresss, in this case Wormhole bridge
+>>> trader = "0x3ee18B2214AFF97000D974cf647E7C347E8fa585"
 
->>> tbtc.approve(controller, 2**256-1, sender=trader)           # grant approval to the Controller
+>>> tbtc.approve(controller, 2**256-1, sender=trader)
 
 >>> with ape.accounts.use_sender(trader):
         controller.create_loan(...)

@@ -54,7 +54,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 *The code examples below are based on the [0x8c...c933](https://etherscan.io/address/0x8c5a7f011f733fbb0a6c969c058716d5ce9bc933) MonetaryPolicy.*
 
 ```shell
-import ape
+>>> import ape
 
 >>> MonetaryPolicy = ape.Contract("0x8c5a7f011f733fbb0a6c969c058716d5ce9bc933")
 ```

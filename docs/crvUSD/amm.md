@@ -82,11 +82,17 @@ Conversely, when the **price starts to decrease**, $\text{price_oracle} > \text{
 *The code examples below are based on the [tbtc/crvusd](https://etherscan.io/address/0xf9bd9da2427a50908c4c6d1599d8e62837c2bcb0) AMM.*
 
 ```shell
-import ape
+>>> import ape
 
 >>> AMM = ape.Contract("0xf9bd9da2427a50908c4c6d1599d8e62837c2bcb0")
+>>> tbtc = ape.Contract("0x18084fbA666a33d37592fA2633fD49a74DD93a88")
+>>> crvusd = ape.Contract("0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E")
+
 >>> tbtc.approve(AMM, 2**256-1, sender=trader)
 >>> crvusd.approve(AMM, 2**256-1, sender=trader)
+
+>>> with ape.accounts.use_sender(trader):
+        AMM.exchange(...)
 ```
 
 
