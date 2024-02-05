@@ -49,7 +49,15 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
     $\text{annualRate} = (1 + \frac{rate}{10^{18}})^{365*24*60*60} - 1$
 
+---
 
+*The code examples below are based on the [0x8c...c933](https://etherscan.io/address/0x8c5a7f011f733fbb0a6c969c058716d5ce9bc933) MonetaryPolicy.*
+
+```shell
+import ape
+
+>>> MonetaryPolicy = ape.Contract("0x8c5a7f011f733fbb0a6c969c058716d5ce9bc933")
+```
 
 ### `rate`
 !!! description "`MonetaryPolicy.rate() -> uint256: view`"
@@ -94,7 +102,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
         ```shell
         >>> MonetaryPolicy.rate()
-        232855059
+        2130219534
         ```
 
 
@@ -131,7 +139,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
         ```shell
         >>> MonetaryPolicy.rate0()
-        3022265993
+        3488077118
         ```
 
 
@@ -139,7 +147,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 !!! description "`MonetaryPolicy.set_rate(rate: uint256):`"
 
     !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract.
+        This function is only callable by the `admin` of the contract, which is the CurveOwnershipAgent.
 
     Function to set a new rate0. New `rate0` has to be less than or equal to `MAX_RATE (=43959106799)`.
 
@@ -169,7 +177,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
     === "Example"
 
         ```shell
-        >>> MonetaryPolicy.set_rate(3022265993)
+        >>> MonetaryPolicy.set_rate(3488077118)
         ```
 
 
@@ -216,7 +224,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 !!! description "`MonetaryPolicy.set_sigma(sigma: uint256):`"
 
     !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract.
+        This function is only callable by the `admin` of the contract, which is the CurveOwnershipAgent.
 
     Function to set a new sigma value. New value must be inbetween `MIN_SIGMA` and `MAX_SIGMA`.
 
@@ -285,7 +293,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 
         ```shell
         >>> MonetaryPolicy.target_debt_fraction()
-        100000000000000000
+        100000000000000000              # 10%
         ```
 
 
@@ -293,7 +301,7 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
 !!! description "`MonetaryPolicy.set_target_debt_fraction(target_debt_fraction: uint256):`"
     
     !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract.
+        This function is only callable by the `admin` of the contract, which is the CurveOwnershipAgent.
 
     Function to set a new value for the debt fraction target. New value needs to be less than or equal to `MAX_TARGET_DEBT_FRACTION`.
 
@@ -325,8 +333,9 @@ $$DebtFraction = \frac{PegKeeperDebt}{TotalDebt}$$
     === "Example"
 
         ```shell
-        >>> MonetaryPolicy.set_target_debt_fraction(100000000000000000)
+        >>> MonetaryPolicy.set_target_debt_fraction(200000000000000000)
         ```
+
 
 
 ## **PegKeepers**
@@ -416,7 +425,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
     === "Example"
 
         ```shell
-        >>> MonetaryPolicy.add_peg_keepers("PegKeeper address")
+        >>> MonetaryPolicy.add_peg_keeper("PegKeeper address")
         ```
 
 
@@ -466,12 +475,13 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
         ```
 
 
+
 ## **Admin Ownership**
 
 ### `admin`
 !!! description "`MonetaryPolicy.admin() -> address: view`"
 
-    Getter for the admin of the contract, which is the Curve DAO OwnershipAgent.
+    Getter for the admin of the contract, which is the CurveOwnershipAgent.
 
     Returns: admin (`address`).
 
@@ -505,7 +515,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 !!! description "`MonetaryPolicy.set_admin(admin: address):`"
 
     !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract.
+        This function is only callable by the `admin` of the contract, which is the CurveOwnershipAgent.
 
     Function to set a new admin.
 
@@ -535,6 +545,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
         ```shell
         >>> MonetaryPolicy.set_admin("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045")
         ```
+
 
 
 ## **Contract Info Methods**
@@ -570,7 +581,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 
         ```shell
         >>> MonetaryPolicy.PRICE_ORACLE()
-        '0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7'
+        '0x18672b1b0c623a30089A280Ed9256379fb0E4E62'
         ```
 
 
@@ -650,5 +661,5 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
     === "Example"
 
         ```shell
-        >>> MonetaryPolicy.rate_write():
+        >>> MonetaryPolicy.rate_write()
         ```
