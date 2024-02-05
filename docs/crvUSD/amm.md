@@ -53,7 +53,7 @@ When the **price of the collateral rises**, then $\text{price_oracle} < \text{ge
 
 Conversely, when the **price starts to decrease**, $\text{price_oracle} > \text{get_p}$, arbitrage is possible by **swapping crvUSD into the collateral asset** until both prices reach equilibrium. 
 
-!!!info "todo"
+!!!info
     A position enters soft-liquidation mode only when the price oracle falls within a band where the user has deposited collateral. 
     For example, if a user has collateral deposited between bands 10 and 0, they will not enter soft-liquidation as long as the oracle price stays outside these bands. In this scenario, the only "loss" the user faces is the variable interest rate of the market.
     Additionally, there is a rather rare possibility that a user's loan was fully soft-liquidated, resulting in all their collateral being converted to crvUSD. In such a case, the user would be out of soft-liquidation because the price oracle is below the lowest band.
@@ -77,6 +77,23 @@ Conversely, when the **price starts to decrease**, $\text{price_oracle} > \text{
 | `p_current_up`, `p_current_down` | the value of p at constant p_oracle when y=0 or x=0 respectively for the band n  |
 | `p_oracle_up`, `p_oracle_down` |  edges of the band when p=p_oracle (steady state), happen when x=0 or y=0 respectively, for band n  |
 
+---
+
+*The code examples below are based on the [tbtc/crvusd](https://etherscan.io/address/0xf9bd9da2427a50908c4c6d1599d8e62837c2bcb0) AMM.*
+
+```shell
+>>> import ape
+
+>>> AMM = ape.Contract("0xf9bd9da2427a50908c4c6d1599d8e62837c2bcb0")
+>>> tbtc = ape.Contract("0x18084fbA666a33d37592fA2633fD49a74DD93a88")
+>>> crvusd = ape.Contract("0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E")
+
+>>> tbtc.approve(AMM, 2**256-1, sender=trader)
+>>> crvusd.approve(AMM, 2**256-1, sender=trader)
+
+>>> with ape.accounts.use_sender(trader):
+        AMM.exchange(...)
+```
 
 
 ## **Depositing and Removing Collateral**
@@ -90,7 +107,7 @@ Depositing and removing collateral can only be done by the `admin` of the AMM, t
 !!! description "`AMM.deposit_range(user: address, amount: uint256, n1: int256, n2: int256):`"
 
     !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract.
+        This function is only callable by the `admin` of the contract, which is the Controller.
 
     Function to deposit collateral `amount` for `user` in the range of bands between `n1` and `n2`. This function can only be called by the admin of the AMM, which is the controller.
 
@@ -193,19 +210,12 @@ Depositing and removing collateral can only be done by the `admin` of the AMM, t
                 lm.callback_user_shares(user, n1, user_shares)
         ```
 
-    === "Example"
-
-        ```shell
-        >>> AMM.deposit_range(todo)
-        todo
-        ```
-
 
 ### `withdraw`
 !!! description "`AMM.withdraw(user: address, frac: uint256) -> uint256[2]:`"
 
     !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract.
+        This function is only callable by the `admin` of the contract, which is the Controller.
 
     Function to withdraw liquidity for `user`.
 
@@ -310,13 +320,6 @@ Depositing and removing collateral can only be done by the `admin` of the AMM, t
                 lm.callback_user_shares(user, ns[0], user_shares)
 
             return [total_x, total_y]
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.withdraw(todo)
-        todo
         ```
 
 
@@ -460,8 +463,15 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
     === "Example"
 
         ```shell
-        >>> AMM.exchange(todo)
-        todo
+        >>> tbtc.balanceOf(trader)
+        339653435930000000000
+        >>> crvusd.balanceOf(trader)
+        0
+        >>> AMM.exchange(1, 0, 10**18, 0, trader)
+        >>> tbtc.balanceOf(trader)
+        338653435930000000000
+        >>> crvusd.balanceOf(trader)
+        41483257798652907646746
         ```
 
 
@@ -601,8 +611,8 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
     === "Example"
 
         ```shell
-        >>> AMM.exchange_dy(todo)
-        todo
+        >>> AMM.exchange_dy(1, 0, 41483257798652907646746, 0. trader)
+        1000000000000000000
         ```
 
 
@@ -679,8 +689,8 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
     === "Example"
 
         ```shell
-        >>> AMM.get_dy(0, 1, 2000000000000000000000)  -> swapping 2000 crvusd (`i`) to sfrxeth (`j`).
-        1012955839734366020
+        >>> AMM.get_dy(1, 0, 10**18)  -> swapping 1 tbtc (`i`) for crvusd (`j`).
+        41443710620713878872934
         ```
 
 
@@ -758,8 +768,8 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
     === "Example"
         Selling 2000 crvUSD for sfrxETH:
         ```shell
-        >>> AMM.get_dxdy(0, 1, 2000000000000000000000)
-        2000000000000000000000, 1012955839734366020
+        >>> AMM.get_dxdy(1, 0, 10**18)
+        (1000000000000000000, 41443710620713878872934)
         ```
 
 
@@ -838,10 +848,10 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
         ```
 
     === "Example"
-        How much crvUSD does a user need to swap (sell) in order to receive 1 sfrxeth?
         ```shell
-        >>> AMM.get_dx(0, 1, 1000000000000000000) 
-        1973249425192953127559
+        # how much crvUSD does a user need to swap in to receive 1 tbtc at the currents pool state?
+        >>> AMM.get_dx(0, 1, 10**18)
+        43345361787695375761802
         ```
 
 
@@ -920,10 +930,9 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
 
     === "Example"
         ```shell
-        >>> AMM.get_dydx(0, 1, 1000000000000000000) 
-        1000000000000000000, 1973249425192953127559
+        >>> AMM.get_dydx(0, 1, 10**18)
+        (1000000000000000000, 43345361787695375761802)
         ```
-
 
 
 ### `get_amount_for_price`
@@ -932,10 +941,6 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
     Function to calculate the necessary amount to be exchanged to have the AMM at the final price `p`.   
 
     Returns: necessary amount to exchange (`uint256`) and true or false (`bool`).
-
-    !!!note
-        `bool = true` -> need to exchange crvUSD for collateral (to get the price of the collateral **UP**)      
-        `bool = false` -> need to exchange collateral for crvUSD (to get the price of the collateral **DOWN**)
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1046,14 +1051,23 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
 
     === "Example"
         ```shell
-        >>> AMM.get_amount_for_price(2048203821082923793482)
-        547071746795405807643242, true
+        >>> Controller.amm_price(42360604244534725358731)
+        42360604244534725358731
+        >>> AMM.get_amount_for_price(42360604244534725358731)
+        (0, True)                               # value is 0, because we already are at the current amm price
+        >>> AMM.get_amount_for_price(43500000000000000000000)
+        (33883533434143618564545, True)         # need to sell crvusd for tbtc to get the price up
+        >>> AMM.get_amount_for_price(41500000000000000000000)
+        (648390479703549124, False)             # need to sell tbtc for crvusd to get the price down
         ```
+
+    !!!note
+        `bool = true` -> need to exchange crvUSD for collateral (to get the price of the collateral **UP**)      
+        `bool = false` -> need to exchange collateral for crvUSD (to get the price of the collateral **DOWN**)
 
 
 
 ## **Contract Info Methods**
-
 
 ### `coins`
 !!! description "`AMM.coins(i: uint256) -> address: pure`"
@@ -1083,6 +1097,8 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
         ```shell
         >>> AMM.coins(0)
         '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
+        >>> AMM.coins(1)
+        '0x18084fbA666a33d37592fA2633fD49a74DD93a88'
         ```
 
 
@@ -1164,12 +1180,12 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
 
         ```shell
         >>> AMM.price_oracle()
-        2042551766913649125528
+        42793985938449777891127
         ```
 
 
 ### `has_liquidity`
-!!! description "`AMM.has_liquidity(user_ address) -> bool:`"
+!!! description "`AMM.has_liquidity(user_: address) -> bool:`"
 
     Function to check if `user` has any liquidity in the AMM. Checks if `user_shares[user]` is not equal to zero.
 
@@ -1197,18 +1213,18 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
     === "Example"
 
         ```shell
-        >>> AMM.has_liquidity("0x7a16ff8270133f063aab6c9977183d9e72835428")
-        'true'
+        >>> AMM.has_liquidity(trader)
+        'True'
         ```
+
 
 
 ## **Admin Ownership**
 
-
 ### `admin`
 !!! description "`AMM.admin() -> address: view`"
 
-    Getter for the admin of the contract, which is the corresponding controller.
+    Getter for the admin of the contract, which is the corresponding Controller.
 
     Returns: admin (`address`).
 
@@ -1222,12 +1238,15 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
 
         ```shell
         >>> AMM.admin()
-        '0x8472A9A7632b173c8Cf3a86D3afec50c35548e76'
+        '0x1C91da0223c763d2e0173243eAdaA0A2ea47E704'
         ```
 
 
 ### `set_admin`
 !!! description "`AMM.set_admin(_admin: address):`"
+
+!!!guard "Guarded Method" 
+    This function is only callable when `admin` is set to `ZERO_ADDRESS`. This condition was met at deployment, but after setting the admin for the first time, it cannot be changed. Admin for the AMM is always the corresponding Controller.
 
     Function to set the admin of AMM. Approval needs to be given to the controller in order for it to effectively call functions such as `deposit_range` and `withdraw`. The implementation of `approve_max` as a separate function was chosen because it consumes less bytespace compared to calling it directly.  
 
@@ -1261,8 +1280,7 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
     === "Example"
 
         ```shell
-        >>> AMM.set_admin(todo)
-        ''
+        >>> AMM.set_admin(vitalik.eth)
         ```
 
 
@@ -1339,7 +1357,7 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
 !!! description "`AMM.set_fee(fee: uint256):`"
 
     !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract.
+        This function is only callable by the `admin` of the contract, which is the Controller.
 
     Function to set the AMM fee. 
 
@@ -1372,7 +1390,7 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
     === "Example"
 
         ```shell
-        >>> AMM.set_fee(todo)
+        >>> AMM.set_fee(7000000000000000)
         ```
 
 
@@ -1449,7 +1467,7 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
 
         ```shell
         >>> AMM.admin_fees_x()
-        0
+        327
         ```
 
 
@@ -1478,7 +1496,7 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
 !!! description "`AMM.set_admin_fee(fee: uint256):`"
 
     !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract.
+        This function is only callable by the `admin` of the contract, which is the Controller.
 
     Function to set the admin fee of the AMM.
 
@@ -1511,8 +1529,7 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
     === "Example"
 
         ```shell
-        >>> AMM.set_admin_fee(todo)
-        'todo'
+        >>> AMM.set_admin_fee(2)
         ```
 
 
@@ -1520,7 +1537,7 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
 !!! description "`AMM.reset_admin_fees():`"
 
     !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract.
+        This function is only callable by the `admin` of the contract, which is the Controller.
 
     Function to reset the accumulated admin fees (`admin_fees_x` and `admin_fees_y`) to zero. This function is automatically called when `collect_fees()` via the Controller is called.
 
@@ -1541,13 +1558,19 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
     === "Example"
 
         ```shell
-        >>> AMM.reset_admin_fees()
+        >>> AMM.admin_fees_x()
+        327
+        >>> AMM.admin_fees_y()
+        0
+        >>> Controller.collect_fees()   # this function calls `reset_admin_fees`
+        >>> AMM.admin_fees_x()
+        0
+        >>> AMM.admin_fees_y()
+        0
         ```
 
 
 ## **Parameters**
-
-todo: parameters...
 
 ### `A`
 !!! description "`AMM.A() -> uint256: view`"
@@ -1622,15 +1645,19 @@ todo: parameters...
 
         ```shell
         >>> AMM.rate()
-        701373443
+        2193424322
         ```
+
+    !!!info
+        Annualized interest rate is calculated by (1 + (rate/1e18))^(365*24*60*60)-1.
 
 
 ### `get_rate_mul`
 !!! description "`AMM.get_rate_mul() -> uint256: view`"
 
-    Getter for the interest rate multiplier, which is $1.0 + \int rate \, dt$.    
-    `get_rate_mul` is calculated by multiplying 1.0 with the difference between `block.timestamp` and `self.rate_time`. `rate_time` is always set to `block.timestamp` when calling `deposit_range`, `withdraw` or `set_rate`.
+    Getter for the interest rate multiplier, which is calculated by the following:
+
+    $\frac{\text{self.rate_mul} \times (10^{18} + \text{self.rate} \times (\text{block.timestamp} - \text{self.rate_time}))}{10^{18}}$
 
     Returns: interest rate multiplier (`uint256`).
 
@@ -1664,7 +1691,7 @@ todo: parameters...
 
         ```shell
         >>> AMM.get_rate_mul()
-        1006642137417646444
+        1029018787268879746
         ```
 
 
@@ -1672,7 +1699,7 @@ todo: parameters...
 !!! description "`AMM.set_rate(rate: uint256) -> uint256:`"
 
     !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract.
+        This function is only callable by the `admin` of the contract, which is the Controller.
 
     Function to set the interest rate for the AMM.
 
@@ -1710,9 +1737,9 @@ todo: parameters...
     === "Example"
 
         ```shell
-        >>> AMM.set_rate(todo)
-        'todo'
+        >>> AMM.set_rate(4386848644)
         ```
+
 
 
 ## **Bands**
@@ -1733,8 +1760,8 @@ todo: parameters...
     === "Example"
 
         ```shell
-        >>> AMM.active_band(todo)
-        -7
+        >>> AMM.active_band()
+        -48
         ```
 
 
@@ -1754,8 +1781,8 @@ todo: parameters...
     === "Example"
 
         ```shell
-        >>> AMM.min_band(todo)
-        -8
+        >>> AMM.min_band()
+        -55
         ```
 
 
@@ -1775,15 +1802,15 @@ todo: parameters...
     === "Example"
 
         ```shell
-        >>> AMM.max_band(todo)
-        1026
+        >>> AMM.max_band()
+        653
         ```
 
 
 ### `bands_x`
 !!! description "`AMM.bands_x(arg0: uint256) -> uint256:`"
 
-    Getter for the amount of x deposited in band `arg0` (`uint256`). X represents the token that is being borrowed.
+    Getter for the amount of crvUSD deposited in band `arg0` (`uint256`). X represents the token that is being borrowed.
 
     Returns: amount (`uint256`) of coin x deposited in a band.
 
@@ -1800,15 +1827,23 @@ todo: parameters...
     === "Example"
 
         ```shell
-        >>> AMM.bands_x(-8)
-        5963974791137619564674
+        >>> AMM.bands_x(-47)
+        0
+        >>> AMM.bands_x(-48)
+        11659955945097877786254
+        >>> AMM.bands_x(-49)
+        27556035453154780961521
         ```
+
+    !!!note
+        `active_band` is currently set to -48. Band -48 consists of crvUSD and collateral token, with all bands below fully in crvUSD, and all bands above fully in the collateral tokens.
+
 
 
 ### `bands_y`
 !!! description "`AMM.bands_y(arg0: uint256) -> uint256:`"
 
-    Getter for the amount of y deposited in band `arg0` (`uint256`). Y represents the token that is put up as collateral.
+    Getter for the amount of collateral token deposited in band `arg0` (`uint256`). Y represents the token that is put up as collateral.
 
     Returns: amount (`uint256`) of coin y deposited in a band.
 
@@ -1825,9 +1860,17 @@ todo: parameters...
     === "Example"
 
         ```shell
-        >>> AMM.bands_y(-6)
-        8119284311379011356
+        >>> AMM.bands_x(-47)
+        595268927247021363
+        >>> AMM.bands_x(-48)
+        316435642081117977
+        >>> AMM.bands_x(-49)
+        0
         ```
+
+    !!!note
+        `active_band` is currently set to -48. Band -48 consists of crvUSD and collateral token, with all bands below fully in crvUSD, and all bands above fully in the collateral tokens.
+
 
 
 ### `read_user_tick_numbers`
@@ -1882,8 +1925,8 @@ todo: parameters...
     === "Example"
 
         ```shell
-        >>> AMM.read_user_tick_numbers("0x7a16ff8270133f063aab6c9977183d9e72835428")
-        -5, 4
+        >>> AMM.read_user_tick_numbers(trader)
+        [73, 102]
         ```
 
 
@@ -2050,8 +2093,8 @@ todo: parameters...
     === "Example"
 
         ```shell
-        >>> AMM.get_y_up("0x7a16ff8270133f063aab6c9977183d9e72835428")
-        829966866955064128024
+        >>> AMM.get_y_up(trader)
+        999999999999999970
         ```
 
 
@@ -2218,8 +2261,8 @@ todo: parameters...
     === "Example"
 
         ```shell
-        >>> AMM.get_x_down("0x7a16ff8270133f063aab6c9977183d9e72835428")
-        1563163804055324740128538
+        >>> AMM.get_x_down(trader)
+        11057439659522034798651
         ```
 
 
@@ -2267,7 +2310,7 @@ todo: parameters...
     === "Example"
 
         ```shell
-        >>> AMM.can_skip_bands(-5)
+        >>> AMM.can_skip_bands(-50)
         'False'
         ```
 
@@ -2338,17 +2381,15 @@ todo: parameters...
         ```
 
     === "Example"
-        balances in AMM: crvusd, sfrxeth
         ```shell
-        >>> AMM.get_sum_xy()
-        49681626057739454730917, 804372801855872107611
+        >>> AMM.get_sum_xy(trader)
+        [0, 1000000000000000000]    # collateral composition: [crvusd, collateral token]
+        # if a position is in self-liquidation, `get_sum_xy` will contain both crvusd and collateral token
         ```
 
 
 
 ## **Price Oracles**
-
-todo:
 
 ### `get_base_price`
 !!! description "`AMM.get_base_price() -> uint256:`"
@@ -2401,7 +2442,7 @@ todo:
 
         ```shell
         >>> AMM.get_base_price()
-        1884222370010455703704
+        26675679125535389229023
         ```
 
 
@@ -2449,7 +2490,12 @@ todo:
         === "Example"
 
             ```shell
-            >>> AMM.p_current_up(todo)
+            >>> AMM.p_current_up(-47)
+            43556091391620558676062
+            >>> AMM.p_current_up(-48)
+            42689325172927310418784
+            >>> AMM.p_current_up(-49)
+            41839807601986057796621
             ```
 
 
@@ -2497,8 +2543,12 @@ todo:
         === "Example"
 
             ```shell
-            >>> AMM.p_current_down()
-            1884222370010455703704
+            >>> AMM.p_current_down(-47)
+            42689325172927310418784
+            >>> AMM.p_current_down(-48)
+            41839807601986057796621
+            >>> AMM.p_current_down(-49)
+            41007195430706536064090
             ```
 
 
@@ -2578,8 +2628,12 @@ todo:
     === "Example"
 
         ```shell
-        >>> AMM.p_oracle_up(1)
-        1865386686603967429539
+        >>> AMM.p_oracle_up(-47)
+        42782025149416813700210
+        >>> AMM.p_oracle_up(-48)
+        43214166817592740669693
+        >>> AMM.p_oracle_up(-49)
+        43650673553123980039273
         ```
 
 
@@ -2658,8 +2712,12 @@ todo:
     === "Example"
 
         ```shell
-        >>> AMM.p_oracle_down(1)
-        1846732871125949043036
+        >>> AMM.p_oracle_down(-47)
+        42354204897922645990019
+        >>> AMM.p_oracle_down(-48)
+        42782025149416813700210
+        >>> AMM.p_oracle_down(-49)
+        43214166817592740669693
         ```
 
 
@@ -2722,7 +2780,7 @@ todo:
 
         ```shell
         >>> AMM.get_p()
-        2063381340481787461220
+        42233442666531455461678
         ```
 
 
@@ -2782,7 +2840,7 @@ todo:
 
         ```shell
         >>> AMM.price_oracle_contract()
-        '0x19F5B81e5325F882C9853B5585f74f751DE3896d'
+        '0xbeF434E2aCF0FBaD1f0579d2376fED0d1CfC4217'
         ```
 
 
@@ -2934,15 +2992,14 @@ todo:
 
     === "Example"
         ```shell
-        >>> AMM.get_xy("0x7a16ff8270133f063aab6c9977183d9e72835428") 
-        63380038975112104970972,0,0,0,0,0,0,0,0,0,41547292092819592072,76745129494279646207,80932549271295120487,85505550289434551683,87415762350612525942,88161753995039151371,88913031968634028498,84145723494117511192,79510327248537508812,84498357558739975913
+        >>> AMM.get_xy(trader) 
+        [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [33333333333333343, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333]]
         ```
 
 
 
 ## **Callbacks**
-
-todo
 
 ### `liquidity_mining_callback`
 !!! description "`AMM.liquidity_mining_callback() -> address: view`"
@@ -2969,7 +3026,7 @@ todo
 !!! description "`AMM.set_callback(liquidity_mining_callback: LMGauge):`"
 
     !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract.
+        This function is only callable by the `admin` of the contract, which is the Controller.
 
     Function to set the liquidity mining callback.
 
@@ -3002,5 +3059,4 @@ todo
 
         ```shell
         >>> AMM.set_callback("todo")
-        'todo'
         ```

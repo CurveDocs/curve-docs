@@ -6,19 +6,19 @@ The following are methods that **may only be called by the owner of the contract
 ### `set_debt_ceiling`
 !!! description "`ControllerFactory.set_debt_ceiling(_to: address, debt_ceiling: uint256):`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
     Function to set the debt ceiling of a market and mint the token amount given for it.
 
     Returns: debt ceiling (`uint256`).
 
-    Emits event: `MintForMarket` or `RemoveFromMarket` or `SetDebtCeiling`
+    Emits: `MintForMarket` or `RemoveFromMarket` or `SetDebtCeiling`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_to` |  `address` | Address to set debt ceiling for |
     | `debt_ceiling` |  `uint256` | Maximum to be allowed to mint |
-
-    !!!note 
-        **`set_debt_ceiling`** can only be called by the `admin` of the contract.
 
     ??? quote "Source code"
 
@@ -117,6 +117,9 @@ The following are methods that **may only be called by the owner of the contract
 ### `set_fee_receiver`
 !!! description "`ControllerFactory.set_fee_receiver(fee_receiver: address):`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
     Function to set the fee receiver address.
 
     Emits: `SetFeeReceiver`
@@ -124,9 +127,6 @@ The following are methods that **may only be called by the owner of the contract
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `fee_receiver` |  `address` | Address of the receiver |
-
-    !!!note 
-        **`set_fee_receiver`** can only be called by the `admin` of the contract.  
 
     ??? quote "Source code"
 
@@ -158,14 +158,14 @@ The following are methods that **may only be called by the owner of the contract
 ### `collect_fees_above_ceiling`
 !!! description "`ControllerFactory.collect_fees_above_ceiling(_to: address):`"
 
-    Function to claim fees above the ceiling. This function will automatically increase the debt ceiling if it's not enough to claim admin fees.
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
+    Function to claim fees above the debt ceiling. This function will automatically increase the debt ceiling if there is not enough to claim admin fees.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_to` |  `address` | Address of the controller |
-
-    !!!note 
-        **`collect_fees_above_ceiling`** can only be called by the `admin` of the contract.  
 
     ??? quote "Source code"
 
@@ -203,13 +203,12 @@ The following are methods that **may only be called by the owner of the contract
 ### `set_implementations`
 !!! description "`ControllerFactory.set_implementations(controller: address, amm: address):`"
 
-    Function to set new implementations (blueprints) for controller and amm. 
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
 
-    Emits event: `SetImplementations`
+    Function to set new implementations (blueprints) for Controller and AMM. Setting new implementations for Controller and AMM does not affect the existing ones.
 
-    !!!note 
-        **`set_implementations`** can only be called by the `admin` of the contract.  
-        Setting new implementations for Controller and AMM does not affect the existing ones.
+    Emits: `SetImplementations`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -248,13 +247,15 @@ The following are methods that **may only be called by the owner of the contract
         ``` 
 
 
+
 ## **Admin Ownership**
+
 ### `admin`
 !!! description "`ControllerFactory.admin() -> address: view`"
 
     Getter for the admin of the contract.
 
-    Returns: admin `address`.
+    Returns: admin (`address`).
 
     ??? quote "Source code"
 
@@ -289,16 +290,16 @@ The following are methods that **may only be called by the owner of the contract
 ### `set_admin`
 !!! description "`ControllerFactory.set_admin(admin: address):`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
     Function to set the admin of the contract.
 
-    Emits event: `SetAdmin`
+    Emits: `SetAdmin`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `admin` |  `address` | Address of the admin |
-
-    !!!note 
-        **`set_admin`** can only be called by the `admin` of the contract.  
+    | `admin` |  `address` | New admin |
 
     ??? quote "Source code"
 
