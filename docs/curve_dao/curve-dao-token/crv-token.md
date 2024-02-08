@@ -447,12 +447,9 @@ Highcharts.merge(true, options, {
 ### `minter`
 !!! description "`CRV.minter() -> address: view`"
 
-    Getter for the minter contract address.
+    Getter for the minter contract address. The minter address can only be set once (at deployment) and not altered after.
 
     Returns: minter contract (`address`).
-
-    !!! note
-        Minter contract can be changed by calling the `set_minter()` function.
 
     ??? quote "Source code"
 
