@@ -388,8 +388,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
     === "Example"
 
         ```shell
-        >>> CryptoSwap.exchange_underlying()
-        1696841675
+        >>> CryptoSwap.exchange_underlying(todo)
         ```
 
 
@@ -556,9 +555,9 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
     === "Example"
 
         ```shell
-        >>> CryptoSwap.exchange_extended()
-        1696841675
+        >>> CryptoSwap.exchange_extended(todo)
         ```
+
 
 ### `get_dy`
 !!! description "`CryptoSwap.get_dy(i: uint256, j: uint256, dx: uint256) -> uint256:`"
@@ -616,90 +615,6 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
         ```shell
         >>> CryptoSwap.get_dy(0, 1, 1e18) # get_dy: 1 ETH for dy PRISMA
         2244836869048665161301
-        ```
-
-
-### `calc_withdraw_one_coin`
-!!! description "`CryptoSwap.calc_withdraw_one_coin(token_amount: uint256, i: uint256) -> uint256:`"
-
-    Method to calculate the amount of output token `i` when burning `token_amount` of lp tokens, taking fees into condsideration.
-
-    Returns: amount of token received (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `token_amount` |  `uint256` | amount of lp tokens burned |
-    | `i` |  `uint256` | index of the coin to withdraw |
-
-    !!!note
-        This method takes fees into consideration.
-
-    ??? quote "Source code"
-
-        ```vyper
-        N_COINS: constant(int128) = 2
-
-        @view
-        @external
-        def calc_withdraw_one_coin(token_amount: uint256, i: uint256) -> uint256:
-            return self._calc_withdraw_one_coin(self._A_gamma(), token_amount, i, True, False)[0]
-
-        @internal
-        @view
-        def _calc_withdraw_one_coin(A_gamma: uint256[2], token_amount: uint256, i: uint256, update_D: bool,
-                                    calc_price: bool) -> (uint256, uint256, uint256, uint256[N_COINS]):
-            token_supply: uint256 = CurveToken(self.token).totalSupply()
-            assert token_amount <= token_supply  # dev: token amount more than supply
-            assert i < N_COINS  # dev: coin out of range
-
-            xx: uint256[N_COINS] = self.balances
-            D0: uint256 = 0
-            precisions: uint256[2] = self._get_precisions()
-
-            price_scale_i: uint256 = self.price_scale * precisions[1]
-            xp: uint256[N_COINS] = [xx[0] * precisions[0], xx[1] * price_scale_i / PRECISION]
-            if i == 0:
-                price_scale_i = PRECISION * precisions[0]
-
-            if update_D:
-                D0 = self.newton_D(A_gamma[0], A_gamma[1], xp)
-            else:
-                D0 = self.D
-
-            D: uint256 = D0
-
-            # Charge the fee on D, not on y, e.g. reducing invariant LESS than charging the user
-            fee: uint256 = self._fee(xp)
-            dD: uint256 = token_amount * D / token_supply
-            D -= (dD - (fee * dD / (2 * 10**10) + 1))
-            y: uint256 = self.newton_y(A_gamma[0], A_gamma[1], xp, D, i)
-            dy: uint256 = (xp[i] - y) * PRECISION / price_scale_i
-            xp[i] = y
-
-            # Price calc
-            p: uint256 = 0
-            if calc_price and dy > 10**5 and token_amount > 10**5:
-                # p_i = dD / D0 * sum'(p_k * x_k) / (dy - dD / D0 * y0)
-                S: uint256 = 0
-                precision: uint256 = precisions[0]
-                if i == 1:
-                    S = xx[0] * precisions[0]
-                    precision = precisions[1]
-                else:
-                    S = xx[1] * precisions[1]
-                S = S * dD / D0
-                p = S * PRECISION / (dy * precision - dD * xx[i] * precision / D0)
-                if i == 0:
-                    p = (10**18)**2 / p
-
-            return dy, p, D, xp
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> CryptoSwap.calc_withdraw_one_coin(1000000000000000000, 0) # withdraw 1 LP token in coin[0]
-        43347133051647883
         ```
 
 
@@ -851,8 +766,51 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 
         ```shell
         >>> CryptoSwap.add_liquidity(todo)
-        
         ```
+
+
+### `calc_token_amount`
+!!! description "`CryptoSwap.calc_token_amount(amounts: uint256[N_COINS]) -> uint256:`"
+
+    Function to calculate the amount of tokens to deposit/withdraw to get `amounts`.
+
+    Returns amount of LP tokens (`uint256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_amount` |  `uint256[N_COINS]` | amount of coins to withdraw/deposit |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @view
+        @external
+        def calc_token_amount(amounts: uint256[N_COINS]) -> uint256:
+            token_supply: uint256 = CurveToken(self.token).totalSupply()
+            precisions: uint256[2] = self._get_precisions()
+            price_scale: uint256 = self.price_scale * precisions[1]
+            A_gamma: uint256[2] = self._A_gamma()
+            xp: uint256[N_COINS] = self.xp()
+            amountsp: uint256[N_COINS] = [
+                amounts[0] * precisions[0],
+                amounts[1] * price_scale / PRECISION]
+            D0: uint256 = self.D
+            if self.future_A_gamma_time > 0:
+                D0 = self.newton_D(A_gamma[0], A_gamma[1], xp)
+            xp[0] += amountsp[0]
+            xp[1] += amountsp[1]
+            D: uint256 = self.newton_D(A_gamma[0], A_gamma[1], xp)
+            d_token: uint256 = token_supply * D / D0 - token_supply
+            d_token -= self._calc_token_fee(amountsp, xp) * d_token / 10**10 + 1
+            return d_token
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> CryptoSwap.calc_token_amount(todo)
+        ```
+
 
 ### `remove_liquidity`
 !!! description "`CryptoSwap.remove_liquidity(_amount: uint256, min_amounts: uint256[N_COINS], use_eth: bool = False, receiver: address = msg.sender):`"
@@ -997,6 +955,91 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
         ```
 
 
+### `calc_withdraw_one_coin`
+!!! description "`CryptoSwap.calc_withdraw_one_coin(token_amount: uint256, i: uint256) -> uint256:`"
+
+    Method to calculate the amount of output token `i` when burning `token_amount` of lp tokens, taking fees into condsideration.
+
+    Returns: amount of token received (`uint256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `token_amount` |  `uint256` | amount of lp tokens burned |
+    | `i` |  `uint256` | index of the coin to withdraw |
+
+    !!!note
+        This method takes fees into consideration.
+
+    ??? quote "Source code"
+
+        ```vyper
+        N_COINS: constant(int128) = 2
+
+        @view
+        @external
+        def calc_withdraw_one_coin(token_amount: uint256, i: uint256) -> uint256:
+            return self._calc_withdraw_one_coin(self._A_gamma(), token_amount, i, True, False)[0]
+
+        @internal
+        @view
+        def _calc_withdraw_one_coin(A_gamma: uint256[2], token_amount: uint256, i: uint256, update_D: bool,
+                                    calc_price: bool) -> (uint256, uint256, uint256, uint256[N_COINS]):
+            token_supply: uint256 = CurveToken(self.token).totalSupply()
+            assert token_amount <= token_supply  # dev: token amount more than supply
+            assert i < N_COINS  # dev: coin out of range
+
+            xx: uint256[N_COINS] = self.balances
+            D0: uint256 = 0
+            precisions: uint256[2] = self._get_precisions()
+
+            price_scale_i: uint256 = self.price_scale * precisions[1]
+            xp: uint256[N_COINS] = [xx[0] * precisions[0], xx[1] * price_scale_i / PRECISION]
+            if i == 0:
+                price_scale_i = PRECISION * precisions[0]
+
+            if update_D:
+                D0 = self.newton_D(A_gamma[0], A_gamma[1], xp)
+            else:
+                D0 = self.D
+
+            D: uint256 = D0
+
+            # Charge the fee on D, not on y, e.g. reducing invariant LESS than charging the user
+            fee: uint256 = self._fee(xp)
+            dD: uint256 = token_amount * D / token_supply
+            D -= (dD - (fee * dD / (2 * 10**10) + 1))
+            y: uint256 = self.newton_y(A_gamma[0], A_gamma[1], xp, D, i)
+            dy: uint256 = (xp[i] - y) * PRECISION / price_scale_i
+            xp[i] = y
+
+            # Price calc
+            p: uint256 = 0
+            if calc_price and dy > 10**5 and token_amount > 10**5:
+                # p_i = dD / D0 * sum'(p_k * x_k) / (dy - dD / D0 * y0)
+                S: uint256 = 0
+                precision: uint256 = precisions[0]
+                if i == 1:
+                    S = xx[0] * precisions[0]
+                    precision = precisions[1]
+                else:
+                    S = xx[1] * precisions[1]
+                S = S * dD / D0
+                p = S * PRECISION / (dy * precision - dD * xx[i] * precision / D0)
+                if i == 0:
+                    p = (10**18)**2 / p
+
+            return dy, p, D, xp
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> CryptoSwap.calc_withdraw_one_coin(1000000000000000000, 0) # withdraw 1 LP token in coin[0]
+        43347133051647883
+        ```
+
+
+
 ## **Oracles Methods**
 
 Oracle prices are updated whenever the `tweak_price` function is called. This occurs when any of the `_exchange()`, `add_liquidity()`, or `remove_liquidity_one_coin()` functions are called.
@@ -1004,119 +1047,119 @@ Oracle prices are updated whenever the `tweak_price` function is called. This oc
 
 ??? quote "Source code"
 
-```vyper "Update Price Oracles"
+    ```vyper "Update Price Oracles"
 
-@internal
-def tweak_price(A_gamma: uint256[2],_xp: uint256[N_COINS], p_i: uint256, new_D: uint256):
-    price_oracle: uint256 = self._price_oracle
-    last_prices: uint256 = self.last_prices
-    price_scale: uint256 = self.price_scale
-    last_prices_timestamp: uint256 = self.last_prices_timestamp
-    p_new: uint256 = 0
+    @internal
+    def tweak_price(A_gamma: uint256[2],_xp: uint256[N_COINS], p_i: uint256, new_D: uint256):
+        price_oracle: uint256 = self._price_oracle
+        last_prices: uint256 = self.last_prices
+        price_scale: uint256 = self.price_scale
+        last_prices_timestamp: uint256 = self.last_prices_timestamp
+        p_new: uint256 = 0
 
-    if last_prices_timestamp < block.timestamp:
-        # MA update required
-        ma_half_time: uint256 = self.ma_half_time
-        alpha: uint256 = self.halfpow((block.timestamp - last_prices_timestamp) * 10**18 / ma_half_time)
-        price_oracle = (last_prices * (10**18 - alpha) + price_oracle * alpha) / 10**18
-        self._price_oracle = price_oracle
-        self.last_prices_timestamp = block.timestamp
+        if last_prices_timestamp < block.timestamp:
+            # MA update required
+            ma_half_time: uint256 = self.ma_half_time
+            alpha: uint256 = self.halfpow((block.timestamp - last_prices_timestamp) * 10**18 / ma_half_time)
+            price_oracle = (last_prices * (10**18 - alpha) + price_oracle * alpha) / 10**18
+            self._price_oracle = price_oracle
+            self.last_prices_timestamp = block.timestamp
 
-    D_unadjusted: uint256 = new_D  # Withdrawal methods know new D already
-    if new_D == 0:
-        # We will need this a few times (35k gas)
-        D_unadjusted = self.newton_D(A_gamma[0], A_gamma[1], _xp)
+        D_unadjusted: uint256 = new_D  # Withdrawal methods know new D already
+        if new_D == 0:
+            # We will need this a few times (35k gas)
+            D_unadjusted = self.newton_D(A_gamma[0], A_gamma[1], _xp)
 
-    if p_i > 0:
-        last_prices = p_i
+        if p_i > 0:
+            last_prices = p_i
 
-    else:
-        # calculate real prices
-        __xp: uint256[N_COINS] = _xp
-        dx_price: uint256 = __xp[0] / 10**6
-        __xp[0] += dx_price
-        last_prices = price_scale * dx_price / (_xp[1] - self.newton_y(A_gamma[0], A_gamma[1], __xp, D_unadjusted, 1))
+        else:
+            # calculate real prices
+            __xp: uint256[N_COINS] = _xp
+            dx_price: uint256 = __xp[0] / 10**6
+            __xp[0] += dx_price
+            last_prices = price_scale * dx_price / (_xp[1] - self.newton_y(A_gamma[0], A_gamma[1], __xp, D_unadjusted, 1))
 
-    self.last_prices = last_prices
+        self.last_prices = last_prices
 
-    total_supply: uint256 = CurveToken(self.token).totalSupply()
-    old_xcp_profit: uint256 = self.xcp_profit
-    old_virtual_price: uint256 = self.virtual_price
+        total_supply: uint256 = CurveToken(self.token).totalSupply()
+        old_xcp_profit: uint256 = self.xcp_profit
+        old_virtual_price: uint256 = self.virtual_price
 
-    # Update profit numbers without price adjustment first
-    xp: uint256[N_COINS] = [D_unadjusted / N_COINS, D_unadjusted * PRECISION / (N_COINS * price_scale)]
-    xcp_profit: uint256 = 10**18
-    virtual_price: uint256 = 10**18
+        # Update profit numbers without price adjustment first
+        xp: uint256[N_COINS] = [D_unadjusted / N_COINS, D_unadjusted * PRECISION / (N_COINS * price_scale)]
+        xcp_profit: uint256 = 10**18
+        virtual_price: uint256 = 10**18
 
-    if old_virtual_price > 0:
-        xcp: uint256 = self.geometric_mean(xp, True)
-        virtual_price = 10**18 * xcp / total_supply
-        xcp_profit = old_xcp_profit * virtual_price / old_virtual_price
+        if old_virtual_price > 0:
+            xcp: uint256 = self.geometric_mean(xp, True)
+            virtual_price = 10**18 * xcp / total_supply
+            xcp_profit = old_xcp_profit * virtual_price / old_virtual_price
 
-        t: uint256 = self.future_A_gamma_time
-        if virtual_price < old_virtual_price and t == 0:
-            raise "Loss"
-        if t == 1:
-            self.future_A_gamma_time = 0
+            t: uint256 = self.future_A_gamma_time
+            if virtual_price < old_virtual_price and t == 0:
+                raise "Loss"
+            if t == 1:
+                self.future_A_gamma_time = 0
 
-    self.xcp_profit = xcp_profit
+        self.xcp_profit = xcp_profit
 
-    norm: uint256 = price_oracle * 10**18 / price_scale
-    if norm > 10**18:
-        norm -= 10**18
-    else:
-        norm = 10**18 - norm
-    adjustment_step: uint256 = max(self.adjustment_step, norm / 5)
+        norm: uint256 = price_oracle * 10**18 / price_scale
+        if norm > 10**18:
+            norm -= 10**18
+        else:
+            norm = 10**18 - norm
+        adjustment_step: uint256 = max(self.adjustment_step, norm / 5)
 
-    needs_adjustment: bool = self.not_adjusted
-    # if not needs_adjustment and (virtual_price-10**18 > (xcp_profit-10**18)/2 + self.allowed_extra_profit):
-    # (re-arrange for gas efficiency)
-    if not needs_adjustment and (virtual_price * 2 - 10**18 > xcp_profit + 2*self.allowed_extra_profit) and (norm > adjustment_step) and (old_virtual_price > 0):
-        needs_adjustment = True
-        self.not_adjusted = True
+        needs_adjustment: bool = self.not_adjusted
+        # if not needs_adjustment and (virtual_price-10**18 > (xcp_profit-10**18)/2 + self.allowed_extra_profit):
+        # (re-arrange for gas efficiency)
+        if not needs_adjustment and (virtual_price * 2 - 10**18 > xcp_profit + 2*self.allowed_extra_profit) and (norm > adjustment_step) and (old_virtual_price > 0):
+            needs_adjustment = True
+            self.not_adjusted = True
 
-    if needs_adjustment:
-        if norm > adjustment_step and old_virtual_price > 0:
-            p_new = (price_scale * (norm - adjustment_step) + adjustment_step * price_oracle) / norm
+        if needs_adjustment:
+            if norm > adjustment_step and old_virtual_price > 0:
+                p_new = (price_scale * (norm - adjustment_step) + adjustment_step * price_oracle) / norm
 
-            # Calculate balances*prices
-            xp = [_xp[0], _xp[1] * p_new / price_scale]
+                # Calculate balances*prices
+                xp = [_xp[0], _xp[1] * p_new / price_scale]
 
-            # Calculate "extended constant product" invariant xCP and virtual price
-            D: uint256 = self.newton_D(A_gamma[0], A_gamma[1], xp)
-            xp = [D / N_COINS, D * PRECISION / (N_COINS * p_new)]
-            # We reuse old_virtual_price here but it's not old anymore
-            old_virtual_price = 10**18 * self.geometric_mean(xp, True) / total_supply
+                # Calculate "extended constant product" invariant xCP and virtual price
+                D: uint256 = self.newton_D(A_gamma[0], A_gamma[1], xp)
+                xp = [D / N_COINS, D * PRECISION / (N_COINS * p_new)]
+                # We reuse old_virtual_price here but it's not old anymore
+                old_virtual_price = 10**18 * self.geometric_mean(xp, True) / total_supply
 
-            # Proceed if we've got enough profit
-            # if (old_virtual_price > 10**18) and (2 * (old_virtual_price - 10**18) > xcp_profit - 10**18):
-            if (old_virtual_price > 10**18) and (2 * old_virtual_price - 10**18 > xcp_profit):
-                self.price_scale = p_new
-                self.D = D
-                self.virtual_price = old_virtual_price
+                # Proceed if we've got enough profit
+                # if (old_virtual_price > 10**18) and (2 * (old_virtual_price - 10**18) > xcp_profit - 10**18):
+                if (old_virtual_price > 10**18) and (2 * old_virtual_price - 10**18 > xcp_profit):
+                    self.price_scale = p_new
+                    self.D = D
+                    self.virtual_price = old_virtual_price
 
-                return
+                    return
 
-            else:
-                self.not_adjusted = False
+                else:
+                    self.not_adjusted = False
 
-                # Can instead do another flag variable if we want to save bytespace
-                self.D = D_unadjusted
-                self.virtual_price = virtual_price
-                self._claim_admin_fees()
+                    # Can instead do another flag variable if we want to save bytespace
+                    self.D = D_unadjusted
+                    self.virtual_price = virtual_price
+                    self._claim_admin_fees()
 
-                return
+                    return
 
-    # If we are here, the price_scale adjustment did not happen
-    # Still need to update the profit counter and D
-    self.D = D_unadjusted
-    self.virtual_price = virtual_price
+        # If we are here, the price_scale adjustment did not happen
+        # Still need to update the profit counter and D
+        self.D = D_unadjusted
+        self.virtual_price = virtual_price
 
-    # norm appeared < adjustment_step after
-    if needs_adjustment:
-        self.not_adjusted = False
-        self._claim_admin_fees()
-```
+        # norm appeared < adjustment_step after
+        if needs_adjustment:
+            self.not_adjusted = False
+            self._claim_admin_fees()
+    ```
 
 
 ### `lp_price`
