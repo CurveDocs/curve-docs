@@ -1,11 +1,12 @@
 Newer Liquidity Gauges allow the addition of permissionless rewards to a gauge by a `distributor`. When deploying a gauge through the [OwnershipProxy](../../ownership-proxy/overview.md), the deployer is automatically designated as the *gauge manager*. This address can then call **`add_rewards`** within the OwnershipProxy contract to add *reward tokens and distributors*. These can subsequently be deposited into the gauge.
 
-
-
 If the gauge wasn't deployed through the OwnershipProxy, a [migration](#migrate_gauge_manager) is required first before adding permissionless rewards.
 
-!!!info
-    On sidechains, permissionless rewards are directly built into the gauges. Whoever deploys the gauge can call `add_rewards` on the gauge contract itself (no need to migrate or do it via proxy).
+On sidechains, permissionless rewards are directly built into the gauges. Whoever deploys the gauge can call `add_rewards` on the gauge contract itself (no need to migrate or do it via proxy).
+
+!!!warning "NG Gauges"
+    Gauges for NG (stableswap-ng, tricrypto-ng, or twocrypto-ng) pools offer the possibility to add external rewards unlocked from the start, without deploying the gauge from an OwnershipProxy or doing any migration.
+
 
 !!!deploy "Contract Source & Deployment"
     - OwnerProxy for StableSwap pools (*Ownership- and GaugeProxy*): [0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571](https://etherscan.io/address/0x742C3cF9Af45f91B109a81EfEaf11535ECDe9571)  
@@ -31,9 +32,6 @@ If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/addr
     !!!guard
         This function can only be called by the `ownership_admin` or `gauge_manager`.
 
-    !!!guarded-method
-        test
-
     Function to add a reward token  and distributor.
 
     | Input      | Type   | Description |
@@ -46,7 +44,7 @@ If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/addr
 
         === "OwnerProxy.vy"
 
-            ```vyper hl_lines="5 6 7"
+            ```vyper
             ownership_admin: public(address)
             gauge_manager: public(HashMap[address, address])
 
@@ -58,7 +56,7 @@ If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/addr
         
         === "GaugeV4.vy"
 
-            ```vyper hl_lines="6 10"
+            ```vyper
             MAX_REWARDS: constant(uint256) = 8
 
             admin: public(address)
@@ -103,7 +101,7 @@ If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/addr
 
         === "OwnerProxy.vy"
 
-            ```vyper hl_lines="1"
+            ```vyper 
             ownership_admin: public(address)
             gauge_manager: public(HashMap[address, address])
 
@@ -115,7 +113,7 @@ If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/addr
         
         === "GaugeV4.vy"
 
-            ```vyper hl_lines="3"
+            ```vyper
             admin: public(address)
 
             @external
@@ -150,7 +148,7 @@ If the gauge was deployed through the [old GaugeProxy](https://etherscan.io/addr
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         @external
         def migrate_gauge_manager(_gauge: address):
             manager: address = ManagerProxy(OLD_MANAGER_PROXY).gauge_manager(_gauge)
@@ -186,7 +184,7 @@ Depositing reward tokens is done directly via the individual gauges after the re
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 5"
+        ```vyper
         WEEK: constant(uint256) = 604800
 
         @external
@@ -246,7 +244,7 @@ These methods are queried directly from the individual gauge contracts.
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 4 15"
+        ```vyper
         reward_tokens: public(address[MAX_REWARDS])
 
         @external
@@ -282,7 +280,7 @@ These methods are queried directly from the individual gauge contracts.
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1 16"
+        ```vyper
         reward_count: public(uint256)
 
         @external
@@ -322,7 +320,7 @@ These methods are queried directly from the individual gauge contracts.
 
     ??? quote "Source code"
 
-        ```vyper hl_lines="1"
+        ```vyper
         reward_data: public(HashMap[address, Reward])
         ```
 
