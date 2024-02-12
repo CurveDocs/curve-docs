@@ -53,6 +53,11 @@ The **controls within the Curve DAO Token are strictly limited**. The admin of t
 
     Function to change the token name symbol.
 
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_name` |  `String[64]` | New Token Name |
+    | `_symbol` |  `String[32]` | New Token Symbol |
+
     ??? quote "Source code"
 
         ```vyper
@@ -91,6 +96,10 @@ The **controls within the Curve DAO Token are strictly limited**. The admin of t
     Function to set the minter contract for the token.
 
     Emits: `SetMinter`
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_minter` |  `address` | New Minter Address |
 
     ??? quote "Source code"
 
