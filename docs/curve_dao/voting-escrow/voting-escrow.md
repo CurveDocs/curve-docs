@@ -107,8 +107,8 @@ CRV tokens can be locked by any Externally Owned Account (EOA). When a smart con
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_value`   |  `uint256` | amount of CRV to deposit |
-    | `_unlock_time` |  `uint256` | unlock time |
+    | `_value`   |  `uint256` | Amount of CRV to deposit |
+    | `_unlock_time` |  `uint256` | Timestamp of the unlock time |
 
     ??? quote "Source code"
 
@@ -202,13 +202,13 @@ CRV tokens can be locked by any Externally Owned Account (EOA). When a smart con
 ### `increase_amount`
 !!! description "`VotingEscrow.increase_amount(_value: uint256):`"
 
-    Deposit additional `_value` CRV tokens into an existing lock.
+    Lock an additional amount of  `_value` CRV tokens to an existing lock.
 
     Emits: `Deposit`, `Supply` and `Transfer`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_value`       |  `uint256` | amount of CRV to additionally lock |
+    | Input    | Type       | Description |
+    | -------- | ---------- | ----------- |
+    | `_value` |  `uint256` | Amount of CRV to additionally lock |
 
     ??? quote "Source code"
 
@@ -272,13 +272,13 @@ CRV tokens can be locked by any Externally Owned Account (EOA). When a smart con
 ### `increase_unlock_time`
 !!! description "`VotingEscrow.increase_unlock_time(_unlock_time: uint256):`"
 
-    Extend the unlock time on an already existing lock until `_unlock_time`.
+    Function to extend the unlock time on an already existing lock until `_unlock_time`.
 
     Emits: `Deposit`, `Supply` and `Transfer`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_unlock_time` |  `uint256` | new epoch time for unlocking |
+    | `_unlock_time` |  `uint256` | New unlock timestamp |
 
     ??? quote "Source code"
 
@@ -415,7 +415,7 @@ CRV tokens can be locked by any Externally Owned Account (EOA). When a smart con
 ### `withdraw`
 !!! description "`VotingEscrow.withdraw()`"
 
-    Withdraw deposited CRV tokens once a lock has expired.
+    Function to withdraw deposited CRV tokens once a lock has expired.
 
     Emits: `Transfer`, `Withdraw` and `Supply`
 
@@ -738,7 +738,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
         ```
 
 
-### `locked_end`
+### `locked__end`
 !!! description "`VotingEscrow.locked__end(_addr: address) -> uint256:`"
 
     Getter for the timestamp when `_addr`'s lock finishes.
@@ -768,7 +768,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     === "Example"  
         ```shell
-        >>> VotingEscrow.locked_end(0x7a16fF8270133F063aAb6C9977183D9e72835428)
+        >>> VotingEscrow.locked_end("0x7a16fF8270133F063aAb6C9977183D9e72835428")
         1808956800
         ```
 

@@ -16,7 +16,7 @@ The ownership admin controls most functionality within the protocol. Performing 
 
 
 2. ### **Parameter Admin**
-The parameter admin has authority to modify parameters on pools, such as adjusting the amplification co-efficient. Performing an action via the paramater admin requries a 15% quorum with 60% support.  
+The parameter admin has authority to modify parameters on pools, such as adjusting the amplification co-efficient. Performing an action via the paramater admin requries a 15% quorum with 30% support.  
 
 
 
