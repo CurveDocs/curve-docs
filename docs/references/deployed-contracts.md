@@ -204,7 +204,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-polygon: `Polygon` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://polygonscan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-avalanche: `Avalanche` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://snowtrace.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-fantom: `Fantom` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://ftmscan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
-| :logos-binance: `BinanceSmartChain` | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://bscscan.com/address/0x69522fb5337663d3B4dFB0030b881c1A750Adb4f#code) |
+| :logos-bsc: `Binance Smart Chain` | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://bscscan.com/address/0x69522fb5337663d3B4dFB0030b881c1A750Adb4f#code) |
 | :logos-kava: `Kava` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://kavascan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D/contracts#address-tabs) |
 
 
@@ -476,7 +476,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `Meta AMM`  | [0x046207cB759F527b6c10C2D61DBaca45513685CC](https://ftmscan.com/address/0x046207cB759F527b6c10C2D61DBaca45513685CC#code) |
 
 
-**:logos-binance: Binance Smart Chain**
+**:logos-bsc: Binance Smart Chain**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
@@ -720,7 +720,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 
 
-**:logos-binance: Binance Smart Chain**
+**:logos-bsc: Binance Smart Chain**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
@@ -819,7 +819,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-polygon: `Polygon` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://polygonscan.com/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-avalanche: `Avalanche` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://snowtrace.io/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-fantom: `Fantom` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://ftmscan.com/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
-| :logos-binance: `Binance Smart Chain` | [0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF](https://bscscan.com/address/0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF#code) |
+| :logos-bsc: `Binance Smart Chain` | [0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF](https://bscscan.com/address/0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF#code) |
 | :logos-celo: `Celo`| [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://celoscan.io/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-kava: `Kava` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://kavascan.com/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#contracts) |
 | :logos-aurora: `Aurora` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](ttps://explorer.aurora.dev/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4/contracts) |
@@ -841,7 +841,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-polygon: `Polygon` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://polygonscan.com/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-avalanche: `Avalanche` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://snowtrace.io/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-fantom: `Fantom` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://ftmscan.com/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
-| :logos-binance: `Binance Smart Chain` | [0xd6681e74eEA20d196c15038C580f721EF2aB6320](https://bscscan.com/address/0xd6681e74eEA20d196c15038C580f721EF2aB6320#code) |
+| :logos-bsc: `Binance Smart Chain` | [0xd6681e74eEA20d196c15038C580f721EF2aB6320](https://bscscan.com/address/0xd6681e74eEA20d196c15038C580f721EF2aB6320#code) |
 | :logos-celo: `Celo`| [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://celoscan.io/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-kava: `Kava` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://kavascan.com/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#contracts) |
 | :logos-aurora: `Aurora` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](ttps://explorer.aurora.dev/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC/contracts) |
@@ -863,7 +863,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-polygon: `Polygon` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://polygonscan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-avalanche: `Avalanche` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://snowtrace.io/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-fantom: `Fantom` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://ftmscan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
-| :logos-binance: `Binance Smart Chain` | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://bscscan.com/address/0x4f37A9d177470499A2dD084621020b023fcffc1F#code) |
+| :logos-bsc: `Binance Smart Chain` | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://bscscan.com/address/0x4f37A9d177470499A2dD084621020b023fcffc1F#code) |
 | :logos-kava: `Kava` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://kavascan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#contracts) |
 
 
