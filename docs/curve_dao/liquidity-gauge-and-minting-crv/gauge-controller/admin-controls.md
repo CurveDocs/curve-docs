@@ -17,7 +17,7 @@ In order for a liquidity gauge to be elegible to receive CRV emission, its addre
 
     Function to add a new gauge to the GaugeController.
 
-    Emits: `NewGauge`
+    Emits: `NewGauge` 
 
     | Input      | Type   | Description |
     | ----------- | -------| ---------- |
@@ -133,7 +133,7 @@ In order for a liquidity gauge to be elegible to receive CRV emission, its addre
 
     Function to change the weight for a give gauge.
 
-    Emits: `NewTypeWeight`
+    Emits: `NewTypeWeight` 
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -189,7 +189,62 @@ In order for a liquidity gauge to be elegible to receive CRV emission, its addre
 
 
 
-## **Transfer Ownership**
+## **Contract Ownership** 
+
+Admin ownership can be commited by calling [`commit_transfer_ownership`](../gauge-controller/admin-controls.md#commit_transfer_ownership). Changes then need to be [applied](../gauge-controller/admin-controls.md#apply_transfer_ownership). The current `admin` is the OwnershipAgent, which would require a DAO vote to change it.
+
+
+### `admin`
+!!! description "`GaugeController.admin() -> address: view`"
+
+    Getter for the admin of the contract.
+
+    Returns: admin (`address`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        admin: public(address)  # Can and will be a smart contract
+
+        @external
+        def __init__(_token: address, _voting_escrow: address):
+            """
+            @notice Contract constructor
+            @param _token `ERC20CRV` contract address
+            @param _voting_escrow `VotingEscrow` contract address
+            """
+            ...
+
+            self.admin = msg.sender
+
+            ...
+        ```
+
+    === "Example"
+        ```shell
+        >>> GaugeController.admin()
+        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
+        ```
+
+
+### `future_admin`
+!!! description "`GaugeController.future_admin() -> address: view`"
+
+    Getter for the future admin of the contract. 
+
+    Returns: future admin (`address`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        future_admin: public(address)  # Can and will be a smart contract
+        ```
+
+    === "Example"
+        ```shell
+        >>> GaugeController.future_admin()
+        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
+        ```
 
 ### `commit_transfer_ownership`
 !!! description "`GaugeController.commit_transfer_ownership(addr: address)`"
