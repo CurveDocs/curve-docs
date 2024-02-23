@@ -1,6 +1,6 @@
 <h1>LP Token Methods</h1>
 
-The LP Token methods are integrated within the exchange contract. They share the same contract address.
+The LP Token methods are integrated into the exchange contract. Pool and LP token **share the same contract address**.
 
 
 ## **Contract Info Methods**
@@ -40,7 +40,8 @@ The LP Token methods are integrated within the exchange contract. They share the
     === "Example"
 
         ```shell
-        >>> TwoCrypto.name(todo)
+        >>> TwoCrypto.name()
+        "LP token name"
         ```
 
 
@@ -79,14 +80,15 @@ The LP Token methods are integrated within the exchange contract. They share the
     === "Example"
 
         ```shell
-        >>> TwoCrypto.symbol(todo)
+        >>> TwoCrypto.symbol()
+        "LP token symbol"
         ```
 
 
 ### `decimals`
 !!! description "`TwoCrypto.decimals -> uint8: view`"
 
-    Getter for the decimals of the LP token. This variable is a constant and is always set to 18.
+    Getter for the decimals of the LP token. This variable is a **constant** and is always set to 18.
 
     Returns: Decimals (`String[32]`).
 
@@ -151,8 +153,8 @@ The LP Token methods are integrated within the exchange contract. They share the
     === "Example"
 
         ```shell
-        >>> TwoCrypto.balanceOf(todo)
-
+        >>> TwoCrypto.balanceOf("address")
+        returns lp token balance of address
         ```
 
 
@@ -174,7 +176,8 @@ The LP Token methods are integrated within the exchange contract. They share the
     === "Example"
 
         ```shell
-        >>> TwoCrypto.totalSupply(todo)
+        >>> TwoCrypto.totalSupply()
+        returns total supply
         ```
 
 
@@ -229,7 +232,8 @@ The LP Token methods are integrated within the exchange contract. They share the
     === "Example"
 
         ```shell
-        >>> TwoCrypto.transfer(todo)
+        >>> TwoCrypto.transfer(alice, 100)
+        returns True            # transfers 100 tokens to alice
         ```
 
 
@@ -287,8 +291,8 @@ The LP Token methods are integrated within the exchange contract. They share the
     === "Example"
 
         ```shell
-        >>> TwoCrypto.(todo)
-
+        >>> TwoCrypto.transferFrom("Alice", "Bob", 100)
+        returns True            # transfers 100 tokens from Alice to Bob
         ```
 
 
@@ -337,7 +341,8 @@ The LP Token methods are integrated within the exchange contract. They share the
     === "Example"
 
         ```shell
-        >>> TwoCrypto.approve(todo)
+        >>> TwoCrypto.approve(Alice, 100)
+        returns True            # approves Alice to send 100 tokens of msg.sender
         ```
 
 
@@ -364,12 +369,13 @@ The LP Token methods are integrated within the exchange contract. They share the
     === "Example"
 
         ```shell
-        >>> TwoCrypto.allowance(todo)
+        >>> TwoCrypto.allowance("Alice", "Bob")
+        100
         ```
 
 
 ### `permit`
-!!! description "`TwoCrypto.`"
+!!! description "`TwoCrypto.permit(_owner: address, _spender: address, _value: uint256, _deadline: uint256, _v: uint8, _r: bytes32, _s: bytes32) -> bool:`"
 
     Function to permit `spender` to spend up to `_value` amount of `_owner`'s tokens via a signature.
 
@@ -450,12 +456,6 @@ The LP Token methods are integrated within the exchange contract. They share the
 
                 log Approval(_owner, _spender, _value)
             ```
-    
-    === "Example"
-
-        ```shell
-        >>> TwoCrypto.permit(todo)
-        ```
 
 
 ### `nonces`
@@ -480,13 +480,14 @@ The LP Token methods are integrated within the exchange contract. They share the
     === "Example"
 
         ```shell
-        >>> TwoCrypto.(todo)
+        >>> TwoCrypto.nonces("Alice")
+        0
         ```
 
 
 
 ### `salt`
-!!! description "`TwoCrypto.salt -> bytes32`"
+!!! description "`TwoCrypto.salt() -> bytes32`"
 
     Getter for the salt of the LP token.
 
@@ -509,7 +510,7 @@ The LP Token methods are integrated within the exchange contract. They share the
 
 
 ### `DOMAIN_SEPERATOR`
-!!! description "`TwoCrypto.DOMAIN_SEPERATOR -> bytes32: view`"
+!!! description "`TwoCrypto.DOMAIN_SEPERATOR() -> bytes32: view`"
 
     Getter for the domain seperator.
 

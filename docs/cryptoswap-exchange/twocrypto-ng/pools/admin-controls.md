@@ -1,26 +1,20 @@
 <h1>Pool: Admin Controls</h1>
 
 
-!!!notebook
-    A Jupyter Notebook regarding the admin-guarded functions of the pool can be found on [GitHub](https://github.com/CurveDocs/curve-notebook/blob/main/notebooks/scripts/cryptoswap-ng/admin_controls.ipynb).
-    
-    **Note:** In the future, these notebooks will be made more interactive and will be hosted for quick and easy usage.
-
-
-
 # **Pool Ownership**
-Pools created through the Factory are "owned" by the factory **`admin`**. Ownership can therefore only be changed within the factory contract via **`commit_transfer_ownership`** and **`accept_transfer_ownership`**. 
+Liquidity pools are deployed via the [pool factory](../../../factory/twocrypto-ng/deployer-api.md). All pools deployed share the same admin defined within the Factory contract. To transfer ownership of an individual pool, it's necessary to transfer the ownership of the entire Factory, a decision that requires a DAO vote, given that the Factory is controlled by the DAO.
+
+The same applies to the fee receiver of the pools. This is set in the Factory as well and can only be changed there. 
 
 [Factory Contract Ownership](../../../factory/overview.md#factory-contract-ownership)
 
+
 # **Parameter Changes**
 
-More informations about the parameters: [https://nagaking.substack.com/p/deep-dive-curve-v2-parameters](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).
+More information about parameters: [https://nagaking.substack.com/p/deep-dive-curve-v2-parameters](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).
 
-The appropriate value for **`A`** and **`gamma`** is dependent upon the type of coin being used within the pool, and is subject to optimisation and pool-parameter update based on the market history of the trading pair. It is possible to modify the parameters for a pool after it has been deployed. However, it requires a vote within the Curve DAO and must reach a 15% quorum.
+The appropriate value for **`A`** and **`gamma`** is dependent upon the type of coin being used within the pool, and is subject to optimization and pool-parameter update based on the market history of the trading pair. It is possible to modify the parameters for a pool after it has been deployed. However, it requires a vote within the Curve DAO and must reach a 15% quorum.
 
-
-## **Amplification Coefficient / Gamma**
 
 ### `ramp_A_gamma`
 !!! description "`TwoCrypto.ramp_A_gamma(future_A: uint256, future_gamma: uint256, future_time: uint256):`"
@@ -28,7 +22,7 @@ The appropriate value for **`A`** and **`gamma`** is dependent upon the type of 
     !!!guard "Guarded Method" 
         This function can only be called by the `admin` of the Factory contract.
 
-    Function to linearly ramp the values of `A` and `gamma`. Both `A` and `gamma` are packed within the same variable.
+    Function to linearly ramp the values of `A` and `gamma`.
 
     Emits: `RampAgamma`
 
@@ -104,7 +98,7 @@ The appropriate value for **`A`** and **`gamma`** is dependent upon the type of 
     === "Example"
 
         ```shell
-        >>> TwoCrypto.ramp_A_gamma(todo)
+        >>> soon
         ```
 
 
@@ -152,13 +146,9 @@ The appropriate value for **`A`** and **`gamma`** is dependent upon the type of 
     === "Example"
 
         ```shell
-        >>> TwoCrypto.stop_ramp_A_gamma(todo)
+        >>> soon
         ```
 
-
-## **Other Parameters**
-
-Other parameters, besides `A` and `gamma` can be modified via the `apply_new_parameters` function:
 
 ### `apply_new_parameters`
 !!! description "`TwoCrypto.apply_new_parameters(_new_mid_fee: uint256, _new_out_fee: uint256, _new_fee_gamma: uint256, _new_allowed_extra_profit: uint256, _new_adjustment_step: uint256, _new_ma_time: uint256, _new_xcp_ma_time: uint256):`"
@@ -289,7 +279,7 @@ Other parameters, besides `A` and `gamma` can be modified via the `apply_new_par
     === "Example"
 
         ```shell
-        >>> TwoCrypto.apply_new_parameters(todo)
+        >>> soon
         ```
 
 
@@ -313,7 +303,7 @@ Other parameters, besides `A` and `gamma` can be modified via the `apply_new_par
     === "Example"
 
         ```shell
-        >>> TwoCrypto.initial_A_gamma(todo)
+        >>> soon
         ```
 
 
@@ -335,7 +325,7 @@ Other parameters, besides `A` and `gamma` can be modified via the `apply_new_par
     === "Example"
 
         ```shell
-        >>> TwoCrypto.initial_A_gamma_time(todo)
+        >>> soon
         ```
 
 
@@ -357,7 +347,7 @@ Other parameters, besides `A` and `gamma` can be modified via the `apply_new_par
     === "Example"
 
         ```shell
-        >>> TwoCrypto.future_A_gamma(todo)
+        >>> soon
         ```
 
 
@@ -387,5 +377,5 @@ Other parameters, besides `A` and `gamma` can be modified via the `apply_new_par
     === "Example"
 
         ```shell
-        >>> TwoCrypto.future_A_gamma_time(todo)
+        >>> soon
         ```
