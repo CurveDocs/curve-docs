@@ -200,8 +200,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-optimism: `Optimism` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://optimistic.etherscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-base: `Base` | [0xd6681e74eEA20d196c15038C580f721EF2aB6320](https://basescan.org/address/0xd6681e74eEA20d196c15038C580f721EF2aB6320#code) |
 | `Fraxtal` | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://fraxscan.com/address/0x4f37A9d177470499A2dD084621020b023fcffc1F#code) |
-| :logos-gnosis: `Gnosis (xDAI)` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://gnosisscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-polygon: `Polygon` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://polygonscan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
+| :logos-gnosis: `Gnosis (xDAI)` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://gnosisscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-avalanche: `Avalanche` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://snowtrace.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-fantom: `Fantom` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://ftmscan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-bsc: `Binance Smart Chain` | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://bscscan.com/address/0x69522fb5337663d3B4dFB0030b881c1A750Adb4f#code) |
@@ -241,9 +241,14 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `veBoost - Boost Delegation V2` | Moonbeam | :material-close: |
 
 
+
 ## **Pool Factory**
 
+Pool factory addresses are referenced within the according sections, e.g., stableswap-ng factories can be found in the [stableswap-ng section](#stableswap-ng).
+
 **Ethereum Mainnet**
+
+*The following are "old" factories on Ethereum Mainnet:*
 
 |  Factory              | Contract Address |
 | :-------------------: | :--------------: |
@@ -252,6 +257,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | crvUSD Pool Factory   | [0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d](https://etherscan.io/address/0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d) | 
 | CryptoSwap Factory    | [0xF18056Bbd320E96A48e3Fbf8bC061322531aac99](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99) | 
 | Tricrypto Factory     | [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963) |
+
 
 
 ## **Curve X-GOV**
@@ -311,6 +317,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | Agent Blueprint | [0x5EF72230578b3e399E6C6F4F6360edF95e83BBfd](https://explorer.mantle.xyz/address/0x5EF72230578b3e399E6C6F4F6360edF95e83BBfd) |
 
 
+
 ## **Stableswap-NG**
 
 !!!deploy "Source Code"
@@ -321,7 +328,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
     *To query the factory-specific implementations:*
 
-    ```vyper
+    ```shell
     >>> Factory.pool_implementation(0)
     '0xDCc91f930b42619377C200BA05b7513f2958b202'
     >>> Factory.metapool_implementation(0)
@@ -343,7 +350,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `Meta AMM`  | [0xede71F77d7c900dCA5892720E76316C6E575F0F7](https://etherscan.io/address/0xede71F77d7c900dCA5892720E76316C6E575F0F7#code) |
 
 
-**Ethereum Sepolia**
+**:logos-ethereum: Ethereum Sepolia**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
@@ -399,26 +406,15 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `Zaps`      | [0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b](https://fraxscan.com/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b#code) |
 
 
-**Linea**
+**:logos-polygon: Polygon**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://lineascan.build/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
-| `Views`     | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://lineascan.build/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
-| `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://lineascan.build/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
-| `Plain AMM` | [0xa7b9d886a9a374a1c86dc52d2ba585c5cdfdac26](https://lineascan.build/address/0xa7b9d886a9a374a1c86dc52d2ba585c5cdfdac26#code) |
-| `Meta AMM`  | [0xf3a6aa40cf048a3960e9664847e9a7be025a390a](https://lineascan.build/address/0xf3a6aa40cf048a3960e9664847e9a7be025a390a#code) |
-
-
-**:logos-scroll: Scroll**
-
-| Contract Type | Contract Address |
-| :---------: | :----------------: | 
-| `Math`      | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://scroll.l2scan.co/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8) |
-| `Views`     | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://scroll.l2scan.co/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
-| `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://scroll.l2scan.co/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
-| `Plain AMM`   | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://scroll.l2scan.co/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
-| `Meta AMM`   | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://scroll.l2scan.co/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a#code) |
+| `Math`      | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://polygonscan.com//address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B#code) |
+| `Views`     | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://polygonscan.com/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
+| `Factory`   | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://polygonscan.com/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#code) |
+| `Plain AMM` | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://polygonscan.com/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
+| `Meta AMM`  | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://polygonscan.com/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
 
 
 **:logos-polygon: Polygon zk-EVM**
@@ -441,17 +437,6 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `Factory`   | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://gnosisscan.io/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
 | `Plain AMM` | [0x3d6cb2f6dcf47cdd9c13e4e3beae9af041d8796a](https://gnosisscan.io/address/0x3d6cb2f6dcf47cdd9c13e4e3beae9af041d8796a#code) |
 | `Meta AMM`  | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://gnosisscan.io/address/0xC1b393EfEF38140662b91441C6710Aa704973228#code) |
-
-
-**:logos-polygon: Polygon**
-
-| Contract Type | Contract Address |
-| :---------: | :----------------: | 
-| `Math`      | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://polygonscan.com//address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B#code) |
-| `Views`     | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://polygonscan.com/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
-| `Factory`   | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://polygonscan.com/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#code) |
-| `Plain AMM` | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://polygonscan.com/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
-| `Meta AMM`  | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://polygonscan.com/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
 
 
 **:logos-avalanche: Avalanche**
@@ -487,6 +472,39 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `Meta AMM`  | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://bscscan.com/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC#code) |
 
 
+**Linea**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+| `Math`      | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://lineascan.build/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
+| `Views`     | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://lineascan.build/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
+| `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://lineascan.build/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
+| `Plain AMM` | [0xa7b9d886a9a374a1c86dc52d2ba585c5cdfdac26](https://lineascan.build/address/0xa7b9d886a9a374a1c86dc52d2ba585c5cdfdac26#code) |
+| `Meta AMM`  | [0xf3a6aa40cf048a3960e9664847e9a7be025a390a](https://lineascan.build/address/0xf3a6aa40cf048a3960e9664847e9a7be025a390a#code) |
+
+
+**:logos-scroll: Scroll**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+| `Math`      | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://scroll.l2scan.co/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8) |
+| `Views`     | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://scroll.l2scan.co/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
+| `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://scroll.l2scan.co/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
+| `Plain AMM`   | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://scroll.l2scan.co/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
+| `Meta AMM`   | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://scroll.l2scan.co/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a#code) |
+
+
+**:logos-mantle: Mantle**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+| `Math`      | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://mantlescan.info/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6#code-5000) |
+| `Views`     | [0x506F594ceb4E33F5161139bAe3Ee911014df9f7f](https://mantlescan.info/address/0x506F594ceb4E33F5161139bAe3Ee911014df9f7f#code-5000) |
+| `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://mantlescan.info/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E) |
+| `Plain AMM` | [0x87FE17697D0f14A222e8bEf386a0860eCffDD617](https://mantlescan.info/address/0x87FE17697D0f14A222e8bEf386a0860eCffDD617) |
+| `Meta AMM`  | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://mantlescan.info/address/0x1764ee18e8B3ccA4787249Ceb249356192594585) |
+
+
 **:logos-celo: Celo**
 
 | Contract Type | Contract Address |
@@ -520,37 +538,27 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `Meta AMM`  | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://explorer.aurora.dev/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a/contracts) |
 
 
-**:logos-mantle: Mantle**
-
-| Contract Type | Contract Address |
-| :---------: | :----------------: | 
-| `Math`      | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://mantlescan.info/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6#code-5000) |
-| `Views`     | [0x506F594ceb4E33F5161139bAe3Ee911014df9f7f](https://mantlescan.info/address/0x506F594ceb4E33F5161139bAe3Ee911014df9f7f#code-5000) |
-| `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://mantlescan.info/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E) |
-| `Plain AMM` | [0x87FE17697D0f14A222e8bEf386a0860eCffDD617](https://mantlescan.info/address/0x87FE17697D0f14A222e8bEf386a0860eCffDD617) |
-| `Meta AMM`  | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://mantlescan.info/address/0x1764ee18e8B3ccA4787249Ceb249356192594585) |
-
-
 **:logos-zksync: zk-Sync**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | *tbd* |
-| `Views`     | *tbd* |
-| `Factory`   | *tbd* |
-| `Plain AMM` | *tbd* |
-| `Meta AMM`  | *tbd* |
+| `Math`      | *soon*             |
+| `Views`     | *soon*             |
+| `Factory`   | *soon*             |
+| `Plain AMM` | *soon*             |
+| `Meta AMM`  | *soon*             |
 
 
 **:logos-tron: Tron**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | *tbd* |
-| `Views`     | *tbd* |
-| `Factory`   | *tbd* |
-| `Plain AMM` | *tbd* |
-| `Meta AMM`  | *tbd* |
+| `Math`      | *soon*             |
+| `Views`     | *soon*             |
+| `Factory`   | *soon*             |
+| `Plain AMM` | *soon*             |
+| `Meta AMM`  | *soon*             |
+
 
 
 ## **TwoCrypto-NG**
@@ -571,11 +579,10 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
     ```
 
 
-
 **:logos-ethereum: Ethereum Mainnet**
 
-| Contract    | Address   | 
-| :---------: | :-------: | 
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
 | `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://etherscan.io/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://etherscan.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://etherscan.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
@@ -583,10 +590,10 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://etherscan.io/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
 
 
-**Ethereum Sepolia**
+**:logos-ethereum: Ethereum Sepolia**
 
-| Contract    | Address   | 
-| :---------: | :-------: | 
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
 | `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://sepolia.etherscan.io/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://sepolia.etherscan.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://sepolia.etherscan.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
@@ -595,8 +602,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 **:logos-arbitrum: Arbitrum**
 
-| Contract    | Address   | 
-| :---------: | :-------: | 
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
 | `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://arbiscan.io/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://arbiscan.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://arbiscan.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
@@ -605,8 +612,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 **:logos-optimism: Optimism**
 
-| Contract    | Address   | 
-| :---------: | :-------: | 
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
 | `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://optimistic.etherscan.io/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://optimistic.etherscan.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://optimistic.etherscan.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
@@ -615,48 +622,38 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 **:logos-base: Base**
 
-| Contract    | Address   | 
-| :---------: | :-------: | 
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
 | `Math`      | [0x64379C265Fc6595065D7d835AAaa731c0584dB80](https://basescan.org/address/0x64379C265Fc6595065D7d835AAaa731c0584dB80#code) |
 | `Views`     | [0xd3B17f862956464ae4403cCF829CE69199856e1e](https://basescan.org/address/0xd3B17f862956464ae4403cCF829CE69199856e1e#code) |
 | `Factory`   | [0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F](https://basescan.org/address/0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F#code) |
 | `AMM`       | [0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495](https://basescan.org/address/0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495#code) |
 
 
-**Linea**
+**Fraxtal**
 
-| Contract    | Address   | 
-| :---------: | :-------: | 
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://lineascan.build/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
-| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://lineascan.build/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
-| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://lineascan.build/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://lineascan.build/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
-
-
-**:logos-scroll: Scroll**
-
-| Contract    | Address   | 
-| :---------: | :-------: | 
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://scroll.l2scan.co/address/0x2005995a71243be9FB995DaB4742327dc76564Df) |
-| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://scroll.l2scan.co/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
-| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://scroll.l2scan.co/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://scroll.l2scan.co/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
+| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://fraxscan.com/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
+| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://fraxscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
+| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://fraxscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
+| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://fraxscan.com/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
 
 
-**:logos-zksync: zk-Sync**
+**:logos-polygon: Polygon**
 
-| Contract    | Address   | 
-| :---------: | :-------: | 
-| `Math`      | *soon* |
-| `Views`     | *soon* |
-| `Factory`   | *soon* |
-| `AMM`       | *soon* |
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
+| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://polygonscan.com//address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
+| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://polygonscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
+| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://polygonscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
+| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://polygonscan.com/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
 
 
-**Polygon zk-EVM**
+**:logos-polygon: Polygon zk-EVM**
 
-| Contract    | Address   | 
-| :---------: | :-------: | 
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
 | `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://zkevm.polygonscan.com/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://zkevm.polygonscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://zkevm.polygonscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
@@ -665,28 +662,18 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 **:logos-gnosis: Gnosis**
 
-| Contract    | Address   | 
-| :---------: | :-------: | 
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
 | `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://gnosisscan.io/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://gnosisscan.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://gnosisscan.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
 | `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://gnosisscan.io/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
 
 
-**Polygon**
-
-| Contract    | Address   | 
-| :---------: | :-------: | 
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://polygonscan.com//address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
-| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://polygonscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
-| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://polygonscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://polygonscan.com/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
-
-
 **:logos-avalanche: Avalanche**
 
-| Contract    | Address   | 
-| :---------: | :-------: |  
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
 | `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://snowtrace.io/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://snowtrace.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://snowtrace.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
@@ -695,28 +682,59 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 **:logos-fantom: Fantom**
 
-| Contract    | Address   | 
-| :---------: | :-------: | 
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
 | `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://ftmscan.com/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://ftmscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://ftmscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
 | `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://ftmscan.com/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
 
 
-**:logos-binance: Binance Smart Chain**
+**:logos-bsc: Binance Smart Chain**
 
-| Contract    | Address   | 
-| :---------: | :-------: | 
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
 | `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://bscscan.com/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://bscscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://bscscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
 | `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://bscscan.com/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
 
 
+
+**Linea**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
+| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://lineascan.build/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
+| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://lineascan.build/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
+| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://lineascan.build/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
+| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://lineascan.build/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+
+
+**:logos-scroll: Scroll**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
+| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://scroll.l2scan.co/address/0x2005995a71243be9FB995DaB4742327dc76564Df) |
+| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://scroll.l2scan.co/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
+| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://scroll.l2scan.co/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
+| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://scroll.l2scan.co/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+
+
+**:logos-mantle: Mantle**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
+| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://mantlescan.info/address/0x2005995a71243be9FB995DaB4742327dc76564Df) |
+| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://mantlescan.info/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
+| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://mantlescan.info/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
+| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://mantlescan.info/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223) |
+
+
 **:logos-celo: Celo**
 
-| Contract    | Address   | 
-| :---------: | :-------: | 
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
 | `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://celoscan.io/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://celoscan.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://celoscan.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
@@ -725,8 +743,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 **:logos-kava: Kava**
 
-| Contract    | Address   | 
-| :---------: | :-------: | 
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
 | `Math`      | [0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a](https://kavascan.com/address/0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a#contracts) |
 | `Views`     | [0x0C9D8c7e486e822C29488Ff51BFf0167B4650953](https://kavascan.com/address/0x0C9D8c7e486e822C29488Ff51BFf0167B4650953#contracts) |
 | `Factory`   | [0xd3B17f862956464ae4403cCF829CE69199856e1e](https://kavascan.com/address/0xd3B17f862956464ae4403cCF829CE69199856e1e#contracts) |
@@ -735,42 +753,32 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 **:logos-aurora: Aurora**
 
-| Contract    | Address   | 
-| :---------: | :-------: | 
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
 | `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://explorer.aurora.dev/address/0x2005995a71243be9FB995DaB4742327dc76564Df/contracts) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://explorer.aurora.dev/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80/contracts) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://explorer.aurora.dev/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F/contracts) |
 | `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://explorer.aurora.dev/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223/contracts) |
 
 
-**Linea**
+**:logos-zksync: zk-Sync**
 
-| Contract    | Address   | 
-| :---------: | :-------: | 
-| `Math`      | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://lineascan.build/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
-| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://lineascan.build/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
-| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://lineascan.build/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://lineascan.build/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
-
-
-**:logos-mantle: Mantle**
-
-| Contract    | Address   | 
-| :---------: | :-------: | 
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://mantlescan.info/address/0x2005995a71243be9FB995DaB4742327dc76564Df) |
-| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://mantlescan.info/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
-| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://mantlescan.info/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://mantlescan.info/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223) |
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
+| `Math`      | *soon*             |
+| `Views`     | *soon*             |
+| `Factory`   | *soon*             |
+| `AMM`       | *soon*             |
 
 
 **:logos-tron: Tron**
 
-| Contract    | Address   | 
-| :---------: | :-------: | 
-| `Math`      | *soon* |
-| `Views`     | *soon* |
-| `Factory`   | *soon* |
-| `AMM`       | *soon* |
+| Contract Type | Contract Address |
+| :---------: | :----------------: |  
+| `Math`      | *soon*             |
+| `Views`     | *soon*             |
+| `Factory`   | *soon*             |
+| `AMM`       | *soon*             |
 
 
 
@@ -786,7 +794,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
     *To query the factory-specific implementations:*
 
-    ```vyper
+    ```shell
     >>> Factory.pool_implementation(0)
     '0x66442B0C5260B92cAa9c234ECf2408CBf6b19a6f'
     >>> Factory.views_implementation()
@@ -808,7 +816,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `AMM native enabled` | [0x66442B0C5260B92cAa9c234ECf2408CBf6b19a6f](https://etherscan.io/address/0x66442B0C5260B92cAa9c234ECf2408CBf6b19a6f) |
 
 
-**Ethereum Sepolia**
+**:logos-ethereum: Ethereum Sepolia**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
@@ -864,27 +872,15 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `AMM native enabled` | [0xd3b17f862956464ae4403ccf829ce69199856e1e](https://fraxscan.com/address/0xd3b17f862956464ae4403ccf829ce69199856e1e#code) |
 
 
-**Linea**
+**:logos-polygon: Polygon**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | [0x0C9D8c7e486e822C29488Ff51BFf0167B4650953](https://lineascan.build/address/0x0C9D8c7e486e822C29488Ff51BFf0167B4650953#code) |
-| `Views`     | [0x64379c265fc6595065d7d835aaaa731c0584db80](https://lineascan.build/address/0x64379c265fc6595065d7d835aaaa731c0584db80#code) |
-| `Factory`   | [0xd125E7a0cEddF89c6473412d85835450897be6Dc](https://lineascan.build/address/0xd125E7a0cEddF89c6473412d85835450897be6Dc#code) |
-| `AMM native disable` | [0x76303e4fDcA0AbF28aB3ee42Ce086E6503431F1D](https://lineascan.build/address/0x76303e4fDcA0AbF28aB3ee42Ce086E6503431F1D#code) |
-| `AMM native enabled` | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://lineascan.build/address/0xC1b393EfEF38140662b91441C6710Aa704973228#code) |
-
-
-**:logos-scroll: Scroll**
-
-| Contract Type | Contract Address |
-| :---------: | :----------------: | 
-| `Math`      | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://scroll.l2scan.co/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC) |
-| `Views`     | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://scroll.l2scan.co/address/0xFAbC421e3368D158d802684A217a83c083c94CeB    #code) |
-| `Factory`   | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://scroll.l2scan.co/address/0xC1b393EfEF38140662b91441C6710Aa704973228#code) |
-| `AMM native disable` | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://scroll.l2scan.co/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a#code) |
-| `AMM native enabled` | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://scroll.l2scan.co/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf#code) |
-
+| `Math`      | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://polygonscan.com//address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC#code) |
+| `Views`     | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://polygonscan.com/address/0xFAbC421e3368D158d802684A217a83c083c94CeB#code) |
+| `Factory`   | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://polygonscan.com/address/0xC1b393EfEF38140662b91441C6710Aa704973228#code) |
+| `AMM native disable` | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://polygonscan.com/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a#code) |
+| `AMM native enabled` | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://polygonscan.com/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf#code) |
 
 
 **:logos-polygon: Polygon zk-EVM**
@@ -908,15 +904,6 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `AMM native disable` | [0x3f445D38E820c010a7A6E33c5F80cBEBE6930f61](https://gnosisscan.io/address/0x3f445D38E820c010a7A6E33c5F80cBEBE6930f61#code) |
 | `AMM native enabled` | [0xa54f3c1dfa5f7dbf2564829d14b3b74a65d26ae2](https://gnosisscan.io/address/0xa54f3c1dfa5f7dbf2564829d14b3b74a65d26ae2#code) |
 
-**:logos-polygon: Polygon**
-
-| Contract Type | Contract Address |
-| :---------: | :----------------: | 
-| `Math`      | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://polygonscan.com//address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC#code) |
-| `Views`     | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://polygonscan.com/address/0xFAbC421e3368D158d802684A217a83c083c94CeB#code) |
-| `Factory`   | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://polygonscan.com/address/0xC1b393EfEF38140662b91441C6710Aa704973228#code) |
-| `AMM native disable` | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://polygonscan.com/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a#code) |
-| `AMM native enabled` | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://polygonscan.com/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf#code) |
 
 **:logos-avalanche: Avalanche**
 
@@ -952,6 +939,39 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `AMM native enabled` | [0xBff334F8D5912AC5c4f2c590A2396d1C5d990123](https://bscscan.com/address/0xBff334F8D5912AC5c4f2c590A2396d1C5d990123#code) |
 
 
+**Linea**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+| `Math`      | [0x0C9D8c7e486e822C29488Ff51BFf0167B4650953](https://lineascan.build/address/0x0C9D8c7e486e822C29488Ff51BFf0167B4650953#code) |
+| `Views`     | [0x64379c265fc6595065d7d835aaaa731c0584db80](https://lineascan.build/address/0x64379c265fc6595065d7d835aaaa731c0584db80#code) |
+| `Factory`   | [0xd125E7a0cEddF89c6473412d85835450897be6Dc](https://lineascan.build/address/0xd125E7a0cEddF89c6473412d85835450897be6Dc#code) |
+| `AMM native disable` | [0x76303e4fDcA0AbF28aB3ee42Ce086E6503431F1D](https://lineascan.build/address/0x76303e4fDcA0AbF28aB3ee42Ce086E6503431F1D#code) |
+| `AMM native enabled` | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://lineascan.build/address/0xC1b393EfEF38140662b91441C6710Aa704973228#code) |
+
+
+**:logos-scroll: Scroll**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+| `Math`      | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://scroll.l2scan.co/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC) |
+| `Views`     | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://scroll.l2scan.co/address/0xFAbC421e3368D158d802684A217a83c083c94CeB    #code) |
+| `Factory`   | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://scroll.l2scan.co/address/0xC1b393EfEF38140662b91441C6710Aa704973228#code) |
+| `AMM native disable` | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://scroll.l2scan.co/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a#code) |
+| `AMM native enabled` | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://scroll.l2scan.co/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf#code) |
+
+
+**:logos-mantle: Mantle**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+| `Math`      | [0x635742dCC8313DCf8c904206037d962c042EAfBd](https://mantlescan.info/address/0x635742dCC8313DCf8c904206037d962c042EAfBd) |
+| `Views`     | [0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499](https://mantlescan.info/address/0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499) |
+| `Factory`   | [0x0C9D8c7e486e822C29488Ff51BFf0167B4650953](https://mantlescan.info/address/0x0C9D8c7e486e822C29488Ff51BFf0167B4650953) |
+| `AMM native disable` | [0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a](https://mantlescan.info/address/0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a) |
+| `AMM native enable`  | [0x046207cB759F527b6c10C2D61DBaca45513685CC](https://mantlescan.info/address/0x046207cB759F527b6c10C2D61DBaca45513685CC) |
+
+
 **:logos-celo: Celo**
 
 | Contract Type | Contract Address |
@@ -984,37 +1004,27 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `AMM native disable` | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://explorer.aurora.dev/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a/contracts) |
 | `AMM native enabled` | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://explorer.aurora.dev/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf/contracts) |
 
-**:logos-mantle: Mantle**
-
-| Contract Type | Contract Address |
-| :---------: | :----------------: | 
-| `Math`      | [0x635742dCC8313DCf8c904206037d962c042EAfBd](https://mantlescan.info/address/0x635742dCC8313DCf8c904206037d962c042EAfBd) |
-| `Views`     | [0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499](https://mantlescan.info/address/0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499) |
-| `Factory`   | [0x0C9D8c7e486e822C29488Ff51BFf0167B4650953](https://mantlescan.info/address/0x0C9D8c7e486e822C29488Ff51BFf0167B4650953) |
-| `AMM native disable` | [0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a](https://mantlescan.info/address/0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a) |
-| `AMM native enable`  | [0x046207cB759F527b6c10C2D61DBaca45513685CC](https://mantlescan.info/address/0x046207cB759F527b6c10C2D61DBaca45513685CC) |
-
 
 **:logos-zksync: zk-Sync**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | *tbd* |
-| `Views`     | *tbd* |
-| `Factory`   | *tbd* |
-| `AMM native disable` | *tbd* |
-| `AMM native enabled` | *tbd* |
+| `Math`      | *soon*             |
+| `Views`     | *soon*             |
+| `Factory`   | *soon*             |
+| `AMM native disable` | *soon*    |
+| `AMM native enabled` | *soon*    |
 
 
 **:logos-tron: Tron**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | *tbd* |
-| `Views`     | *tbd* |
-| `Factory`   | *tbd* |
-| `AMM native disable` | *tbd* |
-| `AMM native enabled` | *tbd* |
+| `Math`      | *soon*             |
+| `Views`     | *soon*             |
+| `Factory`   | *soon*             |
+| `AMM native disable` | *soon*    |
+| `AMM native enabled` | *soon*    |
 
 
 
@@ -1036,8 +1046,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-optimism: `Optimism` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://optimistic.etherscan.io/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-base: `Base` | [0x5552b631e2aD801fAa129Aacf4B701071cC9D1f7](https://basescan.org/address/0x5552b631e2aD801fAa129Aacf4B701071cC9D1f7#code) |
 | `Fraxtal` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://fraxscan.com/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
-| :logos-gnosis: `Gnosis` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://gnosisscan.io/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-polygon: `Polygon` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://polygonscan.com/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
+| :logos-gnosis: `Gnosis` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://gnosisscan.io/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-avalanche: `Avalanche` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://snowtrace.io/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-fantom: `Fantom` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://ftmscan.com/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-bsc: `Binance Smart Chain` | [0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF](https://bscscan.com/address/0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF#code) |
@@ -1058,8 +1068,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-optimism: `Optimism` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://optimistic.etherscan.io/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-base: `Base` | [0xEfadDdE5B43917CcC738AdE6962295A0B343f7CE](https://basescan.org/address/0xEfadDdE5B43917CcC738AdE6962295A0B343f7CE#code) |
 | `Fraxtal` | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://fraxscan.com/address/0x69522fb5337663d3B4dFB0030b881c1A750Adb4f#code) |
-| :logos-gnosis: `Gnosis` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://gnosisscan.io/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-polygon: `Polygon` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://polygonscan.com/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
+| :logos-gnosis: `Gnosis` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://gnosisscan.io/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-avalanche: `Avalanche` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://snowtrace.io/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-fantom: `Fantom` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://ftmscan.com/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-bsc: `Binance Smart Chain` | [0xd6681e74eEA20d196c15038C580f721EF2aB6320](https://bscscan.com/address/0xd6681e74eEA20d196c15038C580f721EF2aB6320#code) |
@@ -1075,13 +1085,13 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Chain | Contract Address |
 | ----- | :--------------: |
-| :logos-ethereum: `Ethereum` | [0xBFab8ebc836E1c4D81837798FC076D219C9a1855](https://etherscan.io/address/0xBFab8ebc836E1c4D81837798FC076D219C9a1855#code) |
+| :logos-ethereum: `Ethereum` | [0x56C526b0159a258887e0d79ec3a80dfb940d0cD7](https://etherscan.io/address/0x56C526b0159a258887e0d79ec3a80dfb940d0cD7#code) |
 | :logos-arbitrum: `Arbitrum` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://arbiscan.io/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-optimism: `Optimism` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://optimistic.etherscan.io/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-base: `Base` | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://basescan.org/address/0x69522fb5337663d3B4dFB0030b881c1A750Adb4f#code) |
 | `Fraxtal` | [0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF](https://fraxscan.com/address/0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF#code) |
-| :logos-gnosis: `Gnosis` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://gnosisscan.io/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-polygon: `Polygon` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://polygonscan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
+| :logos-gnosis: `Gnosis` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://gnosisscan.io/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-avalanche: `Avalanche` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://snowtrace.io/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-fantom: `Fantom` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://ftmscan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-bsc: `Binance Smart Chain` | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://bscscan.com/address/0x4f37A9d177470499A2dD084621020b023fcffc1F#code) |
@@ -1100,8 +1110,8 @@ For testing in production purposes, several contract deployments have taken plac
 | :---------------------: | :----------------------------------------------------------------------: |
 | `Stablecoin`            | [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/address/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E#code) |
 | `Factory`               | [0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC#code) |
-| `Controller Implementation` | [0xCdb55051fC792303DdC7c1052cC5161BaeD88e2A](https://etherscan.io/address/0xCdb55051fC792303DdC7c1052cC5161BaeD88e2A#code) |
-| `AMM Implementation`    | [0x23208cA4F2B30d8f7D54bf2D5A822D1a2F876501](https://etherscan.io/address/0x23208cA4F2B30d8f7D54bf2D5A822D1a2F876501#code) |
+| `Controller Implementation` | [0x6340678b2bab22a37d781Cd8da958a3cD1d97cdD](https://etherscan.io/address/0x6340678b2bab22a37d781Cd8da958a3cD1d97cdD#code) |
+| `AMM Implementation`    | [0x3da7fF6C15C0c97D9C2dF4AF82a9910384b372FD](https://etherscan.io/address/0x3da7fF6C15C0c97D9C2dF4AF82a9910384b372FD#code) |
 | `Swap factory`          | [0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d](https://etherscan.io/address/0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d#code) |
 | `Owner proxy`           | [0x855cC906dA8271Dd53879929bd226711247D5f17](https://etherscan.io/address/0x855cC906dA8271Dd53879929bd226711247D5f17#code) |
 | `PriceAggregator`       | [0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7](https://etherscan.io/address/0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7#code) |
