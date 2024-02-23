@@ -11,7 +11,7 @@ plugins:
   - minify:
       minify_html: true
 
-# extension
+# extension 
 markdown_extensions:
   - def_list
   - attr_list
@@ -71,7 +71,6 @@ theme:
     repo: simple/github
   features:
     - content.code.annotate
-    - content.tabs.link
     - navigation.indexes
     - navigation.path
     - navigation.top
@@ -201,6 +200,7 @@ nav:
       - Cross Asset Swaps:
         - Overview: stableswap-exchange/stableswap/cross_asset_swaps/overview.md
         - SynthSwap: stableswap-exchange/stableswap/cross_asset_swaps/synthswap_exchange.md
+
     - Stableswap-NG:
       - Overview: stableswap-exchange/stableswap-ng/overview.md
       - Pools:
@@ -216,6 +216,7 @@ nav:
 
   - CryptoSwap Exchange:
     - Overview: cryptoswap-exchange/overview.md
+
     - CryptoSwap:
       - Pools:
         - Crypto Pool: cryptoswap-exchange/cryptoswap/pools/crypto-pool.md
@@ -223,6 +224,18 @@ nav:
       - Liquidity Pool Tokens:
         - Overview: cryptoswap-exchange/cryptoswap/lp_tokens/overview.md
         - Curve Token V5: cryptoswap-exchange/cryptoswap/lp_tokens/lp-token-V5.md
+
+    - Twocrypto-NG:
+      - Overview: cryptoswap-exchange/twocrypto-ng/overview.md
+      - Pools:
+        - Overview: cryptoswap-exchange/twocrypto-ng/pools/overview.md
+        - Twocrypto Pool: cryptoswap-exchange/twocrypto-ng/pools/twocrypto.md
+        - LP Token Methods: cryptoswap-exchange/twocrypto-ng/pools/lp-token.md
+        - Admin Controls: cryptoswap-exchange/twocrypto-ng/pools/admin-controls.md
+      - Utility Contracts: 
+        - Math: cryptoswap-exchange/twocrypto-ng/utility-contracts/math.md
+        - Views: cryptoswap-exchange/twocrypto-ng/utility-contracts/views.md
+
     - Tricrypto-NG:
       - Overview: cryptoswap-exchange/tricrypto-ng/overview.md
       - Pools:
@@ -248,6 +261,9 @@ nav:
       - Overview: factory/cryptoswap/overview.md
       - Deployer API: factory/cryptoswap/deployer-api.md
       - Implementations: factory/cryptoswap/implementations.md
+    - TwoCrypto-NG:
+      - Overview: factory/twocrypto-ng/overview.md
+      - Deployer API: factory/twocrypto-ng/deployer-api.md
     - Tricrypto-NG:
       - Overview: factory/tricryptoNG/overview.md
       - Deployer API: factory/tricryptoNG/deployer-api.md

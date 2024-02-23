@@ -1,3 +1,8 @@
+---
+hide:
+  - toc
+---
+
 <h1> Curve CryptoSwap Exchange: Overview </h1>
 
 The "Automatic Market-Making with Dynamic Peg" (CryptoSwap) algorithm introduces a new approach to liquidity provision in decentralized finance. It aims to improve liquidity for assets that are not directly pegged to each other, differentiating itself from the traditional x·y = k model. 
@@ -11,6 +16,16 @@ The algorithm also incorporates a dynamic fee structure that responds to changin
 !!!pdf "CryptoSwap Whitepaper"
     For a detailed overview of the CryptoSwap design, please read the official [whitepaper](../pdf/crypto-pools-paper.pdf).
 
+# **Implementations**
+
+There are several implementations of the CryptoSwap invariant:
+
+| Name           | Description |
+| :------------: | ----------- |
+| **`CryptoSwap`** | The first two-coin volatile asset pool integration. |
+| **`Tricrypto`** | The first three-coin volatile asset pool integration. |
+| **`TwoCrypto-NG`** | An improved version of CryptoSwap, addressing gas efficiency and more. |
+| **`Tricrypto-NG`** | An improved version of Tricrypto, addressing gas efficiency and more. |
 
 
 # **Parameters**
