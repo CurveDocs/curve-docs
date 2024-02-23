@@ -71,7 +71,6 @@ theme:
     repo: simple/github
   features:
     - content.code.annotate
-    - content.tabs.link
     - navigation.indexes
     - navigation.path
     - navigation.top
