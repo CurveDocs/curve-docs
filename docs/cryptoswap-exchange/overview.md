@@ -14,7 +14,7 @@ Key features include the use of transformed pegged invariants, a method for quan
 The algorithm also incorporates a dynamic fee structure that responds to changing market conditions. This approach seeks to enhance liquidity provision and optimize returns for liquidity providers within the decentralized finance ecosystem.
 
 !!!pdf "CryptoSwap Whitepaper"
-    For a detailed overview of the CryptoSwap design, please read the official [whitepaper](../pdf/crypto-pools-paper.pdf).
+    For a detailed overview of the CryptoSwap design, please read the official [whitepaper](../assets/pdf/crypto-pools-paper.pdf).
 
 # **Implementations**
 

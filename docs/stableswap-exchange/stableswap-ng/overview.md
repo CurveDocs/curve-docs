@@ -4,7 +4,7 @@
     Source code available on [GitHub](https://github.com/curvefi/stableswap-ng). The following documentation covers all commits up until [5f582a6](https://github.com/curvefi/stableswap-ng/commit/5f582a6b8f709d863825c5fbe026cd3b4fa2d840).  
     All stableswap-ng deployments can be found in the [Deployment Addresses](../../references/deployed-contracts.md#stableswap-ng) section.
 
-For an in-depth understanding of the StableSwap invariant design, please refer to the official [StableSwap whitepaper](../../pdf/stableswap-paper.pdf).
+For an in-depth understanding of the StableSwap invariant design, please refer to the official [StableSwap whitepaper](../../assets/pdf/stableswap-paper.pdf).
 
 **The Stableswap-NG AMM infrastructure represents a technically enhanced iteration of the previous stableswap implementation. It comprises the following key components:**
 

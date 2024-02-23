@@ -1,5 +1,5 @@
 !!!pdf "PDF"
-    PDF version: [here](../../pdf/curve-stablecoin.pdf)
+    PDF version: [here](../../assets/pdf/curve-stablecoin.pdf)
 
 <h1 style="text-align: center;"></h1>
 <h2 style="text-align: center;">Curve stablecoin design</h2>

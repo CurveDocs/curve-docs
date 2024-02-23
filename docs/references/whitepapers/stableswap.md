@@ -1,5 +1,5 @@
 !!!pdf "PDF"
-    PDF version: [here](../../pdf/stableswap-paper.pdf)
+    PDF version: [here](../../assets/pdf/stableswap-paper.pdf)
 
 <h1 style="text-align: center;"></h1>
 <h2 style="text-align: center;">StableSwap - efficient mechanism for Stablecoin liquidity</h2>

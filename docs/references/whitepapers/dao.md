@@ -1,5 +1,5 @@
 !!!pdf "PDF"
-    PDF version: [here](../../pdf/CurveDAO.pdf)
+    PDF version: [here](../../assets/pdf/CurveDAO.pdf)
 
 <h1 style="text-align: center;"></h1>
 <h2 style="text-align: left;">Curve DAO</h2>

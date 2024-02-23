@@ -7,24 +7,24 @@
 
     ---
 
-    [:octicons-arrow-right-24: **PDF**](../../pdf/CurveDAO.pdf)
+    [:octicons-arrow-right-24: **PDF**](../../assets/pdf/CurveDAO.pdf)
 
 -   :logos-crvusd:{ .lg .middle } **Curve Stablecoin (crvUSD)**
 
     ---
 
-    [:octicons-arrow-right-24: **PDF**](../../pdf/curve-stablecoin.pdf)
+    [:octicons-arrow-right-24: **PDF**](../../assets/pdf/curve-stablecoin.pdf)
 
 -   :material-scale-balance:{ .lg .middle } **StableSwap**
 
     ---
 
-    [:octicons-arrow-right-24: **PDF**](../../pdf/stableswap-paper.pdf)
+    [:octicons-arrow-right-24: **PDF**](../../assets/pdf/stableswap-paper.pdf)
 
 -   :material-scale-unbalanced:{ .lg .middle } **CryptoSwap**
 
     ---
 
-    [:octicons-arrow-right-24: **PDF**](../../pdf/crypto-pools-paper.pdf)
+    [:octicons-arrow-right-24: **PDF**](../../assets/pdf/crypto-pools-paper.pdf)
 
 </div>
