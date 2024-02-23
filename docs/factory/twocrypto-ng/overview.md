@@ -179,7 +179,7 @@ It utilizes four different implementations:
     === "Example"
 
         ```shell
-        >>> Factory.set_pool_implementation("0x0000000000000000000000000000000000000000", 1)
+        >>> soon
         ```
 
 
@@ -224,7 +224,7 @@ It utilizes four different implementations:
     === "Example"
 
         ```shell
-        >>> Factory.set_gauge_implementation("0x0000000000000000000000000000000000000000")
+        >>> soon
         ```
 
 
@@ -269,7 +269,7 @@ It utilizes four different implementations:
     === "Example"
 
         ```shell
-        >>> Factory.set_views_implementation("0x0000000000000000000000000000000000000000")
+        >>> soon
         ```
 
 
@@ -313,7 +313,7 @@ It utilizes four different implementations:
     === "Example"
 
         ```shell
-        >>> Factory.set_math_implementation("0x0000000000000000000000000000000000000000")
+        >>> soon
         ```
 
 
@@ -394,134 +394,5 @@ It utilizes four different implementations:
     === "Example"
 
         ```shell
-        >>> Factory.set_fee_receiver("0x0000000000000000000000000000000000000000")
-        ```
-
-
-## **Contract Ownership**
-
-Contract ownership can be transfered via the following methods:
-
-### `admin`
-!!! description "`Factory.admin() -> address: view`"
-
-    Getter for the current admin of the Factory.
-
-    Returns: Admin (`address`).
-
-    ??? quote "Source code"
-
-        === "CurveTwocryptoFactory.vy"
-
-            ```vyper
-            admin: public(address)
-            ```
-    
-    === "Example"
-
-        ```shell
-        >>> Factory.admin()
-        '0x2d12D0907A388811e3AA855A550F959501d303EE'
-        ```
-
-
-### `future_admin`
-!!! description "`Factory.future_admin() -> address: view`"
-
-    Getter for the future admin of the Factory. This variable is set when commiting the transfer of ownership.
-
-    Returns: Future admin (`address`).
-
-    ??? quote "Source code"
-
-        === "CurveTwocryptoFactory.vy"
-
-            ```vyper
-            future_admin: public(address)
-            ```
-    
-    === "Example"
-
-        ```shell
-        >>> Factory.future_admin()
-        '0x0000000000000000000000000000000000000000'
-        ```
-
-
-### `commit_transfer_ownership`
-!!! description "`Factory.commit_transfer_ownership(_addr: address):`"
-
-    !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the contract.
-
-    Function to commit the transfer of ownership. The function sets `future_admin` as `_addr`.
-
-    | Input      | Type      | Description   |
-    | ---------- | --------- | ------------- |
-    | `_addr`    | `address` | New admin     |
-
-    ??? quote "Source code"
-
-        === "CurveTwocryptoFactory.vy"
-
-            ```vyper
-            admin: public(address)
-            future_admin: public(address)
-
-            @external
-            def commit_transfer_ownership(_addr: address):
-                """
-                @notice Transfer ownership of this contract to `addr`
-                @param _addr Address of the new owner
-                """
-                assert msg.sender == self.admin, "dev: admin only"
-
-                self.future_admin = _addr
-            ```
-    
-    === "Example"
-
-        ```shell
-        >>> Factory.commit_transfer_ownership("0x40907540d8a6C65c637785e8f8B742ae6b0b9968")
-        ```
-
-
-### `accept_transfer_ownership`
-!!! description "`Factory.accept_transfer_ownership():`"
-
-    !!!guard "Guarded Method"
-        This function is only callable by the `future_admin` of the contract.
-
-    Function to accept the ownership transfer by the future admin.
-
-    Emits: `TransferOwnership`
-
-    ??? quote "Source code"
-
-        === "CurveTwocryptoFactory.vy"
-
-            ```vyper
-            event TransferOwnership:
-                _old_owner: address
-                _new_owner: address
-
-            admin: public(address)
-            future_admin: public(address)
-
-            @external
-            def accept_transfer_ownership():
-                """
-                @notice Accept a pending ownership transfer
-                @dev Only callable by the new owner
-                """
-                assert msg.sender == self.future_admin, "dev: future admin only"
-
-                log TransferOwnership(self.admin, msg.sender)
-                self.admin = msg.sender
-            ```
-    
-    === "Example"
-
-        ```shell
-        >>> Factory.accept_transfer_ownership()
+        >>> soon
         ```

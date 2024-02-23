@@ -180,7 +180,7 @@
     
     === "Example"
 
-        ```vyper
+        ```shell
         >>> Factory.deploy_pool(
             _name: CRV/ETH,
             _symbol: crv-eth,
@@ -247,7 +247,7 @@
     
     === "Example"
 
-        ```vyper
+        ```shell
         >>> Factory.deploy_gauge('pool address')
 
         'returns address of the deployed gauge' 
