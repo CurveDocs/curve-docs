@@ -1,4 +1,6 @@
-**The Math Contract provides AMM Math for 3-coin Curve Cryptoswap Pools.**
+<h1>Math Contract</h1>
+
+**The Math Contract provides AMM Math for 2-coin Curve Twocrypto-NG Pools.**
 
 !!!deploy "Contract Source & Deployment"
     Source code for this contract is available on [Github](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/CurveCryptoMathOptimized2.vy). 
@@ -21,7 +23,7 @@
     | Input   | Type      | Description                                      |
     | ------- | --------- | ------------------------------------------------ |
     | `x`     | `uint256` | 32-byte variable                                 |
-    | `roundup` | `bool`    | Whether to round up or not. Default is `False` to round down |
+    | `roundup` | `bool`  | Whether to round up or not. Default is `False` to round down |
 
 
     ??? quote "Source code"
@@ -80,28 +82,24 @@
 
                 return result
             ```
-    
-    === "Example"
 
-        ```shell
-        >>> Math.()
-        ```
 
 
 ### `newton_y`
 !!! description "`Math.newton_y(ANN: uint256, gamma: uint256, x: uint256[N_COINS], D: uint256, i: uint256) -> uint256:`"
 
-    todo
+    Function to calculate `y` given `ANN`, `gamma`, `x`, `D`, and `i`.
 
-    Returns: 
+    Returns: `y` (`uint256`).
 
-    | Input | Type | Description |
-    | ----- | ---- | ----------- |
-    | `ANN` |  `uint256` |  |
-    | `gamma` |  `uint256` |  |
-    | `x` |  `uint256[N_COINS]` |  |
-    | `D` |  `uint256` |  |
-    | `i` |  `uint256` |  |
+    | Input   | Type             | Description                                                         |
+    |---------|------------------|---------------------------------------------------------------------|
+    | `ANN`   | `uint256`        | Amplification coefficient adjusted by N; `ANN = A * N^N`            |
+    | `gamma` | `uint256`        | Gamma                                                               |
+    | `x`     | `uint256[N_COINS]` | Balances multiplied by prices and precisions of the coins         |
+    | `D`     | `uint256`        | D invariant.                                                        |
+    | `i`     | `uint256`        | Index of the coin for which to calculate `y`.                       |
+
 
     ??? quote "Source code"
 
@@ -189,28 +187,22 @@
 
                 raise "Did not converge"
             ```
-    
-    === "Example"
-
-        ```shell
-        >>> Math.()
-        ```
 
 
 ### `get_y`
 !!! description "`Math.get_y(_ANN: uint256, _gamma: uint256, _x: uint256[N_COINS], _D: uint256, i: uint256) -> uint256[2]:`"
 
-    Function to calculate x[i] given other balances `_x` and invariant `_D`.
+    Function to calculate `y` given `_ANN`, `_gamma`, `_x`, `_D`, and `_i`.
 
-    Returns: y (`uint256`).
+    Returns: `y` (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----------- |
-    | `_ANN` |  `uint256` | ANN = A * N^N |
-    | `_gamma` |  `uint256` | AMM.gamma() value |
-    | `x` |  `uint256[N_COINS]` | Balances multiplied by prices and precisions of all coins |
-    | `_D` |  `uint256` | Invariant |
-    | `i` |  `uint256` | Index of the coin to calculate y |
+    | Input   | Type             | Description                                                         |
+    |---------|------------------|---------------------------------------------------------------------|
+    | `_ANN`   | `uint256`        | Amplification coefficient adjusted by N; `ANN = A * N^N`           |
+    | `_gamma` | `uint256`        | Gamma                                                              |
+    | `_x`     | `uint256[N_COINS]` | Balances multiplied by prices and precisions of the coins        |
+    | `_D`     | `uint256`        | D invariant.                                                       |
+    | `_i`     | `uint256`        | Index of the coin for which to calculate `y`.                      |
 
     ??? quote "Source code"
 
@@ -359,27 +351,22 @@
 
                 return y_out
             ```
-    
-    === "Example"
-
-        ```shell
-        >>> Math.get_y()
-        ```
 
 
 ### `newton_D`
 !!! description "`Math.newton_D(ANN: uint256, gamma: uint256, x_unsorted: uint256[N_COINS], K0_prev: uint256 = 0) -> uint256:`"
 
-    Function to find the invariant using the Newton method.
+    Function to find the D invariant using the Newton method.
 
     Returns: D invariant (`uint256`).
 
-    | Input | Type | Description |
-    | ----- | ---- | ----------- |
-    | `ANN` |  `uint256[N_COINS]` | - |
-    | `gamma` |  `uint256` | Gamma value. |
-    | `x_unsorted` |  `uint256[N_COINS]` | Balances of the pool. |
-    | `K0_prev` |  `uint256` | Defaults to 0. |
+    | Input        | Type                | Description                                                                 |
+    |--------------|---------------------|-----------------------------------------------------------------------------|
+    | `_ANN`       | `uint256`           | Amplification coefficient adjusted by N; `_ANN = A * N^N`.                  |
+    | `gamma`      | `uint256`           | Gamma value.                                                                |
+    | `x_unsorted` | `uint256[N_COINS]`  | Unsorted array of the pool balances.                                        |
+    | `K0_prev`    | `uint256`           | A priori for Newton's method derived from `get_y_int`. Defaults to zero if no a priori is provided. |
+
 
 
     ??? quote "Source code"
@@ -475,19 +462,12 @@
 
                 raise "Did not converge"
             ```
-    
-    === "Example"
-
-        ```shell
-        >>> Math.()
-        ```
-
 
 
 ### `get_p`
 !!! description "`Math.get_p(_xp: uint256[N_COINS], _D: uint256, _A_gamma: uint256[N_COINS]) -> uint256:`"
 
-    Function to calculate dx/dy. The output needs to be multiplied with `price_scale` to get the actual value.
+    Function to calculate dx/dy. The output needs to be multiplied with `price_scale` to get the actual value. The function is externally called form a twocrypto-ng pools when prices are tweaked via [`tweak_price`](../pools/twocrypto.md#oracle-methods).
 
     Returns: dx/dy (`uint256`).
 
@@ -553,12 +533,6 @@
                     denominator
                 )
             ```
-    
-    === "Example"
-
-        ```shell
-        >>> Math.get_p()
-        ```
 
 
 ### `wad_exp`
@@ -644,16 +618,10 @@
                 return convert(unsafe_mul(convert(convert(r, bytes32), uint256), 3_822_833_074_963_236_453_042_738_258_902_158_003_155_416_615_667) >>\
                     convert(unsafe_sub(195, k), uint256), int256)
             ```
-    
-    === "Example"
-
-        ```shell
-        >>> Math.()
-        ```
 
 
 ### `version`
-!!! description "`Math.version -> String[8]: view `"
+!!! description "`Math.version() -> String[8]: view `"
 
     Getter for the version of the contract.
 
