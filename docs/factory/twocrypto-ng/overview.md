@@ -5,7 +5,7 @@ The TwoCrypto-NG Factory allows the permissionless deployment of two-coin volati
 
 !!!deploy "Contract Source & Deployment"
     Source code for the Factory is available on [Github](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/CurveTwocryptoFactory.vy). 
-    A full list of all deployments can be found [here](../../../references/deployed-contracts.md#twocrypto-ng).
+    A full list of all deployments can be found [here](../../references/deployed-contracts.md#twocrypto-ng).
 
 ## **Implementations**
 
@@ -21,7 +21,7 @@ It utilizes four different implementations:
 - **`views_implementation`**, containing a view methods contract relevant for integrators and users looking to interact with the AMMs.
 - **`math_implementation`**, containing math functions used in the AMM.
 
-*More on the [**Math Implementation**](../../twocrypto-ng/utility_contracts/math.md) and [**Views Implementation**](../../twocrypto-ng/utility_contracts/views.md).*
+*More on the [**Math Implementation**](../../cryptoswap-exchange/twocrypto-ng/utility-contracts/math.md) and [**Views Implementation**](../../cryptoswap-exchange/twocrypto-ng/utility-contracts/views.md).*
 
 
 ## **Query Implementations**
@@ -56,7 +56,7 @@ It utilizes four different implementations:
 ### `gauge_implementation`
 !!! description "`Factory.gauge_implementation() -> address: view`"
 
-    Getter for the current gauge implementation. Only Ethereum mainnet has a valid gauge implementation; on other chains, the implementation is set to `ZERO_ADDRESS`, as sidechain gauges need to be deployed via the [`RootChainGaugeFactory`](../../../curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md).
+    Getter for the current gauge implementation. Only Ethereum mainnet has a valid gauge implementation; on other chains, the implementation is set to `ZERO_ADDRESS`, as sidechain gauges need to be deployed via the [`RootChainGaugeFactory`](../../curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md).
 
     Returns: Gauge implementation (`address`).
 
@@ -189,7 +189,7 @@ It utilizes four different implementations:
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to set a new gauge implementation (blueprint contract). This implementation is only available on Ethereum mainnet. To deploy a gauge on a sidechain, this needs to be done through the [`RootChainGaugeFactory`](../../../curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md).
+    Function to set a new gauge implementation (blueprint contract). This implementation is only available on Ethereum mainnet. To deploy a gauge on a sidechain, this needs to be done through the [`RootChainGaugeFactory`](../../curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md).
 
     Emits: `UpdateGaugeImplementation`
 
