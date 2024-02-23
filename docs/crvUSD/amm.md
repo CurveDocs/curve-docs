@@ -32,7 +32,7 @@ When the **health drops below 0%,** the user is eligible for **hard-liquidation*
 - Bands > **`active_band`**: fully in the collateral asset as the bands have not been in soft-liquidation mode
 
 <figure markdown>
-  ![](../images/amm1.png)
+  ![](../assets/images/llamma.png)
   <figcaption>bands > -2: fully in collateral asset, bands < -2: fully in crvUSD and band -2: contains both</figcaption>
 </figure>
 

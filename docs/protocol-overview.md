@@ -18,13 +18,13 @@ This documentation outlines the technical implementation of the core Curve proto
 
 <div class="grid cards" markdown>
 
--   ![Curve DAO Logo](./images/curve_logo.svg){: style="width: 22px; height: auto; vertical-align: middle;" } **Curve DAO** 
+-   **:logos-crv: Curve DAO** 
 
     ---
 
     Core smart contracts include the Curve DAO Token, governance infrastructure governed by vote-escrowed CRV, mechanisms for fee collection and distribution, gauges, and many other components.
 
--   ![Curve Stablecoin (crvUSD) Logo](./images/crvUSD.svg){: style="width: 24px; height: auto; vertical-align: middle;" } **Curve Stablecoin (crvUSD)**
+-   **:logos-crvusd: Curve Stablecoin (crvUSD)**
 
     ---
 
