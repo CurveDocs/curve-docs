@@ -257,8 +257,8 @@ The oracle contracts have the option to utilize Chainlink prices, which serve as
 Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: bool)`, which can only be done by the admin of the Factory contract.
 
 <figure markdown>
-  ![](../images/chainlink_oracle.png){ width="400" }
-  <figcaption>Chainlink vs Internal Orcale</figcaption>
+  ![](../assets/images/oracle_chainlink_vs_internal.png){ width="400" }
+  <figcaption>Chainlink vs Internal Oracle</figcaption>
 </figure>
 
 

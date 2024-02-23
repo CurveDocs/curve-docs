@@ -1,5 +1,5 @@
 !!!pdf "PDF"
-    PDF version: [here](../../pdf/crypto-pools-paper.pdf)
+    PDF version: [here](../../assets/pdf/crypto-pools-paper.pdf)
 
 <h1 style="text-align: center;"></h1>
 <h2 style="text-align: center;">Automatic market-making with dynamic peg</h2>
@@ -10,7 +10,7 @@
 
 ## **Introduction**
 Automatic market-makers (AMMs) are one of the major innovations which decentralized finance brought. First, Uniswap brought markets created by $x·y = k$ invariant which doesn’t make any assumption about pricing of underlying assets and spreads liquidity across all prices evenly. Next, we introduced the stableswap invariant which allowed to focus most of liquidity around price 1.0 (or really any price), a very useful feature for creating stablecoin-to-stablecoin liquidity.    
-In this work, we describe a method for creating liquidity for assets whicharen’t necessarily pegged to each other in a way more efficient than $x · y = k$ invariant. We concentrate liquidity given by the current “internal oracle” price but only move that price when the loss is smaller than part of the profit which the system makes. This creates $5 − 10$ times higher liquidity than the Uniswap invariant, as well as higher profits for liquidity providers.  
+In this work, we describe a method for creating liquidity for assets which aren’t necessarily pegged to each other in a way more efficient than $x · y = k$ invariant. We concentrate liquidity given by the current “internal oracle” price but only move that price when the loss is smaller than part of the profit which the system makes. This creates $5 − 10$ times higher liquidity than the Uniswap invariant, as well as higher profits for liquidity providers.  
 We describe the method in general, the invariants chosen, limits of their applicability and results of simulations based on historic pricing data.
 
 ## **Transformed pegged invariants**
@@ -23,7 +23,7 @@ $$ \mathbf{b'} = T^{-1} (\mathbf{b, p}) = (\frac {b_0}{p_0}, \frac{b_1}{p_1}, ..
 An invariant can be represented as a hypersurface (a curve if the number of dimensions is 2) given by:
 
 <figure markdown>
-  ![](../../images/figure1_cs.png){ width="500" }
+  ![](../../assets/images/cs1){ width="500" }
   <figcaption>Figure 1: Comparison of AMM invariants: constant-product (dashed line), stableswap (blue) and from this w (orange)</figcaption>
 </figure>
 

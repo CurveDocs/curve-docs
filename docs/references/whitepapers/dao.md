@@ -1,5 +1,5 @@
 !!!pdf "PDF"
-    PDF version: [here](../../pdf/CurveDAO.pdf)
+    PDF version: [here](../../assets/pdf/CurveDAO.pdf)
 
 <h1 style="text-align: center;"></h1>
 <h2 style="text-align: left;">Curve DAO</h2>
@@ -8,7 +8,7 @@
 Curve DAO consists of multiple smart contracts connected by Aragon. Apart from that, standard Aragon’s 1 token = 1 vote method is replaced with the voting weight proportional to locktime, as will be described below.
 
 <figure markdown>
-  ![](../../images/figure1_dao.png){ width="500" }
+  ![](../../assets/images/dao1.png){ width="500" }
   <figcaption>Figure 1: Curve DAO contracts managed by Aragon</figcaption>
 </figure>
 
@@ -26,7 +26,7 @@ The account which locks the tokens cannot be a smart contract (because can be tr
 VotingEscrow tries to resemble Aragon’s Minime token. Most importantly, `balanceOf()` / `balanceOfAt()` and `totalSupply()` / `totalSupplyAt()` return the time-weighted voting weight $w$ and the sum of all of those weights $W = \sum w_i$ respectively. Aragon can interface VotingEscrow as if it was a typical governance token.
 
 <figure markdown>
-  ![](../../images/figure2_dao.png){ width="500" }
+  ![](../../assets/images/dao2.png){ width="500" }
   <figcaption>Figure 2: Voting weight of vote-locked tokens</figcaption>
 </figure>
 
@@ -44,7 +44,7 @@ Token *ERC20CRV* is an ERC20 token which allows a piecewise linear inflation sch
 Each time the inflation changes, a new mining epoch starts
 
 <figure markdown>
-  ![](../../images/figure3_dao.png){ width="500" }
+  ![](../../assets/images/dao3.png){ width="500" }
   <figcaption>Figure 3: CRV token inflation schedule</figcaption>
 </figure>
 

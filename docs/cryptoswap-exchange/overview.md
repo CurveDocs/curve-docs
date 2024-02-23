@@ -14,7 +14,7 @@ Key features include the use of transformed pegged invariants, a method for quan
 The algorithm also incorporates a dynamic fee structure that responds to changing market conditions. This approach seeks to enhance liquidity provision and optimize returns for liquidity providers within the decentralized finance ecosystem.
 
 !!!pdf "CryptoSwap Whitepaper"
-    For a detailed overview of the CryptoSwap design, please read the official [whitepaper](../pdf/crypto-pools-paper.pdf).
+    For a detailed overview of the CryptoSwap design, please read the official [whitepaper](../assets/pdf/crypto-pools-paper.pdf).
 
 # **Implementations**
 
@@ -37,7 +37,7 @@ There are several implementations of the CryptoSwap invariant:
 - *Fees:* **`mid_fee`**, **`out_fee`** and **`fee_gamma`** 
 
 !!!tip
-    An excellent deep-dive artilce on the parameters: [https://nagaking.substack.com/p/deep-dive-curve-v2-parameters](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).
+    An excellent deep-dive article on the parameters: [https://nagaking.substack.com/p/deep-dive-curve-v2-parameters](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).
 
 
 ## **Bonding Curve Parameters**
@@ -66,6 +66,6 @@ Fees are charged based on the balance/imbalance of the pool. Fee is low when the
 
 
 <figure markdown>
-  ![](../images/curveV2_fee.png){ width="400" }
+  ![](../assets/images/curveV2_fee.png){ width="400" }
   <figcaption></figcaption>
 </figure>

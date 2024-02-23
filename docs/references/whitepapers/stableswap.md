@@ -1,5 +1,5 @@
 !!!pdf "PDF"
-    PDF version: [here](../../pdf/stableswap-paper.pdf)
+    PDF version: [here](../../assets/pdf/stableswap-paper.pdf)
 
 <h1 style="text-align: center;"></h1>
 <h2 style="text-align: center;">StableSwap - efficient mechanism for Stablecoin liquidity</h2>
@@ -40,7 +40,7 @@ While this is suitable for assets like ETH and tokens, it’s not very well work
 For StableSwap, there was a middle-ground invariant found (Fig. 1). As expected, the price (equal to derivative) only slightly deviates from 1 when number of coins is closed to balance.
 
 <figure markdown>
-  ![](../../images/figure1_ss.png){ width="500" }
+  ![](../../assets/images/ss1.png){ width="500" }
   <figcaption>Figure 1: Comparison of StableSwap invariant with Uniswap (constant-product) and constant price invariants. The portfolio consists of coins X and Y which have the “ideal” price of 1.0. There are x = 5 and y = 5 coins loaded up initially. As x decreases, y increases, and the price is the derivative dy/dx.</figcaption>
 </figure>
 
@@ -49,7 +49,7 @@ The price slippage (Fig. 2) is much smaller, if compared to constant-product inv
 The StableSwap invariant has an “amplification coefficient” parameter: the lower it is, the closer the invariant is to the constant product. When calculating slippage, we use a practical value of $A = 100$. This is somewhat comparable to using Uniswap with 100x leverage.
 
 <figure markdown>
-  ![](../../images/figure2_ss.png){ width="500" }
+  ![](../../assets/images/ss2.png){ width="500" }
   <figcaption>Figure 2: Price slippage: Uniswap invariant (dashed line) vs Stableswap (solidline)</figcaption>
 </figure>
 
@@ -101,6 +101,6 @@ Apart from liquidity for stablecoins, the same method can be applied for providi
 Applying this method to stablecoins can get it battle-tested, and to increase usability of decentralized (non-custodial) stablecoins.
 
 <figure markdown>
-  ![](../../images/figure3_ss.png){ width="500" }
+  ![](../../assets/images/ss3.png){ width="500" }
   <figcaption>Figure 3: Stableswap UI</figcaption>
 </figure>
