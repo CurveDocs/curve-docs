@@ -50,15 +50,10 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
         ```
 
 
-!!!warning "Examples"
-    The examples following each code block of the corresponding functions provide a basic illustration of input/output values. **When using the function in production, ensure not to set `_min_dy`, `_min_amount`, etc., to zero or other arbitrary numbers**. Otherwise, MEV bots may frontrun or sandwich your transaction, leading to a potential loss of funds.
-
-    The examples are based on the <tbd> pool: <tbd>.
-
 
 ## **Exchange Methods**
 
-The AMM contract utilizes two internal functions to transfer tokens/coins in and out of the pool:
+The AMM contract utilizes two internal functions to transfer coins in and out of the pool:
 
 
 - **Transfer tokens into the AMM**
@@ -550,12 +545,8 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.exchange(0, 1, 100, 95)
-        returns token amount received (`y_out`)
+        >>> soon
         ```
-
-    !!!note todo
-        Token indices can be check by `Pool.coins(i)` which returns the token address of the token at index `i`.
 
 
 ### `exchange_received`
@@ -946,9 +937,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> crv.transfer(pool, 10**18)
-        >>> pool.exchange_received(1, 0, 10**18, 0)
-        returns token amount received (`y_out`)
+        >>> soon
         ```
 
 
@@ -1191,7 +1180,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.get_dy(todo)
+        >>> soon
         ```
 
 
@@ -1441,7 +1430,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.get_dx(todo)
+        >>> soon
         ```
 
 
@@ -1691,7 +1680,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.add_liquidity(todo)
+        >>> soon
         ```
 
 
@@ -1709,50 +1698,51 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
 
     ??? quote "Source code"
 
-        ```vyper
-        @external
-        @view
-        def calc_token_fee(
-            amounts: uint256[N_COINS], xp: uint256[N_COINS]
-        ) -> uint256:
-            """
-            @notice Returns the fee charged on the given amounts for add_liquidity.
-            @param amounts The amounts of coins being added to the pool.
-            @param xp The current balances of the pool multiplied by coin precisions.
-            @return uint256 Fee charged.
-            """
-            return self._calc_token_fee(amounts, xp)
+        === "CurveTwocryptoOptimized.vy"
 
-        @view
-        @internal
-        def _calc_token_fee(amounts: uint256[N_COINS], xp: uint256[N_COINS]) -> uint256:
-            # fee = sum(amounts_i - avg(amounts)) * fee' / sum(amounts)
-            fee: uint256 = unsafe_div(
-                unsafe_mul(self._fee(xp), N_COINS),
-                unsafe_mul(4, unsafe_sub(N_COINS, 1))
-            )
+            ```vyper
+            @external
+            @view
+            def calc_token_fee(
+                amounts: uint256[N_COINS], xp: uint256[N_COINS]
+            ) -> uint256:
+                """
+                @notice Returns the fee charged on the given amounts for add_liquidity.
+                @param amounts The amounts of coins being added to the pool.
+                @param xp The current balances of the pool multiplied by coin precisions.
+                @return uint256 Fee charged.
+                """
+                return self._calc_token_fee(amounts, xp)
 
-            S: uint256 = 0
-            for _x in amounts:
-                S += _x
+            @view
+            @internal
+            def _calc_token_fee(amounts: uint256[N_COINS], xp: uint256[N_COINS]) -> uint256:
+                # fee = sum(amounts_i - avg(amounts)) * fee' / sum(amounts)
+                fee: uint256 = unsafe_div(
+                    unsafe_mul(self._fee(xp), N_COINS),
+                    unsafe_mul(4, unsafe_sub(N_COINS, 1))
+                )
 
-            avg: uint256 = unsafe_div(S, N_COINS)
-            Sdiff: uint256 = 0
+                S: uint256 = 0
+                for _x in amounts:
+                    S += _x
 
-            for _x in amounts:
-                if _x > avg:
-                    Sdiff += unsafe_sub(_x, avg)
-                else:
-                    Sdiff += unsafe_sub(avg, _x)
+                avg: uint256 = unsafe_div(S, N_COINS)
+                Sdiff: uint256 = 0
 
-            return fee * Sdiff / S + NOISE_FEE
-        ```
+                for _x in amounts:
+                    if _x > avg:
+                        Sdiff += unsafe_sub(_x, avg)
+                    else:
+                        Sdiff += unsafe_sub(avg, _x)
+
+                return fee * Sdiff / S + NOISE_FEE
+            ```
 
     === "Example"
 
         ```shell
-        >>> TwoCrypto.calc_token_fee()
-        'todo'
+        >>> soon
         ```
 
 
@@ -1956,7 +1946,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.remove_liquidity(todo)
+        >>> soon
         ```
 
 
@@ -2381,8 +2371,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.remove_liquidity_one_coin()
-        'todo'
+        >>> soon
         ```
 
 
@@ -2528,8 +2517,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.calc_token_amount()
-        'todo'
+        >>> soon
         ```
 
 
@@ -2872,12 +2860,11 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
 
                 return y_out
             ```
-    
+
     === "Example"
 
         ```shell
-        >>> TwoCrypto.calc_withdraw_one_coin()
-        'todo'
+        >>> soon
         ```
 
 
@@ -2928,8 +2915,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.fee()
-        todo
+        >>> soon
         ```
 
 
@@ -2977,7 +2963,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.fee_calc(todo)
+        >>> soon
         ```
 
 
@@ -3008,8 +2994,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.mid_fee()
-        26000000
+        >>> soon
         ```
 
 
@@ -3040,8 +3025,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.out_fee()
-        45000000
+        >>> soon
         ```
 
 
@@ -3072,8 +3056,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.fee_gamma()
-        230000000000000
+        >>> soon
         ```
 
 
@@ -3114,8 +3097,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.packed_fee_params()
-        8847341539944400050877843276543133320576000000
+        >>> soon
         ```
 
 
@@ -3137,8 +3119,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.ADMIN_FEE()
-        5000000000
+        >>> soon
         ```
 
 
@@ -3170,8 +3151,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.fee_receiver()
-        '0xd4F94D0aaa640BBb72b5EEc2D85F6D114D81a88E'
+        >>> soon
         ```
 
 
@@ -3193,7 +3173,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.xcp_profit(todo)
+        >>> soon
         ```
 
 
@@ -3232,7 +3212,7 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.xcp_profit_a(todo)
+        >>> soon
         ```
 
 
@@ -3254,13 +3234,216 @@ The AMM contract utilizes two internal functions to transfer tokens/coins in and
     === "Example"
 
         ```shell
-        >>> TwoCrypto.last_xcp(todo)
+        >>> soon
         ```
+
+
+## **Price Scaling**
+
+### `allowed_extra_profit`
+!!! description "`TwoCrypto.allowed_extra_profit() -> uint256:`"
+
+    Getter for the allowed extra profit value.
+
+    Returns: Allowed extra profit value (`uint256`).
+
+    ??? quote "Source code"
+
+        === "CurveTwocryptoOptimized.vy"
+
+            ```vyper
+            packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
+            #               parameters allowed_extra_profit, adjustment_step, and ma_time.
+
+            @view
+            @external
+            def allowed_extra_profit() -> uint256:
+                """
+                @notice Returns the current allowed extra profit
+                @return uint256 allowed_extra_profit value.
+                """
+                return self._unpack_3(self.packed_rebalancing_params)[0]
+            ```
+    
+    === "Example"
+
+        ```shell
+        >>> soon
+        ```
+
+
+### `adjustment_step`
+!!! description "`TwoCrypto.allowed_extra_profit() -> uint256:`"
+
+    Getter for the adjustment step value.
+
+    Returns: Adjustment step value (`uint256`).
+
+    ??? quote "Source code"
+
+        === "CurveTwocryptoOptimized.vy"
+
+            ```vyper
+            packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
+            #               parameters allowed_extra_profit, adjustment_step, and ma_time.
+
+            @view
+            @external
+            def adjustment_step() -> uint256:
+                """
+                @notice Returns the current adjustment step
+                @return uint256 adjustment_step value.
+                """
+                return self._unpack_3(self.packed_rebalancing_params)[1]
+            ```
+    
+    === "Example"
+
+        ```shell
+        >>> soon
+        ```
+
+
+### `packed_rebalancing_params`
+!!! description "`TwoCrypto.packed_rebalancing_params() -> uint256: view`"
+
+    Getter for the packed rebalancing parameters, consisting of `allowed_extra_profit`, `adjustment_step`, and `ma_time`.
+
+    Returns: Packed rebalancing parameters (`uint256`).
+
+    ??? quote "Source code"
+
+        === "CurveTwocryptoOptimized.vy"
+
+            ```vyper
+            packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
+            #               parameters allowed_extra_profit, adjustment_step, and ma_time.
+            ```
+    
+    === "Example"
+
+        ```shell
+        >>> soon
+        ```
+
+
+
+## **Bonding Curve Parameters**
+
+`A` and `gamma` values are [upgradable](./admin-controls.md#parameter-changes) by the the pools admin.
+
+### `A`
+!!! description "`TwoCrypto.A() -> uint256:`"
+
+    Getter for the current pool amplification parameter.
+
+    Returns: A (`uint256`).
+
+    ??? quote "Source code"
+
+        === "CurveTwocryptoOptimized.vy"
+
+            ```vyper
+            @view
+            @external
+            def A() -> uint256:
+                """
+                @notice Returns the current pool amplification parameter.
+                @return uint256 A param.
+                """
+                return self._A_gamma()[0]
+
+            @view
+            @internal
+            def _A_gamma() -> uint256[2]:
+                t1: uint256 = self.future_A_gamma_time
+
+                A_gamma_1: uint256 = self.future_A_gamma
+                gamma1: uint256 = A_gamma_1 & 2**128 - 1
+                A1: uint256 = A_gamma_1 >> 128
+
+                if block.timestamp < t1:
+
+                    # --------------- Handle ramping up and down of A --------------------
+
+                    A_gamma_0: uint256 = self.initial_A_gamma
+                    t0: uint256 = self.initial_A_gamma_time
+
+                    t1 -= t0
+                    t0 = block.timestamp - t0
+                    t2: uint256 = t1 - t0
+
+                    A1 = ((A_gamma_0 >> 128) * t2 + A1 * t0) / t1
+                    gamma1 = ((A_gamma_0 & 2**128 - 1) * t2 + gamma1 * t0) / t1
+
+                return [A1, gamma1]
+            ```
+    
+    === "Example"
+
+        ```shell
+        >>> soon
+        ```
+
+
+### `gamma`
+!!! description "`TwoCrypto.gamma() -> uint256:`"
+
+    Getter for the current pool gamma parameter.
+
+    Returns: Gamma (`uint256`).
+
+    ??? quote "Source code"
+
+        === "CurveTwocryptoOptimized.vy"
+
+            ```vyper
+            @view
+            @external
+            def gamma() -> uint256:
+                """
+                @notice Returns the current pool gamma parameter.
+                @return uint256 gamma param.
+                """
+                return self._A_gamma()[1]
+
+            @view
+            @internal
+            def _A_gamma() -> uint256[2]:
+                t1: uint256 = self.future_A_gamma_time
+
+                A_gamma_1: uint256 = self.future_A_gamma
+                gamma1: uint256 = A_gamma_1 & 2**128 - 1
+                A1: uint256 = A_gamma_1 >> 128
+
+                if block.timestamp < t1:
+
+                    # --------------- Handle ramping up and down of A --------------------
+
+                    A_gamma_0: uint256 = self.initial_A_gamma
+                    t0: uint256 = self.initial_A_gamma_time
+
+                    t1 -= t0
+                    t0 = block.timestamp - t0
+                    t2: uint256 = t1 - t0
+
+                    A1 = ((A_gamma_0 >> 128) * t2 + A1 * t0) / t1
+                    gamma1 = ((A_gamma_0 & 2**128 - 1) * t2 + gamma1 * t0) / t1
+
+                return [A1, gamma1]
+            ```
+    
+    === "Example"
+
+        ```shell
+        >>> soon
+        ```
+
 
 
 ## **Oracle Methods**
 
-Prices and their orcales are adjusted by when calling the internal `tweak_price` method, which happens at `add_liquidity`, `remove_liquidity_one_coin` and `_exchange`.
+Prices and their oracles are adjusted by when calling the internal `tweak_price` method, which happens at `add_liquidity`, `remove_liquidity_one_coin` and `_exchange`.
 
 It is not called when removing liquidity one sided with `remove_liquidity` as this function does not alter prices.
 
@@ -3549,7 +3732,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.lp_price(todo)
+        >>> soon
         ```
 
 
@@ -3572,7 +3755,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.virtual_price(todo)
+        >>> soon
         ```
 
 
@@ -3607,7 +3790,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.get_virtual_price(todo)
+        >>> soon
         ```
 
 
@@ -3751,7 +3934,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.
+        >>> soon
         ```
 
 
@@ -3803,7 +3986,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.
+        >>> soon
         ```
 
 
@@ -3838,7 +4021,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.price_scale()
+        >>> soon
         ```
 
 
@@ -3872,7 +4055,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.ma_time()
+        >>> soon
         ```
 
 
@@ -3928,7 +4111,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.xcp_oracle(todo)
+        >>> soon
         ```
 
 
@@ -3968,8 +4151,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.xcp_ma_time()
-        todo
+        >>> soon
         ```
 
 
@@ -3991,8 +4173,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.D()
-        todo
+        >>> soon
         ```
 
 
@@ -4014,215 +4195,10 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.last_timestamp()
-        todo
+        >>> soon
         ```
 
-
-## **Price Scaling**
-
-### `allowed_extra_profit`
-!!! description "`TwoCrypto.allowed_extra_profit() -> uint256:`"
-
-    Getter for the allowed extra profit value.
-
-    Returns: Allowed extra profit value (`uint256`).
-
-    ??? quote "Source code"
-
-        === "CurveTwocryptoOptimized.vy"
-
-            ```vyper
-            packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
-            #               parameters allowed_extra_profit, adjustment_step, and ma_time.
-
-            @view
-            @external
-            def allowed_extra_profit() -> uint256:
-                """
-                @notice Returns the current allowed extra profit
-                @return uint256 allowed_extra_profit value.
-                """
-                return self._unpack_3(self.packed_rebalancing_params)[0]
-            ```
-    
-    === "Example"
-
-        ```shell
-        >>> TwoCrypto.allowed_extra_profit()
-        todo
-        ```
-
-
-### `adjustment_step`
-!!! description "`TwoCrypto.allowed_extra_profit() -> uint256:`"
-
-    Getter for the adjustment step value.
-
-    Returns: Adjustment step value (`uint256`).
-
-    ??? quote "Source code"
-
-        === "CurveTwocryptoOptimized.vy"
-
-            ```vyper
-            packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
-            #               parameters allowed_extra_profit, adjustment_step, and ma_time.
-
-            @view
-            @external
-            def adjustment_step() -> uint256:
-                """
-                @notice Returns the current adjustment step
-                @return uint256 adjustment_step value.
-                """
-                return self._unpack_3(self.packed_rebalancing_params)[1]
-            ```
-    
-    === "Example"
-
-        ```shell
-        >>> TwoCrypto.adjustment_step()
-        todo
-        ```
-
-
-### `packed_rebalancing_params`
-!!! description "`TwoCrypto.packed_rebalancing_params() -> uint256: view`"
-
-    Getter for the packed rebalancing parameters, consisting of `allowed_extra_profit`, `adjustment_step`, and `ma_time`.
-
-    Returns: Packed rebalancing parameters (`uint256`).
-
-    ??? quote "Source code"
-
-        === "CurveTwocryptoOptimized.vy"
-
-            ```vyper
-            packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
-            #               parameters allowed_extra_profit, adjustment_step, and ma_time.
-            ```
-    
-    === "Example"
-
-        ```shell
-        >>> TwoCrypto.packed_rebalancing_params()
-        todo
-        ```
-
-
-
-## **Bonding Curve Parameters**
-
-### `A`
-!!! description "`TwoCrypto.A() -> uint256:`"
-
-    Getter for the current pool amplification parameter.
-
-    Returns: A (`uint256`).
-
-    ??? quote "Source code"
-
-        === "CurveTwocryptoOptimized.vy"
-
-            ```vyper
-            @view
-            @external
-            def A() -> uint256:
-                """
-                @notice Returns the current pool amplification parameter.
-                @return uint256 A param.
-                """
-                return self._A_gamma()[0]
-
-            @view
-            @internal
-            def _A_gamma() -> uint256[2]:
-                t1: uint256 = self.future_A_gamma_time
-
-                A_gamma_1: uint256 = self.future_A_gamma
-                gamma1: uint256 = A_gamma_1 & 2**128 - 1
-                A1: uint256 = A_gamma_1 >> 128
-
-                if block.timestamp < t1:
-
-                    # --------------- Handle ramping up and down of A --------------------
-
-                    A_gamma_0: uint256 = self.initial_A_gamma
-                    t0: uint256 = self.initial_A_gamma_time
-
-                    t1 -= t0
-                    t0 = block.timestamp - t0
-                    t2: uint256 = t1 - t0
-
-                    A1 = ((A_gamma_0 >> 128) * t2 + A1 * t0) / t1
-                    gamma1 = ((A_gamma_0 & 2**128 - 1) * t2 + gamma1 * t0) / t1
-
-                return [A1, gamma1]
-            ```
-    
-    === "Example"
-
-        ```shell
-        >>> TwoCrypto.A()
-        todo
-        ```
-
-
-### `gamma`
-!!! description "`TwoCrypto.gamma() -> uint256:`"
-
-    Getter for the current pool gamma parameter.
-
-    Returns: Gamma (`uint256`).
-
-    ??? quote "Source code"
-
-        === "CurveTwocryptoOptimized.vy"
-
-            ```vyper
-            @view
-            @external
-            def gamma() -> uint256:
-                """
-                @notice Returns the current pool gamma parameter.
-                @return uint256 gamma param.
-                """
-                return self._A_gamma()[1]
-
-            @view
-            @internal
-            def _A_gamma() -> uint256[2]:
-                t1: uint256 = self.future_A_gamma_time
-
-                A_gamma_1: uint256 = self.future_A_gamma
-                gamma1: uint256 = A_gamma_1 & 2**128 - 1
-                A1: uint256 = A_gamma_1 >> 128
-
-                if block.timestamp < t1:
-
-                    # --------------- Handle ramping up and down of A --------------------
-
-                    A_gamma_0: uint256 = self.initial_A_gamma
-                    t0: uint256 = self.initial_A_gamma_time
-
-                    t1 -= t0
-                    t0 = block.timestamp - t0
-                    t2: uint256 = t1 - t0
-
-                    A1 = ((A_gamma_0 >> 128) * t2 + A1 * t0) / t1
-                    gamma1 = ((A_gamma_0 & 2**128 - 1) * t2 + gamma1 * t0) / t1
-
-                return [A1, gamma1]
-            ```
-    
-    === "Example"
-
-        ```shell
-        >>> TwoCrypto.gamma()
-        todo
-        ```
-
+        
 
 ## **Contract Info Methods**
 
@@ -4254,8 +4230,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.admin()
-        '0x2d12D0907A388811e3AA855A550F959501d303EE'
+        >>> soon
         ```
 
 
@@ -4287,8 +4262,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.precisions()
-        todo
+        >>> soon
         ```
 
 
@@ -4327,8 +4301,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.MATH()
-        '0x2005995a71243be9FB995DaB4742327dc76564Df'
+        >>> soon
         ```
 
 
@@ -4376,10 +4349,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.coins(0)
-        '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1'
-        >>> TwoCrypto.coins(1)
-        '0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978'
+        >>> soon
         ```
 
 
@@ -4418,8 +4388,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.factory()
-        '0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F'
+        >>> soon
         ```
 
 
@@ -4445,8 +4414,5 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> TwoCrypto.balances(0)
-        todo
-        >>> TwoCrypto.balances(1)
-        todo
+        >>> soon
         ```
