@@ -178,6 +178,11 @@ nav:
       - Deployer API: crvUSD/factory/deployer-api.md
       - Admin Controls: crvUSD/factory/admin-controls.md
 
+  - Curve Lending:
+    - Overview: lending/overview.md
+    - OneWayLendingFactory: lending/contracts/oneway-factory.md
+    - Vault: lending/contracts/vault.md
+
 
   - StableSwap Exchange:
     - Overview: stableswap-exchange/overview.md

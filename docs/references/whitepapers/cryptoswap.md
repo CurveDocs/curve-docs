@@ -23,7 +23,7 @@ $$ \mathbf{b'} = T^{-1} (\mathbf{b, p}) = (\frac {b_0}{p_0}, \frac{b_1}{p_1}, ..
 An invariant can be represented as a hypersurface (a curve if the number of dimensions is 2) given by:
 
 <figure markdown>
-  ![](../../assets/images/cs1){ width="500" }
+  ![](../../assets/images/cs1.png){ width="500" }
   <figcaption>Figure 1: Comparison of AMM invariants: constant-product (dashed line), stableswap (blue) and from this w (orange)</figcaption>
 </figure>
 
