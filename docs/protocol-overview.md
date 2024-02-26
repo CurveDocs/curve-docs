@@ -55,12 +55,15 @@ This documentation outlines the technical implementation of the core Curve proto
 
     Permissionless deployment of liquidity pools, including stableswap and cryptoswap pools, along with liquidity gauges.
 
--   >:material-link: **API**
+-   :simple-fastapi: **Curve API**
+
     ---
 
-    *__coming soon__*
+    Public Curve API intended for all those seeking to integrate Curve data onto their own projects.
+
 
 -   >:material-chart-line: **Oracles**
+
     ---
 
     *__coming soon__*
