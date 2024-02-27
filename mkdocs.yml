@@ -10,6 +10,8 @@ plugins:
       type: timeago
   - minify:
       minify_html: true
+  - swagger-ui-tag:
+
 
 # extension 
 markdown_extensions:
@@ -162,6 +164,9 @@ nav:
     - Overview: registry/overview.md
     - MetaRegistry API: registry/MetaRegistryAPI.md
     - Admin Controls: registry/admin-controls.md
+
+  - Curve API:
+    - curve-prices: curve-api/curve-prices.md
 
 
   - Curve Stablecoin:
