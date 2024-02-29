@@ -51,7 +51,7 @@ The vault is an **implementation of the ERC4626 vault which deposits into the co
 
     Function which initializes a vault and creates the corresponding Controller and AMM contract from their blueprint implementations.
 
-    ```python
+    ```vyper
     @external
     def initialize(
             amm_impl: address,
@@ -152,7 +152,7 @@ The price oracle contract to use the `price_oracle()` method of a Curve tricrypt
 
     Function to create a vault using a existing oraclized Curve pool as price oracle.
 
-    ```python
+    ```vyper
     @external
     @nonreentrant('lock')
     def create_from_pool(
