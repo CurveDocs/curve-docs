@@ -184,7 +184,7 @@ nav:
     - Vault: lending/contracts/vault.md
     - Controller: lending/contracts/controller.md
     - OneWay Lending Factory: lending/contracts/oneway-factory.md
-    - SemiLog Monetary Policy: lending/contracts/semilog.md
+    - SemiLog Monetary Policy: lending/contracts/semilog-mp.md
 
 
   - StableSwap Exchange:
