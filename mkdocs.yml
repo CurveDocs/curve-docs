@@ -170,18 +170,21 @@ nav:
     - Controller: crvUSD/controller.md
     - LLAMMA: crvUSD/amm.md
     - PegKeeper: crvUSD/pegkeeper.md
-    - MonetaryPolicy: crvUSD/monetarypolicy.md
-    - PriceAggregator: crvUSD/priceaggregator.md
+    - Monetary Policy: crvUSD/monetarypolicy.md
+    - Price Aggregator: crvUSD/priceaggregator.md
     - Oracle: crvUSD/oracle.md
     - Factory: 
       - Overview: crvUSD/factory/overview.md
       - Deployer API: crvUSD/factory/deployer-api.md
       - Admin Controls: crvUSD/factory/admin-controls.md
 
+
   - Curve Lending:
     - Overview: lending/overview.md
-    - OneWayLendingFactory: lending/contracts/oneway-factory.md
     - Vault: lending/contracts/vault.md
+    - Controller: lending/contracts/controller.md
+    - OneWay Lending Factory: lending/contracts/oneway-factory.md
+    - SemiLog Monetary Policy: lending/contracts/semilog.md
 
 
   - StableSwap Exchange:
