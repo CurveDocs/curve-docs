@@ -1,9 +1,8 @@
-<h1>Lending and borrowing using LLAMMA</h1>
+<h1>Curve Lending: Overview</h1>
 
-Curve stablecoin crvUSD utilizes [LLAMMA](../crvUSD/amm.md) for soft liquidations. This AMM can be used for any pair of tokens.
+Curve lending allows permissionless lending/borrowing powered by [LLAMMA](../crvUSD/amm.md) for soft liquidations.
 
 The Factory enables the **creation of permissionless lending/borrowing markets to borrow crvUSD against any token, or to borrow any token against crvUSD in an isolated mode.** Minted crvUSD is not backed by any of the collateral tokens in lending markets.
-
 
 Liquidity is provided in [Vaults](./contracts/vault.md), which are [ERC4626](https://ethereum.org/developers/docs/standards/tokens/erc-4626) contracts with some additional methods for convenience.
 
@@ -220,4 +219,4 @@ The price oracle contract to use the `price_oracle()` method of a Curve tricrypt
 Lending markets uses a semi-log monetary policy for lending markets where the **borrow rate does not depend on the crvUSD peg** but just on the **utilization of
 the market**.
 
-**[:octicons-arrow-right-24: More here](./contracts/semilog.md)**
+**[:octicons-arrow-right-24: More here](./contracts/semilog-mp.md)**

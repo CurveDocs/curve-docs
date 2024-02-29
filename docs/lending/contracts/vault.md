@@ -2,7 +2,7 @@
 
 The vault is an **implementation of a [ERC-4626](https://ethereum.org/developers/docs/standards/tokens/erc-4626)** vault which **deposits the underlying asset into the controller** and **tracks the progress of the fees earned**. Vault is a standard facrory (non-blueprint) contract which also creates AMM and Controller using `initialize()`.
 
-The Vault itself does not hold any tokens, as the tokens deposited are forwarded to the Controller contract where it can be borrowed from.
+The Vault itself does not hold any tokens, as the deposited tokens are forwarded to the Controller contract where it can be borrowed from.
 
 ??? quote "`initialize()`"
 
@@ -91,28 +91,7 @@ Unlike standard ERC4626 methods, it also has:
 - `lend_apr()`
 - `pricePerShare()`
 
-Also, optionally, methods `mint()`, `deposit()`, `redeem()`, `withdraw()` can have the receiver not specified - in such the receiver address defaults to `msg.sender`.
-
-!!!tip "Code Examples using Titanoboa"
-    The provided shell code examples use the amazing Vyper interpreter [Titanoboa](https://github.com/vyperlang/titanoboa).  
-    To replicate the examples, simply do the following in your terminal/console:
-
-    ```shell
-    >>> ipython
-
-    In  [1]:  import boa
-
-    In  [2]:  boa.env.fork("https://eth-mainnet.g.alchemy.com/v2/{ALCHEMY_API_KEY}")
-
-    In  [3]:  vault = boa.from_etherscan("0x67A18c18709C09D48000B321c6E1cb09F7181211", name="Vault", api_key="ETHERSCAN_API_KEY")
-
-    In  [4]:  vault.name()
-    Out [4]: 'Curve Vault for crvUSD'
-
-    In  [5]:  with boa.env.prank(""):
-                       
-    Out [5]: 'Curve Vault for crvUSD'
-    ```
+Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` can have the receiver address not specified. In such cases, the receiver address defaults to `msg.sender`.
 
 
 ---
@@ -291,7 +270,13 @@ Also, optionally, methods `mint()`, `deposit()`, `redeem()`, `withdraw()` can ha
 
     === "Example"
         ```shell
-        >>> soon
+        In  [1]:  Vault.balanceOf(trader)
+        Out [1]:  0
+
+        In  [2]:  Vault.deposit(1000000000000000000)
+
+        In  [3]:  Vault.balanceOf(trader)
+        Out [3]:  997552662404145514069
         ```
 
 
@@ -545,7 +530,13 @@ Also, optionally, methods `mint()`, `deposit()`, `redeem()`, `withdraw()` can ha
 
     === "Example"
         ```shell
-        >>> soon
+        In  [1]:  Vault.balanceOf(trader)
+        Out [1]:  997552662404145514069
+
+        In  [2]:  Vault.deposit(100000000000000000000)
+
+        In  [3]:  Vault.balanceOf(trader)
+        Out [3]:  1097552662404145514069
         ```
 
 
@@ -881,7 +872,19 @@ Also, optionally, methods `mint()`, `deposit()`, `redeem()`, `withdraw()` can ha
 
     === "Example"
         ```shell
-        >>> soon
+        In  [1]:  Vault.balanceOf(trader)
+        Out [1]:  1097552662404145514069
+
+        In  [2]:  crvusd.balanceOf(trader)
+        Out [2]:  999998899754665824864192
+
+        In  [3]:  Vault.withdraw(1000000000000000000)
+
+        In  [4]:  Vault.balanceOf(trader)
+        Out [4]:  99999999999999999999
+
+        In  [5]:  crvusd.balanceOf(trader)
+        Out [5]:  999999899754665824864192
         ```
 
 
@@ -1157,7 +1160,19 @@ Also, optionally, methods `mint()`, `deposit()`, `redeem()`, `withdraw()` can ha
 
     === "Example"
         ```shell
-        >>> soon
+        In  [1]:  Vault.balanceOf(trader)
+        Out [1]:  99999999999999999999
+
+        In  [2]:  crvusd.balanceOf(trader)
+        Out [2]:  999999899754665824864192
+
+        In  [3]:  Vault.redeem(99999999999999999999)
+
+        In  [4]:  Vault.balanceOf(trader)
+        Out [4]:  0
+
+        In  [5]:  crvusd.balanceOf(trader)
+        Out [5]:  999999999999999999999998
         ```
 
 
@@ -1320,7 +1335,7 @@ Also, optionally, methods `mint()`, `deposit()`, `redeem()`, `withdraw()` can ha
 
 ## **Interest Rates**
 
-Borrowing and lending rates are dependent on the `rate` within the AMM. This value is adjusted whenever `_save_rate()` is called. Initially, the rate is calculated in the MonetaryPolicy contract and then set within the AMM.
+Borrowing and lending rates are dependent on the `rate` within the AMM. This value is adjusted whenever `_save_rate()` is called. Initially, the rate is calculated in the [MonetaryPolicy](./semilog-mp.md) contract and then set within the AMM.
 
 ??? quote "Source Code"
 

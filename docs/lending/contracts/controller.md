@@ -12,4 +12,4 @@ The idea is to only have one Controller implementation - no matter if it is a le
 
 **Conclusion:** There have been some under-the-hood changes to the Controller.vy implementation to make sure it works both for lending and minting markets. **For a user, functions for e.g. creating loans, adding collateral, or repaying work the same as in all the other Controllers.**
 
-For now, **for full documentation of those functions**, please refer [here](../../crvUSD/controller.md) or check out the **source code on [GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/Controller.vy)**.
+For now, **for full documentation of those functions**, please refer [**here**](../../crvUSD/controller.md) or check out the **source code on [GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/Controller.vy)**.
