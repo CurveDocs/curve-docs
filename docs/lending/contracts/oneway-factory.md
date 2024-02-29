@@ -1,11 +1,16 @@
 <h1>OneWay Lending Factory</h1>
 
+A one-way lending market is a **non-rehypothecating** market where one token is considered the collateral token and another token is the borrow token. This means the **deposited collateral cannot be lent out** but can only be used as collateral. 
 
-todo:
-- change python back to vyper
+*Later on, two-way lending markets will be established, allowing the collateral provided to be lent out and used as borrow liquidity.*
+
+
+---
 
 
 ## **Creating Lending Markets**
+
+A lending market **must always include crvUSD, either as collateral or as a borrow token**.
 
 *There are two ways to create lending markets:*
 
@@ -39,7 +44,7 @@ todo:
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             event NewVault:
                 id: indexed(uint256)
                 collateral_token: indexed(address)
@@ -145,7 +150,19 @@ todo:
 
     === "Example"
         ```shell
-        >>> soon
+        >>> OneWayLendingVaultFactory.create(
+                "0xf939e0a03fb07f59a73314e73794be0e57ac1b4e",       # borrowed_token
+                "0x8f22779662ad253844013d8e99eccb4d80e31417",       # collateral_token
+                50,                                                 # A
+                6000000000000000,                                   # fee
+                140000000000000016,                                 # loan_discount
+                110000000000000000,                                 # liquidation_discount
+                external price_oracle,                              # price_oracle
+                "bobrCRV-long",                                     # name
+                0,                                                  # min_borrow_rate
+                1)                                                  # max_borrow_rate
+
+        '0xE16D806c4198955534d4EB10E4861Ea94557602E'                # returns address of the created vault
         ```
 
 
@@ -175,7 +192,7 @@ todo:
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             event NewVault:
                 id: indexed(uint256)
                 collateral_token: indexed(address)
@@ -310,13 +327,26 @@ todo:
 
     === "Example"
         ```shell
-        >>> soon
+        >>> OneWayLendingVaultFactory.create_from_pool(
+                "0xf939e0a03fb07f59a73314e73794be0e57ac1b4e",       # borrowed_token
+                "0x8f22779662ad253844013d8e99eccb4d80e31417",       # collateral_token
+                50,                                                 # A
+                6000000000000000,                                   # fee
+                140000000000000016,                                 # loan_discount
+                110000000000000000,                                 # liquidation_discount
+                "0x9fee65d5a627e73212989c8bbedc5fa5cae3821f",       # pool to use oracle from
+                "bobrCRV-long",                                     # name
+                0,                                                  # min_borrow_rate
+                0)                                                  # max_borrow_rate
+
+        '0xE16D806c4198955534d4EB10E4861Ea94557602E'                # returns address of the created vault
         ```
+
 
 
 ## **Deploying Gauges**
 
-Vaults can have liquidity gauges. Once they are added to the GaugeController by the DAO, they are eligible to receive CRV emissions.
+Just like pools, vaults can have liquidity gauges. Once they are added to the `GaugeController` by the DAO, they are eligible to receive CRV emissions.
 
 
 ### `deploy_gauge`
@@ -337,7 +367,7 @@ Vaults can have liquidity gauges. Once they are added to the GaugeController by 
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             event LiquidityGaugeDeployed:
                 vault: address
                 gauge: address
@@ -365,8 +395,9 @@ Vaults can have liquidity gauges. Once they are added to the GaugeController by 
 
     === "Example"
         ```shell
-        >>> soon
-        ```
+        In  [1]: OneWayLendingVaultFactory.deploy_gauge("0xE16D806c4198955534d4EB10E4861Ea94557602E")
+        Out [1]: '0xACEBA186aDF691245dfb20365B48DB87DEA7b98F'                # returns address of deployed gauge
+        ``` 
 
 
 ---
@@ -383,7 +414,7 @@ The implementations of the Factory can be governed by the DAO; they are upgradab
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to set new implementations.
+    Function to set new implementations. If a certain implementation should not be changed, `ZER0_ADDRESS` can be used as a placeholder.
 
     Emits: `SetImplementations`
 
@@ -394,12 +425,13 @@ The implementations of the Factory can be governed by the DAO; they are upgradab
     | `vault`             | `address` | New vault implementation. |
     | `pool_price_oracle` | `address` | New pool price oracle implementation. |
     | `monetary_policy`   | `address` | New monetary policy implementation. |
+    | `gauge`             | `address` | New gauge implementation. |
 
     ??? quote "Source code"
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             event SetImplementations:
                 amm: address
                 controller: address
@@ -465,14 +497,14 @@ The implementations of the Factory can be governed by the DAO; they are upgradab
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             controller_impl: public(address)
             ```
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.controller_impl():
-        '0x5473B1BcBbC45d38d8fBb50a18a73aFb8B0637A7'
+        In  [1]:  OneWayLendingVaultFactory.controller_impl()
+        Out [1]:  '0x5473B1BcBbC45d38d8fBb50a18a73aFb8B0637A7'
         ```
 
 
@@ -487,14 +519,14 @@ The implementations of the Factory can be governed by the DAO; they are upgradab
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             amm_impl: public(address)
             ```
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.amm_impl():
-        '0x4f37395BdFbE3A0dca124ad3C9DbFe6A6cbc31D6'
+        In  [1]:  OneWayLendingVaultFactory.amm_impl()
+        Out [1]:  '0x4f37395BdFbE3A0dca124ad3C9DbFe6A6cbc31D6'
         ```
 
 
@@ -509,21 +541,21 @@ The implementations of the Factory can be governed by the DAO; they are upgradab
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             vault_impl: public(address)
             ```
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.vault_imp():
-        '0x596F8E49acE6fC8e09B561972360DC216f1c2A1f'
+        In  [1]:  OneWayLendingVaultFactory.vault_imp()
+        Out [1]:  '0x596F8E49acE6fC8e09B561972360DC216f1c2A1f'
         ```
 
 
 ### `pool_price_oracle_impl`
 !!! description "`OneWayLendingVaultFactory.pool_price_oracle_impl() -> address: view`"
 
-    Getter for the pool price oracle implementation.
+    Getter for the price oracle implementation when creating lending markets from pools.
 
     Returns: pool price oracle implementation (`address`).
 
@@ -531,14 +563,14 @@ The implementations of the Factory can be governed by the DAO; they are upgradab
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             pool_price_oracle_impl: public(address)
             ```
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.pool_price_oracle_impl():
-        '0x9164e210d123e6566DaF113136a73684C4AB01e2'
+        In  [1]:  OneWayLendingVaultFactory.pool_price_oracle_impl()
+        Out [1]:  '0x9164e210d123e6566DaF113136a73684C4AB01e2'
         ```
 
 
@@ -553,14 +585,14 @@ The implementations of the Factory can be governed by the DAO; they are upgradab
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             monetary_policy_impl: public(address)
             ```
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.monetary_policy_impl():
-        '0xa7E98815c0193E01165720C3abea43B885ae67FD'
+        In  [1]:  OneWayLendingVaultFactory.monetary_policy_impl()
+        Out [1]:  '0xa7E98815c0193E01165720C3abea43B885ae67FD'
         ```
 
 
@@ -575,14 +607,14 @@ The implementations of the Factory can be governed by the DAO; they are upgradab
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             gauge_impl: public(address)
             ```
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.gauge_impl():
-        '0x00B71A425Db7C8B65a46CF39c23A188e10A2DE99'
+        In  [1]:  OneWayLendingVaultFactory.gauge_impl()
+        Out [1]:  '0x00B71A425Db7C8B65a46CF39c23A188e10A2DE99'
         ```
 
 
@@ -596,7 +628,7 @@ The Factory has a `MIN_RATE` and `MAX_RATE`. These variables are constants and c
 Additionally, the Factory has two variables, `min_default_borrow_rate` and `max_default_borrow_rate`, which are used as default values when creating new lending markets. If no value is given when deploying a new market, the default rates are applied. Theses default rates can be changed by the `admin`. 
 
 
-Rate values are given per second. To get the annualized value, do: 
+**Rate values are given per second**. To get the annualized value, do: 
 
 $$\text{Annualized Rate} = \text{Rate per second} \times 60 \times 60 \times 24 \times 365$$
 
@@ -618,8 +650,8 @@ $$\text{Annualized Rate} = \text{Rate per second} \times 60 \times 60 \times 24 
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.MIN_RATE():
-        31709791        # 0.1%
+        In  [1]:  OneWayLendingVaultFactory.MIN_RATE()
+        Out [1]:  31709791        # 0.1%
         ```
 
 
@@ -640,8 +672,8 @@ $$\text{Annualized Rate} = \text{Rate per second} \times 60 \times 60 \times 24 
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.MAX_RATE():
-        317097919837    # 1000%
+        In  [1]:  OneWayLendingVaultFactory.MAX_RATE()
+        Out [1]:  317097919837    # 1000%
         ```
 
 
@@ -681,8 +713,8 @@ $$\text{Annualized Rate} = \text{Rate per second} \times 60 \times 60 \times 24 
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.min_default_borrow_rate():
-        158548959       # 5%
+        In  [1]:  OneWayLendingVaultFactory.min_default_borrow_rate()
+        Out [1]:  158548959       # 0.5%
         ```
 
 
@@ -722,13 +754,13 @@ $$\text{Annualized Rate} = \text{Rate per second} \times 60 \times 60 \times 24 
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.max_default_borrow_rate():
-        15854895991     # 500%
+        In  [1]:  OneWayLendingVaultFactory.max_default_borrow_rate()
+        Out [1]:  15854895991     # 50%
         ```
 
 
 ### `set_default_rates`
-!!! description "`OneWayLendingVault.set_default_rates(min_rate: uint256, max_rate: uint256):`"
+!!! description "`OneWayLendingVaultFactory.set_default_rates(min_rate: uint256, max_rate: uint256):`"
 
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
@@ -745,9 +777,9 @@ $$\text{Annualized Rate} = \text{Rate per second} \times 60 \times 60 \times 24 
 
     ??? quote "Source code"
 
-        === "OneWayLendingVault.vy"
+        === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             event SetDefaultRates:
                 min_rate: uint256
                 max_rate: uint256
@@ -777,7 +809,19 @@ $$\text{Annualized Rate} = \text{Rate per second} \times 60 \times 60 \times 24 
 
     === "Example"
         ```shell
-        >>> soon
+        In  [1]:  OneWayLendingVaultFactory.min_default_borrow_rate()
+        Out [1]:  158548959
+        
+        In  [2]:  OneWayLendingVaultFactory.max_default_borrow_rate()
+        Out [2]:  15854895991
+
+        In  [3]:  OneWayLendingVaultFactory.set_default_rates(168548959, 16854895991)
+
+        In  [4]:  OneWayLendingVaultFactory.min_default_borrow_rate()
+        Out [4]:  168548959
+
+        In  [5]:  OneWayLendingVaultFactory.max_default_borrow_rate()
+        Out [5]:  16854895991
         ```
 
 ---
@@ -808,7 +852,7 @@ interface AMM:
 
     | Input       | Type       | Description                                                                 |
     |-------------|------------|-----------------------------------------------------------------------------|
-    | `vault_id`  | `uint256`  | Vault ID (AMM) to exchange within. Based on `amms(vault_id)`.               |
+    | `vault_id`  | `uint256`  | Vault ID of the AMM to use. Based on `Factory.amms(vault_id)`.              |
     | `i`         | `uint256`  | Input coin.                                                                 |
     | `j`         | `uint256`  | Output coin.                                                                |
     | `amount`    | `uint256`  | Amount of the input token to exchange.                                      |
@@ -819,7 +863,7 @@ interface AMM:
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             interface AMM:
                 def exchange(i: uint256, j: uint256, in_amount: uint256, min_amount: uint256, _for: address) -> uint256[2]: nonpayable
 
@@ -845,7 +889,7 @@ interface AMM:
 
         === "AMM.vy"
 
-            ```python
+            ```vyper
             event TokenExchange:
                 buyer: indexed(address)
                 sold_id: uint256
@@ -957,38 +1001,186 @@ interface AMM:
                 assert out_coin.transfer(_for, out_amount_done, default_return_value=True)
 
                 return [in_amount_done, out_amount_done]
+
+            @internal
+            @view
+            def calc_swap_out(pump: bool, in_amount: uint256, p_o: uint256[2], in_precision: uint256, out_precision: uint256) -> DetailedTrade:
+                """
+                @notice Calculate the amount which can be obtained as a result of exchange.
+                        If couldn't exchange all - will also update the amount which was actually used.
+                        Also returns other parameters related to state after swap.
+                        This function is core to the AMM functionality.
+                @param pump Indicates whether the trade buys or sells collateral
+                @param in_amount Amount of token going in
+                @param p_o Current oracle price and ratio (p_o, dynamic_fee)
+                @return Amounts spent and given out, initial and final bands of the AMM, new
+                        amounts of coins in bands in the AMM, as well as admin fee charged,
+                        all in one data structure
+                """
+                # pump = True: borrowable (USD) in, collateral (ETH) out; going up
+                # pump = False: collateral (ETH) in, borrowable (USD) out; going down
+                min_band: int256 = self.min_band
+                max_band: int256 = self.max_band
+                out: DetailedTrade = empty(DetailedTrade)
+                out.n2 = self.active_band
+                p_o_up: uint256 = self._p_oracle_up(out.n2)
+                x: uint256 = self.bands_x[out.n2]
+                y: uint256 = self.bands_y[out.n2]
+
+                in_amount_left: uint256 = in_amount
+                antifee: uint256 = unsafe_div(
+                    (10**18)**2,
+                    unsafe_sub(10**18, max(self.fee, p_o[1]))
+                )
+                admin_fee: uint256 = self.admin_fee
+                j: uint256 = MAX_TICKS_UINT
+
+                for i in range(MAX_TICKS + MAX_SKIP_TICKS):
+                    y0: uint256 = 0
+                    f: uint256 = 0
+                    g: uint256 = 0
+                    Inv: uint256 = 0
+
+                    if x > 0 or y > 0:
+                        if j == MAX_TICKS_UINT:
+                            out.n1 = out.n2
+                            j = 0
+                        y0 = self._get_y0(x, y, p_o[0], p_o_up)  # <- also checks p_o
+                        f = unsafe_div(A * y0 * p_o[0] / p_o_up * p_o[0], 10**18)
+                        g = unsafe_div(Aminus1 * y0 * p_o_up, p_o[0])
+                        Inv = (f + x) * (g + y)
+
+                    if j != MAX_TICKS_UINT:
+                        # Initialize
+                        _tick: uint256 = y
+                        if pump:
+                            _tick = x
+                        out.ticks_in.append(_tick)
+
+                    # Need this to break if price is too far
+                    p_ratio: uint256 = unsafe_div(p_o_up * 10**18, p_o[0])
+
+                    if pump:
+                        if y != 0:
+                            if g != 0:
+                                x_dest: uint256 = (unsafe_div(Inv, g) - f) - x
+                                dx: uint256 = unsafe_div(x_dest * antifee, 10**18)
+                                if dx >= in_amount_left:
+                                    # This is the last band
+                                    x_dest = unsafe_div(in_amount_left * 10**18, antifee)  # LESS than in_amount_left
+                                    out.last_tick_j = min(Inv / (f + (x + x_dest)) - g + 1, y)  # Should be always >= 0
+                                    x_dest = unsafe_div(unsafe_sub(in_amount_left, x_dest) * admin_fee, 10**18)  # abs admin fee now
+                                    x += in_amount_left  # x is precise after this
+                                    # Round down the output
+                                    out.out_amount += y - out.last_tick_j
+                                    out.ticks_in[j] = x - x_dest
+                                    out.in_amount = in_amount
+                                    out.admin_fee = unsafe_add(out.admin_fee, x_dest)
+                                    break
+
+                                else:
+                                    # We go into the next band
+                                    dx = max(dx, 1)  # Prevents from leaving dust in the band
+                                    x_dest = unsafe_div(unsafe_sub(dx, x_dest) * admin_fee, 10**18)  # abs admin fee now
+                                    in_amount_left -= dx
+                                    out.ticks_in[j] = x + dx - x_dest
+                                    out.in_amount += dx
+                                    out.out_amount += y
+                                    out.admin_fee = unsafe_add(out.admin_fee, x_dest)
+
+                        if i != MAX_TICKS + MAX_SKIP_TICKS - 1:
+                            if out.n2 == max_band:
+                                break
+                            if j == MAX_TICKS_UINT - 1:
+                                break
+                            if p_ratio < unsafe_div(10**36, MAX_ORACLE_DN_POW):
+                                # Don't allow to be away by more than ~50 ticks
+                                break
+                            out.n2 += 1
+                            p_o_up = unsafe_div(p_o_up * Aminus1, A)
+                            x = 0
+                            y = self.bands_y[out.n2]
+
+                    else:  # dump
+                        if x != 0:
+                            if f != 0:
+                                y_dest: uint256 = (unsafe_div(Inv, f) - g) - y
+                                dy: uint256 = unsafe_div(y_dest * antifee, 10**18)
+                                if dy >= in_amount_left:
+                                    # This is the last band
+                                    y_dest = unsafe_div(in_amount_left * 10**18, antifee)
+                                    out.last_tick_j = min(Inv / (g + (y + y_dest)) - f + 1, x)
+                                    y_dest = unsafe_div(unsafe_sub(in_amount_left, y_dest) * admin_fee, 10**18)  # abs admin fee now
+                                    y += in_amount_left
+                                    out.out_amount += x - out.last_tick_j
+                                    out.ticks_in[j] = y - y_dest
+                                    out.in_amount = in_amount
+                                    out.admin_fee = unsafe_add(out.admin_fee, y_dest)
+                                    break
+
+                                else:
+                                    # We go into the next band
+                                    dy = max(dy, 1)  # Prevents from leaving dust in the band
+                                    y_dest = unsafe_div(unsafe_sub(dy, y_dest) * admin_fee, 10**18)  # abs admin fee now
+                                    in_amount_left -= dy
+                                    out.ticks_in[j] = y + dy - y_dest
+                                    out.in_amount += dy
+                                    out.out_amount += x
+                                    out.admin_fee = unsafe_add(out.admin_fee, y_dest)
+
+                        if i != MAX_TICKS + MAX_SKIP_TICKS - 1:
+                            if out.n2 == min_band:
+                                break
+                            if j == MAX_TICKS_UINT - 1:
+                                break
+                            if p_ratio > MAX_ORACLE_DN_POW:
+                                # Don't allow to be away by more than ~50 ticks
+                                break
+                            out.n2 -= 1
+                            p_o_up = unsafe_div(p_o_up * A, Aminus1)
+                            x = self.bands_x[out.n2]
+                            y = 0
+
+                    if j != MAX_TICKS_UINT:
+                        j = unsafe_add(j, 1)
+
+                # Round up what goes in and down what goes out
+                # ceil(in_amount_used/BORROWED_PRECISION) * BORROWED_PRECISION
+                out.in_amount = unsafe_mul(unsafe_div(unsafe_add(out.in_amount, unsafe_sub(in_precision, 1)), in_precision), in_precision)
+                out.out_amount = unsafe_mul(unsafe_div(out.out_amount, out_precision), out_precision)
+
+                return out
             ```
 
     === "Example"
         ```shell
-        >>> soon
+        >>> notebook soon
         ```
 
 
 ### `exchange_dy`
 !!! description "`OneWayLendingVaultFactory.exchange_dy(i: uint256, j: uint256, out_amount: uint256, max_amount: uint256, _for: address = msg.sender) -> uint256[2]::`"
 
-    todo:
+    Function to exchange a `max_amount` of input coin `i` for output coin `j` to receive `out_amount` using a certain vaults AMM (`vault_id`). 
 
-    Returns: in and out amopunt (`uint256`).
+    Returns: out amount (`uint256`).
 
     Emits: `TokenExchange` and `Transfer`
 
     | Input       | Type       | Description                                                                 |
     |-------------|------------|-----------------------------------------------------------------------------|
-    | `vault_id`  | `uint256`  | Vault ID (AMM) to exchange within. Based on `amms(vault_id)`.               |
+    | `vault_id`  | `uint256`  | Vault ID of the AMM to use. Based on `Factory.amms(vault_id)`.              |
     | `i`         | `uint256`  | Input coin.                                                                 |
     | `j`         | `uint256`  | Output coin.                                                                |
     | `amount`    | `uint256`  | Amount of the input token to exchange.                                      |
     | `min_out`   | `uint256`  | Minimum amount of the output token to be received.                          |
     | `receiver`  | `address`  | Receiver of the token exchange. Defaults to `msg.sender`.                   |
 
-
     ??? quote "Source code"
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             interface AMM:
                 def exchange_dy(i: uint256, j: uint256, out_amount: uint256, max_amount: uint256, _for: address) -> uint256[2]: nonpayable
 
@@ -1027,7 +1219,7 @@ interface AMM:
 
         === "AMM.vy"
 
-            ```python
+            ```vyper
             event TokenExchange:
                 buyer: indexed(address)
                 sold_id: uint256
@@ -1139,11 +1331,156 @@ interface AMM:
                 assert out_coin.transfer(_for, out_amount_done, default_return_value=True)
 
                 return [in_amount_done, out_amount_done]
+
+            @internal
+            @view
+            def calc_swap_in(pump: bool, out_amount: uint256, p_o: uint256[2], in_precision: uint256, out_precision: uint256) -> DetailedTrade:
+                """
+                @notice Calculate the input amount required to receive the desired output amount.
+                        If couldn't exchange all - will also update the amount which was actually received.
+                        Also returns other parameters related to state after swap.
+                @param pump Indicates whether the trade buys or sells collateral
+                @param out_amount Desired amount of token going out
+                @param p_o Current oracle price and antisandwich fee (p_o, dynamic_fee)
+                @return Amounts required and given out, initial and final bands of the AMM, new
+                        amounts of coins in bands in the AMM, as well as admin fee charged,
+                        all in one data structure
+                """
+                # pump = True: borrowable (USD) in, collateral (ETH) out; going up
+                # pump = False: collateral (ETH) in, borrowable (USD) out; going down
+                min_band: int256 = self.min_band
+                max_band: int256 = self.max_band
+                out: DetailedTrade = empty(DetailedTrade)
+                out.n2 = self.active_band
+                p_o_up: uint256 = self._p_oracle_up(out.n2)
+                x: uint256 = self.bands_x[out.n2]
+                y: uint256 = self.bands_y[out.n2]
+
+                out_amount_left: uint256 = out_amount
+                antifee: uint256 = unsafe_div(
+                    (10**18)**2,
+                    unsafe_sub(10**18, max(self.fee, p_o[1]))
+                )
+                admin_fee: uint256 = self.admin_fee
+                j: uint256 = MAX_TICKS_UINT
+
+                for i in range(MAX_TICKS + MAX_SKIP_TICKS):
+                    y0: uint256 = 0
+                    f: uint256 = 0
+                    g: uint256 = 0
+                    Inv: uint256 = 0
+
+                    if x > 0 or y > 0:
+                        if j == MAX_TICKS_UINT:
+                            out.n1 = out.n2
+                            j = 0
+                        y0 = self._get_y0(x, y, p_o[0], p_o_up)  # <- also checks p_o
+                        f = unsafe_div(A * y0 * p_o[0] / p_o_up * p_o[0], 10**18)
+                        g = unsafe_div(Aminus1 * y0 * p_o_up, p_o[0])
+                        Inv = (f + x) * (g + y)
+
+                    if j != MAX_TICKS_UINT:
+                        # Initialize
+                        _tick: uint256 = y
+                        if pump:
+                            _tick = x
+                        out.ticks_in.append(_tick)
+
+                    # Need this to break if price is too far
+                    p_ratio: uint256 = unsafe_div(p_o_up * 10**18, p_o[0])
+
+                    if pump:
+                        if y != 0:
+                            if g != 0:
+                                if y >= out_amount_left:
+                                    # This is the last band
+                                    out.last_tick_j = unsafe_sub(y, out_amount_left)
+                                    x_dest: uint256 = Inv / (g + out.last_tick_j) - f - x
+                                    dx: uint256 = unsafe_div(x_dest * antifee, 10**18)  # MORE than x_dest
+                                    out.out_amount = out_amount  # We successfully found liquidity for all the out_amount
+                                    out.in_amount += dx
+                                    x_dest = unsafe_div(unsafe_sub(dx, x_dest) * admin_fee, 10**18)  # abs admin fee now
+                                    out.ticks_in[j] = x + dx - x_dest
+                                    out.admin_fee = unsafe_add(out.admin_fee, x_dest)
+                                    break
+
+                                else:
+                                    # We go into the next band
+                                    x_dest: uint256 = (unsafe_div(Inv, g) - f) - x
+                                    dx: uint256 = max(unsafe_div(x_dest * antifee, 10**18), 1)
+                                    out_amount_left -= y
+                                    out.in_amount += dx
+                                    out.out_amount += y
+                                    x_dest = unsafe_div(unsafe_sub(dx, x_dest) * admin_fee, 10**18)  # abs admin fee now
+                                    out.ticks_in[j] = x + dx - x_dest
+                                    out.admin_fee = unsafe_add(out.admin_fee, x_dest)
+
+                        if i != MAX_TICKS + MAX_SKIP_TICKS - 1:
+                            if out.n2 == max_band:
+                                break
+                            if j == MAX_TICKS_UINT - 1:
+                                break
+                            if p_ratio < unsafe_div(10**36, MAX_ORACLE_DN_POW):
+                                # Don't allow to be away by more than ~50 ticks
+                                break
+                            out.n2 += 1
+                            p_o_up = unsafe_div(p_o_up * Aminus1, A)
+                            x = 0
+                            y = self.bands_y[out.n2]
+
+                    else:  # dump
+                        if x != 0:
+                            if f != 0:
+                                if x >= out_amount_left:
+                                    # This is the last band
+                                    out.last_tick_j = unsafe_sub(x, out_amount_left)
+                                    y_dest: uint256 = Inv / (f + out.last_tick_j) - g - y
+                                    dy: uint256 = unsafe_div(y_dest * antifee, 10**18)  # MORE than y_dest
+                                    out.out_amount = out_amount
+                                    out.in_amount += dy
+                                    y_dest = unsafe_div(unsafe_sub(dy, y_dest) * admin_fee, 10**18)  # abs admin fee now
+                                    out.ticks_in[j] = y + dy - y_dest
+                                    out.admin_fee = unsafe_add(out.admin_fee, y_dest)
+                                    break
+
+                                else:
+                                    # We go into the next band
+                                    y_dest: uint256 = (unsafe_div(Inv, f) - g) - y
+                                    dy: uint256 = max(unsafe_div(y_dest * antifee, 10**18), 1)
+                                    out_amount_left -= x
+                                    out.in_amount += dy
+                                    out.out_amount += x
+                                    y_dest = unsafe_div(unsafe_sub(dy, y_dest) * admin_fee, 10**18)  # abs admin fee now
+                                    out.ticks_in[j] = y + dy - y_dest
+                                    out.admin_fee = unsafe_add(out.admin_fee, y_dest)
+
+                        if i != MAX_TICKS + MAX_SKIP_TICKS - 1:
+                            if out.n2 == min_band:
+                                break
+                            if j == MAX_TICKS_UINT - 1:
+                                break
+                            if p_ratio > MAX_ORACLE_DN_POW:
+                                # Don't allow to be away by more than ~50 ticks
+                                break
+                            out.n2 -= 1
+                            p_o_up = unsafe_div(p_o_up * A, Aminus1)
+                            x = self.bands_x[out.n2]
+                            y = 0
+
+                    if j != MAX_TICKS_UINT:
+                        j = unsafe_add(j, 1)
+
+                # Round up what goes in and down what goes out
+                # ceil(in_amount_used/BORROWED_PRECISION) * BORROWED_PRECISION
+                out.in_amount = unsafe_mul(unsafe_div(unsafe_add(out.in_amount, unsafe_sub(in_precision, 1)), in_precision), in_precision)
+                out.out_amount = unsafe_mul(unsafe_div(out.out_amount, out_precision), out_precision)
+
+                return out
             ```
 
     === "Example"
         ```shell
-        >>> soon
+        >>> notebook soon
         ```
 
 
@@ -1156,7 +1493,7 @@ interface AMM:
 
     | Input      | Type      | Description    |
     |------------|-----------|----------------|
-    | `vault_id` | `uint256` | Vault ID to use the AMM of.|
+    | `vault_id`  | `uint256`  | Vault ID of the AMM to use. Based on `Factory.amms(vault_id)`. |
     | `i`        | `uint256` | Input coin.    |
     | `j`        | `uint256` | Output coin.   |
     | `amount`   | `uint256` | Amount to exchange.|
@@ -1165,7 +1502,7 @@ interface AMM:
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             interface AMM:
                 def get_dy(i: uint256, j: uint256, in_amount: uint256) -> uint256: view
 
@@ -1179,7 +1516,7 @@ interface AMM:
 
         === "AMM.vy"
 
-            ```python
+            ```vyper
             struct DetailedTrade:
                 in_amount: uint256
                 out_amount: uint256
@@ -1236,8 +1573,12 @@ interface AMM:
 
     === "Example"
         ```shell
-        >>> soon
+        In  [1]:  OneWayLendingVaultFactory.get_dy(1, 0, 1, 1000000000000000000)
+        Out [1]:  1474604741661300515
         ```
+
+    !!!note
+        How much of output coin `j` does a user receive when swapping in `amount` of input coin `i`? In other words, how much CRV does a user receive when swapping in 1 crvUSD?
 
 
 ### `get_dx`
@@ -1249,7 +1590,7 @@ interface AMM:
 
     | Input      | Type      | Description                      |
     |------------|-----------|----------------------------------|
-    | `vault_id` | `uint256` | Vault ID to use the AMM of.      | 
+    | `vault_id`  | `uint256`  | Vault ID of the AMM to use. Based on `Factory.amms(vault_id)`. |
     | `i`        | `uint256` | Input coin                       |
     | `j`        | `uint256` | Output coin                      |
     | `out_amount`| `uint256`| Amount of output coins to receive|
@@ -1259,7 +1600,7 @@ interface AMM:
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             interface AMM:
                 def get_dx(i: uint256, j: uint256, out_amount: uint256) -> uint256: view
 
@@ -1273,7 +1614,7 @@ interface AMM:
 
         === "AMM.vy"
 
-            ```python
+            ```vyper
             struct DetailedTrade:
                 in_amount: uint256
                 out_amount: uint256
@@ -1334,30 +1675,34 @@ interface AMM:
 
     === "Example"
         ```shell
-        >>> soon
+        In  [1]:  OneWayLendingVaultFactory.get_dx(1, 0, 1, 1000000000000000000)
+        Out [1]:  676680022754098674
         ```
+
+    !!!note
+        How much of input coin `i` does a user need to swap in order to receive `out_amount` amount of output coin `j`? In other words, how much crvUSD does a user need to exchange in order to receive 1 CRV?
+
 
 
 ### `get_dydx`
 !!! description "`OneWayLendingVaultFactory.get_dydx(vault_id: uint256, i: uint256, j: uint256, out_amount: uint256) -> (uint256, uint256):`"
 
-    Function to calculate the out amount and spent in amount.
+    Method to calculate the in amount required and the out amount received for input coin `i` and output coin `j` for swapping `out_amount`. Input and output coins are not known in advance. 
 
-    Returns: in and out amount (`uint256`, `uint256`)
+    Returns: in and out amount (`uint256`, `uint256`).
 
     | Input      | Type      | Description                      |
     |------------|-----------|----------------------------------|
-    | `vault_id` | `uint256` | Vault ID to use the AMM of.      |
+    | `vault_id` | `uint256` | Vault ID of the AMM to use. Based on `Factory.amms(vault_id)`. |
     | `i`        | `uint256` | Input coin                       |
     | `j`        | `uint256` | Output coin                      |
-    | `out_amount`| `uint256`| Amount of output coins to receive|
-
+    | `out_amount`| `uint256`| Amount of input or output coin to swap |
 
     ??? quote "Source code"
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             interface AMM:
                 def get_dydx(i: uint256, j: uint256, out_amount: uint256) -> (uint256, uint256): view
 
@@ -1371,7 +1716,7 @@ interface AMM:
 
         === "AMM.vy"
 
-            ```python
+            ```py
             struct DetailedTrade:
                 in_amount: uint256
                 out_amount: uint256
@@ -1427,17 +1772,164 @@ interface AMM:
                 out.in_amount = unsafe_div(out.in_amount, in_precision)
                 out.out_amount = unsafe_div(out.out_amount, out_precision)
                 return out
+
+            @internal
+            @view
+            def calc_swap_in(pump: bool, out_amount: uint256, p_o: uint256[2], in_precision: uint256, out_precision: uint256) -> DetailedTrade:
+                """
+                @notice Calculate the input amount required to receive the desired output amount.
+                        If couldn't exchange all - will also update the amount which was actually received.
+                        Also returns other parameters related to state after swap.
+                @param pump Indicates whether the trade buys or sells collateral
+                @param out_amount Desired amount of token going out
+                @param p_o Current oracle price and antisandwich fee (p_o, dynamic_fee)
+                @return Amounts required and given out, initial and final bands of the AMM, new
+                        amounts of coins in bands in the AMM, as well as admin fee charged,
+                        all in one data structure
+                """
+                # pump = True: borrowable (USD) in, collateral (ETH) out; going up
+                # pump = False: collateral (ETH) in, borrowable (USD) out; going down
+                min_band: int256 = self.min_band
+                max_band: int256 = self.max_band
+                out: DetailedTrade = empty(DetailedTrade)
+                out.n2 = self.active_band
+                p_o_up: uint256 = self._p_oracle_up(out.n2)
+                x: uint256 = self.bands_x[out.n2]
+                y: uint256 = self.bands_y[out.n2]
+
+                out_amount_left: uint256 = out_amount
+                antifee: uint256 = unsafe_div(
+                    (10**18)**2,
+                    unsafe_sub(10**18, max(self.fee, p_o[1]))
+                )
+                admin_fee: uint256 = self.admin_fee
+                j: uint256 = MAX_TICKS_UINT
+
+                for i in range(MAX_TICKS + MAX_SKIP_TICKS):
+                    y0: uint256 = 0
+                    f: uint256 = 0
+                    g: uint256 = 0
+                    Inv: uint256 = 0
+
+                    if x > 0 or y > 0:
+                        if j == MAX_TICKS_UINT:
+                            out.n1 = out.n2
+                            j = 0
+                        y0 = self._get_y0(x, y, p_o[0], p_o_up)  # <- also checks p_o
+                        f = unsafe_div(A * y0 * p_o[0] / p_o_up * p_o[0], 10**18)
+                        g = unsafe_div(Aminus1 * y0 * p_o_up, p_o[0])
+                        Inv = (f + x) * (g + y)
+
+                    if j != MAX_TICKS_UINT:
+                        # Initialize
+                        _tick: uint256 = y
+                        if pump:
+                            _tick = x
+                        out.ticks_in.append(_tick)
+
+                    # Need this to break if price is too far
+                    p_ratio: uint256 = unsafe_div(p_o_up * 10**18, p_o[0])
+
+                    if pump:
+                        if y != 0:
+                            if g != 0:
+                                if y >= out_amount_left:
+                                    # This is the last band
+                                    out.last_tick_j = unsafe_sub(y, out_amount_left)
+                                    x_dest: uint256 = Inv / (g + out.last_tick_j) - f - x
+                                    dx: uint256 = unsafe_div(x_dest * antifee, 10**18)  # MORE than x_dest
+                                    out.out_amount = out_amount  # We successfully found liquidity for all the out_amount
+                                    out.in_amount += dx
+                                    x_dest = unsafe_div(unsafe_sub(dx, x_dest) * admin_fee, 10**18)  # abs admin fee now
+                                    out.ticks_in[j] = x + dx - x_dest
+                                    out.admin_fee = unsafe_add(out.admin_fee, x_dest)
+                                    break
+
+                                else:
+                                    # We go into the next band
+                                    x_dest: uint256 = (unsafe_div(Inv, g) - f) - x
+                                    dx: uint256 = max(unsafe_div(x_dest * antifee, 10**18), 1)
+                                    out_amount_left -= y
+                                    out.in_amount += dx
+                                    out.out_amount += y
+                                    x_dest = unsafe_div(unsafe_sub(dx, x_dest) * admin_fee, 10**18)  # abs admin fee now
+                                    out.ticks_in[j] = x + dx - x_dest
+                                    out.admin_fee = unsafe_add(out.admin_fee, x_dest)
+
+                        if i != MAX_TICKS + MAX_SKIP_TICKS - 1:
+                            if out.n2 == max_band:
+                                break
+                            if j == MAX_TICKS_UINT - 1:
+                                break
+                            if p_ratio < unsafe_div(10**36, MAX_ORACLE_DN_POW):
+                                # Don't allow to be away by more than ~50 ticks
+                                break
+                            out.n2 += 1
+                            p_o_up = unsafe_div(p_o_up * Aminus1, A)
+                            x = 0
+                            y = self.bands_y[out.n2]
+
+                    else:  # dump
+                        if x != 0:
+                            if f != 0:
+                                if x >= out_amount_left:
+                                    # This is the last band
+                                    out.last_tick_j = unsafe_sub(x, out_amount_left)
+                                    y_dest: uint256 = Inv / (f + out.last_tick_j) - g - y
+                                    dy: uint256 = unsafe_div(y_dest * antifee, 10**18)  # MORE than y_dest
+                                    out.out_amount = out_amount
+                                    out.in_amount += dy
+                                    y_dest = unsafe_div(unsafe_sub(dy, y_dest) * admin_fee, 10**18)  # abs admin fee now
+                                    out.ticks_in[j] = y + dy - y_dest
+                                    out.admin_fee = unsafe_add(out.admin_fee, y_dest)
+                                    break
+
+                                else:
+                                    # We go into the next band
+                                    y_dest: uint256 = (unsafe_div(Inv, f) - g) - y
+                                    dy: uint256 = max(unsafe_div(y_dest * antifee, 10**18), 1)
+                                    out_amount_left -= x
+                                    out.in_amount += dy
+                                    out.out_amount += x
+                                    y_dest = unsafe_div(unsafe_sub(dy, y_dest) * admin_fee, 10**18)  # abs admin fee now
+                                    out.ticks_in[j] = y + dy - y_dest
+                                    out.admin_fee = unsafe_add(out.admin_fee, y_dest)
+
+                        if i != MAX_TICKS + MAX_SKIP_TICKS - 1:
+                            if out.n2 == min_band:
+                                break
+                            if j == MAX_TICKS_UINT - 1:
+                                break
+                            if p_ratio > MAX_ORACLE_DN_POW:
+                                # Don't allow to be away by more than ~50 ticks
+                                break
+                            out.n2 -= 1
+                            p_o_up = unsafe_div(p_o_up * A, Aminus1)
+                            x = self.bands_x[out.n2]
+                            y = 0
+
+                    if j != MAX_TICKS_UINT:
+                        j = unsafe_add(j, 1)
+
+                # Round up what goes in and down what goes out
+                # ceil(in_amount_used/BORROWED_PRECISION) * BORROWED_PRECISION
+                out.in_amount = unsafe_mul(unsafe_div(unsafe_add(out.in_amount, unsafe_sub(in_precision, 1)), in_precision), in_precision)
+                out.out_amount = unsafe_mul(unsafe_div(out.out_amount, out_precision), out_precision)
+
+                return out
             ```
 
     === "Example"
         ```shell
-        >>> soon
+        In  [1]:  OneWayLendingVaultFactory.get_dydx(1, 0, 1, 1000000000000000000)
+        Out [1]:  (1000000000000000000, 678146519222857223)
+
+        In  [2]:  OneWayLendingVaultFactory.get_dydx(1, 1, 0, 1000000000000000000)
+        Out [2]:  (79734140975529042, 119000828779767200)
         ```
 
 
-
 ---
-
 
 
 ## **Contract Ownership**
@@ -1456,14 +1948,14 @@ The Factory contract is owned by the DAO ([CurveOwnershipAdmin](https://ethersca
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             admin: public(address)
             ```
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.admin():
-        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
+        In  [1]:  OneWayLendingVaultFactory.admin()
+        Out [1]:  '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
         ```
 
 
@@ -1485,7 +1977,7 @@ The Factory contract is owned by the DAO ([CurveOwnershipAdmin](https://ethersca
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             event SetAdmin:
                 admin: address
 
@@ -1505,7 +1997,13 @@ The Factory contract is owned by the DAO ([CurveOwnershipAdmin](https://ethersca
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.set_admin(todo):
+        In  [1]:  OneWayLendingVaultFactory.admin()
+        Out [1]:  '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
+
+        In  [2]:  OneWayLendingVaultFactory.set_admin("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045")
+
+        In  [3]:  OneWayLendingVaultFactory.admin()
+        Out [3]:  '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
         ```
 
 
@@ -1516,7 +2014,14 @@ The Factory contract is owned by the DAO ([CurveOwnershipAdmin](https://ethersca
 
 ## **Contract Info Methods**
 
-Information is queried from the Factory mostly using vault indices. The first deployed vault is index 0, the second one is index 1, and so on.
+Most informations are queried based on vault indices. The first deployed vault is vault index 0, second one index 1, etc.
+
+*To get the index of a certain vault:*
+
+```shell
+>>> OneWayLendingVaultFactory.vaults_index("0x67A18c18709C09D48000B321c6E1cb09F7181211")
+1
+```
 
 ### `vaults_index`
 !!! description "`OneWayLendingVaultFactory.vaults_index(vault: Vault) -> uint256:`"
@@ -1533,7 +2038,7 @@ Information is queried from the Factory mostly using vault indices. The first de
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             _vaults_index: HashMap[Vault, uint256]
 
             @view
@@ -1544,8 +2049,8 @@ Information is queried from the Factory mostly using vault indices. The first de
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.vaults_index("0x67A18c18709C09D48000B321c6E1cb09F7181211"):
-        1
+        In  [1]:  OneWayLendingVaultFactory.vaults_index('0x67A18c18709C09D48000B321c6E1cb09F7181211')
+        Out [1]:  1
         ```
 
 
@@ -1564,16 +2069,17 @@ Information is queried from the Factory mostly using vault indices. The first de
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             vaults: public(Vault[10**18])
             ```
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.vaults(0):
-        '0xE21C518a09b26Bf65B16767B97249385f12780d9'
-        >>> OneWayLendingVaultFactory.vaults(0):
-        '0x67A18c18709C09D48000B321c6E1cb09F7181211'
+        In  [1]:  OneWayLendingVaultFactory.vaults(0)
+        Out [1]:  '0xE21C518a09b26Bf65B16767B97249385f12780d9'
+
+        In  [2]:  OneWayLendingVaultFactory.vaults(0)
+        Out [2]:  '0x67A18c18709C09D48000B321c6E1cb09F7181211'
         ```
 
 
@@ -1592,7 +2098,7 @@ Information is queried from the Factory mostly using vault indices. The first de
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             interface Vault:
                 def amm() -> address: view
 
@@ -1606,10 +2112,11 @@ Information is queried from the Factory mostly using vault indices. The first de
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.controllers(0):
-        '0x5E657c5227A596a860621C5551c9735d8f4A8BE3'
-        >>> OneWayLendingVaultFactory.controllers(0):
-        '0x7443944962D04720f8c220C0D25f56F869d6EfD4'
+        In  [1]:  OneWayLendingVaultFactory.controllers(0)
+        Out [1]:  '0x5E657c5227A596a860621C5551c9735d8f4A8BE3'
+
+        In  [2]:  OneWayLendingVaultFactory.controllers(1)
+        Out [2]:  '0x7443944962D04720f8c220C0D25f56F869d6EfD4'
         ```
 
 
@@ -1628,16 +2135,17 @@ Information is queried from the Factory mostly using vault indices. The first de
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             amms: public(AMM[10**18])
             ```
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.amms(0):
-        '0x0167B8a9A3959E698A3e3BCaFe829878FfB709e3'
-        >>> OneWayLendingVaultFactory.amms(1):
-        '0xafC1ab86045Cb2a07C23399dbE64b56D1B8B3239'
+        In  [1]:  OneWayLendingVaultFactory.amms(0)
+        Out [1]:  '0x0167B8a9A3959E698A3e3BCaFe829878FfB709e3'
+
+        In  [2]:  OneWayLendingVaultFactory.amms(1)
+        Out [2]:  '0xafC1ab86045Cb2a07C23399dbE64b56D1B8B3239'
         ```
 
 
@@ -1657,7 +2165,7 @@ Information is queried from the Factory mostly using vault indices. The first de
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             interface Vault:
                 def borrowed_token() -> address: view
 
@@ -1671,10 +2179,11 @@ Information is queried from the Factory mostly using vault indices. The first de
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.borrowed_tokens(0):
-        '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
-        >>> OneWayLendingVaultFactory.borrowed_tokens(2):
-        '0xD533a949740bb3306d119CC777fa900bA034cd52'
+        In  [1]:  OneWayLendingVaultFactory.borrowed_tokens(0)
+        Out [1]:  '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
+
+        In  [2]:  OneWayLendingVaultFactory.borrowed_tokens(2)
+        Out [2]:  '0xD533a949740bb3306d119CC777fa900bA034cd52'
         ```
 
 
@@ -1693,7 +2202,7 @@ Information is queried from the Factory mostly using vault indices. The first de
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             interface Vault:
                 def collateral_token() -> address: view
 
@@ -1707,10 +2216,11 @@ Information is queried from the Factory mostly using vault indices. The first de
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.collateral_tokens(0):
-        '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0'
-        >>> OneWayLendingVaultFactory.collateral_tokens(1):
-        '0xD533a949740bb3306d119CC777fa900bA034cd52'
+        In  [1]:  OneWayLendingVaultFactory.collateral_tokens(0)
+        Out [1]:  '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0'
+
+        In  [2]:  OneWayLendingVaultFactory.collateral_tokens(1)
+        Out [2]:  '0xD533a949740bb3306d119CC777fa900bA034cd52'
         ```
 
 
@@ -1730,7 +2240,7 @@ Information is queried from the Factory mostly using vault indices. The first de
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             interface Vault:
                 def price_oracle() -> address: view
 
@@ -1744,10 +2254,11 @@ Information is queried from the Factory mostly using vault indices. The first de
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.price_oracles(0):
-        '0xDf1B41413EafcCfC6E98BB905feaeB271d307aF3'
-        >>> OneWayLendingVaultFactory.price_oracles(1):
-        '0xc17B0451E6d8C0f71297d0f174590632BE81163c'
+        In  [1]:  OneWayLendingVaultFactory.price_oracles(0)
+        Out [1]:  '0xDf1B41413EafcCfC6E98BB905feaeB271d307aF3'
+
+        In  [2]:  OneWayLendingVaultFactory.price_oracles(1)
+        Out [2]:  '0xc17B0451E6d8C0f71297d0f174590632BE81163c'
         ```
 
 
@@ -1766,7 +2277,7 @@ Information is queried from the Factory mostly using vault indices. The first de
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             interface Vault:
                 def controller() -> address: view
 
@@ -1783,10 +2294,11 @@ Information is queried from the Factory mostly using vault indices. The first de
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.monetary_policies(0):  
-        '0xfd8eF79883815D6771FC986D43E3Dce60ea33726'      
-        >>> OneWayLendingVaultFactory.monetary_policies(1):
-        '0x5c79C4cFE9D77B3d2385E119fADb4F8ff8c08294'
+        In  [1]:  OneWayLendingVaultFactory.monetary_policies(0)
+        Out [1]:  '0xfd8eF79883815D6771FC986D43E3Dce60ea33726'
+
+        In  [2]:  OneWayLendingVaultFactory.monetary_policies(1)
+        Out [2]:  '0x5c79C4cFE9D77B3d2385E119fADb4F8ff8c08294'
         ```
 
 
@@ -1806,7 +2318,7 @@ Information is queried from the Factory mostly using vault indices. The first de
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             _vaults_index: HashMap[Vault, uint256]
 
             gauges: public(address[10**18])
@@ -1819,8 +2331,8 @@ Information is queried from the Factory mostly using vault indices. The first de
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.gauge_for_vault("0x67A18c18709C09D48000B321c6E1cb09F7181211"):
-        '0xAA90BE8bd52aeA49314dFc6e385e21A4e9c4ea0c'
+        In  [1]:  OneWayLendingVaultFactory.gauge_for_vault("0x67A18c18709C09D48000B321c6E1cb09F7181211")
+        Out [1]:  '0xAA90BE8bd52aeA49314dFc6e385e21A4e9c4ea0c'
         ```
 
 
@@ -1839,7 +2351,7 @@ Information is queried from the Factory mostly using vault indices. The first de
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             interface Vault:
                 def borrowed_token() -> address: view
                 def collateral_token() -> address: view
@@ -1855,9 +2367,9 @@ Information is queried from the Factory mostly using vault indices. The first de
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.coins(0):
-        [[0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E]
-        [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0]]
+        In  [1]:  OneWayLendingVaultFactory.coins(1)
+        Out [1]:  [Address('0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'),
+                   Address('0xD533a949740bb3306d119CC777fa900bA034cd52')]
         ```
 
 
@@ -1872,7 +2384,7 @@ Information is queried from the Factory mostly using vault indices. The first de
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             STABLECOIN: public(immutable(address))
 
             @external
@@ -1901,8 +2413,8 @@ Information is queried from the Factory mostly using vault indices. The first de
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.STABLECOIN():
-        '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
+        In  [1]:  OneWayLendingVaultFactory.STABLECOIN()
+        Out [1]:  '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
         ```
 
 
@@ -1917,7 +2429,7 @@ Information is queried from the Factory mostly using vault indices. The first de
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             market_count: public(uint256)
 
             @internal
@@ -1944,8 +2456,8 @@ Information is queried from the Factory mostly using vault indices. The first de
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.market_count():
-        3
+        In  [1]:  OneWayLendingVaultFactory.market_count()
+        Out [1]:  3
         ```
 
 
@@ -1965,16 +2477,17 @@ Information is queried from the Factory mostly using vault indices. The first de
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             token_to_vaults: public(HashMap[address, Vault[10**18]])
             ```
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.token_to_vaults("0xD533a949740bb3306d119CC777fa900bA034cd52", 0):
-        '0x67A18c18709C09D48000B321c6E1cb09F7181211'
-        >>> OneWayLendingVaultFactory.token_to_vaults("0xD533a949740bb3306d119CC777fa900bA034cd52", 1):
-        '0x044aC5160e5A04E09EBAE06D786fc151F2BA5ceD'
+        In  [1]:  OneWayLendingVaultFactory.token_to_vaults("0xD533a949740bb3306d119CC777fa900bA034cd52", 0)
+        Out [1]:  '0x67A18c18709C09D48000B321c6E1cb09F7181211'
+
+        In  [2]:  OneWayLendingVaultFactory.token_to_vaults("0xD533a949740bb3306d119CC777fa900bA034cd52", 1)
+        Out [2]:  '0x044aC5160e5A04E09EBAE06D786fc151F2BA5ceD'
         ```
 
 
@@ -1993,7 +2506,7 @@ Information is queried from the Factory mostly using vault indices. The first de
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             token_market_count: public(HashMap[address, uint256])
 
             @internal
@@ -2024,10 +2537,11 @@ Information is queried from the Factory mostly using vault indices. The first de
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.token_market_count("0xD533a949740bb3306d119CC777fa900bA034cd52"):
-        2
-        >>> OneWayLendingVaultFactory.token_market_count("0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E"):
-        0           # market count of crvusd will always return 0, because the token is included in every vault (market)
+        In  [1]:  OneWayLendingVaultFactory.token_market_count("0xD533a949740bb3306d119CC777fa900bA034cd52")
+        Out [1]:  2
+
+        In  [2]:  OneWayLendingVaultFactory.token_market_count("0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E")
+        Out [2]:  0     # market count of crvusd will always return 0, because the token is included in every vault (market)
         ```
 
 
@@ -2046,14 +2560,14 @@ Information is queried from the Factory mostly using vault indices. The first de
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             gauges: public(address[10**18])
             ```
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.gauges(0):
-        '0x3742aCa9ad8655d2d3eab5569eF1BdB4C5d52e5D'
+        In  [1]:  OneWayLendingVaultFactory.gauges(0)
+        Out [1]:  '0x3742aCa9ad8655d2d3eab5569eF1BdB4C5d52e5D'
         ```
 
 
@@ -2072,14 +2586,15 @@ Information is queried from the Factory mostly using vault indices. The first de
 
         === "OneWayLendingVaultFactory.vy"
 
-            ```python
+            ```vyper
             names: public(HashMap[uint256, String[64]])
             ```
 
     === "Example"
         ```shell
-        >>> OneWayLendingVaultFactory.names(0):
-        'wstETH-long'
-        >>> OneWayLendingVaultFactory.names(1):    
-        'CRV-long'    
+        In  [1]:  OneWayLendingVaultFactory.names(0)
+        Out [1]:  'wstETH-long'
+
+        In  [2]:  OneWayLendingVaultFactory.names(1)
+        Out [2]:  'CRV-long'
         ```
