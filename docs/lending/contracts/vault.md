@@ -1,6 +1,6 @@
 <h1>Vault</h1>
 
-The vault is an implementation of a [ERC-4626](https://ethereum.org/developers/docs/standards/tokens/erc-4626) vault which deposits the underlying asset into the controller and tracks the progress of the fees earned. Vault is a standard facrory (non-blueprint) contract which also creates AMM and Controller using `initialize()`.
+The vault is an **implementation of a [ERC-4626](https://ethereum.org/developers/docs/standards/tokens/erc-4626)** vault which **deposits the underlying asset into the controller** and **tracks the progress of the fees earned**. Vault is a standard facrory (non-blueprint) contract which also creates AMM and Controller using `initialize()`.
 
 The Vault itself does not hold any tokens, as the tokens deposited are forwarded to the Controller contract where it can be borrowed from.
 
@@ -8,7 +8,7 @@ The Vault itself does not hold any tokens, as the tokens deposited are forwarded
 
     Function which initializes a vault and creates the corresponding Controller and AMM from their blueprint implementations.
 
-    ```python
+    ```vyper
     @external
     def initialize(
             amm_impl: address,
@@ -85,8 +85,34 @@ The Vault itself does not hold any tokens, as the tokens deposited are forwarded
         return controller, amm
     ```
 
-Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pricePerShare()`. Also, optionally, methods
-`mint()`, `deposit()`, `redeem()`, `withdraw()` can have the receiver not specified - in such the receiver address defaults to `msg.sender`.
+Unlike standard ERC4626 methods, it also has:
+
+- `borrow_apr()`
+- `lend_apr()`
+- `pricePerShare()`
+
+Also, optionally, methods `mint()`, `deposit()`, `redeem()`, `withdraw()` can have the receiver not specified - in such the receiver address defaults to `msg.sender`.
+
+!!!tip "Code Examples using Titanoboa"
+    The provided shell code examples use the amazing Vyper interpreter [Titanoboa](https://github.com/vyperlang/titanoboa).  
+    To replicate the examples, simply do the following in your terminal/console:
+
+    ```shell
+    >>> ipython
+
+    In  [1]:  import boa
+
+    In  [2]:  boa.env.fork("https://eth-mainnet.g.alchemy.com/v2/{ALCHEMY_API_KEY}")
+
+    In  [3]:  vault = boa.from_etherscan("0x67A18c18709C09D48000B321c6E1cb09F7181211", name="Vault", api_key="ETHERSCAN_API_KEY")
+
+    In  [4]:  vault.name()
+    Out [4]: 'Curve Vault for crvUSD'
+
+    In  [5]:  with boa.env.prank(""):
+                       
+    Out [5]: 'Curve Vault for crvUSD'
+    ```
 
 
 ---
@@ -118,7 +144,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             event Transfer:
                 sender: indexed(address)
                 receiver: indexed(address)
@@ -180,7 +206,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Controller.vy"
 
-            ```python
+            ```vyper
             interface MonetaryPolicy:
                 def rate_write() -> uint256: nonpayable
 
@@ -205,7 +231,10 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "MonetaryPolicy.vy"
 
-            ```python
+            ```vyper
+            log_min_rate: public(int256)
+            log_max_rate: public(int256)
+
             @external
             def rate_write(_for: address = msg.sender) -> uint256:
                 return self.calculate_rate(_for, 0, 0)
@@ -221,14 +250,14 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
                 if total_debt == 0:
                     return self.min_rate
                 else:
-                    log_min_rate: int256 = self.log_min_rate
+                    log_min_rate: int256 = self.
                     log_max_rate: int256 = self.log_max_rate
                     return self.exp(total_debt * (log_max_rate - log_min_rate) / total_reserves + log_min_rate)
             ```
             
         === "AMM.vy"
 
-            ```python
+            ```vyper
             event SetRate:
                 rate: uint256
                 rate_mul: uint256
@@ -284,7 +313,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             balanceOf: public(HashMap[address, uint256])
 
             @external
@@ -318,7 +347,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             @external
             @view
             @nonreentrant('lock')
@@ -369,7 +398,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             event Transfer:
                 sender: indexed(address)
                 receiver: indexed(address)
@@ -431,7 +460,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Controller.vy"
 
-            ```python
+            ```vyper
             interface MonetaryPolicy:
                 def rate_write() -> uint256: nonpayable
 
@@ -456,7 +485,10 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "MonetaryPolicy.vy"
 
-            ```python
+            ```vyper
+            log_min_rate: public(int256)
+            log_max_rate: public(int256)
+
             @external
             def rate_write(_for: address = msg.sender) -> uint256:
                 return self.calculate_rate(_for, 0, 0)
@@ -479,7 +511,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
             
         === "AMM.vy"
 
-            ```python
+            ```vyper
             event SetRate:
                 rate: uint256
                 rate_mul: uint256
@@ -535,7 +567,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             @external
             @view
             def maxMint(receiver: address) -> uint256:
@@ -584,7 +616,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             @external
             @view
             @nonreentrant('lock')
@@ -632,7 +664,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             @external
             @view
             @nonreentrant('lock')
@@ -665,6 +697,8 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
         ```
 
 
+---
+
 
 ## **Withdrawing Assets and Redeeming Shares**
 
@@ -693,7 +727,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             event Transfer:
                 sender: indexed(address)
                 receiver: indexed(address)
@@ -762,7 +796,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Controller.vy"
 
-            ```python
+            ```vyper
             interface MonetaryPolicy:
                 def rate_write() -> uint256: nonpayable
 
@@ -787,7 +821,10 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "MonetaryPolicy.vy"
 
-            ```python
+            ```vyper
+            log_min_rate: public(int256)
+            log_max_rate: public(int256)
+
             @external
             def rate_write(_for: address = msg.sender) -> uint256:
                 return self.calculate_rate(_for, 0, 0)
@@ -810,7 +847,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
             
         === "AMM.vy"
 
-            ```python
+            ```vyper
             event SetRate:
                 rate: uint256
                 rate_mul: uint256
@@ -863,7 +900,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             @external
             @view
             @nonreentrant('lock')
@@ -893,8 +930,8 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
     === "Example"
         ```shell
-        >>> Vault.:
-        todo
+        >>> Vault.maxWithdraw("0x7a16fF8270133F063aAb6C9977183D9e72835428")
+        45917295006116605730466
         ```
 
 
@@ -913,7 +950,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             @external
             @view
             @nonreentrant('lock')
@@ -966,7 +1003,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             event Transfer:
                 sender: indexed(address)
                 receiver: indexed(address)
@@ -1035,7 +1072,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Controller.vy"
 
-            ```python
+            ```vyper
             interface MonetaryPolicy:
                 def rate_write() -> uint256: nonpayable
 
@@ -1060,7 +1097,10 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "MonetaryPolicy.vy"
 
-            ```python
+            ```vyper
+            log_min_rate: public(int256)
+            log_max_rate: public(int256)
+
             @external
             def rate_write(_for: address = msg.sender) -> uint256:
                 return self.calculate_rate(_for, 0, 0)
@@ -1083,7 +1123,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "AMM.vy"
 
-            ```python
+            ```vyper
             event SetRate:
                 rate: uint256
                 rate_mul: uint256
@@ -1136,7 +1176,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             @external   
             @view
             @nonreentrant('lock')
@@ -1166,8 +1206,8 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
     === "Example"
         ```shell
-        >>> Vault.
-        todo
+        >>> Vault.maxRedeem("0x7a16fF8270133F063aAb6C9977183D9e72835428")
+        45836614069469292514157944
         ```
 
 
@@ -1186,7 +1226,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             @external
             @view
             @nonreentrant('lock')
@@ -1242,7 +1282,7 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             @external
             @view
             @nonreentrant('lock')
@@ -1275,10 +1315,75 @@ Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, `pric
         ```
 
 
+---
+
 
 ## **Interest Rates**
 
-Interest rates depend on vault utilization, and the values are annualized and based on 1e18.
+Borrowing and lending rates are dependent on the `rate` within the AMM. This value is adjusted whenever `_save_rate()` is called. Initially, the rate is calculated in the MonetaryPolicy contract and then set within the AMM.
+
+??? quote "Source Code"
+
+    === "Controller.vy"
+
+        ```vyper
+        @internal
+        def _save_rate():
+            """
+            @notice Save current rate
+            """
+            rate: uint256 = min(self.monetary_policy.rate_write(), MAX_RATE)
+            AMM.set_rate(rate)
+        ```
+
+    === "MonetaryPolicy.vy"
+
+        ```vyper
+        log_min_rate: public(int256)
+        log_max_rate: public(int256)
+
+        @internal
+        @external
+        def rate_write(_for: address = msg.sender) -> uint256:
+            return self.calculate_rate(_for, 0, 0)
+
+        @internal
+        @view
+        def calculate_rate(_for: address, d_reserves: int256, d_debt: int256) -> uint256:
+            total_debt: int256 = convert(Controller(_for).total_debt(), int256)
+            total_reserves: int256 = convert(BORROWED_TOKEN.balanceOf(_for), int256) + total_debt + d_reserves
+            total_debt += d_debt
+            assert total_debt >= 0, "Negative debt"
+            assert total_reserves >= total_debt, "Reserves too small"
+            if total_debt == 0:
+                return self.min_rate
+            else:
+                log_min_rate: int256 = self.log_min_rate
+                log_max_rate: int256 = self.log_max_rate
+                return self.exp(total_debt * (log_max_rate - log_min_rate) / total_reserves + log_min_rate)
+        ```
+
+    === "AMM.vy"
+
+        ```vyper
+        @external
+        @nonreentrant('lock')
+        def set_rate(rate: uint256) -> uint256:
+            """
+            @notice Set interest rate. That affects the dependence of AMM base price over time
+            @param rate New rate in units of int(fraction * 1e18) per second
+            @return rate_mul multiplier (e.g. 1.0 + integral(rate, dt))
+            """
+            assert msg.sender == self.admin
+            rate_mul: uint256 = self._rate_mul()
+            self.rate_mul = rate_mul
+            self.rate_time = block.timestamp
+            self.rate = rate
+            log SetRate(rate, rate_mul, block.timestamp)
+            return rate_mul
+        ```
+
+Interest rates values are **annualized and based on 1e18**.
 
 
 ### `borrow_apr`
@@ -1292,7 +1397,7 @@ Interest rates depend on vault utilization, and the values are annualized and ba
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             interface AMM:
                 def set_admin(_admin: address): nonpayable
                 def rate() -> uint256: view
@@ -1311,21 +1416,21 @@ Interest rates depend on vault utilization, and the values are annualized and ba
 
         === "AMM.vy"
 
-            ```python
+            ```vyper
             rate: public(uint256)
             ```
 
     === "Example"
         ```shell
         >>> Vault.borrow_apr():
-        152933173055280000
+        152933173055280000          # 15.29%
         ```
 
 
 ### `lend_apr`
 !!! description "`Vault.lend_apr() -> uint256:`"
 
-    Getter for the annualized lending APR. This value is based on the utilization. This rate is awarded to the user by supplying the `borrowed_token`.
+    Getter for the annualized lending APR. The value is based on the utilization is awarded to the user for supplying underlying asset (`borrowed_token`) to the vault.
 
     Returns: lending rate (`uint256`).
 
@@ -1334,7 +1439,7 @@ Interest rates depend on vault utilization, and the values are annualized and ba
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             interface AMM:
                 def set_admin(_admin: address): nonpayable
                 def rate() -> uint256: view
@@ -1364,16 +1469,18 @@ Interest rates depend on vault utilization, and the values are annualized and ba
 
         === "AMM.vy"
 
-            ```python
+            ```vyper
             rate: public(uint256)
             ```
 
     === "Example"
         ```shell
         >>> Vault.lend_apr():
-        113600673360849488
+        113600673360849488          # 11.36%
         ```
 
+
+---
 
 
 ## **Contract Info Methods**
@@ -1389,7 +1496,7 @@ Interest rates depend on vault utilization, and the values are annualized and ba
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             @external
             @view
             def asset() -> ERC20:
@@ -1417,7 +1524,7 @@ Interest rates depend on vault utilization, and the values are annualized and ba
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             @external
             @view
             @nonreentrant('lock')
@@ -1451,13 +1558,13 @@ Interest rates depend on vault utilization, and the values are annualized and ba
 
     | Input      | Type   | Description |
     |------------|--------|-------------|
-    | `is_floor` | `bool` | todo |
+    | `is_floor` | `bool` | - |
 
     ??? quote "Source code"
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             @external
             @view
             @nonreentrant('lock')
@@ -1508,7 +1615,7 @@ Interest rates depend on vault utilization, and the values are annualized and ba
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             interface Factory:
                 def admin() -> address: view
 
@@ -1520,7 +1627,7 @@ Interest rates depend on vault utilization, and the values are annualized and ba
 
         === "LendingFactory.vy"
 
-            ```python
+            ```vyper
             admin: public(address)
             ```
 
@@ -1542,7 +1649,7 @@ Interest rates depend on vault utilization, and the values are annualized and ba
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             borrowed_token: public(ERC20)
             ```
 
@@ -1564,7 +1671,7 @@ Interest rates depend on vault utilization, and the values are annualized and ba
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             collateral_token: public(ERC20)
             ```
 
@@ -1586,7 +1693,7 @@ Interest rates depend on vault utilization, and the values are annualized and ba
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             price_oracle: public(PriceOracle)
             ```
 
@@ -1608,7 +1715,7 @@ Interest rates depend on vault utilization, and the values are annualized and ba
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             amm: public(AMM)
             ```
 
@@ -1630,7 +1737,7 @@ Interest rates depend on vault utilization, and the values are annualized and ba
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             controller: public(Controller)
             ```
 
@@ -1652,7 +1759,7 @@ Interest rates depend on vault utilization, and the values are annualized and ba
 
         === "Vault.vy"
 
-            ```python
+            ```vyper
             factory: public(Factory)
             ```
 
