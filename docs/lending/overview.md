@@ -1,10 +1,11 @@
 <h1>Lending and borrowing using LLAMMA</h1>
 
-Curve stablecoin crvUSD utilizes LLAMMA for soft liquidations. This AMM can be used for any pair of tokens.
+Curve stablecoin crvUSD utilizes [LLAMMA](../crvUSD/amm.md) for soft liquidations. This AMM can be used for any pair of tokens.
 
-The code enables the **creation of lending/borrowing markets to borrow crvUSD against any tokens, or to borrow any tokens against crvUSD in an isolated mode**.
+The Factory enables the **creation of permissionless lending/borrowing markets to borrow crvUSD against any token, or to borrow any token against crvUSD in an isolated mode.** Minted crvUSD is not backed by any of the collateral tokens in lending markets.
 
-Liquidity is provided in Vaults, which are **[ERC4626](https://ethereum.org/developers/docs/standards/tokens/erc-4626)** contracts with some additional methods for convenience.
+
+Liquidity is provided in [Vaults](./contracts/vault.md), which are [ERC4626](https://ethereum.org/developers/docs/standards/tokens/erc-4626) contracts with some additional methods for convenience.
 
 !!!deploy "Contract Source & Deployment"
     Lending related deployments can be found [here](../references/deployed-contracts.md#curve-lending).  
@@ -16,9 +17,12 @@ Liquidity is provided in Vaults, which are **[ERC4626](https://ethereum.org/deve
 
 # **Smart contracts and their differences from original Curve stablecoin contracts**
 
+Both `Controller.vy` and `AMM.vy` can be used for the stablecoin in this same form, to keep the codebase the same. A full documentation of the LLAMMA can be found [here](../crvUSD/amm.md). 
+
+
 ## **AMM.vy**
 
-The core contract `AMM.vy` **remains exactly the same**. It is already precisely what we need for lending; no changes are needed.
+The core contract **`AMM.vy` remains exactly the same**. It is already precisely what we need for lending; no changes are needed.
 
 ## **Controller.vy**
 
@@ -36,13 +40,13 @@ However, compatibility with the `stablecoin()` method is preserved.
 **Transfers of native ETH are removed for safety**. Multiple hacks in DeFi were due to integrators mishandling ETH transfers,
 and also due to errors. To keep things safer with unknown unknowns, automatic wrapping of ETH is turned off for good.
 
-Both `Controller.vy` and `AMM.vy` can be used for the stablecoin in this same form, to keep the codebase the same.
+**[:octicons-arrow-right-24: More here](./contracts/controller.md)**
 
 
 
 ## **Vault.vy**
 
-The vault is an **implementation of the ERC4626 vault which deposits into the controller** and tracks the progress of fees earned. The Vault is a standard factory (non-blueprint) contract that also creates the AMM and Controller using `initialize()`.
+The vault is an **implementation of the ERC4626 vault which deposits into the controller** and tracks the **progress of fees earned**. The Vault is a standard factory (non-blueprint) contract that also creates the AMM and Controller using `initialize()`.
 
 ??? quote "`initialize()`"
 
@@ -125,10 +129,7 @@ The vault is an **implementation of the ERC4626 vault which deposits into the co
         return controller, amm
     ```
 
-Unlike standard ERC4626 methods, it also has `borrow_apr()`, `lend_apr()`, and `pricePerShare()`. Additionally, the methods
-`mint()`, `deposit()`, `redeem()`, and `withdraw()` can optionally have the receiver not specified - in such a case, `msg.sender` is the
-receiver.
-
+**[:octicons-arrow-right-24: More here](./contracts/vault.md)**
 
 
 ## **OneWayLendingFactory.vy**
@@ -138,6 +139,8 @@ The factory allows the **permissionless creation of borrowing/lending markets wi
 - **[stableswap-ng](../stableswap-exchange/stableswap-ng/overview.md)** 
 - **[tricrypto-ng](../cryptoswap-exchange/tricrypto-ng/overview.md)** 
 - **[twocrypto-ng](../cryptoswap-exchange/twocrypto-ng/overview.md)**.
+
+**[:octicons-arrow-right-24: More here](./contracts/oneway-factory.md)**
 
 
 
@@ -214,33 +217,7 @@ The price oracle contract to use the `price_oracle()` method of a Curve tricrypt
 
 ## **SemilogMonetaryPolicy.vy**
 
-A monetary policy contract for lending markets where the **borrow rate does not depend on the crvUSD peg** but just on the **utilization of
-the market**. The function is as simple as:
+Lending markets uses a semi-log monetary policy for lending markets where the **borrow rate does not depend on the crvUSD peg** but just on the **utilization of
+the market**.
 
-The rate is calculated through a interal function:
-
-??? quote "`(calculate_rate(_for: address, d_reserves: int256, d_debt: int256) -> uint256:`"
-
-    ```python
-    @internal
-    @view
-    def calculate_rate(_for: address, d_reserves: int256, d_debt: int256) -> uint256:
-        total_debt: int256 = convert(Controller(_for).total_debt(), int256)
-        total_reserves: int256 = convert(BORROWED_TOKEN.balanceOf(_for), int256) + total_debt + d_reserves
-        total_debt += d_debt
-        assert total_debt >= 0, "Negative debt"
-        assert total_reserves >= total_debt, "Reserves too small"
-        if total_debt == 0:
-            return self.min_rate
-        else:
-            log_min_rate: int256 = self.log_min_rate
-            log_max_rate: int256 = self.log_max_rate
-            return self.exp(total_debt * (log_max_rate - log_min_rate) / total_reserves + log_min_rate)
-    ```
-
-
-$$\log(\text{rate}) = \text{utilization} \cdot (\log(rate_{\text{max}}) - \log(rate_{\text{min}})) + \log(rate_{\text{min}})$$
-
-$$\text{rate} = rate_{\text{min}} \cdot \left(\frac{rate_{\text{max}}}{rate_{\text{min}}}\right)^{\text{utilization}}$$
-
-
+**[:octicons-arrow-right-24: More here](./contracts/semilog.md)**
