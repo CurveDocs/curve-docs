@@ -31,8 +31,6 @@ The **borrow rate** is based on the **utilization of the lending markets**. If u
 
 *The function is as simple as:*
 
-$$\log(\text{rate}) = \text{utilization} \cdot (\log(\text{rate}_{\text{max}}) - \log(\text{rate}_{\text{min}})) + \log(\text{rate}_{\text{min}})$$
-
 $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{max}}}{\text{rate}_{\text{min}}}\right)^{\text{utilization}}$$
 
 | Variable | Description |

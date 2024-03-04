@@ -1,8 +1,6 @@
 <h1>Vault</h1>
 
-The vault is an **implementation of a [ERC-4626](https://ethereum.org/developers/docs/standards/tokens/erc-4626)** vault which **deposits the underlying asset into the controller** and **tracks the progress of the fees earned**. Vault is a standard facrory (non-blueprint) contract which also creates AMM and Controller using `initialize()`.
-
-The Vault itself does not hold any tokens, as the deposited tokens are forwarded to the Controller contract where it can be borrowed from.
+The vault is an **implementation of a [ERC-4626](https://ethereum.org/developers/docs/standards/tokens/erc-4626)** vault which **deposits the underlying asset into the controller** and **tracks the progress of the fees earned**. It is a standard (non-blueprint) contract which also creates AMM and Controller using `initialize()`.
 
 ??? quote "`initialize()`"
 
@@ -85,7 +83,9 @@ The Vault itself does not hold any tokens, as the deposited tokens are forwarded
         return controller, amm
     ```
 
-Unlike standard ERC4626 methods, it also has:
+The Vault itself does not hold any tokens, as the deposited tokens are forwarded to the Controller contract where it can be borrowed from.
+
+*Unlike standard ERC4626 methods, it also has:*
 
 - `borrow_apr()`
 - `lend_apr()`

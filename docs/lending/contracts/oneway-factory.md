@@ -2,7 +2,7 @@
 
 A one-way lending market is a **non-rehypothecating** market where one token is considered the collateral token and another token is the borrow token. This means the **deposited collateral cannot be lent out** but can only be used as collateral. 
 
-*Later on, two-way lending markets will be established, allowing the collateral provided to be lent out and used as borrow liquidity.*
+*Later on, two-way lending markets will be established, allowing the collateral provided to be lent out and used as liquidity to borrow.*
 
 
 ---
@@ -10,7 +10,7 @@ A one-way lending market is a **non-rehypothecating** market where one token is 
 
 ## **Creating Lending Markets**
 
-A lending market **must always include crvUSD, either as collateral or as a borrow token**.
+A lending market **must always include crvUSD, either as collateral or as the borrowable token**.
 
 *There are two ways to create lending markets:*
 
@@ -398,224 +398,6 @@ Just like pools, vaults can have liquidity gauges. Once they are added to the `G
         In  [1]: OneWayLendingVaultFactory.deploy_gauge("0xE16D806c4198955534d4EB10E4861Ea94557602E")
         Out [1]: '0xACEBA186aDF691245dfb20365B48DB87DEA7b98F'                # returns address of deployed gauge
         ``` 
-
-
----
-
-
-## **Implementations**
-
-The implementations of the Factory can be governed by the DAO; they are upgradable.
-
-
-### `set_implementations`
-!!! description "`OneWayLendingVaultFactory.set_implementations(controller: address, amm: address, vault: address, pool_price_oracle: address, monetary_policy: address, gauge: address):`"
-
-    !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the contract.
-
-    Function to set new implementations. If a certain implementation should not be changed, `ZER0_ADDRESS` can be used as a placeholder.
-
-    Emits: `SetImplementations`
-
-    | Input               | Type      | Description |
-    | ------------------- | --------- | ----------- |
-    | `controller`        | `address` | New controller implementation. |
-    | `amm`               | `address` | New amm implementation. |
-    | `vault`             | `address` | New vault implementation. |
-    | `pool_price_oracle` | `address` | New pool price oracle implementation. |
-    | `monetary_policy`   | `address` | New monetary policy implementation. |
-    | `gauge`             | `address` | New gauge implementation. |
-
-    ??? quote "Source code"
-
-        === "OneWayLendingVaultFactory.vy"
-
-            ```vyper
-            event SetImplementations:
-                amm: address
-                controller: address
-                vault: address
-                price_oracle: address
-                monetary_policy: address
-                gauge: address
-
-            # Implementations which can be changed by governance
-            amm_impl: public(address)
-            controller_impl: public(address)
-            vault_impl: public(address)
-            pool_price_oracle_impl: public(address)
-            monetary_policy_impl: public(address)
-            gauge_impl: public(address)
-
-            @external
-            @nonreentrant('lock')
-            def set_implementations(controller: address, amm: address, vault: address,
-                                    pool_price_oracle: address, monetary_policy: address, gauge: address):
-                """
-                @notice Set new implementations (blueprints) for controller, amm, vault, pool price oracle and monetary polcy.
-                        Doesn't change existing ones
-                @param controller Address of the controller blueprint
-                @param amm Address of the AMM blueprint
-                @param vault Address of the Vault template
-                @param pool_price_oracle Address of the pool price oracle blueprint
-                @param monetary_policy Address of the monetary policy blueprint
-                @param gauge Address for gauge implementation blueprint
-                """
-                assert msg.sender == self.admin
-
-                if controller != empty(address):
-                    self.controller_impl = controller
-                if amm != empty(address):
-                    self.amm_impl = amm
-                if vault != empty(address):
-                    self.vault_impl = vault
-                if pool_price_oracle != empty(address):
-                    self.pool_price_oracle_impl = pool_price_oracle
-                if monetary_policy != empty(address):
-                    self.monetary_policy_impl = monetary_policy
-                if gauge != empty(address):
-                    self.gauge_impl = gauge
-
-                log SetImplementations(amm, controller, vault, pool_price_oracle, monetary_policy, gauge)
-            ```
-
-    === "Example"
-        ```shell
-        >>> soon
-        ```
-
-
-### `controller_impl`
-!!! description "`OneWayLendingVaultFactory.controller_impl() -> address: view`"
-
-    Getter for the controller implementation.
-
-    Returns: controller implementation (`address`).
-
-    ??? quote "Source code"
-
-        === "OneWayLendingVaultFactory.vy"
-
-            ```vyper
-            controller_impl: public(address)
-            ```
-
-    === "Example"
-        ```shell
-        In  [1]:  OneWayLendingVaultFactory.controller_impl()
-        Out [1]:  '0x5473B1BcBbC45d38d8fBb50a18a73aFb8B0637A7'
-        ```
-
-
-### `amm_impl`
-!!! description "`OneWayLendingVaultFactory.amm_impl() -> address: view`"
-
-    Getter for the amm implementation.
-
-    Returns: amm implementation (`address`).
-
-    ??? quote "Source code"
-
-        === "OneWayLendingVaultFactory.vy"
-
-            ```vyper
-            amm_impl: public(address)
-            ```
-
-    === "Example"
-        ```shell
-        In  [1]:  OneWayLendingVaultFactory.amm_impl()
-        Out [1]:  '0x4f37395BdFbE3A0dca124ad3C9DbFe6A6cbc31D6'
-        ```
-
-
-### `vault_imp`
-!!! description "`OneWayLendingVaultFactory.vault_imp() -> address: view`"
-
-    Getter for the vault implementation.
-
-    Returns: vault implementation (`address`).
-
-    ??? quote "Source code"
-
-        === "OneWayLendingVaultFactory.vy"
-
-            ```vyper
-            vault_impl: public(address)
-            ```
-
-    === "Example"
-        ```shell
-        In  [1]:  OneWayLendingVaultFactory.vault_imp()
-        Out [1]:  '0x596F8E49acE6fC8e09B561972360DC216f1c2A1f'
-        ```
-
-
-### `pool_price_oracle_impl`
-!!! description "`OneWayLendingVaultFactory.pool_price_oracle_impl() -> address: view`"
-
-    Getter for the price oracle implementation when creating lending markets from pools.
-
-    Returns: pool price oracle implementation (`address`).
-
-    ??? quote "Source code"
-
-        === "OneWayLendingVaultFactory.vy"
-
-            ```vyper
-            pool_price_oracle_impl: public(address)
-            ```
-
-    === "Example"
-        ```shell
-        In  [1]:  OneWayLendingVaultFactory.pool_price_oracle_impl()
-        Out [1]:  '0x9164e210d123e6566DaF113136a73684C4AB01e2'
-        ```
-
-
-### `monetary_policy_impl`
-!!! description "`OneWayLendingVaultFactory.monetary_policy_impl() -> address: view`"
-
-    Getter for the monetary policy implementation.
-
-    Returns: monetary policy implementation (`address`).
-
-    ??? quote "Source code"
-
-        === "OneWayLendingVaultFactory.vy"
-
-            ```vyper
-            monetary_policy_impl: public(address)
-            ```
-
-    === "Example"
-        ```shell
-        In  [1]:  OneWayLendingVaultFactory.monetary_policy_impl()
-        Out [1]:  '0xa7E98815c0193E01165720C3abea43B885ae67FD'
-        ```
-
-
-### `gauge_impl`
-!!! description "`OneWayLendingVaultFactory.gauge_impl() -> address: view`"
-
-    Getter for the gauge implementation.
-
-    Returns: gauge implementation (`address`).
-
-    ??? quote "Source code"
-
-        === "OneWayLendingVaultFactory.vy"
-
-            ```vyper
-            gauge_impl: public(address)
-            ```
-
-    === "Example"
-        ```shell
-        In  [1]:  OneWayLendingVaultFactory.gauge_impl()
-        Out [1]:  '0x00B71A425Db7C8B65a46CF39c23A188e10A2DE99'
-        ```
 
 
 ---
@@ -1716,7 +1498,7 @@ interface AMM:
 
         === "AMM.vy"
 
-            ```py
+            ```vyper
             struct DetailedTrade:
                 in_amount: uint256
                 out_amount: uint256
@@ -1930,6 +1712,225 @@ interface AMM:
 
 
 ---
+
+
+## **Implementations**
+
+The implementations of the Factory can be governed by the DAO; they are upgradable.
+
+
+### `set_implementations`
+!!! description "`OneWayLendingVaultFactory.set_implementations(controller: address, amm: address, vault: address, pool_price_oracle: address, monetary_policy: address, gauge: address):`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
+    Function to set new implementations. If a certain implementation should not be changed, `ZER0_ADDRESS` can be used as a placeholder.
+
+    Emits: `SetImplementations`
+
+    | Input               | Type      | Description |
+    | ------------------- | --------- | ----------- |
+    | `controller`        | `address` | New controller implementation. |
+    | `amm`               | `address` | New amm implementation. |
+    | `vault`             | `address` | New vault implementation. |
+    | `pool_price_oracle` | `address` | New pool price oracle implementation. |
+    | `monetary_policy`   | `address` | New monetary policy implementation. |
+    | `gauge`             | `address` | New gauge implementation. |
+
+    ??? quote "Source code"
+
+        === "OneWayLendingVaultFactory.vy"
+
+            ```vyper
+            event SetImplementations:
+                amm: address
+                controller: address
+                vault: address
+                price_oracle: address
+                monetary_policy: address
+                gauge: address
+
+            # Implementations which can be changed by governance
+            amm_impl: public(address)
+            controller_impl: public(address)
+            vault_impl: public(address)
+            pool_price_oracle_impl: public(address)
+            monetary_policy_impl: public(address)
+            gauge_impl: public(address)
+
+            @external
+            @nonreentrant('lock')
+            def set_implementations(controller: address, amm: address, vault: address,
+                                    pool_price_oracle: address, monetary_policy: address, gauge: address):
+                """
+                @notice Set new implementations (blueprints) for controller, amm, vault, pool price oracle and monetary polcy.
+                        Doesn't change existing ones
+                @param controller Address of the controller blueprint
+                @param amm Address of the AMM blueprint
+                @param vault Address of the Vault template
+                @param pool_price_oracle Address of the pool price oracle blueprint
+                @param monetary_policy Address of the monetary policy blueprint
+                @param gauge Address for gauge implementation blueprint
+                """
+                assert msg.sender == self.admin
+
+                if controller != empty(address):
+                    self.controller_impl = controller
+                if amm != empty(address):
+                    self.amm_impl = amm
+                if vault != empty(address):
+                    self.vault_impl = vault
+                if pool_price_oracle != empty(address):
+                    self.pool_price_oracle_impl = pool_price_oracle
+                if monetary_policy != empty(address):
+                    self.monetary_policy_impl = monetary_policy
+                if gauge != empty(address):
+                    self.gauge_impl = gauge
+
+                log SetImplementations(amm, controller, vault, pool_price_oracle, monetary_policy, gauge)
+            ```
+
+    === "Example"
+        ```shell
+        >>> soon
+        ```
+
+
+### `controller_impl`
+!!! description "`OneWayLendingVaultFactory.controller_impl() -> address: view`"
+
+    Getter for the controller implementation.
+
+    Returns: controller implementation (`address`).
+
+    ??? quote "Source code"
+
+        === "OneWayLendingVaultFactory.vy"
+
+            ```vyper
+            controller_impl: public(address)
+            ```
+
+    === "Example"
+        ```shell
+        In  [1]:  OneWayLendingVaultFactory.controller_impl()
+        Out [1]:  '0x5473B1BcBbC45d38d8fBb50a18a73aFb8B0637A7'
+        ```
+
+
+### `amm_impl`
+!!! description "`OneWayLendingVaultFactory.amm_impl() -> address: view`"
+
+    Getter for the amm implementation.
+
+    Returns: amm implementation (`address`).
+
+    ??? quote "Source code"
+
+        === "OneWayLendingVaultFactory.vy"
+
+            ```vyper
+            amm_impl: public(address)
+            ```
+
+    === "Example"
+        ```shell
+        In  [1]:  OneWayLendingVaultFactory.amm_impl()
+        Out [1]:  '0x4f37395BdFbE3A0dca124ad3C9DbFe6A6cbc31D6'
+        ```
+
+
+### `vault_imp`
+!!! description "`OneWayLendingVaultFactory.vault_imp() -> address: view`"
+
+    Getter for the vault implementation.
+
+    Returns: vault implementation (`address`).
+
+    ??? quote "Source code"
+
+        === "OneWayLendingVaultFactory.vy"
+
+            ```vyper
+            vault_impl: public(address)
+            ```
+
+    === "Example"
+        ```shell
+        In  [1]:  OneWayLendingVaultFactory.vault_imp()
+        Out [1]:  '0x596F8E49acE6fC8e09B561972360DC216f1c2A1f'
+        ```
+
+
+### `pool_price_oracle_impl`
+!!! description "`OneWayLendingVaultFactory.pool_price_oracle_impl() -> address: view`"
+
+    Getter for the price oracle implementation when creating lending markets from pools.
+
+    Returns: pool price oracle implementation (`address`).
+
+    ??? quote "Source code"
+
+        === "OneWayLendingVaultFactory.vy"
+
+            ```vyper
+            pool_price_oracle_impl: public(address)
+            ```
+
+    === "Example"
+        ```shell
+        In  [1]:  OneWayLendingVaultFactory.pool_price_oracle_impl()
+        Out [1]:  '0x9164e210d123e6566DaF113136a73684C4AB01e2'
+        ```
+
+
+### `monetary_policy_impl`
+!!! description "`OneWayLendingVaultFactory.monetary_policy_impl() -> address: view`"
+
+    Getter for the monetary policy implementation.
+
+    Returns: monetary policy implementation (`address`).
+
+    ??? quote "Source code"
+
+        === "OneWayLendingVaultFactory.vy"
+
+            ```vyper
+            monetary_policy_impl: public(address)
+            ```
+
+    === "Example"
+        ```shell
+        In  [1]:  OneWayLendingVaultFactory.monetary_policy_impl()
+        Out [1]:  '0xa7E98815c0193E01165720C3abea43B885ae67FD'
+        ```
+
+
+### `gauge_impl`
+!!! description "`OneWayLendingVaultFactory.gauge_impl() -> address: view`"
+
+    Getter for the gauge implementation.
+
+    Returns: gauge implementation (`address`).
+
+    ??? quote "Source code"
+
+        === "OneWayLendingVaultFactory.vy"
+
+            ```vyper
+            gauge_impl: public(address)
+            ```
+
+    === "Example"
+        ```shell
+        In  [1]:  OneWayLendingVaultFactory.gauge_impl()
+        Out [1]:  '0x00B71A425Db7C8B65a46CF39c23A188e10A2DE99'
+        ```
+
+
+---
+
 
 
 ## **Contract Ownership**

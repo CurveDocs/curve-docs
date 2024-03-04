@@ -1,51 +1,44 @@
 <h1>Curve Lending: Overview</h1>
 
-Curve lending allows permissionless lending/borrowing powered by [LLAMMA](../crvUSD/amm.md) for soft liquidations.
+Curve lending allows the **creation of permissionless lending/borrowing markets to borrow crvUSD against any token, or to borrow any token against crvUSD in an isolated mode** powered by **LLAMMA** for soft-liquidations.
 
-The Factory enables the **creation of permissionless lending/borrowing markets to borrow crvUSD against any token, or to borrow any token against crvUSD in an isolated mode.** Minted crvUSD is not backed by any of the collateral tokens in lending markets.
-
-Liquidity is provided in [Vaults](./contracts/vault.md), which are [ERC4626](https://ethereum.org/developers/docs/standards/tokens/erc-4626) contracts with some additional methods for convenience.
+The **borrowable liquidity is provided by willing lenders** through [Vaults](./contracts/vault.md), which are [ERC4626](https://ethereum.org/en/developers/docs/standards/tokens/erc-4626/) contracts with some additional methods for convenience.
 
 !!!deploy "Contract Source & Deployment"
-    Lending related deployments can be found [here](../references/deployed-contracts.md#curve-lending).  
+    Lending-related deployments can be found [here](../references/deployed-contracts.md#curve-lending).  
     Source code for all lending-relevant contracts is available on [GitHub](https://github.com/curvefi/curve-stablecoin/tree/lending).
+
+
+## **Overview**
+
+*The entire system is similar to the one for minting markets. Every lending market has a individual **Controller**, **LLAMMA**, and **Vault**.*
+
+<figure markdown="span">
+  ![](../assets/images/lending_overview.svg){ width="600" }
+  <figcaption></figcaption>
+</figure>
+
+The **Controller** can be seen as some sort of on-chain interface. Most user actions, such as creating or repaying loans or managing existing ones, are done through this contract.
+
+The **LLAMMA** is an AMM that holds the collateral assets. This is where the magic around soft-liquidations happens. Full documentation can be found [here](../crvUSD/amm.md).
+
+The **Vault** is where willing lenders provide assets to be borrowed. The contract does not actually hold any borrowable assets; they are held by the Controller.
 
 
 ---
 
 
-# **Smart contracts and their differences from original Curve stablecoin contracts**
+## **AMM.vy and Controller.vy**
 
-Both `Controller.vy` and `AMM.vy` can be used for the stablecoin in this same form, to keep the codebase the same. A full documentation of the LLAMMA can be found [here](../crvUSD/amm.md). 
+Because Curve Lending operates very similarly to the system for minting crvUSD, both `Controller.vy` and `AMM.vy` (LLAMMA) can be used for lending markets. To ensure full compatibility with both systems, **several modifications have been made to their codebases**:
 
-
-## **AMM.vy**
-
-The core contract **`AMM.vy` remains exactly the same**. It is already precisely what we need for lending; no changes are needed.
-
-## **Controller.vy**
-
-The Controller has the **ability to handle not only 18-digit tokens** (like crvUSD) but also **tokens with any number of digits**. For that,
-there were multiple changes to **ensure rounding always rounds up in favor of the existing borrowers**.
-
-The **method which collects borrowing fees `collect_fees()` will not work in lending**. Admin fees are zero, and all the
-interest will go to the vault depositors. Moreover, AMM admin fees cannot be charged: their claim would fail too.
-This is intentional: the system will make money on fees made by crvUSD itself.
-
-The contract which creates the Controller can have `collateral_token()` and `borrowed_token()` public methods instead of
-a `stablecoin()` method. This is to keep the code clean and understandable when a stablecoin is collateral, not borrowed.
-However, compatibility with the `stablecoin()` method is preserved.
-
-**Transfers of native ETH are removed for safety**. Multiple hacks in DeFi were due to integrators mishandling ETH transfers,
-and also due to errors. To keep things safer with unknown unknowns, automatic wrapping of ETH is turned off for good.
-
-**[:octicons-arrow-right-24: More here](./contracts/controller.md)**
+[:octicons-arrow-right-24: More here](./contracts/controller-llamma.md)
 
 
 
 ## **Vault.vy**
 
-The vault is an **implementation of the ERC4626 vault which deposits into the controller** and tracks the **progress of fees earned**. The Vault is a standard factory (non-blueprint) contract that also creates the AMM and Controller using `initialize()`.
+The Vault is an **implementation of the ERC4626 vault which deposits assets into the Controller contract** and tracks the **progress of fees earned**. It is a standard factory (non-blueprint) contract that also creates the AMM and Controller using `initialize()`.
 
 ??? quote "`initialize()`"
 
@@ -128,7 +121,8 @@ The vault is an **implementation of the ERC4626 vault which deposits into the co
         return controller, amm
     ```
 
-**[:octicons-arrow-right-24: More here](./contracts/vault.md)**
+[:octicons-arrow-right-24: More here](./contracts/vault.md)
+
 
 
 ## **OneWayLendingFactory.vy**
@@ -139,14 +133,13 @@ The factory allows the **permissionless creation of borrowing/lending markets wi
 - **[tricrypto-ng](../cryptoswap-exchange/tricrypto-ng/overview.md)** 
 - **[twocrypto-ng](../cryptoswap-exchange/twocrypto-ng/overview.md)**.
 
-**[:octicons-arrow-right-24: More here](./contracts/oneway-factory.md)**
-
+[:octicons-arrow-right-24: More here](./contracts/oneway-factory.md)
 
 
 
 ## **CryptoFromPool.vy**
 
-The price oracle contract to use the `price_oracle()` method of a Curve tricrypto-ng, twocrypto-ng or stableswap-ng pool, used by the `create_from_pool()` method.
+The price oracle contract to use the `price_oracle()` method of a Curve *tricrypto-ng*, *twocrypto-ng* or *stableswap-ng* pool, used by the `create_from_pool()` method.
 
 ??? quote "`create_from_pool(borrowed_token: address, collateral_token: address, A: uint256, fee: uint256, loan_discount: uint256, liquidation_discount: uint256, pool: address, name: String[64], min_borrow_rate: uint256 = 0, max_borrow_rate: uint256 = 0) -> Vault:`"
 
@@ -216,7 +209,7 @@ The price oracle contract to use the `price_oracle()` method of a Curve tricrypt
 
 ## **SemilogMonetaryPolicy.vy**
 
-Lending markets uses a semi-log monetary policy for lending markets where the **borrow rate does not depend on the crvUSD peg** but just on the **utilization of
+Lending markets uses a semi-log monetary policy for lending markets where the **borrow rate does not depend on the price of crvUSD** but just on the **utilization of
 the market**.
 
-**[:octicons-arrow-right-24: More here](./contracts/semilog-mp.md)**
+[:octicons-arrow-right-24: More here](./contracts/semilog-mp.md)
