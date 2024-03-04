@@ -3080,9 +3080,9 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
     Emits: `SetMonetaryPolicy`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `monetary_policy` |  `address` |  Monetary policy contract |
+    | Input             | Type      | Description |
+    | ----------------- | --------- | ----------- |
+    | `monetary_policy` | `address` | Monetary policy contract. |
 
     ??? quote "Source code"
 
@@ -3132,9 +3132,6 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
     Getter of the factory contract of the controller.
 
     Returns: factory contract (`address`). 
-
-    !!!note
-        `factory` is an immutable variable; hence, it cannot be changed.
 
     ??? quote "Source code"
 
@@ -3204,9 +3201,6 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
     Getter of the AMM contract of the controller.
 
     Returns: AMM contract (`address`). 
-
-    !!!note
-        `amm` is an immutable variable; hence, it cannot be changed.
 
     ??? quote "Source code"
 
@@ -3337,11 +3331,6 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
     Returns: price (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | Pool address |
-
-
     ??? quote "Source code"
 
         === "Controller.vy"
@@ -3414,13 +3403,13 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 ### `liquidation_discounts`
 !!! description "`Controller.liquidation_discounts(arg0: address) -> uint256: view`"
 
-    Getter method for the liquidation discount of a user.
+    Getter method for the liquidation discount of a user. This value is used to discount the collateral for calculating the recoverable value upon liquidation at the current market price. The discount is factored into the health calculation.
 
     Returns: liquidation discount (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `address` |  Address |
+    | Input  | Type      | Description   |
+    | ------ | --------- | ------------- |
+    | `arg0` | `address` | User Address. |
 
     ??? quote "Source code"
 
