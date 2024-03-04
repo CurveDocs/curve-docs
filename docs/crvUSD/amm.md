@@ -1,103 +1,84 @@
-LLAMMA is the **market-making contract that rebalances the collateral**. As the name suggests, this contract is **responsible for liquidating collateral**. Every market has its own AMM (created from a blueprint contract) **containing the collateral asset and crvUSD**.
+LLAMMA is the **market-making contract that rebalances the collateral**. This contract is **responsible for liquidating and de-liquidating collateral** through arbitragurs. Every market has its own AMM (created from a blueprint) **containing the collateral and borrowable asset**.
 
-When creating a new loan, the controller evenly **distributes the collateral put up by the user across a specified number of bands in the AMM**, each representing a range of collateral prices, and mints stablecoins for the user.
+When creating a new loan, the Controller evenly **deposits the provided collateral by the user across a specified number of bands within the AMM**, each representing a range of collateral prices, and mints stablecoins if it is a minting market or transfers the borrowed assets if it is a lending maket to the user. Withdrawing collateral is also done through the Controller.
+
+!!!info "In-Depth Overview"
+    For a more technical and detailed overview of the entire system, see here: https://github.com/chanhosuh/curvefi-math/blob/master/LLAMMA.ipynb
+
 
 ---
 
-The **loan-to-value (LTV)** ratio depends on the number of bands:
 
-$$LTV = 1 - \text{loan_discount} - 1 * \frac{N}{2*A}$$
+**The main concept behind LLAMMA:**
 
-The start of the liquidation range is also determined by the LTV:
+*"Conceptually, the main idea is that LLAMMA always skews the prices like a "taker", someone who pays for immediacy of trade execution by "crossing the spread", i.e. buys above the market mid and sells below the market mid. Of course, a smart contract cannot execute anything without an EOA triggering a transaction, so the way this works in practice is that LLAMMA sets the prices like a taker and relies upon arbitrageurs to "arb" the price back to market (oracle price)."*[^1]
 
-$$ \text{starting_price} = \frac{debt} {collateral * LTV} $$
+[^1]: https://github.com/chanhosuh/curvefi-math/blob/master/LLAMMA.ipynb
 
-!!!tip
-    The `starting_price` value is in percentage. To calculate the starting price, one must multiply the value by the `price_oracle` when creating the loan.
+In simple words: LLAMMA **automatically converts collateral into crvUSD as the collateral price decreases, and vice versa, converts crvUSD back into the collateral asset when prices rise.** Due to this, there is no instant hard-liquidation when certain collateral prices are reached, but during the soft-liquidation process, losses occur and consequently decrease the health of a loan. When the **health drops below 0%,** the user is eligible for **hard-liquidation**. The user's collateral can be sold off, and the position will be closed (just as in regular liquidations).
+
+!!!warning "Disclaimer: Losses in Soft-Liquidation"
+    When a position is in soft-liquidation, losses occur due to the "rebalancing" of collateral and borrowed asset within the bands of the AMM on the way down (converting collateral for borrowed asset) and on the way up (converting borrowed asset back to the collateral asset). These losses cannot numerically be quantified and are heavily dependent on the number of bands used for the loan and generally how efficient the arbitrage was.
 
 
-Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p_oracle_down`](#p_oracle_down)) price bound. These prices are not actual AMM prices, but rather thresholds for the bands.  
-Therefore, because it is a continuous grid, the lower price bound of, let's say, band 0 is the same as the upper price bound of band 1.
-
-The concept of LLAMMA is to **automatically convert collateral into crvUSD as the collateral price decreases, and vice versa, convert crvUSD back into the collateral asset when prices rise.** When the collateral price is within a band that has deposited collateral, the position enters a so-called **soft-liquidation mode** and the health of the loan starts decreasing as external arbitrage traders soft-liquidiate a users collateral. More on this later.
-
-When the **health drops below 0%,** the user is eligible for **hard-liquidation**. The users collateral can be sold off and the position will be closed (just as in regular liquidations).
 
 ---
 
-*There are **three possible compositions** of bands:*   
 
-- **`active_band`** consists of both crvUSD and the collateral asset, depending on the oracle price within the band  
-- Bands < **`active_band`**: fully in crvUSD as the bands above have already gone through soft-liquidation  
-- Bands > **`active_band`**: fully in the collateral asset as the bands have not been in soft-liquidation mode
+**LTV Ratio**
 
-<figure markdown>
-  ![](../assets/images/llamma.png)
-  <figcaption>bands > -2: fully in collateral asset, bands < -2: fully in crvUSD and band -2: contains both</figcaption>
-</figure>
+The loan-to-value (LTV) ratio depends on the number of bands `N` and the parameter `A`. The higher the number of bands, the lower the LTV. More on bands [here](#bands).
 
+$$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
-To ensure assets are liquidated or de-liquidated, the AMM adjusts its price `get_p` to create arbitrage opportunities. Every trade within the AMM that arbitrages the price difference between `oracle_price` and `get_p` is essentially soft-liquidating users.
+!!!example "LTV"
+    Example: At the time of writing, the [wBTC market](https://crvusd.curve.fi/#/ethereum/markets/wbtc/create) has a loan discount of 9% and a A value of 100.  
+        
+    $\text{LTV (4 bands)} = \text{100%} - \text{9%} - 100 * \frac{4}{2*100} = \text{89%}$
+
+    $\text{LTV (50 bands)} = \text{100%} - \text{9%} - 100 * \frac{50}{2*100} = \text{66%}$
+
 
 ---
 
-*The AMM relies on **two different prices**:*
 
-- **`price_oracle`:** collateral price fetched from an internal price oracle  
-- **`get_p`:** oracle price of the AMM itself
+**Liquidation Range**
 
-When $\text{price_oracle} = \text{get_p}$, the external oracle price and the AMM price are identical. There is no need to arbitrage prices.
-When the price oracle begins to change, the AMM price is adjusted (AMM price is more sensitive than the regular **`price_oracle`**) to open up arbitrage opportunities.
+*The start of the liquidation range is also determined by the LTV:*
 
-When the **price of the collateral rises**, then $\text{price_oracle} < \text{get_p}$, arbitrage is possible by **swapping the collateral asset into crvUSD** until an price equilibrium is reached again.
+$$\text{starting_price} = \frac{debt}{collateral * LTV}$$
 
-Conversely, when the **price starts to decrease**, $\text{price_oracle} > \text{get_p}$, arbitrage is possible by **swapping crvUSD into the collateral asset** until both prices reach equilibrium. 
+To obtain the acutal the starting price value in dollars, one must multiply the value by the `price_oracle` at the time when creating the loan.
 
-!!!info
-    A position enters soft-liquidation mode only when the price oracle falls within a band where the user has deposited collateral. 
-    For example, if a user has collateral deposited between bands 10 and 0, they will not enter soft-liquidation as long as the oracle price stays outside these bands. In this scenario, the only "loss" the user faces is the variable interest rate of the market.
-    Additionally, there is a rather rare possibility that a user's loan was fully soft-liquidated, resulting in all their collateral being converted to crvUSD. In such a case, the user would be out of soft-liquidation because the price oracle is below the lowest band.
-
-
-| Glossary      |  Description |
-| ----------- | -------| 
-| `ticks`, `bands` | price ranges where liquidity is deposited |
-| `x` |  coin which is being borrowed, typically stablecoin |
-| `y` |  collateral coin |
-| `A` |  amplification, the measure of how concentrated the tick is  |
-| `rate` |  interest rate |
-| `rate_mul` |  rate multiplier, 1 + integral(rate * dt) |
-| `active_band` |  current band. Other bands are either in one or other coin, but not both |
-| `min_band` | bands below this are definitely empty |
-| `max_band` | bands above this are definitely empty  |
-| `bands_x[n]`, `bands_y[n]` | amounts of coin x or y deposited in band n |
-| `user_shares[user,n] / total_shares[n]` | fraction of n'th band owned by a user  |
-| `p_oracle` |  external oracle price (can be from another AMM) |
-| `p (as in get_p)` | current price of AMM. It depends not only on the balances (x,y) in the band and active_band, but also on p_oracle |
-| `p_current_up`, `p_current_down` | the value of p at constant p_oracle when y=0 or x=0 respectively for the band n  |
-| `p_oracle_up`, `p_oracle_down` |  edges of the band when p=p_oracle (steady state), happen when x=0 or y=0 respectively, for band n  |
 
 ---
 
-*The code examples below are based on the [tbtc/crvusd](https://etherscan.io/address/0xf9bd9da2427a50908c4c6d1599d8e62837c2bcb0) AMM.*
 
-```shell
->>> import ape
+| Glossary             | Description |
+| -------------------- | ----------- |
+| `ticks`, `bands`     | Price ranges where liquidity is deposited. |
+| `x`                  | Coin which is being borrowed, typically a stablecoin. |
+| `y`                  | Collateral coin. |
+| `A`                  | Amplification, the measure of how concentrated the tick is. |
+| `rate`               | Interest rate. |
+| `rate_mul`           | Rate multiplier, 1 + integral(rate * dt). |
+| `active_band`        | Current band. Other bands are either in one or the other coin, but not both. |
+| `min_band`           | Bands below this are definitely empty. |
+| `max_band`           | Bands above this are definitely empty. |
+| `bands_x[n]`, `bands_y[n]` | Amounts of coin x or y deposited in band n. |
+| `user_shares[user,n] / total_shares[n]` | Fraction of the n'th band owned by a user. |
+| `p_oracle`           | External oracle price (can be from another AMM). |
+| `p (as in get_p)`    | Current price of AMM. It depends not only on the balances (x,y) in the band and active_band, but also on p_oracle. |
+| `p_current_up`, `p_current_down` | The value of p at constant p_oracle when y=0 or x=0 respectively for the band n. |
+| `p_oracle_up`, `p_oracle_down` | Edges of the band when p=p_oracle (steady state), happen when x=0 or y=0 respectively, for band n. |
 
->>> AMM = ape.Contract("0xf9bd9da2427a50908c4c6d1599d8e62837c2bcb0")
->>> tbtc = ape.Contract("0x18084fbA666a33d37592fA2633fD49a74DD93a88")
->>> crvusd = ape.Contract("0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E")
 
->>> tbtc.approve(AMM, 2**256-1, sender=trader)
->>> crvusd.approve(AMM, 2**256-1, sender=trader)
-
->>> with ape.accounts.use_sender(trader):
-        AMM.exchange(...)
-```
+---
 
 
-## **Depositing and Removing Collateral**
-Depositing and removing collateral can only be done by the `admin` of the AMM, the Controller.
+## **Depositing and Withdrawing Collateral**
+
+Depositing and withdrawing collateral can only be done by the `admin` of the AMM, the Controller.
 
 - Collateral is put into bands by calling `deposit_range()` whenever someone creates a new loan or adds collateral to the existing position. 
 - Collateral is removed by calling `withdraw()`.
@@ -109,16 +90,16 @@ Depositing and removing collateral can only be done by the `admin` of the AMM, t
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract, which is the Controller.
 
-    Function to deposit collateral `amount` for `user` in the range of bands between `n1` and `n2`. This function can only be called by the admin of the AMM, which is the controller.
+    Function to deposit collateral `amount` for `user` in the range of bands between `n1` and `n2`. 
 
     Emits: `Deposit`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` | User address |
-    | `amount` |  `uint256` | Amount of collateral to deposit |
-    | `n1` |  `int256` | Lower band in the deposit range |
-    | `n2` |  `int256` | Upper band in the deposit range |
+    | Input    | Type      | Description                       |
+    | -------- | --------- | --------------------------------- |
+    | `user`   | `address` | User address.                     |
+    | `amount` | `uint256` | Amount of collateral to deposit.  |
+    | `n1`     | `int256`  | Lower band in the deposit range.  |
+    | `n2`     | `int256`  | Upper band in the deposit range.  |
 
     ??? quote "Source code"
 
@@ -221,10 +202,10 @@ Depositing and removing collateral can only be done by the `admin` of the AMM, t
 
     Emits: `Withdraw`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` | User address |
-    | `frac` |  `uint256` | Fraction to withdraw (1e18 = 100%) |
+    | Input      | Type       | Description |
+    | ---------- | ---------- | ----------- |
+    | `user`     |  `address` | User address. |
+    | `frac`     |  `uint256` | Fraction to withdraw (1e18 = 100%). |
 
     ??? quote "Source code"
 
@@ -324,25 +305,26 @@ Depositing and removing collateral can only be done by the `admin` of the AMM, t
 
 
 ## **Exchange Methods**
-The AMM can be used to exchange tokens, just like in any other AMM. This is necessary, as positions in soft-liquidation are arbitrated by trades within the AMM.
+
+The AMM can be used to exchange tokens, just like in any other AMM. This is necessary, as positions are arbitraged by trades within the AMM.
 
 
 ### `exchange`
 !!! description "`AMM.exchange(i: uint256, j: uint256, in_amount: uint256, min_amount: uint256, _for: address = msg.sender) -> uint256[2]:`"
 
-    Function to exchange an amount of `in_amount` of token `i` for a minimum amount of `_min_amount` of token `j`.
+    Function to exchange `in_amount` of token `i` for a minimum amount of `_min_amount` of token `j`.
 
     Returns: amount of coins given in and out (`uint256`).
 
     Emits: `TokenExchange`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | Input coin index |
-    | `j` |  `uint256` | Output coin index |
-    | `in_amount` |  `uint256` | Amount of input coin to swap |
-    | `min_amount` |  `uint256` | Minimum amount of output coin to get |
-    | `_for` |  `address` | Address to send coins to (defaulted to msg.sender) |
+    | Input        | Type      | Description                                         |
+    | ------------ | --------- | --------------------------------------------------- |
+    | `i`          | `uint256` | Input coin index.                                   |
+    | `j`          | `uint256` | Output coin index.                                  |
+    | `in_amount`  | `uint256` | Amount of input coin to swap.                       |
+    | `min_amount` | `uint256` | Minimum amount of output coin to get.               |
+    | `_for`       | `address` | Address to send coins to. Defaults to `msg.sender`. |
 
     ??? quote "Source code"
 
@@ -478,19 +460,19 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
 ### `exchange_dy`
 !!! description "`AMM.exchange_dy(i: uint256, j: uint256, out_amount: uint256, max_amount: uint256, _for: address = msg.sender) -> uint256[2]:`"
 
-    Function to exchange two tokens to obtain the desired amount of output token using the minimum amount of input token.
+    Function to exchange a maximum amount of `max_amount` of input token `j` for a total of `out_amount` of output token `j`.
 
-    Returns: amount of coins given in and out (`uint256`).
+    Returns: amount of coins given: in and out (`uint256`).
 
     Emits: `TokenExchange`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | Input coin index |
-    | `j` |  `uint256` | Output coin index |
-    | `in_amount` |  `uint256` | Amount of input coin to swap |
-    | `min_amount` |  `uint256` | Minimum amount of output coin to get |
-    | `_for` |  `address` | Address to send coins to (defaulted to msg.sender) |
+    | Input        | Type      | Description                                         |
+    | ------------ | --------- | --------------------------------------------------- |
+    | `i`          | `uint256` | Input coin index.                                         |
+    | `j`          | `uint256` | Output coin index.                                        |
+    | `in_amount`  | `uint256` | Amount of input coin to swap.                       |
+    | `min_amount` | `uint256` | Minimum amount of output coin to get.               |
+    | `_for`       | `address` | Address to send coins to (defaults to `msg.sender`). |
 
     ??? quote "Source code"
 
@@ -619,15 +601,15 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
 ### `get_dy`
 !!! description "`AMM.get_dy(i: uint256, j: uint256, in_amount: uint256) -> uint256:`"
 
-    Function to calculate the `out_amount` when swapping tokens through the AMM. 
+    Function to calculate the amount of output tokens `j` to receive when exchanging `in_amount` of input token `i`. 
 
     Returns: out amount (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | Input coin index |
-    | `j` |  `uint256` | Output coin index |
-    | `in_amount` |  `uint256` | Amount of input coin to swap |
+    | Input       | Type      | Description                   |
+    | ----------- | --------- | ----------------------------- |
+    | `i`         | `uint256` | Input coin index.                   |
+    | `j`         | `uint256` | Output coin index.                  |
+    | `in_amount` | `uint256` | Amount of input coin to swap. |
 
     ??? quote "Source code"
 
@@ -697,15 +679,15 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
 ### `get_dxdy`
 !!! description "`AMM.get_dxdy(i: uint256, j: uint256, in_amount: uint256) -> (uint256, uint256):`"
 
-    Function to calculate `out_amount` and `in_amount` of the DetailedTrade.
+    Function to calculate `out_amount` and `in_amount` spent.
 
     Returns: in and out amount (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | Input coin index |
-    | `j` |  `uint256` | Output coin index |
-    | `in_amount` |  `uint256` | Amount of input coin to swap |
+    | Input       | Type      | Description                   |
+    | ----------- | --------- | ----------------------------- |
+    | `i`         | `uint256` | Input coin index.                   |
+    | `j`         | `uint256` | Output coin index.                  |
+    | `in_amount` | `uint256` | Amount of input coin to swap. |
 
     ??? quote "Source code"
 
@@ -776,15 +758,15 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
 ### `get_dx`
 !!! description "`AMM.get_dx(i: uint256, j: uint256, out_amount: uint256) -> uint256:`"
 
-    Function to calculate the `in_amount` required to receive the desired `out_amount`.
+    Function to calculate the `in_amount` of token `i` required to receive `out_amount` of token `j`.
 
-    Returns: out amount (`uint256`).
+    Returns: in amount (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | Input coin index |
-    | `j` |  `uint256` | Output coin index |
-    | `out_amount` |  `uint256` | Desired amount of output coin to receive |
+    | Input       | Type      | Description                           |
+    | ----------- | --------- | ------------------------------------- |
+    | `i`         | `uint256` | Input coin index.                           |
+    | `j`         | `uint256` | Output coin index.                       |
+    | `out_amount`| `uint256` | Desired amount of output coin to receive. |
 
     ??? quote "Source code"
 
@@ -938,14 +920,13 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
 ### `get_amount_for_price`
 !!! description "`AMM.get_amount_for_price(p: uint256) -> (uint256, bool):`"
 
-    Function to calculate the necessary amount to be exchanged to have the AMM at the final price `p`.   
+    Function to calculate the necessary amount to be exchanged to have the AMM at the final price `p`.
 
-    Returns: necessary amount to exchange (`uint256`) and true or false (`bool`).
+    Returns: amount to exchange (`uint256`) and true or false (`bool`). The returned `bool` reflects whether the exchange "pumps" the collateral price or "dumps" it. `True` reflects the need to buy the collateral token with crvUSD in order to reach the final price `p`, and `False` vice versa.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `p` |  `uint256` | Price of the AMM |
-
+    | Input | Type      | Description       |
+    | ----- | --------- | ----------------- |
+    | `p`   | `uint256` | Price of the AMM. |
 
     ??? quote "Source code"
 
@@ -1066,516 +1047,38 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
         `bool = false` -> need to exchange collateral for crvUSD (to get the price of the collateral **DOWN**)
 
 
+---
 
-## **Contract Info Methods**
 
-### `coins`
-!!! description "`AMM.coins(i: uint256) -> address: pure`"
+## **Bands**
 
-    Getter for the coins in the AMM, with `i = 0` as borrowed token and `i = 1` as collateral token.
+*"Each band works like Uniswap V3, concentrating liquidity between two prices, and being all in the collateral at the lower price and all in crvUSD at the higher price. However since the entire interval of prices are aggressively placed with respect to the market (higher than oracle price when it's moving up and lower when it's moving down), each band gets arbed to hold all of either collateral or stablecoin in the opposite manner than expected when LP-ing with Uniswap V3."*[^2]
 
-    Returns: coin at index `i`.
+[^2]: https://github.com/chanhosuh/curvefi-math/blob/master/LLAMMA.ipynb
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | Index |
+Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p_oracle_down`](#p_oracle_down)) price bound. These prices are not actual AMM prices, but rather thresholds for the bands.  
+Therefore, because it is a continuous grid, the lower price bound of, let's say, band 0 is the same as the upper price bound of band 1.
 
-    ??? quote "Source code"
 
-        ```vyper
-        BORROWED_TOKEN: immutable(ERC20)    # x
-        COLLATERAL_TOKEN: immutable(ERC20)  # y
+*There are **three possible compositions** of bands:*   
 
-        @external
-        @pure
-        def coins(i: uint256) -> address:
-            return [BORROWED_TOKEN.address, COLLATERAL_TOKEN.address][i]
-        ```
+- **`active_band`** consists of both the borrowable and collateral asset, depending on the oracle price within the band  
+- Bands < **`active_band`**: fully in borrowable asset as the bands above have already gone through soft-liquidation  
+- Bands > **`active_band`**: fully in the collateral asset as the bands have not been in soft-liquidation mode
 
-    === "Example"
+<figure markdown>
+  ![](../assets/images/llamma.png)
+  <figcaption>bands > -2: fully in collateral asset, bands < -2: fully in borrowable asset and band -2: contains both assets</figcaption>
+</figure>
 
-        ```shell
-        >>> AMM.coins(0)
-        '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
-        >>> AMM.coins(1)
-        '0x18084fbA666a33d37592fA2633fD49a74DD93a88'
-        ```
 
+*In the code, `x` represents the borrowable token, and `y` the collateral token.*
 
-### `price_oracle` 
-!!! description "`AMM.price_oracle() -> uint256: view`"
-
-    Getter for oracle price.
-
-    Returns: oracle price (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper 
-        @external
-        @view
-        def price_oracle() -> uint256:
-            """
-            @notice Value returned by the external price oracle contract
-            """
-            return self._price_oracle_ro()[0]
-
-        @internal
-        @view
-        def _price_oracle_ro() -> uint256[2]:
-            return self.limit_p_o(price_oracle_contract.price())
-
-        @internal
-        @view
-        def limit_p_o(p: uint256) -> uint256[2]:
-            """
-            @notice Limits oracle price to avoid losses at abrupt changes, as well as calculates a dynamic fee.
-                If we consider oracle_change such as:
-                    ratio = p_new / p_old
-                (let's take for simplicity p_new < p_old, otherwise we compute p_old / p_new)
-                Then if the minimal AMM fee will be:
-                    fee = (1 - ratio**3),
-                AMM will not have a loss associated with the price change.
-                However, over time fee should still go down (over PREV_P_O_DELAY), and also ratio should be limited
-                because we don't want the fee to become too large (say, 50%) which is achieved by limiting the instantaneous
-                change in oracle price.
-
-            @return (limited_price_oracle, dynamic_fee)
-            """
-            p_new: uint256 = p
-            dt: uint256 = unsafe_sub(PREV_P_O_DELAY, min(PREV_P_O_DELAY, block.timestamp - self.prev_p_o_time))
-            ratio: uint256 = 0
-
-            # ratio = 1 - (p_o_min / p_o_max)**3
-
-            if dt > 0:
-                old_p_o: uint256 = self.old_p_o
-                old_ratio: uint256 = self.old_dfee
-                # ratio = p_o_min / p_o_max
-                if p > old_p_o:
-                    ratio = unsafe_div(old_p_o * 10**18, p)
-                    if ratio < 10**36 / MAX_P_O_CHG:
-                        p_new = unsafe_div(old_p_o * MAX_P_O_CHG, 10**18)
-                        ratio = 10**36 / MAX_P_O_CHG
-                else:
-                    ratio = unsafe_div(p * 10**18, old_p_o)
-                    if ratio < 10**36 / MAX_P_O_CHG:
-                        p_new = unsafe_div(old_p_o * 10**18, MAX_P_O_CHG)
-                        ratio = 10**36 / MAX_P_O_CHG
-
-                # ratio is lower than 1e18
-                # Also guaranteed to be limited, therefore can have all ops unsafe
-                ratio = min(
-                    unsafe_div(
-                        unsafe_mul(
-                            unsafe_sub(unsafe_add(10**18, old_ratio), unsafe_div(pow_mod256(ratio, 3), 10**36)),  # (f' + (1 - r**3))
-                            dt),                                                                                  # * dt / T
-                    PREV_P_O_DELAY),
-                10**18 - 1)
-
-            return [p_new, ratio]
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.price_oracle()
-        42793985938449777891127
-        ```
-
-
-### `has_liquidity`
-!!! description "`AMM.has_liquidity(user_: address) -> bool:`"
-
-    Function to check if `user` has any liquidity in the AMM. Checks if `user_shares[user]` is not equal to zero.
-
-    Returns: true or flase (`bool`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` | User Address |
-
-    ??? quote "Source code"
-
-        ```vyper
-        user_shares: HashMap[address, UserTicks]
-
-        @external
-        @view
-        @nonreentrant('lock')
-        def has_liquidity(user: address) -> bool:
-            """
-            @notice Check if `user` has any liquidity in the AMM
-            """
-            return self.user_shares[user].ticks[0] != 0
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.has_liquidity(trader)
-        'True'
-        ```
-
-
-
-## **Admin Ownership**
-
-### `admin`
-!!! description "`AMM.admin() -> address: view`"
-
-    Getter for the admin of the contract, which is the corresponding Controller.
-
-    Returns: admin (`address`).
-
-    ??? quote "Source code"
-
-        ```vyper 
-        admin: public(address)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.admin()
-        '0x1C91da0223c763d2e0173243eAdaA0A2ea47E704'
-        ```
-
-
-### `set_admin`
-!!! description "`AMM.set_admin(_admin: address):`"
-
-!!!guard "Guarded Method" 
-    This function is only callable when `admin` is set to `ZERO_ADDRESS`. This condition was met at deployment, but after setting the admin for the first time, it cannot be changed. Admin for the AMM is always the corresponding Controller.
-
-    Function to set the admin of AMM. Approval needs to be given to the controller in order for it to effectively call functions such as `deposit_range` and `withdraw`. The implementation of `approve_max` as a separate function was chosen because it consumes less bytespace compared to calling it directly.  
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_admin` |  `address` | admin address |
-
-    ??? quote "Source code"
-
-        ```vyper 
-        @external
-        def set_admin(_admin: address):
-            """
-            @notice Set admin of the AMM. Typically it's a controller (unless it's tests)
-            @param _admin Admin address
-            """
-            assert self.admin == empty(address)
-            self.admin = _admin
-            self.approve_max(BORROWED_TOKEN, _admin)
-            self.approve_max(COLLATERAL_TOKEN, _admin)
-
-        @internal
-        def approve_max(token: ERC20, _admin: address):
-            """
-            Approve max in a separate function because it uses less bytespace than
-            calling directly, and gas doesn't matter in set_admin
-            """
-            assert token.approve(_admin, max_value(uint256), default_return_value=True)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.set_admin(vitalik.eth)
-        ```
-
-
-## **Fees**
-Just like all Curve pools, there are three different kinds of fees: 
-
-- **Regular swap fees** are charged when tokens within the AMM are exchanged.
-- **Admin fees** determine the percentage of the "total fees" that are ultimately distributed to veCRV holders.
-- **Interest rate** which is charged on the minted crvUSD tokens.
-
-Currently, the admin fees of the AMMs are set to 1 (1 / 1e18), making them virtually nonexistent. The reason for this is to increase oracle manipulation resistance.
-
-If there are accumulated admin fees, they cannot be claimed separately. Instead, they can only be claimed by also claiming the interest rate fees at the same time. This is accomplished by calling `collect_fee()` on the Controller.
-
-
-### `fee`
-!!! description "`AMM.fee() -> uint256: view`"
-
-    Getter for the fee of the AMM.
-
-    Returns: fee (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        fee: public(uint256)
-
-        @external
-        def __init__(
-                _borrowed_token: address,
-                _borrowed_precision: uint256,
-                _collateral_token: address,
-                _collateral_precision: uint256,
-                _A: uint256,
-                _sqrt_band_ratio: uint256,
-                _log_A_ratio: int256,
-                _base_price: uint256,
-                fee: uint256,
-                admin_fee: uint256,
-                _price_oracle_contract: address,
-            ):
-            """
-            @notice LLAMMA constructor
-            @param _borrowed_token Token which is being borrowed
-            @param _collateral_token Token used as collateral
-            @param _collateral_precision Precision of collateral: we pass it because we want the blueprint to fit into bytecode
-            @param _A "Amplification coefficient" which also defines density of liquidity and band size. Relative band size is 1/_A
-            @param _sqrt_band_ratio Precomputed int(sqrt(A / (A - 1)) * 1e18)
-            @param _log_A_ratio Precomputed int(ln(A / (A - 1)) * 1e18)
-            @param _base_price Typically the initial crypto price at which AMM is deployed. Will correspond to band 0
-            @param fee Relative fee of the AMM: int(fee * 1e18)
-            @param admin_fee Admin fee: how much of fee goes to admin. 50% === int(0.5 * 1e18)
-            @param _price_oracle_contract External price oracle which has price() and price_w() methods
-                which both return current price of collateral multiplied by 1e18
-            """
-
-            ...
-
-            self.fee = fee
-
-            ...
-
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.fee()
-        6000000000000000
-        ```
-
-
-### `set_fee`
-!!! description "`AMM.set_fee(fee: uint256):`"
-
-    !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract, which is the Controller.
-
-    Function to set the AMM fee. 
-
-    Emits: `SetFee`
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `fee` |  `uint256` | Fee (1e18 == 100%) |
-
-    ??? quote "Source code"
-
-        ```vyper 
-        event SetFee:
-            fee: uint256
-
-        fee: public(uint256)
-
-        @external
-        @nonreentrant('lock')
-        def set_fee(fee: uint256):
-            """
-            @notice Set AMM fee
-            @param fee Fee where 1e18 == 100%
-            """
-            assert msg.sender == self.admin
-            self.fee = fee
-            log SetFee(fee)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.set_fee(7000000000000000)
-        ```
-
-
-### `admin_fee`
-!!! description "`AMM.admin_fee() -> uint256: view`"
-
-    Getter for the admin fee of the AMM. 
-
-    Returns: admin fee (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper 
-        admin_fee: public(uint256)
-
-        @external
-        def __init__(
-                _borrowed_token: address,
-                _borrowed_precision: uint256,
-                _collateral_token: address,
-                _collateral_precision: uint256,
-                _A: uint256,
-                _sqrt_band_ratio: uint256,
-                _log_A_ratio: int256,
-                _base_price: uint256,
-                fee: uint256,
-                admin_fee: uint256,
-                _price_oracle_contract: address,
-            ):
-            """
-            @notice LLAMMA constructor
-            @param _borrowed_token Token which is being borrowed
-            @param _collateral_token Token used as collateral
-            @param _collateral_precision Precision of collateral: we pass it because we want the blueprint to fit into bytecode
-            @param _A "Amplification coefficient" which also defines density of liquidity and band size. Relative band size is 1/_A
-            @param _sqrt_band_ratio Precomputed int(sqrt(A / (A - 1)) * 1e18)
-            @param _log_A_ratio Precomputed int(ln(A / (A - 1)) * 1e18)
-            @param _base_price Typically the initial crypto price at which AMM is deployed. Will correspond to band 0
-            @param fee Relative fee of the AMM: int(fee * 1e18)
-            @param admin_fee Admin fee: how much of fee goes to admin. 50% === int(0.5 * 1e18)
-            @param _price_oracle_contract External price oracle which has price() and price_w() methods
-                which both return current price of collateral multiplied by 1e18
-            """
-
-            ...
-
-            self.admin_fee = admin_fee
-
-            ...
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.admin_fee()
-        1
-        ```
-
-
-### `admin_fees_x`
-!!! description "`AMM.admin_fees_x() -> uint256: view`"
-
-    Getter for the accured admin fees of the borrowed token (crvUSD).
-
-    Returns: admin fee of borrowed token (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        admin_fees_x: public(uint256)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.admin_fees_x()
-        327
-        ```
-
-
-### `admin_fees_y`
-!!! description "`AMM.admin_fees_y() -> uint256: view`"
-
-    Getter for the accured admin fees of the collateral token.
-
-    Returns: admin fee of collateral token (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        admin_fees_y: public(uint256)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.admin_fees_y()
-        0
-        ```
-
-
-### `set_admin_fee`
-!!! description "`AMM.set_admin_fee(fee: uint256):`"
-
-    !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract, which is the Controller.
-
-    Function to set the admin fee of the AMM.
-
-    Emits: `SetAdminFee`
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `fee` |  `uint256` | Admin Fee (1e18 == 100%) |
-
-    ??? quote "Source code"
-
-        ```vyper 
-        event SetAdminFee:
-            fee: uint256
-
-        admin_fee: public(uint256)
-
-        @external
-        @nonreentrant('lock')
-        def set_admin_fee(fee: uint256):
-            """
-            @notice Set admin fee - fraction of the AMM fee to go to admin
-            @param fee Admin fee where 1e18 == 100%
-            """
-            assert msg.sender == self.admin
-            self.admin_fee = fee
-            log SetAdminFee(fee)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.set_admin_fee(2)
-        ```
-
-
-### `reset_admin_fee`
-!!! description "`AMM.reset_admin_fees():`"
-
-    !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract, which is the Controller.
-
-    Function to reset the accumulated admin fees (`admin_fees_x` and `admin_fees_y`) to zero. This function is automatically called when `collect_fees()` via the Controller is called.
-
-    ??? quote "Source code"
-
-        ```vyper 
-        @external
-        @nonreentrant('lock')
-        def reset_admin_fees():
-            """
-            @notice Zero out AMM fees collected
-            """
-            assert msg.sender == self.admin
-            self.admin_fees_x = 0
-            self.admin_fees_y = 0
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.admin_fees_x()
-        327
-        >>> AMM.admin_fees_y()
-        0
-        >>> Controller.collect_fees()   # this function calls `reset_admin_fees`
-        >>> AMM.admin_fees_x()
-        0
-        >>> AMM.admin_fees_y()
-        0
-        ```
-
-
-## **Parameters**
 
 ### `A`
 !!! description "`AMM.A() -> uint256: view`"
 
-    Getter for A (amplicitation coefficient). The amplication defines the density of the liquidty and band size.  
+    Getter for A (amplicitation coefficient). The amplication defines the density of the liquidty and band size. The relative band size is $\frac{1}{A}$.
 
     Returns: amplification coefficient (`uint256`).
 
@@ -1628,126 +1131,10 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
         ```
 
 
-### `rate`
-!!! description "`AMM.rate() -> uint256: view`"
-
-    Getter for the interest rate. More information [here](../crvUSD/monetarypolicy.md).
-
-    Returns: interest rate (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        rate: public(uint256)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.rate()
-        2193424322
-        ```
-
-    !!!info
-        Annualized interest rate is calculated by (1 + (rate/1e18))^(365*24*60*60)-1.
-
-
-### `get_rate_mul`
-!!! description "`AMM.get_rate_mul() -> uint256: view`"
-
-    Getter for the interest rate multiplier, which is calculated by the following:
-
-    $\frac{\text{self.rate_mul} \times (10^{18} + \text{self.rate} \times (\text{block.timestamp} - \text{self.rate_time}))}{10^{18}}$
-
-    Returns: interest rate multiplier (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        rate: public(uint256)
-        rate_time: uint256
-        rate_mul: uint256
-
-        @external
-        @view
-        def get_rate_mul() -> uint256:
-            """
-            @notice Rate multiplier which is 1.0 + integral(rate, dt)
-            @return Rate multiplier in units where 1.0 == 1e18
-            """
-            return self._rate_mul()
-
-        @internal
-        @view
-        def _rate_mul() -> uint256:
-            """
-            @notice Rate multiplier which is 1.0 + integral(rate, dt)
-            @return Rate multiplier in units where 1.0 == 1e18
-            """
-            return unsafe_div(self.rate_mul * (10**18 + self.rate * (block.timestamp - self.rate_time)), 10**18)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.get_rate_mul()
-        1029018787268879746
-        ```
-
-
-### `set_rate`
-!!! description "`AMM.set_rate(rate: uint256) -> uint256:`"
-
-    !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract, which is the Controller.
-
-    Function to set the interest rate for the AMM.
-
-    Returns: rate multiplier (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `rate` |  `uint256` | New rate in units of int(fraction * 1e18) per second |
-
-    ??? quote "Source code"
-
-        ```vyper
-        event SetRate:
-            rate: uint256
-            rate_mul: uint256
-            time: uint256
-            
-        @external
-        @nonreentrant('lock')
-        def set_rate(rate: uint256) -> uint256:
-            """
-            @notice Set interest rate. That affects the dependence of AMM base price over time
-            @param rate New rate in units of int(fraction * 1e18) per second
-            @return rate_mul multiplier (e.g. 1.0 + integral(rate, dt))
-            """
-            assert msg.sender == self.admin
-            rate_mul: uint256 = self._rate_mul()
-            self.rate_mul = rate_mul
-            self.rate_time = block.timestamp
-            self.rate = rate
-            log SetRate(rate, rate_mul, block.timestamp)
-            return rate_mul
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.set_rate(4386848644)
-        ```
-
-
-
-## **Bands**
-
 ### `active_band`
-!!! description "`AMM.active_band() -> int256:`"
+!!! description "`AMM.active_band() -> int256: view`"
 
-    Getter for the current active band. Other bands are either in one or the other coin, but not in both. Upper bands are in crvUSD, lower bands in the collateral token.
+    Getter for the current active band, the band in which `get_p` currently is in. Other bands are either in one or the other coin, but not in both. Upper bands are in the borrowable token, lower bands in the collateral token.
 
     Returns: active band (`int256`).
 
@@ -1766,7 +1153,7 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
 
 
 ### `min_band`
-!!! description "`AMM.min_band() -> int256:`"
+!!! description "`AMM.min_band() -> int256: view`"
 
     Getter for the minimum band. All bands below this one are definitely empty. 
 
@@ -1787,7 +1174,7 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
 
 
 ### `max_band`
-!!! description "`AMM.max_band() -> int256:`"
+!!! description "`AMM.max_band() -> int256: view`"
 
     Getter for the maximum band. All bands above this one are definitely empty. 
 
@@ -1807,16 +1194,50 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
         ```
 
 
+### `has_liquidity`
+!!! description "`AMM.has_liquidity(user_: address) -> bool:`"
+
+    Function to check if `user` has any liquidity in the AMM.
+
+    Returns: true or false (`bool`).
+
+    | Input  | Type      | Description   |
+    | ------ | --------- | ------------- |
+    | `user` | `address` | User Address. |
+
+    ??? quote "Source code"
+
+        ```vyper
+        user_shares: HashMap[address, UserTicks]
+
+        @external
+        @view
+        @nonreentrant('lock')
+        def has_liquidity(user: address) -> bool:
+            """
+            @notice Check if `user` has any liquidity in the AMM
+            """
+            return self.user_shares[user].ticks[0] != 0
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.has_liquidity(trader)
+        'True'
+        ```
+
+
 ### `bands_x`
-!!! description "`AMM.bands_x(arg0: uint256) -> uint256:`"
+!!! description "`AMM.bands_x(arg0: int256) -> uint256: view`"
 
-    Getter for the amount of crvUSD deposited in band `arg0` (`uint256`). X represents the token that is being borrowed.
+    Getter for the amount of the borrowable token deposited in band number `arg0`.
 
-    Returns: amount (`uint256`) of coin x deposited in a band.
+    Returns: token amount (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `uint256` | Number of the band |
+    | Input  | Type      | Description        |
+    | ------ | --------- | ------------------ |
+    | `arg0` | `int256` | Number of the band. |
 
     ??? quote "Source code"
 
@@ -1836,20 +1257,19 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
         ```
 
     !!!note
-        `active_band` is currently set to -48. Band -48 consists of crvUSD and collateral token, with all bands below fully in crvUSD, and all bands above fully in the collateral tokens.
-
+        At the time of creating these examples, `active_band` was -48. Band -48 consists of the borrowable and collateral token. All bands below fully in the borrowable token, and all bands above fully in the collateral token.
 
 
 ### `bands_y`
-!!! description "`AMM.bands_y(arg0: uint256) -> uint256:`"
+!!! description "`AMM.bands_y(arg0: int256) -> uint256: view`"
 
-    Getter for the amount of collateral token deposited in band `arg0` (`uint256`). Y represents the token that is put up as collateral.
+    Getter for the amount of collateral token deposited in band number `arg0`.
 
     Returns: amount (`uint256`) of coin y deposited in a band.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `uint256` | Band |
+    | `arg0` |  `int256` | Band |
 
     ??? quote "Source code"
 
@@ -1869,20 +1289,91 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
         ```
 
     !!!note
-        `active_band` is currently set to -48. Band -48 consists of crvUSD and collateral token, with all bands below fully in crvUSD, and all bands above fully in the collateral tokens.
+        At the time of creating these examples, `active_band` was -48. Band -48 consists of the borrowable and collateral token. All bands below fully in the borrowable token, and all bands above fully in the collateral token.
 
+
+### `get_xy`
+!!! description "`AMM.get_xy(user: address) -> DynArray[uint256, MAX_TICKS_UINT][2]:`"
+
+    Function to measure balances of the borrowed and collateral assets across the different bands for `user`.
+
+    Returns: balances of borrowed and collateral token (`uint256`) in the different bands.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `user` |  `address` | User address |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @external
+        @view
+        @nonreentrant('lock')
+        def get_xy(user: address) -> DynArray[uint256, MAX_TICKS_UINT][2]:
+            """
+            @notice A low-gas function to measure amounts of stablecoins and collateral by bands which user currently owns
+            @param user User address
+            @return Amounts of (stablecoin, collateral) by bands in a tuple
+            """
+            return self._get_xy(user, False)
+
+        @internal
+        @view
+        def _get_xy(user: address, is_sum: bool) -> DynArray[uint256, MAX_TICKS_UINT][2]:
+            """
+            @notice A low-gas function to measure amounts of stablecoins and collateral which user currently owns
+            @param user User address
+            @param is_sum Return sum or amounts by bands
+            @return Amounts of (stablecoin, collateral) in a tuple
+            """
+            xs: DynArray[uint256, MAX_TICKS_UINT] = []
+            ys: DynArray[uint256, MAX_TICKS_UINT] = []
+            if is_sum:
+                xs.append(0)
+                ys.append(0)
+            ns: int256[2] = self._read_user_tick_numbers(user)
+            ticks: DynArray[uint256, MAX_TICKS_UINT] = self._read_user_ticks(user, ns)
+            if ticks[0] != 0:
+                for i in range(MAX_TICKS):
+                    total_shares: uint256 = self.total_shares[ns[0]] + DEAD_SHARES
+                    ds: uint256 = ticks[i]
+                    dx: uint256 = unsafe_div((self.bands_x[ns[0]] + 1) * ds, total_shares)
+                    dy: uint256 = unsafe_div((self.bands_y[ns[0]] + 1) * ds, total_shares)
+                    if is_sum:
+                        xs[0] += dx
+                        ys[0] += dy
+                    else:
+                        xs.append(unsafe_div(dx, BORROWED_PRECISION))
+                        ys.append(unsafe_div(dy, COLLATERAL_PRECISION))
+                    if ns[0] == ns[1]:
+                        break
+                    ns[0] = unsafe_add(ns[0], 1)
+
+            if is_sum:
+                xs[0] = unsafe_div(xs[0], BORROWED_PRECISION)
+                ys[0] = unsafe_div(ys[0], COLLATERAL_PRECISION)
+
+            return [xs, ys]
+        ```
+
+    === "Example"
+        ```shell
+        >>> AMM.get_xy(trader) 
+        [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [33333333333333343, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333]]
+        ```
 
 
 ### `read_user_tick_numbers`
 !!! description "`AMM.read_user_tick_numbers(user: address) -> int256[2]:`"
 
-    Function to unpack and read the user's tick numbers (= lowest and highest band the user deposited into). 
+    Function to unpack and read the user's tick numbers (= lowest and highest band the user deposited into).
 
-    Returns: lowest and highest band (`int256`).
+    Returns: upper and lower band (`int256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` | User address |
+    | Input  | Type      | Description   |
+    | ------ | --------- | ------------- |
+    | `user` | `address` | User address. |
 
     ??? quote "Source code"
 
@@ -1933,13 +1424,13 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
 ### `get_y_up`
 !!! description "`AMM.get_y_up(user: address) -> uint256:`"
 
-    Function to measure the amount of y (collateral) in band n for `user` if we adiabatically trade near p_oracle on the way up.
+    Function to measure the amount of y (collateral token) in band n for `user` if we adiabatically trade near `p_oracle` on the way up.
 
     Returns: amount of collateral (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` | User address |
+    | Input  | Type      | Description   |
+    | ------ | --------- | ------------- |
+    | `user` | `address` | User address. |
 
     ??? quote "Source code"
 
@@ -2101,13 +1592,13 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
 ### `get_x_down`
 !!! description "`AMM.get_x_down(user: address) -> uint256:`"
 
-    Function to measure the amount of x (stablecoin) in band n for `user` if we adiabatically trade near p_oracle on the way down.
+    Function to measure the amount of x (borrowable token) in band n for `user` if we adiabatically trade down.
 
-    Returns: amount of coins (`uint256`).
+    Returns: amount of collateral (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` | User address |
+    | Input  | Type      | Description   |
+    | ------ | --------- | ------------- |
+    | `user` | `address` | User address. |
 
     ??? quote "Source code"
 
@@ -2271,11 +1762,11 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
 
     Function to check if there is liquidity between `active_band` and `n_end`.
 
-    Returns: true or flase (`boolean`).
+    Returns: true or false (`bool`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `n_end` |  `int256` | Band |
+    | Input   | Type     | Description                        |
+    | ------- | -------- | ---------------------------------- |
+    | `n_end` | `int256` | Band number to check until.        |
 
     ??? quote "Source code"
 
@@ -2318,13 +1809,13 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
 ### `get_sum_xy`
 !!! description "`AMM.get_sum_xy(user: address) -> uint256[2]:`"
 
-    Function to measure the amount of stablecoin and collateral `user` currently owns inside the AMM.
+    Function to measure the amount of borrowable and collateral token `user` currently owns inside the AMM.
 
-    Returns: balances of stablecoin token and collateral token (`uint256`) inside the AMM.
+    Returns: balances of borrowable token and collateral token (`uint256[2]`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `n_end` |  `int256` | Band |
+    | Input   | Type     | Description  |
+    | ------- | -------- | ------------ |
+    | `user`  | `address`| User address. |
 
     ??? quote "Source code"
 
@@ -2386,21 +1877,39 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
         [0, 1000000000000000000]    # collateral composition: [crvusd, collateral token]
         # if a position is in self-liquidation, `get_sum_xy` will contain both crvusd and collateral token
         ```
+ 
+
+---
 
 
 
 ## **Price Oracles**
 
+*The AMM relies on **two different prices**:*
+
+- **`price_oracle`:** Collateral price fetched from a price oracle.
+- **`get_p`:** Oracle price of the AMM itself.
+
+When $\text{price_oracle} = \text{get_p}$, the external oracle price and the AMM prices are identical, indicating no need for arbitrage.
+When the external oracle price begins to diverge, the AMM price `get_p` is adjusted to be more sensitive than the regular `price_oracle`, creating arbitrage opportunities.
+
+- When the **price of the collateral rises** ($\text{price_oracle} > \text{get_p}$), arbitrage is possible by **swapping collateral into the borrowable asset** until equilibrium is restored.
+- Conversely, when the **price begins to decrease** ($\text{price_oracle} < \text{get_p}$), arbitrage by **swapping the borrowable asset into collateral** is possible until both prices align again.
+
+
+!!!info "A user's loan is only in soft-liquidation when the price oracle is within the bands of the deposited collateral"
+    A position enters soft-liquidation mode only when the price oracle falls within a band where the user has deposited collateral. 
+    For example, if a user has collateral deposited between bands 10 and 0, they will not enter soft-liquidation as long as the oracle price stays outside these bands. In this scenario, the only "loss" the user faces is the variable interest rate of the market.
+    Additionally, there is a rather rare possibility that a user's loan was fully soft-liquidated, resulting in all their collateral being converted to the borrowable asset. In such a case, the user would be out of soft-liquidation because the price oracle is below the lowest band.
+
+
+
 ### `get_base_price`
 !!! description "`AMM.get_base_price() -> uint256:`"
 
-    Function to get the base price of the AMM which corresponds to band 0. The base price grows with time to account for the interest rate:  `BASE_PRICE` (=the 'real' base price when the contract was deployed) is multiplied by `_rate_mul` to account for the interest rate.
+    Function to get the base price of the AMM which corresponds to band 0. The base price grows over time to account for the interest rate: `BASE_PRICE` (= the 'real' base price when the contract was deployed) is multiplied by `_rate_mul` to account for the interest rate.
 
-    Returns: base price (`uint256`) .
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` | User address |
+    Returns: base price (`uint256`).
 
     ??? quote "Source code"
 
@@ -2451,11 +1960,11 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
 
     Getter for the highest possible price of the band at the current oracle price.
 
-    Returns: highest price (`uint256`) of band `n`.
+    Returns: highest possible price (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `n` |  `int256` | Band Number |
+    | Input | Type    | Description   |
+    | ----- | ------- | ------------- |
+    | `n`   | `int256`| Band Number.  |
 
     ??? quote "Source code"
 
@@ -2506,9 +2015,9 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
 
     Returns: lowest price (`uint256`) of band `n`.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `n` |  `int256` | Band Number |
+    | Input | Type    | Description   |
+    | ----- | ------- | ------------- |
+    | `n`   | `int256`| Band Number.  |
 
     ??? quote "Source code"
 
@@ -2555,13 +2064,13 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
 ### `p_oracle_up`
 !!! description "`AMM.p_oracle_up(n: int256) -> uint256:`"
 
-    Getter for the highest oracle price of the collateral in band `n` when p = p_oracle.
+    Getter for the highest oracle price of the collateral in band `n` when `get_p` = `price_oracle`.
 
-    Returns: highest oracle price (`uint256`) in band `n`.
+    Returns: highest oracle price (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `n` |  `int256` | Band |
+    | Input | Type    | Description  |
+    | ----- | ------- | ------------ |
+    | `n`   | `int256`| Band Number. |
 
     ??? quote "Source code"
 
@@ -2640,13 +2149,13 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
 ### `p_oracle_down`
 !!! description "`AMM.p_oracle_down(n: int256) -> uint256:`"
 
-    Getter for the lowest oracle price of the collateral in band `n` when p = p_oracle.
+    Getter for the lowest oracle price for band `n` to have liquidity when `get_p` = `price_oracle`.
 
-    Returns: lowest oracle price (`uint256`) in band `n`.
+    Returns: lowest oracle price (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `n` |  `int256` | Band |
+    | Input | Type    | Description  |
+    | ----- | ------- | ------------ |
+    | `n`   | `int256`| Band Number. |
 
     ??? quote "Source code"
 
@@ -2724,7 +2233,7 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
 ### `get_p` 
 !!! description "`AMM.get_p() -> uint256:`"
 
-    Function to get the current AMM price in `active_band`.
+    Function to get the current AMM price in the active band.
 
     Returns: current AMM price (`uint256`).
 
@@ -2784,16 +2293,94 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
         ```
 
 
+### `price_oracle` 
+!!! description "`AMM.price_oracle() -> uint256: view`"
+
+    Getter for the value (price) of the external oracle contract `price_oracle_contract`.
+
+    Returns: external oracle price (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper 
+        @external
+        @view
+        def price_oracle() -> uint256:
+            """
+            @notice Value returned by the external price oracle contract
+            """
+            return self._price_oracle_ro()[0]
+
+        @internal
+        @view
+        def _price_oracle_ro() -> uint256[2]:
+            return self.limit_p_o(price_oracle_contract.price())
+
+        @internal
+        @view
+        def limit_p_o(p: uint256) -> uint256[2]:
+            """
+            @notice Limits oracle price to avoid losses at abrupt changes, as well as calculates a dynamic fee.
+                If we consider oracle_change such as:
+                    ratio = p_new / p_old
+                (let's take for simplicity p_new < p_old, otherwise we compute p_old / p_new)
+                Then if the minimal AMM fee will be:
+                    fee = (1 - ratio**3),
+                AMM will not have a loss associated with the price change.
+                However, over time fee should still go down (over PREV_P_O_DELAY), and also ratio should be limited
+                because we don't want the fee to become too large (say, 50%) which is achieved by limiting the instantaneous
+                change in oracle price.
+
+            @return (limited_price_oracle, dynamic_fee)
+            """
+            p_new: uint256 = p
+            dt: uint256 = unsafe_sub(PREV_P_O_DELAY, min(PREV_P_O_DELAY, block.timestamp - self.prev_p_o_time))
+            ratio: uint256 = 0
+
+            # ratio = 1 - (p_o_min / p_o_max)**3
+
+            if dt > 0:
+                old_p_o: uint256 = self.old_p_o
+                old_ratio: uint256 = self.old_dfee
+                # ratio = p_o_min / p_o_max
+                if p > old_p_o:
+                    ratio = unsafe_div(old_p_o * 10**18, p)
+                    if ratio < 10**36 / MAX_P_O_CHG:
+                        p_new = unsafe_div(old_p_o * MAX_P_O_CHG, 10**18)
+                        ratio = 10**36 / MAX_P_O_CHG
+                else:
+                    ratio = unsafe_div(p * 10**18, old_p_o)
+                    if ratio < 10**36 / MAX_P_O_CHG:
+                        p_new = unsafe_div(old_p_o * 10**18, MAX_P_O_CHG)
+                        ratio = 10**36 / MAX_P_O_CHG
+
+                # ratio is lower than 1e18
+                # Also guaranteed to be limited, therefore can have all ops unsafe
+                ratio = min(
+                    unsafe_div(
+                        unsafe_mul(
+                            unsafe_sub(unsafe_add(10**18, old_ratio), unsafe_div(pow_mod256(ratio, 3), 10**36)),  # (f' + (1 - r**3))
+                            dt),                                                                                  # * dt / T
+                    PREV_P_O_DELAY),
+                10**18 - 1)
+
+            return [p_new, ratio]
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.price_oracle()
+        42793985938449777891127
+        ```
+
+
 ### `price_oracle_contract`
 !!! description "`AMM.price_oracle_contract() -> uint256: view`"
 
     Getter for the price oracle contract.
 
     Returns: oracle contract (`address`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | Index |
 
     ??? quote "Source code"
 
@@ -2844,10 +2431,81 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
         ```
 
 
+---
+
+
+## **Fees and Interest Rates**
+
+Just like all Curve pools, there are three different kinds of fees: 
+
+- **Regular swap fees** are charged when tokens within the AMM are exchanged.
+- **Admin fees** determine the percentage of the "total fees" that are ultimately distributed to veCRV holders.
+- **Interest rate** which is charged on the borrowed assets tokens.
+
+If there are accumulated admin fees, they cannot be claimed separately. Instead, they can only be claimed by also claiming the interest rate fees at the same time. This is accomplished by calling `collect_fee()` on the Controller.
+
+
+### `fee`
+!!! description "`AMM.fee() -> uint256: view`"
+
+    Getter for the exchange fee of the AMM.
+
+    Returns: fee (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        fee: public(uint256)
+
+        @external
+        def __init__(
+                _borrowed_token: address,
+                _borrowed_precision: uint256,
+                _collateral_token: address,
+                _collateral_precision: uint256,
+                _A: uint256,
+                _sqrt_band_ratio: uint256,
+                _log_A_ratio: int256,
+                _base_price: uint256,
+                fee: uint256,
+                admin_fee: uint256,
+                _price_oracle_contract: address,
+            ):
+            """
+            @notice LLAMMA constructor
+            @param _borrowed_token Token which is being borrowed
+            @param _collateral_token Token used as collateral
+            @param _collateral_precision Precision of collateral: we pass it because we want the blueprint to fit into bytecode
+            @param _A "Amplification coefficient" which also defines density of liquidity and band size. Relative band size is 1/_A
+            @param _sqrt_band_ratio Precomputed int(sqrt(A / (A - 1)) * 1e18)
+            @param _log_A_ratio Precomputed int(ln(A / (A - 1)) * 1e18)
+            @param _base_price Typically the initial crypto price at which AMM is deployed. Will correspond to band 0
+            @param fee Relative fee of the AMM: int(fee * 1e18)
+            @param admin_fee Admin fee: how much of fee goes to admin. 50% === int(0.5 * 1e18)
+            @param _price_oracle_contract External price oracle which has price() and price_w() methods
+                which both return current price of collateral multiplied by 1e18
+            """
+
+            ...
+
+            self.fee = fee
+
+            ...
+
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.fee()
+        6000000000000000
+        ```
+
+
 ### `dynamic_fee`
 !!! description "`AMM.dynamic_fee() -> uint256: view`"
 
-    Getter for the dynamic fee of the AMM. Dynamic fee is set to the maixmum of either `fee` or `_price_oracle_ro()`.
+    Getter for the dynamic fee of the AMM. Dynamic fee is set to the maixmum of either `fee` or `_price_oracle_ro()[1]`.
 
     Returns: dynamic fee (`uint256`).
 
@@ -2926,80 +2584,458 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
         ```
 
 
-### `get_xy`
-!!! description "`AMM.get_xy(user: address) -> DynArray[uint256, MAX_TICKS_UINT][2]:`"
+### `set_fee`
+!!! description "`AMM.set_fee(fee: uint256):`"
 
-    Function to measure balances of stablecoin and collateral across the different bands for `user`.
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract, which is the Controller.
 
-    Returns: balances of stablecoin and collateral token (`uint256`) in the different bands.
+    Function to set a new AMM exchange fee. 
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` | User address |
+    Emits: `SetFee`
+
+    | Input | Type      | Description        |
+    | ----- | --------- | ------------------ |
+    | `fee` | `uint256` | Fee (1e18 == 100%). |
+
+    ??? quote "Source code"
+
+        ```vyper 
+        event SetFee:
+            fee: uint256
+
+        fee: public(uint256)
+
+        @external
+        @nonreentrant('lock')
+        def set_fee(fee: uint256):
+            """
+            @notice Set AMM fee
+            @param fee Fee where 1e18 == 100%
+            """
+            assert msg.sender == self.admin
+            self.fee = fee
+            log SetFee(fee)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.set_fee(7000000000000000)
+        ```
+
+
+### `admin_fee`
+!!! description "`AMM.admin_fee() -> uint256: view`"
+
+    Getter for the admin fee of the AMM. This value represents the portion of how much of `fee` is awarded to veCRV holders. Currently, the admin fees of the AMMs are set to 1 (1 / 1e18), making them virtually nonexistent. The reason for this is to increase oracle manipulation resistance.
+
+    Returns: admin fee (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper 
+        admin_fee: public(uint256)
+
+        @external
+        def __init__(
+                _borrowed_token: address,
+                _borrowed_precision: uint256,
+                _collateral_token: address,
+                _collateral_precision: uint256,
+                _A: uint256,
+                _sqrt_band_ratio: uint256,
+                _log_A_ratio: int256,
+                _base_price: uint256,
+                fee: uint256,
+                admin_fee: uint256,
+                _price_oracle_contract: address,
+            ):
+            """
+            @notice LLAMMA constructor
+            @param _borrowed_token Token which is being borrowed
+            @param _collateral_token Token used as collateral
+            @param _collateral_precision Precision of collateral: we pass it because we want the blueprint to fit into bytecode
+            @param _A "Amplification coefficient" which also defines density of liquidity and band size. Relative band size is 1/_A
+            @param _sqrt_band_ratio Precomputed int(sqrt(A / (A - 1)) * 1e18)
+            @param _log_A_ratio Precomputed int(ln(A / (A - 1)) * 1e18)
+            @param _base_price Typically the initial crypto price at which AMM is deployed. Will correspond to band 0
+            @param fee Relative fee of the AMM: int(fee * 1e18)
+            @param admin_fee Admin fee: how much of fee goes to admin. 50% === int(0.5 * 1e18)
+            @param _price_oracle_contract External price oracle which has price() and price_w() methods
+                which both return current price of collateral multiplied by 1e18
+            """
+
+            ...
+
+            self.admin_fee = admin_fee
+
+            ...
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.admin_fee()
+        1
+        ```
+
+
+### `admin_fees_x`
+!!! description "`AMM.admin_fees_x() -> uint256: view`"
+
+    Getter for the accured admin fees of the borrowed token since the last fee collection.
+
+    Returns: accured fees (`uint256`).
 
     ??? quote "Source code"
 
         ```vyper
-        @external
-        @view
-        @nonreentrant('lock')
-        def get_xy(user: address) -> DynArray[uint256, MAX_TICKS_UINT][2]:
-            """
-            @notice A low-gas function to measure amounts of stablecoins and collateral by bands which user currently owns
-            @param user User address
-            @return Amounts of (stablecoin, collateral) by bands in a tuple
-            """
-            return self._get_xy(user, False)
-
-        @internal
-        @view
-        def _get_xy(user: address, is_sum: bool) -> DynArray[uint256, MAX_TICKS_UINT][2]:
-            """
-            @notice A low-gas function to measure amounts of stablecoins and collateral which user currently owns
-            @param user User address
-            @param is_sum Return sum or amounts by bands
-            @return Amounts of (stablecoin, collateral) in a tuple
-            """
-            xs: DynArray[uint256, MAX_TICKS_UINT] = []
-            ys: DynArray[uint256, MAX_TICKS_UINT] = []
-            if is_sum:
-                xs.append(0)
-                ys.append(0)
-            ns: int256[2] = self._read_user_tick_numbers(user)
-            ticks: DynArray[uint256, MAX_TICKS_UINT] = self._read_user_ticks(user, ns)
-            if ticks[0] != 0:
-                for i in range(MAX_TICKS):
-                    total_shares: uint256 = self.total_shares[ns[0]] + DEAD_SHARES
-                    ds: uint256 = ticks[i]
-                    dx: uint256 = unsafe_div((self.bands_x[ns[0]] + 1) * ds, total_shares)
-                    dy: uint256 = unsafe_div((self.bands_y[ns[0]] + 1) * ds, total_shares)
-                    if is_sum:
-                        xs[0] += dx
-                        ys[0] += dy
-                    else:
-                        xs.append(unsafe_div(dx, BORROWED_PRECISION))
-                        ys.append(unsafe_div(dy, COLLATERAL_PRECISION))
-                    if ns[0] == ns[1]:
-                        break
-                    ns[0] = unsafe_add(ns[0], 1)
-
-            if is_sum:
-                xs[0] = unsafe_div(xs[0], BORROWED_PRECISION)
-                ys[0] = unsafe_div(ys[0], COLLATERAL_PRECISION)
-
-            return [xs, ys]
+        admin_fees_x: public(uint256)
         ```
 
     === "Example"
+
         ```shell
-        >>> AMM.get_xy(trader) 
-        [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [33333333333333343, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333, 33333333333333333]]
+        >>> AMM.admin_fees_x()
+        327
+        ```
+
+
+### `admin_fees_y`
+!!! description "`AMM.admin_fees_y() -> uint256: view`"
+
+    Getter for the accrued admin fees of the collateral token since the last fee collection.
+
+    Returns: accured fees (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        admin_fees_y: public(uint256)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.admin_fees_y()
+        0
+        ```
+
+
+### `set_admin_fee`
+!!! description "`AMM.set_admin_fee(fee: uint256):`"
+
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract, which is the Controller.
+
+    Function to set a new admin fee of the AMM.
+
+    Emits: `SetAdminFee`
+
+    | Input | Type      | Description           |
+    | ----- | --------- | --------------------- |
+    | `fee` | `uint256` | Admin Fee (1e18 == 100%). |
+
+    ??? quote "Source code"
+
+        ```vyper 
+        event SetAdminFee:
+            fee: uint256
+
+        admin_fee: public(uint256)
+
+        @external
+        @nonreentrant('lock')
+        def set_admin_fee(fee: uint256):
+            """
+            @notice Set admin fee - fraction of the AMM fee to go to admin
+            @param fee Admin fee where 1e18 == 100%
+            """
+            assert msg.sender == self.admin
+            self.admin_fee = fee
+            log SetAdminFee(fee)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.set_admin_fee(2)
+        ```
+
+
+### `reset_admin_fee`
+!!! description "`AMM.reset_admin_fees():`"
+
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract, which is the Controller.
+
+    Function to reset the accumulated admin fees (`admin_fees_x` and `admin_fees_y`) to zero. This function is automatically called when `collect_fees()` via the Controller is called.
+
+    ??? quote "Source code"
+
+        ```vyper 
+        @external
+        @nonreentrant('lock')
+        def reset_admin_fees():
+            """
+            @notice Zero out AMM fees collected
+            """
+            assert msg.sender == self.admin
+            self.admin_fees_x = 0
+            self.admin_fees_y = 0
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.admin_fees_x()
+        327
+        >>> AMM.admin_fees_y()
+        0
+        >>> Controller.collect_fees()   # this function calls `reset_admin_fees`
+        >>> AMM.admin_fees_x()
+        0
+        >>> AMM.admin_fees_y()
+        0
+        ```
+
+
+### `rate`
+!!! description "`AMM.rate() -> uint256: view`"
+
+    Getter for the current interest/borrow rate. The rate is based on the monetary policy contract.
+
+    Returns: interest rate (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        rate: public(uint256)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.rate()
+        2193424322
+        ```
+
+    !!!note "Annualized rate"
+        Annualized interest rate is calculated by $1 + (\frac{rate}{1e18})^{86400*365} -1$.
+
+
+### `get_rate_mul`
+!!! description "`AMM.get_rate_mul() -> uint256: view`"
+
+    Getter for the interest rate multiplier, which is $1.0 + \int \text{rate}(t) \, dt$.
+
+    Returns: interest rate multiplier (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        rate: public(uint256)
+        rate_time: uint256
+        rate_mul: uint256
+
+        @external
+        @view
+        def get_rate_mul() -> uint256:
+            """
+            @notice Rate multiplier which is 1.0 + integral(rate, dt)
+            @return Rate multiplier in units where 1.0 == 1e18
+            """
+            return self._rate_mul()
+
+        @internal
+        @view
+        def _rate_mul() -> uint256:
+            """
+            @notice Rate multiplier which is 1.0 + integral(rate, dt)
+            @return Rate multiplier in units where 1.0 == 1e18
+            """
+            return unsafe_div(self.rate_mul * (10**18 + self.rate * (block.timestamp - self.rate_time)), 10**18)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.get_rate_mul()
+        1029018787268879746
+        ```
+
+
+### `set_rate`
+!!! description "`AMM.set_rate(rate: uint256) -> uint256:`"
+
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the contract, which is the Controller.
+
+    Function to update the interest rate. The rate is always updated whenever the internal `_save_rate` function within the Controller contract is called (e.g., when a new loan is created or assets are repaid). The new rate is calculated in `get_rate_mul()`.
+
+    Returns: rate multiplier (`uint256`).
+
+    Emits: `SetRate`
+
+    | Input  | Type      | Description  |
+    | ------ | --------- | ------------ |
+    | `rate` | `uint256` | New rate.    |
+
+    ??? quote "Source code"
+
+        ```vyper
+        event SetRate:
+            rate: uint256
+            rate_mul: uint256
+            time: uint256
+            
+        @external
+        @nonreentrant('lock')
+        def set_rate(rate: uint256) -> uint256:
+            """
+            @notice Set interest rate. That affects the dependence of AMM base price over time
+            @param rate New rate in units of int(fraction * 1e18) per second
+            @return rate_mul multiplier (e.g. 1.0 + integral(rate, dt))
+            """
+            assert msg.sender == self.admin
+            rate_mul: uint256 = self._rate_mul()
+            self.rate_mul = rate_mul
+            self.rate_time = block.timestamp
+            self.rate = rate
+            log SetRate(rate, rate_mul, block.timestamp)
+            return rate_mul
+
+        @internal
+        @view
+        def _rate_mul() -> uint256:
+            """
+            @notice Rate multiplier which is 1.0 + integral(rate, dt)
+            @return Rate multiplier in units where 1.0 == 1e18
+            """
+            return unsafe_div(self.rate_mul * (10**18 + self.rate * (block.timestamp - self.rate_time)), 10**18)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.set_rate(4386848644)
+        ```
+
+
+---
+
+
+
+## **Contract Info Methods**
+
+### `coins`
+!!! description "`AMM.coins(i: uint256) -> address`"
+
+    Getter for the coins in the AMM, with `i = 0` as the borrowed token and `i = 1` as the collateral token.
+
+    Returns: coin at index `i`.
+
+    | Input | Type      | Description   |
+    | ----- | --------- | ------------- |
+    | `i`   | `uint256` | Coin Index.  |
+
+    ??? quote "Source code"
+
+        ```vyper
+        BORROWED_TOKEN: immutable(ERC20)    # x
+        COLLATERAL_TOKEN: immutable(ERC20)  # y
+
+        @external
+        @pure
+        def coins(i: uint256) -> address:
+            return [BORROWED_TOKEN.address, COLLATERAL_TOKEN.address][i]
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.coins(0)
+        '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
+        >>> AMM.coins(1)
+        '0x18084fbA666a33d37592fA2633fD49a74DD93a88'
         ```
 
 
 
+## **Admin Ownership**
+
+The admin of each AMM is the corresponding Controller contract. The admin can only be set once, which is done when deploying the AMM. Therefore, the `admin` cannot be changed.
+
+
+### `admin`
+!!! description "`AMM.admin() -> address: view`"
+
+    Getter for the admin of the contract, which is the corresponding Controller.
+
+    Returns: admin (`address`).
+
+    ??? quote "Source code"
+
+        ```vyper 
+        admin: public(address)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.admin()
+        '0x1C91da0223c763d2e0173243eAdaA0A2ea47E704'
+        ```
+
+
+### `set_admin`
+!!! description "`AMM.set_admin(_admin: address):`"
+
+    !!!guard "Guarded Method" 
+        This function is only callable when `admin` is set to `ZERO_ADDRESS`. This condition was met at deployment, but after setting the admin for the first time, it cannot be changed. Admin for the AMM is always the corresponding Controller.
+
+    Function to set the admin of the AMM. Maximum approval is given to the Controller in order for it to effectively call functions such as `deposit_range` and `withdraw`. This is achieved through an extra `approve_max` function, because it consumes less byte space compared to calling it directly.
+
+    | Input    | Type      | Description      |
+    | -------- | --------- | ---------------- |
+    | `_admin` | `address` | Admin address.   |
+
+    ??? quote "Source code"
+
+        ```vyper 
+        @external
+        def set_admin(_admin: address):
+            """
+            @notice Set admin of the AMM. Typically it's a controller (unless it's tests)
+            @param _admin Admin address
+            """
+            assert self.admin == empty(address)
+            self.admin = _admin
+            self.approve_max(BORROWED_TOKEN, _admin)
+            self.approve_max(COLLATERAL_TOKEN, _admin)
+
+        @internal
+        def approve_max(token: ERC20, _admin: address):
+            """
+            Approve max in a separate function because it uses less bytespace than
+            calling directly, and gas doesn't matter in set_admin
+            """
+            assert token.approve(_admin, max_value(uint256), default_return_value=True)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> AMM.set_admin(vitalik.eth)
+        ```
+
+
+---
+
+
 ## **Callbacks**
+
 
 ### `liquidity_mining_callback`
 !!! description "`AMM.liquidity_mining_callback() -> address: view`"
@@ -3058,5 +3094,5 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
     === "Example"
 
         ```shell
-        >>> AMM.set_callback("todo")
+        >>> soon
         ```
