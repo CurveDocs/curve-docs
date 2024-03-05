@@ -31,13 +31,14 @@ The loan-to-value (LTV) ratio depends on the number of bands `N` and the paramet
 
 $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
+The loan discount is the percentage used to discount the collateral for calculating the maximum borrowable amount when creating a loan.
+
 !!!example "LTV"
     Example: At the time of writing, the [wBTC market](https://crvusd.curve.fi/#/ethereum/markets/wbtc/create) has a loan discount of 9% and a A value of 100.  
         
     $\text{LTV (4 bands)} = \text{100%} - \text{9%} - 100 * \frac{4}{2*100} = \text{89%}$
 
     $\text{LTV (50 bands)} = \text{100%} - \text{9%} - 100 * \frac{50}{2*100} = \text{66%}$
-
 
 ---
 

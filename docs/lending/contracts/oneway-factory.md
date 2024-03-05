@@ -611,7 +611,7 @@ $$\text{Annualized Rate} = \text{Rate per second} \times 60 \times 60 \times 24 
 
 ## **AMM Exchange Methods**
 
-The Factory contract uses interfaces to enable calling AMM exchange methods directly through this contract. 
+The Factory uses interfaces to enable calling AMM exchange methods directly through this contract. 
 
 ```vyper
 interface AMM:

@@ -544,7 +544,7 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 !!! description "`Vault.maxMint(receiver: address) -> uint256:`"
 
     !!!bug "Incorrect Implementation"
-        The function is implemented incorrectly once again (see [`maxDeposit`](#maxdeposit)). It erroneously calls the internal function `_convert_to_shares` using the incorrect balance. It uses the balance of the vault token rather than the balance of the underlying token (`borrowed_token`) belonging to the `receiver`. This mistake affects the calculation of convertible shares and needs correction to ensure accurate functionality. Again, this is read-only function and does not have any impact on stat-changing functions.
+        The function is implemented incorrectly once again (see [`maxDeposit`](#maxdeposit)). It erroneously calls the internal function `_convert_to_shares` using the incorrect balance. It uses the balance of the vault token rather than the balance of the underlying token (`borrowed_token`) belonging to the `receiver`. This mistake affects the calculation of convertible shares and needs correction to ensure accurate functionality. Again, this is read-only function and does not have any impact on state-changing functions.
 
     Getter for the maximum amount of shares a user can mint, based on their current asset holdings.
 

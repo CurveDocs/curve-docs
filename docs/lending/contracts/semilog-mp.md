@@ -41,12 +41,12 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
 
 ---
 
-The embedded graph has limited features, such as the inability to modify the axis. However, by clicking the *"edit graph on Desmos"* button at the bottom right, one is redirected to the main Desmos site. There, setting other values for `min_rate` and `max_rate` is possible.
+The embedded graph has limited features. However, by clicking the *"edit graph on Desmos"* button at the bottom right (or [here](https://www.desmos.com/calculator/cnhulwzyfx)), one is redirected to the main Desmos site. There, setting other values for `min_rate` and `max_rate` is possible.
 
 *The example below uses a minimum rate of 0.5% and a maximum rate of 50%.*
 
 <div style="text-align: center;">
-    <iframe src="https://www.desmos.com/calculator/rsolelilxk?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder="0"></iframe>
+    <iframe src="https://www.desmos.com/calculator/cnhulwzyfx?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
 </div>
 
 
