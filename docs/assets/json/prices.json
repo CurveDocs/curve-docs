@@ -1,0 +1,5239 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Curve prices",
+    "description": "Price Feeds Backend API",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/v1/chains/": {
+      "get": {
+        "tags": ["v1 chains"],
+        "summary": "Get all supported chains",
+        "operationId": "get_chains_v1_chains__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChainsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/chains/{chain}": {
+      "get": {
+        "tags": ["v1 chains"],
+        "summary": "Get all supported contracts for chain",
+        "operationId": "get_chain_pools_v1_chains__chain__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Page",
+              "type": "integer"
+            },
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Per Page",
+              "type": "integer"
+            },
+            "name": "per_page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PoolsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/pools/{chain}/{address}/metadata": {
+      "get": {
+        "tags": ["v1 pools"],
+        "summary": "Get descriptive metadata for a pool on a certain chain",
+        "operationId": "get_chain_pool_metadata_v1_pools__chain___address__metadata_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            },
+            "name": "address",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PoolMetadataModel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ohlc/{chain}/{address}": {
+      "get": {
+        "tags": ["v1 ohlc"],
+        "summary": "Get ohlc for pool",
+        "description": "This method only allows time window 300x times aggregation window, for more - try several requests",
+        "operationId": "get_ohlc_v1_ohlc__chain___address__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            },
+            "name": "address",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Main Token",
+              "type": "string"
+            },
+            "name": "main_token",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Reference Token",
+              "type": "string"
+            },
+            "name": "reference_token",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Agg Number",
+              "type": "integer",
+              "default": 1
+            },
+            "name": "agg_number",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/api__routes__v1__utils__Units"
+                }
+              ],
+              "default": "hour"
+            },
+            "name": "agg_units",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Start",
+              "type": "integer"
+            },
+            "name": "start",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "End",
+              "type": "integer"
+            },
+            "name": "end",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/api__routes__v1__ohlc__models__OhlcResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/lp_ohlc/{chain}/{address}": {
+      "get": {
+        "tags": ["v1 ohlc"],
+        "summary": "Get ohlc for pool",
+        "description": "This method only allows time window 300x times aggregation window, for more - try several requests",
+        "operationId": "get_ohlc_v1_lp_ohlc__chain___address__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            },
+            "name": "address",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Agg Number",
+              "type": "integer",
+              "default": 1
+            },
+            "name": "agg_number",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/api__routes__v1__utils__Units"
+                }
+              ],
+              "default": "hour"
+            },
+            "name": "agg_units",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Start",
+              "type": "integer"
+            },
+            "name": "start",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "End",
+              "type": "integer"
+            },
+            "name": "end",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/PriceUnits"
+                }
+              ],
+              "default": "token0"
+            },
+            "name": "price_units",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/api__routes__v1__lp_ohlc__models__OhlcResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/trades/{chain}/{address}": {
+      "get": {
+        "tags": ["v1 trades"],
+        "summary": "Get trades for contract",
+        "description": "This method 100 per_page trades",
+        "operationId": "get_trades_v1_trades__chain___address__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            },
+            "name": "address",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Main Token",
+              "type": "string"
+            },
+            "name": "main_token",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Reference Token",
+              "type": "string"
+            },
+            "name": "reference_token",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Page",
+              "type": "integer",
+              "default": 1
+            },
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Per Page",
+              "type": "integer",
+              "default": 10
+            },
+            "name": "per_page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TradesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/liquidity/{chain}/{address}": {
+      "get": {
+        "tags": ["v1 liquidity"],
+        "summary": "Get liquidity events for contract",
+        "description": "This method 100 per_page trades",
+        "operationId": "get_liquidity_events_v1_liquidity__chain___address__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            },
+            "name": "address",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Page",
+              "type": "integer",
+              "default": 1
+            },
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Per Page",
+              "type": "integer",
+              "default": 10
+            },
+            "name": "per_page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LiquidityEventsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/volume/usd/{chain}/{address}": {
+      "get": {
+        "tags": ["v1 volume"],
+        "summary": "Get USD denominated volume for a specific pool",
+        "description": "This method only allows time window 300x times aggregation window, for more - try several requests",
+        "operationId": "get_volume_usd_v1_volume_usd__chain___address__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            },
+            "name": "address",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/api__routes__v1__trading_volume__models__Units"
+                }
+              ],
+              "default": "day"
+            },
+            "name": "interval",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Start",
+              "type": "integer"
+            },
+            "name": "start",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "End",
+              "type": "integer"
+            },
+            "name": "end",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VolumeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/volume/{chain}/{address}": {
+      "get": {
+        "tags": ["v1 volume"],
+        "summary": "Get token denominated volume for a specific pair of tokens on a pool. For 3+ token pools, volume of the tokens not specified as reference or main is not included.",
+        "description": "This method only allows time window 300x times aggregation window, for more - try several requests",
+        "operationId": "get_pair_volume_v1_volume__chain___address__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            },
+            "name": "address",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Main Token",
+              "type": "string"
+            },
+            "name": "main_token",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Reference Token",
+              "type": "string"
+            },
+            "name": "reference_token",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/api__routes__v1__trading_volume__models__Units"
+                }
+              ],
+              "default": "hour"
+            },
+            "name": "interval",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Start",
+              "type": "integer"
+            },
+            "name": "start",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "End",
+              "type": "integer"
+            },
+            "name": "end",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VolumeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/volume/{chain}/all": {
+      "get": {
+        "tags": ["v1 volume"],
+        "summary": "Get USD denominated, aggregated volume for a chain",
+        "description": "This method only allows time window 300x times aggregation window, for more - try several requests",
+        "operationId": "get_volume_v1_volume__chain__all_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain Name",
+              "type": "string"
+            },
+            "name": "chain_name",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/api__routes__v1__trading_volume__models__Units"
+                }
+              ],
+              "default": "day"
+            },
+            "name": "interval",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Start",
+              "type": "integer"
+            },
+            "name": "start",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "End",
+              "type": "integer"
+            },
+            "name": "end",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VolumeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/snapshots/{chain}/{address}": {
+      "get": {
+        "tags": ["v1 snapshots"],
+        "summary": "Get historical snapshots for pool (snapshots are taken every 4 hour)",
+        "description": "This method will return 300 results at most. Adjust your time window accordingly",
+        "operationId": "get_snapshots_v1_snapshots__chain___address__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            },
+            "name": "address",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Start",
+              "type": "integer"
+            },
+            "name": "start",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "End",
+              "type": "integer"
+            },
+            "name": "end",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PoolSnapshotResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/crvusd/markets/{chain}": {
+      "get": {
+        "tags": ["v1 crvusd"],
+        "summary": "Get information on all crvUSD markets",
+        "operationId": "get_markets_v1_crvusd_markets__chain__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Page",
+              "type": "integer",
+              "default": 1
+            },
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Per Page",
+              "type": "integer",
+              "default": 10
+            },
+            "name": "per_page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarketResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/crvusd/markets/{chain}/{address}/snapshots": {
+      "get": {
+        "tags": ["v1 crvusd"],
+        "summary": "Get historical data for a crvUSD market",
+        "operationId": "get_market_snapshots_v1_crvusd_markets__chain___address__snapshots_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            },
+            "name": "address",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Page",
+              "type": "integer",
+              "default": 1
+            },
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Per Page",
+              "type": "integer",
+              "default": 10
+            },
+            "name": "per_page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarketSnapshotResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/crvusd/collateral_events/{chain}/{controller}/{user}": {
+      "get": {
+        "tags": ["v1 crvusd"],
+        "summary": "Get collateral/loan changes for user for specific controllers",
+        "operationId": "get_collateral_v1_crvusd_collateral_events__chain___controller___user__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Controller",
+              "type": "string"
+            },
+            "name": "controller",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "User",
+              "type": "string"
+            },
+            "name": "user",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Pagination",
+              "type": "integer"
+            },
+            "name": "pagination",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Page",
+              "type": "integer"
+            },
+            "name": "page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollateralEventsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/crvusd/pegkeepers/{chain}": {
+      "get": {
+        "tags": ["v1 pegkeepers"],
+        "summary": "Get information on all peg keepers",
+        "operationId": "get_keepers_v1_crvusd_pegkeepers__chain__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PegKeeperEntityResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/crvusd/pegkeepers/{chain}/{address}": {
+      "get": {
+        "tags": ["v1 pegkeepers"],
+        "summary": "Get event history for a specified peg keeper",
+        "operationId": "get_events_v1_crvusd_pegkeepers__chain___address__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            },
+            "name": "address",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Page",
+              "type": "integer",
+              "default": 1
+            },
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Pagination",
+              "type": "integer",
+              "default": 10
+            },
+            "name": "pagination",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PegKeeperEventResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/crvusd/llamma_ohlc/{chain}/{address}": {
+      "get": {
+        "tags": ["v1 ohlc"],
+        "summary": "Get ohlc for llamma",
+        "description": "This method only allows time window 300x times aggregation window, for more - try several requests",
+        "operationId": "get_llamma_ohlc_v1_crvusd_llamma_ohlc__chain___address__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            },
+            "name": "address",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Agg Number",
+              "type": "integer",
+              "default": 1
+            },
+            "name": "agg_number",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/api__routes__v1__utils__Units"
+                }
+              ],
+              "default": "hour"
+            },
+            "name": "agg_units",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Start",
+              "type": "integer"
+            },
+            "name": "start",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "End",
+              "type": "integer"
+            },
+            "name": "end",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/api__routes__v1__llamma_ohlc__models__OhlcResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/crvusd/llamma_trades/{chain}/{address}": {
+      "get": {
+        "tags": ["v1 trades"],
+        "summary": "Get trades for llamma contract",
+        "description": "This method 100 per_page trades",
+        "operationId": "get_llamma_trades_v1_crvusd_llamma_trades__chain___address__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            },
+            "name": "address",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Page",
+              "type": "integer",
+              "default": 1
+            },
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Per Page",
+              "type": "integer",
+              "default": 10
+            },
+            "name": "per_page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlammaTradesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/crvusd/llamma_events/{chain}/{address}": {
+      "get": {
+        "tags": ["v1 liquidity"],
+        "summary": "Get events for llamma contract",
+        "description": "This method maxes at 100 per_page events",
+        "operationId": "get_llamma_events_v1_crvusd_llamma_events__chain___address__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            },
+            "name": "address",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Page",
+              "type": "integer",
+              "default": 1
+            },
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Per Page",
+              "type": "integer",
+              "default": 10
+            },
+            "name": "per_page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LlammaEventsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dao/gauges/overview": {
+      "get": {
+        "tags": ["v1 dao"],
+        "summary": "Get descriptive metadata for all gauges",
+        "operationId": "get_chain_pool_metadata_v1_dao_gauges_overview_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GaugesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dao/gauges/votes/user/{user}": {
+      "get": {
+        "tags": ["v1 dao"],
+        "summary": "Get a user's gauge voting history",
+        "operationId": "get_user_gauge_votes_v1_dao_gauges_votes_user__user__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "User",
+              "type": "string"
+            },
+            "name": "user",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserVoteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dao/gauges/votes/{gauge}": {
+      "get": {
+        "tags": ["v1 dao"],
+        "summary": "Get the history of votes for a specific gauge",
+        "operationId": "get_votes_for_gauge_v1_dao_gauges_votes__gauge__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Gauge",
+              "type": "string"
+            },
+            "name": "gauge",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GaugeVoteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dao/gauges/{gauge}/deployment": {
+      "get": {
+        "tags": ["v1 dao"],
+        "summary": "Get information about the deployment of a specific gauge",
+        "operationId": "get_deployment_v1_dao_gauges__gauge__deployment_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Gauge",
+              "type": "string"
+            },
+            "name": "gauge",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GaugeDeploymentTxModel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dao/locks/{user}": {
+      "get": {
+        "tags": ["v1 dao"],
+        "summary": "Get the history of CRV locks of a particular user",
+        "operationId": "get_locks_v1_dao_locks__user__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "User",
+              "type": "string"
+            },
+            "name": "user",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserVoteReponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dao/locks/daily/{days}": {
+      "get": {
+        "tags": ["v1 dao"],
+        "summary": "Get the amount of CRV locked daily over the last X days",
+        "operationId": "daily_locks_v1_dao_locks_daily__days__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Days",
+              "type": "integer"
+            },
+            "name": "days",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyLocksResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dao/supply/{days}": {
+      "get": {
+        "tags": ["v1 dao"],
+        "summary": "Get the historical breakdown of CRV supply over the last X days",
+        "operationId": "get_supply_v1_dao_supply__days__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Days",
+              "type": "integer"
+            },
+            "name": "days",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupplySnapshotResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dao/lockers/{top}": {
+      "get": {
+        "tags": ["v1 dao"],
+        "summary": "Returns the top X largest lockers by voting power",
+        "operationId": "get_top_lockers_v1_dao_lockers__top__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Top",
+              "type": "integer"
+            },
+            "name": "top",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserLockReponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dao/lockers": {
+      "get": {
+        "tags": ["v1 dao"],
+        "summary": "Returns the top X largest lockers by voting power",
+        "operationId": "get_lockers_v1_dao_lockers_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "Pagination",
+              "type": "integer",
+              "default": 10
+            },
+            "name": "pagination",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Page",
+              "type": "integer",
+              "default": 1
+            },
+            "name": "page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserLockPaginatedReponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/usd_price/{chain}": {
+      "get": {
+        "tags": ["v1 trades"],
+        "summary": "Get USD denominated price for all tokens in chain",
+        "operationId": "get_token_price_usd_v1_usd_price__chain__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChainResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/usd_price/{chain}/{address}": {
+      "get": {
+        "tags": ["v1 trades"],
+        "summary": "Get USD denominated price for token",
+        "operationId": "get_token_price_usd_v1_usd_price__chain___address__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            },
+            "name": "address",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SingleTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/usd_price/{chain}/{address}/history": {
+      "get": {
+        "tags": ["v1 trades"],
+        "summary": "Get USD denominated price history for token",
+        "operationId": "get_historical_token_price_usd_v1_usd_price__chain___address__history_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Chain",
+              "type": "string"
+            },
+            "name": "chain",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            },
+            "name": "address",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/api__routes__v1__utils__Units"
+                }
+              ],
+              "default": "day"
+            },
+            "name": "interval",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Start",
+              "type": "integer"
+            },
+            "name": "start",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "End",
+              "type": "integer"
+            },
+            "name": "end",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoricalPriceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ping": {
+      "get": {
+        "tags": ["Health checks"],
+        "summary": "Ping",
+        "operationId": "ping_ping_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Chain": {
+        "title": "Chain",
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        }
+      },
+      "ChainResponse": {
+        "title": "ChainResponse",
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "title": "Data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LastPrice"
+            }
+          }
+        }
+      },
+      "ChainsResponse": {
+        "title": "ChainsResponse",
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "title": "Data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Chain"
+            }
+          }
+        }
+      },
+      "Coin": {
+        "title": "Coin",
+        "required": ["pool_index", "symbol", "address"],
+        "type": "object",
+        "properties": {
+          "pool_index": {
+            "title": "Pool Index",
+            "type": "integer"
+          },
+          "symbol": {
+            "title": "Symbol",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          }
+        }
+      },
+      "CollateralChangeEventType": {
+        "title": "CollateralChangeEventType",
+        "enum": ["Borrow", "Repay", "RemoveCollateral", "Liquidate"],
+        "description": "An enumeration."
+      },
+      "CollateralEvent": {
+        "title": "CollateralEvent",
+        "required": [
+          "dt",
+          "transaction_hash",
+          "type",
+          "user",
+          "collateral_change"
+        ],
+        "type": "object",
+        "properties": {
+          "dt": {
+            "title": "Dt",
+            "type": "string",
+            "format": "date-time"
+          },
+          "transaction_hash": {
+            "title": "Transaction Hash",
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/CollateralChangeEventType"
+          },
+          "user": {
+            "title": "User",
+            "type": "string"
+          },
+          "collateral_change": {
+            "title": "Collateral Change",
+            "type": "string"
+          },
+          "loan_change": {
+            "title": "Loan Change",
+            "type": "string"
+          },
+          "liquidation": {
+            "$ref": "#/components/schemas/Liquidation"
+          },
+          "n1": {
+            "title": "N1",
+            "type": "integer"
+          },
+          "n2": {
+            "title": "N2",
+            "type": "integer"
+          },
+          "oracle_price": {
+            "title": "Oracle Price",
+            "type": "number"
+          }
+        }
+      },
+      "CollateralEventsResponse": {
+        "title": "CollateralEventsResponse",
+        "required": [
+          "chain",
+          "controller",
+          "user",
+          "total_collateral",
+          "total_stablecoin",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "chain": {
+            "title": "Chain",
+            "type": "string"
+          },
+          "controller": {
+            "title": "Controller",
+            "type": "string"
+          },
+          "user": {
+            "title": "User",
+            "type": "string"
+          },
+          "total_collateral": {
+            "title": "Total Collateral",
+            "type": "string"
+          },
+          "total_stablecoin": {
+            "title": "Total Stablecoin",
+            "type": "string"
+          },
+          "pagination": {
+            "title": "Pagination",
+            "type": "integer"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "data": {
+            "title": "Data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CollateralEvent"
+            }
+          }
+        }
+      },
+      "DailyLocks": {
+        "title": "DailyLocks",
+        "required": ["day", "amount"],
+        "type": "object",
+        "properties": {
+          "day": {
+            "title": "Day",
+            "type": "integer"
+          },
+          "amount": {
+            "title": "Amount",
+            "type": "string"
+          }
+        }
+      },
+      "DailyLocksResponse": {
+        "title": "DailyLocksResponse",
+        "required": ["locks"],
+        "type": "object",
+        "properties": {
+          "locks": {
+            "title": "Locks",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DailyLocks"
+            }
+          }
+        }
+      },
+      "Error": {
+        "title": "Error",
+        "required": ["message"],
+        "type": "object",
+        "properties": {
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "title": "ErrorResponse",
+        "required": ["error"],
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/Error"
+          }
+        }
+      },
+      "GaugeData": {
+        "title": "GaugeData",
+        "required": [
+          "address",
+          "gauge_type",
+          "emissions",
+          "gauge_weight",
+          "gauge_relative_weight",
+          "creation_tx",
+          "creation_date"
+        ],
+        "type": "object",
+        "properties": {
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "gauge_type": {
+            "title": "Gauge Type",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          },
+          "lp_token": {
+            "title": "Lp Token",
+            "type": "string"
+          },
+          "pool": {
+            "$ref": "#/components/schemas/PoolInfo"
+          },
+          "is_killed": {
+            "title": "Is Killed",
+            "type": "boolean"
+          },
+          "emissions": {
+            "title": "Emissions",
+            "type": "number"
+          },
+          "gauge_weight": {
+            "title": "Gauge Weight",
+            "type": "string"
+          },
+          "gauge_weight_7d_delta": {
+            "title": "Gauge Weight 7D Delta",
+            "type": "number"
+          },
+          "gauge_weight_60d_delta": {
+            "title": "Gauge Weight 60D Delta",
+            "type": "number"
+          },
+          "gauge_relative_weight": {
+            "title": "Gauge Relative Weight",
+            "type": "number"
+          },
+          "gauge_relative_weight_7d_delta": {
+            "title": "Gauge Relative Weight 7D Delta",
+            "type": "number"
+          },
+          "gauge_relative_weight_60d_delta": {
+            "title": "Gauge Relative Weight 60D Delta",
+            "type": "number"
+          },
+          "creation_tx": {
+            "title": "Creation Tx",
+            "type": "string"
+          },
+          "creation_date": {
+            "title": "Creation Date",
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_vote_date": {
+            "title": "Last Vote Date",
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_vote_tx": {
+            "title": "Last Vote Tx",
+            "type": "string"
+          }
+        }
+      },
+      "GaugeDeploymentTxModel": {
+        "title": "GaugeDeploymentTxModel",
+        "required": [
+          "from_address",
+          "to_address",
+          "calldata",
+          "decoded_calldata",
+          "transaction_hash",
+          "block_number",
+          "dt"
+        ],
+        "type": "object",
+        "properties": {
+          "from_address": {
+            "title": "From Address",
+            "type": "string"
+          },
+          "to_address": {
+            "title": "To Address",
+            "type": "string"
+          },
+          "calldata": {
+            "title": "Calldata",
+            "type": "string"
+          },
+          "decoded_calldata": {
+            "title": "Decoded Calldata",
+            "type": "string"
+          },
+          "transaction_hash": {
+            "title": "Transaction Hash",
+            "type": "string"
+          },
+          "block_number": {
+            "title": "Block Number",
+            "type": "integer"
+          },
+          "dt": {
+            "title": "Dt",
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "GaugeVote": {
+        "title": "GaugeVote",
+        "required": [
+          "user",
+          "weight",
+          "block_number",
+          "timestamp",
+          "transaction"
+        ],
+        "type": "object",
+        "properties": {
+          "user": {
+            "title": "User",
+            "type": "string"
+          },
+          "weight": {
+            "title": "Weight",
+            "type": "integer"
+          },
+          "block_number": {
+            "title": "Block Number",
+            "type": "integer"
+          },
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "string",
+            "format": "date-time"
+          },
+          "transaction": {
+            "title": "Transaction",
+            "type": "string"
+          }
+        }
+      },
+      "GaugeVoteResponse": {
+        "title": "GaugeVoteResponse",
+        "required": ["votes"],
+        "type": "object",
+        "properties": {
+          "votes": {
+            "title": "Votes",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GaugeVote"
+            }
+          }
+        }
+      },
+      "GaugesResponse": {
+        "title": "GaugesResponse",
+        "required": ["gauges"],
+        "type": "object",
+        "properties": {
+          "gauges": {
+            "title": "Gauges",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GaugeData"
+            }
+          }
+        }
+      },
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "HistoricalPrice": {
+        "title": "HistoricalPrice",
+        "required": ["price", "timestamp"],
+        "type": "object",
+        "properties": {
+          "price": {
+            "title": "Price",
+            "type": "number"
+          },
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "HistoricalPriceResponse": {
+        "title": "HistoricalPriceResponse",
+        "required": ["address", "data"],
+        "type": "object",
+        "properties": {
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "data": {
+            "title": "Data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HistoricalPrice"
+            }
+          }
+        }
+      },
+      "LastPrice": {
+        "title": "LastPrice",
+        "required": ["address", "usd_price", "last_updated"],
+        "type": "object",
+        "properties": {
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "usd_price": {
+            "title": "Usd Price",
+            "type": "number"
+          },
+          "last_updated": {
+            "title": "Last Updated",
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Liquidation": {
+        "title": "Liquidation",
+        "required": [
+          "user",
+          "liquidator",
+          "collateral_received",
+          "stablecoin_received",
+          "debt"
+        ],
+        "type": "object",
+        "properties": {
+          "user": {
+            "title": "User",
+            "type": "string"
+          },
+          "liquidator": {
+            "title": "Liquidator",
+            "type": "string"
+          },
+          "collateral_received": {
+            "title": "Collateral Received",
+            "type": "string"
+          },
+          "stablecoin_received": {
+            "title": "Stablecoin Received",
+            "type": "string"
+          },
+          "debt": {
+            "title": "Debt",
+            "type": "string"
+          }
+        }
+      },
+      "LiquidityEvent": {
+        "title": "LiquidityEvent",
+        "required": [
+          "liquidity_event_type",
+          "block_number",
+          "time",
+          "transaction_hash"
+        ],
+        "type": "object",
+        "properties": {
+          "liquidity_event_type": {
+            "$ref": "#/components/schemas/LiquidityEventType"
+          },
+          "token_amounts": {
+            "title": "Token Amounts",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "fees": {
+            "title": "Fees",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "token_supply": {
+            "title": "Token Supply",
+            "type": "number"
+          },
+          "block_number": {
+            "title": "Block Number",
+            "type": "integer"
+          },
+          "time": {
+            "title": "Time",
+            "type": "string",
+            "format": "date-time"
+          },
+          "transaction_hash": {
+            "title": "Transaction Hash",
+            "type": "string"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          }
+        }
+      },
+      "LiquidityEventType": {
+        "title": "LiquidityEventType",
+        "enum": [
+          "AddLiquidity",
+          "RemoveLiquidity",
+          "RemoveLiquidityOne",
+          "RemoveLiquidityImbalance"
+        ],
+        "description": "An enumeration."
+      },
+      "LiquidityEventsResponse": {
+        "title": "LiquidityEventsResponse",
+        "required": ["chain", "address", "data"],
+        "type": "object",
+        "properties": {
+          "chain": {
+            "title": "Chain",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "data": {
+            "title": "Data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LiquidityEvent"
+            }
+          }
+        }
+      },
+      "LlammaDeposit": {
+        "title": "LlammaDeposit",
+        "required": ["amount", "n1", "n2"],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "title": "Amount",
+            "type": "string"
+          },
+          "n1": {
+            "title": "N1",
+            "type": "integer"
+          },
+          "n2": {
+            "title": "N2",
+            "type": "integer"
+          }
+        }
+      },
+      "LlammaEvent": {
+        "title": "LlammaEvent",
+        "required": [
+          "provider",
+          "block_number",
+          "timestamp",
+          "transaction_hash"
+        ],
+        "type": "object",
+        "properties": {
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "deposit": {
+            "$ref": "#/components/schemas/LlammaDeposit"
+          },
+          "withdrawal": {
+            "$ref": "#/components/schemas/LlammaWithdrawal"
+          },
+          "block_number": {
+            "title": "Block Number",
+            "type": "integer"
+          },
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "integer"
+          },
+          "transaction_hash": {
+            "title": "Transaction Hash",
+            "type": "string"
+          }
+        }
+      },
+      "LlammaEventsResponse": {
+        "title": "LlammaEventsResponse",
+        "required": ["chain", "address", "data"],
+        "type": "object",
+        "properties": {
+          "chain": {
+            "title": "Chain",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "data": {
+            "title": "Data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LlammaEvent"
+            }
+          }
+        }
+      },
+      "LlammaTrade": {
+        "title": "LlammaTrade",
+        "required": [
+          "sold_id",
+          "bought_id",
+          "token_sold",
+          "token_bought",
+          "amount_sold",
+          "amount_bought",
+          "price",
+          "block_number",
+          "timestamp",
+          "transaction_hash"
+        ],
+        "type": "object",
+        "properties": {
+          "sold_id": {
+            "title": "Sold Id",
+            "type": "integer",
+            "description": "Pool index of token"
+          },
+          "bought_id": {
+            "title": "Bought Id",
+            "type": "integer",
+            "description": "Pool index of token"
+          },
+          "token_sold": {
+            "$ref": "#/components/schemas/api__routes__v1__llamma_trades__models__Token"
+          },
+          "token_bought": {
+            "$ref": "#/components/schemas/api__routes__v1__llamma_trades__models__Token"
+          },
+          "amount_sold": {
+            "title": "Amount Sold",
+            "type": "number"
+          },
+          "amount_bought": {
+            "title": "Amount Bought",
+            "type": "number"
+          },
+          "price": {
+            "title": "Price",
+            "type": "number"
+          },
+          "buyer": {
+            "title": "Buyer",
+            "type": "string"
+          },
+          "fee_x": {
+            "title": "Fee X",
+            "type": "number"
+          },
+          "fee_y": {
+            "title": "Fee Y",
+            "type": "number"
+          },
+          "block_number": {
+            "title": "Block Number",
+            "type": "integer"
+          },
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "integer"
+          },
+          "transaction_hash": {
+            "title": "Transaction Hash",
+            "type": "string"
+          }
+        }
+      },
+      "LlammaTradesResponse": {
+        "title": "LlammaTradesResponse",
+        "required": ["chain", "address", "data"],
+        "type": "object",
+        "properties": {
+          "chain": {
+            "title": "Chain",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "data": {
+            "title": "Data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LlammaTrade"
+            }
+          }
+        }
+      },
+      "LlammaWithdrawal": {
+        "title": "LlammaWithdrawal",
+        "required": ["amount_borrowed", "amount_collateral"],
+        "type": "object",
+        "properties": {
+          "amount_borrowed": {
+            "title": "Amount Borrowed",
+            "type": "string"
+          },
+          "amount_collateral": {
+            "title": "Amount Collateral",
+            "type": "string"
+          }
+        }
+      },
+      "LockedSupplyDetail": {
+        "title": "LockedSupplyDetail",
+        "required": ["address", "label", "locked"],
+        "type": "object",
+        "properties": {
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "locked": {
+            "title": "Locked",
+            "type": "string"
+          }
+        }
+      },
+      "LockerActionModel": {
+        "title": "LockerActionModel",
+        "required": [
+          "amount",
+          "unlock_time",
+          "lock_type",
+          "locked_balance",
+          "block_number",
+          "dt",
+          "transaction_hash"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "title": "Amount",
+            "type": "string"
+          },
+          "unlock_time": {
+            "title": "Unlock Time",
+            "type": "integer"
+          },
+          "lock_type": {
+            "title": "Lock Type",
+            "type": "string"
+          },
+          "locked_balance": {
+            "title": "Locked Balance",
+            "type": "string"
+          },
+          "block_number": {
+            "title": "Block Number",
+            "type": "integer"
+          },
+          "dt": {
+            "title": "Dt",
+            "type": "string",
+            "format": "date-time"
+          },
+          "transaction_hash": {
+            "title": "Transaction Hash",
+            "type": "string"
+          }
+        }
+      },
+      "Market": {
+        "title": "Market",
+        "required": [
+          "address",
+          "factory_address",
+          "llamma",
+          "rate",
+          "total_debt",
+          "n_loans",
+          "collateral_amount",
+          "stablecoin_amount",
+          "collateral_token",
+          "stablecoin_token"
+        ],
+        "type": "object",
+        "properties": {
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "factory_address": {
+            "title": "Factory Address",
+            "type": "string"
+          },
+          "llamma": {
+            "title": "Llamma",
+            "type": "string"
+          },
+          "rate": {
+            "title": "Rate",
+            "type": "number"
+          },
+          "total_debt": {
+            "title": "Total Debt",
+            "type": "number"
+          },
+          "n_loans": {
+            "title": "N Loans",
+            "type": "integer"
+          },
+          "debt_ceiling": {
+            "title": "Debt Ceiling",
+            "type": "number"
+          },
+          "borrowable": {
+            "title": "Borrowable",
+            "type": "number"
+          },
+          "collateral_amount": {
+            "title": "Collateral Amount",
+            "type": "number"
+          },
+          "stablecoin_amount": {
+            "title": "Stablecoin Amount",
+            "type": "number"
+          },
+          "collateral_token": {
+            "$ref": "#/components/schemas/api__routes__v1__markets__models__Token"
+          },
+          "stablecoin_token": {
+            "$ref": "#/components/schemas/api__routes__v1__markets__models__Token"
+          }
+        }
+      },
+      "MarketResponse": {
+        "title": "MarketResponse",
+        "required": ["chain", "page", "per_page", "data"],
+        "type": "object",
+        "properties": {
+          "chain": {
+            "title": "Chain",
+            "type": "string"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "per_page": {
+            "title": "Per Page",
+            "type": "integer"
+          },
+          "data": {
+            "title": "Data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Market"
+            }
+          }
+        }
+      },
+      "MarketSnapshot": {
+        "title": "MarketSnapshot",
+        "required": [
+          "rate",
+          "minted",
+          "redeemed",
+          "total_collateral",
+          "total_stablecoin",
+          "total_debt",
+          "n_loans",
+          "amm_price",
+          "price_oracle",
+          "admin_fees_x",
+          "admin_fees_y"
+        ],
+        "type": "object",
+        "properties": {
+          "rate": {
+            "title": "Rate",
+            "type": "number"
+          },
+          "minted": {
+            "title": "Minted",
+            "type": "number"
+          },
+          "redeemed": {
+            "title": "Redeemed",
+            "type": "number"
+          },
+          "total_collateral": {
+            "title": "Total Collateral",
+            "type": "number"
+          },
+          "total_stablecoin": {
+            "title": "Total Stablecoin",
+            "type": "number"
+          },
+          "total_debt": {
+            "title": "Total Debt",
+            "type": "number"
+          },
+          "n_loans": {
+            "title": "N Loans",
+            "type": "integer"
+          },
+          "amm_price": {
+            "title": "Amm Price",
+            "type": "number"
+          },
+          "price_oracle": {
+            "title": "Price Oracle",
+            "type": "number"
+          },
+          "admin_fees_x": {
+            "title": "Admin Fees X",
+            "type": "number"
+          },
+          "admin_fees_y": {
+            "title": "Admin Fees Y",
+            "type": "number"
+          }
+        }
+      },
+      "MarketSnapshotResponse": {
+        "title": "MarketSnapshotResponse",
+        "required": ["chain", "market", "page", "per_page", "data"],
+        "type": "object",
+        "properties": {
+          "chain": {
+            "title": "Chain",
+            "type": "string"
+          },
+          "market": {
+            "title": "Market",
+            "type": "string"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "per_page": {
+            "title": "Per Page",
+            "type": "integer"
+          },
+          "data": {
+            "title": "Data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarketSnapshot"
+            }
+          }
+        }
+      },
+      "OhlcLlammaModel": {
+        "title": "OhlcLlammaModel",
+        "required": ["time"],
+        "type": "object",
+        "properties": {
+          "time": {
+            "title": "Time",
+            "type": "integer"
+          },
+          "open": {
+            "title": "Open",
+            "type": "number"
+          },
+          "close": {
+            "title": "Close",
+            "type": "number"
+          },
+          "high": {
+            "title": "High",
+            "type": "number"
+          },
+          "low": {
+            "title": "Low",
+            "type": "number"
+          },
+          "base_price": {
+            "title": "Base Price",
+            "type": "number"
+          },
+          "oracle_price": {
+            "title": "Oracle Price",
+            "type": "number"
+          },
+          "volume": {
+            "title": "Volume",
+            "type": "number"
+          }
+        }
+      },
+      "OhlcModel": {
+        "title": "OhlcModel",
+        "required": ["time"],
+        "type": "object",
+        "properties": {
+          "time": {
+            "title": "Time",
+            "type": "integer"
+          },
+          "open": {
+            "title": "Open",
+            "type": "number"
+          },
+          "close": {
+            "title": "Close",
+            "type": "number"
+          },
+          "high": {
+            "title": "High",
+            "type": "number"
+          },
+          "low": {
+            "title": "Low",
+            "type": "number"
+          }
+        }
+      },
+      "Oracle": {
+        "title": "Oracle",
+        "type": "object",
+        "properties": {
+          "oracle_address": {
+            "title": "Oracle Address",
+            "type": "string"
+          },
+          "method_id": {
+            "title": "Method Id",
+            "type": "string"
+          },
+          "method": {
+            "title": "Method",
+            "type": "string"
+          }
+        }
+      },
+      "PegKeeperActionType": {
+        "title": "PegKeeperActionType",
+        "enum": ["Withdraw", "Provide", "Profit"],
+        "description": "An enumeration."
+      },
+      "PegKeeperEntity": {
+        "title": "PegKeeperEntity",
+        "required": ["address", "pool", "pool_address", "active"],
+        "type": "object",
+        "properties": {
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "pool": {
+            "title": "Pool",
+            "type": "string"
+          },
+          "pool_address": {
+            "title": "Pool Address",
+            "type": "string"
+          },
+          "active": {
+            "title": "Active",
+            "type": "boolean"
+          },
+          "total_debt": {
+            "title": "Total Debt",
+            "type": "number"
+          },
+          "total_profit": {
+            "title": "Total Profit",
+            "type": "number"
+          }
+        }
+      },
+      "PegKeeperEntityResponse": {
+        "title": "PegKeeperEntityResponse",
+        "required": ["chain", "keepers"],
+        "type": "object",
+        "properties": {
+          "chain": {
+            "title": "Chain",
+            "type": "string"
+          },
+          "keepers": {
+            "title": "Keepers",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PegKeeperEntity"
+            }
+          }
+        }
+      },
+      "PegKeeperEvent": {
+        "title": "PegKeeperEvent",
+        "required": [
+          "action_type",
+          "amount",
+          "profit",
+          "debt",
+          "block_number",
+          "timestamp",
+          "transaction_hash"
+        ],
+        "type": "object",
+        "properties": {
+          "action_type": {
+            "$ref": "#/components/schemas/PegKeeperActionType"
+          },
+          "amount": {
+            "title": "Amount",
+            "type": "number"
+          },
+          "profit": {
+            "title": "Profit",
+            "type": "number"
+          },
+          "debt": {
+            "title": "Debt",
+            "type": "number"
+          },
+          "block_number": {
+            "title": "Block Number",
+            "type": "integer"
+          },
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "integer"
+          },
+          "transaction_hash": {
+            "title": "Transaction Hash",
+            "type": "string"
+          }
+        }
+      },
+      "PegKeeperEventResponse": {
+        "title": "PegKeeperEventResponse",
+        "required": ["chain", "keeper", "events"],
+        "type": "object",
+        "properties": {
+          "chain": {
+            "title": "Chain",
+            "type": "string"
+          },
+          "keeper": {
+            "title": "Keeper",
+            "type": "string"
+          },
+          "events": {
+            "title": "Events",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PegKeeperEvent"
+            }
+          }
+        }
+      },
+      "Pool": {
+        "title": "Pool",
+        "required": [
+          "name",
+          "address",
+          "n_coins",
+          "tvl_usd",
+          "trading_volume_24h",
+          "trading_fee_24h",
+          "liquidity_volume_24h",
+          "liquidity_fee_24h",
+          "coins",
+          "base_daily_apr",
+          "base_weekly_apr",
+          "virtual_price"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "n_coins": {
+            "title": "N Coins",
+            "type": "integer"
+          },
+          "tvl_usd": {
+            "title": "Tvl Usd",
+            "type": "number"
+          },
+          "trading_volume_24h": {
+            "title": "Trading Volume 24H",
+            "type": "number"
+          },
+          "trading_fee_24h": {
+            "title": "Trading Fee 24H",
+            "type": "number"
+          },
+          "liquidity_volume_24h": {
+            "title": "Liquidity Volume 24H",
+            "type": "number"
+          },
+          "liquidity_fee_24h": {
+            "title": "Liquidity Fee 24H",
+            "type": "number"
+          },
+          "coins": {
+            "title": "Coins",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Coin"
+            }
+          },
+          "base_daily_apr": {
+            "title": "Base Daily Apr",
+            "type": "number"
+          },
+          "base_weekly_apr": {
+            "title": "Base Weekly Apr",
+            "type": "number"
+          },
+          "virtual_price": {
+            "title": "Virtual Price",
+            "type": "integer"
+          }
+        }
+      },
+      "PoolInfo": {
+        "title": "PoolInfo",
+        "required": ["address"],
+        "type": "object",
+        "properties": {
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "chain": {
+            "title": "Chain",
+            "type": "string"
+          },
+          "tvl_usd": {
+            "title": "Tvl Usd",
+            "type": "number"
+          },
+          "trading_volume_24h": {
+            "title": "Trading Volume 24H",
+            "type": "number"
+          }
+        }
+      },
+      "PoolMetadataModel": {
+        "title": "PoolMetadataModel",
+        "required": [
+          "name",
+          "registry",
+          "lp_token_address",
+          "coins",
+          "pool_type",
+          "metapool"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "registry": {
+            "title": "Registry",
+            "type": "string"
+          },
+          "lp_token_address": {
+            "title": "Lp Token Address",
+            "type": "string"
+          },
+          "coins": {
+            "title": "Coins",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Coin"
+            }
+          },
+          "pool_type": {
+            "$ref": "#/components/schemas/PoolType"
+          },
+          "metapool": {
+            "title": "Metapool",
+            "type": "boolean"
+          },
+          "base_pool": {
+            "title": "Base Pool",
+            "type": "string"
+          },
+          "asset_types": {
+            "title": "Asset Types",
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "oracles": {
+            "title": "Oracles",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Oracle"
+            }
+          },
+          "vyper_version": {
+            "title": "Vyper Version",
+            "type": "string"
+          }
+        }
+      },
+      "PoolSnapshotModel": {
+        "title": "PoolSnapshotModel",
+        "required": ["timestamp"],
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "integer"
+          },
+          "a": {
+            "title": "A",
+            "type": "number"
+          },
+          "fee": {
+            "title": "Fee",
+            "type": "number"
+          },
+          "admin_fee": {
+            "title": "Admin Fee",
+            "type": "number"
+          },
+          "virtual_price": {
+            "title": "Virtual Price",
+            "type": "number"
+          },
+          "xcp_profit": {
+            "title": "Xcp Profit",
+            "type": "number"
+          },
+          "xcp_profit_a": {
+            "title": "Xcp Profit A",
+            "type": "number"
+          },
+          "base_daily_apr": {
+            "title": "Base Daily Apr",
+            "type": "number"
+          },
+          "base_weekly_apr": {
+            "title": "Base Weekly Apr",
+            "type": "number"
+          },
+          "offpeg_fee_multiplier": {
+            "title": "Offpeg Fee Multiplier",
+            "type": "number"
+          },
+          "gamma": {
+            "title": "Gamma",
+            "type": "number"
+          },
+          "mid_fee": {
+            "title": "Mid Fee",
+            "type": "number"
+          },
+          "out_fee": {
+            "title": "Out Fee",
+            "type": "number"
+          },
+          "fee_gamma": {
+            "title": "Fee Gamma",
+            "type": "number"
+          },
+          "allowed_extra_profit": {
+            "title": "Allowed Extra Profit",
+            "type": "number"
+          },
+          "adjustment_step": {
+            "title": "Adjustment Step",
+            "type": "number"
+          },
+          "ma_half_time": {
+            "title": "Ma Half Time",
+            "type": "number"
+          },
+          "price_scale": {
+            "title": "Price Scale",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "price_oracle": {
+            "title": "Price Oracle",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "block_number": {
+            "title": "Block Number",
+            "type": "integer"
+          }
+        }
+      },
+      "PoolSnapshotResponse": {
+        "title": "PoolSnapshotResponse",
+        "required": ["chain", "address", "data"],
+        "type": "object",
+        "properties": {
+          "chain": {
+            "title": "Chain",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "data": {
+            "title": "Data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PoolSnapshotModel"
+            }
+          }
+        }
+      },
+      "PoolType": {
+        "title": "PoolType",
+        "enum": [
+          "main",
+          "crypto",
+          "factory",
+          "factory_crypto",
+          "crvusd",
+          "factory_tricrypto",
+          "stableswapng",
+          "twocryptong"
+        ],
+        "description": "An enumeration."
+      },
+      "PoolsResponse": {
+        "title": "PoolsResponse",
+        "required": ["chain", "total", "data"],
+        "type": "object",
+        "properties": {
+          "chain": {
+            "title": "Chain",
+            "type": "string"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "per_page": {
+            "title": "Per Page",
+            "type": "integer"
+          },
+          "total": {
+            "$ref": "#/components/schemas/TotalStats"
+          },
+          "data": {
+            "title": "Data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pool"
+            }
+          }
+        }
+      },
+      "PriceUnits": {
+        "title": "PriceUnits",
+        "enum": ["token0", "usd"],
+        "description": "An enumeration."
+      },
+      "SingleTokenResponse": {
+        "title": "SingleTokenResponse",
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/LastPrice"
+          }
+        }
+      },
+      "SupplySnapshotModel": {
+        "title": "SupplySnapshotModel",
+        "required": [
+          "total_vecrv",
+          "escrowed_crv",
+          "crv_supply",
+          "circulating_supply",
+          "locked_supply_details",
+          "block_number",
+          "dt",
+          "transaction_hash"
+        ],
+        "type": "object",
+        "properties": {
+          "total_vecrv": {
+            "title": "Total Vecrv",
+            "type": "string"
+          },
+          "escrowed_crv": {
+            "title": "Escrowed Crv",
+            "type": "string"
+          },
+          "crv_supply": {
+            "title": "Crv Supply",
+            "type": "string"
+          },
+          "circulating_supply": {
+            "title": "Circulating Supply",
+            "type": "string"
+          },
+          "locked_supply_details": {
+            "title": "Locked Supply Details",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LockedSupplyDetail"
+            }
+          },
+          "block_number": {
+            "title": "Block Number",
+            "type": "integer"
+          },
+          "dt": {
+            "title": "Dt",
+            "type": "string",
+            "format": "date-time"
+          },
+          "transaction_hash": {
+            "title": "Transaction Hash",
+            "type": "string"
+          }
+        }
+      },
+      "SupplySnapshotResponse": {
+        "title": "SupplySnapshotResponse",
+        "required": ["supply"],
+        "type": "object",
+        "properties": {
+          "supply": {
+            "title": "Supply",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SupplySnapshotModel"
+            }
+          }
+        }
+      },
+      "TotalStats": {
+        "title": "TotalStats",
+        "required": [
+          "total_tvl",
+          "trading_volume_24h",
+          "trading_fee_24h",
+          "liquidity_volume_24h",
+          "liquidity_fee_24h"
+        ],
+        "type": "object",
+        "properties": {
+          "total_tvl": {
+            "title": "Total Tvl",
+            "type": "number"
+          },
+          "trading_volume_24h": {
+            "title": "Trading Volume 24H",
+            "type": "number"
+          },
+          "trading_fee_24h": {
+            "title": "Trading Fee 24H",
+            "type": "number"
+          },
+          "liquidity_volume_24h": {
+            "title": "Liquidity Volume 24H",
+            "type": "number"
+          },
+          "liquidity_fee_24h": {
+            "title": "Liquidity Fee 24H",
+            "type": "number"
+          }
+        }
+      },
+      "Trade": {
+        "title": "Trade",
+        "required": [
+          "sold_id",
+          "bought_id",
+          "tokens_sold",
+          "tokens_bought",
+          "price",
+          "block_number",
+          "time",
+          "transaction_hash"
+        ],
+        "type": "object",
+        "properties": {
+          "sold_id": {
+            "title": "Sold Id",
+            "type": "integer",
+            "description": "Pool index of token"
+          },
+          "bought_id": {
+            "title": "Bought Id",
+            "type": "integer",
+            "description": "Pool index of token"
+          },
+          "tokens_sold": {
+            "title": "Tokens Sold",
+            "type": "number"
+          },
+          "tokens_sold_usd": {
+            "title": "Tokens Sold Usd",
+            "type": "number"
+          },
+          "tokens_bought": {
+            "title": "Tokens Bought",
+            "type": "number"
+          },
+          "tokens_bought_usd": {
+            "title": "Tokens Bought Usd",
+            "type": "number"
+          },
+          "price": {
+            "title": "Price",
+            "type": "number"
+          },
+          "block_number": {
+            "title": "Block Number",
+            "type": "integer"
+          },
+          "time": {
+            "title": "Time",
+            "type": "string",
+            "format": "date-time"
+          },
+          "transaction_hash": {
+            "title": "Transaction Hash",
+            "type": "string"
+          },
+          "buyer": {
+            "title": "Buyer",
+            "type": "string"
+          },
+          "fee": {
+            "title": "Fee",
+            "type": "number"
+          },
+          "usd_fee": {
+            "title": "Usd Fee",
+            "type": "number"
+          }
+        }
+      },
+      "TradesResponse": {
+        "title": "TradesResponse",
+        "required": [
+          "chain",
+          "address",
+          "main_token",
+          "reference_token",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "chain": {
+            "title": "Chain",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "main_token": {
+            "$ref": "#/components/schemas/api__routes__v1__trades__models__Token"
+          },
+          "reference_token": {
+            "$ref": "#/components/schemas/api__routes__v1__trades__models__Token"
+          },
+          "data": {
+            "title": "Data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Trade"
+            }
+          }
+        }
+      },
+      "UserLockInfo": {
+        "title": "UserLockInfo",
+        "required": ["user", "locked", "weight", "weight_ratio", "unlock_time"],
+        "type": "object",
+        "properties": {
+          "user": {
+            "title": "User",
+            "type": "string"
+          },
+          "locked": {
+            "title": "Locked",
+            "type": "string"
+          },
+          "weight": {
+            "title": "Weight",
+            "type": "string"
+          },
+          "weight_ratio": {
+            "title": "Weight Ratio",
+            "type": "string"
+          },
+          "unlock_time": {
+            "title": "Unlock Time",
+            "type": "integer"
+          }
+        }
+      },
+      "UserLockPaginatedReponse": {
+        "title": "UserLockPaginatedReponse",
+        "required": ["locks", "page", "count"],
+        "type": "object",
+        "properties": {
+          "locks": {
+            "title": "Locks",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserLockInfo"
+            }
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          }
+        }
+      },
+      "UserLockReponse": {
+        "title": "UserLockReponse",
+        "required": ["users"],
+        "type": "object",
+        "properties": {
+          "users": {
+            "title": "Users",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserLockInfo"
+            }
+          }
+        }
+      },
+      "UserVote": {
+        "title": "UserVote",
+        "required": [
+          "gauge",
+          "weight",
+          "block_number",
+          "timestamp",
+          "transaction"
+        ],
+        "type": "object",
+        "properties": {
+          "gauge": {
+            "title": "Gauge",
+            "type": "string"
+          },
+          "gauge_name": {
+            "title": "Gauge Name",
+            "type": "string"
+          },
+          "weight": {
+            "title": "Weight",
+            "type": "integer"
+          },
+          "block_number": {
+            "title": "Block Number",
+            "type": "integer"
+          },
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "string",
+            "format": "date-time"
+          },
+          "transaction": {
+            "title": "Transaction",
+            "type": "string"
+          }
+        }
+      },
+      "UserVoteReponse": {
+        "title": "UserVoteReponse",
+        "required": ["locks"],
+        "type": "object",
+        "properties": {
+          "locks": {
+            "title": "Locks",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LockerActionModel"
+            }
+          }
+        }
+      },
+      "UserVoteResponse": {
+        "title": "UserVoteResponse",
+        "required": ["votes"],
+        "type": "object",
+        "properties": {
+          "votes": {
+            "title": "Votes",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserVote"
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "title": "ValidationError",
+        "required": ["loc", "msg", "type"],
+        "type": "object",
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            }
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        }
+      },
+      "VolumeDataPoint": {
+        "title": "VolumeDataPoint",
+        "required": ["timestamp", "volume", "fees"],
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "integer"
+          },
+          "volume": {
+            "title": "Volume",
+            "type": "number"
+          },
+          "fees": {
+            "title": "Fees",
+            "type": "number"
+          }
+        }
+      },
+      "VolumeResponse": {
+        "title": "VolumeResponse",
+        "required": ["chain", "address", "data"],
+        "type": "object",
+        "properties": {
+          "chain": {
+            "title": "Chain",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "data": {
+            "title": "Data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolumeDataPoint"
+            }
+          }
+        }
+      },
+      "api__routes__v1__llamma_ohlc__models__OhlcResponse": {
+        "title": "OhlcResponse",
+        "required": ["chain", "address", "data"],
+        "type": "object",
+        "properties": {
+          "chain": {
+            "title": "Chain",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "data": {
+            "title": "Data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OhlcLlammaModel"
+            }
+          }
+        }
+      },
+      "api__routes__v1__llamma_trades__models__Token": {
+        "title": "Token",
+        "required": ["symbol", "address"],
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "title": "Symbol",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          }
+        }
+      },
+      "api__routes__v1__lp_ohlc__models__OhlcResponse": {
+        "title": "OhlcResponse",
+        "required": ["chain", "address", "data"],
+        "type": "object",
+        "properties": {
+          "chain": {
+            "title": "Chain",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "data": {
+            "title": "Data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OhlcModel"
+            }
+          }
+        }
+      },
+      "api__routes__v1__markets__models__Token": {
+        "title": "Token",
+        "required": ["symbol", "address"],
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "title": "Symbol",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          }
+        }
+      },
+      "api__routes__v1__ohlc__models__OhlcResponse": {
+        "title": "OhlcResponse",
+        "required": ["chain", "address", "data"],
+        "type": "object",
+        "properties": {
+          "chain": {
+            "title": "Chain",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "data": {
+            "title": "Data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OhlcModel"
+            }
+          }
+        }
+      },
+      "api__routes__v1__trades__models__Token": {
+        "title": "Token",
+        "required": ["symbol", "address", "pool_index"],
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "title": "Symbol",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "pool_index": {
+            "title": "Pool Index",
+            "type": "integer"
+          },
+          "event_index": {
+            "title": "Event Index",
+            "type": "integer"
+          }
+        }
+      },
+      "api__routes__v1__trading_volume__models__Units": {
+        "title": "Units",
+        "enum": ["week", "day", "hour"],
+        "type": "string",
+        "description": "An enumeration."
+      },
+      "api__routes__v1__utils__Units": {
+        "title": "Units",
+        "enum": ["day", "hour", "minute"],
+        "type": "string",
+        "description": "An enumeration."
+      }
+    }
+  }
+}
