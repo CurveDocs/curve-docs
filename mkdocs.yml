@@ -166,6 +166,7 @@ nav:
     - Admin Controls: registry/admin-controls.md
 
   - Curve API:
+    - curve-api: curve-api/curve-api.md
     - curve-prices: curve-api/curve-prices.md
 
 
