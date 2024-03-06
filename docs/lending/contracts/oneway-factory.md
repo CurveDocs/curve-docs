@@ -17,6 +17,11 @@ A lending market **must always include crvUSD, either as collateral or as the bo
 - **`create`**: This method involves creating a vault and its accompanying contracts using an **external user-supplied price oracle**.
 - **`create_from_pool`**: This method involves creating a vault and its accompanying contracts using an **existing oraclized Curve pool as a price oracle**.
 
+!!!info "Finding Optimal Parameters"
+    To find optimal values for the parameters, check out: https://github.com/curvefi/llamma-simulator.
+
+    *Regarding rates:* Borrow rates default to `min_default_borrow_rate` and `max_default_borrow_rate` if no input values are given for `min_borrow_rate` and `max_borrow_rate`. If custom values are used, they need to be within the values of `MIN_RATE` and `MAX_RATE`. More on rates [here](./semilog-mp.md).
+
 
 ### `create`
 !!! description "`OneWayLendingVaultFactory.create(borrowed_token: address, collateral_token: address, A: uint256, fee: uint256, loan_discount: uint256, liquidation_discount: uint256, price_oracle: address, name: String[64], min_borrow_rate: uint256 = 0, max_borrow_rate: uint256 = 0) -> Vault:`"
@@ -169,7 +174,10 @@ A lending market **must always include crvUSD, either as collateral or as the bo
 ### `create_from_pool`
 !!! description "`OneWayLendingVaultFactory.create(borrowed_token: address, collateral_token: address, A: uint256, fee: uint256, loan_discount: uint256, liquidation_discount: uint256, price_oracle: address, name: String[64], min_borrow_rate: uint256 = 0, max_borrow_rate: uint256 = 0) -> Vault:`"
 
-    Function to create a new vault using a existing oraclized Curve pool as a price oracle.
+    !!!warning "Valid Pool Oracles"
+        Only oracles from stableswap-ng, twocrypto-ng, and tricrypto-ng pools are valid. Oracles from other pools may not be manipulation resistant and therefore should not be used.
+
+    Function to create a new vault using a existing oraclized Curve pool as the price oracle. 
 
     Returns: vault (`address`).
 
@@ -337,7 +345,7 @@ A lending market **must always include crvUSD, either as collateral or as the bo
                 "0x9fee65d5a627e73212989c8bbedc5fa5cae3821f",       # pool to use oracle from
                 "bobrCRV-long",                                     # name
                 0,                                                  # min_borrow_rate
-                0)                                                  # max_borrow_rate
+                1)                                                  # max_borrow_rate
 
         '0xE16D806c4198955534d4EB10E4861Ea94557602E'                # returns address of the created vault
         ```

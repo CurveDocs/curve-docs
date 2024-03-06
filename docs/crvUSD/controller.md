@@ -14,7 +14,7 @@ The Controller contract acts as a on-chain interface for **creating loans and fu
 
 
     <figure markdown="span">
-    ![](../assets/images/new_controller_mint.svg){ width="500" }
+    ![](../assets/images/mint_controller.svg){ width="500" }
     <figcaption></figcaption>
     </figure>
 

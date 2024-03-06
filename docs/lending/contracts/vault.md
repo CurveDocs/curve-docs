@@ -101,8 +101,8 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 
 *Two methods for acquiring shares in an ERC4626 Vault:*
 
-- **Deposit**: A user deposits a specified amount of the underlying token into the vault. In exchange, the user receives an equivalent number of shares, converting their tokens into vault shares.
-- **Mint**: A user specifies the desired number of shares and deposits the required amount of the underlying asset to mint these shares. This method allows a user to obtain a precise share quantity.
+- **Deposit**: A lender deposits a specified amount of the underlying (borrowable) token into the vault. In exchange, the user receives an equivalent number of shares.
+- **Mint**: A lender specifies the desired number of shares to receive and deposits the required amount of the underlying (borrowable) asset to mint these shares. This method allows a user to obtain a precise number of shares.
 
 
 ### `deposit`

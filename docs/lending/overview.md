@@ -11,14 +11,14 @@ The **borrowable liquidity is provided by willing lenders** through [Vaults](./c
 
 ## **Overview**
 
-*The entire system is similar to the one for minting markets. Every lending market has a individual **Controller**, **LLAMMA**, and **Vault**.*
+*The entire system is similar to the one for minting crvUSD. Every lending market has a individual **Controller**, **LLAMMA**, and **Vault**.*
 
 <figure markdown="span">
   ![](../assets/images/lending_overview.svg){ width="600" }
   <figcaption></figcaption>
 </figure>
 
-The **Controller** can be seen as some sort of on-chain interface. Most user actions, such as creating or repaying loans or managing existing ones, are done through this contract.
+The **Controller** is some sort of on-chain interface. Most user actions, such as creating or repaying loans or managing existing ones, are done through this contract.
 
 The **LLAMMA** is an AMM that holds the collateral assets. This is where the magic around soft-liquidations happens. Full documentation can be found [here](../crvUSD/amm.md).
 
@@ -127,11 +127,11 @@ The Vault is an **implementation of the ERC4626 vault which deposits assets into
 
 ## **OneWayLendingFactory.vy**
 
-The factory allows the **permissionless creation of borrowing/lending markets without rehypothecation**, indicating that the collateral asset cannot be lent out. A distinctive feature is its ability to generate markets from pools with a `price_oracle()` method, eliminating the need for a separate price oracle. Nonetheless, these pools must adhere to one of the following standards: 
+The factory allows the **permissionless creation of borrowing/lending markets without rehypothecation**, meaning the collateral asset cannot be lent out. A distinctive feature is its ability to generate markets from Curve pools with a `price_oracle()` method, eliminating the need for a separate price oracle. Nonetheless, these pools must adhere to one of the following standards: 
 
-- **[stableswap-ng](../stableswap-exchange/stableswap-ng/overview.md)** 
-- **[tricrypto-ng](../cryptoswap-exchange/tricrypto-ng/overview.md)** 
-- **[twocrypto-ng](../cryptoswap-exchange/twocrypto-ng/overview.md)**.
+- [stableswap-ng](../stableswap-exchange/stableswap-ng/overview.md)
+- [tricrypto-ng](../cryptoswap-exchange/tricrypto-ng/overview.md)
+- [twocrypto-ng](../cryptoswap-exchange/twocrypto-ng/overview.md)
 
 [:octicons-arrow-right-24: More here](./contracts/oneway-factory.md)
 
@@ -139,7 +139,7 @@ The factory allows the **permissionless creation of borrowing/lending markets wi
 
 ## **CryptoFromPool.vy**
 
-The price oracle contract to use the `price_oracle()` method of a Curve *tricrypto-ng*, *twocrypto-ng* or *stableswap-ng* pool, used by the `create_from_pool()` method.
+`CryptoFromPool.vy` is a price oracle contract which uses the `price_oracle()` method of a Curve *tricrypto-ng*, *twocrypto-ng* or *stableswap-ng* pool. This contract is created from a blueprint when using the [`create_from_pool()` function](./contracts/oneway-factory.md#create_from_pool).
 
 ??? quote "`create_from_pool(borrowed_token: address, collateral_token: address, A: uint256, fee: uint256, loan_discount: uint256, liquidation_discount: uint256, pool: address, name: String[64], min_borrow_rate: uint256 = 0, max_borrow_rate: uint256 = 0) -> Vault:`"
 
