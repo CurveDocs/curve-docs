@@ -177,6 +177,11 @@ th {
   color: white;
 }
 
+th a{
+  color: var(--md-accent-fg-color);
+}
+
+
 .md-typeset__table {
   line-height: 1;
 
