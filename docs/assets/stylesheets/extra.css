@@ -177,7 +177,8 @@ th {
   color: white;
 }
 
-th a{
+
+.md-typeset th a{
   color: var(--md-accent-fg-color);
 }
 
