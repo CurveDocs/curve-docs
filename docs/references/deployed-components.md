@@ -8,7 +8,7 @@ This section of the documentation is dedicated to offering a comprehensive overv
 | :logos-arbitrum: `Arbitrum`       |   | x | x | x | x | x | x | x | disable, enabled | x | x | x | x |
 | :logos-optimism: `Optimism`       |   | x | x | x | x | x | x | x | disable, enabled | x | x | x | x |
 | :logos-base: `Base`               |   | x |   | x | no veBoost | x | x | x | disable, enabled | x | x | x | x |
-| `Fraxtal`                         |   |   |   | x | x |   | x | x | disable, enabled | x | x | x |   |
+| :logos-fraxtal: `Fraxtal`                         |   | x |   | x | x |   | x | x | disable, enabled | x | x | x |   |
 | :logos-polygon: `Polygon`         |   | x | x | x | x |   | x | x | disable, enabled | x | x | x |   |
 | :logos-polygon: `Polygon zk-EVM`  |   |   |   |   |   |   | x | x | disable, enabled |   |   |   | x |
 | :logos-gnosis: `Gnosis (xDAI)`    |   | x | x | x | x |   | x | x | disable, enabled | x | x | x | x |
