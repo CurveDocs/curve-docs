@@ -28,7 +28,14 @@ This documentation outlines the technical implementation of the core Curve proto
 
     ---
 
-    Over-collateralized USD stablecoin powered by a unique liquidating algorithm (LLAMMA), which progressively converts the put-up collateral token into crvUSD when the loan health decreases to certain thresholds.
+    Over-collateralized USD stablecoin powered by a unique liquidating algorithm ([LLAMMA](./crvUSD/amm.md)), which progressively converts the put-up collateral token into crvUSD when the loan health decreases to certain thresholds.
+
+-   **:material-bank: Curve Lending**
+
+    ---
+
+    Permissionless lending markets to borrow or lend crvUSD against any asset with a proper oracle. Additionally, the markets are powered by Curve's unique liquidation algorithm, [LLAMMA](./crvUSD/amm.md).
+
 
 -   :material-scale-balance:{ .lg .middle } **StableSwap Exchange**
 

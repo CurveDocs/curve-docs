@@ -1106,6 +1106,10 @@ For testing in production purposes, several contract deployments have taken plac
 !!!deploy "Source Code"
     Source code is available on [GitHub](https://github.com/curvefi/curve-stablecoin).
 
+!!!warning "Implementations"
+    **Implementation contracts are upgradable.** They can be either replaced or additional implementation contracts can be set. Therefore, please **always make sure to check the most recent ones**.
+
+
 | Contract Type           | Contract Address                                                         |
 | :---------------------: | :----------------------------------------------------------------------: |
 | `Stablecoin`            | [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/address/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E#code) |
@@ -1213,3 +1217,46 @@ For testing in production purposes, several contract deployments have taken plac
 |`CollateralToken (tBTC)`|[0x18084fba666a33d37592fa2633fd49a74dd93a88](https://etherscan.io/address/0x18084fba666a33d37592fa2633fd49a74dd93a88)|
 |`PriceOracle`|[0xbeF434E2aCF0FBaD1f0579d2376fED0d1CfC4217](https://etherscan.io/address/0xbeF434E2aCF0FBaD1f0579d2376fED0d1CfC4217#code)|
 |`Leverage Zap`|[0xD79964C70Cb06224FdA4c48387B53E9819bcB71c](https://etherscan.io/address/0xD79964C70Cb06224FdA4c48387B53E9819bcB71c#code)|
+
+
+
+
+## **Curve Lending**
+
+!!!deploy "Source Code"
+    Source code for all lending-relevant contracts is available on [GitHub](https://github.com/curvefi/curve-stablecoin/tree/lending).
+
+!!!warning "Implementations"
+    **Implementation contracts are upgradable.** They can be either replaced or additional implementation contracts can be set. Therefore, please **always make sure to check the most recent ones**.
+
+
+| Contract Type                      | Contract Address                                                         |
+| :--------------------------------: | :----------------------------------------------------------------------: |
+| `AMM implementation`               | [0x4f37395BdFbE3A0dca124ad3C9DbFe6A6cbc31D6](https://etherscan.io/address/0x4f37395BdFbE3A0dca124ad3C9DbFe6A6cbc31D6) |
+| `Controller implementation`        | [0x5473B1BcBbC45d38d8fBb50a18a73aFb8B0637A7](https://etherscan.io/address/0x5473B1BcBbC45d38d8fBb50a18a73aFb8B0637A7) |
+| `Vault implementation`             | [0x596F8E49acE6fC8e09B561972360DC216f1c2A1f](https://etherscan.io/address/0x596F8E49acE6fC8e09B561972360DC216f1c2A1f) |
+| `Pool price oracle implementation` | [0x9164e210d123e6566DaF113136a73684C4AB01e2](https://etherscan.io/address/0x9164e210d123e6566DaF113136a73684C4AB01e2) |
+| `Monetary Policy Implementation`   | [0xa7E98815c0193E01165720C3abea43B885ae67FD](https://etherscan.io/address/0xa7E98815c0193E01165720C3abea43B885ae67FD) |
+| `Gauge Implementation`             | [0x00B71A425Db7C8B65a46CF39c23A188e10A2DE99](https://etherscan.io/address/0x00B71A425Db7C8B65a46CF39c23A188e10A2DE99) |
+| `OneWay Lending Factory`           | [0xc67a44D958eeF0ff316C3a7c9E14FB96f6DedAA3](https://etherscan.io/address/0xc67a44D958eeF0ff316C3a7c9E14FB96f6DedAA3) |
+
+---
+
+As the creation of lending markets is permissionless, listing all deployed vaults and their correpsonding contracts would exceed the scope of this section. The Factory contract has a [`market_count`](../lending/contracts/oneway-factory.md#market_count) variable which represents the total number of markets created, as well as a [`vaults(arg0: uint256)`](../lending/contracts/oneway-factory.md#vaults) which returns the vault address at a specific index.
+
+*For more informations, please refer to the [Factory documentation](../lending/contracts/oneway-factory.md).*
+
+---
+
+AMM, Controller, and Price Oracle contracts and other variables of a vault can simply be queried:
+
+```shell
+>>> Vault.amm()
+'0xafC1ab86045Cb2a07C23399dbE64b56D1B8B3239'
+>>> Vault.controller()
+'0x7443944962D04720f8c220C0D25f56F869d6EfD4'
+>>> Vault.price_oracle()
+'0xc17B0451E6d8C0f71297d0f174590632BE81163c'
+```
+
+*For more informations, please refer to the [Vault documentation](../lending/contracts/vault.md#contract-info-methods).*

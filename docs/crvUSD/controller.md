@@ -1,51 +1,74 @@
-The Controller is the contract the user interacts with to **create a loan and further manage the position**. It holds all user debt information. External liquidations are also done through it.
+The Controller contract acts as a on-chain interface for **creating loans and further managing existing positions**. It holds all user debt information. External liquidations are also done through it.
 
-**Each market has its own Controller**, automatically deployed from a blueprint contract, as soon as a new market is successfully added via the `add_market` function within the Factory.
+**Each market has its own Controller**, automatically deployed from a blueprint contract, as soon as a new market is added via the `add_market` function or, for lending markets, via the `create` or `create_from_pool` function within the respective Factory.
+
 
 ---
 
-*The code examples below are based on the [tbtc market](https://etherscan.io/address/0x1c91da0223c763d2e0173243eadaa0a2ea47e704) Controller.*
-
-```shell
->>> import ape
-
->>> controller = ape.Contract("0x1C91da0223c763d2e0173243eAdaA0A2ea47E704")
->>> tbtc = ape.Contract("0x18084fbA666a33d37592fA2633fD49a74DD93a88")
->>> trader = "0x3ee18B2214AFF97000D974cf647E7C347E8fa585"
-
->>> tbtc.approve(controller, 2**256-1, sender=trader)
-
->>> with ape.accounts.use_sender(trader):
-        controller.create_loan(...)
-        controller.repay(...)
-    ...
-```
+*Controller contracts are currently used for the following two cases:*
 
 
-# **Loans**
+- **Curve Stablecoin - minting crvUSD**
+
+    Minting crvUSD is only possible with whitelised collateral by the DAO and requires users to provide collateral against which they can mint[^1] crvUSD. Provided collateral is deposited into LLAMMA according to the number of bands chosen. Subsequently, **crvUSD is backed by the assets provided as collateral**.
+
+
+    <figure markdown="span">
+    ![](../assets/images/mint_controller1.svg){ width="500" }
+    <figcaption></figcaption>
+    </figure>
+
+    [^1]: The system does not actually mint crvUSD, as the tokens are "pre-minted". If a controller has a 100m debt ceiling, 100m crvUSD will be minted to the Controller from which the tokens can be borrowed.
+
+    Repaying the loan is straightforward: Debt is repaid, the health of the loan improves, allowing for the removal of collateral from LLAMMA. When the entire loan is repaid, the user can remove their entire collateral.
+
+
+
+- **Curve Lending Markets**
+
+    *[:octicons-arrow-right-24: Curve Lending Overview](../lending/overview.md)*
+
+    In lending markets, not only can crvUSD be borrowed. Every lending market token composition is possible as long as one of the assets, no matter if collateral or borrowable asset, is crvUSD.
+
+    The main difference compared to the minting system above is that there are no tokens minted (neglecting the ERC-4626 vault token here) and therefore **not backed by the provided collateral token**. E.g., if there is a CRV<>crvUSD lending market, with CRV as collateral and crvUSD as borrowable asset, then the borrowed crvUSD are not minted but rather borrowed. **Borrowable assets are provided by lenders**, who deposit the assets into an [ERC-4626 Vault](../lending/contracts/vault.md), where they earn interest for lending out their assets.
+
+
+    <figure markdown="span">
+    ![](../assets/images/lending_overview.svg){ width="600" }
+    <figcaption></figcaption>
+    </figure>
+
+
+    Repaying the loan is straightforward: Debt is repaid, the health of the loan improves, allowing for the removal of collateral from LLAMMA. When the entire loan is repaid, the user can remove their entire collateral.
+
+---
+
 
 ## **Creating and Repaying Loans**
 
-New loans are created via the **`ceate_loan`** function. When creating a loan the user needs to specify the **amount of collateral** and **debt** and the **number of bands** to deposit the collateral into. The maximum amount of borrowable debt is determined by the number of bands, the amount of collateral, and the oracle price.
+New loans are created via the **`ceate_loan`** function. When creating a loan the user needs to specify the **amount of collateral**, **debt** and the **number of bands** to deposit the collateral into. 
+
+The maximum amount of borrowable debt is determined by the number of bands, the amount of collateral, and the oracle price.
 
 
-Before doing that, users can utilize some functions to pre-calculate metrics: [Loan calculations](#loan-calculations-borrowable-etc)
+The loan-to-value (LTV) ratio depends on the number of bands `N` and the parameter `A`. The higher the number of bands, the lower the LTV. More on bands [here](#bands).
+
+$$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
+
+
 
 ### `create_loan`
 !!! description "`Controller.create_loan(collateral: uint256, debt: uint256, N: uint256):`"
 
-    Function to create a loan. The user must specify the amount of `collateral` to deposit into `N`-bands and the amount of `debt` to borrow. If a user already has an existing loan, the function will revert.
+    Function to create a new loan, requiring specification of the amount of `collateral` to be deposited into `N` bands and the amount of `debt` to be borrowed. The lower bands choosen, the higher the loss when the position is in soft-liquiation. Should there already be an existing loan, the function will revert. 
 
-    Emits: `UserState`, `Borrow` and `Deposit`
+    Emits: `UserState`, `Borrow`, `Deposit` and `Transfer`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `collateral` |  `uint256` |  Amount of collateral to use |
-    | `debt` |  `uint256` | Amount of debt to take |
-    | `N` |  `uint256` | Number of bands to deposit into |
-
-    !!!note
-        `N` can range between `MIN_TICKS` and `MAX_TICKS`. A loan cannot be created if one already exists.
+    | Input        | Type      | Description                           |
+    | ------------ | --------- | ------------------------------------- |
+    | `collateral` | `uint256` | Amount of collateral to use.          |
+    | `debt`       | `uint256` | Amount of debt to take.               |
+    | `N`          | `uint256` | Number of bands to deposit into; must range between `MIN_TICKS` and `MAX_TICKS` |
 
     ??? quote "Source code"
 
@@ -219,18 +242,17 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 ### `create_loan_extended`
 !!! description "`Controller.create_loan_extended(collateral: uint256, debt: uint256, N: uint256, callbacker: address, callback_args: DynArray[uint256,5]):`"
 
-    Extended function to create a loan. This function passes crvUSD to a callback first so that it can leverage up.
+    Function to create a new loan using callbacks. This function passes the stablecoin to a callback first, enabling the construction of leverage.
 
-    Emits: `UserState`, `Borrow` and `Deposit`
+    Emits: `UserState`, `Borrow`, `Deposit`, and `Transfer`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `collateral` |  `uint256` |  Amount of collateral to use |
-    | `debt` |  `uint256` | Amount of debt to take |
-    | `N` |  `uint256` | Number of bands to deposit into |
-    | `callbacker` |  `address` | Address of the callback contract |
-    | `callback_args` |  `DynArray[uint256,5]` | Extra arguments for the callback (up to 5) such as `min_amount` etc |
-
+    | Input           | Type                  | Description                                           |
+    | --------------- | --------------------- | ----------------------------------------------------- |
+    | `collateral`    | `uint256`             | Amount of collateral to use.                          |
+    | `debt`          | `uint256`             | Amount of debt to take.                               |
+    | `N`             | `uint256`             | Number of bands to deposit into.                      |
+    | `callbacker`    | `address`             | Address of the callback contract.                     |
+    | `callback_args` | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5), such as `min_amount`, etc. |
 
     ??? quote "Source code"
 
@@ -409,22 +431,262 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
         ```
 
 
+### `max_borrowable`
+!!! description "`Controller.max_borrowable(collateral: uint256, N: uint256) -> uint256:`"
+
+    Function to calculate the maximum amount of crvUSD that can be borrowed against `collateral` using `N` bands. If the max borrowable amount exceeds the crvUSD balance of the controller, which essentially is what's left to be borrowed, it returns the amount that remains available for borrowing.
+
+    Returns: maximum borrowable amount (`uint256`).
+
+    | Input       | Type      | Description          |
+    | ----------- | --------- | -------------------- |
+    | `collateral`| `uint256` | Collateral amount.   |
+    | `N`         | `uint256` | Number of bands.     |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @internal
+        @view
+        def get_y_effective(collateral: uint256, N: uint256, discount: uint256) -> uint256:
+            """
+            @notice Intermediary method which calculates y_effective defined as x_effective / p_base,
+                    however discounted by loan_discount.
+                    x_effective is an amount which can be obtained from collateral when liquidating
+            @param collateral Amount of collateral to get the value for
+            @param N Number of bands the deposit is made into
+            @param discount Loan discount at 1e18 base (e.g. 1e18 == 100%)
+            @return y_effective
+            """
+            # x_effective = sum_{i=0..N-1}(y / N * p(n_{n1+i})) =
+            # = y / N * p_oracle_up(n1) * sqrt((A - 1) / A) * sum_{0..N-1}(((A-1) / A)**k)
+            # === d_y_effective * p_oracle_up(n1) * sum(...) === y_effective * p_oracle_up(n1)
+            # d_y_effective = y / N / sqrt(A / (A - 1))
+            # d_y_effective: uint256 = collateral * unsafe_sub(10**18, discount) / (SQRT_BAND_RATIO * N)
+            # Make some extra discount to always deposit lower when we have DEAD_SHARES rounding
+            d_y_effective: uint256 = collateral * unsafe_sub(
+                10**18, min(discount + (DEAD_SHARES * 10**18) / max(collateral / N, DEAD_SHARES), 10**18)
+            ) / (SQRT_BAND_RATIO * N)
+            y_effective: uint256 = d_y_effective
+            for i in range(1, MAX_TICKS_UINT):
+                if i == N:
+                    break
+                d_y_effective = unsafe_div(d_y_effective * Aminus1, A)
+                y_effective = unsafe_add(y_effective, d_y_effective)
+            return y_effective
+
+        @external
+        @view
+        @nonreentrant('lock')
+        def max_borrowable(collateral: uint256, N: uint256) -> uint256:
+            """
+            @notice Calculation of maximum which can be borrowed (details in comments)
+            @param collateral Collateral amount against which to borrow
+            @param N number of bands to have the deposit into
+            @return Maximum amount of stablecoin to borrow
+            """
+            # Calculation of maximum which can be borrowed.
+            # It corresponds to a minimum between the amount corresponding to price_oracle
+            # and the one given by the min reachable band.
+            #
+            # Given by p_oracle (perhaps needs to be multiplied by (A - 1) / A to account for mid-band effects)
+            # x_max ~= y_effective * p_oracle
+            #
+            # Given by band number:
+            # if n1 is the lowest empty band in the AMM
+            # xmax ~= y_effective * amm.p_oracle_up(n1)
+            #
+            # When n1 -= 1:
+            # p_oracle_up *= A / (A - 1)
+
+            y_effective: uint256 = self.get_y_effective(collateral * COLLATERAL_PRECISION, N, self.loan_discount)
+
+            x: uint256 = unsafe_sub(max(unsafe_div(y_effective * self.max_p_base(), 10**18), 1), 1)
+            x = unsafe_div(x * (10**18 - 10**14), 10**18)  # Make it a bit smaller
+            return min(x, STABLECOIN.balanceOf(self))  # Cannot borrow beyond the amount of coins Controller has
+        ```
+
+    === "Example"
+        ```shell
+        >>> Controller.max_borrowable(10**18, 5)
+        37965133715410776274198
+        >>> Controller.max_borrowable(10**18, 25)
+        34421752243813852608681
+        >>> Controller.max_borrowable(10**18, 50)
+        30597863183498027832984
+        ```
+
+
+### `min_collateral`
+!!! description "`Controller.min_collateral(debt: uint256, N: uint256) -> uint256:`"
+
+    Function to calculate the minimum amount of collateral that is necessary to support `debt` using `N` bands.
+
+    Returns: minimal collateral amount (`uint256`).
+
+    | Input  | Type      | Description               |
+    | ------ | --------- | ------------------------- |
+    | `debt` | `uint256` | Debt.                     |
+    | `N`    | `uint256` | Number of bands.          |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @internal
+        @view
+        def get_y_effective(collateral: uint256, N: uint256, discount: uint256) -> uint256:
+            """
+            @notice Intermediary method which calculates y_effective defined as x_effective / p_base,
+                    however discounted by loan_discount.
+                    x_effective is an amount which can be obtained from collateral when liquidating
+            @param collateral Amount of collateral to get the value for
+            @param N Number of bands the deposit is made into
+            @param discount Loan discount at 1e18 base (e.g. 1e18 == 100%)
+            @return y_effective
+            """
+            # x_effective = sum_{i=0..N-1}(y / N * p(n_{n1+i})) =
+            # = y / N * p_oracle_up(n1) * sqrt((A - 1) / A) * sum_{0..N-1}(((A-1) / A)**k)
+            # === d_y_effective * p_oracle_up(n1) * sum(...) === y_effective * p_oracle_up(n1)
+            # d_y_effective = y / N / sqrt(A / (A - 1))
+            # d_y_effective: uint256 = collateral * unsafe_sub(10**18, discount) / (SQRT_BAND_RATIO * N)
+            # Make some extra discount to always deposit lower when we have DEAD_SHARES rounding
+            d_y_effective: uint256 = collateral * unsafe_sub(
+                10**18, min(discount + (DEAD_SHARES * 10**18) / max(collateral / N, DEAD_SHARES), 10**18)
+            ) / (SQRT_BAND_RATIO * N)
+            y_effective: uint256 = d_y_effective
+            for i in range(1, MAX_TICKS_UINT):
+                if i == N:
+                    break
+                d_y_effective = unsafe_div(d_y_effective * Aminus1, A)
+                y_effective = unsafe_add(y_effective, d_y_effective)
+            return y_effective
+
+        @external
+        @view
+        @nonreentrant('lock')
+        def min_collateral(debt: uint256, N: uint256) -> uint256:
+            """
+            @notice Minimal amount of collateral required to support debt
+            @param debt The debt to support
+            @param N Number of bands to deposit into
+            @return Minimal collateral required
+            """
+            # Add N**2 to account for precision loss in multiple bands, e.g. N * 1 / (y/N) = N**2 / y
+            return unsafe_div(unsafe_div(debt * 10**18 / self.max_p_base() * 10**18 / self.get_y_effective(10**18, N, self.loan_discount) + N * (N + 2 * DEAD_SHARES), COLLATERAL_PRECISION) * 10**18, 10**18 - 10**14)
+        ```
+
+    === "Example"
+        ```shell
+        >>> Controller.min_collateral(10**22, 5)
+        263399572749066565
+        >>> Controller.min_collateral(10**22, 25)
+        290513972942760489
+        >>> Controller.min_collateral(10**22, 50)
+        326820207673727834
+        ```
+
+
+### `calculate_debt_n1`
+!!! description "`Controller.calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256) -> int256:`"
+
+    Getter method to calculate the upper band number for the deposited collateral to sit in to support the given debt. This call reverts if the requested debt is too high.
+
+    Returns: upper band n1 (`int256`) to deposit the collateral into.
+
+    | Input        | Type      | Description                                   |
+    | ------------ | --------- | --------------------------------------------- |
+    | `collateral` | `uint256` | Amount of collateral (at its native precision). |
+    | `debt`       | `uint256` | Amount of requested debt.                     |
+    | `N`          | `uint256` | Number of bands to deposit into.              |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @internal
+        @view
+        def _calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256) -> int256:
+            """
+            @notice Calculate the upper band number for the deposit to sit in to support
+                    the given debt. Reverts if requested debt is too high.
+            @param collateral Amount of collateral (at its native precision)
+            @param debt Amount of requested debt
+            @param N Number of bands to deposit into
+            @return Upper band n1 (n1 <= n2) to deposit into. Signed integer
+            """
+            assert debt > 0, "No loan"
+            n0: int256 = AMM.active_band()
+            p_base: uint256 = AMM.p_oracle_up(n0)
+
+            # x_effective = y / N * p_oracle_up(n1) * sqrt((A - 1) / A) * sum_{0..N-1}(((A-1) / A)**k)
+            # === d_y_effective * p_oracle_up(n1) * sum(...) === y_effective * p_oracle_up(n1)
+            # d_y_effective = y / N / sqrt(A / (A - 1))
+            y_effective: uint256 = self.get_y_effective(collateral * COLLATERAL_PRECISION, N, self.loan_discount)
+            # p_oracle_up(n1) = base_price * ((A - 1) / A)**n1
+
+            # We borrow up until min band touches p_oracle,
+            # or it touches non-empty bands which cannot be skipped.
+            # We calculate required n1 for given (collateral, debt),
+            # and if n1 corresponds to price_oracle being too high, or unreachable band
+            # - we revert.
+
+            # n1 is band number based on adiabatic trading, e.g. when p_oracle ~ p
+            y_effective = y_effective * p_base / (debt + 1)  # Now it's a ratio
+
+            # n1 = floor(log2(y_effective) / self.logAratio)
+            # EVM semantics is not doing floor unlike vyper, so we do this
+            assert y_effective > 0, "Amount too low"
+            n1: int256 = self.log2(y_effective)  # <- switch to faster ln() XXX?
+            if n1 < 0:
+                n1 -= LOG2_A_RATIO - 1  # This is to deal with vyper's rounding of negative numbers
+            n1 /= LOG2_A_RATIO
+
+            n1 = min(n1, 1024 - convert(N, int256)) + n0
+            if n1 <= n0:
+                assert AMM.can_skip_bands(n1 - 1), "Debt too high"
+
+            # Let's not rely on active_band corresponding to price_oracle:
+            # this will be not correct if we are in the area of empty bands
+            assert AMM.p_oracle_up(n1) < AMM.price_oracle(), "Debt too high"
+
+            return n1
+
+            @external
+            @view
+            @nonreentrant('lock')
+            def calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256) -> int256:
+                """
+                @notice Calculate the upper band number for the deposit to sit in to support
+                        the given debt. Reverts if requested debt is too high.
+                @param collateral Amount of collateral (at its native precision)
+                @param debt Amount of requested debt
+                @param N Number of bands to deposit into
+                @return Upper band n1 (n1 <= n2) to deposit into. Signed integer
+                """
+                return self._calculate_debt_n1(collateral, debt, N)
+        ```
+
+    === "Example"
+        ```shell
+        >>> Controller.calculate_debt_n1(10**18, 10**22, 5)
+        85
+        >>> Controller.calculate_debt_n1(10**18, 10**22, 25)
+        76
+        ```
+
+
 ### `repay`
 !!! description "`Controller.repay(_d_debt: uint256, _for: address = msg.sender, max_active_band: int256 = 2**255-1, use_eth: bool = True):`"
 
-    Function to partially or fully repay `_d_debt` amount of debt.
+    Function to partially or fully repay `_d_debt` amount of debt. If `_d_debt` exceeds the total debt amount of the user, a full repayment will be done.
 
     Emits: `UserState` and `Repay`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_d_debt` |  `uint256` |  Amount of debt to repay |
-    | `_for` |  `address` |  Address to repay the debt for; defaults to `msg.sender` |
-    | `max_active_band` |  `int256` |  Highest active band. Used to prevent front-running the repay; defaults to `2**255-1` |
-    | `use_eth` |  `bool` |  Use wrapping/unwrapping if collateral is ETH |
-
-    !!! note
-        If `_d_debt` exceeds the total debt amount of the user, a full repayment will be done.
+    | Input              | Type      | Description                                                     |
+    | ------------------ | --------- | --------------------------------------------------------------- |
+    | `_d_debt`          | `uint256` | Amount of debt to repay.                                        |
+    | `_for`             | `address` | Address to repay the debt for; defaults to `msg.sender`.        |
+    | `max_active_band`  | `int256`  | Highest active band. Used to prevent front-running the repay; defaults to `2**255-1`. |
+    | `use_eth`          | `bool`    | Use wrapping/unwrapping if collateral is ETH.                   |
 
     ??? quote "Source code"
 
@@ -579,23 +841,20 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
         ```shell
         >>> Controller.repay(10**20, trader, 2**255-1, False)
         >>> Controller.debt(trader)
-
-
         ```
 
 
 ### `repay_extended`
 !!! description "`Controller.repay_extended(callbacker: address, callback_args: DynArray[uint256,5]):`"
 
-    Extended function to repay a loan but get a stablecoin for that from callback (to deleverage).
+    Extended function to repay a loan but obtain a stablecoin for that from a callback (to deleverage).
 
     Emits: `UserState` and `Repay`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `callbacker` |  `address` |  Address of the callback contract |
-    | `callback_args` |  `DynArray[uint256,5]` |  Extra arguments for the callback (up to 5) such as `min_amount` |
-
+    | Input           | Type                  | Description                                          |
+    | --------------- | --------------------- | ---------------------------------------------------- |
+    | `callbacker`    | `address`             | Address of the callback contract.                    |
+    | `callback_args` | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5), such as `min_amount`. |
 
     ??? quote "Source code"
 
@@ -794,20 +1053,31 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
         ```
 
 
+---
+
+
 ## **Adjusting Existing Loans**
+
+An already existing loan can be managed in different ways:
+
+- `add_collateral`: Adding more collateral.
+- `remove_collateral`: Removing collateral.
+- `borrow_more`: Borrowing more assets.
+- `liquidate`: Partially or fully liquidating a position.
+
+
 
 ### `add_collateral` 
 !!! description "`Controller.add_collateral(collateral: uint256, _for: address = msg.sender):`"
 
-    Function to add extra collateral to a position.
+    Function to add extra collateral to an existing loan.
 
     Emits: `UserState` and `Borrow`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `collateral` |  `uint256` |  Amount of collateral to add |
-    | `_for` |  `address` | Address to add collateral for |
-
+    | Input        | Type      | Description                    |
+    | ------------ | --------- | ------------------------------ |
+    | `collateral` | `uint256` | Amount of collateral to add.   |
+    | `_for`       | `address` | Address to add collateral for. Defaults to `msg.sender`. |
 
     ??? quote "Source code"
 
@@ -992,15 +1262,14 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 ### `remove_collateral`
 !!! description "`Controller.remove_collateral(collateral: uint256, use_eth: bool = True):`"
 
-    Function to remove collateral from a position.
+    Function to remove collateral from an existing loan.
 
     Emits: `UserState` and `RemoveCollateral`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `collateral` |  `uint256` |  Amount of collateral to remove |
-    | `use_eth` |  `bool` |  Whether to use wrapping/unwrapping if collateral is ETH; defaults to `True` |
-
+    | Input        | Type      | Description                                                |
+    | ------------ | --------- | ---------------------------------------------------------- |
+    | `collateral` | `uint256` | Amount of collateral to remove.                            |
+    | `use_eth`    | `bool`    | Whether to use wrapping/unwrapping if collateral is ETH; defaults to `True`. |
 
     ??? quote "Source code"
 
@@ -1189,15 +1458,14 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 ### `borrow_more`
 !!! description "`Controller.borrow_more(collateral: uint256, debt: uint256):`"
 
-    Function to borrow more stablecoins while adding more collateral (not necessary).
+    Function to borrow more assets while adding more collateral (not necessary).
 
     Emits: `UserState` and `Borrow`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `collateral` |  `uint256` |  Amount of collateral to add |
-    | `debt` |  `uint256` |  Amount of debt to take |
-
+    | Input        | Type      | Description                      |
+    | ------------ | --------- | -------------------------------- |
+    | `collateral` | `uint256` | Amount of collateral to add.     |
+    | `debt`       | `uint256` | Amount of debt to take.          |
 
     ??? quote "Source code"
 
@@ -1381,19 +1649,101 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
         ```
 
 
+### `health_calculator`
+!!! description "`Controller.health_calculator(user: address, d_collateral: int256, d_debt: int256, full: bool, N: uint256 = 0) -> int256:`"
+
+    Function to predict the health of `user` after changing collateral by `d_collateral` and/or debt by `d_debt`.
+
+    Returns: health (`int256`).
+
+    | Input          | Type      | Description                                  |
+    | -------------- | --------- | -------------------------------------------- |
+    | `user`         | `address` | Address of the user.                         |
+    | `d_collateral` | `int256`  | Change in collateral amount.                 |
+    | `d_debt`       | `int256`  | Change in debt amount.                       |
+    | `full`         | `bool`    | Weather to take into account the price difference above the highest user's band |
+    | `N`            | `uint256` | Number of bands in case loan does not exist yet. |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @external
+        @view
+        @nonreentrant('lock')
+        def health_calculator(user: address, d_collateral: int256, d_debt: int256, full: bool, N: uint256 = 0) -> int256:
+            """
+            @notice Health predictor in case user changes the debt or collateral
+            @param user Address of the user
+            @param d_collateral Change in collateral amount (signed)
+            @param d_debt Change in debt amount (signed)
+            @param full Whether it's a 'full' health or not
+            @param N Number of bands in case loan doesn't yet exist
+            @return Signed health value
+            """
+            ns: int256[2] = AMM.read_user_tick_numbers(user)
+            debt: int256 = convert(self._debt_ro(user), int256)
+            n: uint256 = N
+            ld: int256 = 0
+            if debt != 0:
+                ld = convert(self.liquidation_discounts[user], int256)
+                n = convert(unsafe_add(unsafe_sub(ns[1], ns[0]), 1), uint256)
+            else:
+                ld = convert(self.liquidation_discount, int256)
+                ns[0] = max_value(int256)  # This will trigger a "re-deposit"
+
+            n1: int256 = 0
+            collateral: int256 = 0
+            x_eff: int256 = 0
+            debt += d_debt
+            assert debt > 0, "Non-positive debt"
+
+            active_band: int256 = AMM.active_band_with_skip()
+
+            if ns[0] > active_band and (d_collateral != 0 or d_debt != 0):  # re-deposit
+                collateral = convert(AMM.get_sum_xy(user)[1] * COLLATERAL_PRECISION, int256) + d_collateral
+                n1 = self._calculate_debt_n1(convert(collateral, uint256), convert(debt, uint256), n)
+
+            else:
+                n1 = ns[0]
+                x_eff = convert(AMM.get_x_down(user) * 10**18, int256)
+
+            p0: int256 = convert(AMM.p_oracle_up(n1), int256)
+            if ns[0] > active_band:
+                x_eff = convert(self.get_y_effective(convert(collateral, uint256), n, 0), int256) * p0
+
+            health: int256 = unsafe_div(x_eff, debt)
+            health = health - unsafe_div(health * ld, 10**18) - 10**18
+
+            if full:
+                if n1 > active_band:  # We are not in liquidation mode
+                    p_diff: int256 = max(p0, convert(AMM.price_oracle(), int256)) - p0
+                    if p_diff > 0:
+                        health += unsafe_div(p_diff * collateral, debt)
+
+            return health
+        ```
+
+    === "Example"
+        ```shell
+        >>> Controller.health_calculator(trader, 10**18, 10**22, True, 0)
+        5026488624797598934
+        >>> Controller.health_calculator(trader, 10**18, 10**22, False, 0)
+        40995665483999083
+        ```
+
+
 ### `liquidate`
 !!! description "`Controller.liquidate(user: address, min_x: uint256, use_eth: bool = True):`"
 
     Function to perform a bad liquidation (or self-liquidation) of `user` if `health` is not good.
 
-    Emits: `UserState`, `Repay` and `Liquidate` 
+    Emits: `UserState`, `Repay`, and `Liquidate`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` |  Address to be liquidated |
-    | `min_x` |  `uint256` |  Minimal amount of stablecoin to receive (to avoid liquidators being sandwiched) |
-    | `use_eth` |  `bool` | Use wrapping/unwrapping if collateral is ETH  |
-
+    | Input    | Type      | Description                                                          |
+    | -------- | --------- | -------------------------------------------------------------------- |
+    | `user`   | `address` | Address to be liquidated.                                           |
+    | `min_x`  | `uint256` | Minimal amount of asset to receive (to avoid liquidators being sandwiched). |
+    | `use_eth`| `bool`    | Use wrapping/unwrapping if collateral is ETH.                        |
 
     ??? quote "Source code"
 
@@ -1621,19 +1971,18 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 ### `liquidate_extended`
 !!! description "`Controller.liquidate_extended(user: address, min_x: uint256, frac: uint256, use_eth: bool, callbacker: address, callback_args: DynArray[uint256,5]):`"
 
-    Extended function to perform a bad liquidation (or self-liquidation) of `user` if `health` is not good.
+    Extended function to perform a bad liquidation (or self-liquidation) of `user` if `health` is not good using callbacks.
 
     Emits: `Repay` and `Liquidate`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` |  Address to be liquidated |
-    | `min_x` |  `uint256` |  Minimal amount of stablecoin to receive (to avoid liquidators being sandwiched) |
-    | `frac` |  `uint256` | Fraction to liquidate; 100% = 10**18  |
-    | `use_eth` |  `bool` | Use wrapping/unwrapping if collateral is ETH  |
-    | `callbacker` |  `bool` | Address of the callback contract  |
-    | `callback_args` |  `DynArray[uint256,5]` |  Extra arguments for the callback (up to 5) such as `min_amount` |
-
+    | Input           | Type                  | Description                                                                |
+    | --------------- | --------------------- | -------------------------------------------------------------------------- |
+    | `user`          | `address`             | Address to be liquidated.                                                  |
+    | `min_x`         | `uint256`             | Minimal amount of assets to receive (to avoid liquidators being sandwiched). |
+    | `frac`          | `uint256`             | Fraction to liquidate; 100% = 10**18.                                      |
+    | `use_eth`       | `bool`                | Use wrapping/unwrapping if collateral is ETH.                              |
+    | `callbacker`    | `address`             | Address of the callback contract.                                          |
+    | `callback_args` | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5), such as `min_amount`.          |
 
     ??? quote "Source code"
 
@@ -1862,18 +2211,118 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
         ```
 
 
+### `tokens_to_liquidate`
+!!! description "`Controller.tokens_to_liquidate(user: address, frac: uint256 = 10 ** 18) -> uint256:`"
+
+    Function to calculate the amount of assets to have in a liquidator's wallet in order to liquidate a user.
+
+    Returns: amount of tokens needed (`uint256`).
+
+    | Input    | Type      | Description                                  |
+    | -------- | --------- | -------------------------------------------- |
+    | `user`   | `address` | Address of the user to liquidate.            |
+    | `frac`   | `uint256` | Fraction to liquidate; 100% = 10**18.        |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @view
+        @external
+        @nonreentrant('lock')
+        def tokens_to_liquidate(user: address, frac: uint256 = 10 ** 18) -> uint256:
+            """
+            @notice Calculate the amount of stablecoins to have in liquidator's wallet to liquidate a user
+            @param user Address of the user to liquidate
+            @param frac Fraction to liquidate; 100% = 10**18
+            @return The amount of stablecoins needed
+            """
+            health_limit: uint256 = 0
+            if user != msg.sender:
+                health_limit = self.liquidation_discounts[user]
+            f_remove: uint256 = self._get_f_remove(frac, health_limit)
+            stablecoins: uint256 = unsafe_div(AMM.get_sum_xy(user)[0] * f_remove, 10 ** 18)
+            debt: uint256 = unsafe_div(self._debt_ro(user) * frac, 10 ** 18)
+
+            return unsafe_sub(max(debt, stablecoins), stablecoins)
+        ```
+
+    === "Example"
+        ```shell
+        >>> Controller.tokens_to_liquidate(trader)
+        10000067519253003373620
+        ```
+
+
+### `users_to_liquidate`
+!!! description "`Controller.users_to_liquidate(_from: uint256=0, _limit: uint256=0) -> DynArray[Position, 1000]:`"
+
+    Getter for a dynamic array of users who can be hard-liquidated.
+
+    Returns: detailed info about positions of users that can be hard-liquidated (`DynArray[Position, 1000]`).
+
+    | Input     | Type     | Description                                        |
+    | --------- | -------- | -------------------------------------------------- |
+    | `_from`   | `uint256` | Loan index to start iteration from. Defaults to 0. |
+    | `_limit`  | `uint256` | Number of loans to look over. Defaults to 0.       |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @view
+        @external
+        @nonreentrant('lock')
+        def users_to_liquidate(_from: uint256=0, _limit: uint256=0) -> DynArray[Position, 1000]:
+            """
+            @notice Returns a dynamic array of users who can be "hard-liquidated".
+                    This method is designed for convenience of liquidation bots.
+            @param _from Loan index to start iteration from
+            @param _limit Number of loans to look over
+            @return Dynamic array with detailed info about positions of users
+            """
+            n_loans: uint256 = self.n_loans
+            limit: uint256 = _limit
+            if _limit == 0:
+                limit = n_loans
+            ix: uint256 = _from
+            out: DynArray[Position, 1000] = []
+            for i in range(10**6):
+                if ix >= n_loans or i == limit:
+                    break
+                user: address = self.loans[ix]
+                debt: uint256 = self._debt_ro(user)
+                health: int256 = self._health(user, debt, True, self.liquidation_discounts[user])
+                if health < 0:
+                    xy: uint256[2] = AMM.get_sum_xy(user)
+                    out.append(Position({
+                        user: user,
+                        x: xy[0],
+                        y: xy[1],
+                        debt: debt,
+                        health: health
+                    }))
+                ix += 1
+            return out
+        ```
+
+    === "Example"
+        ```shell
+        >>> Controller.users_to_liquidate(0)
+        []
+        ```
+
+
 ## **Loan Info Methods**
 
 ### `debt`
 !!! description "`Controller.debt(user: address) -> uint256:`"
 
-    Getter for the amount of debt for `user`. Decreases every block due to interest rate.
+    Getter for the amount of debt for `user`. Constantly increases due to the charged interest rate.
 
     Returns: debt (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` | User Address |
+    | Input  | Type      | Description      |
+    | ------ | --------- | ---------------- |
+    | `user` | `address` | User Address.    |
 
     ??? quote "Source code"
 
@@ -1921,9 +2370,9 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 ### `total_debt`
 !!! description "`Controller.total_debt() -> uint256:`"
 
-    Getter for the total debt of the controller (=total borrowed crvusd for the market).
+    Getter for the total debt of the controller.
 
-    Returns: total debt (`uint256`) of the market.
+    Returns: total debt (`uint256`).
 
     ??? quote "Source code"
 
@@ -1955,13 +2404,17 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
     Returns: true or false (`bool`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` | Address |
+    | Input  | Type      | Description   |
+    | ------ | --------- | ------------- |
+    | `user` | `address` | User address. |
 
     ??? quote "Source code"
 
         ```vyper
+        struct Loan:
+            initial_debt: uint256
+            rate_mul: uint256
+
         @external
         @view
         @nonreentrant('lock')
@@ -1984,14 +2437,13 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 ### `user_prices`
 !!! description "`Controller.user_prices(user: address) -> uint256[2]:`"
 
-    Getter for the highest price of the upper band and lowest price of the lower band the user has deposited in the AMM.
+    Getter for the highest price of the upper band and the lowest price of the lower band the user has deposited in the AMM. This is essentially the liquidation price range of the loan.
 
-    Returns: upper and lower band-price (`uint256`).
+    Returns: upper and lower band price (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` | User address |
-
+    | Input  | Type      | Description   |
+    | ------ | --------- | ------------- |
+    | `user` | `address` | User address. |
 
     ??? quote "Source code"
 
@@ -2093,14 +2545,14 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 ### `health`
 !!! description "`Controller.health(user: address, full: bool = False) -> int256:`"
 
-    Getter for the health of the position normalized to 1e18 for `user`.
+    Getter for the health of `user`'s loan normalized to 1e18. If health is lower than 0, the loan can be hard-liquidated.
 
     Returns: health (`int256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` |  User address |
-    | `full` |  `bool` | Weather to take into account the price difference above the highest user's band |
+    | Input  | Type      | Description                                                          |
+    | ------ | --------- | -------------------------------------------------------------------- |
+    | `user` | `address` | User address.                                                        |
+    | `full` | `bool`    | Whether to take into account the price difference above the highest user's band. |
 
     ??? quote "Source code"
 
@@ -2156,14 +2608,13 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 ### `user_state`
 !!! description "`Controller.user_state(user: address) -> uint256[4]:`"
 
-    Getter for the user state in one call.
+    Getter for `user`'s state.
 
-    Returns: collateral, stablecoin, debt and number of bands (`uint256`).
+    Returns: collateral, stablecoin, debt, and number of bands (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` | User address to return state for |
-
+    | Input  | Type      | Description                         |
+    | ------ | --------- | ----------------------------------- |
+    | `user` | `address` | User address to return state for.   |
 
     ??? quote "Source code"
 
@@ -2226,18 +2677,30 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 ### `loans`
 !!! description "`Controller.liquidation_discounts(arg0: uint256) -> uint256: view`"
 
-    Getter for the user that created loan at index `arg0`.
+    Getter for the user address that created a loan at index `arg0`. Only loans with debt greater than 0 are included. Liquidated ones get removed.
 
     Returns: user (`address`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `uint256` |  Index |
+    | Input  | Type      | Description  |
+    | ------ | --------- | ------------ |
+    | `arg0` | `uint256` | Loan index.  |
 
     ??? quote "Source code"
 
         ```vyper
         loans: public(address[2**64 - 1])  # Enumerate existing loans
+
+        @internal
+        def _remove_from_list(_for: address):
+            last_loan_ix: uint256 = self.n_loans - 1
+            loan_ix: uint256 = self.loan_ix[_for]
+            assert self.loans[loan_ix] == _for  # dev: should never fail but safety first
+            self.loan_ix[_for] = 0
+            if loan_ix < last_loan_ix:  # Need to replace
+                last_loan: address = self.loans[last_loan_ix]
+                self.loans[loan_ix] = last_loan
+                self.loan_ix[last_loan] = loan_ix
+            self.n_loans = last_loan_ix
         ```
 
     === "Example"
@@ -2252,13 +2715,13 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 ### `loan_ix`
 !!! description "`Controller.loan_ix(arg0: address) -> address: view`"
 
-    Getter for the posistion of the loan in the list.
+    Getter for the user's loan in the list. Only loans with debt greater than 0 are included. Liquidated ones get removed.
 
     Returns: index (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `address` |  User address |
+    | Input  | Type      | Description    |
+    | ------ | --------- | -------------- |
+    | `arg0` | `address` | User address.  |
 
     ??? quote "Source code"
 
@@ -2272,11 +2735,11 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
         21
         ```
 
-     
+
 ### `n_loans`
 !!! description "`Controller.n_loans() -> uint256: view`"
 
-    Getter for the number of loans.
+    Getter for the total number of existing loans. This variable is increased by one when a loan is created and decreased by one when a loan is fully repaid.
 
     Returns: total loans (`uint256`).
 
@@ -2288,6 +2751,18 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
 
         ```vyper
         n_loans: public(uint256)  # Number of nonzero loans
+
+        @internal
+        def _remove_from_list(_for: address):
+            last_loan_ix: uint256 = self.n_loans - 1
+            loan_ix: uint256 = self.loan_ix[_for]
+            assert self.loans[loan_ix] == _for  # dev: should never fail but safety first
+            self.loan_ix[_for] = 0
+            if loan_ix < last_loan_ix:  # Need to replace
+                last_loan: address = self.loans[last_loan_ix]
+                self.loans[loan_ix] = last_loan
+                self.loan_ix[last_loan] = loan_ix
+            self.n_loans = last_loan_ix
         ```
 
     === "Example"
@@ -2297,455 +2772,21 @@ Before doing that, users can utilize some functions to pre-calculate metrics: [L
         ```
 
 
-
-## **Useful Loan Calculations**
-The following functions can be used to pre-calculate metrics before creating a loan.
-
-
-### `max_borrowable`
-!!! description "`Controller.max_borrowable(collateral: uint256, N: uint256) -> uint256:`"
-
-    Function to calculate the maximum amount of crvUSD that can be borrowed against `collateral` using `N`-bands. If the max_borrowable amount exceeds the crvUSD balance of the controller (essentially, what is left to be borrowed), it returns the amount that remains available for borrowing.
-
-    Returns: maximum borrowable amount (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `collateral` |  `uint256` | Collateral amount |
-    | `N` |  `uint256` | Number of bands |
-
-    ??? quote "Source code"
-
-        ```vyper
-        @internal
-        @view
-        def get_y_effective(collateral: uint256, N: uint256, discount: uint256) -> uint256:
-            """
-            @notice Intermediary method which calculates y_effective defined as x_effective / p_base,
-                    however discounted by loan_discount.
-                    x_effective is an amount which can be obtained from collateral when liquidating
-            @param collateral Amount of collateral to get the value for
-            @param N Number of bands the deposit is made into
-            @param discount Loan discount at 1e18 base (e.g. 1e18 == 100%)
-            @return y_effective
-            """
-            # x_effective = sum_{i=0..N-1}(y / N * p(n_{n1+i})) =
-            # = y / N * p_oracle_up(n1) * sqrt((A - 1) / A) * sum_{0..N-1}(((A-1) / A)**k)
-            # === d_y_effective * p_oracle_up(n1) * sum(...) === y_effective * p_oracle_up(n1)
-            # d_y_effective = y / N / sqrt(A / (A - 1))
-            # d_y_effective: uint256 = collateral * unsafe_sub(10**18, discount) / (SQRT_BAND_RATIO * N)
-            # Make some extra discount to always deposit lower when we have DEAD_SHARES rounding
-            d_y_effective: uint256 = collateral * unsafe_sub(
-                10**18, min(discount + (DEAD_SHARES * 10**18) / max(collateral / N, DEAD_SHARES), 10**18)
-            ) / (SQRT_BAND_RATIO * N)
-            y_effective: uint256 = d_y_effective
-            for i in range(1, MAX_TICKS_UINT):
-                if i == N:
-                    break
-                d_y_effective = unsafe_div(d_y_effective * Aminus1, A)
-                y_effective = unsafe_add(y_effective, d_y_effective)
-            return y_effective
-
-        @external
-        @view
-        @nonreentrant('lock')
-        def max_borrowable(collateral: uint256, N: uint256) -> uint256:
-            """
-            @notice Calculation of maximum which can be borrowed (details in comments)
-            @param collateral Collateral amount against which to borrow
-            @param N number of bands to have the deposit into
-            @return Maximum amount of stablecoin to borrow
-            """
-            # Calculation of maximum which can be borrowed.
-            # It corresponds to a minimum between the amount corresponding to price_oracle
-            # and the one given by the min reachable band.
-            #
-            # Given by p_oracle (perhaps needs to be multiplied by (A - 1) / A to account for mid-band effects)
-            # x_max ~= y_effective * p_oracle
-            #
-            # Given by band number:
-            # if n1 is the lowest empty band in the AMM
-            # xmax ~= y_effective * amm.p_oracle_up(n1)
-            #
-            # When n1 -= 1:
-            # p_oracle_up *= A / (A - 1)
-
-            y_effective: uint256 = self.get_y_effective(collateral * COLLATERAL_PRECISION, N, self.loan_discount)
-
-            x: uint256 = unsafe_sub(max(unsafe_div(y_effective * self.max_p_base(), 10**18), 1), 1)
-            x = unsafe_div(x * (10**18 - 10**14), 10**18)  # Make it a bit smaller
-            return min(x, STABLECOIN.balanceOf(self))  # Cannot borrow beyond the amount of coins Controller has
-        ```
-
-    === "Example"
-        ```shell
-        >>> Controller.max_borrowable(10**18, 5)
-        37965133715410776274198
-        >>> Controller.max_borrowable(10**18, 25)
-        34421752243813852608681
-        >>> Controller.max_borrowable(10**18, 50)
-        30597863183498027832984
-        ```
-
-    !!!note
-        The maximum amount that can be borrowed is dependent on the number of bands (N) used. The more bands there are, the lower the maximum borrowable amount.
-        Fewer bands also result in higher losses when the position is in soft-liquidation.
-
-
-### `min_collateral`
-!!! description "`Controller.min_collateral(debt: uint256, N: uint256) -> uint256:`"
-
-    Function to calculate the minimum amount of collateral that is necessary to support `debt` using `N`-bands.
-
-    Returns: minimal collateral amount (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `debt` |  `uint256` |  Debt |
-    | `N` |  `uint256` | Number of bands |
-
-    ??? quote "Source code"
-
-        ```vyper
-        @internal
-        @view
-        def get_y_effective(collateral: uint256, N: uint256, discount: uint256) -> uint256:
-            """
-            @notice Intermediary method which calculates y_effective defined as x_effective / p_base,
-                    however discounted by loan_discount.
-                    x_effective is an amount which can be obtained from collateral when liquidating
-            @param collateral Amount of collateral to get the value for
-            @param N Number of bands the deposit is made into
-            @param discount Loan discount at 1e18 base (e.g. 1e18 == 100%)
-            @return y_effective
-            """
-            # x_effective = sum_{i=0..N-1}(y / N * p(n_{n1+i})) =
-            # = y / N * p_oracle_up(n1) * sqrt((A - 1) / A) * sum_{0..N-1}(((A-1) / A)**k)
-            # === d_y_effective * p_oracle_up(n1) * sum(...) === y_effective * p_oracle_up(n1)
-            # d_y_effective = y / N / sqrt(A / (A - 1))
-            # d_y_effective: uint256 = collateral * unsafe_sub(10**18, discount) / (SQRT_BAND_RATIO * N)
-            # Make some extra discount to always deposit lower when we have DEAD_SHARES rounding
-            d_y_effective: uint256 = collateral * unsafe_sub(
-                10**18, min(discount + (DEAD_SHARES * 10**18) / max(collateral / N, DEAD_SHARES), 10**18)
-            ) / (SQRT_BAND_RATIO * N)
-            y_effective: uint256 = d_y_effective
-            for i in range(1, MAX_TICKS_UINT):
-                if i == N:
-                    break
-                d_y_effective = unsafe_div(d_y_effective * Aminus1, A)
-                y_effective = unsafe_add(y_effective, d_y_effective)
-            return y_effective
-
-        @external
-        @view
-        @nonreentrant('lock')
-        def min_collateral(debt: uint256, N: uint256) -> uint256:
-            """
-            @notice Minimal amount of collateral required to support debt
-            @param debt The debt to support
-            @param N Number of bands to deposit into
-            @return Minimal collateral required
-            """
-            # Add N**2 to account for precision loss in multiple bands, e.g. N * 1 / (y/N) = N**2 / y
-            return unsafe_div(unsafe_div(debt * 10**18 / self.max_p_base() * 10**18 / self.get_y_effective(10**18, N, self.loan_discount) + N * (N + 2 * DEAD_SHARES), COLLATERAL_PRECISION) * 10**18, 10**18 - 10**14)
-        ```
-
-    === "Example"
-        ```shell
-        >>> Controller.min_collateral(10**22, 5)
-        263399572749066565
-        >>> Controller.min_collateral(10**22, 25)
-        290513972942760489
-        >>> Controller.min_collateral(10**22, 50)
-        326820207673727834
-        ```
-
-
-### `calculate_debt_n1`
-!!! description "`Controller.calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256) -> int256:`"
-
-    Getter method to calculate the upper band number for the deposit to sit in to support the give debt.
-
-    Returns: upper band n1 (`int256`) to deposit the collateral into.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `collateral` |  `uint256` |  Amount of collateral (at its native precision) |
-    | `debt` |  `uint256` | Amount of requested debt |
-    | `N` |  `uint256` | Number of bands to deposit into |
-
-    !!!note
-        This call reverts if the requested debt is too high.
-
-    ??? quote "Source code"
-
-        ```vyper
-        @internal
-        @view
-        def _calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256) -> int256:
-            """
-            @notice Calculate the upper band number for the deposit to sit in to support
-                    the given debt. Reverts if requested debt is too high.
-            @param collateral Amount of collateral (at its native precision)
-            @param debt Amount of requested debt
-            @param N Number of bands to deposit into
-            @return Upper band n1 (n1 <= n2) to deposit into. Signed integer
-            """
-            assert debt > 0, "No loan"
-            n0: int256 = AMM.active_band()
-            p_base: uint256 = AMM.p_oracle_up(n0)
-
-            # x_effective = y / N * p_oracle_up(n1) * sqrt((A - 1) / A) * sum_{0..N-1}(((A-1) / A)**k)
-            # === d_y_effective * p_oracle_up(n1) * sum(...) === y_effective * p_oracle_up(n1)
-            # d_y_effective = y / N / sqrt(A / (A - 1))
-            y_effective: uint256 = self.get_y_effective(collateral * COLLATERAL_PRECISION, N, self.loan_discount)
-            # p_oracle_up(n1) = base_price * ((A - 1) / A)**n1
-
-            # We borrow up until min band touches p_oracle,
-            # or it touches non-empty bands which cannot be skipped.
-            # We calculate required n1 for given (collateral, debt),
-            # and if n1 corresponds to price_oracle being too high, or unreachable band
-            # - we revert.
-
-            # n1 is band number based on adiabatic trading, e.g. when p_oracle ~ p
-            y_effective = y_effective * p_base / (debt + 1)  # Now it's a ratio
-
-            # n1 = floor(log2(y_effective) / self.logAratio)
-            # EVM semantics is not doing floor unlike vyper, so we do this
-            assert y_effective > 0, "Amount too low"
-            n1: int256 = self.log2(y_effective)  # <- switch to faster ln() XXX?
-            if n1 < 0:
-                n1 -= LOG2_A_RATIO - 1  # This is to deal with vyper's rounding of negative numbers
-            n1 /= LOG2_A_RATIO
-
-            n1 = min(n1, 1024 - convert(N, int256)) + n0
-            if n1 <= n0:
-                assert AMM.can_skip_bands(n1 - 1), "Debt too high"
-
-            # Let's not rely on active_band corresponding to price_oracle:
-            # this will be not correct if we are in the area of empty bands
-            assert AMM.p_oracle_up(n1) < AMM.price_oracle(), "Debt too high"
-
-            return n1
-
-            @external
-            @view
-            @nonreentrant('lock')
-            def calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256) -> int256:
-                """
-                @notice Calculate the upper band number for the deposit to sit in to support
-                        the given debt. Reverts if requested debt is too high.
-                @param collateral Amount of collateral (at its native precision)
-                @param debt Amount of requested debt
-                @param N Number of bands to deposit into
-                @return Upper band n1 (n1 <= n2) to deposit into. Signed integer
-                """
-                return self._calculate_debt_n1(collateral, debt, N)
-        ```
-
-    === "Example"
-        ```shell
-        >>> Controller.calculate_debt_n1(10**18, 10**22, 5)
-        85
-        >>> Controller.calculate_debt_n1(10**18, 10**22, 25)
-        76
-        ```
-
-
-### `health_calculator`
-!!! description "`Controller.health_calculator(user: address, d_collateral: int256, d_debt: int256, full: bool, N: uint256 = 0) -> int256:`"
-
-    Function to predict the health after changing collateral (`d_collateral`) or debt (`d_debt`).
-
-    Returns: health value (`int256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` |  Address of the user |
-    | `d_collateral` |  `int256` | Change in collateral amount |
-    | `d_debt` |  `int256` | Change in debt amount |
-    | `full` |  `bool` | Weather it is a 'full' health or not |
-    | `N` |  `uint256` | Number of bands in case loan does not exist yet |
-
-
-    ??? quote "Source code"
-
-        ```vyper
-        @external
-        @view
-        @nonreentrant('lock')
-        def health_calculator(user: address, d_collateral: int256, d_debt: int256, full: bool, N: uint256 = 0) -> int256:
-            """
-            @notice Health predictor in case user changes the debt or collateral
-            @param user Address of the user
-            @param d_collateral Change in collateral amount (signed)
-            @param d_debt Change in debt amount (signed)
-            @param full Whether it's a 'full' health or not
-            @param N Number of bands in case loan doesn't yet exist
-            @return Signed health value
-            """
-            ns: int256[2] = AMM.read_user_tick_numbers(user)
-            debt: int256 = convert(self._debt_ro(user), int256)
-            n: uint256 = N
-            ld: int256 = 0
-            if debt != 0:
-                ld = convert(self.liquidation_discounts[user], int256)
-                n = convert(unsafe_add(unsafe_sub(ns[1], ns[0]), 1), uint256)
-            else:
-                ld = convert(self.liquidation_discount, int256)
-                ns[0] = max_value(int256)  # This will trigger a "re-deposit"
-
-            n1: int256 = 0
-            collateral: int256 = 0
-            x_eff: int256 = 0
-            debt += d_debt
-            assert debt > 0, "Non-positive debt"
-
-            active_band: int256 = AMM.active_band_with_skip()
-
-            if ns[0] > active_band and (d_collateral != 0 or d_debt != 0):  # re-deposit
-                collateral = convert(AMM.get_sum_xy(user)[1] * COLLATERAL_PRECISION, int256) + d_collateral
-                n1 = self._calculate_debt_n1(convert(collateral, uint256), convert(debt, uint256), n)
-
-            else:
-                n1 = ns[0]
-                x_eff = convert(AMM.get_x_down(user) * 10**18, int256)
-
-            p0: int256 = convert(AMM.p_oracle_up(n1), int256)
-            if ns[0] > active_band:
-                x_eff = convert(self.get_y_effective(convert(collateral, uint256), n, 0), int256) * p0
-
-            health: int256 = unsafe_div(x_eff, debt)
-            health = health - unsafe_div(health * ld, 10**18) - 10**18
-
-            if full:
-                if n1 > active_band:  # We are not in liquidation mode
-                    p_diff: int256 = max(p0, convert(AMM.price_oracle(), int256)) - p0
-                    if p_diff > 0:
-                        health += unsafe_div(p_diff * collateral, debt)
-
-            return health
-        ```
-
-    === "Example"
-        ```shell
-        >>> Controller.health_calculator(trader, 10**18, 10**22, True, 0)
-        5026488624797598934
-        >>> Controller.health_calculator(trader, 10**18, 10**22, False, 0)
-        40995665483999083
-        ```
-
-
-### `tokens_to_liquidate`
-!!! description "`Controller.tokens_to_liquidate(user: address, frac: uint256 = 10 ** 18) -> uint256:`"
-
-    Function to calculate the amount of stablecoins to have in a liquidator's wallet in order to liquidate a user.
-
-    Returns: amount (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `user` |  `address` |  Address of the user to liquidate |
-    | `frac` |  `uint256` | Fraction to liquidate; 100% = 10**18|
-
-    ??? quote "Source code"
-
-        ```vyper
-        @view
-        @external
-        @nonreentrant('lock')
-        def tokens_to_liquidate(user: address, frac: uint256 = 10 ** 18) -> uint256:
-            """
-            @notice Calculate the amount of stablecoins to have in liquidator's wallet to liquidate a user
-            @param user Address of the user to liquidate
-            @param frac Fraction to liquidate; 100% = 10**18
-            @return The amount of stablecoins needed
-            """
-            health_limit: uint256 = 0
-            if user != msg.sender:
-                health_limit = self.liquidation_discounts[user]
-            f_remove: uint256 = self._get_f_remove(frac, health_limit)
-            stablecoins: uint256 = unsafe_div(AMM.get_sum_xy(user)[0] * f_remove, 10 ** 18)
-            debt: uint256 = unsafe_div(self._debt_ro(user) * frac, 10 ** 18)
-
-            return unsafe_sub(max(debt, stablecoins), stablecoins)
-        ```
-
-    === "Example"
-        ```shell
-        >>> Controller.tokens_to_liquidate(trader)
-        10000067519253003373620
-        ```
-
-
-### `users_to_liquidate`
-!!! description "`Controller.users_to_liquidate(_from: uint256=0, _limit: uint256=0) -> DynArray[Position, 1000]:`"
-
-    Getter for a dynamic array of users who can be "hard-liquidated".
-
-    Returns: dynamic array (`DynArray[Position, 1000]`) with detailed info about positions of users.
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_from` |  `uin256` |  Loan index to start iteration from |
-    | `_limit` |  `uin256` | Number of loans to look over |
-
-    !!!note
-        `_from` and `_limit` default to 0 if no input is given when calling the function.
-
-    ??? quote "Source code"
-
-        ```vyper
-        @view
-        @external
-        @nonreentrant('lock')
-        def users_to_liquidate(_from: uint256=0, _limit: uint256=0) -> DynArray[Position, 1000]:
-            """
-            @notice Returns a dynamic array of users who can be "hard-liquidated".
-                    This method is designed for convenience of liquidation bots.
-            @param _from Loan index to start iteration from
-            @param _limit Number of loans to look over
-            @return Dynamic array with detailed info about positions of users
-            """
-            n_loans: uint256 = self.n_loans
-            limit: uint256 = _limit
-            if _limit == 0:
-                limit = n_loans
-            ix: uint256 = _from
-            out: DynArray[Position, 1000] = []
-            for i in range(10**6):
-                if ix >= n_loans or i == limit:
-                    break
-                user: address = self.loans[ix]
-                debt: uint256 = self._debt_ro(user)
-                health: int256 = self._health(user, debt, True, self.liquidation_discounts[user])
-                if health < 0:
-                    xy: uint256[2] = AMM.get_sum_xy(user)
-                    out.append(Position({
-                        user: user,
-                        x: xy[0],
-                        y: xy[1],
-                        debt: debt,
-                        health: health
-                    }))
-                ix += 1
-            return out
-        ```
-
-    === "Example"
-        ```shell
-        >>> Controller.users_to_liquidate(0)
-        []
-        ```
+---
 
 
 # **Fees**
 
-There are two of fees:
-1. Borrowing-based fee: interest rate
-2. AMM-based fee: swap fee for trades within the AMM
+*There are two types of fees:*
 
-While the borrowing-based fee is determined by the MonetaryPolicy Contract, the AMM fee can be set by the DAO. Currently, the AMM fees are set to 0.6% with an admin_fee of 0, meaning all the generated fees from trades within the AMM go to the liquidity providers who are essentially the borrowers.
+1. `Borrowing-based fee`: Borrowers pay **interest** on the debt borrowed.
+2. `AMM-based fee`: **Swap fee** for trades within the AMM. There is also the option for an **admin fee**, but at the time of writing, admin fees are set to zero[^2], meaning all swap fees go to the liquidity providers, who are the borrowers themselves.
+
+[^2]: Technically, admin fees within the AMMs are not zero. Currently, the admin fees of the AMMs are set to 1 (= 1/1e18), making them virtually nonexistent. The reason for this is to increase oracle manipulation resistance.
+
+Both fees can be determined by the DAO. To change the borrowing-based fee, a new monetary policy contract needs to be set via [`set_monetary_policy`](#set_monetary_policy).
+Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admin fees through [`set_admin_fee`](#set_amm_admin_fee).
+
 
 
 ### `admin_fees`
@@ -2802,15 +2843,16 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 ### `set_amm_fee`
 !!! description "`Controller.set_amm_fee(fee: uint256):`"
 
-    Function to set the AMM fee.
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the `Factory`.
 
-    !!!note 
-        This function can only be called by the factory admin. The new fee value should be in between `MIN_FEE` and `MAX_FEE`.
+    Function to set the AMM fee. The new fee value should be between `MIN_FEE` (10**6) and `MAX_FEE` (10**17).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `fee` |  `uint256` | New Fee |
+    Emits: `SetFee`
 
+    | Input | Type      | Description   |
+    | ----- | --------- | ------------- |
+    | `fee` | `uint256` | New fee value. |
 
     ??? quote "Source code"
 
@@ -2857,30 +2899,27 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
         >>> Controller.set_amm_fee(6000000000000000):
         ```
 
-    !!!note
-        The current `fee` can be obtained by reading the `fee` variable on the corresponding AMM.
-
 
 ### `set_amm_admin_fee`
 !!! description "`Controller.set_amm_admin_fee(fee: uint256):`"
 
-    Function to set the AMM admin fee.
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the `Factory`.
 
-    !!!note 
-        This function can only be called by the factory admin. The new fee value should be in between `MIN_ADMIN_FEE` and `MAX_ADMIN_FEE`.
+    Function to set the AMM admin fee. Maximum admin fee is 50%.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `fee` |  `uint256` | New Fee  |
+    Emits: `SetAdminFee`
 
+    | Input | Type      | Description    |
+    | ----- | --------- | -------------- |
+    | `fee` | `uint256` | New admin fee. |
 
     ??? quote "Source code"
 
         === "Controller.vy"
 
             ```vyper
-            MIN_FEE: constant(uint256) = 10**6  # 1e-12, still needs to be above 0
-            MAX_FEE: constant(uint256) = 10**17  # 10%
+            MAX_ADMIN_FEE: constant(uint256) = 5 * 10**17  # 50%
 
             # AMM has nonreentrant decorator
             @external
@@ -2919,23 +2958,23 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
         >>> Controller.set_amm_admin_fee(1):
         ```
 
-    !!!note
-        The current AMM `admin_fee` can be obtained by reading the `admin_fee` variable on the corresponding AMM.
-
 
 ### `collect_fees`
 !!! description "`Controller.collect_fees():`"
 
-    Function to **collects all fees**, including **Borrwing-based fees (interest rate)** and **AMM-based fees (swap fee)**(if applicable). If there are any AMM-based fees (represented by `admin_fee_x` and/or `admin_fee_y`), the `reset_admin_fee()` method will be invoked, which resets these variables to zero.
+    Function to collects all fees, including borrwing-based fees and AMM-based fees (if there are any). Collected fees are sent to the `fee_receiver` specified in the [Factory](./factory/overview.md#fee-receiver).
 
-    !!!note
-        The collected fees will be sent to the `fee_receiver` as specified in the [factory contract](./factory/overview.md#fee-receiver).
+    Emits: `CollectFees`
 
     ??? quote "Source code"
 
         === "Controller.vy"
 
             ```vyper
+            event CollectFees:
+                amount: uint256
+                new_supply: uint256
+
             @external
             @nonreentrant('lock')
             def collect_fees() -> uint256:
@@ -3004,7 +3043,12 @@ While the borrowing-based fee is determined by the MonetaryPolicy Contract, the 
 
 
 # **Monetary Policy**
-MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Documenatation](../crvUSD/monetarypolicy.md).
+
+Each controller has a monetary policy contract. This contract is responsible for the interest rates within the markets. 
+
+While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depend on several factors such as the price of crvUSD, pegkeeper debt, etc., the monetary policy for lending markets is solely based on a [semi-log monetary policy](../lending/contracts/semilog-mp.md) which determines the rate based on the utilization of the assets.
+
+
 
 ### `monetary_policy`
 !!! description "`Controller.monetary_policy() -> address: view`"
@@ -3036,9 +3080,9 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     Emits: `SetMonetaryPolicy`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `monetary_policy` |  `address` |  Monetary policy contract |
+    | Input             | Type      | Description |
+    | ----------------- | --------- | ----------- |
+    | `monetary_policy` | `address` | Monetary policy contract. |
 
     ??? quote "Source code"
 
@@ -3088,9 +3132,6 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
     Getter of the factory contract of the controller.
 
     Returns: factory contract (`address`). 
-
-    !!!note
-        `factory` is an immutable variable; hence, it cannot be changed.
 
     ??? quote "Source code"
 
@@ -3160,9 +3201,6 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
     Getter of the AMM contract of the controller.
 
     Returns: AMM contract (`address`). 
-
-    !!!note
-        `amm` is an immutable variable; hence, it cannot be changed.
 
     ??? quote "Source code"
 
@@ -3293,11 +3331,6 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 
     Returns: price (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | Pool address |
-
-
     ??? quote "Source code"
 
         === "Controller.vy"
@@ -3370,13 +3403,13 @@ MonetaryPolicy determines the interest rate for the market: [MonetaryPolicy Docu
 ### `liquidation_discounts`
 !!! description "`Controller.liquidation_discounts(arg0: address) -> uint256: view`"
 
-    Getter method for the liquidation discount of a user.
+    Getter method for the liquidation discount of a user. This value is used to discount the collateral for calculating the recoverable value upon liquidation at the current market price. The discount is factored into the health calculation.
 
     Returns: liquidation discount (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `address` |  Address |
+    | Input  | Type      | Description   |
+    | ------ | --------- | ------------- |
+    | `arg0` | `address` | User Address. |
 
     ??? quote "Source code"
 

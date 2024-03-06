@@ -15,6 +15,7 @@ plugins:
 
 # extension 
 markdown_extensions:
+  - footnotes
   - def_list
   - attr_list
   - md_in_html
@@ -73,6 +74,7 @@ theme:
     repo: simple/github
   features:
     - content.code.annotate
+    - content.footnote.tooltips
     - navigation.indexes
     - navigation.path
     - navigation.top
@@ -175,13 +177,21 @@ nav:
     - Controller: crvUSD/controller.md
     - LLAMMA: crvUSD/amm.md
     - PegKeeper: crvUSD/pegkeeper.md
-    - MonetaryPolicy: crvUSD/monetarypolicy.md
-    - PriceAggregator: crvUSD/priceaggregator.md
+    - Monetary Policy: crvUSD/monetarypolicy.md
+    - Price Aggregator: crvUSD/priceaggregator.md
     - Oracle: crvUSD/oracle.md
     - Factory: 
       - Overview: crvUSD/factory/overview.md
       - Deployer API: crvUSD/factory/deployer-api.md
       - Admin Controls: crvUSD/factory/admin-controls.md
+
+
+  - Curve Lending:
+    - Overview: lending/overview.md
+    - Vault: lending/contracts/vault.md
+    - LLAMMA and Controller: lending/contracts/controller-llamma.md
+    - OneWay Lending Factory: lending/contracts/oneway-factory.md
+    - SemiLog Monetary Policy: lending/contracts/semilog-mp.md
 
 
   - StableSwap Exchange:
