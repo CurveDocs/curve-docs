@@ -3,7 +3,7 @@ This section of the documentation is dedicated to offering a comprehensive overv
 ## **Deployed Components**
 
 | Chain | [Curve Dao](deployed-contracts.md#curve-dao) [Pool Registry](deployed-contracts.md#pool-registry) | [CRV](deployed-contracts.md#curve-dao) | [ Fee Burner](deployed-contracts.md#fee-burner) | [Curve Router](deployed-contracts.md#curve-router) | [Sidechain Gauges ](deployed-contracts.md#evm-sidechain-gauges)  | [Curve X-GOV ](deployed-contracts.md#curve-x-gov) | [Stableswap-NG](deployed-contracts.md#stableswap-ng) | [TwoCrypto-NG](deployed-contracts.md#twocrypto-ng) | [Tricrypto-NG](deployed-contracts.md#tricrypto-ng) | [StableCalcZap](deployed-contracts.md#stablecalczap) | [CryptoCalcZap](deployed-contracts.md#cryptocalczap) | [DepositAndStake Zap](deployed-contracts.md#depositandstake-zap) | [crvUSD](deployed-contracts.md#curve-stablecoin) | [lending (soon)](deployed-contracts.md#lending) |
-| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- | ----------- |
+| ----------- | ----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- |----------- | ----------- | ----------- |
 | :logos-ethereum: `Ethereum`       | x | x | x | x | x | x | x | x | enabled | x | x | x | mint |   |
 | :logos-arbitrum: `Arbitrum`       |   | x | x | x | x | x | x | x | disable, enabled | x | x | x | x |   |
 | :logos-optimism: `Optimism`       |   | x | x | x | x | x | x | x | disable, enabled | x | x | x | x |   |
@@ -23,5 +23,5 @@ This section of the documentation is dedicated to offering a comprehensive overv
 | `Linea`                           |   |   |   |   |   |   | x | x | disable, enabled |   |   |   |   |   |
 | :logos-scroll: `Scroll`           |   |   |   |   |   |   | x | x | disable, enabled |   |   |   |   |   |
 | :logos-aurora: `Aurora`           |   |   |   |   |   |   | x | x | disable, enabled | x | x |   |   |   |
-| :ogos-zksync: `zk-Sync`           |   |   |   |   |   |   | soon | soon | soon |   |   |   |   |
+| :logos-zksync: `zk-Sync`           |   |   |   |   |   |   | soon | soon | soon |   |   |   |   |
 | :logos-tron: `Tron`               |   |   |   |   |   |   | soon | soon | soon |   |   |   |   |
