@@ -162,7 +162,7 @@ A lending market **must always include crvUSD, either as collateral or as the bo
                 6000000000000000,                                   # fee
                 140000000000000016,                                 # loan_discount
                 110000000000000000,                                 # liquidation_discount
-                external price_oracle,                              # price_oracle
+                external price oracle,                              # price_oracle
                 "bobrCRV-long",                                     # name
                 0,                                                  # min_borrow_rate
                 1)                                                  # max_borrow_rate

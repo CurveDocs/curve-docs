@@ -1230,20 +1230,25 @@ For testing in production purposes, several contract deployments have taken plac
     **Implementation contracts are upgradable.** They can be either replaced or additional implementation contracts can be set. Therefore, please **always make sure to check the most recent ones**.
 
 
-| Contract Type           | Contract Address                                                         |
-| :---------------------: | :----------------------------------------------------------------------: |
-| `AMM implementation`    | [0x4f37395BdFbE3A0dca124ad3C9DbFe6A6cbc31D6](https://etherscan.io/address/0x4f37395BdFbE3A0dca124ad3C9DbFe6A6cbc31D6#code) |
-| `Controller implementation`            | [0x5473B1BcBbC45d38d8fBb50a18a73aFb8B0637A7](https://etherscan.io/address/0x5473B1BcBbC45d38d8fBb50a18a73aFb8B0637A7#code) |
-| `Vault implementation`            | [0x596F8E49acE6fC8e09B561972360DC216f1c2A1f](https://etherscan.io/address/0x596F8E49acE6fC8e09B561972360DC216f1c2A1f#code) |
-| `Pool price oracle implementation`            | [0x9164e210d123e6566DaF113136a73684C4AB01e2](https://etherscan.io/address/0x9164e210d123e6566DaF113136a73684C4AB01e2#code) |
-| `Monetary Policy Implementation`            | [0xa7E98815c0193E01165720C3abea43B885ae67FD](https://etherscan.io/address/0xa7E98815c0193E01165720C3abea43B885ae67FD#code) |
-| `Gauge Implementation`            | [0x00B71A425Db7C8B65a46CF39c23A188e10A2DE99](https://etherscan.io/address/0x00B71A425Db7C8B65a46CF39c23A188e10A2DE99#code) |
-| `OneWay Lending Factory`            | [0xc67a44D958eeF0ff316C3a7c9E14FB96f6DedAA3](https://etherscan.io/address/0xc67a44D958eeF0ff316C3a7c9E14FB96f6DedAA3#code) |
+| Contract Type                      | Contract Address                                                         |
+| :--------------------------------: | :----------------------------------------------------------------------: |
+| `AMM implementation`               | [0x4f37395BdFbE3A0dca124ad3C9DbFe6A6cbc31D6](https://etherscan.io/address/0x4f37395BdFbE3A0dca124ad3C9DbFe6A6cbc31D6) |
+| `Controller implementation`        | [0x5473B1BcBbC45d38d8fBb50a18a73aFb8B0637A7](https://etherscan.io/address/0x5473B1BcBbC45d38d8fBb50a18a73aFb8B0637A7) |
+| `Vault implementation`             | [0x596F8E49acE6fC8e09B561972360DC216f1c2A1f](https://etherscan.io/address/0x596F8E49acE6fC8e09B561972360DC216f1c2A1f) |
+| `Pool price oracle implementation` | [0x9164e210d123e6566DaF113136a73684C4AB01e2](https://etherscan.io/address/0x9164e210d123e6566DaF113136a73684C4AB01e2) |
+| `Monetary Policy Implementation`   | [0xa7E98815c0193E01165720C3abea43B885ae67FD](https://etherscan.io/address/0xa7E98815c0193E01165720C3abea43B885ae67FD) |
+| `Gauge Implementation`             | [0x00B71A425Db7C8B65a46CF39c23A188e10A2DE99](https://etherscan.io/address/0x00B71A425Db7C8B65a46CF39c23A188e10A2DE99) |
+| `OneWay Lending Factory`           | [0xc67a44D958eeF0ff316C3a7c9E14FB96f6DedAA3](https://etherscan.io/address/0xc67a44D958eeF0ff316C3a7c9E14FB96f6DedAA3) |
 
+---
 
-### **Lending Vaults**
+As the creation of lending markets is permissionless, listing all deployed vaults and their correpsonding contracts would exceed the scope of this section. The Factory contract has a [`market_count`](../lending/contracts/oneway-factory.md#market_count) variable which represents the total number of markets created, as well as a [`vaults(arg0: uint256)`](../lending/contracts/oneway-factory.md#vaults) which returns the vault address at a specific index.
 
-AMM, Controller and Price Oracle contracts of vaults and other variables can simply be queried via:
+*For more informations, please refer to the [Factory documentation](../lending/contracts/oneway-factory.md).*
+
+---
+
+AMM, Controller, and Price Oracle contracts and other variables of a vault can simply be queried:
 
 ```shell
 >>> Vault.amm()
@@ -1254,11 +1259,4 @@ AMM, Controller and Price Oracle contracts of vaults and other variables can sim
 '0xc17B0451E6d8C0f71297d0f174590632BE81163c'
 ```
 
-For more informations, please refer to the [Vault documentation](../lending/contracts/vault.md#contract-info-methods).
-
-
-| Vault Description      | Contract Address                                                         |
-| :---------------------: | :----------------------------------------------------------------------: |
-| `wstETH-long` | [0xE21C518a09b26Bf65B16767B97249385f12780d9](https://etherscan.io/address/0xE21C518a09b26Bf65B16767B97249385f12780d9#code) |
-| `CRV-long` | [0x67A18c18709C09D48000B321c6E1cb09F7181211](https://etherscan.io/address/0x67A18c18709C09D48000B321c6E1cb09F7181211#code) |
-| `CRV-short` | [0x044aC5160e5A04E09EBAE06D786fc151F2BA5ceD](https://etherscan.io/address/0x044aC5160e5A04E09EBAE06D786fc151F2BA5ceD#code) |
+*For more informations, please refer to the [Vault documentation](../lending/contracts/vault.md#contract-info-methods).*
