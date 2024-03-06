@@ -12,10 +12,10 @@ This section of the documentation is dedicated to offering a comprehensive overv
 | :logos-polygon: `Polygon`         |   | x | x | x | x |   | x | x | disable, enabled | x | x | x |   |   |
 | :logos-polygon: `Polygon zk-EVM`  |   |   |   |   |   |   | x | x | disable, enabled |   |   |   | x |   |
 | :logos-gnosis: `Gnosis (xDAI)`    |   | x | x | x | x |   | x | x | disable, enabled | x | x | x | x |   |
-| :logos-avalanche: `Avalanche`     |   | no bridge back |   | x | frozen |   | x | x | disable, enabled | x | x | x | x |   |
-| :logos-fantom: `Fantom`           |   | no bridge back  |   | x | frozen |   | x | x | disable, enabled | x | x | x | x |   |
-| :logos-bsc: `BNB Smart Chain`     |   |   | x | x |   |   | x | x | disable, enabled | x | x | x | ? |   |
-| :logos-kava: `Kava`               |   |   | x | x |   |   | x | x | disable, enabled | x | x | x |   |   |
+| :logos-avalanche: `Avalanche`     |   | no bridge back | x  | x | frozen |   | x | x | disable, enabled | x | x | x | x |   |
+| :logos-fantom: `Fantom`           |   | no bridge back  | x  | x | frozen |   | x | x | disable, enabled | x | x | x | x |   |
+| :logos-bsc: `BNB Smart Chain`     |   |   |  | x |   |   | x | x | disable, enabled | x | x | x | ? |   |
+| :logos-kava: `Kava`               |   |   |  | x |   |   | x | x | disable, enabled | x | x | x |   |   |
 | :logos-celo: `Celo`               |   | no bridge back |   |   | frozen, no veBoost |   | x | x | disable, enabled | x | x |   |   |   |
 | `Moonbeam`                        |   |   |   |   | no veBoost | x |   |   |   |   |   |   |   |   |
 | :logos-mantle: `Mantle`           |   |   |   |   |   | x | x | x | disable, enabled |   |   |   |   |   |
