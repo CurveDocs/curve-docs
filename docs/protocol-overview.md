@@ -66,7 +66,7 @@ This documentation outlines the technical implementation of the core Curve proto
 
     ---
 
-    Public Curve API intended for all those seeking to integrate Curve data onto their own projects.
+    Public Curve API for pools, volumes, gauges, and much more, intended for all those seeking to integrate Curve data into their own projects.
 
 
 -   >:material-chart-line: **Oracles**
