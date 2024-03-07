@@ -1,42 +1,55 @@
+<h1>CryptoSwap Exchange: Overview</h1>
+
+The *Automatic Market-Making with Dynamic Peg (CryptoSwap)* algorithm introduces a new approach for creating liquidity for assets which are not necessarily pegged to each other.
+
+The core of this algorithm lies in its ability to **concentrate liquidity around a price point determined by an internal oracle**, adjusting this price in a way that balances potential losses and system profits. 
+
+Key features include the use of **transformed pegged invariants**, a method for quantifying profits and losses, and the **CurveCrypto invariant**, specifically designed for efficient execution on the EVM. 
+
+The algorithm also incorporates a **dynamic fee structure** that responds to changing market conditions. This approach seeks to enhance liquidity provision and optimize returns for liquidity providers.
+
+!!!pdf "Whitepaper"
+    For a detailed overview of the design, please read the official [whitepaper](../assets/pdf/crypto-pools-paper.pdf).
+
+
 ---
-hide:
-  - toc
----
 
-<h1> Curve CryptoSwap Exchange: Overview </h1>
-
-The "Automatic Market-Making with Dynamic Peg" (CryptoSwap) algorithm introduces a new approach to liquidity provision in decentralized finance. It aims to improve liquidity for assets that are not directly pegged to each other, differentiating itself from the traditional x·y = k model. 
-
-The core of this algorithm lies in its ability to concentrate liquidity around a price point determined by an internal oracle, adjusting this price in a way that balances potential losses and system profits. 
-
-Key features include the use of transformed pegged invariants, a method for quantifying profits and losses, and the CurveCrypto invariant, specifically designed for efficient execution on the EVM. 
-
-The algorithm also incorporates a dynamic fee structure that responds to changing market conditions. This approach seeks to enhance liquidity provision and optimize returns for liquidity providers within the decentralized finance ecosystem.
-
-!!!pdf "CryptoSwap Whitepaper"
-    For a detailed overview of the CryptoSwap design, please read the official [whitepaper](../assets/pdf/crypto-pools-paper.pdf).
 
 # **Implementations**
 
-There are several implementations of the CryptoSwap invariant:
+*There have been several implementations of the CryptoSwap algorithm:*
 
-| Name           | Description |
-| :------------: | ----------- |
-| **`CryptoSwap`** | The first two-coin volatile asset pool integration. |
-| **`Tricrypto`** | The first three-coin volatile asset pool integration. |
-| **`TwoCrypto-NG`** | An improved version of CryptoSwap, addressing gas efficiency and more. |
-| **`Tricrypto-NG`** | An improved version of Tricrypto, addressing gas efficiency and more. |
+!!!deploy "Contract Source"
+
+    *Source code is available on GitHub:*
+    
+    - genesis contracts: [https://github.com/curvefi/curve-crypto-contract](https://github.com/curvefi/curve-crypto-contract)
+    - twocrypto-ng: [https://github.com/curvefi/twocrypto-ng](https://github.com/curvefi/twocrypto-ng)
+    - tricrypto-ng: [https://github.com/curvefi/tricrypto-ng](https://github.com/curvefi/tricrypto-ng)
+
+
+| Type               | Description                                                            |
+| :----------------: | ---------------------------------------------------------------------- |
+| **`CryptoSwap`**   | Genesis two-coin volatile asset pool integration.                      |
+| **`Tricrypto`**    | Genesis three-coin volatile asset pool integration.                    |
+| **`TwoCrypto-NG`** | Improved version of `CryptoSwap`, more [here](./twocrypto-ng/overview.md). |
+| **`Tricrypto-NG`** | Improved version of `Tricrypto`, more [here](./tricrypto-ng/overview.md).  |
+
+
+---
 
 
 # **Parameters**
 
+Because different trading pairs can exhibit drastically different price dynamics, Curve v2 offers a variety of tunable parameters that can be used to optimize for different types of assets.
+
 **The CryptoSwap market-making algorithm contains of three different classes of parameters:**
 
-- *Bonding Curve:* **`A`** and **`gamma`**  
-- *Price Scaling:* **`ma_time`**, **`allowed_extra_profit`** and **`adjustment_step`**  
-- *Fees:* **`mid_fee`**, **`out_fee`** and **`fee_gamma`** 
+- *Bonding Curve:* `A` and `gamma`  
+- *Price Scaling:* `ma_time`, `allowed_extra_profit` and `adjustment_step`  
+- *Fees:* `mid_fee`, `out_fee` and `fee_gamma`
 
-!!!tip
+!!!tip "Explainer for Parameters"
     An excellent deep-dive article on the parameters: [https://nagaking.substack.com/p/deep-dive-curve-v2-parameters](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).
 
 
