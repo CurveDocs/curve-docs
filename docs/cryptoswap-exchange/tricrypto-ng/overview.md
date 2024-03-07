@@ -3,32 +3,56 @@ hide:
   - toc
 ---
 
-The Tricrypto-NG contract infrastructure represents an **optimised version of Curve Finance [Tricrypto pool](https://etherscan.io/address/0xd51a44d3fae010294c616388b506acda1bfaae46)**.
+<h1>Tricrypto-NG Overview</h1>
+
+
+Tricrypto-NG was designed as an **optimised version of Curve Finance's original three-coin volatile assets pools**. 
 
 
 !!!deploy "Contract Source & Deployment"
-    Source code available on [Github](https://github.com/curvefi/tricrypto-ng).
+    Source code is available on [Github](https://github.com/curvefi/tricrypto-ng). 
+    
+    A full list of all deployments can be found [here](../../references/deployed-contracts.md#tricrypto-ng).
+
+
+---
 
 
 **The AMM infrastructure involves the following parts:**
 
-- AMM blueprint contract (includes LP-Token)
-- Liquidity Gauge blueprint contract
-- Maths Contract
-- Views Contract
-- Factory
+<div class="grid cards" markdown>
 
+-   :octicons-code-16: **`AMM blueprint contracts`** 
 
-The **`Factory`** can accommodate **multiple blueprints of the AMM** contract (deployed on-chain). These blueprints are then specified by the user while deploying the pool. Similarly, liquidity gauges can be deployed through the factory contract as well for a specific pool, through liquidity gauge blueprint contracts.
+    ---
 
-The **`AMM`** is a **3-coin, auto-rebalancing Cryptoswap implementation**. The contract is version 2.0.0, with several optimizations that make the contract cheaper for the end user. Also, unlike the older version, the pool contract is an ERC20-compliant LP token as well.
+    The `AMM` is a **3-coin, auto-rebalancing Cryptoswap implementation**. The contract is version 2.0.0, with several optimizations that make the contract cheaper for the end user.
+    Also, unlike the older version, the **pool contract is an ERC20-compliant LP token** as well. 
+    
+    There are two different implementations, one with **native transfers enabled** and the other with native transfers **disabled**.
 
-The **`Math contract`** contains the different **math functions used in the AMM**.
+-   :octicons-code-16: **`Factory`**
 
-The **`Views contract`** contains view methods relevant for integrators and users looking to interact with the AMMs. Unlike the older tricrypto contracts, the address of the deployed Views contract is stored in the Factory: users are advised to query the stored views contract since it is upgradeable by the Factory's admin.
+    ---
 
-The Factory AMMs have a **hardcoded `ADMIN_FEE`**, set to 50% of the earned profits. Factory admins can also implement parameter changes to the AMMs, change the fee recipient, upgrade/add blueprint contract addresses stored in the factory. Unlike the original tricrypto contracts, **Factory tricrypto contracts cannot be 'killed'** by the admin.
+    The Factory allows the permissionless deployment of liquidity pools. It can accommodate **multiple blueprints of the AMM** contract (deployed on-chain). These blueprints are specified by the user while deploying the pool. Similarly, liquidity gauges for pools can be deployed through the factory contract, utilizing the liquidity gauge blueprint contract.
 
-!!!info
-    In case of any issues that result in a borked AMM state, users can safely withdraw liquidity using **`remove_liquidity`** at balances proportional to the AMM balances.
+-   :octicons-code-16: **`Views Contract`**
 
+    ---
+
+    The Views contract contains **view methods relevant for integrators** and users looking to interact with the AMMs. Unlike the older tricrypto contracts, the address of the deployed Views contract is stored in the Factory: users are advised to query the stored views contract since it is upgradeable by the Factory's admin.
+
+-   :octicons-code-16: **`Math Contract`**
+
+    ---
+
+    A contract which contains different **math functions used in the AMM**.
+
+-   :octicons-code-16: **`Liquidity Gauge blueprint contract`**
+
+    ---
+
+    A liquidity gauge blueprint contract which deploys a liquidiy gauge of a pool on Ethereum. Gauges on sidechains, needs to be deployed via the [RootChainGaugeFactory](./../../curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md). 
+
+</div>
