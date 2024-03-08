@@ -1,11 +1,16 @@
 <h1>Pool Factory: Overview</h1>
 
-
 The TwoCrypto-NG Factory allows the permissionless deployment of two-coin volatile asset pools, as well as gauges. **The liquidity pool and LP token share the same contract.**
 
+Additionally, the Factory contract is the direct admin and fee receiver of all pools. In turn, the Factory is controlled by the CurveDAO.
+
 !!!deploy "Contract Source & Deployment"
-    Source code for the Factory is available on [Github](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/CurveTwocryptoFactory.vy). 
+    Source code for the Factory is available on [Github](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/CurveTwocryptoFactory.vy).   
     A full list of all deployments can be found [here](../../references/deployed-contracts.md#twocrypto-ng).
+
+
+---
+
 
 ## **Implementations**
 
@@ -324,7 +329,7 @@ It utilizes four different implementations:
 
     Getter for the fee receiver address of the admin fee. The fee receiver is initially set by calling the `initialize_ownership` function. It can later be changed via the `set_fee_receiver` method.
 
-    Returns: Fee receiver (`address`).
+    Returns: fee receiver (`address`).
 
     ??? quote "Source code"
 
