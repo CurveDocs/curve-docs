@@ -1,8 +1,11 @@
 **The Math Contract provides AMM Math for 3-coin Curve Cryptoswap Pools.**
 
 !!!deploy "Contract Source & Deployment"
-    The **Math** contract is deployed to the Ethereum mainnet at: [0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE](https://etherscan.io/address/0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE#code).
     Source code for this contract is available on [Github](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveCryptoMathOptimized3.vy). 
+    Full list of all deployments can be found [here](../../../references/deployed-contracts.md#twocrypto-ng).
+
+
+---
 
 
 ## **AMM Math Functions**

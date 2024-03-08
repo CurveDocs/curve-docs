@@ -1,9 +1,11 @@
 This contract contains **view-only external methods** which can be gas-inefficient when called from smart contracts.
 
 !!!deploy "Contract Source & Deployment"
-    **ViewMethodContract** is deployed to the Ethereum mainnet at: [0x064253915b8449fdEFac2c4A74aA9fdF56691a31](https://etherscan.io/address/0x064253915b8449fdEFac2c4A74aA9fdF56691a31#code).
     Source code for this contract is available on [Github](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveCryptoViews3Optimized.vy).
+    Full list of all deployments can be found [here](../../../references/deployed-contracts.md#twocrypto-ng).
 
+
+---
 
 
 ## **Exchange Methods**

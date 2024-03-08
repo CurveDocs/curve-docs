@@ -1,11 +1,17 @@
-A Twocrypto-NG pool consists of **two non-pegged assets**. The [LP token](../pools/lp-token.md) methods are integrated into the liquidity pool.
+A Twocrypto-NG pool consists of **two non-pegged assets**. The LP token is a ERC-20 token integrated directly into the liquidity pool.
+
+!!!info "Liquidity Pool (LP) Token"
+    The LP token is directly integrated into the exchange contract. Pool and LP token share the same address. 
+    
+    The token has the regular ERC-20 methods, which will not be further documented.
+
 
 In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored as a single unsigned integer**. This consolidation reduces storage read and write operations, leading to more cost-efficient calls.
 
 
-- ??? quote "pack"
+??? quote "pack"
 
-        This internal function packs two or three integers into a single uint256.
+    This internal function packs two or three integers into a single uint256.
 
         ```vyper 
         @pure
@@ -24,9 +30,9 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
             return (x[0] << 128) | (x[1] << 64) | x[2]
         ```
 
-- ??? quote "unpack"
+??? quote "unpack"
 
-        This internal function unpacks a single uin256 into two or three integers.
+    This internal function unpacks a single uin256 into two or three integers.
 
         ```vyper
         @pure
@@ -50,119 +56,127 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
         ```
 
 
+*The AMM contract utilizes two internal functions to transfer coins in and out of the pool e.g. when exchanging tokens or adding/removing liquidity:*
+
+
+**Token transfer into the AMM:**
+
+??? quote "`_transfer_in(_coin_idx: uint256, _dx: uint256, sender: address, expect_optimistic_transfer: bool) -> uint256:`"
+
+    Internal function to transfer tokens into the AMM, called by `exchange`, `exchange_received` or `add_liquidity`.
+
+    | Input                      | Type      | Description                                            |
+    | -------------------------- | --------- | ------------------------------------------------------ |
+    | `_coin_idx`                | `int128`  | Index of the token to transfer in.                     |
+    | `_dx`                      | `uint256` | Amount to transfer in.                                 |
+    | `sender`                   | `address` | Address to transfer coins from.                        |
+    | `expect_optimistic_transfer` | `bool`   | `True` if the contract expects an optimistic coin transfer. |
+
+    **`expect_optimistic_transfer`** is only `True` when using the `exchange_received` function.
+
+    ```vyper
+    balances: public(uint256[N_COINS])
+
+    @internal
+    def _transfer_in(
+        _coin_idx: uint256,
+        _dx: uint256,
+        sender: address,
+        expect_optimistic_transfer: bool,
+    ) -> uint256:
+        """
+        @notice Transfers `_coin` from `sender` to `self` and calls `callback_sig`
+                if it is not empty.
+        @params _coin_idx uint256 Index of the coin to transfer in.
+        @params dx amount of `_coin` to transfer into the pool.
+        @params sender address to transfer `_coin` from.
+        @params expect_optimistic_transfer bool True if pool expects user to transfer.
+                This is only enabled for exchange_received.
+        @return The amount of tokens received.
+        """
+        coin_balance: uint256 = ERC20(coins[_coin_idx]).balanceOf(self)
+
+        if expect_optimistic_transfer:  # Only enabled in exchange_received:
+            # it expects the caller of exchange_received to have sent tokens to
+            # the pool before calling this method.
+
+            # If someone donates extra tokens to the contract: do not acknowledge.
+            # We only want to know if there are dx amount of tokens. Anything extra,
+            # we ignore. This is why we need to check if received_amounts (which
+            # accounts for coin balances of the contract) is atleast dx.
+            # If we checked for received_amounts == dx, an extra transfer without a
+            # call to exchange_received will break the method.
+            dx: uint256 = coin_balance - self.balances[_coin_idx]
+            assert dx >= _dx  # dev: user didn't give us coins
+
+            # Adjust balances
+            self.balances[_coin_idx] += dx
+
+            return dx
+
+        # ----------------------------------------------- ERC20 transferFrom flow.
+
+        # EXTERNAL CALL
+        assert ERC20(coins[_coin_idx]).transferFrom(
+            sender,
+            self,
+            _dx,
+            default_return_value=True
+        )
+
+        dx: uint256 = ERC20(coins[_coin_idx]).balanceOf(self) - coin_balance
+        self.balances[_coin_idx] += dx
+        return dx
+    ```
+
+**Token transfer out of the AMM:**
+
+??? quote "`_transfer_out(_coin_idx: int128, _amount: uint256, receiver: address):`"
+
+    Internal function to transfer tokens out of the AMM, called by the `remove_liquidity`, `remove_liquidity_one`, `_claim_admin_fees`, and `_exchange` methods.
+
+    | Input        | Type     | Description                           |
+    | ------------ | -------- | ------------------------------------- |
+    | `_coin_idx`  | `int128` | Index of the token to transfer out.   |
+    | `_amount`    | `uint256`| Amount to transfer out.               |
+    | `receiver`   | `address`| Address to send the tokens to.        |
+
+
+    ```vyper
+    balances: public(uint256[N_COINS])
+
+    @internal
+    def _transfer_out(_coin_idx: uint256, _amount: uint256, receiver: address):
+        """
+        @notice Transfer a single token from the pool to receiver.
+        @dev This function is called by `remove_liquidity` and
+            `remove_liquidity_one`, `_claim_admin_fees` and `_exchange` methods.
+        @params _coin_idx uint256 Index of the token to transfer out
+        @params _amount Amount of token to transfer out
+        @params receiver Address to send the tokens to
+        """
+
+        # Adjust balances before handling transfers:
+        self.balances[_coin_idx] -= _amount
+
+        # EXTERNAL CALL
+        assert ERC20(coins[_coin_idx]).transfer(
+            receiver,
+            _amount,
+            default_return_value=True
+        )
+    ```
+
+---
+
 
 ## **Exchange Methods**
 
-The AMM contract utilizes two internal functions to transfer coins in and out of the pool:
+*The contract offers two different ways to exchange tokens:*
 
+- A regular `exchange` method.
+- A novel `exchange_received` method, which swaps tokens based on the *"internal balances"* of the pool. This method is of great use for aggregators, as it **does not require token approval** of the pool, which eliminates certain smart contract risks and *can* remove one redundant ERC-20 transfer. More [here](../../../stableswap-exchange/stableswap-ng/pools/overview.md#exchange_received).
 
-- **Transfer tokens into the AMM**
-
-    ??? quote "`_transfer_in(_coin_idx: uint256, _dx: uint256, sender: address, expect_optimistic_transfer: bool) -> uint256:`"
-
-        Internal function to transfer tokens into the AMM, called by `exchange`, `exchange_received` or `add_liquidity`.
-
-        | Input                      | Type      | Description                                            |
-        | -------------------------- | --------- | ------------------------------------------------------ |
-        | `_coin_idx`                | `int128`  | Index of the token to transfer in.                     |
-        | `_dx`                      | `uint256` | Amount to transfer in.                                 |
-        | `sender`                   | `address` | Address to transfer coins from.                        |
-        | `expect_optimistic_transfer` | `bool`   | `True` if the contract expects an optimistic coin transfer. |
-
-        **`expect_optimistic_transfer`** is only `True` when using the `exchange_received` function.
-
-        ```vyper
-        balances: public(uint256[N_COINS])
-
-        @internal
-        def _transfer_in(
-            _coin_idx: uint256,
-            _dx: uint256,
-            sender: address,
-            expect_optimistic_transfer: bool,
-        ) -> uint256:
-            """
-            @notice Transfers `_coin` from `sender` to `self` and calls `callback_sig`
-                    if it is not empty.
-            @params _coin_idx uint256 Index of the coin to transfer in.
-            @params dx amount of `_coin` to transfer into the pool.
-            @params sender address to transfer `_coin` from.
-            @params expect_optimistic_transfer bool True if pool expects user to transfer.
-                    This is only enabled for exchange_received.
-            @return The amount of tokens received.
-            """
-            coin_balance: uint256 = ERC20(coins[_coin_idx]).balanceOf(self)
-
-            if expect_optimistic_transfer:  # Only enabled in exchange_received:
-                # it expects the caller of exchange_received to have sent tokens to
-                # the pool before calling this method.
-
-                # If someone donates extra tokens to the contract: do not acknowledge.
-                # We only want to know if there are dx amount of tokens. Anything extra,
-                # we ignore. This is why we need to check if received_amounts (which
-                # accounts for coin balances of the contract) is atleast dx.
-                # If we checked for received_amounts == dx, an extra transfer without a
-                # call to exchange_received will break the method.
-                dx: uint256 = coin_balance - self.balances[_coin_idx]
-                assert dx >= _dx  # dev: user didn't give us coins
-
-                # Adjust balances
-                self.balances[_coin_idx] += dx
-
-                return dx
-
-            # ----------------------------------------------- ERC20 transferFrom flow.
-
-            # EXTERNAL CALL
-            assert ERC20(coins[_coin_idx]).transferFrom(
-                sender,
-                self,
-                _dx,
-                default_return_value=True
-            )
-
-            dx: uint256 = ERC20(coins[_coin_idx]).balanceOf(self) - coin_balance
-            self.balances[_coin_idx] += dx
-            return dx
-        ```
-
-- **Transfer tokens out of the AMM**
-
-    ??? quote "`_transfer_out(_coin_idx: int128, _amount: uint256, receiver: address):`"
-
-        Internal function to transfer tokens out of the AMM, called by the `remove_liquidity`, `remove_liquidity_one`, `_claim_admin_fees`, and `_exchange` methods.
-
-        | Input        | Type     | Description                           |
-        | ------------ | -------- | ------------------------------------- |
-        | `_coin_idx`  | `int128` | Index of the token to transfer out.   |
-        | `_amount`    | `uint256`| Amount to transfer out.               |
-        | `receiver`   | `address`| Address to send the tokens to.        |
-
-
-        ```vyper
-        balances: public(uint256[N_COINS])
-
-        @internal
-        def _transfer_out(_coin_idx: uint256, _amount: uint256, receiver: address):
-            """
-            @notice Transfer a single token from the pool to receiver.
-            @dev This function is called by `remove_liquidity` and
-                `remove_liquidity_one`, `_claim_admin_fees` and `_exchange` methods.
-            @params _coin_idx uint256 Index of the token to transfer out
-            @params _amount Amount of token to transfer out
-            @params receiver Address to send the tokens to
-            """
-
-            # Adjust balances before handling transfers:
-            self.balances[_coin_idx] -= _amount
-
-            # EXTERNAL CALL
-            assert ERC20(coins[_coin_idx]).transfer(
-                receiver,
-                _amount,
-                default_return_value=True
-            )
-        ```
 
 
 ### `exchange`
@@ -170,7 +184,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`. Charged fee at current states is `Pool.fee()`.
 
-    Returns: Amount of tokens at index `j` received (`uint256`).
+    Returns: amount of output coin `j` received (`uint256`).
 
     Emits: `TokenExchange`
 
@@ -545,7 +559,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        >>> soon  
         ```
 
 
@@ -557,7 +571,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`. This function requires a transfer of `dx` amount of coin `i` to the pool prior to calling this function, as this exchange is based on the change of token balances in the pool. The pool will not call `transferFrom` and will only check if a surplus of `coins[i]` is greater than or equal to `dx`. Charged fee at current states is `Pool.fee()`.
 
-    Returns: Amount of tokens at index `j` received (`uint256`).
+    Returns: amount of output coin `j` received (`uint256`).
 
     Emits: `TokenExchange`
 
@@ -937,7 +951,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        >>> soon  
         ```
 
 
@@ -946,7 +960,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Getter for the received amount of coin `j` for swapping in `dx` amount of coin `i`. This method includes fees.
 
-    Returns: Exact amount of output `j` tokens (`uint256`).
+    Returns: exact amount of output coin `j` (`uint256`).
 
     | Input | Type      | Description               |
     | ----- | --------- | ------------------------- |
@@ -1180,7 +1194,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        >>> soon  
         ```
 
 
@@ -1189,7 +1203,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Getter for the required amount of coin `i` to input for swapping out `dy` amount of token `j`.
 
-    Returns: Amount of coins received (`uint256`).
+    Returns: amount of input coin `i` needed (`uint256`).
 
     | Input | Type      | Description               |
     | ----- | --------- | ------------------------- |
@@ -1434,15 +1448,74 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
         ```
 
 
+### `fee_calc`
+!!! description "`TwoCrypto.fee_calc(xp: uint256[N_COINS]) -> uint256:`"
 
-## **Adding / Removing Liquidity**
+    Getter for the charged exchange fee by the pool at the current state.
+
+    Returns: fee (`uint256`).
+
+    | Input | Type               | Description                                      |
+    | ----- | ------------------ | ------------------------------------------------ |
+    | `xp`  | `uint256[N_COINS]` | Pool balances multiplied by the coin precisions. |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @external
+        @view
+        def fee_calc(xp: uint256[N_COINS]) -> uint256:  # <----- For by view contract.
+            """
+            @notice Returns the fee charged by the pool at current state.
+            @param xp The current balances of the pool multiplied by coin precisions.
+            @return uint256 Fee value.
+            """
+            return self._fee(xp)
+
+        @internal
+        @view
+        def _fee(xp: uint256[N_COINS]) -> uint256:
+
+            fee_params: uint256[3] = self._unpack_3(self.packed_fee_params)
+            f: uint256 = xp[0] + xp[1]
+            f = fee_params[2] * 10**18 / (
+                fee_params[2] + 10**18 -
+                (10**18 * N_COINS**N_COINS) * xp[0] / f * xp[1] / f
+            )
+
+            return unsafe_div(
+                fee_params[0] * f + fee_params[1] * (10**18 - f),
+                10**18
+            )
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> soon  
+        ```
+
+
+---
+
+
+## **Adding and Removing Liquidity**
+
+*The twocrypto-ng implementation utilizes the usual methods to add and remove liquidity.*
+
+**Adding liquidity** can be done via the `add_liquidity` method. The code uses a list of unsigned integers `uint256[N_COINS]` as input for the pools underlying tokens to add. **Any proportion is possible**. For example, adding fully single-sided can be done using `[0, 1e18]` or `[1e18, 0]`, but again, any variation is possible, e.g., `[1e18, 1e19]`.
+
+**Removing liquidity** can be done in two different ways. Either withdraw the underlying assets in a **balanced proportion** using the `remove_liquidity` method **or fully single-sided** in a single underlying token using `remove_liquidity_one_coin`.
+
+
+
 
 ### `add_liquidity`
 !!! description "`TwoCrypto.add_liquidity(amounts: uint256[N_COINS], min_mint_amount: uint256, receiver: address = msg.sender) -> uint256:`"
 
     Function to add liquidity to the pool and mint the corresponding LP tokens.
 
-    Returns: Amount of LP tokens received (`uint256`).
+    Returns: amount of LP tokens received (`uint256`).
 
     Emits: `AddLiquidity`
 
@@ -1680,7 +1753,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        >>> soon  
         ```
 
 
@@ -1689,7 +1762,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Function to calculate the charged fee on `amounts` when adding liquidity.
 
-    Returns: Charged fee (`uint256`).
+    Returns: fee (`uint256`).
 
     | Input    | Type                | Description                                      |
     | -------- | ------------------- | ------------------------------------------------ |
@@ -1742,19 +1815,19 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        >>> soon  
         ```
 
 
 ### `remove_liquidity`
 !!! description "`TwoCrypto.remove_liquidity(_amount: uint256, min_amounts: uint256[N_COINS], receiver: address = msg.sender) -> uint256[N_COINS]:`"
 
-    !!! info
+    !!!info
         In case of any issues that result in a malfunctioning AMM state, users can safely withdraw liquidity using **`remove_liquidity`**. Withdrawal is based on balances proportional to the AMM balances, as this function does not perform complex math.
 
     Function to remove liquidity from the pool and burn `_amount` of LP tokens. When removing liquidity with this function, no fees are charged as the coins are withdrawn in balanced proportions. This function also updates the `xcp_oracle` since liquidity was removed.
 
-    Returns: Withdrawn balances (`uint256[N_COINS]`).
+    Returns: withdrawn balances (`uint256[N_COINS]`).
 
     Emits: `RemoveLiquidity`
 
@@ -1946,7 +2019,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        >>> soon  
         ```
 
 
@@ -1955,7 +2028,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Function to burn `token_amount` LP tokens and withdraw liquidity in a single token `i`.
 
-    Returns: Amount of coins withdrawn (`uint256`).
+    Returns: amount of coins withdrawn (`uint256`).
 
     Emits: `RemoveLiquidityOne`
 
@@ -2371,7 +2444,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        >>> soon  
         ```
 
 
@@ -2380,7 +2453,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Function to calculate the LP tokens to be minted or burned for depositing or removing `amounts` of coins. This method takes fees into consideration.
 
-    Returns: Amount of LP tokens deposited or withdrawn (`uint256`).
+    Returns: amount of LP tokens deposited or withdrawn (`uint256`).
 
     | Input      | Type               | Description                                     |
     | ---------- | ------------------ | ----------------------------------------------- |
@@ -2517,7 +2590,14 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.calc_token_amount([1000000000000000000, 0], True)
+        Out [1]:  37590681591977081154
+
+        In  [1]:  Pool.calc_token_amount([0, 1000000000000000000], True)
+        Out [1]:  6622263874240447
+
+        In  [1]:  Pool.calc_token_amount([1000000000000000000, 0], False)
+        Out [1]:  37707043389433059543
         ```
 
 
@@ -2526,13 +2606,12 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Function to calculate the amount of output token `i` when burning `token_amount` of LP tokens. This method takes fees into consideration.
 
-    Returns: Amount of tokens received (`uint256`).
+    Returns: amount of tokens to receive (`uint256`).
 
     | Input         | Type      | Description                              |
     | ------------- | --------- | ---------------------------------------- |
     | `token_amount`| `uint256` | Amount of LP tokens burned.              |
     | `i`           | `uint256` | Index of the coin to withdraw.           |
-
 
     ??? quote "Source code"
 
@@ -2864,19 +2943,33 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.calc_withdraw_one_coin(1000000000000000000, 0)
+        Out [1]:  26501860406190437
+
+        In  [2]:  Pool.calc_withdraw_one_coin(1000000000000000000, 1)
+        Out [2]:  150537307454780254829
         ```
 
 
+---
 
-## **Fee Methods**
+
+## **Fees and Pool Profits**
+
+The cryptoswap algorithm uses different fees, such as `fee`, `mid_fee`, `out_fee`, or `fee_gamma` to determine the fees charged, more on that [here](../../overview.md#fees). All Fee values are denominated in 1e10 and [can be changed](./admin-controls.md#apply_new_parameters) by the admin.
+
+Additionally, just as for other curve pools, there is an `ADMIN_FEE`, which is hardcoded to 50%. All twocrypto-ng pools share a universal `fee_receiver`, which is determined within the Factory contract. Unlike for most other Curve pools, there is no external method to claim the admin fees. They are claimed when removing liquidity single sided.
+
+`xcp_profit`, `xcp_profit_a`, and `last_xcp` are used for tracking pool profits, which is necessary for the pool's rebalancing mechanism. These values are denominated in 1e18.
+
+
 
 ### `fee`
 !!! description "`TwoCrypto.fee() -> uint256:`"
 
     Getter for the fee charged by the pool at the current state.
 
-    Returns: Fee in bps (`uint256`).
+    Returns: fee in bps (`uint256`).
 
     ??? quote "Source code"
 
@@ -2915,55 +3008,8 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
-        ```
-
-
-### `fee_calc`
-!!! description "`TwoCrypto.fee_calc(xp: uint256[N_COINS]) -> uint256:`"
-
-    Getter for the charged exchange fee by the pool at the current state.
-
-    Returns: Fee value (`uint256`).
-
-    | Input | Type               | Description                                      |
-    | ----- | ------------------ | ------------------------------------------------ |
-    | `xp`  | `uint256[N_COINS]` | Pool balances multiplied by the coin precisions. |
-
-    ??? quote "Source code"
-
-        ```vyper
-        @external
-        @view
-        def fee_calc(xp: uint256[N_COINS]) -> uint256:  # <----- For by view contract.
-            """
-            @notice Returns the fee charged by the pool at current state.
-            @param xp The current balances of the pool multiplied by coin precisions.
-            @return uint256 Fee value.
-            """
-            return self._fee(xp)
-
-        @internal
-        @view
-        def _fee(xp: uint256[N_COINS]) -> uint256:
-
-            fee_params: uint256[3] = self._unpack_3(self.packed_fee_params)
-            f: uint256 = xp[0] + xp[1]
-            f = fee_params[2] * 10**18 / (
-                fee_params[2] + 10**18 -
-                (10**18 * N_COINS**N_COINS) * xp[0] / f * xp[1] / f
-            )
-
-            return unsafe_div(
-                fee_params[0] * f + fee_params[1] * (10**18 - f),
-                10**18
-            )
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> soon
+        In  [1]:  Pool.fee()
+        Out [1]:  30622026
         ```
 
 
@@ -2972,7 +3018,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Getter for the `mid_fee`. This fee is the minimum fee and is charged when the pool is completely balanced.
 
-    Returns: Mid fee (`uint256`).
+    Returns: mid fee (`uint256`).
 
     ??? quote "Source code"
 
@@ -2994,7 +3040,8 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.mid_fee()
+        Out [1]:  26000000
         ```
 
 
@@ -3003,7 +3050,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Getter for the `out_fee`. This fee is the maximum fee and is charged when the pool is completely imbalanced.
 
-    Returns: Out fee (`uint256`).
+    Returns: out fee (`uint256`).
 
     ??? quote "Source code"
 
@@ -3025,7 +3072,8 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.out_fee()
+        Out [1]:  45000000
         ```
 
 
@@ -3034,7 +3082,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Getter for the current `fee_gamma`. This parameter modifies the rate at which fees rise as imbalance intensifies. Smaller values result in rapid fee hikes with growing imbalances, while larger values lead to more gradual increments in fees as imbalance expands.
 
-    Returns: Fee gamma (`uint256`).
+    Returns: fee gamma (`uint256`).
 
     ??? quote "Source code"
 
@@ -3056,7 +3104,8 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.fee_gamma()
+        Out [1]:  230000000000000
         ```
 
 
@@ -3065,7 +3114,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Getter for the packed fee parameters.
 
-    Returns: Packed fee params (`uint256`).
+    Returns: packed fee params (`uint256`).
 
     ??? quote "Source code"
 
@@ -3097,7 +3146,8 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.packed_fee_params()
+        Out [1]:  8847341539944400050877843276543133320576000000
         ```
 
 
@@ -3106,7 +3156,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Getter for the admin fee of the pool. This value is hardcoded to 50% (5000000000) of the earned fees and can not be changed.
 
-    Returns: Admin fee (`uint256`).
+    Returns: admin fee (`uint256`).
 
     ??? quote "Source code"
 
@@ -3119,7 +3169,8 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.ADMIN_FEE()
+        Out [1]:  5000000000
         ```
 
 
@@ -3128,7 +3179,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Getter for the fee receiver of the admin fees. This address is set within the [TwoCrypto-NG Factory](../../../factory/twocrypto-ng/overview.md). Every pool created through the Factory has the same fee receiver.
 
-    Returns: Fee receiver (`address`).
+    Returns: fee receiver (`address`).
 
     ??? quote "Source code"
 
@@ -3151,7 +3202,8 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.fee_receiver()
+        Out [1]:  '0xeCb456EA5365865EbAb8a2661B0c503410e9B347'
         ```
 
 
@@ -3160,7 +3212,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Getter for the current pool profits.
 
-    Returns: Current profits (`uint256`).
+    Returns: current profits (`uint256`).
 
     ??? quote "Source code"
 
@@ -3173,7 +3225,8 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.xcp_profit()
+        Out [1]:  1000280532115852216
         ```
 
 
@@ -3182,7 +3235,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Getter for the full profit at the last claim of admin fees.
 
-    Returns: Profit at last claim (`uint256`).
+    Returns: profit at last claim (`uint256`).
 
     ??? quote "Source code"
 
@@ -3212,7 +3265,8 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.xcp_profit_a()
+        Out [1]:  1000000000000000000
         ```
 
 
@@ -3221,7 +3275,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Getter for the last xcp action. This variable is updated by calling `tweak_price` or `remove_liquidity`.
 
-    Returns: Timestamp of last xcp action (`uint256`).
+    Returns: timestamp of last xcp action (`uint256`).
 
     ??? quote "Source code"
 
@@ -3234,18 +3288,61 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.last_xcp()
+        Out [1]:  4177413767556756716238
         ```
 
 
+---
+
+
 ## **Price Scaling**
+
+Curve v2 pools automatically adjust liquidity to optimize depth close to the prevailing market rates, reducing slippage. More [here](../../overview.md#price-scaling). Price scaling parameter can be adjusted by the [admin](./admin-controls.md#apply_new_parameters).
+
+
+### `price_scale`
+!!! description "`TwoCrypto.price_scale() -> uint256:`"
+
+    Getter for the price scale of the coin at index 1 with regard to the coin at index 0. The price scale determines the price band around which liquidity is concentrated.
+
+    Returns: price scale (`uint256`).
+
+    ??? quote "Source code"
+
+        === "CurveTwocryptoOptimized.vy"
+
+            ```vyper
+            cached_price_scale: uint256  # <------------------------ Internal price scale.
+
+            @external
+            @view
+            @nonreentrant("lock")
+            def price_scale() -> uint256:
+                """
+                @notice Returns the price scale of the coin at index `k` w.r.t the coin
+                        at index 0.
+                @dev Price scale determines the price band around which liquidity is
+                    concentrated.
+                @return uint256 Price scale of coin.
+                """
+                return self.cached_price_scale
+            ```
+    
+    === "Example"
+
+        ```shell
+        In  [1]:  Pool.price_scale()
+        Out [1]:  176501696719232
+        ```
+
 
 ### `allowed_extra_profit`
 !!! description "`TwoCrypto.allowed_extra_profit() -> uint256:`"
 
     Getter for the allowed extra profit value.
 
-    Returns: Allowed extra profit value (`uint256`).
+    Returns: allowed extra profit (`uint256`).
 
     ??? quote "Source code"
 
@@ -3268,7 +3365,8 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.allowed_extra_profit()
+        Out [1]:  2000000000000
         ```
 
 
@@ -3277,7 +3375,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Getter for the adjustment step value.
 
-    Returns: Adjustment step value (`uint256`).
+    Returns: adjustment step (`uint256`).
 
     ??? quote "Source code"
 
@@ -3300,7 +3398,8 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.adjustment_step()
+        Out [1]:  146000000000000
         ```
 
 
@@ -3309,7 +3408,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Getter for the packed rebalancing parameters, consisting of `allowed_extra_profit`, `adjustment_step`, and `ma_time`.
 
-    Returns: Packed rebalancing parameters (`uint256`).
+    Returns: packed rebalancing parameters (`uint256`).
 
     ??? quote "Source code"
 
@@ -3323,14 +3422,19 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.packed_rebalancing_params()
+        Out [1]:  680564733841876929619973849625130958848000000000600
         ```
 
+
+---
 
 
 ## **Bonding Curve Parameters**
 
-`A` and `gamma` values are [upgradable](./admin-controls.md#parameter-changes) by the the pools admin.
+A bonding curve is used to determine asset prices according to the pool's supply of each asset, more [here](../../overview.md#bonding-curve-parameters).
+
+Bonding curve parameters `A` and `gamma` values are [upgradable](./admin-controls.md#parameter-changes) by the the pools admin.
 
 ### `A`
 !!! description "`TwoCrypto.A() -> uint256:`"
@@ -3382,7 +3486,8 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.A()
+        Out [1]:  400000
         ```
 
 
@@ -3391,7 +3496,7 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
 
     Getter for the current pool gamma parameter.
 
-    Returns: Gamma (`uint256`).
+    Returns: gamma (`uint256`).
 
     ??? quote "Source code"
 
@@ -3436,14 +3541,19 @@ The AMM contract utilizes two internal functions to transfer coins in and out of
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.gamma()
+        Out [1]:  145000000000000
         ```
 
+
+---
 
 
 ## **Oracle Methods**
 
-Prices and their oracles are adjusted by when calling the internal `tweak_price` method, which happens at `add_liquidity`, `remove_liquidity_one_coin` and `_exchange`.
+*All pools have their own built in exponential moving average price oracle.*
+
+Prices and oracles are adjusted by when calling the internal `tweak_price` method, which happens at `add_liquidity`, `remove_liquidity_one_coin` and `_exchange`.
 
 It is not called when removing liquidity one sided with `remove_liquidity` as this function does not alter prices.
 
@@ -3670,139 +3780,15 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     ```
 
 
-### `lp_price`
-!!! description "`TwoCrypto.lp_price() -> uint256:`"
-
-    Function to calculate the current price of the LP token with regard to the coin at index 0.
-
-    Returns: LP token price (`uint256`).
-
-    ??? quote "Source code"
-
-        === "CurveTwocryptoOptimized.vy"
-
-            ```vyper
-            @external
-            @view
-            @nonreentrant("lock")
-            def lp_price() -> uint256:
-                """
-                @notice Calculates the current price of the LP token w.r.t coin at the 0th index
-                @return uint256 LP price.
-                """
-            return 2 * self.virtual_price * isqrt(self.internal_price_oracle() * 10**18) / 10**18
-
-            @internal
-            @view
-            def internal_price_oracle() -> uint256:
-                """
-                @notice Returns the oracle price of the coin at index `k` w.r.t the coin
-                        at index 0.
-                @dev The oracle is an exponential moving average, with a periodicity
-                    determined by `self.ma_time`. The aggregated prices are cached state
-                    prices (dy/dx) calculated AFTER the latest trade.
-                @param k The index of the coin.
-                @return uint256 Price oracle value of kth coin.
-                """
-                price_oracle: uint256 = self.cached_price_oracle
-                price_scale: uint256 = self.cached_price_scale
-                last_prices_timestamp: uint256 = self._unpack_2(self.last_timestamp)[0]
-
-                if last_prices_timestamp < block.timestamp:  # <------------ Update moving
-                    #                                                   average if needed.
-
-                    last_prices: uint256 = self.last_prices
-                    ma_time: uint256 = self._unpack_3(self.packed_rebalancing_params)[2]
-                    alpha: uint256 = MATH.wad_exp(
-                        -convert(
-                            unsafe_sub(block.timestamp, last_prices_timestamp) * 10**18 / ma_time,
-                            int256,
-                        )
-                    )
-
-                    # ---- We cap state price that goes into the EMA with 2 x price_scale.
-                    return (
-                        min(last_prices, 2 * price_scale) * (10**18 - alpha) +
-                        price_oracle * alpha
-                    ) / 10**18
-
-                return price_oracle
-            ```
-    
-    === "Example"
-
-        ```shell
-        >>> soon
-        ```
-
-
-### `virtual_price`
-!!! description "`TwoCrypto.virtual_price -> uint256: view`"
-
-    Getter for the cached virtual price. This variable provides a fast read by accessing the cached value instead of recalculating it.
-
-    Returns: Cached virtual price (`uint256`).
-
-    ??? quote "Source code"
-
-        === "CurveTwocryptoOptimized.vy"
-
-            ```vyper
-            virtual_price: public(uint256)  # <------ Cached (fast to read) virtual price.
-            #                          The cached `virtual_price` is also used internally.
-            ```
-    
-    === "Example"
-
-        ```shell
-        >>> soon
-        ```
-
-
-### `get_virtual_price`
-!!! description "`TwoCrypto.virtual_price -> uint256: view`"
-
-    !!! warning
-        `get_virtual_price` should not be confused with `virtual_price`, which is a cached virtual price.
-
-    Function to calculate the current virtual price of the pool's LP token.
-
-    Returns: Virtual price (`uint256`).
-
-    ??? quote "Source code"
-
-        === "CurveTwocryptoOptimized.vy"
-
-            ```vyper
-            @external
-            @view
-            @nonreentrant("lock")
-            def get_virtual_price() -> uint256:
-                """
-                @notice Calculates the current virtual price of the pool LP token.
-                @dev Not to be confused with `self.virtual_price` which is a cached
-                    virtual price.
-                @return uint256 Virtual Price.
-                """
-                return 10**18 * self.get_xcp(self.D, self.cached_price_scale) / self.totalSupply
-            ```
-    
-    === "Example"
-
-        ```shell
-        >>> soon
-        ```
-
-
 ### `price_oracle`
 !!! description "`TwoCrypto.price_oracle() -> uint256:`"
 
-    !!! info
+    !!!info
         The aggregated prices are cached state prices (dx/dy) calculated **AFTER** the last trade.
 
     Getter for the oracle price of the coin at index 1 with regard to the coin at index 0. The price oracle is an exponential moving average with a periodicity determined by `ma_time`.
 
-    Returns: Oracle price (`uint256`).
+    Returns: oracle price (`uint256`).
 
     ??? quote "Source code"
 
@@ -3934,7 +3920,173 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.price_oracle()
+        Out [1]:  176068711374120           # CVG/ETH price
+        ```
+
+
+### `ma_time`
+!!! description "`TwoCrypto.ma_time() -> uint256:`"
+
+    Getter for the moving average time in seconds.
+
+    Returns: moving average time (`uint256`).
+
+    ??? quote "Source code"
+
+        === "CurveTwocryptoOptimized.vy"
+
+            ```vyper
+            packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
+            #               parameters allowed_extra_profit, adjustment_step, and ma_time.
+
+            @view
+            @external
+            def ma_time() -> uint256:
+                """
+                @notice Returns the current moving average time in seconds
+                @dev To get time in seconds, the parameter is multipled by ln(2)
+                    One can expect off-by-one errors here.
+                @return uint256 ma_time value.
+                """
+                return self._unpack_3(self.packed_rebalancing_params)[2] * 694 / 1000
+            ```
+
+    === "Example"
+
+        ```shell
+        In  [1]:  Pool.ma_time()
+        Out [1]:  416
+        ```
+
+
+### `lp_price`
+!!! description "`TwoCrypto.lp_price() -> uint256:`"
+
+    Function to calculate the current price of the LP token with regard to the coin at index 0.
+
+    Returns: LP token price (`uint256`).
+
+    ??? quote "Source code"
+
+        === "CurveTwocryptoOptimized.vy"
+
+            ```vyper
+            @external
+            @view
+            @nonreentrant("lock")
+            def lp_price() -> uint256:
+                """
+                @notice Calculates the current price of the LP token w.r.t coin at the 0th index
+                @return uint256 LP price.
+                """
+            return 2 * self.virtual_price * isqrt(self.internal_price_oracle() * 10**18) / 10**18
+
+            @internal
+            @view
+            def internal_price_oracle() -> uint256:
+                """
+                @notice Returns the oracle price of the coin at index `k` w.r.t the coin
+                        at index 0.
+                @dev The oracle is an exponential moving average, with a periodicity
+                    determined by `self.ma_time`. The aggregated prices are cached state
+                    prices (dy/dx) calculated AFTER the latest trade.
+                @param k The index of the coin.
+                @return uint256 Price oracle value of kth coin.
+                """
+                price_oracle: uint256 = self.cached_price_oracle
+                price_scale: uint256 = self.cached_price_scale
+                last_prices_timestamp: uint256 = self._unpack_2(self.last_timestamp)[0]
+
+                if last_prices_timestamp < block.timestamp:  # <------------ Update moving
+                    #                                                   average if needed.
+
+                    last_prices: uint256 = self.last_prices
+                    ma_time: uint256 = self._unpack_3(self.packed_rebalancing_params)[2]
+                    alpha: uint256 = MATH.wad_exp(
+                        -convert(
+                            unsafe_sub(block.timestamp, last_prices_timestamp) * 10**18 / ma_time,
+                            int256,
+                        )
+                    )
+
+                    # ---- We cap state price that goes into the EMA with 2 x price_scale.
+                    return (
+                        min(last_prices, 2 * price_scale) * (10**18 - alpha) +
+                        price_oracle * alpha
+                    ) / 10**18
+
+                return price_oracle
+            ```
+    
+    === "Example"
+
+        ```shell
+        In  [1]:  Pool.lp_price()
+        Out [1]:  26545349102641443     # lp token price in wETH
+        ```
+
+
+### `virtual_price`
+!!! description "`TwoCrypto.virtual_price -> uint256: view`"
+
+    !!!warning "`get_virtual_price` ≠ `virtual_price`"
+        `get_virtual_price` should not be confused with `virtual_price`, which is a cached virtual price.
+
+    Getter for the cached virtual price. This variable provides a fast read by accessing the cached value instead of recalculating it.
+
+    Returns: cached virtual price (`uint256`).
+
+    ??? quote "Source code"
+
+        === "CurveTwocryptoOptimized.vy"
+
+            ```vyper
+            virtual_price: public(uint256)  # <------ Cached (fast to read) virtual price.
+            #                          The cached `virtual_price` is also used internally.
+            ```
+    
+    === "Example"
+
+        ```shell
+        In  [1]:  Pool.virtual_price()
+        Out [1]:  1000270251060292804
+        ```
+
+
+### `get_virtual_price`
+!!! description "`TwoCrypto.virtual_price -> uint256: view`"
+
+    !!!warning "`get_virtual_price` ≠ `virtual_price`"
+        `get_virtual_price` should not be confused with `virtual_price`, which is a cached virtual price.
+
+    Function to calculate the current virtual price of the pool's LP token.
+
+    Returns: virtual price (`uint256`).
+
+    ??? quote "Source code"
+
+        === "CurveTwocryptoOptimized.vy"
+
+            ```vyper
+            @external
+            @view
+            @nonreentrant("lock")
+            def get_virtual_price() -> uint256:
+                """
+                @notice Calculates the current virtual price of the pool LP token.
+                @dev Not to be confused with `self.virtual_price` which is a cached
+                    virtual price.
+                @return uint256 Virtual Price.
+                """
+                return 10**18 * self.get_xcp(self.D, self.cached_price_scale) / self.totalSupply
+            ```
+    
+    === "Example"
+
+        ```shell
+        In  [1]:  Pool.get_virtual_price()
+        Out [1]:  1000270251060292804
         ```
 
 
@@ -3943,7 +4095,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
 
     Getter for the last price. This variable is used to calculate the moving average price oracle.
 
-    Returns: Last price (`uint256`).
+    Returns: last price (`uint256`).
 
     ??? quote "Source code"
 
@@ -3986,76 +4138,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> soon
-        ```
-
-
-### `price_scale`
-!!! description "`TwoCrypto.price_scale() -> uint256:`"
-
-    Getter for the price scale of the coin at index 1 with regard to the coin at index 0. The price scale determines the price band around which liquidity is concentrated.
-
-    Returns: Price scale (`uint256`).
-
-    ??? quote "Source code"
-
-        === "CurveTwocryptoOptimized.vy"
-
-            ```vyper
-            cached_price_scale: uint256  # <------------------------ Internal price scale.
-
-            @external
-            @view
-            @nonreentrant("lock")
-            def price_scale() -> uint256:
-                """
-                @notice Returns the price scale of the coin at index `k` w.r.t the coin
-                        at index 0.
-                @dev Price scale determines the price band around which liquidity is
-                    concentrated.
-                @return uint256 Price scale of coin.
-                """
-                return self.cached_price_scale
-            ```
-    
-    === "Example"
-
-        ```shell
-        >>> soon
-        ```
-
-
-### `ma_time`
-!!! description "`TwoCrypto.price_scale() -> uint256:`"
-
-    Getter for the moving average time period.
-
-    Returns: Moving average time (`uint256`).
-
-    ??? quote "Source code"
-
-        === "CurveTwocryptoOptimized.vy"
-
-            ```vyper
-            packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
-            #               parameters allowed_extra_profit, adjustment_step, and ma_time.
-
-            @view
-            @external
-            def ma_time() -> uint256:
-                """
-                @notice Returns the current moving average time in seconds
-                @dev To get time in seconds, the parameter is multipled by ln(2)
-                    One can expect off-by-one errors here.
-                @return uint256 ma_time value.
-                """
-                return self._unpack_3(self.packed_rebalancing_params)[2] * 694 / 1000
-            ```
-    
-    === "Example"
-
-        ```shell
-        >>> soon
+        In  [1]:  Pool.last_prices()
+        Out [1]:  176068709329068
         ```
 
 
@@ -4064,7 +4148,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
 
     Getter for the oracle value for xcp. The oracle is an exponential moving average, with a periodicity determined by `xcp_ma_time`.
 
-    Returns: XCP oracle value (`uint256`).
+    Returns: xcp oracle value (`uint256`).
 
     ??? quote "Source code"
 
@@ -4111,7 +4195,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.xcp_oracle()
+        Out [1]:  3501656271269889041418
         ```
 
 
@@ -4120,8 +4205,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
 
     Getter for the moving average time window for `xcp_oracle`.
 
-    Returns: MA time window (`uint256`).
-
+    Returns: ma time (`uint256`).
 
     ??? quote "Source code"
 
@@ -4151,7 +4235,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.xcp_ma_time()
+        Out [1]:  62324
         ```
 
 
@@ -4173,16 +4258,17 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.D()
+        Out [1]:  110997117004824612212
         ```
 
 
 ### `last_timestamp`
 !!! description "`TwoCrypto.last_timestamp() -> uint256: view`"
 
-    Getter for the last timestamp of prices and xcp. The two values are packed into a `uint256`. Index 0 is for prices, index 1 is for xcp.
+    Getter for the last timestamp of prices and xcp. The two values are packed into a `uint256`. Need to unpack them: Index 0 is for prices, index 1 is for xcp.
 
-    Returns: Last timestamp (`uint256`).
+    Returns: last timestamp (`uint256`).
 
     ??? quote "Source code"
 
@@ -4195,19 +4281,22 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.last_timestamp()
+        Out [1]:  581843605731969082977825518885220002649556567303
         ```
 
-        
+
+---
+
 
 ## **Contract Info Methods**
 
 ### `admin`
 !!! description "`TwoCrypto.admin() -> address:`"
 
-    Getter for the admin of the pool.
+    Getter for the admin of the pool. All deployed pools share the same admin, which is specified within the Factory contract.
 
-    Returns: Admin (`address`).
+    Returns: admin (`address`).
 
     ??? quote "Source code"
 
@@ -4230,16 +4319,17 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.admin()
+        Out [1]:  todo
         ```
 
 
 ### `precisions`
 !!! description "`TwoCrypto.precisions() -> uint256[N_COINS]:`"
 
-    Getter for the precisions of each coin in the pool.
+    Getter for the precisions of each coin in the pool. Precisions are used to make sure the pool is compatible with any coins with decimals up to 18.
 
-    Returns: Precision of coins (`uint256[N_COINS]`).
+    Returns: precision of coins (`uint256[N_COINS]`).
 
     ??? quote "Source code"
 
@@ -4262,16 +4352,17 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.precisions()
+        Out [1]:  [1, 1]
         ```
 
 
 ### `MATH`
 !!! description "`TwoCrypto.MATH() -> address: view`"
 
-    Getter for the math contract.
+    Getter for the [math utility contract](../utility-contracts/math.md).
 
-    Returns: Math contract (`address`).
+    Returns: math contract (`address`).
 
     ??? quote "Source code"
 
@@ -4301,7 +4392,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.MATH()
+        Out [1]:  '0x2005995a71243be9FB995DaB4742327dc76564Df'
         ```
 
 
@@ -4310,7 +4402,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
 
     Getter for the coin at index `arg0` in the pool.
 
-    Returns: Precision of coins (`uint256[N_COINS]`).
+    Returns: precision of coins (`uint256[N_COINS]`).
 
     | Input | Type      | Description  |
     | ----- | --------- | ------------ |
@@ -4349,16 +4441,20 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.coins(0)
+        Out [1]:  '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
+
+        In  [2]:  Pool.coins(1)
+        Out [2]:  '0x97efFB790f2fbB701D88f89DB4521348A2B77be8'
         ```
 
 
 ### `factory`
 !!! description "`TwoCrypto.factory() -> address: view`"
 
-    Getter for the pool factory contract.
+    Getter for the [Factory contract](../../../factory/twocrypto-ng/overview.md), which allows the permissionless deployment of liquidity pools and gauges.
 
-    Returns: Pool factory (`address`).
+    Returns: factory (`address`).
 
     ??? quote "Source code"
 
@@ -4388,7 +4484,8 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.factory()
+        Out [1]:  '0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F'
         ```
 
 
@@ -4397,7 +4494,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
 
     Getter for the current coin balances in the pool.
 
-    Returns: Coin balances (`uint256`).
+    Returns: coin balances (`uint256`).
 
     | Input | Type      | Description  |
     | ----- | --------- | ------------ |
@@ -4414,5 +4511,9 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
     === "Example"
 
         ```shell
-        >>> soon
+        In  [1]:  Pool.balances(0)
+        Out [1]:  55021540803117067316
+
+        In  [2]:  Pool.balances(1)
+        Out [2]:  317141267512073253038923
         ```

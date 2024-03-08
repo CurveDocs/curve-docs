@@ -7,6 +7,9 @@
     Full list of all deployments can be found [here](../../../references/deployed-contracts.md#twocrypto-ng).
 
 
+---
+
+
 ## **AMM Math Functions**
 
 ### `snekmate_log_2`
