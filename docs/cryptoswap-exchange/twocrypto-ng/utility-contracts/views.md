@@ -7,6 +7,9 @@ The Views Contract contains **view-only external methods**, which **may be gas-i
     Full list of all deployments can be found [here](../../../references/deployed-contracts.md#twocrypto-ng).
 
 
+---
+
+
 ## **Exchange Methods** 
 
 ### `get_dy`
