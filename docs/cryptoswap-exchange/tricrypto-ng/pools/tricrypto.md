@@ -1,53 +1,62 @@
 **Tricrypto-NG pool contanins of three non-pegged assets.**
 
-The pools according [LP token](../lp_tokens/tricrypto-lp-token.md) is integrated into the pool and shares the same contract address.
+!!!info "Liquidity Pool (LP) Token"
+    The LP token is directly integrated into the exchange contract. Pool and LP token share the same address. 
+    
+    The token has the regular ERC-20 methods, which will not be further documented.
 
 For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored as a single unsigned integer. This consolidation reduces storage read and write operations, leading to more cost-efficient calls. When these parameters are accessed, they are subsequently unpacked.
 
--    ??? quote "_pack()"
+??? quote "_pack()"
 
-        ```vyper
-        @internal
-        @view
-        def _pack(x: uint256[3]) -> uint256:
-            """
-            @notice Packs 3 integers with values <= 10**18 into a uint256
-            @param x The uint256[3] to pack
-            @return uint256 Integer with packed values
-            """
-            return (x[0] << 128) | (x[1] << 64) | x[2]
-        ```
-
-
--    ??? quote "_unpack()"
-
-        ```vyper
-        @internal
-        @view
-        def _unpack(_packed: uint256) -> uint256[3]:
-            """
-            @notice Unpacks a uint256 into 3 integers (values must be <= 10**18)
-            @param val The uint256 to unpack
-            @return uint256[3] A list of length 3 with unpacked integers
-            """
-            return [
-                (_packed >> 128) & 18446744073709551615,
-                (_packed >> 64) & 18446744073709551615,
-                _packed & 18446744073709551615,
-            ]
-        ```
+    ```vyper
+    @internal
+    @view
+    def _pack(x: uint256[3]) -> uint256:
+        """
+        @notice Packs 3 integers with values <= 10**18 into a uint256
+        @param x The uint256[3] to pack
+        @return uint256 Integer with packed values
+        """
+        return (x[0] << 128) | (x[1] << 64) | x[2]
+    ```
 
 
+??? quote "_unpack()"
+
+    ```vyper
+    @internal
+    @view
+    def _unpack(_packed: uint256) -> uint256[3]:
+        """
+        @notice Unpacks a uint256 into 3 integers (values must be <= 10**18)
+        @param val The uint256 to unpack
+        @return uint256[3] A list of length 3 with unpacked integers
+        """
+        return [
+            (_packed >> 128) & 18446744073709551615,
+            (_packed >> 64) & 18446744073709551615,
+            _packed & 18446744073709551615,
+        ]
+    ```
+
+---
 
 
 ## **Exchange Methods**
+
+*The contract offers two different ways to exchange tokens:*
+
+- A regular `exchange` method.
+- A `exchange_underlying` method, which swaps tokens based on native token transfers into the pool. More [here](../../../stableswap-exchange/stableswap-ng/pools/overview.md#exchange_received).
+
 
 ### `exchange`
 !!! description "`TriCrypto.exchange(i: uint256, j: uint256, dx: uint256, min_dy: uint256, receiver: address = msg.sender) -> uint256:`"
 
     Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`.
 
-    Returns:  Amount of tokens at index j received (uint256).
+    Returns: amount of output coin `j` received (`uint256`).
     
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -217,19 +226,19 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
 ### `exchange_underlying`
 !!! description "`TriCrypto.exchange_underlying(i: uint256, j: uint256, dx: uint256, min_dy: uint256, receiver: address = msg.sender) -> uint256:`"
 
-    Function to exchange between two underlying tokens.
+    Function to exchange between two underlying tokens. More [here](../../../stableswap-exchange/stableswap-ng/pools/overview.md#exchange_received).
 
-    Returns: amount of tokens received (`uint256`).
+    Returns: amount of output coin `j` received (`uint256`).
 
     Emits: `TokenExchange`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `i` |  `uint256` | Index value for the input coin |
-    | `j` |  `uint256` | Index value for the output coin |
-    | `dx` |  `uint256` | Amount of input coin being swapped in |
-    | `min_dy` |  `uint256` | Minimum amount of output coin to receive |
-    | `receiver` |  `address` | Receiver Address; defaults to msg.sender |
+    | `i` |  `uint256` | Index value for the input coin. |
+    | `j` |  `uint256` | Index value for the output coin. |
+    | `dx` |  `uint256` | Amount of input coin being swapped in. |
+    | `min_dy` |  `uint256` | Minimum amount of output coin to receive. |
+    | `receiver` |  `address` | Receiver Address; defaults to msg.sender. |
 
     ??? quote "Source code"
 
@@ -386,99 +395,18 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
         ```
 
 
-### `fee_calc`
-!!! description "`TriCrypto.fee_calc(xp: uint256[N_COINS]) -> uint256: view`"
-
-    Getter for the charged fee by the pool at the current state based on the pools balances.
-
-    Returns: fee value (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `xp` |  `uint256[N_COINS]` | balances of pool |
-
-    ??? quote "Source code"
-
-        === "CurveTricryptoOptimizedWETH.vy"
-
-            ```vyper
-            @external
-            @view
-            def fee_calc(xp: uint256[N_COINS]) -> uint256:  # <----- For by view contract.
-                """
-                @notice Returns the fee charged by the pool at current state.
-                @param xp The current balances of the pool multiplied by coin precisions.
-                @return uint256 Fee value.
-                """
-                return self._fee(xp)
-
-            @internal
-            @view
-            def _fee(xp: uint256[N_COINS]) -> uint256:
-                fee_params: uint256[3] = self._unpack(self.packed_fee_params)
-                f: uint256 = MATH.reduction_coefficient(xp, fee_params[2])
-                return unsafe_div(
-                    fee_params[0] * f + fee_params[1] * (10**18 - f),
-                    10**18
-                )
-            ```
-
-        === "Math.vy"
-
-            ```vyper
-            @external
-            @view
-            def reduction_coefficient(x: uint256[N_COINS], fee_gamma: uint256) -> uint256:
-                """
-                @notice Calculates the reduction coefficient for the given x and fee_gamma
-                @dev This method is used for calculating fees.
-                @param x The x values
-                @param fee_gamma The fee gamma value
-                """
-                return self._reduction_coefficient(x, fee_gamma)
-
-            @internal
-            @pure
-            def _reduction_coefficient(x: uint256[N_COINS], fee_gamma: uint256) -> uint256:
-
-                # fee_gamma / (fee_gamma + (1 - K))
-                # where
-                # K = prod(x) / (sum(x) / N)**N
-                # (all normalized to 1e18)
-
-                S: uint256 = x[0] + x[1] + x[2]
-
-                # Could be good to pre-sort x, but it is used only for dynamic fee
-                K: uint256 = 10**18 * N_COINS * x[0] / S
-                K = unsafe_div(K * N_COINS * x[1], S)  # <- unsafe div is safu.
-                K = unsafe_div(K * N_COINS * x[2], S)
-
-                if fee_gamma > 0:
-                    K = fee_gamma * 10**18 / (fee_gamma + 10**18 - K)
-
-                return K
-            ```
-
-    === "Example"
-
-        ```shell
-        >>> TriCrypto.fee_calc('todo')
-        ''
-        ```
-
-
 ### `get_dy`
 !!! description "`TriCrypto.get_dy(i: uint256, j: uint256, dx: uint256) -> uint256:`"
 
     Getter for the received amount of coin `j` for swapping in `dx` amount of coin `i`. This method includes fees.
 
-    Returns: amount of tokens (`uint256`).
+    Returns: exact amount of output coin `j` (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | index of input token |
-    | `j` |  `uint256` | index of output token |
-    | `dx` |  `uint256` | amount of input tokens |
+    | Input | Type      | Description               |
+    | ----- | --------- | ------------------------- |
+    | `i`   | `uint256` | Index of input token.     |
+    | `j`   | `uint256` | Index of output token.    |
+    | `dx`  | `uint256` | Amount of input tokens.   |
 
     ??? quote "Source code"
 
@@ -584,13 +512,13 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
 
     Getter for the required amount of coin `i` to input for swapping out `dy` amount of token `j`.
 
-    Returns: amount of coins received (`uint256`).
+    Returns: amount of input coin `i` needed (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | index of input token |
-    | `j` |  `uint256` | index of output token |
-    | `dy`|  `uint256` | amount of input tokens |
+    | Input | Type      | Description               |
+    | ----- | --------- | ------------------------- |
+    | `i`   | `uint256` | Index of input token.     |
+    | `j`   | `uint256` | Index of output token.    |
+    | `dy`  | `uint256` | Amount of output tokens.  |
 
     ??? quote "Source code"
 
@@ -786,25 +714,114 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
         2767670393
         ```
 
+### `fee_calc`
+!!! description "`TriCrypto.fee_calc(xp: uint256[N_COINS]) -> uint256: view`"
+
+    Getter for the charged exchange fee by the pool at the current state.
+
+    Returns: fee (`uint256`).
+
+    | Input | Type               | Description                                      |
+    | ----- | ------------------ | ------------------------------------------------ |
+    | `xp`  | `uint256[N_COINS]` | Pool balances multiplied by the coin precisions. |
+
+    ??? quote "Source code"
+
+        === "CurveTricryptoOptimizedWETH.vy"
+
+            ```vyper
+            @external
+            @view
+            def fee_calc(xp: uint256[N_COINS]) -> uint256:  # <----- For by view contract.
+                """
+                @notice Returns the fee charged by the pool at current state.
+                @param xp The current balances of the pool multiplied by coin precisions.
+                @return uint256 Fee value.
+                """
+                return self._fee(xp)
+
+            @internal
+            @view
+            def _fee(xp: uint256[N_COINS]) -> uint256:
+                fee_params: uint256[3] = self._unpack(self.packed_fee_params)
+                f: uint256 = MATH.reduction_coefficient(xp, fee_params[2])
+                return unsafe_div(
+                    fee_params[0] * f + fee_params[1] * (10**18 - f),
+                    10**18
+                )
+            ```
+
+        === "Math.vy"
+
+            ```vyper
+            @external
+            @view
+            def reduction_coefficient(x: uint256[N_COINS], fee_gamma: uint256) -> uint256:
+                """
+                @notice Calculates the reduction coefficient for the given x and fee_gamma
+                @dev This method is used for calculating fees.
+                @param x The x values
+                @param fee_gamma The fee gamma value
+                """
+                return self._reduction_coefficient(x, fee_gamma)
+
+            @internal
+            @pure
+            def _reduction_coefficient(x: uint256[N_COINS], fee_gamma: uint256) -> uint256:
+
+                # fee_gamma / (fee_gamma + (1 - K))
+                # where
+                # K = prod(x) / (sum(x) / N)**N
+                # (all normalized to 1e18)
+
+                S: uint256 = x[0] + x[1] + x[2]
+
+                # Could be good to pre-sort x, but it is used only for dynamic fee
+                K: uint256 = 10**18 * N_COINS * x[0] / S
+                K = unsafe_div(K * N_COINS * x[1], S)  # <- unsafe div is safu.
+                K = unsafe_div(K * N_COINS * x[2], S)
+
+                if fee_gamma > 0:
+                    K = fee_gamma * 10**18 / (fee_gamma + 10**18 - K)
+
+                return K
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> TriCrypto.fee_calc('todo')
+        ''
+        ```
 
 
-## **Adding / Removing Liquidity**
+---
+
+
+## **Adding and Removing Liquidity**
+
+*The tricrypto-ng implementation utilizes the usual methods to add and remove liquidity.*
+
+**Adding liquidity** can be done via the `add_liquidity` method. The code uses a list of unsigned integers `uint256[N_COINS]` as input for the pools underlying tokens to add. **Any proportion is possible**. For example, adding fully single-sided can be done using `[0, 1e18]` or `[1e18, 0]`, but again, any variation is possible, e.g., `[1e18, 1e19]`.
+
+**Removing liquidity** can be done in two different ways. Either withdraw the underlying assets in a **balanced proportion** using the `remove_liquidity` method **or fully single-sided** in a single underlying token using `remove_liquidity_one_coin`.
+
 
 ### `add_liquidity`
 !!! description "`TriCrypto.add_liquidity(amounts: uint256[N_COINS], min_mint_amount: uint256, use_eth: bool = False, receiver: address = msg.sender) -> uint256:`"
 
-    Function to add liquidity to the pool and mint the corresponding lp tokens. After adding liquidity, admin fees are claimed.
+    Function to add liquidity to the pool and mint the corresponding LP tokens.
 
-    Returns: amount of lp tokens received (`uint256`).
+    Returns: amount of LP tokens received (`uint256`).
 
     Emits: `AddLiquidity`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `amounts` |  `uint256[N_COINS]` | amount of each coin to add |
-    | `min_mint_amount` |  `uint256` | minimum amount of lp tokens to mint |
-    | `use_eth` |  `bool` | `True` if native token is being added to the pool; default to `False` |
-    | `receiver` |  `address` | receiver of the lp tokens; defaults to msg.sender |
+    | Input            | Type                | Description                                           |
+    | ---------------- | ------------------- | ----------------------------------------------------- |
+    | `amounts`        | `uint256[N_COINS]`  | Amount of each coin to add.                           |
+    | `min_mint_amount`| `uint256`           | Minimum amount of LP tokens to mint.                  |
+    | `use_eth`        | `bool`              | `True` = native token is added to the pool.           |
+    | `receiver`       |  `address`          | Receiver of the LP tokens; defaults to msg.sender.    |
 
 
     ??? quote "Source code"
@@ -1176,14 +1193,14 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
 ### `calc_token_fee`
 !!! description "`TriCrypto.calc_token_fee(amounts: uint256[N_COINS], xp: uint256[N_COINS]) -> uint256:`"
 
-    Function to calculate the fee on `amounts` when adding liquidity. 
+    Function to calculate the charged fee on `amounts` when adding liquidity.
 
-    Returns: charged fee (`uint256`).
+    Returns: fee (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `amounts` |  `uint256[N_COINS]` | amount of coins added to the pool |
-    | `xp` |  `uint256[N_COINS]` | current balances of the pool (multiplied by coin precision) |
+    | Input    | Type                | Description                                      |
+    | -------- | ------------------- | ------------------------------------------------ |
+    | `amounts`| `uint256[N_COINS]`  | Amount of coins added to the pool.               |
+    | `xp`     | `uint256[N_COINS]`  | Pool balances multiplied by the coin precisions. |
 
     ??? quote "Source code"
 
@@ -1238,19 +1255,20 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
 ### `remove_liquidity`
 !!! description "`TriCrypto.remove_liquidity(_amount: uint256, min_amounts: uint256[N_COINS], use_eth: bool = False, receiver: address = msg.sender, claim_admin_fees: bool = True) -> uint256[N_COINS]:`"
 
-    Function to remove liquidity from the pool and burn the lp tokens. When removing liquidity with this function, no fees are charged as the coins are withdrawin in balanced proportions. If admin fees are claimed, they are claimed before withdrawing liquidity and therefore make sure the DAO gets paid first.
+    Function to remove liquidity from the pool and burn the LP tokens. When removing liquidity with this function, no fees are charged as the coins are withdrawn in balanced proportions.  
+    If admin fees are claimed, they are claimed before withdrawing liquidity, ensuring the DAO gets paid first.
 
     Returns: withdrawn balances (`uint256[N_COINS]`).
 
     Emits: `RemoveLiquidity`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_amount` |  `uint256` | amount of lp tokens to burn |
-    | `min_amounts` |  `uint256[N_COINS]` | minimum amounts of token to withdraw |
-    | `use_eth` |  `bool` | True = withdraw ETH, False = withdraw wETH |
-    | `receiver` |  `address` | receiver of the coins; defaults to msg.sender |
-    | `claim_admin_fees` |  `bool` | whether to claim admin fees; defaults to True |
+    | Input          | Type       | Description                              |
+    | -------------- | ---------- | ---------------------------------------- |
+    | `_amount`      | `uint256`  | Amount of LP tokens to burn.             |
+    | `min_amounts`  | `uint256[N_COINS]` | Minimum amounts of tokens to withdraw. |
+    | `use_eth`      | `bool`     | True = withdraw ETH, False = withdraw wETH. |
+    | `receiver`     | `address`  | Receiver of the coins; defaults to `msg.sender`. |
+    | `claim_admin_fees` | `bool` | Whether to claim admin fees; defaults to `True`. |
 
     ??? quote "Source code"
 
@@ -1346,19 +1364,20 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
 ### `remove_liquidity_one_coin`
 !!! description "`TriCrypto.remove_liquidity_one_coin(token_amount: uint256, i: uint256, min_amount: uint256, use_eth: bool = False, receiver: address = msg.sender) -> uint256:`"
 
-    Funtion to withdraw liquidity in a single token.
+    Function to burn `token_amount` LP tokens and withdraw liquidity in a single token `i`.
 
     Returns: amount of coins withdrawn (`uint256`).
 
     Emits: `RemoveLiquidityOne`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `token_amount` |  `uint256` | amount of lp tokens to burn |
-    | `i` |  `uint256` | index of the token to withdraw |
-    | `min_amount` |  `uint256` | minimum amount of token to withdraw |
-    | `use_eth` |  `bool` | True = withdraw ETH, False = withdraw wETH |
-    | `receiver` |  `address` | receiver of the coins; defaults to msg.sender |
+    | Input          | Type       | Description                              |
+    | -------------- | ---------- | ---------------------------------------- |
+    | `token_amount` | `uint256`  | Amount of LP tokens to burn.             |
+    | `i`            | `uint256`  | Index of the token to withdraw.          |
+    | `min_amount`   | `uint256`  | Minimum amount of token to withdraw.     |
+    | `use_eth`      | `bool`     | True = withdraw ETH, False = withdraw wETH. |
+    | `receiver`     | `address`  | Receiver of the coins; defaults to `msg.sender`. |
+
 
     ??? quote "Source code"
 
@@ -1914,14 +1933,14 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
 ### `calc_token_amount`
 !!! description "`TriCrypto.def calc_token_amount(amounts: uint256[N_COINS], deposit: bool) -> uint256:`"
 
-    Function to calculate LP tokens minted or burned from depositing or removing `amounts`. This function does include fees.
+    Function to calculate the LP tokens to be minted or burned for depositing or removing `amounts` of coins. This method takes fees into consideration.
 
-    Returns: Amount of LP tokens deposited or withdrawn (`uint256`).
+    Returns: amount of LP tokens deposited or withdrawn (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `amounts` |  `uint256[N_COINS]` | amounts of tokens being deposited or withdrawn |
-    | `deposit` |  `bool` | true = deposit, false = withdraw |
+    | Input      | Type               | Description                                     |
+    | ---------- | ------------------ | ----------------------------------------------- |
+    | `amounts`  | `uint256[N_COINS]` | Amounts of tokens being deposited or withdrawn. |
+    | `deposit`  | `bool`             | `true` for deposit, `false` for withdrawal.     |
 
     ??? quote "Source code"
 
@@ -2041,14 +2060,14 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
 ### `calc_withdraw_one_coin`
 !!! description "`TriCrypto.calc_withdraw_one_coin(token_amount: uint256, i: uint256) -> uint256:`"
 
-    Function to calculate the amount of output token `i` when burning `token_amount` of lp tokens, taking fees into condsideration.
+    Function to calculate the amount of output token `i` when burning `token_amount` of LP tokens. This method takes fees into consideration.
 
-    Returns: amount of token received (`uint256`).
+    Returns: amount of tokens to receive (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `token_amount` |  `uint256` | amount of lp tokens burned |
-    | `i` |  `uint256` | index of the coin to withdraw |
+    | Input         | Type      | Description                              |
+    | ------------- | --------- | ---------------------------------------- |
+    | `token_amount`| `uint256` | Amount of LP tokens burned.              |
+    | `i`           | `uint256` | Index of the coin to withdraw.           |
 
     ??? quote "Source code"
 
@@ -2560,7 +2579,17 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
         ```
 
 
-## **Fee Methods**
+---
+
+
+## **Fees and Pool Profits**
+
+The cryptoswap algorithm uses different fees, such as `fee`, `mid_fee`, `out_fee`, or `fee_gamma` to determine the fees charged, more on that [here](../../overview.md#fees). All Fee values are denominated in 1e10 and [can be changed](./admin-controls.md#apply_new_parameters) by the admin.
+
+Additionally, just as for other curve pools, there is an `ADMIN_FEE`, which is hardcoded to 50%. All twocrypto-ng pools share a universal `fee_receiver`, which is determined within the Factory contract.
+
+`xcp_profit` and `xcp_profit_a` are used for tracking pool profits, which is necessary for the pool's rebalancing mechanism. These values are denominated in 1e18.
+
 
 ### `fee`
 !!! description "`TriCrypto.fee() -> uint256:`"
@@ -2783,49 +2812,6 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
         ```shell
         >>> TriCrypto.fee_receiver()
         '0xeCb456EA5365865EbAb8a2661B0c503410e9B347'
-        ```
-
-
-
-### `xcp_profit`
-!!! description "`TriCrypto.xcp_profit() -> uint256:`"
-
-    Getter for the current pool profits.
-
-    Returns: current profits (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        xcp_profit: public(uint256)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> TriCrypto.xcp_profit()
-        1003213938530958270
-        ```
-
-
-### `xcp_profit_a`
-!!! description "`TriCrypto.xcp_profit_a() -> uint256:`"
-
-    Getter for the full profit at the last claim of admin fees.
-
-    Returns: profit at last claim (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        xcp_profit_a: public(uint256)  # <--- Full profit at last claim of admin fees.
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> TriCrypto.xcp_profit_a()
-        1003211094190051384
         ```
 
 
@@ -3161,10 +3147,718 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
         ```
 
 
-## **Price Oracle Methods**
+### `xcp_profit`
+!!! description "`TriCrypto.xcp_profit() -> uint256:`"
 
-`_unpack_prices()` is used to unpack `_packed_prices`.
+    Getter for the current pool profits.
 
+    Returns: current profits (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        xcp_profit: public(uint256)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> TriCrypto.xcp_profit()
+        1003213938530958270
+        ```
+
+
+### `xcp_profit_a`
+!!! description "`TriCrypto.xcp_profit_a() -> uint256:`"
+
+    Getter for the full profit at the last claim of admin fees.
+
+    Returns: profit at last claim (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        xcp_profit_a: public(uint256)  # <--- Full profit at last claim of admin fees.
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> TriCrypto.xcp_profit_a()
+        1003211094190051384
+        ```
+
+
+---
+
+
+## **Price Scaling**
+
+Curve v2 pools automatically adjust liquidity to optimize depth close to the prevailing market rates, reducing slippage. More [here](../../overview.md#price-scaling). Price scaling parameter can be adjusted by the [admin](./admin-controls.md#apply_new_parameters).
+
+### `price_scale`
+!!! description "`TriCrypto.price_scale(k: uint256) -> uint256:`"
+
+    Getter for the price scale of the coin at index `k` with regard to the coin at index 0. Price scale determines the price band around which liquidity is concentrated and is conditionally updated when calling the functions `add_liquidity`, `remove_liquidity_one_coin`, `exchange`, `exchange_underlying` or `exchange_extended`.
+
+    Returns: last price (`uint256`).
+
+    | Input  | Type     | Description         |
+    | ------ | -------- | ------------------- |
+    | `k`    | `uint256`| Index of the coin. |
+
+    ??? quote "Source code"
+
+        ```vyper
+        price_scale_packed: uint256  # <------------------------ Internal price scale.
+
+        @external
+        @view
+        def price_scale(k: uint256) -> uint256:
+            """
+            @notice Returns the price scale of the coin at index `k` w.r.t the coin
+                    at index 0.
+            @dev Price scale determines the price band around which liquidity is
+                concentrated.
+            @param k The index of the coin.
+            @return uint256 Price scale of coin.
+            """
+            return self._unpack_prices(self.price_scale_packed)[k]
+
+        @internal
+        def tweak_price(
+            A_gamma: uint256[2],
+            _xp: uint256[N_COINS],
+            new_D: uint256,
+            K0_prev: uint256 = 0,
+        ) -> uint256:
+            """
+            @notice Tweaks price_oracle, last_price and conditionally adjusts
+                    price_scale. This is called whenever there is an unbalanced
+                    liquidity operation: _exchange, add_liquidity, or
+                    remove_liquidity_one_coin.
+            @dev Contains main liquidity rebalancing logic, by tweaking `price_scale`.
+            @param A_gamma Array of A and gamma parameters.
+            @param _xp Array of current balances.
+            @param new_D New D value.
+            @param K0_prev Initial guess for `newton_D`.
+            """
+
+            # ---------------------------- Read storage ------------------------------
+
+            rebalancing_params: uint256[3] = self._unpack(
+                self.packed_rebalancing_params
+            )  # <---------- Contains: allowed_extra_profit, adjustment_step, ma_time.
+            price_oracle: uint256[N_COINS - 1] = self._unpack_prices(
+                self.price_oracle_packed
+            )
+            last_prices: uint256[N_COINS - 1] = self._unpack_prices(
+                self.last_prices_packed
+            )
+            packed_price_scale: uint256 = self.price_scale_packed
+            price_scale: uint256[N_COINS - 1] = self._unpack_prices(
+                packed_price_scale
+            )
+
+            total_supply: uint256 = self.totalSupply
+            old_xcp_profit: uint256 = self.xcp_profit
+            old_virtual_price: uint256 = self.virtual_price
+            last_prices_timestamp: uint256 = self.last_prices_timestamp
+
+            # ----------------------- Update MA if needed ----------------------------
+
+            if last_prices_timestamp < block.timestamp:
+
+                #   The moving average price oracle is calculated using the last_price
+                #      of the trade at the previous block, and the price oracle logged
+                #              before that trade. This can happen only once per block.
+
+                # ------------------ Calculate moving average params -----------------
+
+                alpha: uint256 = MATH.wad_exp(
+                    -convert(
+                        unsafe_div(
+                            (block.timestamp - last_prices_timestamp) * 10**18,
+                            rebalancing_params[2]  # <----------------------- ma_time.
+                        ),
+                        int256,
+                    )
+                )
+
+                for k in range(N_COINS - 1):
+
+                    # ----------------- We cap state price that goes into the EMA with
+                    #                                                 2 x price_scale.
+                    price_oracle[k] = unsafe_div(
+                        min(last_prices[k], 2 * price_scale[k]) * (10**18 - alpha) +
+                        price_oracle[k] * alpha,  # ^-------- Cap spot price into EMA.
+                        10**18
+                    )
+
+                self.price_oracle_packed = self._pack_prices(price_oracle)
+                self.last_prices_timestamp = block.timestamp  # <---- Store timestamp.
+
+            #                  price_oracle is used further on to calculate its vector
+            #            distance from price_scale. This distance is used to calculate
+            #                  the amount of adjustment to be done to the price_scale.
+
+            # ------------------ If new_D is set to 0, calculate it ------------------
+
+            D_unadjusted: uint256 = new_D
+            if new_D == 0:  #  <--------------------------- _exchange sets new_D to 0.
+                D_unadjusted = MATH.newton_D(A_gamma[0], A_gamma[1], _xp, K0_prev)
+
+            # ----------------------- Calculate last_prices --------------------------
+
+            last_prices = MATH.get_p(_xp, D_unadjusted, A_gamma)
+            for k in range(N_COINS - 1):
+                last_prices[k] = unsafe_div(last_prices[k] * price_scale[k], 10**18)
+            self.last_prices_packed = self._pack_prices(last_prices)
+
+            # ---------- Update profit numbers without price adjustment first --------
+
+            xp: uint256[N_COINS] = empty(uint256[N_COINS])
+            xp[0] = unsafe_div(D_unadjusted, N_COINS)
+            for k in range(N_COINS - 1):
+                xp[k + 1] = D_unadjusted * 10**18 / (N_COINS * price_scale[k])
+
+            # ------------------------- Update xcp_profit ----------------------------
+
+            xcp_profit: uint256 = 10**18
+            virtual_price: uint256 = 10**18
+
+            if old_virtual_price > 0:
+
+                xcp: uint256 = MATH.geometric_mean(xp)
+                virtual_price = 10**18 * xcp / total_supply
+
+                xcp_profit = unsafe_div(
+                    old_xcp_profit * virtual_price,
+                    old_virtual_price
+                )  # <---------------- Safu to do unsafe_div as old_virtual_price > 0.
+
+                #       If A and gamma are not undergoing ramps (t < block.timestamp),
+                #         ensure new virtual_price is not less than old virtual_price,
+                #                                        else the pool suffers a loss.
+                if self.future_A_gamma_time < block.timestamp:
+                    assert virtual_price > old_virtual_price, "Loss"
+
+            self.xcp_profit = xcp_profit
+
+            # ------------ Rebalance liquidity if there's enough profits to adjust it:
+            if virtual_price * 2 - 10**18 > xcp_profit + 2 * rebalancing_params[0]:
+                #                          allowed_extra_profit --------^
+
+                # ------------------- Get adjustment step ----------------------------
+
+                #                Calculate the vector distance between price_scale and
+                #                                                        price_oracle.
+                norm: uint256 = 0
+                ratio: uint256 = 0
+                for k in range(N_COINS - 1):
+
+                    ratio = unsafe_div(price_oracle[k] * 10**18, price_scale[k])
+                    # unsafe_div because we did safediv before ----^
+
+                    if ratio > 10**18:
+                        ratio = unsafe_sub(ratio, 10**18)
+                    else:
+                        ratio = unsafe_sub(10**18, ratio)
+                    norm = unsafe_add(norm, ratio**2)
+
+                norm = isqrt(norm)  # <-------------------- isqrt is not in base 1e18.
+                adjustment_step: uint256 = max(
+                    rebalancing_params[1], unsafe_div(norm, 5)
+                )  #           ^------------------------------------- adjustment_step.
+
+                if norm > adjustment_step:  # <---------- We only adjust prices if the
+                    #          vector distance between price_oracle and price_scale is
+                    #             large enough. This check ensures that no rebalancing
+                    #           occurs if the distance is low i.e. the pool prices are
+                    #                                     pegged to the oracle prices.
+
+                    # ------------------------------------- Calculate new price scale.
+
+                    p_new: uint256[N_COINS - 1] = empty(uint256[N_COINS - 1])
+                    for k in range(N_COINS - 1):
+                        p_new[k] = unsafe_div(
+                            price_scale[k] * unsafe_sub(norm, adjustment_step)
+                            + adjustment_step * price_oracle[k],
+                            norm
+                        )  # <- norm is non-zero and gt adjustment_step; unsafe = safe
+
+                    # ---------------- Update stale xp (using price_scale) with p_new.
+                    xp = _xp
+                    for k in range(N_COINS - 1):
+                        xp[k + 1] = unsafe_div(_xp[k + 1] * p_new[k], price_scale[k])
+                        # unsafe_div because we did safediv before ----^
+
+                    # ------------------------------------------ Update D with new xp.
+                    D: uint256 = MATH.newton_D(A_gamma[0], A_gamma[1], xp, 0)
+
+                    for k in range(N_COINS):
+                        frac: uint256 = xp[k] * 10**18 / D  # <----- Check validity of
+                        assert (frac > 10**16 - 1) and (frac < 10**20 + 1)  #   p_new.
+
+                    xp[0] = D / N_COINS
+                    for k in range(N_COINS - 1):
+                        xp[k + 1] = D * 10**18 / (N_COINS * p_new[k])  # <---- Convert
+                        #                                           xp to real prices.
+
+                    # ---------- Calculate new virtual_price using new xp and D. Reuse
+                    #              `old_virtual_price` (but it has new virtual_price).
+                    old_virtual_price = unsafe_div(
+                        10**18 * MATH.geometric_mean(xp), total_supply
+                    )  # <----- unsafe_div because we did safediv before (if vp>1e18)
+
+                    # ---------------------------- Proceed if we've got enough profit.
+                    if (
+                        old_virtual_price > 10**18 and
+                        2 * old_virtual_price - 10**18 > xcp_profit
+                    ):
+
+                        packed_price_scale = self._pack_prices(p_new)
+
+                        self.D = D
+                        self.virtual_price = old_virtual_price
+                        self.price_scale_packed = packed_price_scale
+
+                        return packed_price_scale
+
+            # --------- price_scale was not adjusted. Update the profit counter and D.
+            self.D = D_unadjusted
+            self.virtual_price = virtual_price
+
+            return packed_price_scale
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> TriCrypto.price_scale(0)
+        27902293922834345521086
+        ```
+
+
+### `allowed_extra_profit`
+!!! description "`TriCrypto.allowed_extra_profit() -> uint256:`"
+
+    Getter for the allowed extra profit value.
+
+    Returns: allowed extra profit (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
+        #               parameters allowed_extra_profit, adjustment_step, and ma_time.
+
+        @view
+        @external
+        def allowed_extra_profit() -> uint256:
+            """
+            @notice Returns the current allowed extra profit
+            @return uint256 allowed_extra_profit value.
+            """
+            return self._unpack(self.packed_rebalancing_params)[0]
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> TriCrypto.allowed_extra_profit()
+        100000000
+        ```
+
+
+### `adjustment_step`
+!!! description "`TriCrypto.adjustment_step() -> uint256:`"
+
+    Getter for the adjustment step value.
+
+    Returns: adjustment step (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
+        #               parameters allowed_extra_profit, adjustment_step, and ma_time.
+
+        @view
+        @external
+        def adjustment_step() -> uint256:
+            """
+            @notice Returns the current adjustment step
+            @return uint256 adjustment_step value.
+            """
+            return self._unpack(self.packed_rebalancing_params)[1]
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> TriCrypto.adjustment_step()
+        100000000000
+        ```
+
+
+### `packed_rebalancing_params`
+!!! description "`TriCrypto.packed_rebalancing_params() -> uint256: view`"
+
+    Getter for the packed rebalancing parameters, consisting of `allowed_extra_profit`, `adjustment_step`, and `ma_time`.
+
+    Returns: packed rebalancing parameters (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
+        #               parameters allowed_extra_profit, adjustment_step, and ma_time.
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> TriCrypto.packed_rebalancing_params()
+        34028236692093848191011868114131982745600000866
+        ```
+
+
+---
+
+
+## **Bonding Curve Parameters**
+
+A bonding curve is used to determine asset prices according to the pool's supply of each asset, more [here](../../overview.md#bonding-curve-parameters).
+
+Bonding curve parameters `A` and `gamma` values are [upgradable](./admin-controls.md#amplification-coefficient-and-gamma) by the the pools admin.
+
+
+### `A`
+!!! description "`CryptoSwap.A() -> uint256:`"
+
+    Getter for the current pool amplification parameter.
+
+    Returns: A (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        @view
+        @external
+        def A() -> uint256:
+            """
+            @notice Returns the current pool amplification parameter.
+            @return uint256 A param.
+            """
+            return self._A_gamma()[0]
+
+        @view
+        @internal
+        def _A_gamma() -> uint256[2]:
+            t1: uint256 = self.future_A_gamma_time
+
+            A_gamma_1: uint256 = self.future_A_gamma
+            gamma1: uint256 = A_gamma_1 & 2**128 - 1
+            A1: uint256 = A_gamma_1 >> 128
+
+            if block.timestamp < t1:
+
+                # --------------- Handle ramping up and down of A --------------------
+
+                A_gamma_0: uint256 = self.initial_A_gamma
+                t0: uint256 = self.initial_A_gamma_time
+
+                t1 -= t0
+                t0 = block.timestamp - t0
+                t2: uint256 = t1 - t0
+
+                A1 = ((A_gamma_0 >> 128) * t2 + A1 * t0) / t1
+                gamma1 = ((A_gamma_0 & 2**128 - 1) * t2 + gamma1 * t0) / t1
+
+            return [A1, gamma1]
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> CryptoSwap.A()
+        1707629
+        ```
+
+
+### `gamma`
+!!! description "`CryptoSwap.gamma() -> uint256:`"
+
+    Getter for the current pool gamma parameter.
+
+    Returns: gamma (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        @view
+        @external
+        def gamma() -> uint256:
+            """
+            @notice Returns the current pool gamma parameter.
+            @return uint256 gamma param.
+            """
+            return self._A_gamma()[1]
+
+        @view
+        @internal
+        def _A_gamma() -> uint256[2]:
+            t1: uint256 = self.future_A_gamma_time
+
+            A_gamma_1: uint256 = self.future_A_gamma
+            gamma1: uint256 = A_gamma_1 & 2**128 - 1
+            A1: uint256 = A_gamma_1 >> 128
+
+            if block.timestamp < t1:
+
+                # --------------- Handle ramping up and down of A --------------------
+
+                A_gamma_0: uint256 = self.initial_A_gamma
+                t0: uint256 = self.initial_A_gamma_time
+
+                t1 -= t0
+                t0 = block.timestamp - t0
+                t2: uint256 = t1 - t0
+
+                A1 = ((A_gamma_0 >> 128) * t2 + A1 * t0) / t1
+                gamma1 = ((A_gamma_0 & 2**128 - 1) * t2 + gamma1 * t0) / t1
+
+            return [A1, gamma1]
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> CryptoSwap.gamma()
+        11809167828997
+        ```
+
+
+---
+
+
+## **Oracle Methods**
+
+*All pools have their own built in exponential moving average price oracle, which are updated through the internal `tweak_price` method when calling `_exchange`, `add_liquidity` or `remove_liquidity_one_coin`.*
+
+??? quote "tweak_price(A_gamma: uint256[2], _xp: uint256[N_COINS], new_D: uint256, K0_prev: uint256 = 0) -> uint256:"
+
+    ```vyper
+    @internal
+    def tweak_price(
+        A_gamma: uint256[2],
+        _xp: uint256[N_COINS],
+        new_D: uint256,
+        K0_prev: uint256 = 0,
+    ) -> uint256:
+        """
+        @notice Tweaks price_oracle, last_price and conditionally adjusts
+                price_scale. This is called whenever there is an unbalanced
+                liquidity operation: _exchange, add_liquidity, or
+                remove_liquidity_one_coin.
+        @dev Contains main liquidity rebalancing logic, by tweaking `price_scale`.
+        @param A_gamma Array of A and gamma parameters.
+        @param _xp Array of current balances.
+        @param new_D New D value.
+        @param K0_prev Initial guess for `newton_D`.
+        """
+
+        # ---------------------------- Read storage ------------------------------
+
+        rebalancing_params: uint256[3] = self._unpack(
+            self.packed_rebalancing_params
+        )  # <---------- Contains: allowed_extra_profit, adjustment_step, ma_time.
+        price_oracle: uint256[N_COINS - 1] = self._unpack_prices(
+            self.price_oracle_packed
+        )
+        last_prices: uint256[N_COINS - 1] = self._unpack_prices(
+            self.last_prices_packed
+        )
+        packed_price_scale: uint256 = self.price_scale_packed
+        price_scale: uint256[N_COINS - 1] = self._unpack_prices(
+            packed_price_scale
+        )
+
+        total_supply: uint256 = self.totalSupply
+        old_xcp_profit: uint256 = self.xcp_profit
+        old_virtual_price: uint256 = self.virtual_price
+        last_prices_timestamp: uint256 = self.last_prices_timestamp
+
+        # ----------------------- Update MA if needed ----------------------------
+
+        if last_prices_timestamp < block.timestamp:
+
+            #   The moving average price oracle is calculated using the last_price
+            #      of the trade at the previous block, and the price oracle logged
+            #              before that trade. This can happen only once per block.
+
+            # ------------------ Calculate moving average params -----------------
+
+            alpha: uint256 = MATH.wad_exp(
+                -convert(
+                    unsafe_div(
+                        (block.timestamp - last_prices_timestamp) * 10**18,
+                        rebalancing_params[2]  # <----------------------- ma_time.
+                    ),
+                    int256,
+                )
+            )
+
+            for k in range(N_COINS - 1):
+
+                # ----------------- We cap state price that goes into the EMA with
+                #                                                 2 x price_scale.
+                price_oracle[k] = unsafe_div(
+                    min(last_prices[k], 2 * price_scale[k]) * (10**18 - alpha) +
+                    price_oracle[k] * alpha,  # ^-------- Cap spot price into EMA.
+                    10**18
+                )
+
+            self.price_oracle_packed = self._pack_prices(price_oracle)
+            self.last_prices_timestamp = block.timestamp  # <---- Store timestamp.
+
+        #                  price_oracle is used further on to calculate its vector
+        #            distance from price_scale. This distance is used to calculate
+        #                  the amount of adjustment to be done to the price_scale.
+
+        # ------------------ If new_D is set to 0, calculate it ------------------
+
+        D_unadjusted: uint256 = new_D
+        if new_D == 0:  #  <--------------------------- _exchange sets new_D to 0.
+            D_unadjusted = MATH.newton_D(A_gamma[0], A_gamma[1], _xp, K0_prev)
+
+        # ----------------------- Calculate last_prices --------------------------
+
+        last_prices = MATH.get_p(_xp, D_unadjusted, A_gamma)
+        for k in range(N_COINS - 1):
+            last_prices[k] = unsafe_div(last_prices[k] * price_scale[k], 10**18)
+        self.last_prices_packed = self._pack_prices(last_prices)
+
+        # ---------- Update profit numbers without price adjustment first --------
+
+        xp: uint256[N_COINS] = empty(uint256[N_COINS])
+        xp[0] = unsafe_div(D_unadjusted, N_COINS)
+        for k in range(N_COINS - 1):
+            xp[k + 1] = D_unadjusted * 10**18 / (N_COINS * price_scale[k])
+
+        # ------------------------- Update xcp_profit ----------------------------
+
+        xcp_profit: uint256 = 10**18
+        virtual_price: uint256 = 10**18
+
+        if old_virtual_price > 0:
+
+            xcp: uint256 = MATH.geometric_mean(xp)
+            virtual_price = 10**18 * xcp / total_supply
+
+            xcp_profit = unsafe_div(
+                old_xcp_profit * virtual_price,
+                old_virtual_price
+            )  # <---------------- Safu to do unsafe_div as old_virtual_price > 0.
+
+            #       If A and gamma are not undergoing ramps (t < block.timestamp),
+            #         ensure new virtual_price is not less than old virtual_price,
+            #                                        else the pool suffers a loss.
+            if self.future_A_gamma_time < block.timestamp:
+                assert virtual_price > old_virtual_price, "Loss"
+
+        self.xcp_profit = xcp_profit
+
+        # ------------ Rebalance liquidity if there's enough profits to adjust it:
+        if virtual_price * 2 - 10**18 > xcp_profit + 2 * rebalancing_params[0]:
+            #                          allowed_extra_profit --------^
+
+            # ------------------- Get adjustment step ----------------------------
+
+            #                Calculate the vector distance between price_scale and
+            #                                                        price_oracle.
+            norm: uint256 = 0
+            ratio: uint256 = 0
+            for k in range(N_COINS - 1):
+
+                ratio = unsafe_div(price_oracle[k] * 10**18, price_scale[k])
+                # unsafe_div because we did safediv before ----^
+
+                if ratio > 10**18:
+                    ratio = unsafe_sub(ratio, 10**18)
+                else:
+                    ratio = unsafe_sub(10**18, ratio)
+                norm = unsafe_add(norm, ratio**2)
+
+            norm = isqrt(norm)  # <-------------------- isqrt is not in base 1e18.
+            adjustment_step: uint256 = max(
+                rebalancing_params[1], unsafe_div(norm, 5)
+            )  #           ^------------------------------------- adjustment_step.
+
+            if norm > adjustment_step:  # <---------- We only adjust prices if the
+                #          vector distance between price_oracle and price_scale is
+                #             large enough. This check ensures that no rebalancing
+                #           occurs if the distance is low i.e. the pool prices are
+                #                                     pegged to the oracle prices.
+
+                # ------------------------------------- Calculate new price scale.
+
+                p_new: uint256[N_COINS - 1] = empty(uint256[N_COINS - 1])
+                for k in range(N_COINS - 1):
+                    p_new[k] = unsafe_div(
+                        price_scale[k] * unsafe_sub(norm, adjustment_step)
+                        + adjustment_step * price_oracle[k],
+                        norm
+                    )  # <- norm is non-zero and gt adjustment_step; unsafe = safe
+
+                # ---------------- Update stale xp (using price_scale) with p_new.
+                xp = _xp
+                for k in range(N_COINS - 1):
+                    xp[k + 1] = unsafe_div(_xp[k + 1] * p_new[k], price_scale[k])
+                    # unsafe_div because we did safediv before ----^
+
+                # ------------------------------------------ Update D with new xp.
+                D: uint256 = MATH.newton_D(A_gamma[0], A_gamma[1], xp, 0)
+
+                for k in range(N_COINS):
+                    frac: uint256 = xp[k] * 10**18 / D  # <----- Check validity of
+                    assert (frac > 10**16 - 1) and (frac < 10**20 + 1)  #   p_new.
+
+                xp[0] = D / N_COINS
+                for k in range(N_COINS - 1):
+                    xp[k + 1] = D * 10**18 / (N_COINS * p_new[k])  # <---- Convert
+                    #                                           xp to real prices.
+
+                # ---------- Calculate new virtual_price using new xp and D. Reuse
+                #              `old_virtual_price` (but it has new virtual_price).
+                old_virtual_price = unsafe_div(
+                    10**18 * MATH.geometric_mean(xp), total_supply
+                )  # <----- unsafe_div because we did safediv before (if vp>1e18)
+
+                # ---------------------------- Proceed if we've got enough profit.
+                if (
+                    old_virtual_price > 10**18 and
+                    2 * old_virtual_price - 10**18 > xcp_profit
+                ):
+
+                    packed_price_scale = self._pack_prices(p_new)
+
+                    self.D = D
+                    self.virtual_price = old_virtual_price
+                    self.price_scale_packed = packed_price_scale
+
+                    return packed_price_scale
+
+        # --------- price_scale was not adjusted. Update the profit counter and D.
+        self.D = D_unadjusted
+        self.virtual_price = virtual_price
+
+        return packed_price_scale
+    ```
+
+
+*`_unpack_prices()` is used to unpack `_packed_prices`, which store all relevant vaules.*
 
 ??? quote "_unpack_prices()"
 
@@ -3187,156 +3881,16 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
     ```
 
 
-### `lp_price`
-!!! description "`TriCrypto.lp_price() -> uint256:`"
-
-    Function to calculate the current price of the LP token with regard to the coin at index 0.
-
-    Returns: LP token price (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        price_oracle_packed: uint256  # <------- Price target given by moving average.
-
-        PRICE_SIZE: constant(uint128) = 256 / (N_COINS - 1)
-        PRICE_MASK: constant(uint256) = 2**PRICE_SIZE - 1
-
-        @external
-        @view
-        @nonreentrant("lock")
-        def lp_price() -> uint256:
-            """
-            @notice Calculates the current price of the LP token w.r.t coin at the
-                    0th index
-            @return uint256 LP price.
-            """
-
-            price_oracle: uint256[N_COINS-1] = self._unpack_prices(
-                self.price_oracle_packed
-            )
-            return (
-                3 * self.virtual_price * MATH.cbrt(price_oracle[0] * price_oracle[1])
-            ) / 10**24
-
-        @internal
-        @view
-        def _unpack_prices(_packed_prices: uint256) -> uint256[2]:
-            """
-            @notice Unpacks N_COINS-1 prices from a uint256.
-            @param _packed_prices The packed prices
-            @return uint256[2] Unpacked prices
-            """
-            unpacked_prices: uint256[N_COINS-1] = empty(uint256[N_COINS-1])
-            packed_prices: uint256 = _packed_prices
-            for k in range(N_COINS - 1):
-                unpacked_prices[k] = packed_prices & PRICE_MASK
-                packed_prices = packed_prices >> PRICE_SIZE
-
-            return unpacked_prices
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> TriCrypto.lp_price()
-        1070632218683371923538
-        ```
-
-
-### `get_virtual_price`
-!!! description "`TriCrypto.get_virtual_price() -> uint256:`"
-
-    Getter for the current virtual price of the LP token.
-
-    Returns: virtual price (`uint256`).
-
-    ??? quote "Source code"
-
-        === "CurveTricryptoOptimizedWETH.vy"
-
-            ```vyper
-            D: public(uint256)
-
-            PRICE_SIZE: constant(uint128) = 256 / (N_COINS - 1)
-            PRICE_MASK: constant(uint256) = 2**PRICE_SIZE - 1
-
-            @external
-            @view
-            @nonreentrant("lock")
-            def get_virtual_price() -> uint256:
-                """
-                @notice Calculates the current virtual price of the pool LP token.
-                @dev Not to be confused with `self.virtual_price` which is a cached
-                    virtual price.
-                @return uint256 Virtual Price.
-                """
-                return 10**18 * self.get_xcp(self.D) / self.totalSupply
-
-            @internal
-            @view
-            def get_xcp(D: uint256) -> uint256:
-
-                x: uint256[N_COINS] = empty(uint256[N_COINS])
-                x[0] = D / N_COINS
-                packed_prices: uint256 = self.price_scale_packed  # <-- No precisions here
-                #                                 because we don't switch to "real" units.
-
-                for i in range(1, N_COINS):
-                    x[i] = D * 10**18 / (N_COINS * (packed_prices & PRICE_MASK))
-                    packed_prices = packed_prices >> PRICE_SIZE
-
-                return MATH.geometric_mean(x)
-            ```
-
-        === "Math.vy"
-
-            ```vyper
-            @external
-            @view
-            def geometric_mean(_x: uint256[3]) -> uint256:
-                """
-                @notice Calculate the geometric mean of a list of numbers in 1e18 precision.
-                @param _x list of 3 numbers to sort
-                """
-                return self._geometric_mean(_x)
-
-            @internal
-            @view
-            def _geometric_mean(_x: uint256[3]) -> uint256:
-
-                # calculates a geometric mean for three numbers.
-
-                prod: uint256 = unsafe_div(
-                    unsafe_div(_x[0] * _x[1], 10**18) * _x[2],
-                    10**18
-                )
-
-                if prod == 0:
-                    return 0
-
-                return self._cbrt(prod)
-            ```
-
-
-    === "Example"
-
-        ```shell
-        >>> TriCrypto.get_virtual_price()
-        1000984764113552847
-        ```
-
-
 ### `price_oracle`
 !!! description "`TriCrypto.price_oracle(k: uint256) -> uint256:`"
 
-    Getter for the oracle price of the coin at index `k` with regard to coin at index 0. The price oracle is updated when calling the functions `add_liquidity`, `remove_liquidity_one_coin`, `exchange`, `exchange_underlying` or `exchange_extended`.
+    Getter for the oracle price of the coin at index `k` with regard to coin at index 0. The price oracle is updated when calling functions such as `add_liquidity`, `remove_liquidity_one_coin`, `exchange`, `exchange_underlying` or `exchange_extended`.
 
     Returns: price (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `k` |  `uint256` | index of the coin |
+    | Input  | Type     | Description         |
+    | ------ | -------- | ------------------- |
+    | `k`    | `uint256`| Index of the coin.  |
 
     ??? quote "Source code"
 
@@ -3593,6 +4147,207 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
         ```
 
 
+### `ma_time`
+!!! description "`TriCrypto.ma_time() -> uint256:`"
+
+    Getter for the moving-average (ma) time in seconds.
+
+    Returns: ma time (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
+        #               parameters allowed_extra_profit, adjustment_step, and ma_time.
+
+        @view
+        @external
+        def ma_time() -> uint256:
+            """
+            @notice Returns the current moving average time in seconds
+            @dev To get time in seconds, the parameter is multipled by ln(2)
+                One can expect off-by-one errors here.
+            @return uint256 ma_time value.
+            """
+            return self._unpack(self.packed_rebalancing_params)[2] * 694 / 1000
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> TriCrypto.ma_time()
+        601
+        ```
+
+
+### `lp_price`
+!!! description "`TriCrypto.lp_price() -> uint256:`"
+
+    Function to calculate the current price of the LP token with regard to the coin at index 0.
+
+    Returns: LP token price (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        price_oracle_packed: uint256  # <------- Price target given by moving average.
+
+        PRICE_SIZE: constant(uint128) = 256 / (N_COINS - 1)
+        PRICE_MASK: constant(uint256) = 2**PRICE_SIZE - 1
+
+        @external
+        @view
+        @nonreentrant("lock")
+        def lp_price() -> uint256:
+            """
+            @notice Calculates the current price of the LP token w.r.t coin at the
+                    0th index
+            @return uint256 LP price.
+            """
+
+            price_oracle: uint256[N_COINS-1] = self._unpack_prices(
+                self.price_oracle_packed
+            )
+            return (
+                3 * self.virtual_price * MATH.cbrt(price_oracle[0] * price_oracle[1])
+            ) / 10**24
+
+        @internal
+        @view
+        def _unpack_prices(_packed_prices: uint256) -> uint256[2]:
+            """
+            @notice Unpacks N_COINS-1 prices from a uint256.
+            @param _packed_prices The packed prices
+            @return uint256[2] Unpacked prices
+            """
+            unpacked_prices: uint256[N_COINS-1] = empty(uint256[N_COINS-1])
+            packed_prices: uint256 = _packed_prices
+            for k in range(N_COINS - 1):
+                unpacked_prices[k] = packed_prices & PRICE_MASK
+                packed_prices = packed_prices >> PRICE_SIZE
+
+            return unpacked_prices
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> TriCrypto.lp_price()
+        1070632218683371923538
+        ```
+
+
+### `virtual_price`
+!!! description "`TriCrypto.virtual_price() -> uint256:`"
+
+    !!!warning "`get_virtual_price` ≠ `virtual_price`"
+        `get_virtual_price` should not be confused with `virtual_price`, which is a cached virtual price.
+
+    Getter for the cached virtual price. This variable provides a fast read by accessing the cached value instead of recalculating it.
+
+    Returns: cached virtual price (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        virtual_price: public(uint256)  # <------ Cached (fast to read) virtual price.
+        #                          The cached `virtual_price` is also used internally.
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> TriCrypto.virtual_price()
+        1000984764113552847
+        ```
+
+
+### `get_virtual_price`
+!!! description "`TriCrypto.get_virtual_price() -> uint256:`"
+
+    !!!warning "`get_virtual_price` ≠ `virtual_price`"
+        `get_virtual_price` should not be confused with `virtual_price`, which is a cached virtual price.
+
+    Function to calculate the current virtual price of the pool's LP token.
+
+    Returns: virtual price (`uint256`).
+
+    ??? quote "Source code"
+
+        === "CurveTricryptoOptimizedWETH.vy"
+
+            ```vyper
+            D: public(uint256)
+
+            PRICE_SIZE: constant(uint128) = 256 / (N_COINS - 1)
+            PRICE_MASK: constant(uint256) = 2**PRICE_SIZE - 1
+
+            @external
+            @view
+            @nonreentrant("lock")
+            def get_virtual_price() -> uint256:
+                """
+                @notice Calculates the current virtual price of the pool LP token.
+                @dev Not to be confused with `self.virtual_price` which is a cached
+                    virtual price.
+                @return uint256 Virtual Price.
+                """
+                return 10**18 * self.get_xcp(self.D) / self.totalSupply
+
+            @internal
+            @view
+            def get_xcp(D: uint256) -> uint256:
+
+                x: uint256[N_COINS] = empty(uint256[N_COINS])
+                x[0] = D / N_COINS
+                packed_prices: uint256 = self.price_scale_packed  # <-- No precisions here
+                #                                 because we don't switch to "real" units.
+
+                for i in range(1, N_COINS):
+                    x[i] = D * 10**18 / (N_COINS * (packed_prices & PRICE_MASK))
+                    packed_prices = packed_prices >> PRICE_SIZE
+
+                return MATH.geometric_mean(x)
+            ```
+
+        === "Math.vy"
+
+            ```vyper
+            @external
+            @view
+            def geometric_mean(_x: uint256[3]) -> uint256:
+                """
+                @notice Calculate the geometric mean of a list of numbers in 1e18 precision.
+                @param _x list of 3 numbers to sort
+                """
+                return self._geometric_mean(_x)
+
+            @internal
+            @view
+            def _geometric_mean(_x: uint256[3]) -> uint256:
+
+                # calculates a geometric mean for three numbers.
+
+                prod: uint256 = unsafe_div(
+                    unsafe_div(_x[0] * _x[1], 10**18) * _x[2],
+                    10**18
+                )
+
+                if prod == 0:
+                    return 0
+
+                return self._cbrt(prod)
+            ```
+
+
+    === "Example"
+
+        ```shell
+        >>> TriCrypto.get_virtual_price()
+        1000984764113552847
+        ```
+
+
 ### `last_prices`
 !!! description "`TriCrypto.last_prices(k: uint256) -> uint256:`"
 
@@ -3600,9 +4355,9 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
 
     Returns: last price (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `k` |  `uint256` | index of the coin |
+    | Input  | Type     | Description         |
+    | ------ | -------- | ------------------- |
+    | `k`    | `uint256`| Index of the coin.  |
 
     ??? quote "Source code"
 
@@ -3841,284 +4596,6 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
         ```
 
 
-### `price_scale`
-!!! description "`TriCrypto.price_scale(k: uint256) -> uint256:`"
-
-    Getter for the price scale of the coin at index `k` with regard to the coin at index 0. Price scale determines the price band around which liquidity is
-    concentrated and is conditionally updated when calling the functions `add_liquidity`, `remove_liquidity_one_coin`, `exchange`, `exchange_underlying` or `exchange_extended`.
-
-    Returns: last price (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `k` |  `uint256` | index of the coin |
-
-    ??? quote "Source code"
-
-        ```vyper
-        price_scale_packed: uint256  # <------------------------ Internal price scale.
-
-        @external
-        @view
-        def price_scale(k: uint256) -> uint256:
-            """
-            @notice Returns the price scale of the coin at index `k` w.r.t the coin
-                    at index 0.
-            @dev Price scale determines the price band around which liquidity is
-                concentrated.
-            @param k The index of the coin.
-            @return uint256 Price scale of coin.
-            """
-            return self._unpack_prices(self.price_scale_packed)[k]
-
-        @internal
-        def tweak_price(
-            A_gamma: uint256[2],
-            _xp: uint256[N_COINS],
-            new_D: uint256,
-            K0_prev: uint256 = 0,
-        ) -> uint256:
-            """
-            @notice Tweaks price_oracle, last_price and conditionally adjusts
-                    price_scale. This is called whenever there is an unbalanced
-                    liquidity operation: _exchange, add_liquidity, or
-                    remove_liquidity_one_coin.
-            @dev Contains main liquidity rebalancing logic, by tweaking `price_scale`.
-            @param A_gamma Array of A and gamma parameters.
-            @param _xp Array of current balances.
-            @param new_D New D value.
-            @param K0_prev Initial guess for `newton_D`.
-            """
-
-            # ---------------------------- Read storage ------------------------------
-
-            rebalancing_params: uint256[3] = self._unpack(
-                self.packed_rebalancing_params
-            )  # <---------- Contains: allowed_extra_profit, adjustment_step, ma_time.
-            price_oracle: uint256[N_COINS - 1] = self._unpack_prices(
-                self.price_oracle_packed
-            )
-            last_prices: uint256[N_COINS - 1] = self._unpack_prices(
-                self.last_prices_packed
-            )
-            packed_price_scale: uint256 = self.price_scale_packed
-            price_scale: uint256[N_COINS - 1] = self._unpack_prices(
-                packed_price_scale
-            )
-
-            total_supply: uint256 = self.totalSupply
-            old_xcp_profit: uint256 = self.xcp_profit
-            old_virtual_price: uint256 = self.virtual_price
-            last_prices_timestamp: uint256 = self.last_prices_timestamp
-
-            # ----------------------- Update MA if needed ----------------------------
-
-            if last_prices_timestamp < block.timestamp:
-
-                #   The moving average price oracle is calculated using the last_price
-                #      of the trade at the previous block, and the price oracle logged
-                #              before that trade. This can happen only once per block.
-
-                # ------------------ Calculate moving average params -----------------
-
-                alpha: uint256 = MATH.wad_exp(
-                    -convert(
-                        unsafe_div(
-                            (block.timestamp - last_prices_timestamp) * 10**18,
-                            rebalancing_params[2]  # <----------------------- ma_time.
-                        ),
-                        int256,
-                    )
-                )
-
-                for k in range(N_COINS - 1):
-
-                    # ----------------- We cap state price that goes into the EMA with
-                    #                                                 2 x price_scale.
-                    price_oracle[k] = unsafe_div(
-                        min(last_prices[k], 2 * price_scale[k]) * (10**18 - alpha) +
-                        price_oracle[k] * alpha,  # ^-------- Cap spot price into EMA.
-                        10**18
-                    )
-
-                self.price_oracle_packed = self._pack_prices(price_oracle)
-                self.last_prices_timestamp = block.timestamp  # <---- Store timestamp.
-
-            #                  price_oracle is used further on to calculate its vector
-            #            distance from price_scale. This distance is used to calculate
-            #                  the amount of adjustment to be done to the price_scale.
-
-            # ------------------ If new_D is set to 0, calculate it ------------------
-
-            D_unadjusted: uint256 = new_D
-            if new_D == 0:  #  <--------------------------- _exchange sets new_D to 0.
-                D_unadjusted = MATH.newton_D(A_gamma[0], A_gamma[1], _xp, K0_prev)
-
-            # ----------------------- Calculate last_prices --------------------------
-
-            last_prices = MATH.get_p(_xp, D_unadjusted, A_gamma)
-            for k in range(N_COINS - 1):
-                last_prices[k] = unsafe_div(last_prices[k] * price_scale[k], 10**18)
-            self.last_prices_packed = self._pack_prices(last_prices)
-
-            # ---------- Update profit numbers without price adjustment first --------
-
-            xp: uint256[N_COINS] = empty(uint256[N_COINS])
-            xp[0] = unsafe_div(D_unadjusted, N_COINS)
-            for k in range(N_COINS - 1):
-                xp[k + 1] = D_unadjusted * 10**18 / (N_COINS * price_scale[k])
-
-            # ------------------------- Update xcp_profit ----------------------------
-
-            xcp_profit: uint256 = 10**18
-            virtual_price: uint256 = 10**18
-
-            if old_virtual_price > 0:
-
-                xcp: uint256 = MATH.geometric_mean(xp)
-                virtual_price = 10**18 * xcp / total_supply
-
-                xcp_profit = unsafe_div(
-                    old_xcp_profit * virtual_price,
-                    old_virtual_price
-                )  # <---------------- Safu to do unsafe_div as old_virtual_price > 0.
-
-                #       If A and gamma are not undergoing ramps (t < block.timestamp),
-                #         ensure new virtual_price is not less than old virtual_price,
-                #                                        else the pool suffers a loss.
-                if self.future_A_gamma_time < block.timestamp:
-                    assert virtual_price > old_virtual_price, "Loss"
-
-            self.xcp_profit = xcp_profit
-
-            # ------------ Rebalance liquidity if there's enough profits to adjust it:
-            if virtual_price * 2 - 10**18 > xcp_profit + 2 * rebalancing_params[0]:
-                #                          allowed_extra_profit --------^
-
-                # ------------------- Get adjustment step ----------------------------
-
-                #                Calculate the vector distance between price_scale and
-                #                                                        price_oracle.
-                norm: uint256 = 0
-                ratio: uint256 = 0
-                for k in range(N_COINS - 1):
-
-                    ratio = unsafe_div(price_oracle[k] * 10**18, price_scale[k])
-                    # unsafe_div because we did safediv before ----^
-
-                    if ratio > 10**18:
-                        ratio = unsafe_sub(ratio, 10**18)
-                    else:
-                        ratio = unsafe_sub(10**18, ratio)
-                    norm = unsafe_add(norm, ratio**2)
-
-                norm = isqrt(norm)  # <-------------------- isqrt is not in base 1e18.
-                adjustment_step: uint256 = max(
-                    rebalancing_params[1], unsafe_div(norm, 5)
-                )  #           ^------------------------------------- adjustment_step.
-
-                if norm > adjustment_step:  # <---------- We only adjust prices if the
-                    #          vector distance between price_oracle and price_scale is
-                    #             large enough. This check ensures that no rebalancing
-                    #           occurs if the distance is low i.e. the pool prices are
-                    #                                     pegged to the oracle prices.
-
-                    # ------------------------------------- Calculate new price scale.
-
-                    p_new: uint256[N_COINS - 1] = empty(uint256[N_COINS - 1])
-                    for k in range(N_COINS - 1):
-                        p_new[k] = unsafe_div(
-                            price_scale[k] * unsafe_sub(norm, adjustment_step)
-                            + adjustment_step * price_oracle[k],
-                            norm
-                        )  # <- norm is non-zero and gt adjustment_step; unsafe = safe
-
-                    # ---------------- Update stale xp (using price_scale) with p_new.
-                    xp = _xp
-                    for k in range(N_COINS - 1):
-                        xp[k + 1] = unsafe_div(_xp[k + 1] * p_new[k], price_scale[k])
-                        # unsafe_div because we did safediv before ----^
-
-                    # ------------------------------------------ Update D with new xp.
-                    D: uint256 = MATH.newton_D(A_gamma[0], A_gamma[1], xp, 0)
-
-                    for k in range(N_COINS):
-                        frac: uint256 = xp[k] * 10**18 / D  # <----- Check validity of
-                        assert (frac > 10**16 - 1) and (frac < 10**20 + 1)  #   p_new.
-
-                    xp[0] = D / N_COINS
-                    for k in range(N_COINS - 1):
-                        xp[k + 1] = D * 10**18 / (N_COINS * p_new[k])  # <---- Convert
-                        #                                           xp to real prices.
-
-                    # ---------- Calculate new virtual_price using new xp and D. Reuse
-                    #              `old_virtual_price` (but it has new virtual_price).
-                    old_virtual_price = unsafe_div(
-                        10**18 * MATH.geometric_mean(xp), total_supply
-                    )  # <----- unsafe_div because we did safediv before (if vp>1e18)
-
-                    # ---------------------------- Proceed if we've got enough profit.
-                    if (
-                        old_virtual_price > 10**18 and
-                        2 * old_virtual_price - 10**18 > xcp_profit
-                    ):
-
-                        packed_price_scale = self._pack_prices(p_new)
-
-                        self.D = D
-                        self.virtual_price = old_virtual_price
-                        self.price_scale_packed = packed_price_scale
-
-                        return packed_price_scale
-
-            # --------- price_scale was not adjusted. Update the profit counter and D.
-            self.D = D_unadjusted
-            self.virtual_price = virtual_price
-
-            return packed_price_scale
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> TriCrypto.price_scale(0)
-        27902293922834345521086
-        ```
-
-
-### `ma_time`
-!!! description "`TriCrypto.ma_time() -> uint256:`"
-
-    Getter for the moving-average (ma) time in seconds.
-
-    Returns: ma time (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
-        #               parameters allowed_extra_profit, adjustment_step, and ma_time.
-
-        @view
-        @external
-        def ma_time() -> uint256:
-            """
-            @notice Returns the current moving average time in seconds
-            @dev To get time in seconds, the parameter is multipled by ln(2)
-                One can expect off-by-one errors here.
-            @return uint256 ma_time value.
-            """
-            return self._unpack(self.packed_rebalancing_params)[2] * 694 / 1000
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> TriCrypto.ma_time()
-        601
-        ```
-
-
 ### `last_prices_timestamp`
 !!! description "`TriCrypto.last_prices_timestamp() -> uint256:`"
 
@@ -4139,237 +4616,7 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
         1696841675
         ```
 
-
-### `virtual_price`
-!!! description "`TriCrypto.virtual_price() -> uint256:`"
-
-    Getter for the virtual price.
-
-    Returns: timestamp (`uint256`).
-
-    !!!warning
-        `virtual_price` is a cached version of the virtual price and should not be confused with `get_virtual_price()`!
-
-    ??? quote "Source code"
-
-        ```vyper
-        virtual_price: public(uint256)  # <------ Cached (fast to read) virtual price.
-        #                          The cached `virtual_price` is also used internally.
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> TriCrypto.virtual_price()
-        1000984764113552847
-        ```
-
-
-## **Price Scaling**
-
-Curve v2 pools adaptively adjust liquidity to optimize depth near prevailing market prices, thereby reducing slippage. This is achieved by maintaining a continuous EMA (exponential moving average) of the pool's recent exchange rates (termed "internal oracle"), and relocating liquidity around this EMA when it's economically sensible for LPs.
-
-You can envision this mechanism as "resetting" the bonding curve to align the peak liquidity concentration (the curve's center) with the EMA. The price with the highest liquidity focus is termed the "price scale", while the ongoing EMA is labeled as the "price oracle."
-
-The price scaling parameters can be adjusted by the admin of the pool, see [here](../pools/admin_controls.md).
-
-
-### `allowed_extra_profit`
-!!! description "`TriCrypto.allowed_extra_profit() -> uint256:`"
-
-    Getter for the current allowed extra profit.
-
-    Returns: allowed extra profit (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
-        #               parameters allowed_extra_profit, adjustment_step, and ma_time.
-
-        @view
-        @external
-        def allowed_extra_profit() -> uint256:
-            """
-            @notice Returns the current allowed extra profit
-            @return uint256 allowed_extra_profit value.
-            """
-            return self._unpack(self.packed_rebalancing_params)[0]
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> TriCrypto.allowed_extra_profit()
-        100000000
-        ```
-
-
-### `adjustment_step`
-!!! description "`TriCrypto.adjustment_step() -> uint256:`"
-
-    Getter for the current adjustment step.
-
-    Returns: adjustment step (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
-        #               parameters allowed_extra_profit, adjustment_step, and ma_time.
-
-        @view
-        @external
-        def adjustment_step() -> uint256:
-            """
-            @notice Returns the current adjustment step
-            @return uint256 adjustment_step value.
-            """
-            return self._unpack(self.packed_rebalancing_params)[1]
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> TriCrypto.adjustment_step()
-        100000000000
-        ```
-
-
-### `packed_rebalancing_params`
-!!! description "`TriCrypto.packed_rebalancing_params() -> uint256: view`"
-
-    Getter for the packed rebalancing parameters.
-
-    Returns: packed rebalancing params (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
-        #               parameters allowed_extra_profit, adjustment_step, and ma_time.
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> TriCrypto.packed_rebalancing_params()
-        34028236692093848191011868114131982745600000866
-        ```
-
-
-
-## **Bonding Curve Parameters**
-
-Similar to many AMMs, Curve v2 employs a bonding curve to determine asset prices based on the pool's availability of each asset. To centralize liquidity near the bonding curve's midpoint, Curve v2 utilizes an invariant that sits between the StableSwap (Curve v1) and the constant-product models (like Uniswap, Balancer, and others).
-
-The bonding curve parameters can be adjusted by the admin of the pool, see [here](../pools/admin_controls.md).
-
-
-### `A`
-!!! description "`CryptoSwap.A() -> uint256:`"
-
-    Getter for the current pool amplification parameter.
-
-    Returns: amplification parameter (A) (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        @view
-        @external
-        def A() -> uint256:
-            """
-            @notice Returns the current pool amplification parameter.
-            @return uint256 A param.
-            """
-            return self._A_gamma()[0]
-
-        @view
-        @internal
-        def _A_gamma() -> uint256[2]:
-            t1: uint256 = self.future_A_gamma_time
-
-            A_gamma_1: uint256 = self.future_A_gamma
-            gamma1: uint256 = A_gamma_1 & 2**128 - 1
-            A1: uint256 = A_gamma_1 >> 128
-
-            if block.timestamp < t1:
-
-                # --------------- Handle ramping up and down of A --------------------
-
-                A_gamma_0: uint256 = self.initial_A_gamma
-                t0: uint256 = self.initial_A_gamma_time
-
-                t1 -= t0
-                t0 = block.timestamp - t0
-                t2: uint256 = t1 - t0
-
-                A1 = ((A_gamma_0 >> 128) * t2 + A1 * t0) / t1
-                gamma1 = ((A_gamma_0 & 2**128 - 1) * t2 + gamma1 * t0) / t1
-
-            return [A1, gamma1]
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> CryptoSwap.A()
-        1707629
-        ```
-
-
-### `gamma`
-!!! description "`CryptoSwap.gamma() -> uint256:`"
-
-    Getter for the current pool gamma parameter.
-
-    Returns: gamma (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        @view
-        @external
-        def gamma() -> uint256:
-            """
-            @notice Returns the current pool gamma parameter.
-            @return uint256 gamma param.
-            """
-            return self._A_gamma()[1]
-
-        @view
-        @internal
-        def _A_gamma() -> uint256[2]:
-            t1: uint256 = self.future_A_gamma_time
-
-            A_gamma_1: uint256 = self.future_A_gamma
-            gamma1: uint256 = A_gamma_1 & 2**128 - 1
-            A1: uint256 = A_gamma_1 >> 128
-
-            if block.timestamp < t1:
-
-                # --------------- Handle ramping up and down of A --------------------
-
-                A_gamma_0: uint256 = self.initial_A_gamma
-                t0: uint256 = self.initial_A_gamma_time
-
-                t1 -= t0
-                t0 = block.timestamp - t0
-                t2: uint256 = t1 - t0
-
-                A1 = ((A_gamma_0 >> 128) * t2 + A1 * t0) / t1
-                gamma1 = ((A_gamma_0 & 2**128 - 1) * t2 + gamma1 * t0) / t1
-
-            return [A1, gamma1]
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> CryptoSwap.gamma()
-        11809167828997
-        ```
+---
 
 
 ## **Contract Info Methods**
@@ -4381,9 +4628,9 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     Returns: coin (`address`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `uint256` | index of coin |
+    | Input  | Type     | Description         |
+    | ------ | -------- | ------------------- |
+    | `k`    | `uint256`| Index of the coin.  |
 
     ??? quote "Source code"
 
@@ -4406,9 +4653,9 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     Returns: coin balance (`address`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `uint256` | index of coin |
+    | Input  | Type     | Description         |
+    | ------ | -------- | ------------------- |
+    | `k`    | `uint256`| Index of the coin.  |
 
     ??? quote "Source code"
 
@@ -4462,7 +4709,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
     Getter for the Factory contract.
 
-    Returns: Factory contract (`address`)
+    Returns: Factory (`address`)
 
     ??? quote "Source code"
 
@@ -4481,9 +4728,9 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 ### `MATH`
 !!! description "`TriCrypto.MATH() -> address: view`"
 
-    Getter for the Math contract.
+    Getter for the [math utility contract](../utility-contracts/math.md).
 
-    Returns: Math contract (`address`).
+    Returns: math contract (`address`).
 
     ??? quote "Source code"
 
@@ -4502,9 +4749,9 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 ### `WETH20`
 !!! description "`TriCrypto.WETH20() -> address: view`"
 
-    Getter for the Math contract.
+    Getter for the wETH contract.
 
-    Returns: Math contract (`address`).
+    Returns: wETH contract (`address`).
 
     ??? quote "Source code"
 
