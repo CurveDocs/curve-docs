@@ -2,11 +2,12 @@
 
 
 # **Pool Ownership**
-Liquidity pools are deployed via the [pool factory](../../../factory/twocrypto-ng/deployer-api.md). All pools deployed **share the same admin** defined within the Factory contract. To transfer ownership of an individual pool, it's necessary to transfer the ownership of the entire Factory, a decision that requires a DAO vote, given that the Factory is controlled by the DAO.
+Liquidity pools are deployed via the [Factory](../../../factory/twocrypto-ng/deployer-api.md). All pools deployed **share the same admin** defined within the Factory contract.  
+Transfering the ownership of a pool is only possible by changing the ownership of the Factory. Admin is the Curve DAO (OwnershipAdmin).
 
-The same applies to the fee receiver of the pools. This is set in the Factory as well and can only be changed there. 
+The same applies to the fee receiver of the pools.
 
-[Factory Contract Ownership](../../../factory/overview.md#factory-contract-ownership)
+[Factory Ownership](../../../factory/overview.md#factory-contract-ownership)
 
 
 ---
@@ -14,13 +15,11 @@ The same applies to the fee receiver of the pools. This is set in the Factory as
 
 # **Parameter Changes**
 
-More information about parameters: [https://nagaking.substack.com/p/deep-dive-curve-v2-parameters](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).
+For more information about parameters: [https://nagaking.substack.com/p/deep-dive-curve-v2-parameters](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).
 
 The appropriate value for `A` and `gamma` is dependent upon the type of coin being used within the pool, and is subject to optimization and pool-parameter update based on the market history of the trading pair. 
 
-It is possible to modify the parameters for a pool after it has been deployed. However, it requires a vote within the Curve DAO[^1] and must reach a 15% quorum.
-
-[^1]: Technically, only the Factory can call functions to change parameters, but the Factory is controlled by the Curve DAO.
+It is possible to modify the parameters for a pool after it has been deployed. Again, only the admin of the pool (= Factory admin) can do so.
 
 
 ### `ramp_A_gamma`
