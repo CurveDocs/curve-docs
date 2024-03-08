@@ -241,26 +241,24 @@ nav:
         - Overview: cryptoswap-exchange/cryptoswap/lp_tokens/overview.md
         - Curve Token V5: cryptoswap-exchange/cryptoswap/lp_tokens/lp-token-V5.md
 
-    - Twocrypto-NG:
+    - TwoCrypto-NG:
       - Overview: cryptoswap-exchange/twocrypto-ng/overview.md
       - Pools:
         - Overview: cryptoswap-exchange/twocrypto-ng/pools/overview.md
-        - Twocrypto Pool: cryptoswap-exchange/twocrypto-ng/pools/twocrypto.md
-        - LP Token Methods: cryptoswap-exchange/twocrypto-ng/pools/lp-token.md
+        - TwoCrypto Pool: cryptoswap-exchange/twocrypto-ng/pools/twocrypto.md
         - Admin Controls: cryptoswap-exchange/twocrypto-ng/pools/admin-controls.md
       - Utility Contracts: 
         - Math: cryptoswap-exchange/twocrypto-ng/utility-contracts/math.md
         - Views: cryptoswap-exchange/twocrypto-ng/utility-contracts/views.md
 
-    - Tricrypto-NG:
+    - TriCrypto-NG:
       - Overview: cryptoswap-exchange/tricrypto-ng/overview.md
       - Pools:
-        - Tricrypto Pool: cryptoswap-exchange/tricrypto-ng/pools/tricrypto_pool.md
-        - LP Token Methods: cryptoswap-exchange/tricrypto-ng/lp_tokens/tricrypto-lp-token.md
-        - Admin Controls: cryptoswap-exchange/tricrypto-ng/pools/admin_controls.md
+        - TriCrypto Pool: cryptoswap-exchange/tricrypto-ng/pools/tricrypto.md
+        - Admin Controls: cryptoswap-exchange/tricrypto-ng/pools/admin-controls.md
       - Utility Contracts: 
-        - Math: cryptoswap-exchange/tricrypto-ng/utility_contracts/math.md
-        - Views: cryptoswap-exchange/tricrypto-ng/utility_contracts/views.md
+        - Math: cryptoswap-exchange/tricrypto-ng/utility-contracts/math.md
+        - Views: cryptoswap-exchange/tricrypto-ng/utility-contracts/views.md
 
 
   - Pool Factory:
@@ -280,10 +278,9 @@ nav:
     - TwoCrypto-NG:
       - Overview: factory/twocrypto-ng/overview.md
       - Deployer API: factory/twocrypto-ng/deployer-api.md
-    - Tricrypto-NG:
+    - TriCrypto-NG:
       - Overview: factory/tricryptoNG/overview.md
       - Deployer API: factory/tricryptoNG/deployer-api.md
-      - Implementations: factory/tricryptoNG/implementations.md
     
 
   - References:
