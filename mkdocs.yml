@@ -223,7 +223,7 @@ nav:
         - Overview: stableswap-exchange/stableswap-ng/pools/overview.md
         - Plain Pools: stableswap-exchange/stableswap-ng/pools/plainpool.md
         - Metapools: stableswap-exchange/stableswap-ng/pools/metapool.md
-        - LP Token Methods: stableswap-exchange/stableswap-ng/pools/lp_token.md
+        - Oracles: stableswap-exchange/stableswap-ng/pools/oracles.md
         - Admin Controls: stableswap-exchange/stableswap-ng/pools/admin_controls.md
       - Utility Contracts: 
           - Math: stableswap-exchange/stableswap-ng/utility_contracts/math.md
