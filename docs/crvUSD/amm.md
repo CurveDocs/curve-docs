@@ -3035,13 +3035,19 @@ When the external oracle price begins to diverge, the AMM price `get_p` is adjus
 
 ## **Fees and Interest Rates**
 
-Just like all Curve pools, there are three different kinds of fees: 
+*There are three different fees within the AMM:*
 
-- **Regular swap fees** are charged when tokens within the AMM are exchanged.
-- **Admin fees** determine the percentage of the "total fees" that are ultimately distributed to veCRV holders.
-- **Interest rate** which is charged on the borrowed assets tokens.
+- `fee`, which is charged on token exchanges.
+- `admin_fee`, which determines the percentage of the "total fees" that are ultimately distributed to veCRV holders.
+- `rate`, which represents the borrow rate a user pays.
 
-If there are accumulated admin fees, they cannot be claimed separately. Instead, they can only be claimed by also claiming the interest rate fees at the same time. This is accomplished by calling `collect_fee()` on the Controller.
+*The interest rate is updated whenever the `_save_rate()` method within the Controller contract is called, which happens when:*
+
+- a loan is created (`_create_loan`),
+- collateral is added or removed or more debt is borrowed (`_add_collateral_borrow`),
+- debt is repaid (`repay` or `repay_extended`),
+- a hard liquidation is performed (`_liquidate`), or
+- when fees are collected (`collect_fees`).
 
 
 ### `fee`
@@ -3097,88 +3103,6 @@ If there are accumulated admin fees, they cannot be claimed separately. Instead,
 
         ```shell
         >>> AMM.fee()
-        6000000000000000
-        ```
-
-
-### `dynamic_fee`
-!!! description "`AMM.dynamic_fee() -> uint256: view`"
-
-    Getter for the dynamic fee of the AMM. Dynamic fee is set to the maixmum of either `fee` or `_price_oracle_ro()[1]`.
-
-    Returns: dynamic fee (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        @external
-        @view
-        def dynamic_fee() -> uint256:
-            """
-            @notice Dynamic fee which accounts for price_oracle shifts
-            """
-            return max(self.fee, self._price_oracle_ro()[1])
-
-        @internal
-        @view
-        def _price_oracle_ro() -> uint256[2]:
-            return self.limit_p_o(price_oracle_contract.price())
-
-        @internal
-        @view
-        def limit_p_o(p: uint256) -> uint256[2]:
-            """
-            @notice Limits oracle price to avoid losses at abrupt changes, as well as calculates a dynamic fee.
-                If we consider oracle_change such as:
-                    ratio = p_new / p_old
-                (let's take for simplicity p_new < p_old, otherwise we compute p_old / p_new)
-                Then if the minimal AMM fee will be:
-                    fee = (1 - ratio**3),
-                AMM will not have a loss associated with the price change.
-                However, over time fee should still go down (over PREV_P_O_DELAY), and also ratio should be limited
-                because we don't want the fee to become too large (say, 50%) which is achieved by limiting the instantaneous
-                change in oracle price.
-
-            @return (limited_price_oracle, dynamic_fee)
-            """
-            p_new: uint256 = p
-            dt: uint256 = unsafe_sub(PREV_P_O_DELAY, min(PREV_P_O_DELAY, block.timestamp - self.prev_p_o_time))
-            ratio: uint256 = 0
-
-            # ratio = 1 - (p_o_min / p_o_max)**3
-
-            if dt > 0:
-                old_p_o: uint256 = self.old_p_o
-                old_ratio: uint256 = self.old_dfee
-                # ratio = p_o_min / p_o_max
-                if p > old_p_o:
-                    ratio = unsafe_div(old_p_o * 10**18, p)
-                    if ratio < 10**36 / MAX_P_O_CHG:
-                        p_new = unsafe_div(old_p_o * MAX_P_O_CHG, 10**18)
-                        ratio = 10**36 / MAX_P_O_CHG
-                else:
-                    ratio = unsafe_div(p * 10**18, old_p_o)
-                    if ratio < 10**36 / MAX_P_O_CHG:
-                        p_new = unsafe_div(old_p_o * 10**18, MAX_P_O_CHG)
-                        ratio = 10**36 / MAX_P_O_CHG
-
-                # ratio is lower than 1e18
-                # Also guaranteed to be limited, therefore can have all ops unsafe
-                ratio = min(
-                    unsafe_div(
-                        unsafe_mul(
-                            unsafe_sub(unsafe_add(10**18, old_ratio), unsafe_div(pow_mod256(ratio, 3), 10**36)),  # (f' + (1 - r**3))
-                            dt),                                                                                  # * dt / T
-                    PREV_P_O_DELAY),
-                10**18 - 1)
-
-            return [p_new, ratio]
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> AMM.dynamic_fee()
         6000000000000000
         ```
 
