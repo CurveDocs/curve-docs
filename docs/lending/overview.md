@@ -18,17 +18,17 @@ The **borrowable liquidity is provided by willing lenders** through [Vaults](./c
   <figcaption></figcaption>
 </figure>
 
-The **Controller** is some sort of on-chain interface. Most user actions, such as creating or repaying loans or managing existing ones, are done through this contract.
+The **Controller** is some sort of on-chain interface. Most user actions, such as *creating or repaying loans or managing existing ones*, are done through this contract.
 
-The **LLAMMA** is an AMM that holds the collateral assets. This is where the magic around soft-liquidations happens. Full documentation can be found [here](../crvUSD/amm.md).
+The **LLAMMA** is an AMM that holds the collateral assets. This is where the magic around *soft-liquidations* happens. Full documentation can be found [here](../crvUSD/amm.md).
 
-The **Vault** is where willing lenders provide assets to be borrowed. The contract does not actually hold any borrowable assets; they are held by the Controller.
+The **Vault** is where willing *lenders provide assets to be borrowed*. The contract does not actually hold any borrowable assets; they are held by the Controller.
 
 
 ---
 
 
-## **AMM.vy and Controller.vy**
+## **LLAMMA and Controller**
 
 Because Curve Lending operates very similarly to the system for minting crvUSD, both `Controller.vy` and `AMM.vy` (LLAMMA) can be used for lending markets. To ensure full compatibility with both systems, **several modifications have been made to their codebases**:
 
@@ -36,7 +36,7 @@ Because Curve Lending operates very similarly to the system for minting crvUSD, 
 
 
 
-## **Vault.vy**
+## **Vault**
 
 The Vault is an **implementation of the ERC4626 vault which deposits assets into the Controller contract** and tracks the **progress of fees earned**. It is a standard factory (non-blueprint) contract that also creates the AMM and Controller using `initialize()`.
 
@@ -125,7 +125,7 @@ The Vault is an **implementation of the ERC4626 vault which deposits assets into
 
 
 
-## **OneWayLendingFactory.vy**
+## **OneWay Lending Factory**
 
 The factory allows the **permissionless creation of borrowing/lending markets without rehypothecation**, meaning the collateral asset cannot be lent out. A distinctive feature is its ability to generate markets from Curve pools with a `price_oracle()` method, eliminating the need for a separate price oracle. Nonetheless, these pools must adhere to one of the following standards: 
 
@@ -137,7 +137,7 @@ The factory allows the **permissionless creation of borrowing/lending markets wi
 
 
 
-## **CryptoFromPool.vy**
+## **CryptoFromPool**
 
 `CryptoFromPool.vy` is a price oracle contract which uses the `price_oracle()` method of a Curve *tricrypto-ng*, *twocrypto-ng* or *stableswap-ng* pool. This contract is created from a blueprint when using the [`create_from_pool()` function](./contracts/oneway-factory.md#create_from_pool).
 
@@ -207,7 +207,7 @@ The factory allows the **permissionless creation of borrowing/lending markets wi
     ```
 
 
-## **SemilogMonetaryPolicy.vy**
+## **Semilog Monetary Policy**
 
 Lending markets uses a semi-log monetary policy for lending markets where the **borrow rate does not depend on the price of crvUSD** but just on the **utilization of
 the market**.

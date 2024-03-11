@@ -1232,13 +1232,13 @@ For testing in production purposes, several contract deployments have taken plac
 
 | Contract Type                      | Contract Address                                                         |
 | :--------------------------------: | :----------------------------------------------------------------------: |
-| `AMM implementation`               | [0x4f37395BdFbE3A0dca124ad3C9DbFe6A6cbc31D6](https://etherscan.io/address/0x4f37395BdFbE3A0dca124ad3C9DbFe6A6cbc31D6) |
-| `Controller implementation`        | [0x5473B1BcBbC45d38d8fBb50a18a73aFb8B0637A7](https://etherscan.io/address/0x5473B1BcBbC45d38d8fBb50a18a73aFb8B0637A7) |
-| `Vault implementation`             | [0x596F8E49acE6fC8e09B561972360DC216f1c2A1f](https://etherscan.io/address/0x596F8E49acE6fC8e09B561972360DC216f1c2A1f) |
-| `Pool price oracle implementation` | [0x9164e210d123e6566DaF113136a73684C4AB01e2](https://etherscan.io/address/0x9164e210d123e6566DaF113136a73684C4AB01e2) |
-| `Monetary Policy Implementation`   | [0xa7E98815c0193E01165720C3abea43B885ae67FD](https://etherscan.io/address/0xa7E98815c0193E01165720C3abea43B885ae67FD) |
-| `Gauge Implementation`             | [0x00B71A425Db7C8B65a46CF39c23A188e10A2DE99](https://etherscan.io/address/0x00B71A425Db7C8B65a46CF39c23A188e10A2DE99) |
-| `OneWay Lending Factory`           | [0xc67a44D958eeF0ff316C3a7c9E14FB96f6DedAA3](https://etherscan.io/address/0xc67a44D958eeF0ff316C3a7c9E14FB96f6DedAA3) |
+| `AMM implementation`               | [0x913A3A0d83b87497587E66A7f9603CcD998bA572](https://etherscan.io/address/0x913A3A0d83b87497587E66A7f9603CcD998bA572) |
+| `Controller implementation`        | [0x42Dd7Dc055a04C3D795A3DFD2eAAF7D480367A02](https://etherscan.io/address/0x42Dd7Dc055a04C3D795A3DFD2eAAF7D480367A02) |
+| `Vault implementation`             | [0x7d20ecB58d9D661AeF2bd0Ee953d53567e695DFB](https://etherscan.io/address/0x7d20ecB58d9D661AeF2bd0Ee953d53567e695DFB) |
+| `Pool price oracle implementation` | [0x69D7469e677e4C8Fa4581D36908B0c9c8750baA9](https://etherscan.io/address/0x69D7469e677e4C8Fa4581D36908B0c9c8750baA9) |
+| `Monetary Policy Implementation`   | [0xEb4480152BEf93FA7bd01a7F427F1Dd3069Fc4D3](https://etherscan.io/address/0xEb4480152BEf93FA7bd01a7F427F1Dd3069Fc4D3) |
+| `Gauge Implementation`             | [0x7E6327Cce4BBDB936Ee744a7Bae6C2978b62183F](https://etherscan.io/address/0x7E6327Cce4BBDB936Ee744a7Bae6C2978b62183F) |
+| `OneWay Lending Factory`           | [0x5E0198C158276efaeBc5A32C8351fb5D679d4288](https://etherscan.io/address/0x5E0198C158276efaeBc5A32C8351fb5D679d4288) |
 
 ---
 
@@ -1252,11 +1252,11 @@ AMM, Controller, and Price Oracle contracts and other variables of a vault can s
 
 ```shell
 >>> Vault.amm()
-'0xafC1ab86045Cb2a07C23399dbE64b56D1B8B3239'
+'0x08220240d39c6e0DaB14D4c68adB0E9b3Ba846Bc'
 >>> Vault.controller()
-'0x7443944962D04720f8c220C0D25f56F869d6EfD4'
+'0x7e2Dae338795EaCEDcfCc9871d022De3de7B5D72'
 >>> Vault.price_oracle()
-'0xc17B0451E6d8C0f71297d0f174590632BE81163c'
+'0xe4FbD6c978895765AADbeb7BAD248982074b5499'
 ```
 
 *For more informations, please refer to the [Vault documentation](../lending/contracts/vault.md#contract-info-methods).*

@@ -20,7 +20,7 @@ A lending market **must always include crvUSD, either as collateral or as the bo
 !!!info "Finding Optimal Parameters"
     To find optimal values for the parameters, check out: https://github.com/curvefi/llamma-simulator.
 
-    *Regarding rates:* Borrow rates default to `min_default_borrow_rate` and `max_default_borrow_rate` if no input values are given for `min_borrow_rate` and `max_borrow_rate`. If custom values are used, they need to be within the values of `MIN_RATE` and `MAX_RATE`. More on rates [here](./semilog-mp.md).
+    *Regarding rates:* Minimum and maximum borrow rates for lending markets default to `min_default_borrow_rate` and `max_default_borrow_rate` if input values for `min_borrow_rate` and `max_borrow_rate` are set to zero. If custom values are used, they need to be within the range of `MIN_RATE` and `MAX_RATE`.
 
 
 ### `create`
@@ -415,12 +415,17 @@ Just like pools, vaults can have liquidity gauges. Once they are added to the `G
 
 The Factory has a `MIN_RATE` and `MAX_RATE`. These variables are constants and can not be changed. The minimum rate is 0.1%, the maximum rate is 1000%.
 
-Additionally, the Factory has two variables, `min_default_borrow_rate` and `max_default_borrow_rate`, which are used as default values when creating new lending markets. If no value is given when deploying a new market, the default rates are applied. Theses default rates can be changed by the `admin`. 
+Additionally, the Factory has two variables, `min_default_borrow_rate` and `max_default_borrow_rate`, which are used as default values when creating new lending markets.  
+If no value is given when deploying a new market, the default rates are applied. Default rates can be changed by the `admin` via the `set_default_rates` method. 
 
+**Rates are denominated in seconds and have a base unit of 1e18**. 
 
-**Rate values are given per second**. To get the annualized value, do: 
+*To get the annualized value, do:*
 
-$$\text{Annualized Rate} = \text{Rate per second} \times 60 \times 60 \times 24 \times 365$$
+$$\text{Annualized Rate} = \text{rate} \times 86400 \times  365$$
+
+!!!notebook "Jupyter Notebook"
+    A notebook on how to change implementations can be found [here](https://try.vyperlang.org/user/mo-anon/lab/tree/shared/mo-anon/curve%20lending/factory/implementations.ipynb).
 
 
 ### `MIN_RATE`
@@ -559,11 +564,10 @@ $$\text{Annualized Rate} = \text{Rate per second} \times 60 \times 60 \times 24 
 
     Emits: `SetDefaultRates`
 
-    | Input      | Type       | Description |
-    | ---------- | ---------- | ----------- |
-    | `min_rate` |  `uint256` | Minimum borrow rate. |
-    | `max_rate` |  `uint256` | Maximum borrow rate. |
-
+    | Input      | Type       | Description                      |
+    | ---------- | ---------- | -------------------------------- |
+    | `min_rate` |  `uint256` | New minimum default borrow rate. |
+    | `max_rate` |  `uint256` | New maximum default borrow rate. |
 
     ??? quote "Source code"
 
@@ -1724,85 +1728,11 @@ interface AMM:
 
 ## **Implementations**
 
-The implementations of the Factory can be governed by the DAO; they are upgradable.
+The implementations of the Factory can be upgraded by the `admin`, which is the Curve DAO. 
 
+!!!notebook "Jupyter Notebook"
+    A notebook on how to change implementations can be found [here](https://try.vyperlang.org/user/mo-anon/lab/tree/shared/mo-anon/curve%20lending/factory/implementations.ipynb).
 
-### `set_implementations`
-!!! description "`OneWayLendingVaultFactory.set_implementations(controller: address, amm: address, vault: address, pool_price_oracle: address, monetary_policy: address, gauge: address):`"
-
-    !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the contract.
-
-    Function to set new implementations. If a certain implementation should not be changed, `ZER0_ADDRESS` can be used as a placeholder.
-
-    Emits: `SetImplementations`
-
-    | Input               | Type      | Description |
-    | ------------------- | --------- | ----------- |
-    | `controller`        | `address` | New controller implementation. |
-    | `amm`               | `address` | New amm implementation. |
-    | `vault`             | `address` | New vault implementation. |
-    | `pool_price_oracle` | `address` | New pool price oracle implementation. |
-    | `monetary_policy`   | `address` | New monetary policy implementation. |
-    | `gauge`             | `address` | New gauge implementation. |
-
-    ??? quote "Source code"
-
-        === "OneWayLendingVaultFactory.vy"
-
-            ```vyper
-            event SetImplementations:
-                amm: address
-                controller: address
-                vault: address
-                price_oracle: address
-                monetary_policy: address
-                gauge: address
-
-            # Implementations which can be changed by governance
-            amm_impl: public(address)
-            controller_impl: public(address)
-            vault_impl: public(address)
-            pool_price_oracle_impl: public(address)
-            monetary_policy_impl: public(address)
-            gauge_impl: public(address)
-
-            @external
-            @nonreentrant('lock')
-            def set_implementations(controller: address, amm: address, vault: address,
-                                    pool_price_oracle: address, monetary_policy: address, gauge: address):
-                """
-                @notice Set new implementations (blueprints) for controller, amm, vault, pool price oracle and monetary polcy.
-                        Doesn't change existing ones
-                @param controller Address of the controller blueprint
-                @param amm Address of the AMM blueprint
-                @param vault Address of the Vault template
-                @param pool_price_oracle Address of the pool price oracle blueprint
-                @param monetary_policy Address of the monetary policy blueprint
-                @param gauge Address for gauge implementation blueprint
-                """
-                assert msg.sender == self.admin
-
-                if controller != empty(address):
-                    self.controller_impl = controller
-                if amm != empty(address):
-                    self.amm_impl = amm
-                if vault != empty(address):
-                    self.vault_impl = vault
-                if pool_price_oracle != empty(address):
-                    self.pool_price_oracle_impl = pool_price_oracle
-                if monetary_policy != empty(address):
-                    self.monetary_policy_impl = monetary_policy
-                if gauge != empty(address):
-                    self.gauge_impl = gauge
-
-                log SetImplementations(amm, controller, vault, pool_price_oracle, monetary_policy, gauge)
-            ```
-
-    === "Example"
-        ```shell
-        >>> soon
-        ```
 
 
 ### `controller_impl`
@@ -1934,6 +1864,84 @@ The implementations of the Factory can be governed by the DAO; they are upgradab
         ```shell
         In  [1]:  OneWayLendingVaultFactory.gauge_impl()
         Out [1]:  '0x00B71A425Db7C8B65a46CF39c23A188e10A2DE99'
+        ```
+
+
+### `set_implementations`
+!!! description "`OneWayLendingVaultFactory.set_implementations(controller: address, amm: address, vault: address, pool_price_oracle: address, monetary_policy: address, gauge: address):`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
+    Function to set new implementations. If a certain implementation should not be changed, `ZER0_ADDRESS` can be used as a placeholder.
+
+    Emits: `SetImplementations`
+
+    | Input               | Type      | Description |
+    | ------------------- | --------- | ----------- |
+    | `controller`        | `address` | New controller implementation. |
+    | `amm`               | `address` | New amm implementation. |
+    | `vault`             | `address` | New vault implementation. |
+    | `pool_price_oracle` | `address` | New pool price oracle implementation. |
+    | `monetary_policy`   | `address` | New monetary policy implementation. |
+    | `gauge`             | `address` | New gauge implementation. |
+
+    ??? quote "Source code"
+
+        === "OneWayLendingVaultFactory.vy"
+
+            ```vyper
+            event SetImplementations:
+                amm: address
+                controller: address
+                vault: address
+                price_oracle: address
+                monetary_policy: address
+                gauge: address
+
+            # Implementations which can be changed by governance
+            amm_impl: public(address)
+            controller_impl: public(address)
+            vault_impl: public(address)
+            pool_price_oracle_impl: public(address)
+            monetary_policy_impl: public(address)
+            gauge_impl: public(address)
+
+            @external
+            @nonreentrant('lock')
+            def set_implementations(controller: address, amm: address, vault: address,
+                                    pool_price_oracle: address, monetary_policy: address, gauge: address):
+                """
+                @notice Set new implementations (blueprints) for controller, amm, vault, pool price oracle and monetary polcy.
+                        Doesn't change existing ones
+                @param controller Address of the controller blueprint
+                @param amm Address of the AMM blueprint
+                @param vault Address of the Vault template
+                @param pool_price_oracle Address of the pool price oracle blueprint
+                @param monetary_policy Address of the monetary policy blueprint
+                @param gauge Address for gauge implementation blueprint
+                """
+                assert msg.sender == self.admin
+
+                if controller != empty(address):
+                    self.controller_impl = controller
+                if amm != empty(address):
+                    self.amm_impl = amm
+                if vault != empty(address):
+                    self.vault_impl = vault
+                if pool_price_oracle != empty(address):
+                    self.pool_price_oracle_impl = pool_price_oracle
+                if monetary_policy != empty(address):
+                    self.monetary_policy_impl = monetary_policy
+                if gauge != empty(address):
+                    self.gauge_impl = gauge
+
+                log SetImplementations(amm, controller, vault, pool_price_oracle, monetary_policy, gauge)
+            ```
+
+    === "Example"
+        ```shell
+        >>> soon
         ```
 
 

@@ -260,7 +260,7 @@ Depositing and withdrawing collateral can only be done by the `admin` of the AMM
                 # If withdrawal is the last one - transfer dust to admin fees
                 if new_shares == 0:
                     if x > 0:
-                        self.admin_fees_x += x
+                        self.admin_fees_x += unsafe_div(x, BORROWED_PRECISION)
                     if y > 0:
                         self.admin_fees_y += unsafe_div(y, COLLATERAL_PRECISION)
                     x = 0
@@ -441,6 +441,308 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
             assert out_coin.transfer(_for, out_amount_done, default_return_value=True)
 
             return [in_amount_done, out_amount_done]
+
+        @internal
+        @view
+        def calc_swap_out(pump: bool, in_amount: uint256, p_o: uint256[2], in_precision: uint256, out_precision: uint256) -> DetailedTrade:
+            """
+            @notice Calculate the amount which can be obtained as a result of exchange.
+                    If couldn't exchange all - will also update the amount which was actually used.
+                    Also returns other parameters related to state after swap.
+                    This function is core to the AMM functionality.
+            @param pump Indicates whether the trade buys or sells collateral
+            @param in_amount Amount of token going in
+            @param p_o Current oracle price and ratio (p_o, dynamic_fee)
+            @return Amounts spent and given out, initial and final bands of the AMM, new
+                    amounts of coins in bands in the AMM, as well as admin fee charged,
+                    all in one data structure
+            """
+            # pump = True: borrowable (USD) in, collateral (ETH) out; going up
+            # pump = False: collateral (ETH) in, borrowable (USD) out; going down
+            min_band: int256 = self.min_band
+            max_band: int256 = self.max_band
+            out: DetailedTrade = empty(DetailedTrade)
+            out.n2 = self.active_band
+            p_o_up: uint256 = self._p_oracle_up(out.n2)
+            x: uint256 = self.bands_x[out.n2]
+            y: uint256 = self.bands_y[out.n2]
+
+            in_amount_left: uint256 = in_amount
+            fee: uint256 = max(self.fee, p_o[1])
+            admin_fee: uint256 = self.admin_fee
+            j: uint256 = MAX_TICKS_UINT
+
+            for i in range(MAX_TICKS + MAX_SKIP_TICKS):
+                y0: uint256 = 0
+                f: uint256 = 0
+                g: uint256 = 0
+                Inv: uint256 = 0
+                dynamic_fee: uint256 = fee
+
+                if x > 0 or y > 0:
+                    if j == MAX_TICKS_UINT:
+                        out.n1 = out.n2
+                        j = 0
+                    y0 = self._get_y0(x, y, p_o[0], p_o_up)  # <- also checks p_o
+                    f = unsafe_div(A * y0 * p_o[0] / p_o_up * p_o[0], 10**18)
+                    g = unsafe_div(Aminus1 * y0 * p_o_up, p_o[0])
+                    Inv = (f + x) * (g + y)
+                    dynamic_fee = max(self.get_dynamic_fee(p_o[0], p_o_up), fee)
+
+                antifee: uint256 = unsafe_div(
+                    (10**18)**2,
+                    unsafe_sub(10**18, min(dynamic_fee, 10**18 - 1))
+                )
+
+                if j != MAX_TICKS_UINT:
+                    # Initialize
+                    _tick: uint256 = y
+                    if pump:
+                        _tick = x
+                    out.ticks_in.append(_tick)
+
+                # Need this to break if price is too far
+                p_ratio: uint256 = unsafe_div(p_o_up * 10**18, p_o[0])
+
+                if pump:
+                    if y != 0:
+                        if g != 0:
+                            x_dest: uint256 = (unsafe_div(Inv, g) - f) - x
+                            dx: uint256 = unsafe_div(x_dest * antifee, 10**18)
+                            if dx >= in_amount_left:
+                                # This is the last band
+                                x_dest = unsafe_div(in_amount_left * 10**18, antifee)  # LESS than in_amount_left
+                                out.last_tick_j = min(Inv / (f + (x + x_dest)) - g + 1, y)  # Should be always >= 0
+                                x_dest = unsafe_div(unsafe_sub(in_amount_left, x_dest) * admin_fee, 10**18)  # abs admin fee now
+                                x += in_amount_left  # x is precise after this
+                                # Round down the output
+                                out.out_amount += y - out.last_tick_j
+                                out.ticks_in[j] = x - x_dest
+                                out.in_amount = in_amount
+                                out.admin_fee = unsafe_add(out.admin_fee, x_dest)
+                                break
+
+                            else:
+                                # We go into the next band
+                                dx = max(dx, 1)  # Prevents from leaving dust in the band
+                                x_dest = unsafe_div(unsafe_sub(dx, x_dest) * admin_fee, 10**18)  # abs admin fee now
+                                in_amount_left -= dx
+                                out.ticks_in[j] = x + dx - x_dest
+                                out.in_amount += dx
+                                out.out_amount += y
+                                out.admin_fee = unsafe_add(out.admin_fee, x_dest)
+
+                    if i != MAX_TICKS + MAX_SKIP_TICKS - 1:
+                        if out.n2 == max_band:
+                            break
+                        if j == MAX_TICKS_UINT - 1:
+                            break
+                        if p_ratio < unsafe_div(10**36, MAX_ORACLE_DN_POW):
+                            # Don't allow to be away by more than ~50 ticks
+                            break
+                        out.n2 += 1
+                        p_o_up = unsafe_div(p_o_up * Aminus1, A)
+                        x = 0
+                        y = self.bands_y[out.n2]
+
+                else:  # dump
+                    if x != 0:
+                        if f != 0:
+                            y_dest: uint256 = (unsafe_div(Inv, f) - g) - y
+                            dy: uint256 = unsafe_div(y_dest * antifee, 10**18)
+                            if dy >= in_amount_left:
+                                # This is the last band
+                                y_dest = unsafe_div(in_amount_left * 10**18, antifee)
+                                out.last_tick_j = min(Inv / (g + (y + y_dest)) - f + 1, x)
+                                y_dest = unsafe_div(unsafe_sub(in_amount_left, y_dest) * admin_fee, 10**18)  # abs admin fee now
+                                y += in_amount_left
+                                out.out_amount += x - out.last_tick_j
+                                out.ticks_in[j] = y - y_dest
+                                out.in_amount = in_amount
+                                out.admin_fee = unsafe_add(out.admin_fee, y_dest)
+                                break
+
+                            else:
+                                # We go into the next band
+                                dy = max(dy, 1)  # Prevents from leaving dust in the band
+                                y_dest = unsafe_div(unsafe_sub(dy, y_dest) * admin_fee, 10**18)  # abs admin fee now
+                                in_amount_left -= dy
+                                out.ticks_in[j] = y + dy - y_dest
+                                out.in_amount += dy
+                                out.out_amount += x
+                                out.admin_fee = unsafe_add(out.admin_fee, y_dest)
+
+                    if i != MAX_TICKS + MAX_SKIP_TICKS - 1:
+                        if out.n2 == min_band:
+                            break
+                        if j == MAX_TICKS_UINT - 1:
+                            break
+                        if p_ratio > MAX_ORACLE_DN_POW:
+                            # Don't allow to be away by more than ~50 ticks
+                            break
+                        out.n2 -= 1
+                        p_o_up = unsafe_div(p_o_up * A, Aminus1)
+                        x = self.bands_x[out.n2]
+                        y = 0
+
+                if j != MAX_TICKS_UINT:
+                    j = unsafe_add(j, 1)
+
+            # Round up what goes in and down what goes out
+            # ceil(in_amount_used/BORROWED_PRECISION) * BORROWED_PRECISION
+            out.in_amount = unsafe_mul(unsafe_div(unsafe_add(out.in_amount, unsafe_sub(in_precision, 1)), in_precision), in_precision)
+            out.out_amount = unsafe_mul(unsafe_div(out.out_amount, out_precision), out_precision)
+
+            return out
+
+        @internal
+        @view
+        def calc_swap_in(pump: bool, out_amount: uint256, p_o: uint256[2], in_precision: uint256, out_precision: uint256) -> DetailedTrade:
+            """
+            @notice Calculate the input amount required to receive the desired output amount.
+                    If couldn't exchange all - will also update the amount which was actually received.
+                    Also returns other parameters related to state after swap.
+            @param pump Indicates whether the trade buys or sells collateral
+            @param out_amount Desired amount of token going out
+            @param p_o Current oracle price and antisandwich fee (p_o, dynamic_fee)
+            @return Amounts required and given out, initial and final bands of the AMM, new
+                    amounts of coins in bands in the AMM, as well as admin fee charged,
+                    all in one data structure
+            """
+            # pump = True: borrowable (USD) in, collateral (ETH) out; going up
+            # pump = False: collateral (ETH) in, borrowable (USD) out; going down
+            min_band: int256 = self.min_band
+            max_band: int256 = self.max_band
+            out: DetailedTrade = empty(DetailedTrade)
+            out.n2 = self.active_band
+            p_o_up: uint256 = self._p_oracle_up(out.n2)
+            x: uint256 = self.bands_x[out.n2]
+            y: uint256 = self.bands_y[out.n2]
+
+            out_amount_left: uint256 = out_amount
+            fee: uint256 = max(self.fee, p_o[1])
+            admin_fee: uint256 = self.admin_fee
+            j: uint256 = MAX_TICKS_UINT
+
+            for i in range(MAX_TICKS + MAX_SKIP_TICKS):
+                y0: uint256 = 0
+                f: uint256 = 0
+                g: uint256 = 0
+                Inv: uint256 = 0
+                dynamic_fee: uint256 = fee
+
+                if x > 0 or y > 0:
+                    if j == MAX_TICKS_UINT:
+                        out.n1 = out.n2
+                        j = 0
+                    y0 = self._get_y0(x, y, p_o[0], p_o_up)  # <- also checks p_o
+                    f = unsafe_div(A * y0 * p_o[0] / p_o_up * p_o[0], 10**18)
+                    g = unsafe_div(Aminus1 * y0 * p_o_up, p_o[0])
+                    Inv = (f + x) * (g + y)
+                    dynamic_fee = max(self.get_dynamic_fee(p_o[0], p_o_up), fee)
+
+                antifee: uint256 = unsafe_div(
+                    (10**18)**2,
+                    unsafe_sub(10**18, min(dynamic_fee, 10**18 - 1))
+                )
+
+                if j != MAX_TICKS_UINT:
+                    # Initialize
+                    _tick: uint256 = y
+                    if pump:
+                        _tick = x
+                    out.ticks_in.append(_tick)
+
+                # Need this to break if price is too far
+                p_ratio: uint256 = unsafe_div(p_o_up * 10**18, p_o[0])
+
+                if pump:
+                    if y != 0:
+                        if g != 0:
+                            if y >= out_amount_left:
+                                # This is the last band
+                                out.last_tick_j = unsafe_sub(y, out_amount_left)
+                                x_dest: uint256 = Inv / (g + out.last_tick_j) - f - x
+                                dx: uint256 = unsafe_div(x_dest * antifee, 10**18)  # MORE than x_dest
+                                out.out_amount = out_amount  # We successfully found liquidity for all the out_amount
+                                out.in_amount += dx
+                                x_dest = unsafe_div(unsafe_sub(dx, x_dest) * admin_fee, 10**18)  # abs admin fee now
+                                out.ticks_in[j] = x + dx - x_dest
+                                out.admin_fee = unsafe_add(out.admin_fee, x_dest)
+                                break
+
+                            else:
+                                # We go into the next band
+                                x_dest: uint256 = (unsafe_div(Inv, g) - f) - x
+                                dx: uint256 = max(unsafe_div(x_dest * antifee, 10**18), 1)
+                                out_amount_left -= y
+                                out.in_amount += dx
+                                out.out_amount += y
+                                x_dest = unsafe_div(unsafe_sub(dx, x_dest) * admin_fee, 10**18)  # abs admin fee now
+                                out.ticks_in[j] = x + dx - x_dest
+                                out.admin_fee = unsafe_add(out.admin_fee, x_dest)
+
+                    if i != MAX_TICKS + MAX_SKIP_TICKS - 1:
+                        if out.n2 == max_band:
+                            break
+                        if j == MAX_TICKS_UINT - 1:
+                            break
+                        if p_ratio < unsafe_div(10**36, MAX_ORACLE_DN_POW):
+                            # Don't allow to be away by more than ~50 ticks
+                            break
+                        out.n2 += 1
+                        p_o_up = unsafe_div(p_o_up * Aminus1, A)
+                        x = 0
+                        y = self.bands_y[out.n2]
+
+                else:  # dump
+                    if x != 0:
+                        if f != 0:
+                            if x >= out_amount_left:
+                                # This is the last band
+                                out.last_tick_j = unsafe_sub(x, out_amount_left)
+                                y_dest: uint256 = Inv / (f + out.last_tick_j) - g - y
+                                dy: uint256 = unsafe_div(y_dest * antifee, 10**18)  # MORE than y_dest
+                                out.out_amount = out_amount
+                                out.in_amount += dy
+                                y_dest = unsafe_div(unsafe_sub(dy, y_dest) * admin_fee, 10**18)  # abs admin fee now
+                                out.ticks_in[j] = y + dy - y_dest
+                                out.admin_fee = unsafe_add(out.admin_fee, y_dest)
+                                break
+
+                            else:
+                                # We go into the next band
+                                y_dest: uint256 = (unsafe_div(Inv, f) - g) - y
+                                dy: uint256 = max(unsafe_div(y_dest * antifee, 10**18), 1)
+                                out_amount_left -= x
+                                out.in_amount += dy
+                                out.out_amount += x
+                                y_dest = unsafe_div(unsafe_sub(dy, y_dest) * admin_fee, 10**18)  # abs admin fee now
+                                out.ticks_in[j] = y + dy - y_dest
+                                out.admin_fee = unsafe_add(out.admin_fee, y_dest)
+
+                    if i != MAX_TICKS + MAX_SKIP_TICKS - 1:
+                        if out.n2 == min_band:
+                            break
+                        if j == MAX_TICKS_UINT - 1:
+                            break
+                        if p_ratio > MAX_ORACLE_DN_POW:
+                            # Don't allow to be away by more than ~50 ticks
+                            break
+                        out.n2 -= 1
+                        p_o_up = unsafe_div(p_o_up * A, Aminus1)
+                        x = self.bands_x[out.n2]
+                        y = 0
+
+                if j != MAX_TICKS_UINT:
+                    j = unsafe_add(j, 1)
+
+            # Round up what goes in and down what goes out
+            # ceil(in_amount_used/BORROWED_PRECISION) * BORROWED_PRECISION
+            out.in_amount = unsafe_mul(unsafe_div(unsafe_add(out.in_amount, unsafe_sub(in_precision, 1)), in_precision), in_precision)
+            out.out_amount = unsafe_mul(unsafe_div(out.out_amount, out_precision), out_precision)
+
+            return out
         ```
 
     === "Example"
@@ -467,12 +769,12 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
 
     Emits: `TokenExchange`
 
-    | Input        | Type      | Description                                         |
-    | ------------ | --------- | --------------------------------------------------- |
-    | `i`          | `uint256` | Input coin index.                                         |
-    | `j`          | `uint256` | Output coin index.                                        |
-    | `in_amount`  | `uint256` | Amount of input coin to swap.                       |
-    | `min_amount` | `uint256` | Minimum amount of output coin to get.               |
+    | Input        | Type      | Description                                          |
+    | ------------ | --------- | ---------------------------------------------------- |
+    | `i`          | `uint256` | Input coin index.                                    |
+    | `j`          | `uint256` | Output coin index.                                   |
+    | `in_amount`  | `uint256` | Amount of input coin to swap.                        |
+    | `min_amount` | `uint256` | Minimum amount of output coin to get.                |
     | `_for`       | `address` | Address to send coins to (defaults to `msg.sender`). |
 
     ??? quote "Source code"
@@ -589,6 +891,308 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
             assert out_coin.transfer(_for, out_amount_done, default_return_value=True)
 
             return [in_amount_done, out_amount_done]
+
+        @internal
+        @view
+        def calc_swap_out(pump: bool, in_amount: uint256, p_o: uint256[2], in_precision: uint256, out_precision: uint256) -> DetailedTrade:
+            """
+            @notice Calculate the amount which can be obtained as a result of exchange.
+                    If couldn't exchange all - will also update the amount which was actually used.
+                    Also returns other parameters related to state after swap.
+                    This function is core to the AMM functionality.
+            @param pump Indicates whether the trade buys or sells collateral
+            @param in_amount Amount of token going in
+            @param p_o Current oracle price and ratio (p_o, dynamic_fee)
+            @return Amounts spent and given out, initial and final bands of the AMM, new
+                    amounts of coins in bands in the AMM, as well as admin fee charged,
+                    all in one data structure
+            """
+            # pump = True: borrowable (USD) in, collateral (ETH) out; going up
+            # pump = False: collateral (ETH) in, borrowable (USD) out; going down
+            min_band: int256 = self.min_band
+            max_band: int256 = self.max_band
+            out: DetailedTrade = empty(DetailedTrade)
+            out.n2 = self.active_band
+            p_o_up: uint256 = self._p_oracle_up(out.n2)
+            x: uint256 = self.bands_x[out.n2]
+            y: uint256 = self.bands_y[out.n2]
+
+            in_amount_left: uint256 = in_amount
+            fee: uint256 = max(self.fee, p_o[1])
+            admin_fee: uint256 = self.admin_fee
+            j: uint256 = MAX_TICKS_UINT
+
+            for i in range(MAX_TICKS + MAX_SKIP_TICKS):
+                y0: uint256 = 0
+                f: uint256 = 0
+                g: uint256 = 0
+                Inv: uint256 = 0
+                dynamic_fee: uint256 = fee
+
+                if x > 0 or y > 0:
+                    if j == MAX_TICKS_UINT:
+                        out.n1 = out.n2
+                        j = 0
+                    y0 = self._get_y0(x, y, p_o[0], p_o_up)  # <- also checks p_o
+                    f = unsafe_div(A * y0 * p_o[0] / p_o_up * p_o[0], 10**18)
+                    g = unsafe_div(Aminus1 * y0 * p_o_up, p_o[0])
+                    Inv = (f + x) * (g + y)
+                    dynamic_fee = max(self.get_dynamic_fee(p_o[0], p_o_up), fee)
+
+                antifee: uint256 = unsafe_div(
+                    (10**18)**2,
+                    unsafe_sub(10**18, min(dynamic_fee, 10**18 - 1))
+                )
+
+                if j != MAX_TICKS_UINT:
+                    # Initialize
+                    _tick: uint256 = y
+                    if pump:
+                        _tick = x
+                    out.ticks_in.append(_tick)
+
+                # Need this to break if price is too far
+                p_ratio: uint256 = unsafe_div(p_o_up * 10**18, p_o[0])
+
+                if pump:
+                    if y != 0:
+                        if g != 0:
+                            x_dest: uint256 = (unsafe_div(Inv, g) - f) - x
+                            dx: uint256 = unsafe_div(x_dest * antifee, 10**18)
+                            if dx >= in_amount_left:
+                                # This is the last band
+                                x_dest = unsafe_div(in_amount_left * 10**18, antifee)  # LESS than in_amount_left
+                                out.last_tick_j = min(Inv / (f + (x + x_dest)) - g + 1, y)  # Should be always >= 0
+                                x_dest = unsafe_div(unsafe_sub(in_amount_left, x_dest) * admin_fee, 10**18)  # abs admin fee now
+                                x += in_amount_left  # x is precise after this
+                                # Round down the output
+                                out.out_amount += y - out.last_tick_j
+                                out.ticks_in[j] = x - x_dest
+                                out.in_amount = in_amount
+                                out.admin_fee = unsafe_add(out.admin_fee, x_dest)
+                                break
+
+                            else:
+                                # We go into the next band
+                                dx = max(dx, 1)  # Prevents from leaving dust in the band
+                                x_dest = unsafe_div(unsafe_sub(dx, x_dest) * admin_fee, 10**18)  # abs admin fee now
+                                in_amount_left -= dx
+                                out.ticks_in[j] = x + dx - x_dest
+                                out.in_amount += dx
+                                out.out_amount += y
+                                out.admin_fee = unsafe_add(out.admin_fee, x_dest)
+
+                    if i != MAX_TICKS + MAX_SKIP_TICKS - 1:
+                        if out.n2 == max_band:
+                            break
+                        if j == MAX_TICKS_UINT - 1:
+                            break
+                        if p_ratio < unsafe_div(10**36, MAX_ORACLE_DN_POW):
+                            # Don't allow to be away by more than ~50 ticks
+                            break
+                        out.n2 += 1
+                        p_o_up = unsafe_div(p_o_up * Aminus1, A)
+                        x = 0
+                        y = self.bands_y[out.n2]
+
+                else:  # dump
+                    if x != 0:
+                        if f != 0:
+                            y_dest: uint256 = (unsafe_div(Inv, f) - g) - y
+                            dy: uint256 = unsafe_div(y_dest * antifee, 10**18)
+                            if dy >= in_amount_left:
+                                # This is the last band
+                                y_dest = unsafe_div(in_amount_left * 10**18, antifee)
+                                out.last_tick_j = min(Inv / (g + (y + y_dest)) - f + 1, x)
+                                y_dest = unsafe_div(unsafe_sub(in_amount_left, y_dest) * admin_fee, 10**18)  # abs admin fee now
+                                y += in_amount_left
+                                out.out_amount += x - out.last_tick_j
+                                out.ticks_in[j] = y - y_dest
+                                out.in_amount = in_amount
+                                out.admin_fee = unsafe_add(out.admin_fee, y_dest)
+                                break
+
+                            else:
+                                # We go into the next band
+                                dy = max(dy, 1)  # Prevents from leaving dust in the band
+                                y_dest = unsafe_div(unsafe_sub(dy, y_dest) * admin_fee, 10**18)  # abs admin fee now
+                                in_amount_left -= dy
+                                out.ticks_in[j] = y + dy - y_dest
+                                out.in_amount += dy
+                                out.out_amount += x
+                                out.admin_fee = unsafe_add(out.admin_fee, y_dest)
+
+                    if i != MAX_TICKS + MAX_SKIP_TICKS - 1:
+                        if out.n2 == min_band:
+                            break
+                        if j == MAX_TICKS_UINT - 1:
+                            break
+                        if p_ratio > MAX_ORACLE_DN_POW:
+                            # Don't allow to be away by more than ~50 ticks
+                            break
+                        out.n2 -= 1
+                        p_o_up = unsafe_div(p_o_up * A, Aminus1)
+                        x = self.bands_x[out.n2]
+                        y = 0
+
+                if j != MAX_TICKS_UINT:
+                    j = unsafe_add(j, 1)
+
+            # Round up what goes in and down what goes out
+            # ceil(in_amount_used/BORROWED_PRECISION) * BORROWED_PRECISION
+            out.in_amount = unsafe_mul(unsafe_div(unsafe_add(out.in_amount, unsafe_sub(in_precision, 1)), in_precision), in_precision)
+            out.out_amount = unsafe_mul(unsafe_div(out.out_amount, out_precision), out_precision)
+
+            return out
+
+        @internal
+        @view
+        def calc_swap_in(pump: bool, out_amount: uint256, p_o: uint256[2], in_precision: uint256, out_precision: uint256) -> DetailedTrade:
+            """
+            @notice Calculate the input amount required to receive the desired output amount.
+                    If couldn't exchange all - will also update the amount which was actually received.
+                    Also returns other parameters related to state after swap.
+            @param pump Indicates whether the trade buys or sells collateral
+            @param out_amount Desired amount of token going out
+            @param p_o Current oracle price and antisandwich fee (p_o, dynamic_fee)
+            @return Amounts required and given out, initial and final bands of the AMM, new
+                    amounts of coins in bands in the AMM, as well as admin fee charged,
+                    all in one data structure
+            """
+            # pump = True: borrowable (USD) in, collateral (ETH) out; going up
+            # pump = False: collateral (ETH) in, borrowable (USD) out; going down
+            min_band: int256 = self.min_band
+            max_band: int256 = self.max_band
+            out: DetailedTrade = empty(DetailedTrade)
+            out.n2 = self.active_band
+            p_o_up: uint256 = self._p_oracle_up(out.n2)
+            x: uint256 = self.bands_x[out.n2]
+            y: uint256 = self.bands_y[out.n2]
+
+            out_amount_left: uint256 = out_amount
+            fee: uint256 = max(self.fee, p_o[1])
+            admin_fee: uint256 = self.admin_fee
+            j: uint256 = MAX_TICKS_UINT
+
+            for i in range(MAX_TICKS + MAX_SKIP_TICKS):
+                y0: uint256 = 0
+                f: uint256 = 0
+                g: uint256 = 0
+                Inv: uint256 = 0
+                dynamic_fee: uint256 = fee
+
+                if x > 0 or y > 0:
+                    if j == MAX_TICKS_UINT:
+                        out.n1 = out.n2
+                        j = 0
+                    y0 = self._get_y0(x, y, p_o[0], p_o_up)  # <- also checks p_o
+                    f = unsafe_div(A * y0 * p_o[0] / p_o_up * p_o[0], 10**18)
+                    g = unsafe_div(Aminus1 * y0 * p_o_up, p_o[0])
+                    Inv = (f + x) * (g + y)
+                    dynamic_fee = max(self.get_dynamic_fee(p_o[0], p_o_up), fee)
+
+                antifee: uint256 = unsafe_div(
+                    (10**18)**2,
+                    unsafe_sub(10**18, min(dynamic_fee, 10**18 - 1))
+                )
+
+                if j != MAX_TICKS_UINT:
+                    # Initialize
+                    _tick: uint256 = y
+                    if pump:
+                        _tick = x
+                    out.ticks_in.append(_tick)
+
+                # Need this to break if price is too far
+                p_ratio: uint256 = unsafe_div(p_o_up * 10**18, p_o[0])
+
+                if pump:
+                    if y != 0:
+                        if g != 0:
+                            if y >= out_amount_left:
+                                # This is the last band
+                                out.last_tick_j = unsafe_sub(y, out_amount_left)
+                                x_dest: uint256 = Inv / (g + out.last_tick_j) - f - x
+                                dx: uint256 = unsafe_div(x_dest * antifee, 10**18)  # MORE than x_dest
+                                out.out_amount = out_amount  # We successfully found liquidity for all the out_amount
+                                out.in_amount += dx
+                                x_dest = unsafe_div(unsafe_sub(dx, x_dest) * admin_fee, 10**18)  # abs admin fee now
+                                out.ticks_in[j] = x + dx - x_dest
+                                out.admin_fee = unsafe_add(out.admin_fee, x_dest)
+                                break
+
+                            else:
+                                # We go into the next band
+                                x_dest: uint256 = (unsafe_div(Inv, g) - f) - x
+                                dx: uint256 = max(unsafe_div(x_dest * antifee, 10**18), 1)
+                                out_amount_left -= y
+                                out.in_amount += dx
+                                out.out_amount += y
+                                x_dest = unsafe_div(unsafe_sub(dx, x_dest) * admin_fee, 10**18)  # abs admin fee now
+                                out.ticks_in[j] = x + dx - x_dest
+                                out.admin_fee = unsafe_add(out.admin_fee, x_dest)
+
+                    if i != MAX_TICKS + MAX_SKIP_TICKS - 1:
+                        if out.n2 == max_band:
+                            break
+                        if j == MAX_TICKS_UINT - 1:
+                            break
+                        if p_ratio < unsafe_div(10**36, MAX_ORACLE_DN_POW):
+                            # Don't allow to be away by more than ~50 ticks
+                            break
+                        out.n2 += 1
+                        p_o_up = unsafe_div(p_o_up * Aminus1, A)
+                        x = 0
+                        y = self.bands_y[out.n2]
+
+                else:  # dump
+                    if x != 0:
+                        if f != 0:
+                            if x >= out_amount_left:
+                                # This is the last band
+                                out.last_tick_j = unsafe_sub(x, out_amount_left)
+                                y_dest: uint256 = Inv / (f + out.last_tick_j) - g - y
+                                dy: uint256 = unsafe_div(y_dest * antifee, 10**18)  # MORE than y_dest
+                                out.out_amount = out_amount
+                                out.in_amount += dy
+                                y_dest = unsafe_div(unsafe_sub(dy, y_dest) * admin_fee, 10**18)  # abs admin fee now
+                                out.ticks_in[j] = y + dy - y_dest
+                                out.admin_fee = unsafe_add(out.admin_fee, y_dest)
+                                break
+
+                            else:
+                                # We go into the next band
+                                y_dest: uint256 = (unsafe_div(Inv, f) - g) - y
+                                dy: uint256 = max(unsafe_div(y_dest * antifee, 10**18), 1)
+                                out_amount_left -= x
+                                out.in_amount += dy
+                                out.out_amount += x
+                                y_dest = unsafe_div(unsafe_sub(dy, y_dest) * admin_fee, 10**18)  # abs admin fee now
+                                out.ticks_in[j] = y + dy - y_dest
+                                out.admin_fee = unsafe_add(out.admin_fee, y_dest)
+
+                    if i != MAX_TICKS + MAX_SKIP_TICKS - 1:
+                        if out.n2 == min_band:
+                            break
+                        if j == MAX_TICKS_UINT - 1:
+                            break
+                        if p_ratio > MAX_ORACLE_DN_POW:
+                            # Don't allow to be away by more than ~50 ticks
+                            break
+                        out.n2 -= 1
+                        p_o_up = unsafe_div(p_o_up * A, Aminus1)
+                        x = self.bands_x[out.n2]
+                        y = 0
+
+                if j != MAX_TICKS_UINT:
+                    j = unsafe_add(j, 1)
+
+            # Round up what goes in and down what goes out
+            # ceil(in_amount_used/BORROWED_PRECISION) * BORROWED_PRECISION
+            out.in_amount = unsafe_mul(unsafe_div(unsafe_add(out.in_amount, unsafe_sub(in_precision, 1)), in_precision), in_precision)
+            out.out_amount = unsafe_mul(unsafe_div(out.out_amount, out_precision), out_precision)
+
+            return out
         ```
 
     === "Example"
@@ -606,11 +1210,11 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
 
     Returns: out amount (`uint256`).
 
-    | Input       | Type      | Description                   |
-    | ----------- | --------- | ----------------------------- |
-    | `i`         | `uint256` | Input coin index.                   |
-    | `j`         | `uint256` | Output coin index.                  |
-    | `in_amount` | `uint256` | Amount of input coin to swap. |
+    | Input       | Type      | Description                    |
+    | ----------- | --------- | ------------------------------ |
+    | `i`         | `uint256` | Input coin index.              |
+    | `j`         | `uint256` | Output coin index.             |
+    | `in_amount` | `uint256` | Amount of input coin to swap.  |
 
     ??? quote "Source code"
 
@@ -763,10 +1367,10 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
 
     Returns: in amount (`uint256`).
 
-    | Input       | Type      | Description                           |
-    | ----------- | --------- | ------------------------------------- |
-    | `i`         | `uint256` | Input coin index.                           |
-    | `j`         | `uint256` | Output coin index.                       |
+    | Input       | Type      | Description                               |
+    | ----------- | --------- | ----------------------------------------- |
+    | `i`         | `uint256` | Input coin index.                         |
+    | `j`         | `uint256` | Output coin index.                        |
     | `out_amount`| `uint256` | Desired amount of output coin to receive. |
 
     ??? quote "Source code"
@@ -843,13 +1447,13 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
 
     Function to calculate the `in_amount` required and `out_amount` received.
 
-    Returns: out and in amount (`uint256`).
+    Returns: out and in amount (`uint256`).|
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | Input coin index |
-    | `j` |  `uint256` | Output coin index |
-    | `out_amount` |  `uint256` | Desired amount of output coin to receive |
+    | Input       | Type      | Description                               |
+    | ----------- | --------- | ----------------------------------------- |
+    | `i`         | `uint256` | Input coin index.                         |
+    | `j`         | `uint256` | Output coin index.                        |
+    | `out_amount`| `uint256` | Desired amount of output coin to receive. |
 
     ??? quote "Source code"
 
@@ -908,7 +1512,7 @@ The AMM can be used to exchange tokens, just like in any other AMM. This is nece
                 out = self.calc_swap_in(i == 0, amount * out_precision, p_o, in_precision, out_precision)
             out.in_amount = unsafe_div(out.in_amount, in_precision)
             out.out_amount = unsafe_div(out.out_amount, out_precision)
-            return out    
+            return out
         ```
 
     === "Example"
@@ -1394,24 +1998,19 @@ Therefore, because it is a continuous grid, the lower price bound of, let's say,
 
         @internal
         @view
-        def _read_user_ticks(user: address, ns: int256[2]) -> DynArray[uint256, MAX_TICKS_UINT]:
+        def _read_user_tick_numbers(user: address) -> int256[2]:
             """
-            @notice Unpacks and reads user ticks (shares) for all the ticks user deposited into
+            @notice Unpacks and reads user tick numbers
             @param user User address
-            @param size Number of ticks the user deposited into
-            @return Array of shares the user has
+            @return Lowest and highest band the user deposited into
             """
-            ticks: DynArray[uint256, MAX_TICKS_UINT] = []
-            size: uint256 = convert(ns[1] - ns[0] + 1, uint256)
-            for i in range(MAX_TICKS / 2):
-                if len(ticks) == size:
-                    break
-                tick: uint256 = self.user_shares[user].ticks[i]
-                ticks.append(tick & (2**128 - 1))
-                if len(ticks) == size:
-                    break
-                ticks.append(shift(tick, -128))
-            return ticks
+            ns: int256 = self.user_shares[user].ns
+            n2: int256 = unsafe_div(ns, 2**128)
+            n1: int256 = ns % 2**128
+            if n1 >= 2**127:
+                n1 = unsafe_sub(n1, 2**128)
+                n2 = unsafe_add(n2, 1)
+            return [n1, n2]
         ```
 
     === "Example"
@@ -1881,7 +2480,6 @@ Therefore, because it is a continuous grid, the lower price bound of, let's say,
  
 
 ---
-
 
 
 ## **Price Oracles**

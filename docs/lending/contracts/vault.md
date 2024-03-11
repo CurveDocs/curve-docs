@@ -283,9 +283,6 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 ### `maxDeposit`
 !!! description "`Vault.maxDeposit(receiver: address) -> uint256:`"
 
-    !!!bug "Incorrect Implementation"
-        The function is implemented incorrectly. It is intended to return the `balanceOf` the `borrowed_token` for the `receiver`. However, it currently returns the balance of the vault token. This error does not affect any state-changing actions, since it is a read-only function. Nonetheless, it should be addressed and will be corrected in an upcoming Vault implementation update.
-
     Getter for the maximum amount of assets `receiver` can deposit, which essentially equals the asset balance of the user.
 
     Returns: maximum depositable assets (`uint256`).
@@ -307,7 +304,7 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
                 """
                 @notice Maximum amount of assets which a given user can deposit. Essentially balanceOf
                 """
-                return self.balanceOf[receiver]
+                return self.borrowed_token.balanceOf(receiver)
             ```
 
     === "Example"
@@ -543,9 +540,6 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 ### `maxMint`
 !!! description "`Vault.maxMint(receiver: address) -> uint256:`"
 
-    !!!bug "Incorrect Implementation"
-        The function is implemented incorrectly once again (see [`maxDeposit`](#maxdeposit)). It erroneously calls the internal function `_convert_to_shares` using the incorrect balance. It uses the balance of the vault token rather than the balance of the underlying token (`borrowed_token`) belonging to the `receiver`. This mistake affects the calculation of convertible shares and needs correction to ensure accurate functionality. Again, this is read-only function and does not have any impact on state-changing functions.
-
     Getter for the maximum amount of shares a user can mint, based on their current asset holdings.
 
     Returns: maximum mintable shares (`uint256`).
@@ -565,7 +559,7 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
                 """
                 @notice Calculate maximum amount of shares which a given user can mint
                 """
-                return self._convert_to_shares(self.balanceOf[receiver])
+                return self._convert_to_shares(self.borrowed_token.balanceOf(receiver))
 
             @internal
             @view
