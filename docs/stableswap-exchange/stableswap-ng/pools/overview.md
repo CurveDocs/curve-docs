@@ -13,6 +13,9 @@ In its simplest form, a Curve pool is an implementation of the StableSwap invari
 - [**`get_dx`**](../pools/plainpool.md#get_dx)
 
 
+---
+
+
 ## **Supported Assets**
 
 Stableswap-NG pools supports the following asset types:
@@ -73,6 +76,9 @@ Stableswap-NG pools supports the following asset types:
     ```
 
 
+---
+
+
 ## **Dynamic Fees**
 
 Stableswap-NG introduces dynamic fees. The use of the **`offpeg_fee_multiplier`** allows the system to dynamically adjust fees based on the pool's state. 
@@ -98,6 +104,8 @@ The internal **`_dynamic_fee()`** function calculates the fee **based on the bal
 $xp_{i} = \frac{{rate_{i} \times balance_{i}}}{{PRECISION_{i}}}$
 
 $xp_{j} = \frac{{rate_{j} \times balance_{j}}}{{PRECISION_{j}}}$
+
+$xp_{i}$ and $xp_{j}$ are the token balances of the pool adjusted for decimals and the pool's internal rates (stored in `stored_rates`).
 
 *And we also have:*
 
@@ -178,6 +186,9 @@ The embedded graph has limited features, such as the inability to modify the axi
 </div>
 
 
+---
+
+
 
 ## **Oracles**
 
@@ -186,86 +197,10 @@ The new generation (NG) of stableswap introduces oracles based on AMM State Pric
 - **price oracle** (spot and ema price)
 - moving average **D oracle**
 
-Oracles are updated when users perform a swap or when liquidity is added or removed from the pool. Most updates are carried out by the internal **`upkeep_oracles()`** function, which is called in those instances. In some cases, such as when removing liquidity in a balanced ratio, the **`D`** oracle is updated directly within the **`remove_liquidity()`** function, as there is no need to update the price oracles (removing balanced does not have a price impact).
+More on oracles [here](./oracles.md).
 
-!!!danger "Oracle Manipulation"
-    The spot price cannot immediately be used for the calculation of the moving average, as this would allow for single block oracle manipulation. Consequently, **`_calc_moving_average`** uses **`last_prices_packed`**, which retains prices from previous actions.
 
-??? quote "`upkeep_oracles` method"
-
-    ```vyper
-    @internal
-    def upkeep_oracles(xp: DynArray[uint256, MAX_COINS], amp: uint256, D: uint256):
-        """
-        @notice Upkeeps price and D oracles.
-        """
-        ma_last_time_unpacked: uint256[2] = self.unpack_2(self.ma_last_time)
-        last_prices_packed_current: DynArray[uint256, MAX_COINS] = self.last_prices_packed
-        last_prices_packed_new: DynArray[uint256, MAX_COINS] = last_prices_packed_current
-
-        spot_price: DynArray[uint256, MAX_COINS] = self._get_p(xp, amp, D)
-
-        # -------------------------- Upkeep price oracle -------------------------
-
-        for i in range(MAX_COINS):
-
-            if i == N_COINS - 1:
-                break
-
-            if spot_price[i] != 0:
-
-                # Upate packed prices -----------------
-                last_prices_packed_new[i] = self.pack_2(
-                    spot_price[i],
-                    self._calc_moving_average(
-                        last_prices_packed_current[i],
-                        self.ma_exp_time,
-                        ma_last_time_unpacked[0],  # index 0 is ma_exp_time for prices
-                    )
-                )
-
-        self.last_prices_packed = last_prices_packed_new
-
-        # ---------------------------- Upkeep D oracle ---------------------------
-
-        last_D_packed_current: uint256 = self.last_D_packed
-        self.last_D_packed = self.pack_2(
-            D,
-            self._calc_moving_average(
-                last_D_packed_current,
-                self.D_ma_time,
-                ma_last_time_unpacked[1],  # index 1 is ma_exp_time for D
-            )
-        )
-
-        # Housekeeping: Update ma_last_time for p and D oracles ------------------
-        for i in range(2):
-            if ma_last_time_unpacked[i] < block.timestamp:
-                ma_last_time_unpacked[i] = block.timestamp
-
-        self.ma_last_time = self.pack_2(ma_last_time_unpacked[0], ma_last_time_unpacked[1])
-
-        @internal
-        @view
-        def _calc_moving_average(
-            packed_value: uint256,
-            averaging_window: uint256,
-            ma_last_time: uint256
-        ) -> uint256:
-
-            last_spot_value: uint256 = packed_value & (2**128 - 1)
-            last_ema_value: uint256 = (packed_value >> 128)
-
-            if ma_last_time < block.timestamp:  # calculate new_ema_value and return that.
-                alpha: uint256 = self.exp(
-                    -convert(
-                        (block.timestamp - ma_last_time) * 10**18 / averaging_window, int256
-                    )
-                )
-                return (last_spot_value * (10**18 - alpha) + last_ema_value * alpha) / 10**18
-
-            return last_ema_value
-    ```
+---
 
 
 ## **`exchange_received`**
