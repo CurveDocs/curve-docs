@@ -11,23 +11,24 @@ The deployment of metapools is permissionless and can be done via the [**`deploy
     The examples are based on the USDV<>3CRV metapool: [0xc273fd237F23cb13296D0Cc2897F0B7A61e83387](https://etherscan.io/address/0xc273fd237F23cb13296D0Cc2897F0B7A61e83387#code).
 
 
-## **Exchange Methods**
+---
 
-The AMM metapool contract implementation utilizes two internal functions to transfer tokens/coins in and out of the pool and then accordingly update `stored_balances`.  
-These function slightly differ to the ones from plain pools, as there needs to be some additional logic because of the basepools:
+*The AMM metapool contract implementation utilizes two internal functions to transfer tokens/coins in and out of the pool and then accordingly update `stored_balances`.*
+
+*These function slightly differ to the ones from plain pools, as there needs to be some additional logic because of the basepools:*
 
 - **`_transfer_in()`**  
 
     ??? quote "`_transfer_in(coin_metapool_idx: int128, coin_basepool_idx: int128, dx: uint256, sender: address, expect_optimistic_transfer: bool, is_base_pool_swap: bool = False) -> uint256:`"
 
-        | Input      | Type   | Description |
-        | ----------- | -------| ----|
-        | `coin_metapool_idx` |  `int128` | metapool index of input coin |
-        | `coin_basepool_idx` |  `int128` | basepool index of input coin |
-        | `dx` |  `uint256` | amount to transfer in |
-        | `sender` |  `address` | address to tranfer coins from |
-        | `expect_optimistic_transfer` |  `bool` | `True` if the contract expect an optimistic coin transfer (see [`exchange_received()`](#exchange_received)) |
-        | `is_base_pool_swap` |  `bool` | if the exchange is a basepool swap (if `i and i > 0`); defaulted to `False` |
+        | Input                     | Type      | Description                                                                                 |
+        | ------------------------- | --------- | ------------------------------------------------------------------------------------------- |
+        | `coin_metapool_idx`      | `int128`  | Metapool index of the input coin.                                                           |
+        | `coin_basepool_idx`      | `int128`  | Basepool index of the input coin.                                                           |
+        | `dx`                      | `uint256` | Amount to transfer in.                                                                      |
+        | `sender`                  | `address` | Address to transfer coins from.                                                             |
+        | `expect_optimistic_transfer` | `bool` | `True` if the contract expects an optimistic coin transfer (see [`exchange_received()`](#exchange_received)). |
+        | `is_base_pool_swap`      | `bool`    | If the exchange is a basepool swap (if `i and i > 0`); defaulted to `False`.                 |
 
         ```vyper
         @internal
@@ -123,11 +124,11 @@ These function slightly differ to the ones from plain pools, as there needs to b
 
     ??? quote "`_transfer_out(_coin_idx: int128, _amount: uint256, receiver: address):`"
 
-        | Input      | Type   | Description |
-        | ----------- | -------| ----|
-        | `coin_idx` |  `in128` | index value of the token to transfer out |
-        | `_amount` |  `uint256` | amount to transfer out |
-        | `receiver` |  `address` | address to send the tokens to |
+        | Input      | Type      | Description                               |
+        | ---------- | --------- | ----------------------------------------- |
+        | `coin_idx` | `int128`  | Index value of the token to transfer out. |
+        | `_amount`  | `uint256` | Amount to transfer out.                   |
+        | `receiver` | `address` | Address to send the tokens to.            |
 
         ```vyper 
         stored_balances: DynArray[uint256, MAX_COINS]
@@ -163,26 +164,38 @@ These function slightly differ to the ones from plain pools, as there needs to b
     E.g., in the USDV<>3CRV pool: `coin[0]` = USDV, `coin[1]` = DAI, `coin[2]` = USDC, and `coin[3]` = USDT.
 
 
+---
+
+
+## **Exchange Methods**
+
+*Three functions for token exchanges:*
+
+- The regular `exchange` function.
+- A novel `exchange_received` function that executes a token exchange based on the internal balances of the pool.
+- Additionally, the metapool implementation includes an `exchange_underlying` function, which allows tokens to be exchanged with the underlying tokens the asset is paired against. For example, swapping USDV for USDT in the USDV<>3CRV pool.
+
 
 ### `exchange`
 !!! description "`StableSwap.exchange(i: int128, j: int128, _dx: uint256, _min_dy: uint256, _receiver: address = msg.sender) -> uint256:`"
 
-    Function to exchange `_dx` amount of coin `i` for coin `j` and receive a minimum amount of `_min_dy`. 
+    !!!warning
+        This exchange swaps between the metapool token and the basepool LP token. coin[0] is always the metapool token and coin[1] is the basepool LP token. To exchange the metapool token against underlying coins, one needs to use the `exchange_underlying` function.
+
+    Function to exchange `_dx` amount of coin `i` for coin `j` and receive a minimum amount of `_min_dy`.
 
     Returns: amount of output coin received (`uint256`).
 
     Emits: `TokenExchange`
 
-    !!!info "Working with underlying tokens"
-        This exchange swaps between the metapool token and the basepool LP token. **coin[0] is always the metapool token and coin[1] is the basepool lp token.** 
+    | Input       | Type      | Description                                            |
+    | ----------- | --------- | ------------------------------------------------------ |
+    | `i`         | `int128`  | Index value of the input coin.                         |
+    | `j`         | `int128`  | Index value of the output coin.                        |
+    | `_dx`       | `uint256` | Amount of coin `i` being exchanged.                    |
+    | `_min_dy`   | `uint256` | Minimum amount of coin `j` to receive.                 |
+    | `_receiver` | `address` | Receiver of the output tokens; defaults to msg.sender. |
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `in128` | index value of input coin |
-    | `j` |  `in128` | index value of output coin |
-    | `_dx` |  `uint256` | amount of coin `i` being exchanged |
-    | `_min_dy` |  `uint256` | minumum amount of coin `j` to receive |
-    | `_receiver` |  `address` | receiver of the output tokens; defaults to msg.sender |
 
     ??? quote "Source code"
 
@@ -317,21 +330,21 @@ These function slightly differ to the ones from plain pools, as there needs to b
 !!! description "`StableSwap.exchange_received(i: int128, j: int128, _dx: uint256, _min_dy: uint256, _receiver: address) -> uint256:`"
 
     !!!danger
-        The `exchange_received` function will revert if the pool contains a rebasing asset. A pool that holds a rebasing token must have an asset_type of 2. If this is not the case, the pool is operating with an incorrect implementation, **potentially allowing rebases to be stolen**!
+        `exchange_received` will revert if the pool contains a rebasing asset. A pool that contains a rebasing token should have an `asset_type` of 2. If this is not the case, the pool is using an incorrect implementation, and rebases can be stolen.
 
-    Function to exchange `_dx` amount of coin `i` for coin `j`, receiving a minimum amount of `_min_dy`. This is done **without actually transferring the coins into the pool yourself**. The exchange is based on the change in the balance of coin `i`, eliminating the need to grant approval to the contract. See [more](../pools/overview.md#exchange_received).
+    Function to exchange `_dx` amount of coin `i` for coin `j`, receiving a minimum amount of `_min_dy`. This is done **without actually transferring the coins into the pool**. The exchange is based on the change in the balance of coin `i`, eliminating the need to grant approval to the contract.
 
     Returns: amount of output coin received (`uint256`).
 
     Emits: `TokenExchange`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `in128` | index value of input coin |
-    | `j` |  `in128` | index value of output coin |
-    | `_dx` |  `uint256` | amount of coin `i` being exchanged |
-    | `_min_dy` |  `uint256` | minumum amount of coin `j` to receive |
-    | `_receiver` |  `address` | receiver of the output tokens; defaults to msg.sender |
+    | Input        | Type       | Description                                        |
+    | ------------ | ---------- | -------------------------------------------------- |
+    | `i`          | `int128`   | Index value of input coin.                         |
+    | `j`          | `int128`   | Index value of output coin.                        |
+    | `_dx`        | `uint256`  | Amount of coin `i` being exchanged.               |
+    | `_min_dy`    | `uint256`  | Minimum amount of coin `j` to receive.            |
+    | `_receiver`  | `address`  | Receiver of the output tokens; defaults to `msg.sender`. |
 
     ??? quote "Source code"
 
@@ -471,7 +484,7 @@ These function slightly differ to the ones from plain pools, as there needs to b
 ### `exchange_underlying`
 !!! description "`StableSwap.exchange_underlying(i: int128, j: int128, _dx: uint256, _min_dy: uint256, _receiver: address = msg.sender) -> uint256:`"
 
-    Function to exchange `_dx` amount of the the underlying coin `i` for the underlying coin `j` and receive a minimum amount of `_min_dy`. Index values are the `coins` followed by the `base_coins`, where the base pool LP token is not included as a value.
+    Function to exchange `_dx` amount of the underlying coin `i` for the underlying coin `j` and receive a minimum amount of `_min_dy`. Index values are the `coins` followed by the `base_coins`, where the base pool LP token is not included as a value.
 
     Returns: amount of output coin received (`uint256`).
 
@@ -479,11 +492,11 @@ These function slightly differ to the ones from plain pools, as there needs to b
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `i` |  `in128` | index value of underlying input coin |
-    | `j` |  `in128` | index value of underlying output coin |
-    | `_dx` |  `uint256` | amount of coin `i` being exchanged |
-    | `_min_dy` |  `uint256` | minumum amount of coin `j` to receive |
-    | `receiver` |  `address` | receiver of the output tokens; defaults to msg.sender |
+    | `i` |  `int128` | Index value of underlying input coin. |
+    | `j` |  `int128` | Index value of underlying output coin. |
+    | `_dx` |  `uint256` | Amount of coin `i` being exchanged. |
+    | `_min_dy` |  `uint256` | Minimum amount of coin `j` to receive. |
+    | `receiver` |  `address` | Receiver of the output tokens; defaults to msg.sender. |
 
     ??? quote "Source code"
 
@@ -667,15 +680,15 @@ These function slightly differ to the ones from plain pools, as there needs to b
 ### `get_dy`
 !!! description "`StableSwap.get_dy(i: int128, j: int128, dx: uint256) -> uint256`"
 
-    Function to calculate the predicted output amount `j` to receive at the pool's current state given a input of `dx` amount coin `i`.
+    Function to calculate the predicted output amount `j` to receive at the pool's current state given an input of `dx` amount of coin `i`. This is just a simple getter method; the calculation logic is within the CurveStableSwapNGViews contract. See [here](../utility_contracts/views.md#get_dy).
 
-    Returns: predicted amount of `j` (`uint256`).
+    Returns: predicted output amount of `j` (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `int128` | index value of input coin |
-    | `j` |  `int128` | index value of output coin |
-    | `dx` |  `uint256` | amount of input coin being exchanged |
+    | Input  | Type     | Description                                |
+    | ------ | -------- | ------------------------------------------ |
+    | `i`    | `int128` | Index value of input coin.                 |
+    | `j`    | `int128` | Index value of output coin.                |
+    | `dx`   | `uint256`| Amount of input coin being exchanged.      |
 
     ??? quote "Source code"
 
@@ -754,15 +767,15 @@ These function slightly differ to the ones from plain pools, as there needs to b
 ### `get_dy_underlying`
 !!! description "`StableSwap.get_dy_underlying(i: int128, j: int128, dx: uint256) -> uint256:`"
 
-    Function to calculate the predicted output amount `j` to receive given a input of `dx` amount coin `i`, including underlying coins. Index values are the `coins` followed by the `base_coins`, where the base pool LP token is not included as a value.
+    Function to calculate the predicted output amount `j` to receive given an input of `dx` amount of coin `i`, including underlying coins. Index values are the `coins` followed by the `base_coins`, where the base pool LP token is not included as a value.
 
     Returns: predicted amount of `j` (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `i` |  `int128` | index value of input coin |
-    | `j` |  `int128` | index value of output coin |
-    | `dx` |  `uint256` | amount of input coin being exchanged |
+    | `i` |  `int128` | Index value of input coin. |
+    | `j` |  `int128` | Index value of output coin. |
+    | `dx` |  `uint256` | Amount of input coin being exchanged. |
 
     ??? quote "Source code"
 
@@ -892,15 +905,15 @@ These function slightly differ to the ones from plain pools, as there needs to b
 ### `get_dx`
 !!! description "`StableSwap.get_dx(i: int128, j: int128, dy: uint256) -> uint256:`"
 
-    Function to calculate the predicted input amount `i` to receive `dy` of coin `j`.
+    Function to calculate the predicted input amount `i` to receive `dy` of coin `j` at the pool's current state. This is just a simple getter method; the calculation logic is within the CurveStableSwapNGViews contract. See [here](../utility_contracts/views.md#get_dx).
 
     Returns: predicted input amount of `i` (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `int128` | index value of input coin |
-    | `j` |  `int128` | index value of output coin |
-    | `dy` |  `uint256` | amount of output coin received |
+    | Input  | Type     | Description                                |
+    | ------ | -------- | ------------------------------------------ |
+    | `i`    | `int128` | Index value of input coin.                 |
+    | `j`    | `int128` | Index value of output coin.                |
+    | `dy`   | `uint256`| Amount of output coin received.            |
 
     ??? quote "Source code"
 
@@ -997,9 +1010,9 @@ These function slightly differ to the ones from plain pools, as there needs to b
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `i` |  `int128` | index value of input coin |
-    | `j` |  `int128` | index value of output coin |
-    | `dy` |  `uint256` | amount of output coin received |
+    | `i` |  `int128` | Index value of input coin. |
+    | `j` |  `int128` | Index value of output coin. |
+    | `dy` |  `uint256` | Amount of output coin received. |
 
     ??? quote "Source code"
 
@@ -1165,23 +1178,28 @@ These function slightly differ to the ones from plain pools, as there needs to b
         ```
 
 
+---
 
-## **Adding / Removing Liquidity**
+
+## **Adding and Removing Liquidity**
+
+There are no restrictions on how liquidity can be added or removed. Liquidity can be provided or removed in any proportion. However, there are fees associated with adding and removing liquidity that depend on the balances within the pool.
+
 
 ### `add_liquidity`
 !!! description "`StableSwap.add_liquidity(_amounts: DynArray[uint256, MAX_COINS], _min_mint_amount: uint256, _receiver: address = msg.sender) -> uint256:`"
 
-    Function to add liquidity to the pool and mint the corresponding LP tokens.
+    Function to add liquidity into the pool and mint a minimum of `_min_mint_amount` of the corresponding LP tokens to `_receiver`. A value for the minimum amount is used to prevent being front-run by MEV bots.
 
     Returns: amount of LP tokens received (`uint256`).
 
-    Emits: `AddLiquidity` and `Transfer`
+    Emits: `Transfer` and `AddLiquidity`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_amounts` |  `DynArray[uint256, MAX_COINS]` | list of amounts of coins to deposit |
-    | `_min_amount` |  `uint256` | minimum amount of LP tokens to mint |
-    | `_receiver` |  `address` | receiver of the LP tokens; defaults to msg.sender |
+    | Input        | Type                           | Description                                        |
+    | ------------ | ------------------------------ | -------------------------------------------------- |
+    | `_amounts`   | `DynArray[uint256, MAX_COINS]`| List of coin amounts to deposit.                    |
+    | `_min_amount`| `uint256`                      | Minimum amount of LP tokens to mint.               |
+    | `_receiver`  | `address`                      | Receiver of the LP tokens; defaults to `msg.sender`.|
 
     ??? quote "Source code"
 
@@ -1331,22 +1349,22 @@ These function slightly differ to the ones from plain pools, as there needs to b
 ### `remove_liquidity`
 !!! description "`StableSwap.remove_liquidity(_burn_amount: uint256, _min_amounts: DynArray[uint256, MAX_COINS], _receiver: address = msg.sender, _claim_admin_fees: bool = True) -> DynArray[uint256, MAX_COINS]:`"
 
-    Function to remove coins from the liquidity pool in a balanced ratio. Admin fees might be claimed after liquidity was removed.
+    !!!info
+        When removing liquidity in a balanced ratio, there is no need to update the price oracle, as this function does not alter the balance ratio within the pool. Calling this function only updates `D_oracle`.    
+        The calculation of `D` does not use Newton methods, ensuring that `remove_liquidity` should always work, even if the pool gets borked.
 
-    Returns: amount of coins withdrawn (`DynArray[uint256, MAX_COINS]`)
+    Function to remove `_min_amount` coins from the liquidity pool based on the pools current ratios by burning `_burn_amount` of LP tokens. Admin fees might be claimed after liquidity is removed.
+
+    Returns: amount of coins withdrawn (`DynArray[uint256, MAX_COINS]`).
 
     Emits: `RemoveLiquidity`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_burn_amount` |  `uint256` | amount of LP tokens to be burned |
-    | `_min_amounts` |  `DynArray[uint256, MAX_COINS]` | minimum amounts of coins to receive |
-    | `_receiver` |  `address` | receiver of the coins; defaults to msg.sender |
-    | `_claim_admin_fees` |  `bool` | if admin fees should be claimed; defaults to `true` |
-
-    !!!info
-        When removing liquidity in a balanced ratio, there is no need to update the price oracles, as this function does not alter the balance ratio within the pool. Calling this function only updates the `D` oracle.   
-        The calculation of `D` does not use Newton methods, ensuring that `remove_liquidity` should always work, even if the pool gets borked.
+    | Input              | Type                           | Description                                        |
+    | ------------------ | ------------------------------ | -------------------------------------------------- |
+    | `_burn_amount`     | `uint256`                      | Amount of LP tokens to be burned.                 |
+    | `_min_amounts`     | `DynArray[uint256, MAX_COINS]` | Minimum amounts of coins to receive.              |
+    | `_receiver`        | `address`                      | Receiver of the coins; defaults to `msg.sender`.  |
+    | `_claim_admin_fees`| `bool`                         | If admin fees should be claimed; defaults to `true`.|
 
     ??? quote "Source code"
 
@@ -1441,18 +1459,18 @@ These function slightly differ to the ones from plain pools, as there needs to b
 ### `remove_liquidity_one_coin`
 !!! description "`StableSwap.remove_liquidity_one_coin(_burn_amount: uint256, i: int128, _min_received: uint256, _receiver: address = msg.sender) -> uint256:`"
 
-    Function to withdraw a single coin from the liquidity pool. The corresponding LP tokens will be burned.
+    Function to remove a minimum of `_min_received` of coin `i` by burning `_burn_amount` of LP tokens.
 
     Returns: coins received (`uint256`).
 
     Emits: `RemoveLiquidityOne`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_burn_amount` |  `uint256` | amount of LP tokens to burn/withdraw |
-    | `i` |  `int128` | index value of the coin to withdraw |
-    | `_min_received` |  `uint256` | minimum amount of coin to receive |
-    | `_receiver` |  `address` | receiver of the coins; defaults to msg.sender |
+    | Input           | Type       | Description                                        |
+    | --------------- | ---------- | -------------------------------------------------- |
+    | `_burn_amount` | `uint256`  | Amount of LP tokens to burn/withdraw.             |
+    | `i`             | `int128`   | Index value of the coin to withdraw.              |
+    | `_min_received`| `uint256`  | Minimum amount of coin to receive.                |
+    | `_receiver`    | `address`  | Receiver of the coins; defaults to `msg.sender`.  |
 
     ??? quote "Source code"
 
@@ -1579,17 +1597,17 @@ These function slightly differ to the ones from plain pools, as there needs to b
 ### `remove_liquidity_imbalance`
 !!! description "`StableSwap.remove_liquidity_imbalance(_amounts: DynArray[uint256, MAX_COINS], _max_burn_amount: uint256, _receiver: address = msg.sender) -> uint256:`"
 
-    Function to remove coins from the liquidity pool in an imbalanced amount.
+    Function to burn a maximum of `_max_burn_amount` of LP tokens in order to receive `_amounts` of underlying tokens.
 
     Returns: amount of LP tokens burned (`uint256`).
 
     Emits: `RemoveLiquidityImbalance`
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_amounts` |  `DynArray[uint256, MAX_COINS]` | list of amounts of coins to withdraw |
-    | `_max_burn_amount` |  `uint256` | maximum amount of LP tokens to burn |
-    | `receiver` |  `address` | receiver of the coins; defaults to msg.sender |
+    | Input              | Type                           | Description                                        |
+    | ------------------ | ------------------------------ | -------------------------------------------------- |
+    | `_amounts`         | `DynArray[uint256, MAX_COINS]`| List of amounts of coins to withdraw.              |
+    | `_max_burn_amount` | `uint256`                      | Maximum amount of LP tokens to burn.               |
+    | `_receiver`        | `address`                      | Receiver of the coins; defaults to `msg.sender`.   |
 
     ??? quote "Source code"
 
@@ -1690,12 +1708,12 @@ These function slightly differ to the ones from plain pools, as there needs to b
 
     Function to calculate the addition or reduction of token supply from a deposit (add liquidity) or withdrawal (remove liquidity). This function does take fees into consideration.
 
-    Returns: amount of LP tokens received (`uint256`).
+    Returns: amount of LP tokens (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_amounts` |  `DynArray[uint256, MAX_COINS]` | amount of coins being deposited/withdrawn |
-    | `_is_deposit` |  `bool` | `true` = deposit, `false` = withdraw |
+    | Input          | Type                           | Description                                        |
+    | -------------- | ------------------------------ | -------------------------------------------------- |
+    | `_amounts`     | `DynArray[uint256, MAX_COINS]` | Amount of coins being deposited/withdrawn.        |
+    | `_is_deposit`  | `bool`                         | `true` = deposit, `false` = withdraw.             |
 
     ??? quote "Source code"
 
@@ -1835,10 +1853,10 @@ These function slightly differ to the ones from plain pools, as there needs to b
 
     Returns: amount of tokens withdrawn (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_burn_amount` |  `uint256` | amount of LP tokens to burn |
-    | `i` |  `int128` | index value of the coin to withdraw |
+    | Input           | Type      | Description                                        |
+    | --------------- | --------- | -------------------------------------------------- |
+    | `_burn_amount` | `uint256` | Amount of LP tokens to burn.                       |
+    | `i`             | `int128`  | Index value of the coin to withdraw.              |
 
     ??? quote "Source code"
 
@@ -1927,6 +1945,8 @@ These function slightly differ to the ones from plain pools, as there needs to b
         ```
 
 
+---
+
 
 ## **Fee Methods**
 
@@ -2008,10 +2028,10 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     Returns: dynamic fee (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `int128` | index value of input coin |
-    | `j` |  `int128` | index value of output coin |
+    | Input  | Type     | Description                                |
+    | ------ | -------- | ------------------------------------------ |
+    | `i`    | `int128` | Index value of input coin.                 |
+    | `j`    | `int128` | Index value of output coin.                |
 
     ??? quote "Source code"
 
@@ -2099,7 +2119,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 ### `admin_fee`
 !!! description "`StableSwap.admin_fee() -> uint256: view`"
 
-    Getter for the admin fee.
+    Getter for the admin fee. It is a constant and is set to 50% (5000000000).
 
     Returns: admin fee (`uint256`).
 
@@ -2117,14 +2137,13 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
         ```
 
     !!!note
-        - The method returns an integer with with 1e10 precision.
-        - `admin_fee` is a constant and set at 50% (5000000000).
+        The method returns an integer with with 1e10 precision.
 
 
 ### `offpeg_fee_multiplier`
 !!! description "`StableSwap.offpeg_fee_multiplier() -> uint256: view`"
 
-    Getter method for the off-peg fee multiplier. This value determines how much the fee increases when assets within the AMM depeg. The off-peg fee multiplicator is expressed as an integer with a 1e10 precision and can be changed via [`set_new_fee`](../pools/admin_controls.md#set_new_fee).
+    Getter method for the off-peg fee multiplier. This value determines how much the fee increases when assets within the AMM depeg. This value can be changed via [`set_new_fee`](../pools/admin_controls.md#set_new_fee).
 
     Returns: offpeg fee multiplier (`uint256`)
 
@@ -2168,6 +2187,78 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
         The method returns an integer with with 1e10 precision.
 
 
+### `stored_rates`
+!!! description "`StableSwap.stored_rates() -> DynArray[uint256, MAX_COINS]:`view"
+
+    Getter for the rate multiplier of each coin.
+
+    Returns: stored rates (`DynArray[uint256, MAX_COINS]`).
+
+    !!!info
+        If the coin has a rate oracle that has been properly initialized, this method queries that rate by static-calling an external contract.
+
+    ??? quote "Source code"
+
+        ```vyper
+        rate_multipliers: immutable(DynArray[uint256, MAX_COINS])
+        # [bytes4 method_id][bytes8 <empty>][bytes20 oracle]
+        oracles: DynArray[uint256, MAX_COINS]
+
+        @view
+        @external
+        def stored_rates() -> DynArray[uint256, MAX_COINS]:
+            return self._stored_rates()
+
+        @view
+        @internal
+        def _stored_rates() -> DynArray[uint256, MAX_COINS]:
+            """
+            @notice Gets rate multipliers for each coin.
+            @dev If the coin has a rate oracle that has been properly initialised,
+                this method queries that rate by static-calling an external
+                contract.
+            """
+            rates: DynArray[uint256, MAX_COINS] = [
+                rate_multipliers[0],
+                StableSwap(BASE_POOL).get_virtual_price()
+            ]
+            oracles: DynArray[uint256, MAX_COINS] = self.oracles
+
+            if asset_types[0] == 1 and not self.oracles[0] == 0:
+
+                # NOTE: fetched_rate is assumed to be 10**18 precision
+                fetched_rate: uint256 = convert(
+                    raw_call(
+                        convert(oracles[0] % 2**160, address),
+                        _abi_encode(oracles[0] & ORACLE_BIT_MASK),
+                        max_outsize=32,
+                        is_static_call=True,
+                    ),
+                    uint256
+                )
+
+                # rates[0] * fetched_rate / PRECISION
+                rates[0] = unsafe_div(rates[0] * fetched_rate, PRECISION)
+
+            elif asset_types[0] == 3:  # ERC4626
+
+                # rates[0] * fetched_rate / PRECISION
+                rates[0] = unsafe_div(
+                    rates[0] * ERC4626(coins[0]).convertToAssets(call_amount) * scale_factor,
+                    PRECISION
+                )  # 1e18 precision
+
+            return rates
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> StableSwap.stored_rates()
+        [1000000000000000000000000000000, 1028532570390672122]
+        ```
+
+
 ### `admin_balances`
 !!! description "`StableSwap.admin_balances(arg0: uint256) -> uint256: view`"
 
@@ -2175,9 +2266,9 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     Returns: admin balances (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `uint256` | index value of the coin |
+    | Input  | Type      | Description                                |
+    | ------ | --------- | ------------------------------------------ |
+    | `arg0` | `uint256` | Index value of the coin.                   |
 
     ??? quote "Source code"
 
@@ -2241,197 +2332,18 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
         ```
 
 
+---
+
+
+
 ## **Oracle Methods**
 
-Oracles are updated whenever the **`upkeep_oracles()`** function is called. This update is triggered by any of the following functions: **`add_liquidity()`**, **`remove_liquidity_one_coin()`**, **`remove_liquidity_imbalanced()`**, **`exchange()`** or **`exchanged_received()`**.
+Stableswap-ng contains two different oracles:
 
-When removing liquidity in a balanced portion (**`remove_liquidity()`**), oracles are not updated as it does not change the price within the AMM, as it does not mess with the coin balance ratio of the pool.
+- `price_oracle`: Exponential Moving Average (EMA) oracle representing the price of an asset within the AMM with respect to the token at index 0.
+- `D_oracle`: EMA oracle for the D invariant. 
 
-??? quote "`upkeep_oracles`"
-
-    ```vyper
-    @internal
-    def upkeep_oracles(xp: DynArray[uint256, MAX_COINS], amp: uint256, D: uint256):
-        """
-        @notice Upkeeps price and D oracles.
-        """
-        ma_last_time_unpacked: uint256[2] = self.unpack_2(self.ma_last_time)
-        last_prices_packed_current: DynArray[uint256, MAX_COINS] = self.last_prices_packed
-        last_prices_packed_new: DynArray[uint256, MAX_COINS] = last_prices_packed_current
-
-        spot_price: DynArray[uint256, MAX_COINS] = self._get_p(xp, amp, D)
-
-        # -------------------------- Upkeep price oracle -------------------------
-
-        # Metapools are always 2-coin pools, so we care about idx=0 only:
-        if spot_price[0] != 0:
-
-            # Upate packed prices -----------------
-            last_prices_packed_new[0] = self.pack_2(
-                spot_price[0],
-                self._calc_moving_average(
-                    last_prices_packed_current[0],
-                    self.ma_exp_time,
-                    ma_last_time_unpacked[0],  # index 0 is ma_exp_time for prices
-                )
-            )
-
-        self.last_prices_packed = last_prices_packed_new
-
-        # ---------------------------- Upkeep D oracle ---------------------------
-
-        last_D_packed_current: uint256 = self.last_D_packed
-        self.last_D_packed = self.pack_2(
-            D,
-            self._calc_moving_average(
-                last_D_packed_current,
-                self.D_ma_time,
-                ma_last_time_unpacked[1],  # index 1 is ma_exp_time for D
-            )
-        )
-
-        # Housekeeping: Update ma_last_time for p and D oracles ------------------
-        for i in range(2):
-            if ma_last_time_unpacked[i] < block.timestamp:
-                ma_last_time_unpacked[i] = block.timestamp
-
-        self.ma_last_time = self.pack_2(ma_last_time_unpacked[0], ma_last_time_unpacked[1])
-    ```
-
-
-### `last_price`
-!!! description "`StableSwap.last_price(i: uint256) -> uint256: view`"
-
-    Getter method for the last price for the coin at index value `i` stored in `last_prices_packed`. The spot price is retrieved from the lower 128 bits of the packed value in `last_prices_packed`.
-
-    The last prices are updated whenever the internal `upkeep_oracles()` function is called.
-
-    Returns: last price of token `i` (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | index value of coin |
-
-    !!!warning "Revert"
-        This function reverts if `i >= MAX_COINS`.
-
-    ??? quote "Source code"
-
-        ```vyper
-        last_prices_packed: DynArray[uint256, MAX_COINS]  #  packing: last_price, ma_price
-
-        @view
-        @external
-        def last_price(i: uint256) -> uint256:
-            return self.last_prices_packed[i] & (2**128 - 1)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> StableSwap.last_price(0)
-        1001013010379719455
-        ```
-
-
-### `ema_price`
-!!! description "`StableSwap.ema_price(i: uint256) -> uint256: view`"
-
-    Getter method for the EMA (exponential moving average) price for the coin at index value `i` stored in `last_prices_packed`. The EMA price is extracted by shifting the packed value in `last_prices_packed` to the right by 128 bits.
-
-    The EMA price is updated whenever the internal `upkeep_oracles()` function is called. 
-
-    Returns: ema price of coin `i` (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | index value of coin |
-
-    ??? quote "Source code"
-
-        ```vyper 
-        last_prices_packed: DynArray[uint256, MAX_COINS]  #  packing: last_price, ma_price
-
-        @view
-        @external
-        def ema_price(i: uint256) -> uint256:
-            return (self.last_prices_packed[i] >> 128)
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> StableSwap.ema_price()
-        1001007272495314573
-        ```
-
-
-### `get_p`
-!!! description "`StableSwap.get_p(i: uint256) -> uint256: view`"
-
-    Function to calculate the AMM state price for the coin at index value `i`.
-
-    Returns: state price (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | index of state price |
-
-    !!!info
-        `i = 0` will return the state price of `coin[1]`.
-
-    ??? quote "Source code"
-
-        ```vyper 
-        @external
-        @view
-        def get_p(i: uint256) -> uint256:
-            """
-            @notice Returns the AMM State price of token
-            @dev if i = 0, it will return the state price of coin[1].
-            @param i index of state price (0 for coin[1], 1 for coin[2], ...)
-            @return uint256 The state price quoted by the AMM for coin[i+1]
-            """
-            assert i == 0  # dev: metapools do not have price oracle indices greater than 0.
-
-            amp: uint256 = self._A()
-            xp: DynArray[uint256, MAX_COINS] = self._xp_mem(
-                self._stored_rates(), self._balances()
-            )
-            D: uint256 = math.get_D(xp, amp, N_COINS)
-            return self._get_p(xp, amp, D)[0]
-
-        @internal
-        @pure
-        def _get_p(
-            xp: DynArray[uint256, MAX_COINS],
-            amp: uint256,
-            D: uint256,
-        ) -> DynArray[uint256, MAX_COINS]:
-
-            # dx_0 / dx_1 only, however can have any number of coins in pool
-            ANN: uint256 = unsafe_mul(amp, N_COINS)
-            Dr: uint256 = unsafe_div(D, pow_mod256(N_COINS, N_COINS))
-
-            for i in range(N_COINS_128):
-                Dr = Dr * D / xp[i]
-
-            p: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
-            # ANN * xp[0] / A_PRECISION
-            xp0_A: uint256 = unsafe_div(ANN * xp[0], A_PRECISION)
-            p.append(
-                10**18 * (xp0_A + unsafe_div(Dr * xp[0], xp[1])) / (xp0_A + Dr)
-            )
-
-            return p
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> StableSwap.get_p(0)
-        1001013009797544592
-        ```
+For full documentation on the available oracles, their update mechanisms, and functionality, please refer to the [Oracles](./oracles.md) section.
 
 
 ### `price_oracle`
@@ -2492,6 +2404,144 @@ When removing liquidity in a balanced portion (**`remove_liquidity()`**), oracle
         ```shell
         >>> StableSwap.price_oracle(0)
         1001013010363716669
+        ```
+
+
+### `last_price`
+!!! description "`StableSwap.last_price(i: uint256) -> uint256: view`"
+
+    !!!warning "Revert"
+        This function reverts if `i >= MAX_COINS`.
+
+    Getter method for the last price (often referred to as the spot price) for the coin at index value `i` stored in `last_prices_packed`. The spot price is retrieved from the lower 128 bits of the packed value in `last_prices_packed`.
+
+    The last prices are updated whenever the internal `upkeep_oracles()` function is called.
+
+    Returns: last price of token `i` (`uint256`).
+
+    | Input  | Type      | Description                        |
+    | ------ | --------- | ---------------------------------- |
+    | `i`    | `uint256` | Index value of the coin.           |
+
+    ??? quote "Source code"
+
+        ```vyper
+        last_prices_packed: DynArray[uint256, MAX_COINS]  #  packing: last_price, ma_price
+
+        @view
+        @external
+        def last_price(i: uint256) -> uint256:
+            return self.last_prices_packed[i] & (2**128 - 1)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> StableSwap.last_price(0)
+        1001013010379719455
+        ```
+
+
+### `ema_price`
+!!! description "`StableSwap.ema_price(i: uint256) -> uint256: view`"
+
+    !!!warning "Revert"
+        This function reverts if `i >= MAX_COINS`.
+
+    Getter method for the EMA (exponential moving average) price for the coin at index value `i` stored in `last_prices_packed`. The EMA price is extracted by shifting the packed value in `last_prices_packed` to the right by 128 bits.
+
+    The EMA price is updated whenever the internal `upkeep_oracles()` function is called.
+
+    Returns: EMA price of coin `i` (`uint256`).
+
+    | Input  | Type      | Description                        |
+    | ------ | --------- | ---------------------------------- |
+    | `i`    | `uint256` | Index value of the coin.           |
+
+    ??? quote "Source code"
+
+        ```vyper 
+        last_prices_packed: DynArray[uint256, MAX_COINS]  #  packing: last_price, ma_price
+
+        @view
+        @external
+        def ema_price(i: uint256) -> uint256:
+            return (self.last_prices_packed[i] >> 128)
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> StableSwap.ema_price()
+        1001007272495314573
+        ```
+
+
+### `get_p`
+!!! description "`StableSwap.get_p(i: uint256) -> uint256: view`"
+
+    !!!info
+        `i = 0` will return the state price of `coin[1]`.
+
+    Getter for the AMM state price for the coin at index value `i`.
+
+    Returns: state price (`uint256`).
+
+    | Input  | Type      | Description                 |
+    | ------ | --------- | --------------------------- |
+    | `i`    | `uint256` | Index of state price.       |
+
+    ??? quote "Source code"
+
+        ```vyper 
+        @external
+        @view
+        def get_p(i: uint256) -> uint256:
+            """
+            @notice Returns the AMM State price of token
+            @dev if i = 0, it will return the state price of coin[1].
+            @param i index of state price (0 for coin[1], 1 for coin[2], ...)
+            @return uint256 The state price quoted by the AMM for coin[i+1]
+            """
+            assert i == 0  # dev: metapools do not have price oracle indices greater than 0.
+
+            amp: uint256 = self._A()
+            xp: DynArray[uint256, MAX_COINS] = self._xp_mem(
+                self._stored_rates(), self._balances()
+            )
+            D: uint256 = math.get_D(xp, amp, N_COINS)
+            return self._get_p(xp, amp, D)[0]
+
+        @internal
+        @pure
+        def _get_p(
+            xp: DynArray[uint256, MAX_COINS],
+            amp: uint256,
+            D: uint256,
+        ) -> DynArray[uint256, MAX_COINS]:
+
+            # dx_0 / dx_1 only, however can have any number of coins in pool
+            ANN: uint256 = unsafe_mul(amp, N_COINS)
+            Dr: uint256 = unsafe_div(D, pow_mod256(N_COINS, N_COINS))
+
+            for i in range(N_COINS_128):
+                Dr = Dr * D / xp[i]
+
+            p: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+            # ANN * xp[0] / A_PRECISION
+            xp0_A: uint256 = unsafe_div(ANN * xp[0], A_PRECISION)
+            p.append(
+                10**18 * (xp0_A + unsafe_div(Dr * xp[0], xp[1])) / (xp0_A + Dr)
+            )
+
+            return p
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> StableSwap.get_p(0)
+        1001013009797544592
         ```
 
 
@@ -2617,6 +2667,49 @@ When removing liquidity in a balanced portion (**`remove_liquidity()`**), oracle
         This value needs to be unpacked, as it contains two variables (`ma_last_time_p`, `ma_last_time_D`). The value 579418424191959296018752878886041228423085294927 is unpacked into two uint256 numbers. First, its lower 128 bits are isolated using a bitwise AND with 2**128 − 1, and then the value is shifted right by 128 bits to extract the upper 128 bits. It returns: [1702757711, 1702757711].
 
 
+### `get_virtual_price`
+!!! description "`StableSwap.get_virtual_price() -> uint256: view`"
+
+    !!!danger "Attack Vector"
+        This method may be vulnerable to donation-style attacks if the implementation contains rebasing tokens. For integrators, caution is advised.
+
+    Getter for the current virtual price of the LP token, which represents a price relative to the underlying.
+
+    Returns: virtual price (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        @view
+        @external
+        @nonreentrant('lock')
+        def get_virtual_price() -> uint256:
+            """
+            @notice The current virtual price of the pool LP token
+            @dev Useful for calculating profits.
+                The method may be vulnerable to donation-style attacks if implementation
+                contains rebasing tokens. For integrators, caution is advised.
+            @return LP token virtual price normalized to 1e18
+            """
+            xp: DynArray[uint256, MAX_COINS] = self._xp_mem(self._stored_rates(), self._balances())
+            D: uint256 = math.get_D(xp, self._A(), N_COINS)
+            # D is in the units similar to DAI (e.g. converted to precision 1e18)
+            # When balanced, D = n * x_u - total virtual value of the portfolio
+            return D * PRECISION / self.total_supply
+        ```
+
+    === "Example"
+
+        ```shell
+        >>> StableSwap.get_virtual_price()
+        1000231466590053350
+        ```
+
+    !!!note
+        The method returns `virtual_price` as an integer with 1e18 precision.
+
+
+---
 
 
 ## **Amplification Coefficient**
@@ -2917,6 +3010,9 @@ When a ramping of A has been initialized, the process can be stopped by calling 
         ```
 
 
+---
+
+
 ## **Contract Info Methods** 
 
 ### `BASE_POOL`
@@ -3012,13 +3108,13 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 ### `BASE_COINS`
 !!! description "`StableSwap.BASE_COINS(arg0: uint256) -> address: view`"
 
-    Getter for the coins at index value `arg0` within the base pool.
+    Getter for the coin at index value `arg0` within the base pool.
 
     Returns: coin (`address`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `uint256` | index value of coin |
+    | `arg0` |  `uint256` | Index value of the coin. |
 
     ??? quote "Source code"
 
@@ -3114,13 +3210,13 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 ### `balances`
 !!! description "`StableSwap.balances(i: uint256) -> uint256: view`"
 
-    Getter for the current balance of coin `i` within the pool. This getter does not include accrued admin fees.
+    Getter for the current balance of coin `i` within the pool. 
 
     Returns: coin balance (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `i` |  `uint256` | index value of coin |
+    | Input  | Type      | Description                 |
+    | ------ | --------- | --------------------------- |
+    | `i`    | `uint256` | Index value of the coin.    |
 
     ??? quote "Source code"
 
@@ -3223,77 +3319,8 @@ When a ramping of A has been initialized, the process can be stopped by calling 
         [4183467888075, 2556883713184291687567176]
         ```
 
-
-### `stored_rates`
-!!! description "`StableSwap.stored_rates() -> DynArray[uint256, MAX_COINS]:`view"
-
-    Getter for the rate multiplier of each coin.
-
-    Returns: stored rates (`DynArray[uint256, MAX_COINS]`).
-
-    !!!info
-        If the coin has a rate oracle that has been properly initialized, this method queries that rate by static-calling an external contract.
-
-    ??? quote "Source code"
-
-        ```vyper
-        rate_multipliers: immutable(DynArray[uint256, MAX_COINS])
-        # [bytes4 method_id][bytes8 <empty>][bytes20 oracle]
-        oracles: DynArray[uint256, MAX_COINS]
-
-        @view
-        @external
-        def stored_rates() -> DynArray[uint256, MAX_COINS]:
-            return self._stored_rates()
-
-        @view
-        @internal
-        def _stored_rates() -> DynArray[uint256, MAX_COINS]:
-            """
-            @notice Gets rate multipliers for each coin.
-            @dev If the coin has a rate oracle that has been properly initialised,
-                this method queries that rate by static-calling an external
-                contract.
-            """
-            rates: DynArray[uint256, MAX_COINS] = [
-                rate_multipliers[0],
-                StableSwap(BASE_POOL).get_virtual_price()
-            ]
-            oracles: DynArray[uint256, MAX_COINS] = self.oracles
-
-            if asset_types[0] == 1 and not self.oracles[0] == 0:
-
-                # NOTE: fetched_rate is assumed to be 10**18 precision
-                fetched_rate: uint256 = convert(
-                    raw_call(
-                        convert(oracles[0] % 2**160, address),
-                        _abi_encode(oracles[0] & ORACLE_BIT_MASK),
-                        max_outsize=32,
-                        is_static_call=True,
-                    ),
-                    uint256
-                )
-
-                # rates[0] * fetched_rate / PRECISION
-                rates[0] = unsafe_div(rates[0] * fetched_rate, PRECISION)
-
-            elif asset_types[0] == 3:  # ERC4626
-
-                # rates[0] * fetched_rate / PRECISION
-                rates[0] = unsafe_div(
-                    rates[0] * ERC4626(coins[0]).convertToAssets(call_amount) * scale_factor,
-                    PRECISION
-                )  # 1e18 precision
-
-            return rates
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> StableSwap.stored_rates()
-        [1000000000000000000000000000000, 1028532570390672122]
-        ```
+    !!!note
+        The returned values do not take admin fees into account.
 
 
 ### `N_COINS`
@@ -3349,46 +3376,3 @@ When a ramping of A has been initialized, the process can be stopped by calling 
         >>> StableSwap.totalSupply()
         6811356567627648910003460
         ```
-
-
-### `get_virtual_price`
-!!! description "`StableSwap.get_virtual_price() -> uint256: view`"
-
-    !!!danger "Attack Vector"
-        This method may be vulnerable to donation-style attacks if the implementation contains rebasing tokens. For integrators, caution is advised.
-
-    Getter for the current virtual price of the LP token.
-
-    Returns: virtual price (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        @view
-        @external
-        @nonreentrant('lock')
-        def get_virtual_price() -> uint256:
-            """
-            @notice The current virtual price of the pool LP token
-            @dev Useful for calculating profits.
-                The method may be vulnerable to donation-style attacks if implementation
-                contains rebasing tokens. For integrators, caution is advised.
-            @return LP token virtual price normalized to 1e18
-            """
-            xp: DynArray[uint256, MAX_COINS] = self._xp_mem(self._stored_rates(), self._balances())
-            D: uint256 = math.get_D(xp, self._A(), N_COINS)
-            # D is in the units similar to DAI (e.g. converted to precision 1e18)
-            # When balanced, D = n * x_u - total virtual value of the portfolio
-            return D * PRECISION / self.total_supply
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> StableSwap.get_virtual_price()
-        1000231466590053350
-        ```
-
-    !!!note
-        - The method returns `virtual_price` as an integer with 1e18 precision.
-        - `virtual_price` returns a price relative to the underlying.
