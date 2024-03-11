@@ -2375,7 +2375,7 @@ An already existing loan can be managed in different ways:
 
 ## **Loan Info Methods**
 
-The Controller stores all the information about loans.
+*All user information, such as `debt`, `health`, etc., is stored within the Controller contract.*
 
 ### `debt`
 !!! description "`Controller.debt(user: address) -> uint256:`"
@@ -2509,7 +2509,7 @@ The Controller stores all the information about loans.
         'True'
         >>> Controller.loan_exists("0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B")
         'False'
-       ```
+        ```
 
 
 ### `user_prices`
@@ -3130,6 +3130,176 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 ---
 
 
+# **Loan and Liquidation Discount** 
+
+*New values for `loan_discount` and `liquidation_discount` can be assigned by the admin of the Factory, which is the DAO.*
+
+The **loan discount** is the percentage used to discount the collateral for calculating the maximum borrowable amount when creating a loan.
+
+The **liquidation discount** is used to discount the collateral for calculating the recoverable value upon liquidation at the current market price.
+
+### `loan_discount`
+!!! description "`Controller.liquidation_discount() -> uint256: view`"
+
+    Getter for the discount of the maximum loan size compared to `get_x_down()` value. This value defines the LTV.
+
+    Returns: loan discount (`uint256`).
+
+    ??? quote "Source code"
+
+        === "Controller.vy"
+
+            ```vyper
+            loan_discount: public(uint256)
+
+            @external
+            def __init__(
+                    collateral_token: address,
+                    monetary_policy: address,
+                    loan_discount: uint256,
+                    liquidation_discount: uint256,
+                    amm: address):
+                """
+                @notice Controller constructor deployed by the factory from blueprint
+                @param collateral_token Token to use for collateral
+                @param monetary_policy Address of monetary policy
+                @param loan_discount Discount of the maximum loan size compare to get_x_down() value
+                @param liquidation_discount Discount of the maximum loan size compare to
+                    get_x_down() for "bad liquidation" purposes
+                @param amm AMM address (Already deployed from blueprint)
+                """
+                ...
+
+                self.loan_discount = loan_discount
+
+                ...
+            ```
+
+    === "Example"
+        ```shell
+        >>> Controller.loan_discount()
+        90000000000000000
+        ```
+
+
+### `liquidation_discount`
+!!! description "`Controller.liquidation_discount() -> uint256: view`"
+
+    Getter for the liquidation discount. This value is used to discount the collateral value when calculating the health for liquidation puroses in order to incentivize liquidators.
+
+    Returns: liquidation discount (`uint256`).
+
+    ??? quote "Source code"
+
+        === "Controller.vy"
+
+            ```vyper
+            liquidation_discount: public(uint256)
+
+            @external
+            def __init__(
+                    collateral_token: address,
+                    monetary_policy: address,
+                    loan_discount: uint256,
+                    liquidation_discount: uint256,
+                    amm: address):
+                """
+                @notice Controller constructor deployed by the factory from blueprint
+                @param collateral_token Token to use for collateral
+                @param monetary_policy Address of monetary policy
+                @param loan_discount Discount of the maximum loan size compare to get_x_down() value
+                @param liquidation_discount Discount of the maximum loan size compare to
+                    get_x_down() for "bad liquidation" purposes
+                @param amm AMM address (Already deployed from blueprint)
+                """
+                ...
+
+                self.liquidation_discount = liquidation_discount
+
+                ...
+            ```
+
+    === "Example"
+        ```shell
+        >>> Controller.liquidation_discount()
+        60000000000000000
+        ```
+
+
+### `liquidation_discounts`
+!!! description "`Controller.liquidation_discounts(arg0: address) -> uint256: view`"
+
+    Getter method for the liquidation discount of a user. This value is used to discount the collateral for calculating the recoverable value upon liquidation at the current market price. The discount is factored into the health calculation.
+
+    Returns: liquidation discount (`uint256`).
+
+    | Input  | Type      | Description   |
+    | ------ | --------- | ------------- |
+    | `arg0` | `address` | User Address. |
+
+    ??? quote "Source code"
+
+        === "Controller.vy"
+
+            ```vyper
+            liquidation_discounts: public(HashMap[address, uint256])
+            ```
+
+    === "Example"
+        ```shell
+        >>> Controller.liquidation_discounts(trader)
+        0
+        ```
+
+
+### `set_borrowing_discounts`
+!!! description "`Controller.set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256)`"
+
+    !!!guard "Guarded Method" 
+        This function is only callable by the `admin` of the Factory.
+
+    Function to set new values for `loan_discount` and `liquidation_discount`. This metric defines the max LTV and where bad liquidations start.
+
+    Emits: `SetBorrowingDiscount`
+
+    | Input                  | Type      | Description                             |
+    | ---------------------- | --------- | --------------------------------------- |
+    | `loan_discount`        | `uint256` | New value for the loan discount.        |
+    | `liquidation_discount` | `uint256` | New value for the liquidation discount. |
+
+    ??? quote "Source code"
+
+        ```vyper
+        event SetBorrowingDiscounts:
+            loan_discount: uint256
+            liquidation_discount: uint256
+
+        @nonreentrant('lock')
+        @external
+        def set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256):
+            """
+            @notice Set discounts at which we can borrow (defines max LTV) and where bad liquidation starts
+            @param loan_discount Discount which defines LTV
+            @param liquidation_discount Discount where bad liquidation starts
+            """
+            assert msg.sender == FACTORY.admin()
+            assert loan_discount > liquidation_discount
+            assert liquidation_discount >= MIN_LIQUIDATION_DISCOUNT
+            assert loan_discount <= MAX_LOAN_DISCOUNT
+            self.liquidation_discount = liquidation_discount
+            self.loan_discount = loan_discount
+            log SetBorrowingDiscounts(loan_discount, liquidation_discount)
+        ```
+
+    === "Example"
+        ```shell
+        >>> Controller.set_borrowing_discounts(90000000000000000, 60000000000000000)
+        ``` 
+
+
+---
+
+
 # **Monetary Policy**
 
 Each controller has a monetary policy contract. This contract is responsible for the interest rates within the markets. 
@@ -3428,32 +3598,6 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
         ```
 
 
-### `liquidation_discounts`
-!!! description "`Controller.liquidation_discounts(arg0: address) -> uint256: view`"
-
-    Getter method for the liquidation discount of a user. This value is used to discount the collateral for calculating the recoverable value upon liquidation at the current market price. The discount is factored into the health calculation.
-
-    Returns: liquidation discount (`uint256`).
-
-    | Input  | Type      | Description   |
-    | ------ | --------- | ------------- |
-    | `arg0` | `address` | User Address. |
-
-    ??? quote "Source code"
-
-        === "Controller.vy"
-
-            ```vyper
-            liquidation_discounts: public(HashMap[address, uint256])
-            ```
-
-    === "Example"
-        ```shell
-        >>> Controller.liquidation_discounts(trader)
-        0
-        ```
-
-
 ### `minted`
 !!! description "`Controller.minted() -> uint256: view`"
 
@@ -3498,144 +3642,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
         ```        
 
 
-### `liquidation_discount`
-!!! description "`Controller.liquidation_discount() -> uint256: view`"
-
-    Getter for the liquidation discount. This value is used to discount the collateral value when calculating the health for liquidation puroses in order to incentivize liquidators.
-
-    Returns: liquidation discount (`uint256`).
-
-    ??? quote "Source code"
-
-        === "Controller.vy"
-
-            ```vyper
-            liquidation_discount: public(uint256)
-
-            @external
-            def __init__(
-                    collateral_token: address,
-                    monetary_policy: address,
-                    loan_discount: uint256,
-                    liquidation_discount: uint256,
-                    amm: address):
-                """
-                @notice Controller constructor deployed by the factory from blueprint
-                @param collateral_token Token to use for collateral
-                @param monetary_policy Address of monetary policy
-                @param loan_discount Discount of the maximum loan size compare to get_x_down() value
-                @param liquidation_discount Discount of the maximum loan size compare to
-                    get_x_down() for "bad liquidation" purposes
-                @param amm AMM address (Already deployed from blueprint)
-                """
-                ...
-
-                self.liquidation_discount = liquidation_discount
-
-                ...
-            ```
-
-    === "Example"
-        ```shell
-        >>> Controller.liquidation_discount()
-        60000000000000000
-        ```
-
-
-### `loan_discount`
-!!! description "`Controller.liquidation_discount() -> uint256: view`"
-
-    Getter for the discount of the maximum loan size compared to `get_x_down()` value. This value defines the LTV.
-
-    Returns: loan discount (`uint256`).
-
-    ??? quote "Source code"
-
-        === "Controller.vy"
-
-            ```vyper
-            loan_discount: public(uint256)
-
-            @external
-            def __init__(
-                    collateral_token: address,
-                    monetary_policy: address,
-                    loan_discount: uint256,
-                    liquidation_discount: uint256,
-                    amm: address):
-                """
-                @notice Controller constructor deployed by the factory from blueprint
-                @param collateral_token Token to use for collateral
-                @param monetary_policy Address of monetary policy
-                @param loan_discount Discount of the maximum loan size compare to get_x_down() value
-                @param liquidation_discount Discount of the maximum loan size compare to
-                    get_x_down() for "bad liquidation" purposes
-                @param amm AMM address (Already deployed from blueprint)
-                """
-                ...
-
-                self.loan_discount = loan_discount
-
-                ...
-            ```
-
-    === "Example"
-        ```shell
-        >>> Controller.loan_discount()
-        90000000000000000
-        ```
-
-
 ---
-
-
-# **Setting Borrowing Discounts** 
-
-Borrowing discounts such as `loan_discount` and `liquidation_discount` can be set by the admin.
-
-### `set_borrowing_discounts`
-!!! description "`Controller.set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256)`"
-
-    !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the Factory.
-
-    Function to set new values for `loan_discount` and `liquidation_discount`. This metric defines the max LTV and where bad liquidations start.
-
-    Emits: `SetBorrowingDiscount`
-
-    | Input                  | Type      | Description                             |
-    | ---------------------- | --------- | --------------------------------------- |
-    | `loan_discount`        | `uint256` | New value for the loan discount.        |
-    | `liquidation_discount` | `uint256` | New value for the liquidation discount. |
-
-    ??? quote "Source code"
-
-        ```vyper
-        event SetBorrowingDiscounts:
-            loan_discount: uint256
-            liquidation_discount: uint256
-
-        @nonreentrant('lock')
-        @external
-        def set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256):
-            """
-            @notice Set discounts at which we can borrow (defines max LTV) and where bad liquidation starts
-            @param loan_discount Discount which defines LTV
-            @param liquidation_discount Discount where bad liquidation starts
-            """
-            assert msg.sender == FACTORY.admin()
-            assert loan_discount > liquidation_discount
-            assert liquidation_discount >= MIN_LIQUIDATION_DISCOUNT
-            assert loan_discount <= MAX_LOAN_DISCOUNT
-            self.liquidation_discount = liquidation_discount
-            self.loan_discount = loan_discount
-            log SetBorrowingDiscounts(loan_discount, liquidation_discount)
-        ```
-
-    === "Example"
-        ```shell
-        >>> Controller.set_borrowing_discounts(90000000000000000, 60000000000000000)
-        ``` 
 
 
 # **Callbacks** 
@@ -3644,7 +3651,7 @@ Borrowing discounts such as `loan_discount` and `liquidation_discount` can be se
 !!! description "`Controller.set_callback(cb: address) -> uint256: view`"
 
     !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract.
+        This function is only callable by the `admin` of the Factory.
 
     Function to set a callback for liquidity mining.
 
