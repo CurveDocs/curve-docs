@@ -19,12 +19,12 @@ It is important to note that the LP tokens are not staked in the gauge (if there
 !!!deploy "Contract Source & Deployment"
     Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/stabilizer/PegKeeper.vy). 
 
-    | PegKeepers | Deployment Address  |
-    | -------|-------|
-    |`PegKepper for crvUSD/USDC`|[0xaA346781dDD7009caa644A4980f044C50cD2ae22](https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22#code)|
-    |`PegKepper for crvUSD/USDT`|[0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8](https://etherscan.io/address/0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8#code)|
-    |`PegKepper for crvUSD/USDP`|[0x6B765d07cf966c745B340AdCa67749fE75B5c345](https://etherscan.io/address/0x6B765d07cf966c745B340AdCa67749fE75B5c345#code)|
-    |`PegKepper for crvUSD/TUSD`|[0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae](https://etherscan.io/address/0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae#code)|
+    | PegKeepers                | Deployment Address  |
+    | ------------------------- | ------------------- |
+    |`PegKeeper for crvUSD/USDC`|[0xaA346781dDD7009caa644A4980f044C50cD2ae22](https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22#code)|
+    |`PegKeeper for crvUSD/USDT`|[0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8](https://etherscan.io/address/0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8#code)|
+    |`PegKeeper for crvUSD/USDP`|[0x6B765d07cf966c745B340AdCa67749fE75B5c345](https://etherscan.io/address/0x6B765d07cf966c745B340AdCa67749fE75B5c345#code)|
+    |`PegKeeper for crvUSD/TUSD`|[0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae](https://etherscan.io/address/0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae#code)|
 
 
 ## **Stabilisation Method** 
