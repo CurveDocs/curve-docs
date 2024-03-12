@@ -283,7 +283,7 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 ### `maxDeposit`
 !!! description "`Vault.maxDeposit(receiver: address) -> uint256:`"
 
-    Getter for the maximum amount of assets `receiver` can deposit, which essentially equals the asset balance of the user.
+    Getter for the maximum amount of assets `receiver` can deposit. Essentially equals to `max_value(uint256)`.
 
     Returns: maximum depositable assets (`uint256`).
 
@@ -302,7 +302,7 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
             @view
             def maxDeposit(receiver: address) -> uint256:
                 """
-                @notice Maximum amount of assets which a given user can deposit. Essentially balanceOf
+                @notice Maximum amount of assets which a given user can deposit (inf)
                 """
                 return self.borrowed_token.balanceOf(receiver)
             ```
@@ -540,7 +540,7 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 ### `maxMint`
 !!! description "`Vault.maxMint(receiver: address) -> uint256:`"
 
-    Getter for the maximum amount of shares a user can mint, based on their current asset holdings.
+    Getter for the maximum amount of shares a user can mint. Essentially equals to `max_value(uint256)`.
 
     Returns: maximum mintable shares (`uint256`).
 
@@ -557,9 +557,9 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
             @view
             def maxMint(receiver: address) -> uint256:
                 """
-                @notice Calculate maximum amount of shares which a given user can mint
+                @notice Return maximum amount of shares which a given user can mint (inf)
                 """
-                return self._convert_to_shares(self.borrowed_token.balanceOf(receiver))
+                return max_value(uint256)
 
             @internal
             @view
