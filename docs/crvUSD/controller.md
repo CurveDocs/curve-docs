@@ -1162,6 +1162,7 @@ An already existing loan can be managed in different ways:
                     return
                 self._add_collateral_borrow(collateral, 0, _for, False)
                 self.transferFrom(COLLATERAL_TOKEN, msg.sender, AMM.address, collateral)
+                self._save_rate()
 
             @internal
             def _add_collateral_borrow(d_collateral: uint256, d_debt: uint256, _for: address, remove_collateral: bool):
@@ -1207,8 +1208,6 @@ An already existing loan can be managed in different ways:
                     log RemoveCollateral(_for, d_collateral)
                 else:
                     log Borrow(_for, d_collateral, d_debt)
-
-                self._save_rate()
 
                 log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
             ```
@@ -1353,6 +1352,7 @@ An already existing loan can be managed in different ways:
                     return
                 self._add_collateral_borrow(collateral, 0, msg.sender, True)
                 self.transferFrom(COLLATERAL_TOKEN, AMM.address, msg.sender, collateral)
+                self._save_rate()
 
             @internal
             def _add_collateral_borrow(d_collateral: uint256, d_debt: uint256, _for: address, remove_collateral: bool):
@@ -1398,8 +1398,6 @@ An already existing loan can be managed in different ways:
                     log RemoveCollateral(_for, d_collateral)
                 else:
                     log Borrow(_for, d_collateral, d_debt)
-
-                self._save_rate()
 
                 log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
             ```
@@ -1552,6 +1550,7 @@ An already existing loan can be managed in different ways:
                 self.minted += debt
                 self.transferFrom(COLLATERAL_TOKEN, msg.sender, AMM.address, collateral)
                 self.transfer(BORROWED_TOKEN, msg.sender, debt)
+                self._save_rate()
 
             @internal
             def _add_collateral_borrow(d_collateral: uint256, d_debt: uint256, _for: address, remove_collateral: bool):
@@ -1597,8 +1596,6 @@ An already existing loan can be managed in different ways:
                     log RemoveCollateral(_for, d_collateral)
                 else:
                     log Borrow(_for, d_collateral, d_debt)
-
-                self._save_rate()
 
                 log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
             ```
@@ -1699,6 +1696,205 @@ An already existing loan can be managed in different ways:
         >>> Controller.user_state(trader)
         [2000000000000000000, 0, 11000001592726154783594, 10]
         ```
+
+
+### `borrow_more_extended`
+!!! description "`Controller.borrow_more_extended(collateral: uint256, debt: uint256, callbacker: address, callback_args: DynArray[uint256,5]):`"
+
+    Function to borrow more assets while adding more collateral. This method uses callacks to build up leverage.
+
+    Emits: `UserState` and `Borrow`
+
+    | Input         | Type                  | Description                      |
+    | ------------- | --------------------- | -------------------------------- |
+    | `collateral`  | `uint256`             | Amount of collateral to add.     |
+    | `debt`        | `uint256`             | Amount of debt to take.          |
+    | `callabacker` | `address`             | Address of the callaback contract. |
+    | `debt`        | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5) such as `min_amount` etc |
+
+    ??? quote "Source code"
+
+        === "Controller.vy"
+
+            ```vyper
+            event UserState:
+                user: indexed(address)
+                collateral: uint256
+                debt: uint256
+                n1: int256
+                n2: int256
+                liquidation_discount: uint256
+
+            event Borrow:
+                user: indexed(address)
+                collateral_increase: uint256
+                loan_increase: uint256
+
+            @external
+            @nonreentrant('lock')
+            def borrow_more_extended(collateral: uint256, debt: uint256, callbacker: address, callback_args: DynArray[uint256,5]):
+                """
+                @notice Borrow more stablecoins while adding more collateral using a callback (to leverage more)
+                @param collateral Amount of collateral to add
+                @param debt Amount of stablecoin debt to take
+                @param callbacker Address of the callback contract
+                @param callback_args Extra arguments for the callback (up to 5) such as min_amount etc
+                """
+                if debt == 0:
+                    return
+
+                # Before callback
+                self.transfer(BORROWED_TOKEN, callbacker, debt)
+
+                # Callback
+                # If there is any unused debt, callbacker can send it to the user
+                more_collateral: uint256 = self.execute_callback(
+                    callbacker, CALLBACK_DEPOSIT, msg.sender, 0, collateral, debt, callback_args).collateral
+
+                # After callback
+                self._add_collateral_borrow(collateral + more_collateral, debt, msg.sender, False)
+                self.minted += debt
+                self.transferFrom(COLLATERAL_TOKEN, msg.sender, AMM.address, collateral)
+                self.transferFrom(COLLATERAL_TOKEN, callbacker, AMM.address, more_collateral)
+                self._save_rate()
+
+            @internal
+            def _add_collateral_borrow(d_collateral: uint256, d_debt: uint256, _for: address, remove_collateral: bool):
+                """
+                @notice Internal method to borrow and add or remove collateral
+                @param d_collateral Amount of collateral to add
+                @param d_debt Amount of debt increase
+                @param _for Address to transfer tokens to
+                @param remove_collateral Remove collateral instead of adding
+                """
+                debt: uint256 = 0
+                rate_mul: uint256 = 0
+                debt, rate_mul = self._debt(_for)
+                assert debt > 0, "Loan doesn't exist"
+                debt += d_debt
+                ns: int256[2] = AMM.read_user_tick_numbers(_for)
+                size: uint256 = convert(unsafe_add(unsafe_sub(ns[1], ns[0]), 1), uint256)
+
+                xy: uint256[2] = AMM.withdraw(_for, 10**18)
+                assert xy[0] == 0, "Already in underwater mode"
+                if remove_collateral:
+                    xy[1] -= d_collateral
+                else:
+                    xy[1] += d_collateral
+                n1: int256 = self._calculate_debt_n1(xy[1], debt, size)
+                n2: int256 = n1 + unsafe_sub(ns[1], ns[0])
+
+                AMM.deposit_range(_for, xy[1], n1, n2)
+                self.loan[_for] = Loan({initial_debt: debt, rate_mul: rate_mul})
+
+                liquidation_discount: uint256 = 0
+                if _for == msg.sender:
+                    liquidation_discount = self.liquidation_discount
+                    self.liquidation_discounts[_for] = liquidation_discount
+                else:
+                    liquidation_discount = self.liquidation_discounts[_for]
+
+                if d_debt != 0:
+                    self._total_debt.initial_debt = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul + d_debt
+                    self._total_debt.rate_mul = rate_mul
+
+                if remove_collateral:
+                    log RemoveCollateral(_for, d_collateral)
+                else:
+                    log Borrow(_for, d_collateral, d_debt)
+
+                log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
+            ```
+        
+        === "AMM.vy"
+
+            ```vyper
+            event Deposit:
+                provider: indexed(address)
+                amount: uint256
+                n1: int256
+                n2: int256
+
+            @external
+            @nonreentrant('lock')
+            def deposit_range(user: address, amount: uint256, n1: int256, n2: int256):
+                """
+                @notice Deposit for a user in a range of bands. Only admin contract (Controller) can do it
+                @param user User address
+                @param amount Amount of collateral to deposit
+                @param n1 Lower band in the deposit range
+                @param n2 Upper band in the deposit range
+                """
+                assert msg.sender == self.admin
+
+                user_shares: DynArray[uint256, MAX_TICKS_UINT] = []
+                collateral_shares: DynArray[uint256, MAX_TICKS_UINT] = []
+
+                n0: int256 = self.active_band
+
+                # We assume that n1,n2 area already sorted (and they are in Controller)
+                assert n2 < 2**127
+                assert n1 > -2**127
+
+                n_bands: uint256 = unsafe_add(convert(unsafe_sub(n2, n1), uint256), 1)
+                assert n_bands <= MAX_TICKS_UINT
+
+                y_per_band: uint256 = unsafe_div(amount * COLLATERAL_PRECISION, n_bands)
+                assert y_per_band > 100, "Amount too low"
+
+                assert self.user_shares[user].ticks[0] == 0  # dev: User must have no liquidity
+                self.user_shares[user].ns = unsafe_add(n1, unsafe_mul(n2, 2**128))
+
+                lm: LMGauge = self.liquidity_mining_callback
+
+                # Autoskip bands if we can
+                for i in range(MAX_SKIP_TICKS + 1):
+                    if n1 > n0:
+                        if i != 0:
+                            self.active_band = n0
+                        break
+                    assert self.bands_x[n0] == 0 and i < MAX_SKIP_TICKS, "Deposit below current band"
+                    n0 -= 1
+
+                for i in range(MAX_TICKS):
+                    band: int256 = unsafe_add(n1, i)
+                    if band > n2:
+                        break
+
+                    assert self.bands_x[band] == 0, "Band not empty"
+                    y: uint256 = y_per_band
+                    if i == 0:
+                        y = amount * COLLATERAL_PRECISION - y * unsafe_sub(n_bands, 1)
+
+                    total_y: uint256 = self.bands_y[band]
+
+                    # Total / user share
+                    s: uint256 = self.total_shares[band]
+                    ds: uint256 = unsafe_div((s + DEAD_SHARES) * y, total_y + 1)
+                    assert ds > 0, "Amount too low"
+                    user_shares.append(ds)
+                    s += ds
+                    assert s <= 2**128 - 1
+                    self.total_shares[band] = s
+
+                    total_y += y
+                    self.bands_y[band] = total_y
+
+                    if lm.address != empty(address):
+                        # If initial s == 0 - s becomes equal to y which is > 100 => nonzero
+                        collateral_shares.append(unsafe_div(total_y * 10**18, s))
+
+                self.min_band = min(self.min_band, n1)
+                self.max_band = max(self.max_band, n2)
+
+                self.save_user_shares(user, user_shares)
+
+                log Deposit(user, amount, n1, n2)
+
+                if lm.address != empty(address):
+                    lm.callback_collateral_shares(n1, collateral_shares)
+                    lm.callback_user_shares(user, n1, user_shares)
+            ```
 
 
 ### `health_calculator`
