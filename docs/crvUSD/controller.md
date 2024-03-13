@@ -1701,7 +1701,7 @@ An already existing loan can be managed in different ways:
 ### `borrow_more_extended`
 !!! description "`Controller.borrow_more_extended(collateral: uint256, debt: uint256, callbacker: address, callback_args: DynArray[uint256,5]):`"
 
-    Function to borrow more assets while adding more collateral (not necessary). This method uses callacks to build up leverage.
+    Function to borrow more assets while adding more collateral. This method uses callacks to build up leverage.
 
     Emits: `UserState` and `Borrow`
 
