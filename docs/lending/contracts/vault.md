@@ -1,6 +1,10 @@
 <h1>Vault</h1>
 
-The vault is an **implementation of a [ERC-4626](https://ethereum.org/developers/docs/standards/tokens/erc-4626)** vault which **deposits the underlying asset into the controller** and **tracks the progress of the fees earned**. It is a standard (non-blueprint) contract which also creates AMM and Controller using `initialize()`.
+The vault is an **implementation of a [ERC-4626](https://ethereum.org/developers/docs/standards/tokens/erc-4626)** vault which **deposits the underlying asset into the controller** and **tracks the progress of the fees earned**. 
+
+ERC-4626 vaults are **yield-bearing**, meaning the shares received when depositing assets increase in value due to the interest earned from lending out assets. The share balance does not increase, only its value. **Shares are transferable**.
+
+It is a standard (non-blueprint) contract which also creates AMM and Controller using `initialize()`.
 
 ??? quote "`initialize()`"
 
@@ -1334,7 +1338,10 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 
 ## **Interest Rates**
 
-Borrowing and lending rates are dependent on the `rate` within the AMM. This value is adjusted whenever `_save_rate()` is called. Initially, the rate is calculated in the [MonetaryPolicy](./semilog-mp.md) contract and then set within the AMM.
+Interest rates for lending markets are dependent on the utilization of the markets. The higher the utilization, the higher the interest rates.
+
+`borrow_apr` and `lend_apr` are public getter methods for the annualized rates with a base of 1e18, calculated based on the `rate` within the corresponding AMM. In turn, this `rate` is calculated within the MonetaryPolicy contract of the specific lending market and is constantly updated through the internal `_save_rate` method in the Controller whenever a new loan is created (`_create_loan`), collateral is added (`add_collateral`) or removed (`remove_collateral`), more debt is taken on (`borrow_more` and `borrow_more_extended`), repaid (`repay`, `repay_extended`), or a loan is liquidated (`_liquidate`).
+
 
 ??? quote "Source Code"
 
@@ -1397,7 +1404,23 @@ Borrowing and lending rates are dependent on the `rate` within the AMM. This val
             return rate_mul
         ```
 
-Interest rates values are **annualized and based on 1e18**.
+*Formula to calculate the Borrow APR:*
+
+$$\text{rate} = \text{rate}_{\text{min}} * \left(\frac{\text{rate}_{\text{max}}}{\text{rate}_{\text{min}}}\right)^{\text{utilization}}$$
+
+$$\text{borrowAPR} = \text{rate} * (365 * 86400)$$
+
+
+*Formula to calculate the Lend APR:*
+
+$$\text{lendAPR} = \text{borrowAPR} * \text{utilization}$$
+
+
+*The utilization is the ratio between the borrowed assets (debt) and total assets provided:[^1]*
+
+$$\text{utilization} = \frac{\text{debt}}{\text{totalAssets}}$$
+
+[^1]: Borrowed assets essentially represent the debt, which is fetched from the `total_debt` method from the Controller. The total assets provided value is taken from the `totalAssets` method within the Vault.
 
 
 ### `borrow_apr`
