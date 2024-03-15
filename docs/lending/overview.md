@@ -1,6 +1,6 @@
 <h1>Curve Lending: Overview</h1>
 
-Curve lending allows the **creation of permissionless lending/borrowing markets to borrow crvUSD against any token, or to borrow any token against crvUSD in an isolated mode** powered by **LLAMMA** for soft-liquidations.
+Curve lending allows the **creation of permissionless lending/borrowing markets to borrow crvUSD against any token, or to borrow any token against crvUSD in an isolated mode**, powered by **LLAMMA** for soft-liquidations. All markets are **isolated** from each other and do not intertwine.
 
 The **borrowable liquidity is provided by willing lenders** through [Vaults](./contracts/vault.md), which are [ERC4626](https://ethereum.org/en/developers/docs/standards/tokens/erc-4626/) contracts with some additional methods for convenience.
 
