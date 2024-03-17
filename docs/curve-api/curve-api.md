@@ -11,4 +11,4 @@ hide:
     
     OpenAPI specification: https://api.curve.fi/v1/openapi.json.
 
-<swagger-ui src="../assets/json/api.json"></swagger-ui>
+<swagger-ui src="https://api.curve.fi/v1/openapi.json"></swagger-ui>
