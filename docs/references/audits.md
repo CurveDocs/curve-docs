@@ -7,7 +7,7 @@ hide:
 
 [**:octicons-arrow-left-24: Back**](../protocol-overview.md)
 
-!!!deploy "test"
+!!!deploy "GitHub"
     All audits and security disclosures are hosted on the [`security-incident-reports` repository on GitHub](https://github.com/curvefi/security-incident-reports).
 
 
@@ -51,6 +51,8 @@ hide:
     [:octicons-arrow-right-24: PDF](../assets/pdf/Curve%20Finance%20DAO%20Voting%20Security%20Audit%20Report.pdf)
 
 -   **Curve DAO**
+
+    ---
 
     Audit report of core Curve DAO contracts.
 
