@@ -1408,7 +1408,7 @@ Interest rates for lending markets are dependent on the utilization of the marke
 
 $$\text{rate} = \text{rate}_{\text{min}} * \left(\frac{\text{rate}_{\text{max}}}{\text{rate}_{\text{min}}}\right)^{\text{utilization}}$$
 
-$$\text{borrowAPR} = \text{rate} * (365 * 86400)$$
+$$\text{borrowAPR} = \frac{\text{rate} * 365 * 86400}{10^{18}}$$
 
 
 *Formula to calculate the Lend APR:*

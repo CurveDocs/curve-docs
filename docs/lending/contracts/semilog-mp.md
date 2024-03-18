@@ -55,6 +55,18 @@ The embedded graph has limited features. However, by clicking the *"edit graph o
 
 ## **Rates**    
 
+**The borrow rate is based on 1e18 and calculated per second.**
+
+
+$$\text{rate} = \text{rate}_{\text{min}} * \left(\frac{\text{rate}_{\text{max}}}{\text{rate}_{\text{min}}}\right)^{\text{utilization}}$$
+
+*Formula to calculate the Borrow APR:*
+
+$$\text{borrowAPR} = \frac{\text{rate} * 365 * 86400}{10^{18}}$$
+
+Additionally, there is a `future_rate` method that allows calculation based on changes in reserves and debt.
+
+
 ### `rate`
 !!! description "`SemiLogMonetaryPolicy.rate(_for: address = msg.sender) -> uint256:`"
 
@@ -102,9 +114,9 @@ The embedded graph has limited features. However, by clicking the *"edit graph o
 ### `future_rate`
 !!! description "`SemiLogMonetaryPolicy.future_rate(_for: address, d_reserves: int256, d_debt: int256) -> uint256:`"
 
-    Function to calculate the future borrow rate for a lending market given a specific change of `d_reserves` and `d_assets`.
+    Function to calculate the future borrow rate for a lending market given a specific change of reserves and debt.
 
-    Returns: borrow rate (`uint256`).
+    Returns: future borrow rate (`uint256`).
 
     | Input        | Type      | Description    |
     | ------------ | --------- | -------------- |
