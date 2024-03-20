@@ -177,10 +177,14 @@ nav:
     - crvUSD Token: crvUSD/crvUSD.md
     - Controller: crvUSD/controller.md
     - LLAMMA: crvUSD/amm.md
-    - PegKeeper: crvUSD/pegkeeper.md
     - Monetary Policy: crvUSD/monetarypolicy.md
     - Price Aggregator: crvUSD/priceaggregator.md
     - Oracle: crvUSD/oracle.md
+    - PegKeppers:
+      - Overview: crvUSD/pegkeepers/overview.md
+      - PegKeeperV1: crvUSD/pegkeepers/pegkeeper.md
+      - PegKeeperV2: crvUSD/pegkeepers/pegkeeperv2.md
+      - PegKeeperRegulator: crvUSD/pegkeepers/regulator.md
     - Factory: 
       - Overview: crvUSD/factory/overview.md
       - Deployer API: crvUSD/factory/deployer-api.md
