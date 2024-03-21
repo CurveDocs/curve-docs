@@ -40,7 +40,7 @@ Technically speaking, allowance is always granted but if certain checks do not p
 
         === "PegKeeperRegulator.vy"
 
-            ```python
+            ```vyper
             struct PegKeeperInfo:
                 peg_keeper: PegKeeper
                 pool: StableSwap
@@ -179,7 +179,7 @@ Technically speaking, allowance is always granted but if certain checks do not p
 
         === "PegKeeperRegulator.vy"
 
-            ```py
+            ```vyper
             struct PegKeeperInfo:
                 peg_keeper: PegKeeper
                 pool: StableSwap
@@ -567,7 +567,7 @@ A PegKeeper can be added by the `admin` through the `add_peg_keepers` function a
 
         === "PegKeeperRegulator.vy"
 
-            ```py
+            ```vyper
             event AddPegKeeper:
                 peg_keeper: PegKeeper
                 pool: StableSwap
@@ -625,7 +625,7 @@ A PegKeeper can be added by the `admin` through the `add_peg_keepers` function a
 
         === "PegKeeperRegulator.vy"
 
-            ```py
+            ```vyper
             event RemovePegKeeper:
                 peg_keeper: PegKeeper
 
