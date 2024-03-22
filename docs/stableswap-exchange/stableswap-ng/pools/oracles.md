@@ -10,7 +10,7 @@ The AMM implementation uses two private variables, `last_prices_packed` and `las
 
 
 !!!danger "Oracle Manipulation Risk"
-    The spot price cannot be immediately used for the calculation of the moving average, as this would permit single-block oracle manipulation. Consequently, the `_calc_moving_average` method, which calculates the moving average of the oracle, employs `last_prices_packed` or `last_D_packed`. These variables retain prices from previous actions.
+    The spot price cannot be immediately used for the calculation of the moving average, as this would permit single-block oracle manipulation. Consequently, the `_calc_moving_average` method, which calculates the moving average of the oracle, uses `last_prices_packed` or `last_D_packed`. These variables retain prices from previous actions.
 
 
 *StableSwap-NG pools have the following oracles:*
@@ -430,7 +430,7 @@ $$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_em
 The internal `upkeep_oracles` method is responsible for updating the price and D oracle.
 
 !!!info
-    Both EMA oracles, `price_oracle` and `D_oracle`, are updated only once per block. If there are two or more trades within the same block, the oracle will be updated at the next action. In such instances, the spot price is recorded as usual, but the moving average is not updated and is instead maintained as the previous value until it is updated again.
+    Both ema values, `ema_price` and `ma_D`, are updated only once per block. If there are two or more trades within the same block, the oracle will be updated at the next action. In such instances, the spot price is recorded as usual, but the moving average is not updated and is instead maintained as the previous value until it is updated again.
 
     The rationale behind this approach is that all transactions within a block share the same timestamp. Therefore, the condition `if ma_last_time < block.timestamp` can only be satisfied once per block (the first time it's called). If there are multiple actions that would trigger an oracle update, it will be updated in the next relevant action.
 
@@ -562,7 +562,7 @@ self.last_prices_packed = last_prices_packed_new
         ```
 
 
-2. The moving-average price (`ema_price`) is calculated using `_calc_moving_average`.
+2. The moving-average price (`ema_price`) is calculated using `_calc_moving_average`. This value can only be updated once per block. If there are two actions which would update the value, only the first action will update it. For the second action, only the `last_price` is updated, while `ema_price` will not be updated and have the same value as in the first action.
 
     ???quote "`_calc_moving_average`"
 
