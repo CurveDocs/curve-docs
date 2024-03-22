@@ -199,7 +199,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-arbitrum: `Arbitrum` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://arbiscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-optimism: `Optimism` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://optimistic.etherscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-base: `Base` | [0xd6681e74eEA20d196c15038C580f721EF2aB6320](https://basescan.org/address/0xd6681e74eEA20d196c15038C580f721EF2aB6320#code) |
-| `Fraxtal` | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://fraxscan.com/address/0x4f37A9d177470499A2dD084621020b023fcffc1F#code) |
+| :logos-fraxtal: `Fraxtal` | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://fraxscan.com/address/0x4f37A9d177470499A2dD084621020b023fcffc1F#code) |
 | :logos-polygon: `Polygon` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://polygonscan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-gnosis: `Gnosis (xDAI)` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://gnosisscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-avalanche: `Avalanche` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://snowtrace.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
@@ -394,7 +394,7 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 | `Meta AMM`  | [0x635742dCC8313DCf8c904206037d962c042EAfBd](https://basescan.org/address/0x635742dCC8313DCf8c904206037d962c042EAfBd#code) |
 
 
-**Fraxtal**
+**:logos-fraxtal: Fraxtal**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
@@ -630,7 +630,7 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 | `AMM`       | [0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495](https://basescan.org/address/0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495#code) |
 
 
-**Fraxtal**
+**:logos-fraxtal: Fraxtal**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
@@ -861,7 +861,7 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 | `AMM native enabled` | [0xa274c88e09fDF1798a7517096557e6c1bEa1f65A](https://basescan.org/address/0xa274c88e09fDF1798a7517096557e6c1bEa1f65A#code) |
 
 
-**Fraxtal**
+**:logos-fraxtal: Fraxtal**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
@@ -1045,7 +1045,7 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 | :logos-arbitrum: `Arbitrum` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://arbiscan.io/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-optimism: `Optimism` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://optimistic.etherscan.io/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-base: `Base` | [0x5552b631e2aD801fAa129Aacf4B701071cC9D1f7](https://basescan.org/address/0x5552b631e2aD801fAa129Aacf4B701071cC9D1f7#code) |
-| `Fraxtal` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://fraxscan.com/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
+| :logos-fraxtal: `Fraxtal` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://fraxscan.com/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-polygon: `Polygon` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://polygonscan.com/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-gnosis: `Gnosis` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://gnosisscan.io/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-avalanche: `Avalanche` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://snowtrace.io/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
@@ -1067,7 +1067,7 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 | :logos-arbitrum: `Arbitrum` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://arbiscan.io/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-optimism: `Optimism` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://optimistic.etherscan.io/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-base: `Base` | [0xEfadDdE5B43917CcC738AdE6962295A0B343f7CE](https://basescan.org/address/0xEfadDdE5B43917CcC738AdE6962295A0B343f7CE#code) |
-| `Fraxtal` | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://fraxscan.com/address/0x69522fb5337663d3B4dFB0030b881c1A750Adb4f#code) |
+| :logos-fraxtal: `Fraxtal` | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://fraxscan.com/address/0x69522fb5337663d3B4dFB0030b881c1A750Adb4f#code) |
 | :logos-polygon: `Polygon` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://polygonscan.com/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-gnosis: `Gnosis` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://gnosisscan.io/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-avalanche: `Avalanche` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://snowtrace.io/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
@@ -1089,7 +1089,7 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 | :logos-arbitrum: `Arbitrum` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://arbiscan.io/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-optimism: `Optimism` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://optimistic.etherscan.io/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-base: `Base` | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://basescan.org/address/0x69522fb5337663d3B4dFB0030b881c1A750Adb4f#code) |
-| `Fraxtal` | [0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF](https://fraxscan.com/address/0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF#code) |
+| :logos-fraxtal: `Fraxtal` | [0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF](https://fraxscan.com/address/0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF#code) |
 | :logos-polygon: `Polygon` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://polygonscan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-gnosis: `Gnosis` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://gnosisscan.io/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-avalanche: `Avalanche` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://snowtrace.io/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
