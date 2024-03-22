@@ -1,11 +1,19 @@
 <h1>StableSwap-NG Oracles</h1>
 
-!!!danger "Oracle Manipulation"
-    The spot price cannot immediately be used for the calculation of the moving average, as this would allow for single block oracle manipulation. Consequently, **`_calc_moving_average`** uses **`last_prices_packed`**, which retains prices from previous actions.
+The AMM implementation uses two private variables, `last_prices_packed` and `last_D_packed`, which are not accessible externally. These variables store both the most recent spot and moving-average values. The oracle calculation is done based on these values.
 
-## **What kind of oracles are there?**
 
-*Stableswap-ng pools have the following two oracles:*
+---
+
+
+## **Price and D Oracles**
+
+
+!!!danger "Oracle Manipulation Risk"
+    The spot price cannot be immediately used for the calculation of the moving average, as this would permit single-block oracle manipulation. Consequently, the `_calc_moving_average` method, which calculates the moving average of the oracle, employs `last_prices_packed` or `last_D_packed`. These variables retain prices from previous actions.
+
+
+*StableSwap-NG pools have the following oracles:*
 
 <div class="grid cards" markdown>
 
@@ -20,147 +28,416 @@
 
     ---
 
-    An exponential moving average (EMA) oracle of the D invariant used for <todo>.
+    An exponential moving average (EMA) oracle of the D invariant.
 
 </div>
 
 
-*The function to calculate the EMA oracle essentially comes down to:*
+*The formula to calculate the exponential moving-average essentially comes down to:*
 
-$$\alpha = \text{self.exp}(\frac{(\text{block.timestamp} - \text{ma_last_time}) * 10^{18}}{\text{averaging_window}})$$
+$$\alpha = \text{exp}\left(\frac{(\text{block.timestamp} - \text{ma_last_time}) * 10^{18}}{\text{averaging_window}}\right)$$
 
-$$ema = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_ema_value} * \alpha}{10^{18}}$$
-
+$$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_ema_value} * \alpha}{10^{18}}$$
 
 *with:*
 
 | Variable           | Description                                          |
 | ------------------ | ---------------------------------------------------- |
-| `block.timestamp`  | Timestamp of the block.                              |
+| `block.timestamp`  | Timestamp of the block. Since all transactions within a block share the same timestamp, the ema_oracles can only be updated once per block. |
 | `ma_last_time`     | Last time the ma oracle was updated.                 |
-| `averaging_window` | Time window of the moving average oracle; `ma_time`. |
-| `last_spot_value`  | Last price within the AMM; `last_price`              |
-| `last_ema_value`   | Last ema value; `price_oracle` or `D_oracle`         |
-| `alpha`            | ---                                                  |
+| `averaging_window` | Time window for the moving average oracle; for the `price_oracle` it's `ma_exp_time`, and for the `D_oracle` it's `D_ma_time`. |
+| `last_spot_value`  | Last price within the AMM; for the `price_oracle` it's `last_price`, which is the first value of `last_prices_packed`. For calculating `D_oracle`, it's `last_D`, which is the first value in `last_D_packed`. |
+| `last_ema_value`   | Last ema value; for calculating `price_oracle` it's `ma_price`, which is the second value packed in `last_prices_packed`. For calculating `D_oracle` it's `ma_D`, also the second value in `last_D_packed`. |
+| `alpha`            | Weighting multiplier that adjusts the impact of the latest spot value versus the previous EMA value in the new EMA calculation. |
+| `exp`            | Function that calculates the natural exponential function of a signed integer with a precision of 1e18. |
 
 
 ---
 
 
-## **When are the oracles updated?**
+### `price_oracle`
+!!! description "`StableSwap.price_oracle(i: uint256) -> uint256:`"
 
-To update/upkeep oracles, the pool uses the internal function `upkeep_oracle`.
+    Function to calculate the exponential moving average (EMA) price for the coin at index `i` with regard to the coin at index 0. The calculation is based on the last spot value (`last_price`), the last ma value (`ema_price`), the moving average time window (`ma_exp_time`), and on the difference between the current timestamp (`block.timestamp`) and the timestamp when the ma oracle was last updated (unpacks from the first value of `ma_last_time`).
 
-This occurs when liquidity is added (`add_liquidity`), single-sidedly (`remove_liquidity_one_coin`) or in an imbalanced proportion (`remove_liquidity_imbalance`) removed, or at a token exchange (`__exchange`).
+    Returns: ema price oracle (`uint256`).
 
-!!!info "Updating Oracles when removing liquidity in a balanced proportion"
-    When liquidity is removed in a balanced proportion using `remove_liquidity`, only the D oracle is updated as a balanced removal does not impact the prices within the AMM. The oracle update in this case is not done via the usual `upkeep_oracle` method but is done "individually" within the function itself.
+    | Input  | Type      | Description                        |
+    | ------ | --------- | ---------------------------------- |
+    | `i`    | `uint256` | Index value of the coin to calculate the ema price for. |
 
-    ???quote "Source Code"
+    ??? quote "Source code"
+
+        ```vyper
+        last_prices_packed: DynArray[uint256, MAX_COINS]  #  packing: last_price, ma_price
+        ma_exp_time: public(uint256)
+        ma_last_time: public(uint256)                     # packing: ma_last_time_p, ma_last_time_D
+
+        @external
+        @view
+        @nonreentrant('lock')
+        def price_oracle(i: uint256) -> uint256:
+            return self._calc_moving_average(
+                self.last_prices_packed[i],
+                self.ma_exp_time,
+                self.ma_last_time & (2**128 - 1)
+            )
+
+        @internal
+        @view
+        def _calc_moving_average(
+            packed_value: uint256,
+            averaging_window: uint256,
+            ma_last_time: uint256
+        ) -> uint256:
+
+            last_spot_value: uint256 = packed_value & (2**128 - 1)
+            last_ema_value: uint256 = (packed_value >> 128)
+
+            if ma_last_time < block.timestamp:  # calculate new_ema_value and return that.
+                alpha: uint256 = self.exp(
+                    -convert(
+                        (block.timestamp - ma_last_time) * 10**18 / averaging_window, int256
+                    )
+                )
+                return (last_spot_value * (10**18 - alpha) + last_ema_value * alpha) / 10**18
+
+            return last_ema_value
+        ```
+
+    === "Example"
 
         ```python
+        >>> StableSwap.price_oracle(0)
+        1000187813326452556
+        ```
+
+
+### `D_oracle`
+!!! description "`StableSwap.D_oracle() -> uint256:`"
+
+    Function to calculate the exponential moving average (EMA) value for the `D` invariant, distinct from calculations for individual coins. This is based on the most recent "spot" value and EMA value of D, extracted from the private `last_D_packed` variable. It considers the moving average time window for D (`D_ma_time`), and calculates the difference between the current timestamp (`block.timestamp`) and the timestamp of the last update to the ma oracle of D, derived from the second value in `ma_last_time`.
+
+    Returns: EMA of D (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        last_D_packed: uint256                            #  packing: last_D, ma_D
+        D_ma_time: public(uint256)
+        ma_last_time: public(uint256)                     # packing: ma_last_time_p, ma_last_time_D
+
         @external
+        @view
         @nonreentrant('lock')
-        def remove_liquidity(
-            _burn_amount: uint256,
-            _min_amounts: DynArray[uint256, MAX_COINS],
-            _receiver: address = msg.sender,
-            _claim_admin_fees: bool = True,
-        ) -> DynArray[uint256, MAX_COINS]:
-            """
-            @notice Withdraw coins from the pool
-            @dev Withdrawal amounts are based on current deposit ratios
-            @param _burn_amount Quantity of LP tokens to burn in the withdrawal
-            @param _min_amounts Minimum amounts of underlying coins to receive
-            @param _receiver Address that receives the withdrawn coins
-            @return List of amounts of coins that were withdrawn
-            """
-            total_supply: uint256 = self.total_supply
-            assert _burn_amount > 0  # dev: invalid burn amount
+        def D_oracle() -> uint256:
+            return self._calc_moving_average(
+                self.last_D_packed,
+                self.D_ma_time,
+                self.ma_last_time >> 128
+            )
 
-            amounts: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
-            balances: DynArray[uint256, MAX_COINS] = self._balances()
+        @internal
+        @view
+        def _calc_moving_average(
+            packed_value: uint256,
+            averaging_window: uint256,
+            ma_last_time: uint256
+        ) -> uint256:
 
-            value: uint256 = 0
-            for i in range(MAX_COINS_128):
+            last_spot_value: uint256 = packed_value & (2**128 - 1)
+            last_ema_value: uint256 = (packed_value >> 128)
 
-                if i == N_COINS_128:
-                    break
-
-                value = balances[i] * _burn_amount / total_supply
-                assert value >= _min_amounts[i], "Withdrawal resulted in fewer coins than expected"
-                amounts.append(value)
-                self._transfer_out(i, value, _receiver)
-
-            self._burnFrom(msg.sender, _burn_amount)  # <---- Updates self.total_supply
-
-            # --------------------------- Upkeep D_oracle ----------------------------
-
-            ma_last_time_unpacked: uint256[2] = self.unpack_2(self.ma_last_time)
-            last_D_packed_current: uint256 = self.last_D_packed
-            old_D: uint256 = last_D_packed_current & (2**128 - 1)
-
-            self.last_D_packed = self.pack_2(
-                old_D - unsafe_div(old_D * _burn_amount, total_supply),  # new_D = proportionally reduce D.
-                self._calc_moving_average(
-                    last_D_packed_current,
-                    self.D_ma_time,
-                    ma_last_time_unpacked[1]
+            if ma_last_time < block.timestamp:  # calculate new_ema_value and return that.
+                alpha: uint256 = self.exp(
+                    -convert(
+                        (block.timestamp - ma_last_time) * 10**18 / averaging_window, int256
+                    )
                 )
-            )
+                return (last_spot_value * (10**18 - alpha) + last_ema_value * alpha) / 10**18
 
-            if ma_last_time_unpacked[1] < block.timestamp:
-                ma_last_time_unpacked[1] = block.timestamp
+            return last_ema_value
+        ```
 
-            self.ma_last_time = self.pack_2(ma_last_time_unpacked[0], ma_last_time_unpacked[1])
+    === "Example"
 
-            # ------------------------------- Log event ------------------------------
-
-            log RemoveLiquidity(
-                msg.sender,
-                amounts,
-                empty(DynArray[uint256, MAX_COINS]),
-                total_supply - _burn_amount
-            )
-
-            # ------- Withdraw admin fees if _claim_admin_fees is set to True --------
-            if _claim_admin_fees:
-                self._withdraw_admin_fees()
-
-            return amounts
+        ```python
+        >>> StableSwap.D_oracle()
+        2183776033162328612308290
         ```
 
 ---
 
 
-## **Technical runthrough on how the oracles are updated**
+## **Other Methods**
 
-To update or upkeep oracles, the pool uses the internal function `upkeep_oracle`.
+### `last_price`
+!!! description "`StableSwap.last_price(i: uint256) -> uint256:`"
 
-??? quote "upkeep_oracles(xp: DynArray[uint256, MAX_COINS], amp: uint256, D: uint256):"
+    !!!warning "Revert"
+        This function reverts if `i >= MAX_COINS`.
 
-    !!!warning
-        The input values for this function are not the values stored in `A` or `D`. Instead, these input values are "fresh" values computed directly before calling this function. For example, if there was an exchange, the `xp`, `amp`, and `D` values were computed beforehand and then passed into this function.
+    Getter method for the last stored price for the coin at index value `i`, stored in `last_prices_packed`. The spot price is retrieved from the lower 128 bits of the packed value in `last_prices_packed` and is updated whenever the internal `upkeep_oracles` method is called.
 
-    Function to upkeep price and D oracles.
+    Returns: last stored spot price of coin `i` (`uint256`).
 
-    | Input | Type                            | Description                |
-    | ----- | ------------------------------- | -------------------------- |
-    | `xp`  | `DynArray[uint256, MAX_COINS]` | Pool balances              |
-    | `amp` | `uint256`                      | Amplification coefficient |
-    | `D`   | `uint256`                      | D invariant                |
+    | Input | Type      | Description                                  |
+    |-------|-----------|----------------------------------------------|
+    | `i`   | `uint256` | Index value of the coin to get the last price for. |
 
-    ```python
-    # ----------------------- Oracle Specific vars -------------------------------
+    ??? quote "Source code"
 
-    last_prices_packed: DynArray[uint256, MAX_COINS]  #  packing: last_price, ma_price
-    last_D_packed: uint256                            #  packing: last_D, ma_D
-    ma_exp_time: public(uint256)
-    D_ma_time: public(uint256)
-    ma_last_time: public(uint256)                     # packing: ma_last_time_p, ma_last_time_D
-    # ma_last_time has a distinction for p and D because p is _not_ updated if
-    # users remove_liquidity, but D is.
+        ```vyper
+        last_prices_packed: DynArray[uint256, MAX_COINS]  #  packing: last_price, ma_price
 
+        @view
+        @external
+        def last_price(i: uint256) -> uint256:
+            return self.last_prices_packed[i] & (2**128 - 1)
+        ```
+
+    === "Example"
+
+        ```python
+        >>> StableSwap.last_price(0)
+        1000187811171795736
+        ```
+
+
+### `ema_price`
+!!! description "`StableSwap.ema_price(i: uint256) -> uint256:`"
+
+    !!! Warning "Revert"
+        This function will revert if `i >= MAX_COINS`.
+
+    Getter method for the last stored exponential moving-average (EMA) price of the coin at index value `i`, retrieved from `last_prices_packed`. The EMA price is obtained by shifting the value in `last_prices_packed` to the right by 128 bits. This value is updated whenever the `upkeep_oracles()` function is internally called.
+
+    Returns: the last stored EMA price of coin `i` (`uint256`).
+
+    | Input | Type      | Description                                      |
+    |-------|-----------|--------------------------------------------------|
+    | `i`   | `uint256` | Index of the coin for which to retrieve the last EMA price. |
+
+    ??? quote "Source code"
+
+        ```vyper 
+        last_prices_packed: DynArray[uint256, MAX_COINS]  #  packing: last_price, ma_price
+
+        @view
+        @external
+        def ema_price(i: uint256) -> uint256:
+            return (self.last_prices_packed[i] >> 128)
+        ```
+
+    === "Example"
+
+        ```python
+        >>> StableSwap.ema_price(0)
+        1000187824576102231
+        ```
+
+
+### `get_p`
+!!! description "`StableSwap.get_p(i: uint256) -> uint256:`"
+
+    Function to calculate the current AMM spot price of coin `i` based on the coin balances in the pool, the amplification coefficient `A`, and the `D` invariant. `i = 0` will return the price of `coin[1]`, `i = 1` the price of `coin[2]`, and so on.
+
+    Returns: current spot price (`uint256`).
+
+    | Input | Type      | Description                                       |
+    |-------|-----------|---------------------------------------------------|
+    | `i`   | `uint256` | Index of the coin for which to calculate the current spot price. |
+
+    ??? quote "Source code"
+
+        ```vyper 
+        @external
+        @view
+        def get_p(i: uint256) -> uint256:
+            """
+            @notice Returns the AMM State price of token
+            @dev if i = 0, it will return the state price of coin[1].
+            @param i index of state price (0 for coin[1], 1 for coin[2], ...)
+            @return uint256 The state price quoted by the AMM for coin[i+1]
+            """
+            amp: uint256 = self._A()
+            xp: DynArray[uint256, MAX_COINS] = self._xp_mem(
+                self._stored_rates(), self._balances()
+            )
+            D: uint256 = self.get_D(xp, amp)
+            return self._get_p(xp, amp, D)[i]
+
+        @internal
+        @pure
+        def _get_p(
+            xp: DynArray[uint256, MAX_COINS],
+            amp: uint256,
+            D: uint256,
+        ) -> DynArray[uint256, MAX_COINS]:
+
+            # dx_0 / dx_1 only, however can have any number of coins in pool
+            ANN: uint256 = unsafe_mul(amp, N_COINS)
+            Dr: uint256 = unsafe_div(D, pow_mod256(N_COINS, N_COINS))
+
+            for i in range(MAX_COINS_128):
+
+                if i == N_COINS_128:
+                    break
+
+                Dr = Dr * D / xp[i]
+
+            p: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+            xp0_A: uint256 = ANN * xp[0] / A_PRECISION
+
+            for i in range(1, MAX_COINS):
+
+                if i == N_COINS:
+                    break
+
+                p.append(10**18 * (xp0_A + Dr * xp[0] / xp[i]) / (xp0_A + Dr))
+
+            return p
+        ```
+
+    === "Example"
+
+        ```python
+        >>> StableSwap.get_p(0)
+        1000187811171795736
+        ```
+
+
+### `get_virtual_price`
+!!! description "`StableSwap.get_virtual_price() -> uint256:`"
+
+    !!!danger "Attack Vector"
+        This method may be vulnerable to donation-style attacks if the implementation contains rebasing tokens. For integrators, caution is advised.
+
+    Getter for the current virtual price of the LP token, which represents a price relative to the underlying.
+
+    Returns: virtual price (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper
+        @view
+        @external
+        @nonreentrant('lock')
+        def get_virtual_price() -> uint256:
+            """
+            @notice The current virtual price of the pool LP token
+            @dev Useful for calculating profits.
+                The method may be vulnerable to donation-style attacks if implementation
+                contains rebasing tokens. For integrators, caution is advised.
+            @return LP token virtual price normalized to 1e18
+            """
+            amp: uint256 = self._A()
+            xp: DynArray[uint256, MAX_COINS] = self._xp_mem(
+                self._stored_rates(), self._balances()
+            )
+            D: uint256 = self.get_D(xp, amp)
+            # D is in the units similar to DAI (e.g. converted to precision 1e18)
+            # When balanced, D = n * x_u - total virtual value of the portfolio
+            return D * PRECISION / self.total_supply
+        ```
+
+    === "Example"
+
+        ```python
+        >>> StableSwap.get_virtual_price()
+        1000063971106330426
+        ```
+
+
+### `ma_exp_time`
+!!! description "`StableSwap.ma_exp_time() -> uint256: view`"
+
+    Getter for the exponential moving-average time for the price oracle (`price_oracle`). This value can be adjusted via `set_ma_exp_time()`, as detailed in [admin controls](../pools/admin_controls.md#set_ma_exp_time).
+
+    Returns: EMA time for the price oracle (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper 
+        ma_exp_time: public(uint256)
+        ```
+
+    === "Example"
+
+        ```python
+        >>> StableSwap.ma_exp_time()
+        866
+        ```
+
+
+### `D_ma_time`
+!!! description "`StableSwap.D_ma_time() -> uint256: view`"
+
+    Getter for the exponential moving average time for the D oracle. This value can be adjusted via `set_ma_exp_time()`, as detailed in [admin controls](../pools/admin_controls.md#set_ma_exp_time).
+
+    Returns: EMA time for the D oracle (`uint256`).
+
+    ??? quote "Source code"
+
+        ```vyper 
+        D_ma_time: public(uint256)
+        ```
+
+    === "Example"
+
+        ```python
+        >>> StableSwap.D_ma_time()
+        62324
+        ```
+
+
+### `ma_last_time`
+!!! description "`StableSwap.ma_last_time() -> uint256: view`"
+
+    !!!warning "Destinction between price and D"
+        This variable contains two packed values because there needs to be a distinction between prices and the D invariant. The reasoning behind this is that the **moving-average price oracle is not updated if users remove liquidity in a balanced proportion (`remove_liquidity`), but the D oracle is.**
+
+    Getter for the last time the exponential moving-average oracle of coin prices or the D invariant was updated. This variable contains two packed values: **ma_last_time_p**, which represents the timestamp of the last update for prices, and **ma_last_time_D**, which represents the last timestamp of the oracle update for the D invariant.
+
+    Returns: packed value (`uint256`).
+
+
+    ??? quote "Source code"
+
+        ```vyper 
+        ma_last_time: public(uint256)                     # packing: ma_last_time_p, ma_last_time_D
+        ```
+
+    === "Example"
+
+        ```python
+        >>> StableSwap.ma_last_time()
+        579359617954437487117250992339883299967854142015
+        ```
+
+    !!!note
+        The value needs to be unpacked, as it contains two values, **ma_last_time_p** and **ma_last_time_D**.  
+
+        For example, 579359617954437487117250992339883299967854142015 is unpacked into two uint256 numbers. First, its lower 128 bits are isolated using a bitwise AND with 2**128 − 1, and then the value is shifted right by 128 bits to extract the upper 128 bits.  
+        It returns: [1702584895, 1702584895], meaning both moving-average oracles were updated at the same time. 
+
+
+---
+
+
+## **Upkeeping Oracles**
+
+The internal `upkeep_oracles` method is responsible for updating the price and D oracle.
+
+!!!info
+    Both EMA oracles, `price_oracle` and `D_oracle`, are updated only once per block. If there are two or more trades within the same block, the oracle will be updated at the next action. In such instances, the spot price is recorded as usual, but the moving average is not updated and is instead maintained as the previous value until it is updated again.
+
+    The rationale behind this approach is that all transactions within a block share the same timestamp. Therefore, the condition `if ma_last_time < block.timestamp` can only be satisfied once per block (the first time it's called). If there are multiple actions that would trigger an oracle update, it will be updated in the next relevant action.
+
+
+???quote "Source code for **`upkeep_oracle`** method"
+
+    ```py
     @internal
     def upkeep_oracles(xp: DynArray[uint256, MAX_COINS], amp: uint256, D: uint256):
         """
@@ -181,7 +458,7 @@ To update or upkeep oracles, the pool uses the internal function `upkeep_oracle`
 
             if spot_price[i] != 0:
 
-                # Upate packed prices -----------------
+                # Update packed prices -----------------
                 last_prices_packed_new[i] = self.pack_2(
                     min(spot_price[i], 2 * 10**18),  # <----- Cap spot value by 2.
                     self._calc_moving_average(
@@ -211,58 +488,23 @@ To update or upkeep oracles, the pool uses the internal function `upkeep_oracle`
                 ma_last_time_unpacked[i] = block.timestamp
 
         self.ma_last_time = self.pack_2(ma_last_time_unpacked[0], ma_last_time_unpacked[1])
-
-
-    @internal
-    @view
-    def _calc_moving_average(
-        packed_value: uint256,
-        averaging_window: uint256,
-        ma_last_time: uint256
-    ) -> uint256:
-
-        last_spot_value: uint256 = packed_value & (2**128 - 1)
-        last_ema_value: uint256 = (packed_value >> 128)
-
-        if ma_last_time < block.timestamp:  # calculate new_ema_value and return that.
-            alpha: uint256 = self.exp(
-                -convert(
-                    (block.timestamp - ma_last_time) * 10**18 / averaging_window, int256
-                )
-            )
-            return (last_spot_value * (10**18 - alpha) + last_ema_value * alpha) / 10**18
-
-        return last_ema_value
     ```
-
-*The function start of by storing several values into memory:[^1]*
-
-```py
-@internal
-def upkeep_oracles(xp: DynArray[uint256, MAX_COINS], amp: uint256, D: uint256):
-    """
-    @notice Upkeeps price and D oracles.
-    """
-    ma_last_time_unpacked: uint256[2] = self.unpack_2(self.ma_last_time)
-    last_prices_packed_current: DynArray[uint256, MAX_COINS] = self.last_prices_packed
-    last_prices_packed_new: DynArray[uint256, MAX_COINS] = last_prices_packed_current
-
-    spot_price: DynArray[uint256, MAX_COINS] = self._get_p(xp, amp, D)
-```
-   
-[^1]: When using values multiple times within a function, it's more gas-efficient to store them in memory rather than reading them from storage multiple times.
-
-1. `ma_last_time_unpacked` stores the unpacked values of `ma_last_time_p` and `ma_last_time_D`. Differentiation between `p` and `D` is necessary because the price oracle is not updated when liquidity is removed in a balanced proportion via `remove_liquidity`.
-2. `last_prices_packed_current` stores the current value of `last_prices_packed` in a DynArray.
-3. `last_prices_packed_new` is initially set to the value of `last_prices_packed_current`. This variable will be updated with new values after the EMA oracles are calculated.
-4. `spot_price` is calculated using the internal `_get_p` function.
-
 
 ---
 
-*Now its time to upkeep the price oracle:*
+### Price Oracles
 
-```python
+The price oracle is updated when the `upkeep_oracles` method is called. This occurs in response to one of the following actions:
+
+- Token exchange (`__exchange`)
+- Liquidity addition (`add_liquidity`)
+- Single-sided liquidity (`remove_liquidity_one_coin`)
+- Liquidity removal in an imbalanced proportion (`remove_liquidity_imbalance`)
+
+*When price oracles are upkept, the code calculates both the spot price and the moving-average price. These values are then packed and stored together in `last_prices_packed`.*
+
+
+```py
 # -------------------------- Upkeep price oracle -------------------------
 
 for i in range(MAX_COINS):
@@ -272,7 +514,7 @@ for i in range(MAX_COINS):
 
     if spot_price[i] != 0:
 
-        # Upate packed prices -----------------
+        # Update packed prices -----------------
         last_prices_packed_new[i] = self.pack_2(
             min(spot_price[i], 2 * 10**18),  # <----- Cap spot value by 2.
             self._calc_moving_average(
@@ -286,14 +528,43 @@ self.last_prices_packed = last_prices_packed_new
 ```
 
 
-The code iterates over the range of `MAX_COINS` and breaks when `N_COINS - 1` is reached. Additionally, the prices are only updated if `spot_price[i] != 0`. This condition ensures that only valid spot prices are considered for updating.
+1. `last_price` which represents the last stored spot price within the AMM is calculated using `_get_p`. Additionally, the value is capped at `2 * 10**18` to prevent price oracle manipulation. Note: It's not actually the spot price which is capped, but rather the spot price that is used in the calculation for the ema price oracle.
 
-Now, we calculate new values for `last_prices_packed_new` by packing the following two values:
+    ???quote "`_get_p`"
 
-- The first value, `last_price`, is determined by taking the minimum of the earlier calculated `spot_price[i]` or `2 * 10**18`. This effectively caps the spot value at 2.
-- For the second value (`ma_price`), the moving average price is calculated using the internal `_calc_moving_average()` method. 
+        ```py
+        @internal
+        @pure
+        def _get_p(
+            xp: DynArray[uint256, MAX_COINS],
+            amp: uint256,
+            D: uint256,
+        ) -> DynArray[uint256, MAX_COINS]:
 
-    ???quote "_calc_moving_average(packed_value: uint256, averaging_window: uint256, ma_last_time: uint256) -> uint256:"
+            # dx_0 / dx_1 only, however can have any number of coins in pool
+            ANN: uint256 = unsafe_mul(amp, N_COINS)
+            Dr: uint256 = unsafe_div(D, pow_mod256(N_COINS, N_COINS))
+
+            for i in range(N_COINS_128, bound=MAX_COINS_128):
+                Dr = Dr * D / xp[i]
+
+            p: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+            xp0_A: uint256 = unsafe_div(ANN * xp[0], A_PRECISION)
+
+            for i in range(1, MAX_COINS):
+
+                if i == N_COINS:
+                    break
+
+                p.append(10**18 * (xp0_A + unsafe_div(Dr * xp[0], xp[i])) / (xp0_A + Dr))
+
+            return p
+        ```
+
+
+2. The moving-average price (`ema_price`) is calculated using `_calc_moving_average`.
+
+    ???quote "`_calc_moving_average`"
 
         ```py
         @internal
@@ -310,97 +581,34 @@ Now, we calculate new values for `last_prices_packed_new` by packing the followi
             if ma_last_time < block.timestamp:  # calculate new_ema_value and return that.
                 alpha: uint256 = self.exp(
                     -convert(
-                        (block.timestamp - ma_last_time) * 10**18 / averaging_window, int256
+                        unsafe_div(unsafe_mul(unsafe_sub(block.timestamp, ma_last_time), 10**18), averaging_window), int256
                     )
                 )
-                return (last_spot_value * (10**18 - alpha) + last_ema_value * alpha) / 10**18
+                return unsafe_div(last_spot_value * (10**18 - alpha) + last_ema_value * alpha, 10**18)
 
-            return last_ema_value     
+            return last_ema_value
         ```
-
-    For computation of the exponential, the code uses a derived version from [Snekmate](https://github.com/pcaversaccio/snekmate):
-
-    ??? quote "exp(x: int256) -> uint256:"
-
-        ```py
-        @internal
-        @pure
-        def exp(x: int256) -> uint256:
-            """
-            @dev Calculates the natural exponential function of a signed integer with
-                a precision of 1e18.
-            @notice Note that this function consumes about 810 gas units. The implementation
-                    is inspired by Remco Bloemen's implementation under the MIT license here:
-                    https://xn--2-umb.com/22/exp-ln.
-            @dev This implementation is derived from Snekmate, which is authored
-                by pcaversaccio (Snekmate), distributed under the AGPL-3.0 license.
-                https://github.com/pcaversaccio/snekmate
-            @param x The 32-byte variable.
-            @return int256 The 32-byte calculation result.
-            """
-            value: int256 = x
-
-            # If the result is `< 0.5`, we return zero. This happens when we have the following:
-            # "x <= floor(log(0.5e18) * 1e18) ~ -42e18".
-            if (x <= -42139678854452767551):
-                return empty(uint256)
-
-            # When the result is "> (2 ** 255 - 1) / 1e18" we cannot represent it as a signed integer.
-            # This happens when "x >= floor(log((2 ** 255 - 1) / 1e18) * 1e18) ~ 135".
-            assert x < 135305999368893231589, "wad_exp overflow"
-
-            # `x` is now in the range "(-42, 136) * 1e18". Convert to "(-42, 136) * 2 ** 96" for higher
-            # intermediate precision and a binary base. This base conversion is a multiplication with
-            # "1e18 / 2 ** 96 = 5 ** 18 / 2 ** 78".
-            value = unsafe_div(x << 78, 5 ** 18)
-
-            # Reduce the range of `x` to "(-½ ln 2, ½ ln 2) * 2 ** 96" by factoring out powers of two
-            # so that "exp(x) = exp(x') * 2 ** k", where `k` is a signer integer. Solving this gives
-            # "k = round(x / log(2))" and "x' = x - k * log(2)". Thus, `k` is in the range "[-61, 195]".
-            k: int256 = unsafe_add(unsafe_div(value << 96, 54916777467707473351141471128), 2 ** 95) >> 96
-            value = unsafe_sub(value, unsafe_mul(k, 54916777467707473351141471128))
-
-            # Evaluate using a "(6, 7)"-term rational approximation. Since `p` is monic,
-            # we will multiply by a scaling factor later.
-            y: int256 = unsafe_add(unsafe_mul(unsafe_add(value, 1346386616545796478920950773328), value) >> 96, 57155421227552351082224309758442)
-            p: int256 = unsafe_add(unsafe_mul(unsafe_add(unsafe_mul(unsafe_sub(unsafe_add(y, value), 94201549194550492254356042504812), y) >> 96,\
-                                28719021644029726153956944680412240), value), 4385272521454847904659076985693276 << 96)
-
-            # We leave `p` in the "2 ** 192" base so that we do not have to scale it up
-            # again for the division.
-            q: int256 = unsafe_add(unsafe_mul(unsafe_sub(value, 2855989394907223263936484059900), value) >> 96, 50020603652535783019961831881945)
-            q = unsafe_sub(unsafe_mul(q, value) >> 96, 533845033583426703283633433725380)
-            q = unsafe_add(unsafe_mul(q, value) >> 96, 3604857256930695427073651918091429)
-            q = unsafe_sub(unsafe_mul(q, value) >> 96, 14423608567350463180887372962807573)
-            q = unsafe_add(unsafe_mul(q, value) >> 96, 26449188498355588339934803723976023)
-
-            # The polynomial `q` has no zeros in the range because all its roots are complex.
-            # No scaling is required, as `p` is already "2 ** 96" too large. Also,
-            # `r` is in the range "(0.09, 0.25) * 2**96" after the division.
-            r: int256 = unsafe_div(p, q)
-
-            # To finalise the calculation, we have to multiply `r` by:
-            #   - the scale factor "s = ~6.031367120",
-            #   - the factor "2 ** k" from the range reduction, and
-            #   - the factor "1e18 / 2 ** 96" for the base conversion.
-            # We do this all at once, with an intermediate result in "2**213" base,
-            # so that the final right shift always gives a positive value.
-
-            # Note that to circumvent Vyper's safecast feature for the potentially
-            # negative parameter value `r`, we first convert `r` to `bytes32` and
-            # subsequently to `uint256`. Remember that the EVM default behaviour is
-            # to use two's complement representation to handle signed integers.
-            return unsafe_mul(convert(convert(r, bytes32), uint256), 3822833074963236453042738258902158003155416615667) >> convert(unsafe_sub(195, k), uint256)
-        ```
-
-*`last_prices_packed_new`, which contains the new `last_price` and `ma_price` is then assigned as the new `last_prices_packed` variable. The price oracle is now updated.*
 
 
 ---
 
-*After updating the price oracle, we want to update the D oracle*
 
-```python
+### D Oracle
+
+The D oracle is updated when the `upkeep_oracles` method is called. This occurs in response to one of the following actions:
+
+- Token exchange (`__exchange`)
+- Liquidity addition (`add_liquidity`)
+- Single-sided liquidity (`remove_liquidity_one_coin`)
+- Liquidity removal in an imbalanced proportion (`remove_liquidity_imbalance`)
+- Balanced proportion liquidity removal. For this action, the `remove_liquidity` function, which executes it, does not directly call the `upkeep_oracles` method. Instead, the D oracle update is performed "manually" within the function. The rationale behind this approach is that updating the price oracle is not necessary in this scenario, because removing in a balanced proportion does not change the prices within the AMM.
+
+
+*When the D oracle is updated, the code calculates both the "spot" D invariant and the moving-average D invariant value. These values are then packed and stored together in `last_D_packed`.*
+
+
+
+```py
 # ---------------------------- Upkeep D oracle ---------------------------
 
 last_D_packed_current: uint256 = self.last_D_packed
@@ -413,28 +621,3 @@ self.last_D_packed = self.pack_2(
     )
 )
 ```
-
-The D oracle is not coin-dependent; therefore, it does not need to iterate over the number of coins in the pool or anything similar. It's a pool-based value. Just like the price oracle, the D oracle is an EMA oracle using the internal `_calc_moving_average` method to calculate the value.
-
-D oracle's values are packed and stored within `last_D_packed`, containing `last_D` and `ma_D`.
-
-Now, we assign the following new values for `last_D_packed`:
-
-1. For `last_D`, we assign the `D` value which was calculated in the specific function that called `upkeep_oracle`. For example, if there was an exchange, the `D` value was calculated within `__exchange` and passed into the method to upkeep the oracle.
-2. For `ma_D`, we compute the value using the `_calc_moving_average` method using `last_D_packed_current`, `D_ma_time` (which is the moving average window of the D oracle), and `ma_last_time_unpacked[1]` (which is `ma_last_time` for D).
-
-
----
-
-*Now that we've updated oracles for price and D, the code does some housekeeping:*
-
-```python
-# Housekeeping: Update ma_last_time for p and D oracles ------------------
-for i in range(2):
-    if ma_last_time_unpacked[i] < block.timestamp:
-        ma_last_time_unpacked[i] = block.timestamp
-
-self.ma_last_time = self.pack_2(ma_last_time_unpacked[0], ma_last_time_unpacked[1])
-```
-
-In this last step, `ma_last_time` values for p and D are updated if the values are less than `block.timestamp`. If the function to upkeep the oracles is called twice within a block, the first call will update this value, but the second one won't. This is consistent and makes sense because on the second call, the EMA values are not updated; it only happens once per block (during the first call). This is due to the line of code `if ma_last_time < block.timestamp:` in `_calc_moving_average`, which prevents the update of the oracle. Each block shares the same timestamp.
