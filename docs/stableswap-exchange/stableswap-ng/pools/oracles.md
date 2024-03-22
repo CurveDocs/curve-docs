@@ -107,7 +107,7 @@ $$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_em
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.price_oracle(0)
         1000187813326452556
         ```
@@ -161,7 +161,7 @@ $$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_em
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.D_oracle()
         2183776033162328612308290
         ```
@@ -198,7 +198,7 @@ $$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_em
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.last_price(0)
         1000187811171795736
         ```
@@ -231,7 +231,7 @@ $$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_em
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.ema_price(0)
         1000187824576102231
         ```
@@ -301,7 +301,7 @@ $$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_em
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.get_p(0)
         1000187811171795736
         ```
@@ -343,7 +343,7 @@ $$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_em
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.get_virtual_price()
         1000063971106330426
         ```
@@ -364,7 +364,7 @@ $$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_em
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.ma_exp_time()
         866
         ```
@@ -385,7 +385,7 @@ $$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_em
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.D_ma_time()
         62324
         ```
@@ -410,7 +410,7 @@ $$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_em
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.ma_last_time()
         579359617954437487117250992339883299967854142015
         ```
@@ -437,7 +437,7 @@ The internal `upkeep_oracles` method is responsible for updating the price and D
 
 ???quote "Source code for **`upkeep_oracle`** method"
 
-    ```py
+    ```vyper
     @internal
     def upkeep_oracles(xp: DynArray[uint256, MAX_COINS], amp: uint256, D: uint256):
         """
@@ -504,7 +504,7 @@ The price oracle is updated when the `upkeep_oracles` method is called. This occ
 *When price oracles are upkept, the code calculates both the spot price and the moving-average price. These values are then packed and stored together in `last_prices_packed`.*
 
 
-```py
+```vyper
 # -------------------------- Upkeep price oracle -------------------------
 
 for i in range(MAX_COINS):
@@ -532,7 +532,7 @@ self.last_prices_packed = last_prices_packed_new
 
     ???quote "`_get_p`"
 
-        ```py
+        ```vyper
         @internal
         @pure
         def _get_p(
@@ -566,7 +566,7 @@ self.last_prices_packed = last_prices_packed_new
 
     ???quote "`_calc_moving_average`"
 
-        ```py
+        ```vyper
         @internal
         @view
         def _calc_moving_average(
@@ -608,7 +608,7 @@ The D oracle is updated when the `upkeep_oracles` method is called. This occurs 
 
 
 
-```py
+```vyper
 # ---------------------------- Upkeep D oracle ---------------------------
 
 last_D_packed_current: uint256 = self.last_D_packed

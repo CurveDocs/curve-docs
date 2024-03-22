@@ -260,7 +260,7 @@ There is no `exchange_underlying` function, as this implementation is for plain 
 
     === "Example"
 
-        ```python
+        ```shell
         >>> expected_dy = pool.get_dy(0, 1, 10**18) * 0.99
         >>> StableSwap.exchange(0, 1, 10**18, expected_dy)
         999712
@@ -415,7 +415,7 @@ There is no `exchange_underlying` function, as this implementation is for plain 
 
     === "Example"
 
-        ```python
+        ```shell
         >>> crvusd.transfer("0xe1e77de32fb301ce55871ba095fd6b8e5d9abad8", 10**18)
         >>> pool.exchange_received(0, 1, 10**18, 0)
         999712
@@ -501,7 +501,7 @@ There is no `exchange_underlying` function, as this implementation is for plain 
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.get_dy(0, 1, 10**18)
         999712
         ```
@@ -600,7 +600,7 @@ There is no `exchange_underlying` function, as this implementation is for plain 
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.get_dx(1, 0, 10**18)
         999912
         ```
@@ -760,7 +760,7 @@ There are no restrictions on how liquidity can be added or removed. Liquidity ca
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.add_liquidity([10000000000000000000, 0], 0)
         9997967030080774869        
         ```
@@ -868,7 +868,7 @@ There are no restrictions on how liquidity can be added or removed. Liquidity ca
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.get_balances()
         [1156170050330410764719488, 1052703857490]
         >>> StableSwap.remove_liquidity(10**18, [0, 0])
@@ -1006,7 +1006,7 @@ There are no restrictions on how liquidity can be added or removed. Liquidity ca
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.remove_liquidity_one_coin(10**18, 0, 9**18)
         1000107995665331176
         >>> StableSwap.remove_liquidity_one_coin(10**18, 1, 9**18)
@@ -1122,7 +1122,7 @@ There are no restrictions on how liquidity can be added or removed. Liquidity ca
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.remove_liquidity_imbalance([10**18, 10**6] 10**19)
         1999880816717294817
         ```
@@ -1258,7 +1258,7 @@ There are no restrictions on how liquidity can be added or removed. Liquidity ca
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.calc_token_amount([10**18, 0], True) # deposit (coin[0])
         999701503692424994
         >>> StableSwap.calc_token_amount([0, 10**6], True) # deposit (coin[1])
@@ -1368,7 +1368,7 @@ There are no restrictions on how liquidity can be added or removed. Liquidity ca
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.calc_withdraw_one_coin(10**18, 0)
         1000107987022361129
         >>> StableSwap.calc_withdraw_one_coin(10**18, 1)
@@ -1443,7 +1443,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.fee()
         1000000
         ```
@@ -1538,7 +1538,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.dynamic_fee(0, 1)
         1001758
         ```
@@ -1562,7 +1562,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.admin_fee()
         5000000000
         ```
@@ -1606,7 +1606,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.offpeg_fee_multiplier()
         50000000000
         ```
@@ -1684,7 +1684,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.stored_rates()
         [1000000000000000000, 1000000000000000000000000000000]
         ```
@@ -1709,7 +1709,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.admin_balances(0)
         38117658162246205676
         >>> StableSwap.admin_balances(1)
@@ -1760,7 +1760,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.withdraw_admin_fees()
         ```
 
@@ -1834,7 +1834,7 @@ For full documentation on the available oracles, their update mechanisms, and fu
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.price_oracle(0)
         1000187813326452556
         ```
@@ -1869,7 +1869,7 @@ For full documentation on the available oracles, their update mechanisms, and fu
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.last_price(0)
         1000187811171795736
         ```
@@ -1904,7 +1904,7 @@ For full documentation on the available oracles, their update mechanisms, and fu
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.ema_price(0)
         1000187824576102231
         ```
@@ -1977,7 +1977,7 @@ For full documentation on the available oracles, their update mechanisms, and fu
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.get_p(0)
         1000187811171795736
         ```
@@ -1998,7 +1998,7 @@ For full documentation on the available oracles, their update mechanisms, and fu
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.ma_exp_time()
         866
         ```
@@ -2056,7 +2056,7 @@ For full documentation on the available oracles, their update mechanisms, and fu
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.D_oracle()
         2183776033162328612308290
         ```
@@ -2077,7 +2077,7 @@ For full documentation on the available oracles, their update mechanisms, and fu
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.D_ma_time()
         62324
         ```
@@ -2100,7 +2100,7 @@ For full documentation on the available oracles, their update mechanisms, and fu
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.ma_last_time()
         579359617954437487117250992339883299967854142015
         ```
@@ -2146,7 +2146,7 @@ For full documentation on the available oracles, their update mechanisms, and fu
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.get_virtual_price()
         1000063971106330426
         ```
@@ -2215,7 +2215,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.A()
         500
         ```
@@ -2269,7 +2269,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.A_precise()
         50000
         ```
@@ -2319,7 +2319,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.initial_A()
         50000
         ```
@@ -2369,7 +2369,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.future_A()
         50000
         ```
@@ -2419,7 +2419,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.initial_A_time()
         0
         ```
@@ -2469,7 +2469,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.future_A_time()
         0
         ```
@@ -2515,7 +2515,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.coins(0)
         '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
         >>> StableSwap.coins(1)
@@ -2579,7 +2579,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.balances(0)
         1156160050449617680048138
         >>> StableSwap.balances(1)
@@ -2633,7 +2633,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.get_balances()
         [1156160050449617680048138, 1052703857609]
         ```
@@ -2685,7 +2685,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.N_COINS()
         2
         ```
@@ -2716,7 +2716,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
     === "Example"
 
-        ```python
+        ```shell
         >>> StableSwap.totalSupply()
         2208717767450789394892159
         ```
