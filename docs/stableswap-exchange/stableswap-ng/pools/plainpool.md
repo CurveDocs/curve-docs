@@ -1922,7 +1922,7 @@ For full documentation on the available oracles, their update mechanisms, and fu
 
     | Input  | Type      | Description                 |
     | ------ | --------- | --------------------------- |
-    | `i`    | `uint256` | Index of state price.       |
+    | `i`    | `uint256` | Index value of the coin.    |
 
     ??? quote "Source code"
 
