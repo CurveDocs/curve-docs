@@ -1,4 +1,4 @@
-<h1>Pools: Overview</h1>
+<h1>StableSwap-NG Pools: Overview</h1>
 
 A Curve pool is essentially a smart contract that implements the StableSwap invariant, housing the logic for exchanging stable tokens. While all Curve pools share this core implementation, they come in various pool flavors.
 
@@ -11,6 +11,9 @@ In its simplest form, a Curve pool is an implementation of the StableSwap invari
 - dynamic fees
 - [**`exchange_received`**](../pools/plainpool.md#exchange_received)
 - [**`get_dx`**](../pools/plainpool.md#get_dx)
+
+
+---
 
 
 ## **Supported Assets**
@@ -73,6 +76,9 @@ Stableswap-NG pools supports the following asset types:
     ```
 
 
+---
+
+
 ## **Dynamic Fees**
 
 Stableswap-NG introduces dynamic fees. The use of the **`offpeg_fee_multiplier`** allows the system to dynamically adjust fees based on the pool's state. 
@@ -98,6 +104,8 @@ The internal **`_dynamic_fee()`** function calculates the fee **based on the bal
 $xp_{i} = \frac{{rate_{i} \times balance_{i}}}{{PRECISION_{i}}}$
 
 $xp_{j} = \frac{{rate_{j} \times balance_{j}}}{{PRECISION_{j}}}$
+
+$xp_{i}$ and $xp_{j}$ are the token balances of the pool adjusted for decimals and the pool's internal rates (stored in `stored_rates`).
 
 *And we also have:*
 
@@ -178,172 +186,28 @@ The embedded graph has limited features, such as the inability to modify the axi
 </div>
 
 
+---
+
+
 
 ## **Oracles**
 
-The new generation (NG) of stableswap introduces oracles based on AMM State Prices and the invariant D.
+The new generation (NG) of stableswap introduces two new pool-built-in oracles:
 
-- **price oracle** (spot and ema price)
+- **price oracle** (spot and moving-average price)
 - moving average **D oracle**
 
-Oracles are updated when users perform a swap or when liquidity is added or removed from the pool. Most updates are carried out by the internal **`upkeep_oracles()`** function, which is called in those instances. In some cases, such as when removing liquidity in a balanced ratio, the **`D`** oracle is updated directly within the **`remove_liquidity()`** function, as there is no need to update the price oracles (removing balanced does not have a price impact).
+More on oracles [here](./oracles.md).
 
-!!!danger "Oracle Manipulation"
-    The spot price cannot immediately be used for the calculation of the moving average, as this would allow for single block oracle manipulation. Consequently, **`_calc_moving_average`** uses **`last_prices_packed`**, which retains prices from previous actions.
 
-??? quote "`upkeep_oracles` method"
-
-    ```vyper
-    @internal
-    def upkeep_oracles(xp: DynArray[uint256, MAX_COINS], amp: uint256, D: uint256):
-        """
-        @notice Upkeeps price and D oracles.
-        """
-        ma_last_time_unpacked: uint256[2] = self.unpack_2(self.ma_last_time)
-        last_prices_packed_current: DynArray[uint256, MAX_COINS] = self.last_prices_packed
-        last_prices_packed_new: DynArray[uint256, MAX_COINS] = last_prices_packed_current
-
-        spot_price: DynArray[uint256, MAX_COINS] = self._get_p(xp, amp, D)
-
-        # -------------------------- Upkeep price oracle -------------------------
-
-        for i in range(MAX_COINS):
-
-            if i == N_COINS - 1:
-                break
-
-            if spot_price[i] != 0:
-
-                # Upate packed prices -----------------
-                last_prices_packed_new[i] = self.pack_2(
-                    spot_price[i],
-                    self._calc_moving_average(
-                        last_prices_packed_current[i],
-                        self.ma_exp_time,
-                        ma_last_time_unpacked[0],  # index 0 is ma_exp_time for prices
-                    )
-                )
-
-        self.last_prices_packed = last_prices_packed_new
-
-        # ---------------------------- Upkeep D oracle ---------------------------
-
-        last_D_packed_current: uint256 = self.last_D_packed
-        self.last_D_packed = self.pack_2(
-            D,
-            self._calc_moving_average(
-                last_D_packed_current,
-                self.D_ma_time,
-                ma_last_time_unpacked[1],  # index 1 is ma_exp_time for D
-            )
-        )
-
-        # Housekeeping: Update ma_last_time for p and D oracles ------------------
-        for i in range(2):
-            if ma_last_time_unpacked[i] < block.timestamp:
-                ma_last_time_unpacked[i] = block.timestamp
-
-        self.ma_last_time = self.pack_2(ma_last_time_unpacked[0], ma_last_time_unpacked[1])
-
-        @internal
-        @view
-        def _calc_moving_average(
-            packed_value: uint256,
-            averaging_window: uint256,
-            ma_last_time: uint256
-        ) -> uint256:
-
-            last_spot_value: uint256 = packed_value & (2**128 - 1)
-            last_ema_value: uint256 = (packed_value >> 128)
-
-            if ma_last_time < block.timestamp:  # calculate new_ema_value and return that.
-                alpha: uint256 = self.exp(
-                    -convert(
-                        (block.timestamp - ma_last_time) * 10**18 / averaging_window, int256
-                    )
-                )
-                return (last_spot_value * (10**18 - alpha) + last_ema_value * alpha) / 10**18
-
-            return last_ema_value
-    ```
+---
 
 
 ## **`exchange_received`**
 
-This new function **allows the exchange of tokens without actually transfering tokens in**, as the exchange is based on the change of the coins balances within the pool (see code below).    
+This new function **allows the exchange of tokens without actually transfering tokens in**, as the exchange is based on the change of the coins balances within the pool.
+
 Users of this method are dex aggregators, arbitrageurs, or other users who **do not wish to grant approvals to the contract**. They can instead send tokens directly to the contract and call **`exchange_received()`**.
 
-!!!warning
-    This function will revert if called on pools that contain rebasing tokens.
-
-??? quote "Transfer logic when using `exchange_received()`"
-
-    ```vyper
-    @internal
-    def _transfer_in(
-        coin_idx: int128,
-        dx: uint256,
-        sender: address,
-        expect_optimistic_transfer: bool,
-    ) -> uint256:
-        """
-        @notice Contains all logic to handle ERC20 token transfers.
-        @param coin_idx Index of the coin to transfer in.
-        @param dx amount of `_coin` to transfer into the pool.
-        @param dy amount of `_coin` to transfer out of the pool.
-        @param sender address to transfer `_coin` from.
-        @param receiver address to transfer `_coin` to.
-        @param expect_optimistic_transfer True if contract expects an optimistic coin transfer
-        """
-        _dx: uint256 = ERC20(coins[coin_idx]).balanceOf(self)
-
-        # ------------------------- Handle Transfers -----------------------------
-
-        if expect_optimistic_transfer:
-
-            _dx = _dx - self.stored_balances[coin_idx]
-            assert _dx >= dx
-
-        else:
-
-            assert dx > 0  # dev : do not transferFrom 0 tokens into the pool
-            assert ERC20(coins[coin_idx]).transferFrom(
-                sender, self, dx, default_return_value=True
-            )
-
-            _dx = ERC20(coins[coin_idx]).balanceOf(self) - _dx
-
-        # --------------------------- Store transferred in amount ---------------------------
-
-        self.stored_balances[coin_idx] += _dx
-
-        return _dx
-    ```
-
-
-### **Example** 
-
-!!!example
-    Lets say a user wants to swap **`GOV-TOKEN<>USDC`** through an aggregator. For simplicity we assume, **`GOV-TOKEN<>USDT`** exchange is done via a uniswap pool, **`USDT<>USDC`** via a Curve pool.
-
-``` mermaid
-graph LR
-    u([USER]) --- p1[(UNISWAP)]
-    p1 -->|"3. transfer out/in"| p2[(CURVE)]
-    u -..-> |1. approve and transfer| a([AGGREGATOR])
-    a ==> |"2. exchange"| p1
-    a -.-|"4. exchange_received"| p2
-    p2 --> |5. transfer dy out| u
-    linkStyle 0 stroke-width:0, fill:none;
-```
-
-1. User gives approval the `AGGREGATOR`, which then transfers tokens into the aggregator contract
-2. Aggregator exchanges `GOV-TOKEN` for `USDT` using Uniswap  
-3. Transfers the `USDT` directly from Uniswap into the Curve pool
-4. Perform a swap on the Curve pool (`USDT<>USDC`) via **`exchange_received`**
-5. Transfer `USDC` to the user
-
-
-!!!info 
-    This method saves aggregators one redundant ERC-20 transfer and eliminates the need to grant approval to a curve pool. Without this function, the aggregator would have to conduct an additional transaction, transferring USDT from the Uniswap pool to their aggregator contract after the exchange, and then sending it to the Curve pool for another exchange (USDT<>USDC).
-    However, with this method in place, the aggregator can transfer the output tokens directly into the next pool and perform an exchange.
+!!!abstract "Article"
+    Explore the `exchange_received` function's role in streamlining swaps without approvals, its efficiency benefits, and security considerations in a succinct article. Learn more about this innovative feature for cost-effective, secure trading through Curve pools: [How to Do Cheaper, Approval-Free Swaps](https://blog.curvemonitor.com/posts/exchange-received/).
