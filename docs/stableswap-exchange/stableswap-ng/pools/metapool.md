@@ -335,7 +335,9 @@ The deployment of metapools is permissionless and can be done via the [**`deploy
     !!!danger
         `exchange_received` will revert if the pool contains a rebasing asset. A pool that contains a rebasing token should have an `asset_type` of 2. If this is not the case, the pool is using an incorrect implementation, and rebases can be stolen.
 
-    Function to exchange `_dx` amount of coin `i` for coin `j`, receiving a minimum amount of `_min_dy`. This is done **without actually transferring the coins into the pool**. The exchange is based on the change in the balance of coin `i`, eliminating the need to grant approval to the contract.
+    Function to exchange `_dx` amount of coin `i` for coin `j`, receiving a minimum amount of `_min_dy`. This is done without actually transferring the coins into the pool within the same call. The exchange is based on the change in the balance of coin `i`, eliminating the need to grant approval to the contract. This function does only swap between the token paird against the basepool and the basepool tokens. The method can not be used to exchange for underlying coins of the basepool.
+
+    **A detailed article can be found here: https://blog.curvemonitor.com/posts/exchange-received/.**
 
     Returns: amount of output coin received (`uint256`).
 
