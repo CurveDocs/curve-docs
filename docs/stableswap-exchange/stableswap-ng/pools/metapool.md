@@ -11,6 +11,9 @@ The deployment of metapools is permissionless and can be done via the [**`deploy
     The examples are based on the USDV<>3CRV metapool: [0xc273fd237F23cb13296D0Cc2897F0B7A61e83387](https://etherscan.io/address/0xc273fd237F23cb13296D0Cc2897F0B7A61e83387#code).
 
 
+!!!info "**Oracle Methods Documentation**"
+    Comprehensive documentation for Oracle Methods is available on a dedicated page, accessible [here](./oracles.md).
+
 ---
 
 *The AMM metapool contract implementation utilizes two internal functions to transfer tokens/coins in and out of the pool and then accordingly update `stored_balances`.*
@@ -2331,13 +2334,6 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
         >>> StableSwap.withdraw_admin_fees()
         ```
 
-
----
-
-
-## **Oracle Methods**
-
-More on oracle methods [here](./oracles.md).
 
 ---
 

@@ -10,6 +10,8 @@ The deployment of plain pools is permissionless and can be done via the [**`depl
 
     The examples are based on the crvUSD-USDV pool: [0xe1e77de32fb301ce55871ba095fd6b8e5d9abad8](https://etherscan.io/address/0xe1e77de32fb301ce55871ba095fd6b8e5d9abad8#code)
 
+!!!info "**Oracle Methods Documentation**"
+    Comprehensive documentation for Oracle Methods is available on a dedicated page, accessible [here](./oracles.md).
 
 ---
 
@@ -1763,14 +1765,6 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
         ```shell
         >>> StableSwap.withdraw_admin_fees()
         ```
-
-
----
-
-
-## **Oracle Methods**
-
-More on oracle methods [here](./oracles.md).
 
 ---
 
