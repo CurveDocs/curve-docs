@@ -481,7 +481,7 @@ If this is the case, `last_price` is updated at every action, so there will be t
 The internal `upkeep_oracles` method is responsible for updating the price and D oracle.
 
 !!!info
-    Both ema values, `ema_price` and `ma_D`, are updated only once per block. If there are two or more trades within the same block, the oracle will be updated at the next action. In such instances, the spot price is recorded as usual, but the moving average is not updated and is instead maintained as the previous value until it is updated again.
+    Both EMA values, `ema_price` and `ma_D`, are updated maximally once per block. If there are two or more actions within the same block that would update the oracles, only the first action will update these values. The spot price (`last_price` or `last_D`) will always update.
 
     The rationale behind this approach is that all transactions within a block share the same timestamp. Therefore, the condition `if ma_last_time < block.timestamp` can only be satisfied once per block (the first time it's called). If there are multiple actions that would trigger an oracle update, it will be updated in the next relevant action.
 
