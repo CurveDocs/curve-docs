@@ -1,16 +1,8 @@
 <h1>StableSwap-NG Oracles</h1>
 
-The AMM implementation uses two private variables, `last_prices_packed` and `last_D_packed`, which are not accessible externally. These variables store both the most recent spot and moving-average values. The oracle calculation is done based on these values.
-
-
----
-
 
 ## **Price and D Oracles**
 
-
-!!!danger "Oracle Manipulation Risk"
-    The spot price cannot be immediately used for the calculation of the moving average, as this would permit single-block oracle manipulation. Consequently, the `_calc_moving_average` method, which calculates the moving average of the oracle, uses `last_prices_packed` or `last_D_packed`. These variables retain prices from previous actions.
 
 
 *StableSwap-NG pools have the following oracles:*
@@ -21,16 +13,52 @@ The AMM implementation uses two private variables, `last_prices_packed` and `las
 
     ---
 
-    An exponential moving average (EMA) price oracle of an asset within the AMM with regard to the coin at index 0.
+    An exponential moving-average price oracle of an asset within the AMM with regard to the coin at index 0.
 
 
 -   **`D_oracle`**
 
     ---
 
-    An exponential moving average (EMA) oracle of the D invariant.
+    An exponential moving-average oracle of the D invariant.
 
 </div>
+
+
+---
+
+
+The AMM implementation utilizes two private variables, `last_prices_packed` and `last_D_packed`, to store the latest spot and EMA values. These values serve as the foundation for calculating the oracles.
+
+
+!!!danger "Oracle Manipulation Risk"
+    The spot price cannot be immediately used for the calculation of the moving average, as this would permit single-block oracle manipulation. Consequently, the `_calc_moving_average` method, which calculates the moving average of the oracle, uses `last_prices_packed` or `last_D_packed`. These variables retain prices from previous actions.
+
+
+    ???quote "`_calc_moving_average`"
+
+        ```py
+        @internal
+        @view
+        def _calc_moving_average(
+            packed_value: uint256,
+            averaging_window: uint256,
+            ma_last_time: uint256
+        ) -> uint256:
+
+            last_spot_value: uint256 = packed_value & (2**128 - 1)
+            last_ema_value: uint256 = (packed_value >> 128)
+
+            if ma_last_time < block.timestamp:  # calculate new_ema_value and return that.
+                alpha: uint256 = self.exp(
+                    -convert(
+                        unsafe_div(unsafe_mul(unsafe_sub(block.timestamp, ma_last_time), 10**18), averaging_window), int256
+                    )
+                )
+                return unsafe_div(last_spot_value * (10**18 - alpha) + last_ema_value * alpha, 10**18)
+
+            return last_ema_value
+        ```
 
 
 *The formula to calculate the exponential moving-average essentially comes down to:*
@@ -52,6 +80,21 @@ $$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_em
 | `exp`            | Function that calculates the natural exponential function of a signed integer with a precision of 1e18. |
 
 
+`price_oracle` calculation is based on the two values stored in `last_prices_packed`, `last_price` and `ema_price`. These values are conditionally updated:
+Generally speaking, both values are simultaneously updated whenever `upkeep_oracles` is called. This happens at certain actions, see [here](#upkeeping-oracles).
+
+While `last_price` (spot price) is always updated at every relevant action, the `ema_price` is maximally updated once per block. There might be the case that there is more than one relevant action within the same block. Let's say there are two relevant actions within the block which would update both values:
+If this is the case, `last_price` is updated at every action, so there will be two updated. `ema_price` on the other hand will only be updated once (at the first action) and will not change a second time. Reasoning behind this is to prevent single-block manipulation. The `ema_price` will just be updated at the next action outside of this block.
+
+
+`D_oracle` calculation is based on the two values stored in `last_D_packed`, `last_D` and `ma_D`.
+
+
+!!!notebook "Jupyter Notebook"
+    For a practical **demonstration of how individual variables behave during the upkeep of the oracle**, a Jupyter notebook is available for reference. This notebook provides a plot showcasing the dynamics in the process. 
+    
+    It can be accessed here: https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/stableswap-ng/oracles/ema_oracle.ipynb.
+
 ---
 
 
@@ -59,12 +102,14 @@ $$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_em
 !!! description "`StableSwap.price_oracle(i: uint256) -> uint256:`"
 
     Function to calculate the exponential moving average (EMA) price for the coin at index `i` with regard to the coin at index 0. The calculation is based on the last spot value (`last_price`), the last ma value (`ema_price`), the moving average time window (`ma_exp_time`), and on the difference between the current timestamp (`block.timestamp`) and the timestamp when the ma oracle was last updated (unpacks from the first value of `ma_last_time`).
+    
+    `i = 0` will return the price oracle of `coin[1]`, `i = 1` the price oracle of `coin[2]`, and so on.
 
     Returns: ema price oracle (`uint256`).
 
     | Input  | Type      | Description                        |
     | ------ | --------- | ---------------------------------- |
-    | `i`    | `uint256` | Index value of the coin to calculate the ema price for. |
+    | `i`    | `uint256` | Index value of the coin to calculate the ema price for. i = 0 returns the price oracle for coin(1). |
 
     ??? quote "Source code"
 
@@ -179,6 +224,8 @@ $$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_em
 
     Getter method for the last stored price for the coin at index value `i`, stored in `last_prices_packed`. The spot price is retrieved from the lower 128 bits of the packed value in `last_prices_packed` and is updated whenever the internal `upkeep_oracles` method is called.
 
+    `i = 0` will return the last price of `coin[1]`, `i = 1` the last price of `coin[2]`, and so on.
+
     Returns: last stored spot price of coin `i` (`uint256`).
 
     | Input | Type      | Description                                  |
@@ -211,6 +258,8 @@ $$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_em
         This function will revert if `i >= MAX_COINS`.
 
     Getter method for the last stored exponential moving-average (EMA) price of the coin at index value `i`, retrieved from `last_prices_packed`. The EMA price is obtained by shifting the value in `last_prices_packed` to the right by 128 bits. This value is updated whenever the `upkeep_oracles()` function is internally called.
+    
+    `i = 0` will return the last ema price of `coin[1]`, `i = 1` of `coin[2]`, and so on.
 
     Returns: the last stored EMA price of coin `i` (`uint256`).
 
@@ -240,7 +289,9 @@ $$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_em
 ### `get_p`
 !!! description "`StableSwap.get_p(i: uint256) -> uint256:`"
 
-    Function to calculate the current AMM spot price of coin `i` based on the coin balances in the pool, the amplification coefficient `A`, and the `D` invariant. `i = 0` will return the price of `coin[1]`, `i = 1` the price of `coin[2]`, and so on.
+    Function to calculate the current AMM spot price of coin `i` based on the coin balances in the pool, the amplification coefficient `A`, and the `D` invariant. 
+    
+    `i = 0` will return the price of `coin[1]`, `i = 1` the price of `coin[2]`, and so on.
 
     Returns: current spot price (`uint256`).
 
@@ -415,7 +466,7 @@ $$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_em
         579359617954437487117250992339883299967854142015
         ```
 
-    !!!note
+    !!!note "Unpacking values"
         The value needs to be unpacked, as it contains two values, **ma_last_time_p** and **ma_last_time_D**.  
 
         For example, 579359617954437487117250992339883299967854142015 is unpacked into two uint256 numbers. First, its lower 128 bits are isolated using a bitwise AND with 2**128 − 1, and then the value is shifted right by 128 bits to extract the upper 128 bits.  
@@ -435,7 +486,7 @@ The internal `upkeep_oracles` method is responsible for updating the price and D
     The rationale behind this approach is that all transactions within a block share the same timestamp. Therefore, the condition `if ma_last_time < block.timestamp` can only be satisfied once per block (the first time it's called). If there are multiple actions that would trigger an oracle update, it will be updated in the next relevant action.
 
 
-???quote "Source code for **`upkeep_oracle`** method"
+???quote "Source code for the internal **`upkeep_oracle`** function"
 
     ```vyper
     @internal
