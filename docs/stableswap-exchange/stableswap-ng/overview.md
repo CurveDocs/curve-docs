@@ -14,7 +14,7 @@ For an in-depth understanding of the StableSwap invariant design, please refer t
 - AMM blueprint contracts
 - LiquidityGauge blueprint contract
 
-!!!info
+!!!warning "Liquidity Gauges"
     The LiquidityGauge blueprint contract is only implemented on Ethereum.
 
 
