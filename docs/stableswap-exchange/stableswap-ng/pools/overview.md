@@ -1,4 +1,4 @@
-<h1>Pools: Overview</h1>
+<h1>StableSwap-NG Pools: Overview</h1>
 
 A Curve pool is essentially a smart contract that implements the StableSwap invariant, housing the logic for exchanging stable tokens. While all Curve pools share this core implementation, they come in various pool flavors.
 
@@ -192,9 +192,9 @@ The embedded graph has limited features, such as the inability to modify the axi
 
 ## **Oracles**
 
-The new generation (NG) of stableswap introduces oracles based on AMM State Prices and the invariant D.
+The new generation (NG) of stableswap introduces two new pool-built-in oracles:
 
-- **price oracle** (spot and ema price)
+- **price oracle** (spot and moving-average price)
 - moving average **D oracle**
 
 More on oracles [here](./oracles.md).
@@ -205,80 +205,9 @@ More on oracles [here](./oracles.md).
 
 ## **`exchange_received`**
 
-This new function **allows the exchange of tokens without actually transfering tokens in**, as the exchange is based on the change of the coins balances within the pool (see code below).    
+This new function **allows the exchange of tokens without actually transfering tokens in**, as the exchange is based on the change of the coins balances within the pool.
+
 Users of this method are dex aggregators, arbitrageurs, or other users who **do not wish to grant approvals to the contract**. They can instead send tokens directly to the contract and call **`exchange_received()`**.
 
-!!!warning
-    This function will revert if called on pools that contain rebasing tokens.
-
-??? quote "Transfer logic when using `exchange_received()`"
-
-    ```vyper
-    @internal
-    def _transfer_in(
-        coin_idx: int128,
-        dx: uint256,
-        sender: address,
-        expect_optimistic_transfer: bool,
-    ) -> uint256:
-        """
-        @notice Contains all logic to handle ERC20 token transfers.
-        @param coin_idx Index of the coin to transfer in.
-        @param dx amount of `_coin` to transfer into the pool.
-        @param dy amount of `_coin` to transfer out of the pool.
-        @param sender address to transfer `_coin` from.
-        @param receiver address to transfer `_coin` to.
-        @param expect_optimistic_transfer True if contract expects an optimistic coin transfer
-        """
-        _dx: uint256 = ERC20(coins[coin_idx]).balanceOf(self)
-
-        # ------------------------- Handle Transfers -----------------------------
-
-        if expect_optimistic_transfer:
-
-            _dx = _dx - self.stored_balances[coin_idx]
-            assert _dx >= dx
-
-        else:
-
-            assert dx > 0  # dev : do not transferFrom 0 tokens into the pool
-            assert ERC20(coins[coin_idx]).transferFrom(
-                sender, self, dx, default_return_value=True
-            )
-
-            _dx = ERC20(coins[coin_idx]).balanceOf(self) - _dx
-
-        # --------------------------- Store transferred in amount ---------------------------
-
-        self.stored_balances[coin_idx] += _dx
-
-        return _dx
-    ```
-
-
-### **Example** 
-
-!!!example
-    Lets say a user wants to swap **`GOV-TOKEN<>USDC`** through an aggregator. For simplicity we assume, **`GOV-TOKEN<>USDT`** exchange is done via a uniswap pool, **`USDT<>USDC`** via a Curve pool.
-
-``` mermaid
-graph LR
-    u([USER]) --- p1[(UNISWAP)]
-    p1 -->|"3. transfer out/in"| p2[(CURVE)]
-    u -..-> |1. approve and transfer| a([AGGREGATOR])
-    a ==> |"2. exchange"| p1
-    a -.-|"4. exchange_received"| p2
-    p2 --> |5. transfer dy out| u
-    linkStyle 0 stroke-width:0, fill:none;
-```
-
-1. User gives approval the `AGGREGATOR`, which then transfers tokens into the aggregator contract
-2. Aggregator exchanges `GOV-TOKEN` for `USDT` using Uniswap  
-3. Transfers the `USDT` directly from Uniswap into the Curve pool
-4. Perform a swap on the Curve pool (`USDT<>USDC`) via **`exchange_received`**
-5. Transfer `USDC` to the user
-
-
-!!!info 
-    This method saves aggregators one redundant ERC-20 transfer and eliminates the need to grant approval to a curve pool. Without this function, the aggregator would have to conduct an additional transaction, transferring USDT from the Uniswap pool to their aggregator contract after the exchange, and then sending it to the Curve pool for another exchange (USDT<>USDC).
-    However, with this method in place, the aggregator can transfer the output tokens directly into the next pool and perform an exchange.
+!!!abstract "Article"
+    Explore the `exchange_received` function's role in streamlining swaps without approvals, its efficiency benefits, and security considerations in a succinct article. Learn more about this innovative feature for cost-effective, secure trading through Curve pools: [How to Do Cheaper, Approval-Free Swaps](https://blog.curvemonitor.com/posts/exchange-received/).
