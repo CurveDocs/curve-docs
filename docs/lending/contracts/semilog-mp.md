@@ -1,11 +1,11 @@
 <h1>Semi-Log Monetary Policy</h1>
 
-The **borrow rate** is based on the **utilization of the lending markets**. If utilization is 0 (no assets borrowed), `rate` will be equal to `min_rate`. If utilization is 1 (all available assets borrowed), the `rate` will be equal to `max_rate`.
+The **borrow rate** in the semi-logarithmic MonetaryPolicy contract is **intricately linked to the utilization ratio of the lending markets**. This ratio plays a crucial role in determining the cost of borrowing, with its value ranging between 0 and 1. At a **utilization rate of 0**, indicating no borrowed assets, the borrowing **rate aligns with the minimum threshold, `min_rate`**. Conversely, a **utilization rate of 1**, where all available assets are borrowed, escalates the **borrowing rate to its maximum limit, `max_rate`**.
 
 
 *The borrow rate is calculated via the following function:*
 
-??? quote "Source code"
+??? quote "`calculate_rate`"
 
     ```vyper
     @view
@@ -39,6 +39,9 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
 | $\text{rate}_{\text{max}}$ | `MonetaryPolicy.max_rate()` |
 | $\text{utilization}$ | `Utilization of the lending market. What ratio of the provided assets are borrowed?` |
 
+
+Based on this value, the APR for borrowing and lending is calculated. See the interest rates section [here](./vault.md#interest-rates) for more details.
+
 ---
 
 The embedded graph has limited features. However, by clicking the *"edit graph on Desmos"* button at the bottom right (or [here](https://www.desmos.com/calculator/cnhulwzyfx)), one is redirected to the main Desmos site. There, setting other values for `min_rate` and `max_rate` is possible.
@@ -53,18 +56,77 @@ The embedded graph has limited features. However, by clicking the *"edit graph o
 ---
 
 
-## **Rates**    
+## **Rates**
 
-**The borrow rate is based on 1e18 and calculated per second.**
+**The rate values are based on 1e18 and are NOT annualized.** 
 
-
-$$\text{rate} = \text{rate}_{\text{min}} * \left(\frac{\text{rate}_{\text{max}}}{\text{rate}_{\text{min}}}\right)^{\text{utilization}}$$
-
-*Formula to calculate the Borrow APR:*
+*To calculate the Borrow APR:*
 
 $$\text{borrowAPR} = \frac{\text{rate} * 365 * 86400}{10^{18}}$$
 
-Additionally, there is a `future_rate` method that allows calculation based on changes in reserves and debt.
+Rate calculations occur within the MonetaryPolicy contract. The rate is regularly updated by the internal `_save_rate` method in the Controller. This happens whenever a new loan is initiated (`_create_loan`), collateral is either added (`add_collateral`) or removed (`remove_collateral`), additional debt is incurred (`borrow_more` and `borrow_more_extended`), debt is repaid (`repay`, `repay_extended`), or a loan undergoes liquidation (`_liquidate`).
+
+
+??? quote "Source Code"
+
+    === "Controller.vy"
+
+        ```vyper
+        @internal
+        def _save_rate():
+            """
+            @notice Save current rate
+            """
+            rate: uint256 = min(self.monetary_policy.rate_write(), MAX_RATE)
+            AMM.set_rate(rate)
+        ```
+
+    === "MonetaryPolicy.vy"
+
+        ```vyper
+        log_min_rate: public(int256)
+        log_max_rate: public(int256)
+
+        @internal
+        @external
+        def rate_write(_for: address = msg.sender) -> uint256:
+            return self.calculate_rate(_for, 0, 0)
+
+        @internal
+        @view
+        def calculate_rate(_for: address, d_reserves: int256, d_debt: int256) -> uint256:
+            total_debt: int256 = convert(Controller(_for).total_debt(), int256)
+            total_reserves: int256 = convert(BORROWED_TOKEN.balanceOf(_for), int256) + total_debt + d_reserves
+            total_debt += d_debt
+            assert total_debt >= 0, "Negative debt"
+            assert total_reserves >= total_debt, "Reserves too small"
+            if total_debt == 0:
+                return self.min_rate
+            else:
+                log_min_rate: int256 = self.log_min_rate
+                log_max_rate: int256 = self.log_max_rate
+                return self.exp(total_debt * (log_max_rate - log_min_rate) / total_reserves + log_min_rate)
+        ```
+
+    === "AMM.vy"
+
+        ```vyper
+        @external
+        @nonreentrant('lock')
+        def set_rate(rate: uint256) -> uint256:
+            """
+            @notice Set interest rate. That affects the dependence of AMM base price over time
+            @param rate New rate in units of int(fraction * 1e18) per second
+            @return rate_mul multiplier (e.g. 1.0 + integral(rate, dt))
+            """
+            assert msg.sender == self.admin
+            rate_mul: uint256 = self._rate_mul()
+            self.rate_mul = rate_mul
+            self.rate_time = block.timestamp
+            self.rate = rate
+            log SetRate(rate, rate_mul, block.timestamp)
+            return rate_mul
+        ```
 
 
 ### `rate`
