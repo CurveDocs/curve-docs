@@ -1338,75 +1338,24 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 
 ## **Interest Rates**
 
-Interest rates for lending markets are dependent on the utilization of the markets. The higher the utilization, the higher the interest rates.
+Interest rates for lending markets are **dependent on the utilization of the markets**. The higher the utilization, the higher the interest rates.
 
-`borrow_apr` and `lend_apr` are public getter methods for the annualized rates with a base of 1e18, calculated based on the `rate` within the corresponding AMM. In turn, this `rate` is calculated within the MonetaryPolicy contract of the specific lending market and is constantly updated through the internal `_save_rate` method in the Controller whenever a new loan is created (`_create_loan`), collateral is added (`add_collateral`) or removed (`remove_collateral`), more debt is taken on (`borrow_more` and `borrow_more_extended`), repaid (`repay`, `repay_extended`), or a loan is liquidated (`_liquidate`).
+The vault contract has two public methods, **`borrow_apr`** and **`lend_apr`**, which return the **annualized borrow and lending rate with a base of 1e18**.
+
+```py
+In  [1]: Vault.borrow_apr()
+Out [1]: 352629439534800000                 # -> 0.352 -> 35.2%
+
+In  [2]: Vault.lend_apr()
+Out [2]: 248442280773618417                 # -> 0.248 -> 24.8%
+```
 
 
-??? quote "Source Code"
+More on rates and when they are updated here: [SemiLog Monetary Policy](./semilog-mp.md)
 
-    === "Controller.vy"
-
-        ```vyper
-        @internal
-        def _save_rate():
-            """
-            @notice Save current rate
-            """
-            rate: uint256 = min(self.monetary_policy.rate_write(), MAX_RATE)
-            AMM.set_rate(rate)
-        ```
-
-    === "MonetaryPolicy.vy"
-
-        ```vyper
-        log_min_rate: public(int256)
-        log_max_rate: public(int256)
-
-        @internal
-        @external
-        def rate_write(_for: address = msg.sender) -> uint256:
-            return self.calculate_rate(_for, 0, 0)
-
-        @internal
-        @view
-        def calculate_rate(_for: address, d_reserves: int256, d_debt: int256) -> uint256:
-            total_debt: int256 = convert(Controller(_for).total_debt(), int256)
-            total_reserves: int256 = convert(BORROWED_TOKEN.balanceOf(_for), int256) + total_debt + d_reserves
-            total_debt += d_debt
-            assert total_debt >= 0, "Negative debt"
-            assert total_reserves >= total_debt, "Reserves too small"
-            if total_debt == 0:
-                return self.min_rate
-            else:
-                log_min_rate: int256 = self.log_min_rate
-                log_max_rate: int256 = self.log_max_rate
-                return self.exp(total_debt * (log_max_rate - log_min_rate) / total_reserves + log_min_rate)
-        ```
-
-    === "AMM.vy"
-
-        ```vyper
-        @external
-        @nonreentrant('lock')
-        def set_rate(rate: uint256) -> uint256:
-            """
-            @notice Set interest rate. That affects the dependence of AMM base price over time
-            @param rate New rate in units of int(fraction * 1e18) per second
-            @return rate_mul multiplier (e.g. 1.0 + integral(rate, dt))
-            """
-            assert msg.sender == self.admin
-            rate_mul: uint256 = self._rate_mul()
-            self.rate_mul = rate_mul
-            self.rate_time = block.timestamp
-            self.rate = rate
-            log SetRate(rate, rate_mul, block.timestamp)
-            return rate_mul
-        ```
+---
 
 *Formula to calculate the Borrow APR:*
-
-$$\text{rate} = \text{rate}_{\text{min}} * \left(\frac{\text{rate}_{\text{max}}}{\text{rate}_{\text{min}}}\right)^{\text{utilization}}$$
 
 $$\text{borrowAPR} = \frac{\text{rate} * 365 * 86400}{10^{18}}$$
 
