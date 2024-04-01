@@ -4,8 +4,8 @@ The calculated price is primarily used as an oracle for calculating the interest
 
 
 !!!deploy "Contract Source & Deployment"
-    **AggregatorStablePrice** contract is deployed to the Ethereum mainnet at: [0x18672b1b0c623a30089A280Ed9256379fb0E4E62](https://etherscan.io/address/0x18672b1b0c623a30089A280Ed9256379fb0E4E62#code).
-    Source code available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/price_oracles/AggregateStablePrice2.vy). 
+    Source code is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/price_oracles/AggregateStablePrice2.vy). 
+    Relevant contract deployments can be found [here](../references/deployed-contracts.md#curve-stablecoin).
 
 
 ---
