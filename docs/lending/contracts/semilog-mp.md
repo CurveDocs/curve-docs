@@ -41,8 +41,7 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
 
 ---
 
-
-*Interest rate example with `rate_min = 5%` and `rate_max = 50%`.*
+*Interest rate example using `rate_min = 5%` and `rate_max = 50%`.*
 
 <style>
     #graphContainer {
@@ -88,8 +87,6 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
         }
 
         const ctx = document.getElementById('graphContainer').getContext('2d');
-
-        const themeColors = getCurrentThemeColors();
 
         const data = {
             datasets: [{
