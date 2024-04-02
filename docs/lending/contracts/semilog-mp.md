@@ -40,17 +40,198 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
 | $\text{utilization}$ | `Utilization of the lending market. What ratio of the provided assets are borrowed?` |
 
 
-Based on this value, the APR for borrowing and lending is calculated. See the interest rates section [here](./vault.md#interest-rates) for more details.
-
 ---
 
-The embedded graph has limited features. However, by clicking the *"edit graph on Desmos"* button at the bottom right (or [here](https://www.desmos.com/calculator/cnhulwzyfx)), one is redirected to the main Desmos site. There, setting other values for `min_rate` and `max_rate` is possible.
+*Interest rate example with `rate_min = 5%` and `rate_max = 50%`.*
 
-*The example below uses a minimum rate of 0.5% and a maximum rate of 50%.*
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
 
-<div style="text-align: center;">
-    <iframe src="https://www.desmos.com/calculator/cnhulwzyfx?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
-</div>
+    #graphContainer {
+        height: 400px;
+        width: 600px;
+    }
+
+    label {
+        display: inline-block;
+        margin-top: 10px;
+        margin-bottom: 4px; /* Reduced margin for compactness */
+    }
+</style>
+<canvas id="graphContainer"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    let hoverX = null;
+    let hoverY = null;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        updateGraph(); // Initial graph display
+    });
+
+    let myChart = null;
+
+    const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    const darkModeColors = {
+    textColor: '#FFFFFF',
+    gridColor: 'rgba(255, 255, 255, 0.1)',
+    pointBorderColor: 'rgba(75, 192, 192, 0.9)',
+    tooltipBackgroundColor: 'rgba(75, 75, 75, 0.9)',
+    // Other colors as needed
+    };
+
+    const lightModeColors = {
+        textColor: '#000000',
+        gridColor: 'rgba(0, 0, 0, 0.1)',
+        pointBorderColor: 'rgba(75, 192, 192, 0.9)',
+        tooltipBackgroundColor: 'rgba(255, 255, 255, 0.9)',
+        // Other colors as needed
+    };
+
+    function getCurrentColors() {
+        return prefersDarkMode ? darkModeColors : lightModeColors;
+    }
+
+
+    function updateGraph() {
+        const rateMin = 5 / 100; // Set minimum rate to 5%
+        const rateMax = 50 / 100; // Set maximum rate to 50%
+
+        let dataPoints = [];
+        for (let u = 0; u <= 1; u += 0.01) {
+            let rate = rateMin * Math.pow((rateMax / rateMin), u);
+            dataPoints.push({x: u * 100, y: rate * 100});
+        }
+
+        const ctx = document.getElementById('graphContainer').getContext('2d');
+
+        const data = {
+            datasets: [{
+                label: 'Rate vs. Utilization',
+                data: dataPoints,
+                borderColor: 'rgba(75, 192, 192, 0.9)',
+                fill: false,
+                pointRadius: 0,
+                showLine: true,
+                borderWidth: 2,
+            }]
+        };
+
+        const config = {
+            type: 'scatter',
+            data: data,
+            options: {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Utilization (%)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Rate (%)'
+                        },
+                        beginAtZero: true
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    intersect: false,
+                    axis: 'x'
+                },
+                plugins: {
+                    tooltip: {
+                        enabled: true, // Enable tooltips
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)', // Tooltip background color
+                        bodyColor: '#ffffff', // Tooltip text color
+                        bodyFont: {
+                            size: 12, // Smaller font size
+                        },
+                        borderColor: 'rgba(0, 0, 0, 0.7)', // Border color
+                        borderWidth: 1, // Border width
+                        usePointStyle: false, // Disable point style for the items to remove the dot
+                        padding: 4, // Reduce padding for a smaller tooltip
+                        displayColors: false, // Do not display the color box next to the text
+                        callbacks: {
+                            // Remove the label
+                            title: function() {
+                                return '';
+                            },
+                            // Customizing the body of the tooltip to display on two lines
+                            label: function(context) {
+                                const rate = context.parsed.y.toFixed(2);
+                                const utilization = context.parsed.x.toFixed(2);
+                                return [`Rate: ${rate}%`, `Utilization: ${utilization}%`];
+                            },
+                            labelPointStyle: function() {
+                                return {    
+                                    pointStyle: 'circle',
+                                    rotation: 0,
+                                    boxWidth: 0, // Set boxWidth to 0 to remove the square
+                                };
+                            },
+                        }
+                    },
+                },
+                onHover: (event, chartElements, chart) => {
+                    if (!chartElements.length) {
+                        hoverX = null;
+                        hoverY = null;
+                    } else {
+                        const element = chartElements[0];
+                        hoverX = element.element.x;
+                        hoverY = element.element.y;
+                    }
+                    drawHoverLines(hoverX, hoverY, myChart);
+                },
+            }
+        };
+
+        if (myChart) {
+            myChart.destroy();
+        }
+        myChart = new Chart(ctx, config);
+    }
+
+    function drawHoverLines(mouseX, mouseY, chart) {
+        if (!chart) return;
+
+        const ctx = chart.ctx;
+        const chartArea = chart.chartArea;
+
+        // Check if the mouse is within the chart area horizontally
+        if (mouseX < chartArea.left || mouseX > chartArea.right) {
+            return; // Exit if the mouse is outside the horizontal bounds of the chart area
+        }
+
+        // Check if the mouse is within the chart area vertically
+        if (mouseY < chartArea.top || mouseY > chartArea.bottom) {
+            return; // Exit if the mouse is outside the vertical bounds of the chart area
+        }
+
+        // Redraw the chart to ensure it's updated without clearing existing content
+        chart.update('none'); // 'none' prevents animation for a smoother update
+
+        // Draw horizontal dotted line
+        ctx.save();
+        ctx.beginPath();
+        ctx.setLineDash([5, 5]);
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.moveTo(chartArea.left, mouseY);
+        ctx.lineTo(chartArea.right, mouseY);
+        ctx.stroke();
+        ctx.restore();
+    }
+</script>
 
 
 ---
