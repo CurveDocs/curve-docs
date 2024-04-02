@@ -3,32 +3,6 @@
 The **borrow rate** in the semi-logarithmic MonetaryPolicy contract is **intricately linked to the utilization ratio of the lending markets**. This ratio plays a crucial role in determining the cost of borrowing, with its value ranging between 0 and 1. At a **utilization rate of 0**, indicating no borrowed assets, the borrowing **rate aligns with the minimum threshold, `min_rate`**. Conversely, a **utilization rate of 1**, where all available assets are borrowed, escalates the **borrowing rate to its maximum limit, `max_rate`**.
 
 
-*The borrow rate is calculated via the following function:*
-
-??? quote "`calculate_rate`"
-
-    ```vyper
-    @view
-    @external
-    def rate(_for: address = msg.sender) -> uint256:
-        return self.calculate_rate(_for, 0, 0)
-
-    @internal
-    @view
-    def calculate_rate(_for: address, d_reserves: int256, d_debt: int256) -> uint256:
-        total_debt: int256 = convert(Controller(_for).total_debt(), int256)
-        total_reserves: int256 = convert(BORROWED_TOKEN.balanceOf(_for), int256) + total_debt + d_reserves
-        total_debt += d_debt
-        assert total_debt >= 0, "Negative debt"
-        assert total_reserves >= total_debt, "Reserves too small"
-        if total_debt == 0:
-            return self.min_rate
-        else:
-            log_min_rate: int256 = self.log_min_rate
-            log_max_rate: int256 = self.log_max_rate
-            return self.exp(total_debt * (log_max_rate - log_min_rate) / total_reserves + log_min_rate)
-    ```
-
 *The function is as simple as:*
 
 $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{max}}}{\text{rate}_{\text{min}}}\right)^{\text{utilization}}$$
@@ -40,6 +14,10 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
 | $\text{utilization}$ | `Utilization of the lending market. What ratio of the provided assets are borrowed?` |
 
 ---
+
+*A graph to display the interplay between `min_rate`, `max_rate`, and market utilization:[^1]*
+
+[^1]: For simplicity, the minimum input value is set at 1% and the maximum at 100%. In reality, these values can range from 0.01% to 1000%. 
 
 <style>
     #graphContainer {
@@ -67,11 +45,11 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
 
 <div class="input-group">
     <label for="min_rate">Minimum Rate (%):</label>
-    <input class="rate-input" type="number" id="min_rate" value="5" min="0" max="99">
+    <input class="rate-input" type="number" id="min_rate" value="5" min="1" max="100">
 </div>
 <div class="input-group">
     <label for="max_rate">Maximum Rate (%):</label>
-    <input class="rate-input" type="number" id="max_rate" value="50" min="0" max="100">
+    <input class="rate-input" type="number" id="max_rate" value="50" min="2" max="100">
 </div>
 
 <canvas id="graphContainer"></canvas>
@@ -80,6 +58,30 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
 <script>
     let hoverX = null;
     let hoverY = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const minRateInput = document.getElementById('min_rate');
+        const maxRateInput = document.getElementById('max_rate');
+
+        // Function to ensure min_rate is always less than max_rate
+        function validateRates() {
+            const minRate = parseFloat(minRateInput.value);
+            const maxRate = parseFloat(maxRateInput.value);
+
+            if (minRate >= maxRate) {
+                // If min_rate >= max_rate, adjust min_rate to be slightly less than max_rate
+                minRateInput.value = maxRate - 1;
+                if (minRateInput.value < 0.01) { // Ensure min_rate does not go below the minimum allowed value
+                    minRateInput.value = 0.01;
+                    maxRateInput.value = Math.max(minRateInput.value + 1, parseFloat(maxRateInput.value));
+                }
+            }
+        }
+
+        // Listen for changes in the rate inputs and validate
+        minRateInput.addEventListener('change', validateRates);
+        maxRateInput.addEventListener('change', validateRates);
+    });
 
     document.addEventListener('DOMContentLoaded', function() {
         updateGraph(); // Initial graph display
