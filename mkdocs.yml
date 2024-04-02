@@ -86,15 +86,16 @@ theme:
     # - media: "(prefers-color-scheme: dark)"
     - scheme: default
       accent: deep purple
-      toggle:
-        icon: material/weather-sunny
-        name: Switch to light mode
+    #  toggle:
+    #    icon: material/weather-sunny
+    #    name: Switch to light mode
     # - media: "(prefers-color-scheme: light)"
-    - scheme: slate
-      accent: amber
-      toggle:
-        icon: material/weather-night
-        name: Switch to dark mode
+    # - scheme: slate
+    #   accent: amber
+    #   toggle:
+    #     icon: material/weather-night
+    #     name: Switch to dark mode
+
 
 extra_css:
   - assets/stylesheets/extra.css
