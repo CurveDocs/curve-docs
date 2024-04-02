@@ -39,26 +39,15 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
 | $\text{rate}_{\text{max}}$ | `MonetaryPolicy.max_rate()` |
 | $\text{utilization}$ | `Utilization of the lending market. What ratio of the provided assets are borrowed?` |
 
-
 ---
+
 
 *Interest rate example with `rate_min = 5%` and `rate_max = 50%`.*
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-    }
-
     #graphContainer {
         height: 400px;
         width: 600px;
-    }
-
-    label {
-        display: inline-block;
-        margin-top: 10px;
-        margin-bottom: 4px; /* Reduced margin for compactness */
     }
 </style>
 <canvas id="graphContainer"></canvas>
@@ -75,27 +64,17 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
 
     let myChart = null;
 
-    const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    const darkModeColors = {
-    textColor: '#FFFFFF',
-    gridColor: 'rgba(255, 255, 255, 0.1)',
-    pointBorderColor: 'rgba(75, 192, 192, 0.9)',
-    tooltipBackgroundColor: 'rgba(75, 75, 75, 0.9)',
-    // Other colors as needed
-    };
-
-    const lightModeColors = {
-        textColor: '#000000',
-        gridColor: 'rgba(0, 0, 0, 0.1)',
-        pointBorderColor: 'rgba(75, 192, 192, 0.9)',
-        tooltipBackgroundColor: 'rgba(255, 255, 255, 0.9)',
-        // Other colors as needed
-    };
-
-    function getCurrentColors() {
-        return prefersDarkMode ? darkModeColors : lightModeColors;
+    function getCurrentThemeColors() {
+        const style = getComputedStyle(document.body);
+        return {
+            backgroundColor: style.getPropertyValue('--md-default-bg-color').trim(),
+            primaryColor: style.getPropertyValue('--md-primary-fg-color').trim(),
+            accentColor: style.getPropertyValue('--md-accent-fg-color').trim(),
+            borderColor: style.getPropertyValue('--pg-light-border').trim(),
+            // Add more variables as needed
+        };
     }
+
 
 
     function updateGraph() {
@@ -109,6 +88,8 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
         }
 
         const ctx = document.getElementById('graphContainer').getContext('2d');
+
+        const themeColors = getCurrentThemeColors();
 
         const data = {
             datasets: [{
