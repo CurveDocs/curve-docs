@@ -3,32 +3,6 @@
 The **borrow rate** in the semi-logarithmic MonetaryPolicy contract is **intricately linked to the utilization ratio of the lending markets**. This ratio plays a crucial role in determining the cost of borrowing, with its value ranging between 0 and 1. At a **utilization rate of 0**, indicating no borrowed assets, the borrowing **rate aligns with the minimum threshold, `min_rate`**. Conversely, a **utilization rate of 1**, where all available assets are borrowed, escalates the **borrowing rate to its maximum limit, `max_rate`**.
 
 
-*The borrow rate is calculated via the following function:*
-
-??? quote "`calculate_rate`"
-
-    ```vyper
-    @view
-    @external
-    def rate(_for: address = msg.sender) -> uint256:
-        return self.calculate_rate(_for, 0, 0)
-
-    @internal
-    @view
-    def calculate_rate(_for: address, d_reserves: int256, d_debt: int256) -> uint256:
-        total_debt: int256 = convert(Controller(_for).total_debt(), int256)
-        total_reserves: int256 = convert(BORROWED_TOKEN.balanceOf(_for), int256) + total_debt + d_reserves
-        total_debt += d_debt
-        assert total_debt >= 0, "Negative debt"
-        assert total_reserves >= total_debt, "Reserves too small"
-        if total_debt == 0:
-            return self.min_rate
-        else:
-            log_min_rate: int256 = self.log_min_rate
-            log_max_rate: int256 = self.log_max_rate
-            return self.exp(total_debt * (log_max_rate - log_min_rate) / total_reserves + log_min_rate)
-    ```
-
 *The function is as simple as:*
 
 $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{max}}}{\text{rate}_{\text{min}}}\right)^{\text{utilization}}$$
@@ -39,18 +13,224 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
 | $\text{rate}_{\text{max}}$ | `MonetaryPolicy.max_rate()` |
 | $\text{utilization}$ | `Utilization of the lending market. What ratio of the provided assets are borrowed?` |
 
-
-Based on this value, the APR for borrowing and lending is calculated. See the interest rates section [here](./vault.md#interest-rates) for more details.
-
 ---
 
-The embedded graph has limited features. However, by clicking the *"edit graph on Desmos"* button at the bottom right (or [here](https://www.desmos.com/calculator/cnhulwzyfx)), one is redirected to the main Desmos site. There, setting other values for `min_rate` and `max_rate` is possible.
+*A graph to display the interplay between `min_rate`, `max_rate`, and market utilization:[^1]*
 
-*The example below uses a minimum rate of 0.5% and a maximum rate of 50%.*
+[^1]: For simplicity, the minimum input value is set at 1% and the maximum at 100%. In reality, these values can range from 0.01% to 1000%. 
 
-<div style="text-align: center;">
-    <iframe src="https://www.desmos.com/calculator/cnhulwzyfx?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
+<style>
+    #graphContainer {
+        height: 400px;
+        width: 600px;
+    }
+    .rate-input {
+        padding: 8px 12px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        font-style: italic;
+    }
+    .rate-input:focus {
+        border-color: #4A90E2;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 8px rgba(74,144,226,0.6);
+        outline: none;
+    }
+    .input-group {
+    margin-bottom: 0px; /* Adjust the space between each input group */
+}
+</style>
+
+<div class="input-group">
+    <label for="min_rate">Minimum Rate (%):</label>
+    <input class="rate-input" type="number" id="min_rate" value="5" min="1" max="100">
 </div>
+<div class="input-group">
+    <label for="max_rate">Maximum Rate (%):</label>
+    <input class="rate-input" type="number" id="max_rate" value="50" min="2" max="100">
+</div>
+
+<canvas id="graphContainer"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    let hoverX = null;
+    let hoverY = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const minRateInput = document.getElementById('min_rate');
+        const maxRateInput = document.getElementById('max_rate');
+
+        // Function to ensure min_rate is always less than max_rate
+        function validateRates() {
+            const minRate = parseFloat(minRateInput.value);
+            const maxRate = parseFloat(maxRateInput.value);
+
+            if (minRate >= maxRate) {
+                // If min_rate >= max_rate, adjust min_rate to be slightly less than max_rate
+                minRateInput.value = maxRate - 1;
+                if (minRateInput.value < 0.01) { // Ensure min_rate does not go below the minimum allowed value
+                    minRateInput.value = 0.01;
+                    maxRateInput.value = Math.max(minRateInput.value + 1, parseFloat(maxRateInput.value));
+                }
+            }
+        }
+
+        // Listen for changes in the rate inputs and validate
+        minRateInput.addEventListener('change', validateRates);
+        maxRateInput.addEventListener('change', validateRates);
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        updateGraph(); // Initial graph display
+
+        // Attach event listeners to input fields to update the graph automatically on value change
+        document.getElementById('min_rate').addEventListener('input', updateGraph);
+        document.getElementById('max_rate').addEventListener('input', updateGraph);
+    });
+
+    let myChart = null;
+
+    function updateGraph() {
+        const minRateInput = document.getElementById('min_rate').value;
+        const maxRateInput = document.getElementById('max_rate').value;
+
+        // Convert input values to percentages (divided by 100)
+        const rateMin = parseFloat(minRateInput) / 100;
+        const rateMax = parseFloat(maxRateInput) / 100;
+
+        let dataPoints = [];
+        for (let u = 0; u <= 1; u += 0.01) {
+            let rate = rateMin * Math.pow((rateMax / rateMin), u);
+            dataPoints.push({x: u * 100, y: rate * 100});
+        }
+
+        const ctx = document.getElementById('graphContainer').getContext('2d');
+
+        const data = {
+            datasets: [{
+                label: 'Rate vs. Utilization',
+                data: dataPoints,
+                borderColor: 'rgba(75, 192, 192, 0.9)',
+                fill: false,
+                pointRadius: 0,
+                showLine: true,
+                borderWidth: 2,
+            }]
+        };
+
+        const config = {
+            type: 'scatter',
+            data: data,
+            options: {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Utilization (%)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Rate (%)'
+                        },
+                        beginAtZero: true
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    intersect: false,
+                    axis: 'x'
+                },
+                plugins: {
+                    tooltip: {
+                        enabled: true, // Enable tooltips
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)', // Tooltip background color
+                        bodyColor: '#ffffff', // Tooltip text color
+                        bodyFont: {
+                            size: 12, // Smaller font size
+                        },
+                        borderColor: 'rgba(0, 0, 0, 0.7)', // Border color
+                        borderWidth: 1, // Border width
+                        usePointStyle: false, // Disable point style for the items to remove the dot
+                        padding: 4, // Reduce padding for a smaller tooltip
+                        displayColors: false, // Do not display the color box next to the text
+                        callbacks: {
+                            // Remove the label
+                            title: function() {
+                                return '';
+                            },
+                            // Customizing the body of the tooltip to display on two lines
+                            label: function(context) {
+                                const rate = context.parsed.y.toFixed(2);
+                                const utilization = context.parsed.x.toFixed(2);
+                                return [`Rate: ${rate}%`, `Utilization: ${utilization}%`];
+                            },
+                            labelPointStyle: function() {
+                                return {    
+                                    pointStyle: 'circle',
+                                    rotation: 0,
+                                    boxWidth: 0, // Set boxWidth to 0 to remove the square
+                                };
+                            },
+                        }
+                    },
+                },
+                onHover: (event, chartElements, chart) => {
+                    if (!chartElements.length) {
+                        hoverX = null;
+                        hoverY = null;
+                    } else {
+                        const element = chartElements[0];
+                        hoverX = element.element.x;
+                        hoverY = element.element.y;
+                    }
+                    drawHoverLines(hoverX, hoverY, myChart);
+                },
+            }
+        };
+
+        if (myChart) {
+            myChart.destroy();
+        }
+        myChart = new Chart(ctx, config);
+    }
+
+    function drawHoverLines(mouseX, mouseY, chart) {
+        if (!chart) return;
+
+        const ctx = chart.ctx;
+        const chartArea = chart.chartArea;
+
+        // Check if the mouse is within the chart area horizontally
+        if (mouseX < chartArea.left || mouseX > chartArea.right) {
+            return; // Exit if the mouse is outside the horizontal bounds of the chart area
+        }
+
+        // Check if the mouse is within the chart area vertically
+        if (mouseY < chartArea.top || mouseY > chartArea.bottom) {
+            return; // Exit if the mouse is outside the vertical bounds of the chart area
+        }
+
+        // Redraw the chart to ensure it's updated without clearing existing content
+        chart.update('none'); // 'none' prevents animation for a smoother update
+
+        // Draw horizontal dotted line
+        ctx.save();
+        ctx.beginPath();
+        ctx.setLineDash([5, 5]);
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.moveTo(chartArea.left, mouseY);
+        ctx.lineTo(chartArea.right, mouseY);
+        ctx.stroke();
+        ctx.restore();
+    }
+</script>
 
 
 ---

@@ -1338,9 +1338,13 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 
 ## **Interest Rates**
 
-Interest rates for lending markets are **dependent on the utilization of the markets**. The higher the utilization, the higher the interest rates.
+Interest rates within lending markets are intricately linked to the market's utilization rate. Essentially, as market utilization increases, so too do the interest rates. This dynamic relationship underscores the market's demand-supply equilibrium, directly influencing the cost of borrowing and the returns on lending.
 
-The vault contract has two public methods, **`borrow_apr`** and **`lend_apr`**, which return the **annualized borrow and lending rate with a base of 1e18**.
+The vault contract has two public methods, named `borrow_apr` and `lend_apr`. These methods are designed to compute and return the **annualized rates for borrowing and lending**, respectively, standardized to a base of 1e18.
+
+- **Borrow Rate:** This is the interest rate charged on the amount borrowed by a user.
+- **Lend Rate:** Conversely, this rate represents the yield a user earns by lending their assets to the vault.
+
 
 ```py
 In  [1]: Vault.borrow_apr()
@@ -1355,22 +1359,23 @@ More on rates and when they are updated here: [SemiLog Monetary Policy](./semilo
 
 ---
 
-*Formula to calculate the Borrow APR:*
+*The formula to calculate the annual percentage rate (APR) for borrowing is outlined as follows:*
 
 $$\text{borrowAPR} = \frac{\text{rate} * 365 * 86400}{10^{18}}$$
 
 
-*Formula to calculate the Lend APR:*
+*The APR for lending is directly linked to the APR for borrowing, defined by:*
 
 $$\text{lendAPR} = \text{borrowAPR} * \text{utilization}$$
 
 
-*The utilization is the ratio between the borrowed assets (debt) and total assets provided:[^1]*
+*Additionally, the utilization ratio is determined by the following:*[^1]
 
 $$\text{utilization} = \frac{\text{debt}}{\text{totalAssets}}$$
 
-[^1]: Borrowed assets essentially represent the debt, which is fetched from the `total_debt` method from the Controller. The total assets provided value is taken from the `totalAssets` method within the Vault.
+[^1]: This ratio represents the proportion of borrowed assets (debt) to the total assets supplied in the vault. It's a key metric that reflects the level of asset utilization within the vault. Borrowed assets, or debt, are obtained through the `total_debt` method from the Controller, while the `totalAssets` method within the Vault provides the value of total assets supplied.
 
+---
 
 ### `borrow_apr`
 !!! description "`Vault.borrow_apr() -> uint256`"
