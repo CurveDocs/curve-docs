@@ -41,44 +41,63 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
 
 ---
 
-*Interest rate example using `rate_min = 5%` and `rate_max = 50%`.*
-
 <style>
     #graphContainer {
         height: 400px;
         width: 600px;
     }
+    .rate-input {
+        padding: 8px 12px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        font-style: italic;
+    }
+    .rate-input:focus {
+        border-color: #4A90E2;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 8px rgba(74,144,226,0.6);
+        outline: none;
+    }
+    .input-group {
+    margin-bottom: 0px; /* Adjust the space between each input group */
+}
 </style>
-<canvas id="graphContainer"></canvas>
 
+<div class="input-group">
+    <label for="min_rate">Minimum Rate (%):</label>
+    <input class="rate-input" type="number" id="min_rate" value="5" min="0" max="99">
+</div>
+<div class="input-group">
+    <label for="max_rate">Maximum Rate (%):</label>
+    <input class="rate-input" type="number" id="max_rate" value="50" min="0" max="100">
+</div>
+
+<canvas id="graphContainer"></canvas>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
     let hoverX = null;
     let hoverY = null;
-    
+
     document.addEventListener('DOMContentLoaded', function() {
         updateGraph(); // Initial graph display
+
+        // Attach event listeners to input fields to update the graph automatically on value change
+        document.getElementById('min_rate').addEventListener('input', updateGraph);
+        document.getElementById('max_rate').addEventListener('input', updateGraph);
     });
 
     let myChart = null;
 
-    function getCurrentThemeColors() {
-        const style = getComputedStyle(document.body);
-        return {
-            backgroundColor: style.getPropertyValue('--md-default-bg-color').trim(),
-            primaryColor: style.getPropertyValue('--md-primary-fg-color').trim(),
-            accentColor: style.getPropertyValue('--md-accent-fg-color').trim(),
-            borderColor: style.getPropertyValue('--pg-light-border').trim(),
-            // Add more variables as needed
-        };
-    }
-
-
-
     function updateGraph() {
-        const rateMin = 5 / 100; // Set minimum rate to 5%
-        const rateMax = 50 / 100; // Set maximum rate to 50%
+        const minRateInput = document.getElementById('min_rate').value;
+        const maxRateInput = document.getElementById('max_rate').value;
+
+        // Convert input values to percentages (divided by 100)
+        const rateMin = parseFloat(minRateInput) / 100;
+        const rateMax = parseFloat(maxRateInput) / 100;
 
         let dataPoints = [];
         for (let u = 0; u <= 1; u += 0.01) {
