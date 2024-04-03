@@ -4,7 +4,7 @@ The vault is an **implementation of a [ERC-4626](https://ethereum.org/developers
 
 ERC-4626 vaults are **yield-bearing**, meaning the shares received when depositing assets increase in value due to the interest earned from lending out assets. The share balance does not increase, only its value. **Shares are transferable**.
 
-It is a standard (non-blueprint) contract which also creates AMM and Controller using `initialize()`.
+It is a proxy contract (EIP1167-compliant) duplicating the logic of the factory's vault implementation contract. Upon initialization it also creates the market's AMM and Controller using blueprint contracts.
 
 ??? quote "`initialize()`"
 
