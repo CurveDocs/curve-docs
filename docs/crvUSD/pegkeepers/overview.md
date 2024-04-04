@@ -10,10 +10,11 @@
 
 PegKeepers are specialized contracts **designed to maintain the stability of the crvUSD peg**. They hold a pre-minted supply of crvUSD tokens to be utilized for peg stabilization efforts. The operation of PegKeepers is **restricted to only two actions: depositing and withdrawing from liquidity pools**. As long as these pre-minted crvUSD tokens are not deposited anywhere, they can and should be counted as out-of-circulation.
 
-These contracts are each associated with a specific liquidity pool that includes crvUSD and another fiat-redeemable USD stablecoin.  
+These contracts are each associated with a specific liquidity pool that includes crvUSD and another fiat-redeemable USD stablecoin.
+
 The basic idea of PegKeepers revolves around monitoring the price of crvUSD and the balances of the linked pools and taking corresponding actions. When the **price of crvUSD exceeds 1.0**, indicating a deviation towards the upside, PegKeepers **deposit their crvUSD** into their linked pool and, in exchange, receive LP tokens. This action increases the crvUSD balance within the pool, thus exerting downward pressure on its price and aiding in peg stabilization.
 
-Conversely, should the crvUSD **price drop below 1.0**, signaling a downward peg deviation, PegKeepers are **permitted to burn their LP tokens and withdraw crvUSD** from the pool to reduce the balance within it and push the price back towards parity. This withdrawal mechanism is contingent on the PegKeeper having previously deposited crvUSD into the pool, as the contract must have LP tokens to burn in the process.
+Conversely, should the crvUSD **price drop below 1.0**, signaling a downward peg deviation, PegKeepers are **permitted to burn their LP tokens and withdraw crvUSD** from the pool to reduce the balance within it and push the price back towards parity. This withdrawal mechanism is contingent on the PegKeeper having previously deposited crvUSD into the pool, as the **contract must have LP tokens to burn in the process**.
 
 Moreover, the **`update` function** that deposits and withdraws crvUSD is **callable by any EOA or smart contract**. To foster engagement, callers are rewarded with a caller share as an incentive.
 
@@ -125,5 +126,4 @@ The critical operation is the **comparison between `largest_price` and the resul
 
 If `largest_price` is found to be lower than the difference, it **indicates a potential depegging scenario**. In response, the Regulator contract **proactively blocks any further deposits** of crvUSD to preemptively address the depeg risk.
 
-This safeguard acts as a bulwark against significant price divergences between the highest observed price (largest_price) and the target price, with the worst_price_threshold serving as a key variable in this evaluation. Failure to align with this safeguard (i.e., when largest_price significantly undercuts the threshold) triggers a halt in operations, as indicated by a return value of 0. Such a mechanism is vital for mitigating risks tied to price volatility, thereby ensuring the system's stability and preserving the integrity of pegged relationships.
-
+This safeguard acts as a bulwark against significant price divergences between the highest observed price (`largest_price`) and the target price, with the `worst_price_threshold` serving as a key variable in this evaluation. Failure to align with this safeguard (i.e., when `largest_price` significantly undercuts the threshold) triggers a halt in operations, as indicated by a return value of 0. Such a mechanism is vital for mitigating risks tied to price volatility, thereby ensuring the system's stability and preserving the integrity of pegged relationships.

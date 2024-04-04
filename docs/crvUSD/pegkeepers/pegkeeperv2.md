@@ -754,8 +754,6 @@ More on the Regulator contract [here](./regulator.md).
 
 ## **Contract Ownership**
 
-Ownership of the PegKeepers follow the standart procedere. Change of ownership first needs to be commited by the `admin` and then the changes need to be applied by the `future_admin`, which is specified when committing.
-
 Ownership of the PegKeepers adheres to the standard procedure. The transition of ownership can only be done by the `admin`. Following this commit, the designated `future_admin`, specified at the time of commitment, is required to apply the changes to complete the change of ownership.
 
 

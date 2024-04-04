@@ -6,7 +6,7 @@
 
 The regulator contract supervises prices and other parameters telling whether the PegKeeper are allowed to provide or withdraw crvUSD.
 
-Technically speaking, allowance is always granted but if certain checks do not pass, the Regulator will allow an amount of 0, which in return can be seen an not allowing anything to deposit or withdraw.
+Technically speaking, allowance is always granted but if certain checks do not pass, the Regulator will allow an amount of 0, which in return can be seen as not allowing anything to deposit or withdraw.
 
 
 ---
@@ -521,9 +521,9 @@ A PegKeeper can be added by the `admin` through the `add_peg_keepers` function a
 ### `peg_keepers`
 !!! description "`PegKeeperRegulator.peg_keepers(arg0: uint256) -> address: view`"
 
-    Getter for all PegKeepers which are regulated by this contract.
+    Getter for the PegKeepers at index `arg0` which are regulated by this contract.
 
-    Returns: todo
+    Returns: PegKeeper (`address`).
 
     | Input  | Type      | Description |
     | ------ | --------- | ----------- |
@@ -555,7 +555,7 @@ A PegKeeper can be added by the `admin` through the `add_peg_keepers` function a
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
 
-    Function to add a PegKeeper contract to the Regulator. Simultaneously, the pegkeeper is added to the `peg_keepers` list and indexed in `peg_keeper_i`.
+    Function to add a PegKeeper contract to the Regulator. Simultaneously, the PegKeeper is added to the `peg_keepers` list and indexed in `peg_keeper_i`.
 
     Emits: `AddPegKeeper`
 
@@ -671,21 +671,21 @@ A PegKeeper can be added by the `admin` through the `add_peg_keepers` function a
 
 ## **Pausing and Unpausing PegKeepers**
 
-"Killing" in this context refers to pausing or unpausing PegKeepers. If the Regulator is "killed," the Regulator contract does not allow the PegKeeper to do one or both, provide or withdraw crvUSD. Both actions, providing and withdrawing, can be killed separately. For example, the regulator can kill the permission to provide any additional crvUSD to pools but can keep the withdrawing "unkilled" so withdrawing is still possible.
+In this context, 'killing' refers to either pausing or unpausing PegKeepers. When the Regulator is 'killed,' it means that the Regulator contract restricts the PegKeeper from performing one or both of the following actions: providing or withdrawing crvUSD. Both actions, providing and withdrawing, can be killed separately. For example, the Regulator can kill the permission to provide any additional crvUSD to pools but can keep the withdrawing action "unkilled" so that it is still possible to load off debt.
 
 Only `admin` and `emergency_admin` are allowed to kill. The former is the Curve DAO, and the latter is the EmergencyDAO.
 
 
 ### `is_killed`
-!!! description "`PegKeeperRegulator.is_killed(arg: uint256) -> bool: view`"
+!!! description "`PegKeeperRegulator.is_killed(arg0: uint256) -> bool: view`"
 
     Getter to check if the Regulator allows providing or withdrawing.
 
-    Returns: todo
+    Returns: true or false (`bool`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_pool` |  `address` | Pool address |
+    | `_pool` |  `address` | PegKeeper address. |
 
     ??? quote "Source code"
 
@@ -717,8 +717,8 @@ Only `admin` and `emergency_admin` are allowed to kill. The former is the Curve 
     There are four options for pausing/unpausing, depending on the value set for the `Killed` enum:
 
       - `0` -> provide and withdraw allowed
-      - `1` -> provide pause, withdraw allowed
-      - `2` -> provide allowed, withdraw pause
+      - `1` -> provide paused, withdraw allowed
+      - `2` -> provide allowed, withdraw paused
       - `3` -> provide and withdraw paused
 
     Emits: `SetKilled`
@@ -851,7 +851,7 @@ Both their ownerships can be transferred using the corresponding `set_admin` or 
 
 
 ### `set_emergency_admin`
-!!! description "`PegKeeperRegulator.`"
+!!! description "`PegKeeperRegulator.set_emergency_admin(_admin: address):`"
 
     Function to set a new emergency admin for the contract.
 
@@ -885,33 +885,7 @@ Both their ownerships can be transferred using the corresponding `set_admin` or 
         ```
 
 
-
-
-!!! description "`PegKeeperRegulator.`"
-
-    Function to unpause the pool `_pool`, re-enabling all functionality.
-
-    Returns:
-
-    Emits:
-
-    | Input          | Type      | Description  |
-    | -------------- | --------- | ------------ |
-    | `_peg_keepers` | `address` | Pool address |
-
-    ??? quote "Source code"
-
-        === "PegKeeperRegulator.vy"
-
-            ```vyper
-            code here
-            ```
-
-    === "Example"
-        ```shell
-        >>> PegKeeperRegulator.
-        todo
-        ```
+---
 
 
 ## **Contract Info Methods**
@@ -951,7 +925,7 @@ Both their ownerships can be transferred using the corresponding `set_admin` or 
 ### `stablecoin`
 !!! description "`PegKeeperRegulator.stablecoin() -> ERC20:`"
 
-    Getter for the stablecoin the PegKeeper stalalizes, which is crvUSD. This address is set when intializing the contract and can not be changed.
+    Getter for the stablecoin the PegKeeper stabilizes, which is crvUSD. This address is set when intializing the contract and can not be changed.
 
     Returns: stablecoin (`address`).
 
