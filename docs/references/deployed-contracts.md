@@ -218,6 +218,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 !!!deploy "Source Code"
     Source code is available on [GitHub](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges/sidechain).
 
+The `RootLiquidityGaugeFactory` contract on Ethereum is utilized across a majority of sidechains, with the exception of Fraxtal, Binance Smart Chain, Avalanche, and Fantom. Each of these networks hosts its own version of the `RootLiquidityGaugeFactory` contract. While the functionality across these contracts remains consistent, they differ in their contract addresses.
+
 | Type | Chain | Contract Address |
 | ---- | ----- | ------- |
 | `RootLiquidityGaugeFactory` | :logos-ethereum: Ethereum | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://etherscan.io/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5) |
@@ -229,6 +231,12 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `veBoost - Boost Delegation V2` | :logos-polygon: Polygon | [0xb5ACC710AEDE048600E10eEDcefDf98d4aBf4B1E](https://polygonscan.com/address/0xb5ACC710AEDE048600E10eEDcefDf98d4aBf4B1E) |
 | `ChildLiquidityGaugeFactory` | :logos-base: Base | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://basescan.org/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5) |
 | `veBoost - Boost Delegation V2` | :logos-base: Base | :material-close: |
+| :logos-fraxtal: `RootLiquidityGaugeFactory` | :logos-ethereum: Ethereum | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c](https://etherscan.io/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c) |
+| `ChildLiquidityGaugeFactory` | :logos-fraxtal: Fraxtal | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c](https://fraxscan.com/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c) |
+| `veBoost - Boost Delegation V2` | :logos-fraxtal: Fraxtal | :material-close: |
+| :logos-bsc: `RootLiquidityGaugeFactory` | :logos-ethereum: Ethereum | [0xDb205f215f568ADf21b9573b62566f6d9a40bed6](https://etherscan.io/address/0xDb205f215f568ADf21b9573b62566f6d9a40bed6) |
+| `ChildLiquidityGaugeFactory` | :logos-bsc: BinanceSmartChain | [0xDb205f215f568ADf21b9573b62566f6d9a40bed6](https://bscscan.com/address/0xDb205f215f568ADf21b9573b62566f6d9a40bed6) |
+| `veBoost - Boost Delegation V2` | :logos-bsc: BinanceSmartChain | :material-close: |
 | `ChildLiquidityGaugeFactory` | :logos-gnosis: Gnosis | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://gnosisscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
 | `veBoost - Boost Delegation V2` | :logos-gnosis: Gnosis | [0xefde221f306152971d8e9f181bfe998447975810](https://gnosisscan.io/address/0xefde221f306152971d8e9f181bfe998447975810) |
 | `ChildLiquidityGaugeFactory` | :logos-celo: Celo | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://celoscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
