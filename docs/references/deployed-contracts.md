@@ -231,10 +231,10 @@ The `RootLiquidityGaugeFactory` contract on Ethereum is utilized across a majori
 | `veBoost - Boost Delegation V2` | :logos-polygon: Polygon | [0xb5ACC710AEDE048600E10eEDcefDf98d4aBf4B1E](https://polygonscan.com/address/0xb5ACC710AEDE048600E10eEDcefDf98d4aBf4B1E) |
 | `ChildLiquidityGaugeFactory` | :logos-base: Base | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://basescan.org/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5) |
 | `veBoost - Boost Delegation V2` | :logos-base: Base | :material-close: |
-| `RootLiquidityGaugeFactory` | :logos-fraxtal:/:logos-ethereum: Fraxtal | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c](https://etherscan.io/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c) |
+| :logos-fraxtal: `RootLiquidityGaugeFactory` | :logos-ethereum: Ethereum | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c](https://etherscan.io/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c) |
 | `ChildLiquidityGaugeFactory` | :logos-fraxtal: Fraxtal | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c](https://fraxscan.com/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c) |
 | `veBoost - Boost Delegation V2` | :logos-fraxtal: Fraxtal | :material-close: |
-| `RootLiquidityGaugeFactory` | :logos-bsc:/:logos-ethereum: BinanceSmartChain | [0xDb205f215f568ADf21b9573b62566f6d9a40bed6](https://etherscan.io/address/0xDb205f215f568ADf21b9573b62566f6d9a40bed6) |
+| :logos-bsc: `RootLiquidityGaugeFactory` | :logos-ethereum: Ethereum | [0xDb205f215f568ADf21b9573b62566f6d9a40bed6](https://etherscan.io/address/0xDb205f215f568ADf21b9573b62566f6d9a40bed6) |
 | `ChildLiquidityGaugeFactory` | :logos-bsc: BinanceSmartChain | [0xDb205f215f568ADf21b9573b62566f6d9a40bed6](https://bscscan.com/address/0xDb205f215f568ADf21b9573b62566f6d9a40bed6) |
 | `veBoost - Boost Delegation V2` | :logos-bsc: BinanceSmartChain | :material-close: |
 | `ChildLiquidityGaugeFactory` | :logos-gnosis: Gnosis | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://gnosisscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
