@@ -168,6 +168,17 @@ nav:
     - MetaRegistry API: registry/MetaRegistryAPI.md
     - Admin Controls: registry/admin-controls.md
 
+
+  - Curve Cross Chain:
+    - Overview: curve-x/overview.md
+    - Governance:
+      - Overview: curve-x/curve-xgov/overview.md
+      - Broadcaster: curve-x/curve-xgov/broadcaster.md
+      - Relayer: curve-x/curve-xgov/relayer.md
+      - Agents: curve-x/curve-xgov/agents.md
+      - Vault: curve-x/curve-xgov/vault.md
+
+
   - Curve API:
     - curve-api: curve-api/curve-api.md
     - curve-prices: curve-api/curve-prices.md
