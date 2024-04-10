@@ -49,7 +49,7 @@ The Agent contract act as some sort of proxy for the agents on Ethereum mainnet.
     !!!guard "Guarded Methods"
         This function can only be called by the `RELAYER` of the contract.
 
-    Function to execute a relayed message. Calling this function directly from the Agent contract will result in a reverted transcation, as it can only be called directly from the `Relayer` contract. Everyone can relay messages from there
+    Function to execute a relayed message. Calling this function directly from the Agent contract will result in a reverted transaction, as it can only be called directly from the `Relayer` contract. Everyone can relay messages from there
 
     | Input       | Type                               | Description  |
     | ----------- | ---------------------------------- | ------------ |

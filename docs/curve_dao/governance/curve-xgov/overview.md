@@ -3,12 +3,12 @@
 # **System Overview**
 
 !!!deploy "Source Code"
-    All source code can be found in the [`curve x-gov`]((../../references/deployed-contracts.md#curve-x-gov)) repository on GitHub.  
-    A comprehensive list of all deployed contracts is available [here :material-arrow-up-right:](../../references/deployed-contracts.md#curve-x-gov).
+    All source code can be found in the [`curve x-gov`](https://github.com/curvefi/curve-xgov) repository on GitHub.  
+    A comprehensive list of all deployed contracts is available [here :material-arrow-up-right:](../../../references/deployed-contracts.md#curve-x-gov).
 
 The Curve X-DAO infrastructure facilitates **cross-chain governance across multiple blockchain networks**. This architecture allows the DAO to conduct and implement governance activities not only on Ethereum but also on other networks such as `Arbitrum`, `Optimism`, `Base`, `Mantle`, `Avalanche`, `Fantom`, `BinanceSmartChain`, `Kava`, and `Polygon`. 
 
-**Governance voting is consistently conducted on the Ethereum mainnet**. Following a successful vote, the **results are transmitted** to the L2 network through a `L1-Broadcaster`. Subsequently, the intended actions are executed by `Agents` on the respective L2 networks by a `L2-Relayer`.
+**Governance voting is exclusively conducted on the Ethereum mainnet**. Following a successful vote, the **results are transmitted** to the L2 network through a `L1-Broadcaster`. Subsequently, the intended actions are executed by `Agents` on the respective L2 networks by a `L2-Relayer`.
 
 
 <div align="center">

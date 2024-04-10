@@ -9,12 +9,12 @@
     - [:material-github: `OptimismRelayer.vy`](https://github.com/curvefi/curve-xgov/blob/master/contracts/optimism/OptimismRelayer.vy) for Optimism and Optimistic Rollups
     - [:material-github: `XYZRelayer.vy`](https://github.com/curvefi/curve-xgov/blob/master/contracts/xyz/XYZRelayer.vy) for all other chains
 
-    A comprehensive list of all deployed contracts is available [here :material-arrow-up-right:](../../references/deployed-contracts.md#curve-x-gov).
+    A comprehensive list of all deployed contracts is available [here :material-arrow-up-right:](../../../references/deployed-contracts.md#curve-x-gov).
 
 
 The L2 Relayer contract acts as a middleman, receiving messages and relaying them to the specific agent (`ownership`, `parameter`, or `emergency`).
 
-The Relayer receives the broadcasted message and, using the `relay` function, forwards this message to the appropriate agent. The agents defined in the L2 Relayer contract (`OWNERSHIP_AGENT`, `PARAMETER_AGENT`, `EMERGENCY_AGENT`) are responsible for executing the calldata in the message.
+The Relayer receives the broadcasted message and, using the `relay` function, forwards this message to the appropriate agent. The agents defined in the L2 Relayer contract (`OWNERSHIP_AGENT`, `PARAMETER_AGENT`, `EMERGENCY_AGENT`) are responsible for executing the `calldata` in the message.
 
 !!!warning
     A Relayer's agent addresses cannot be altered. Once choosen, there is no way back.
@@ -38,9 +38,9 @@ The Relayer receives the broadcasted message and, using the `relay` function, fo
 
 ## **Relaying Messages**
 
-The source code of the relay function might differ slightly depending on the kind of relayer used. The general idea of it although stays the same:
+The source code of the `relay` function may vary slightly depending on the type of `Relayer` used. However, the general concept remains consistent:
 
-A message is broadcasted through the `Broadcaster` contract from L1 to L2, where the `Relayer` relays the message and executes it throught the according agent.
+A message is broadcast through the `Broadcaster` contract from L1 to L2, where the `Relayer` relays the message and executes it via the corresponding agent.
 
 
 ### `relay`

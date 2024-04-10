@@ -1,16 +1,16 @@
 <h1>L1 Broadcaster</h1>
 
-Once the governance vote on Ethereum Mainnet is concluded, a according **sequence of messages need to be communicated to the Layer 2**. This is done via the Broadcaster's `broadcast` function.
+Once the governance vote on Ethereum Mainnet is concluded, a corresponding **sequence of messages needs to be communicated to the Layer 2**. This is done via the Broadcaster's `broadcast` function.
 
 !!!github "GitHub"
 
-    Because L2's provide different infrastructures to broadcast messages, there are three slighlty different version for the `Broadcaster.vy` contract:
+    Because L2's provide different infrastructures to broadcast messages, there are three slighlty different versions for the `Broadcaster.vy` contract:
 
     - [:material-github: `ArbitrumBroadcaster.vy`](https://github.com/curvefi/curve-xgov/blob/master/contracts/arbitrum/ArbitrumBroadcaster.vy) for Arbitrum:
     - [:material-github: `OptimismBroadcaster.vy`](https://github.com/curvefi/curve-xgov/blob/master/contracts/optimism/OptimismBroadcaster.vy) for Optimism and Optimistic Rollups
     - [:material-github: `XYZBroadcaster.vy`](https://github.com/curvefi/curve-xgov/blob/master/contracts/xyz/XYZBroadcaster.vy) for all other chains
 
-    A comprehensive list of all deployed contracts is available [here :material-arrow-up-right:](../../references/deployed-contracts.md#curve-x-gov).
+    A comprehensive list of all deployed contracts is available [here :material-arrow-up-right:](../../../references/deployed-contracts.md#curve-x-gov).
 
 
 ---
