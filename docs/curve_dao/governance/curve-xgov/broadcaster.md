@@ -6,7 +6,7 @@ Once the governance vote on Ethereum Mainnet is concluded, a corresponding **seq
 
     Because L2's provide different infrastructures to broadcast messages, there are three slighlty different versions for the `Broadcaster.vy` contract:
 
-    - [:material-github: `ArbitrumBroadcaster.vy`](https://github.com/curvefi/curve-xgov/blob/master/contracts/arbitrum/ArbitrumBroadcaster.vy) for Arbitrum:
+    - [:material-github: `ArbitrumBroadcaster.vy`](https://github.com/curvefi/curve-xgov/blob/master/contracts/arbitrum/ArbitrumBroadcaster.vy) for Arbitrum
     - [:material-github: `OptimismBroadcaster.vy`](https://github.com/curvefi/curve-xgov/blob/master/contracts/optimism/OptimismBroadcaster.vy) for Optimism and Optimistic Rollups
     - [:material-github: `XYZBroadcaster.vy`](https://github.com/curvefi/curve-xgov/blob/master/contracts/xyz/XYZBroadcaster.vy) for all other chains
 

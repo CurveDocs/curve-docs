@@ -2,7 +2,7 @@
 
 # **System Overview**
 
-!!!deploy "Source Code"
+!!!github "GitHub"
     All source code can be found in the [`curve x-gov`](https://github.com/curvefi/curve-xgov) repository on GitHub.  
     A comprehensive list of all deployed contracts is available [here :material-arrow-up-right:](../../../references/deployed-contracts.md#curve-x-gov).
 
