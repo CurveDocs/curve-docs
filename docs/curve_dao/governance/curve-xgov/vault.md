@@ -5,6 +5,9 @@ The `Vault` contract is a straightforward smart contract designed to enable the 
 
 This contract is directly controlled by the `owner`, which is the ownership agent ([more here](./agents.md)) of the respective chain.
 
+!!!github "GitHub"
+    The source code of the `Vault.vy` contract can be found on [GitHub :material-github:](https://github.com/curvefi/curve-xgov/blob/master/contracts/Vault.vy).
+
 
 ---
 

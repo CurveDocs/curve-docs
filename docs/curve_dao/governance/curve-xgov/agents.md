@@ -11,6 +11,9 @@ The Agent contract act as some sort of proxy for the agents on Ethereum mainnet.
 - **`Emergency Agent`**, which handles emergency actions.
 
 
+!!!github "GitHub"
+    The source code of the `Agent.vy` contract can be found on [GitHub :material-github:](https://github.com/curvefi/curve-xgov/blob/master/contracts/Agent.vy).
+
 ---
 
 
