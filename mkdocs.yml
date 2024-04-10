@@ -164,7 +164,7 @@ nav:
         - Overview: curve_dao/governance/curve-xgov/overview.md
         - Broadcaster.vy: curve_dao/governance/curve-xgov/broadcaster.md
         - Relayer.vy: curve_dao/governance/curve-xgov/relayer.md
-        - Agents.vy: curve_dao/governance/curve-xgov/agents.md
+        - Agent.vy: curve_dao/governance/curve-xgov/agents.md
         - Vault.vy: curve_dao/governance/curve-xgov/vault.md
     - Exchange Router: curve_dao/router/router.md
 
