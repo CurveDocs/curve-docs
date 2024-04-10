@@ -157,9 +157,15 @@ nav:
       - PoolProxy: curve_dao/ownership-proxy/PoolProxy.md
       - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
       - RootChainGaugeProxy: curve_dao/ownership-proxy/RootChainGaugeFactoryProxy.md
+
     - Governance and Voting:  
       - Overview: curve_dao/governance/overview.md
-      - Crosschain Governance: curve_dao/xgov/xgov.md
+      - Crosschain Governance:
+        - Overview: curve_dao/governance/curve-xgov/overview.md
+        - Broadcaster.vy: curve_dao/governance/curve-xgov/broadcaster.md
+        - Relayer.vy: curve_dao/governance/curve-xgov/relayer.md
+        - Agent.vy: curve_dao/governance/curve-xgov/agents.md
+        - Vault.vy: curve_dao/governance/curve-xgov/vault.md
     - Exchange Router: curve_dao/router/router.md
 
 
@@ -167,6 +173,7 @@ nav:
     - Overview: registry/overview.md
     - MetaRegistry API: registry/MetaRegistryAPI.md
     - Admin Controls: registry/admin-controls.md
+
 
   - Curve API:
     - curve-api: curve-api/curve-api.md
