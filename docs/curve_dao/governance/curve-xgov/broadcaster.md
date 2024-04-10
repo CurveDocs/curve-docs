@@ -1,6 +1,6 @@
 <h1>L1 Broadcaster</h1>
 
-Once the governance vote on Ethereum Mainnet is concluded, the **sequence of messages need to be communicated to the Layer 2**. This is done via the Broadcaster's `broadcast` function.
+Once the governance vote on Ethereum Mainnet is concluded, a according **sequence of messages need to be communicated to the Layer 2**. This is done via the Broadcaster's `broadcast` function.
 
 !!!github "GitHub"
 
@@ -468,9 +468,9 @@ This contract is responsible for broadcasting messages across several blockchain
 
 The `Broadcaster` contracts are managed by three admins, defined as follows:
 
-- **Ownership Admin**: [0x40907540d8a6C65c637785e8f8B742ae6b0b9968](https://etherscan.io/address/0x40907540d8a6C65c637785e8f8B742ae6b0b9968) - Responsible for overall ownership and high-level changes.
-- **Parameter Admin**: [0x4EEb3bA4f221cA16ed4A0cC7254E2E32DF948c5f](https://etherscan.io/address/0x4EEb3bA4f221cA16ed4A0cC7254E2E32DF948c5f) - Manages contract parameters and operational settings.
-- **Emergency Admin**: [0x467947EE34aF926cF1DCac093870f613C96B1E0c](https://etherscan.io/address/0x467947EE34aF926cF1DCac093870f613C96B1E0c) - Handles emergency actions and immediate response requirements.
+- **Ownership Admin**: [`0x40907540d8a6C65c637785e8f8B742ae6b0b9968`](https://etherscan.io/address/0x40907540d8a6C65c637785e8f8B742ae6b0b9968) - Responsible for overall ownership and high-level changes.
+- **Parameter Admin**: [`0x4EEb3bA4f221cA16ed4A0cC7254E2E32DF948c5f`](https://etherscan.io/address/0x4EEb3bA4f221cA16ed4A0cC7254E2E32DF948c5f) - Manages contract parameters and operational settings.
+- **Emergency Admin**: [`0x467947EE34aF926cF1DCac093870f613C96B1E0c`](https://etherscan.io/address/0x467947EE34aF926cF1DCac093870f613C96B1E0c) - Handles emergency actions and immediate response requirements.
 
 
 !!!warning "Upgradable Ownership"

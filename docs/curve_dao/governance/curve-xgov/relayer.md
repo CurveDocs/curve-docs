@@ -3,21 +3,24 @@
 
 
 !!!github "GitHub"
-    The source code for the `Relayers` slightly differ depending on the chain its deployed to.
+    The source code for the `Relayer.vy` contract slightly differ depending on the chain its deployed to.
 
-    - `ArbitrumRelayer.vy` for Arbitrum: https://github.com/curvefi/curve-xgov/blob/master/contracts/arbitrum/ArbitrumRelayer.vy
-    - `OptimismRelayer.vy` for Optimism and Optimistic Rollups: https://github.com/curvefi/curve-xgov/blob/master/contracts/optimism/OptimismRelayer.vy
-    - `XYZRelayer.vy`for all other chains: https://github.com/curvefi/curve-xgov/blob/master/contracts/xyz/XYZRelayer.vy
+    - [:material-github: `ArbitrumRelayer.vy`](https://github.com/curvefi/curve-xgov/blob/master/contracts/arbitrum/ArbitrumRelayer.vy) for Arbitrum
+    - [:material-github: `OptimismRelayer.vy`](https://github.com/curvefi/curve-xgov/blob/master/contracts/optimism/OptimismRelayer.vy) for Optimism and Optimistic Rollups
+    - [:material-github: `XYZRelayer.vy`](https://github.com/curvefi/curve-xgov/blob/master/contracts/xyz/XYZRelayer.vy) for all other chains
+
+    A comprehensive list of all deployed contracts is available [here :material-arrow-up-right:](../../references/deployed-contracts.md#curve-x-gov).
 
 
 The L2 Relayer contract acts as a middleman, receiving messages and relaying them to the specific agent (`ownership`, `parameter`, or `emergency`).
 
-The Relayer receives the broadcasted message and, using the `relay` function, forwards this message to the appropriate agent. The agents defined in the L2 Relayer contract (`OWNERSHIP_AGENT`, `PARAMETER_AGENT`, `EMERGENCY_AGENT`) are responsible for executing the instructions contained in the message.
+The Relayer receives the broadcasted message and, using the `relay` function, forwards this message to the appropriate agent. The agents defined in the L2 Relayer contract (`OWNERSHIP_AGENT`, `PARAMETER_AGENT`, `EMERGENCY_AGENT`) are responsible for executing the calldata in the message.
+
+!!!warning
+    A Relayer's agent addresses cannot be altered. Once choosen, there is no way back.
 
 
-
-
-The contract utilizes `Messenger` contacts:
+*The contract utilizes chain dependent `Messenger` contacts:*
 
 
 | Chain                         | Description               | Messenger Contract |
@@ -28,13 +31,6 @@ The contract utilizes `Messenger` contacts:
 | :logos-mantle: Mantle         | L2 Cross Chain Domain Messenger | [0x4200000000000000000000000000000000000007](https://explorer.mantle.xyz/address/0x4200000000000000000000000000000000000007) |
 | :logos-bsc: BinanceSmartChain | MessageDigestProver | [0xbfF1f56c8e48e2F2F52941e16FEecc76C49f1825](https://bscscan.com/address/0xbfF1f56c8e48e2F2F52941e16FEecc76C49f1825) |
 | :logos-fantom: Fantom         | MessageDigestProver | [0xAb0ab357a10c0161002A91426912933750082A9d](https://ftmscan.com/address/0xAb0ab357a10c0161002A91426912933750082A9d) |
-| :logos-avalanche: Avalanche   | not verified | []() |
-| :logos-kava: Kava             | not verified | []() |
-| :logos-polygon: Polygon       | not verified | []() |
-
-
-!!!warning
-    A Relayer's agent addresses cannot be altered. Once choosen, there is no way back.
 
 
 ---

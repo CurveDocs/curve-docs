@@ -1,12 +1,14 @@
 
+<h1>L2 Agents</h1>
+
 The Agent contract act as some sort of proxy for the agents on Ethereum mainnet. Relayed votes are directly executed from the Relayer contract itself. 
 
 
-There are three different agent contracts:
+*There are three different agent contracts:*
 
-- `Ownership Agent`, which executes ownership votes like changing ownership of contracts.
-- `Parameter Agent`, which can executes vote on parameter changes of pools and other contracts.
-- `Emergency Agent`, which todo
+- **`Ownership Agent`**, which manages the ownership of contracts.
+- **`Parameter Agent`**, which manages contract parameters
+- **`Emergency Agent`**, which handles emergency actions.
 
 
 ---
@@ -83,6 +85,5 @@ There are three different agent contracts:
 
     === "Example"
         ```shell
-        >>> Agent.execute('_message'):
-        todo
+        >>> soon
         ```

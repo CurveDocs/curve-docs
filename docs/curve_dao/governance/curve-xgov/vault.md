@@ -1,16 +1,17 @@
 <h1>L2 Vault</h1>
 
 
-The `Vault` contract is a simple smart contract designed to enable the DAO to **manage chain-native assets and ERC-20** tokens across blockchains other than Ethereum.
+The `Vault` contract is a straightforward smart contract designed to enable the DAO to **manage chain-native assets and ERC-20 tokens** across blockchains other than Ethereum.
 
-This contract is directly controlled by the `owner`, which is the the ownership agent ([more here](./agents.md)) on the respective chain.
+This contract is directly controlled by the `owner`, which is the ownership agent ([more here](./agents.md)) of the respective chain.
+
 
 ---
 
+
 ## **Transferring Assets**
 
-
-The contract has a **simple transfer function** that allows the owner to transfer tokens out of the vault.
+The contract features a simple **transfer function** that allows the owner to transfer tokens out of the Vault.
 
 
 `transfer`
@@ -63,7 +64,7 @@ The contract has a **simple transfer function** that allows the owner to transfe
 
 ## **Contract Ownership**
 
-Ownership of the vault contract resembles the classic model of contract ownership. There is an `owner` address, which can be changed by first committing a future owner and then applying the changes.
+Ownership of the Vault contract follows the classic model of contract ownership. It includes an `owner` address, which can be updated by first committing a future owner and then applying the changes.
 
 !!!notebook "Jupyter Notebook"
-    For a basic demonstration of how to change the ownership of the vault, please refer to the following example: https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/basic/ownership.ipynb
+    For a basic demonstration of how to change the ownership of the Vault, please refer to the following example: https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/basic/ownership.ipynb
