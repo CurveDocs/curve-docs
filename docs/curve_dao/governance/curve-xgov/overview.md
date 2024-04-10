@@ -18,7 +18,7 @@ flowchart LR
     l2-r --- |relay| o([Ownership Agent])
     l2-r --- |relay| p([Parameter Agent])
     l2-r --- |relay| e([Emergency Agent])
-    o --> |"execute"| vault[(L2-Vault / Contract)]
+    o --> |"execute"| vault[(L2 Contract)]
     p --> |"execute"| vault
     e --> |"execute"| vault
 ```
