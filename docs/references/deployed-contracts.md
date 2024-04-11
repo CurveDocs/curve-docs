@@ -38,7 +38,7 @@ Curve DAO consists of multiple smart contracts connected by [Aragon](https://git
 | :logos-polygon: **Polygon**       | [0x172370d5Cd63279eFa6d502DAB29171933a610AF](https://polygonscan.com/address/0x172370d5cd63279efa6d502dab29171933a610af) | [**Polygon Bridge**](https://wallet.polygon.technology/bridge/)​ |
 | :logos-gnosis: **Gnosis**         | [0x712b3d230F3C1c19db860d80619288b1F0BDd0Bd](https://gnosisscan.io/address/0x712b3d230f3c1c19db860d80619288b1f0bdd0bd) | [**xDai Bridge**](https://bridge.xdaichain.com/)​ |
 | :logos-gnosis: **Gnosis**         | [0x712b3d230F3C1c19db860d80619288b1F0BDd0Bd](https://gnosisscan.io/address/0x712b3d230f3c1c19db860d80619288b1f0bdd0bd) | [**Omni Bridge**](https://omni.xdaichain.com/bridge)​ |
-| :logos-avalanche: **Avalanche**​   | [0x47536F17F4fF30e64A96a7555826b8f9e66ec468](https://snowtrace.io/address/0x47536f17f4ff30e64a96a7555826b8f9e66ec468) | [**<mark style="background-color: #f31743; color: black">Multichain</mark>**](https://multichain.org/)​ |
+| :logos-avalanche: **Avalanche**​   | [0x47536F17F4fF30e64A96a7555826b8f9e66ec468](https://snowscan.xyz/address/0x47536F17F4fF30e64A96a7555826b8f9e66ec468) | [**<mark style="background-color: #f31743; color: black">Multichain</mark>**](https://multichain.org/)​ |
 | :logos-fantom: **Fantom**​         | [0x1E4F97b9f9F913c46F1632781732927B9019C68b](https://ftmscan.com/address/0x1e4f97b9f9f913c46f1632781732927b9019c68b) | [**<mark style="background-color: #f31743; color: black">Multichain</mark>**](https://multichain.org/)​ |
 | :logos-celo: **Celo**​             | [0x173fd7434B8B50dF08e3298f173487ebDB35FD14](https://explorer.celo.org/mainnet/address/0x173fd7434B8B50dF08e3298f173487ebDB35FD14) | [**<mark style="background-color: #f31743; color: black">Multichain</mark>**](https://multichain.org/)​ |
 
@@ -160,14 +160,14 @@ Burners are a crucial element of the fee payout system in Curve. They convert th
 
 | Burner Type       | Contract Address                                       |
 | :---------------: | :----------------------------------------------------: |
-| `LPBurner`        | [0x2c2fc48c3404a70f2d33290d5820edf49cbf74a5](https://snowtrace.io/address/0x2c2fc48c3404a70f2d33290d5820edf49cbf74a5#code) |
-| `LPBurner`        | [0x8038C01A0390a8c547446a0b2c18fc9aEFEcc10c](https://snowtrace.io/address/0x8038C01A0390a8c547446a0b2c18fc9aEFEcc10c#code) |
-| `avTokenBurner`   | [0x61E10659fe3aa93d036d099405224E4Ac24996d0](https://snowtrace.io/address/0x61E10659fe3aa93d036d099405224E4Ac24996d0#code) |
-| `avTokenBurner`   | [0xcF897d9C8F9174F08f30084220683948B105D1B1](https://snowtrace.io/address/0xcF897d9C8F9174F08f30084220683948B105D1B1#code) |
-| `BTC Burner`      | [0xE6358f6a45B502477e83CC1CDa759f540E4459ee](https://snowtrace.io/address/0xE6358f6a45B502477e83CC1CDa759f540E4459ee#code) |
-| `ETH Burner`      | [0xd7d147c6Bb90A718c3De8C0568F9B560C79fa416](https://snowtrace.io/address/0xd7d147c6Bb90A718c3De8C0568F9B560C79fa416#code) |
-| `Swap Burner`     | [0x6a2691068C7CbdA03292Ba0f9c77A25F658bAeF5](https://snowtrace.io/address/0x6a2691068C7CbdA03292Ba0f9c77A25F658bAeF5#code) |
-| `BridgeContract`  | [0xa218ed442715fc42ac96a6323b47538684a36e4b](https://snowtrace.io/address/0xa218ed442715fc42ac96a6323b47538684a36e4b#code) |
+| `LPBurner`        | [0x2c2fc48c3404a70f2d33290d5820edf49cbf74a5](https://snowscan.xyz/address/0x2c2fc48c3404a70f2d33290d5820edf49cbf74a5#code) |
+| `LPBurner`        | [0x8038C01A0390a8c547446a0b2c18fc9aEFEcc10c](https://snowscan.xyz/address/0x8038C01A0390a8c547446a0b2c18fc9aEFEcc10c#code) |
+| `avTokenBurner`   | [0x61E10659fe3aa93d036d099405224E4Ac24996d0](https://snowscan.xyz/address/0x61E10659fe3aa93d036d099405224E4Ac24996d0#code) |
+| `avTokenBurner`   | [0xcF897d9C8F9174F08f30084220683948B105D1B1](https://snowscan.xyz/address/0xcF897d9C8F9174F08f30084220683948B105D1B1#code) |
+| `BTC Burner`      | [0xE6358f6a45B502477e83CC1CDa759f540E4459ee](https://snowscan.xyz/address/0xE6358f6a45B502477e83CC1CDa759f540E4459ee#code) |
+| `ETH Burner`      | [0xd7d147c6Bb90A718c3De8C0568F9B560C79fa416](https://snowscan.xyz/address/0xd7d147c6Bb90A718c3De8C0568F9B560C79fa416#code) |
+| `Swap Burner`     | [0x6a2691068C7CbdA03292Ba0f9c77A25F658bAeF5](https://snowscan.xyz/address/0x6a2691068C7CbdA03292Ba0f9c77A25F658bAeF5#code) |
+| `BridgeContract`  | [0xa218ed442715fc42ac96a6323b47538684a36e4b](https://snowscan.xyz/address/0xa218ed442715fc42ac96a6323b47538684a36e4b#code) |
 
 
 
@@ -202,7 +202,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-fraxtal: `Fraxtal` | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://fraxscan.com/address/0x4f37A9d177470499A2dD084621020b023fcffc1F#code) |
 | :logos-polygon: `Polygon` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://polygonscan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-gnosis: `Gnosis (xDAI)` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://gnosisscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
-| :logos-avalanche: `Avalanche` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://snowtrace.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
+| :logos-avalanche: `Avalanche` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://snowscan.xyz/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-fantom: `Fantom` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://ftmscan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-bsc: `Binance Smart Chain` | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://bscscan.com/address/0x69522fb5337663d3B4dFB0030b881c1A750Adb4f#code) |
 | :logos-kava: `Kava` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://kavascan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D/contracts#address-tabs) |
@@ -241,8 +241,8 @@ The `RootLiquidityGaugeFactory` contract on Ethereum is utilized across a majori
 | `veBoost - Boost Delegation V2` | :logos-gnosis: Gnosis | [0xefde221f306152971d8e9f181bfe998447975810](https://gnosisscan.io/address/0xefde221f306152971d8e9f181bfe998447975810) |
 | `ChildLiquidityGaugeFactory` | :logos-celo: Celo | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://celoscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
 | `veBoost - Boost Delegation V2` | :logos-celo: Celo | :material-close: |
-| `ChildLiquidityGaugeFactory` | :logos-avalanche: Avalanche | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://snowtrace.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
-| `veBoost - Boost Delegation V2` | :logos-avalanche: Avalanche | [0xc55837710bc500f1e3c7bb9dd1d51f7c5647e657](https://snowtrace.io/address/0xc55837710bc500f1e3c7bb9dd1d51f7c5647e657) |
+| `ChildLiquidityGaugeFactory` | :logos-avalanche: Avalanche | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://snowscan.xyz/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
+| `veBoost - Boost Delegation V2` | :logos-avalanche: Avalanche | [0xc55837710bc500f1e3c7bb9dd1d51f7c5647e657](https://snowscan.xyz/address/0xc55837710bc500f1e3c7bb9dd1d51f7c5647e657) |
 | `ChildLiquidityGaugeFactory` | :logos-fantom: Fantom | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://ftmscan.com/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5) |
 | `veBoost - Boost Delegation V2` | :logos-fantom: Fantom | [0xb75dca485E21A77E1B433eCAcb74475FC67e259c](https://ftmscan.com/address/0xb75dca485E21A77E1B433eCAcb74475FC67e259c) |
 | `ChildLiquidityGaugeFactory` | Moonbeam | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://moonscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
@@ -330,12 +330,12 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 | Contract Type      | Contract Address |
 | :----------------: | :--------------: |
 | L1 Broadcaster     | [0x5786696bB5bE7fCDb9997E7f89355d9e97FF8d89](https://etherscan.io/address/0x5786696bB5bE7fCDb9997E7f89355d9e97FF8d89) |
-| L2 Relayer         | [0x3895064FD74a86542206C4c39eb1bf14BB9aF9a6](https://snowtrace.io/address/0x3895064FD74a86542206C4c39eb1bf14BB9aF9a6) |
-| L2 Ownership Agent | [0xeD953C2849785A8AEd7bC2ee8cf5fdE776E1Dc07](https://snowtrace.io/address/0xeD953C2849785A8AEd7bC2ee8cf5fdE776E1Dc07) |
-| L2 Parameter Agent | [0x33F9A2F3B85e7D4Ff4f9286a9a8525060100D855](https://snowtrace.io/address/0x33F9A2F3B85e7D4Ff4f9286a9a8525060100D855) |
-| L2 Emergency Agent | [0x1309DB123020F0533aFAfaF11D26286d5871bEB0](https://snowtrace.io/address/0x1309DB123020F0533aFAfaF11D26286d5871bEB0) |
-| L2 Vault           | [0xad422855ac8010f82F08696CA7750EfE061aa6D6](https://snowtrace.io/address/0xad422855ac8010f82F08696CA7750EfE061aa6D6) |
-| Agent Blueprint    | [0x31d13B6e3e287F506D21bBED9eA4b169971DF3fe](https://snowtrace.io/address/0x31d13B6e3e287F506D21bBED9eA4b169971DF3fe) |
+| L2 Relayer         | [0x3895064FD74a86542206C4c39eb1bf14BB9aF9a6](https://snowscan.xyz/address/0x3895064FD74a86542206C4c39eb1bf14BB9aF9a6) |
+| L2 Ownership Agent | [0xeD953C2849785A8AEd7bC2ee8cf5fdE776E1Dc07](https://snowscan.xyz/address/0xeD953C2849785A8AEd7bC2ee8cf5fdE776E1Dc07) |
+| L2 Parameter Agent | [0x33F9A2F3B85e7D4Ff4f9286a9a8525060100D855](https://snowscan.xyz/address/0x33F9A2F3B85e7D4Ff4f9286a9a8525060100D855) |
+| L2 Emergency Agent | [0x1309DB123020F0533aFAfaF11D26286d5871bEB0](https://snowscan.xyz/address/0x1309DB123020F0533aFAfaF11D26286d5871bEB0) |
+| L2 Vault           | [0xad422855ac8010f82F08696CA7750EfE061aa6D6](https://snowscan.xyz/address/0xad422855ac8010f82F08696CA7750EfE061aa6D6) |
+| Agent Blueprint    | [0x31d13B6e3e287F506D21bBED9eA4b169971DF3fe](https://snowscan.xyz/address/0x31d13B6e3e287F506D21bBED9eA4b169971DF3fe) |
 
 
 **:logos-fantom: Fantom**
@@ -751,10 +751,10 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://snowtrace.io/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
-| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://snowtrace.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
-| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://snowtrace.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://snowtrace.io/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://snowscan.xyz/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
+| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://snowscan.xyz/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
+| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://snowscan.xyz/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
+| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://snowscan.xyz/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
 
 
 **:logos-fantom: Fantom**
@@ -986,11 +986,11 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x505d666E4DD174DcDD7FA090ed95554486d2Be44](https://snowtrace.io/address/0x505d666E4DD174DcDD7FA090ed95554486d2Be44#code) |
-| `Views`     | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://snowtrace.io/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC#code) |
-| `Factory`   | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://snowtrace.io/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a#code) |
-| `AMM native disable` | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://snowtrace.io/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf#code) |
-| `AMM native enabled` | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://snowtrace.io/address/0xFAbC421e3368D158d802684A217a83c083c94CeB#code) |
+| `Math`      | [0x505d666E4DD174DcDD7FA090ed95554486d2Be44](https://snowscan.xyz/address/0x505d666E4DD174DcDD7FA090ed95554486d2Be44#code) |
+| `Views`     | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://snowscan.xyz/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC#code) |
+| `Factory`   | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://snowscan.xyz/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a#code) |
+| `AMM native disable` | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://snowscan.xyz/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf#code) |
+| `AMM native enabled` | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://snowscan.xyz/address/0xFAbC421e3368D158d802684A217a83c083c94CeB#code) |
 
 
 **:logos-fantom: Fantom**
@@ -1125,7 +1125,7 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 | :logos-fraxtal: `Fraxtal` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://fraxscan.com/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-polygon: `Polygon` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://polygonscan.com/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-gnosis: `Gnosis` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://gnosisscan.io/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
-| :logos-avalanche: `Avalanche` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://snowtrace.io/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
+| :logos-avalanche: `Avalanche` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://snowscan.xyz/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-fantom: `Fantom` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://ftmscan.com/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-bsc: `Binance Smart Chain` | [0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF](https://bscscan.com/address/0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF#code) |
 | :logos-celo: `Celo`| [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://celoscan.io/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
@@ -1147,7 +1147,7 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 | :logos-fraxtal: `Fraxtal` | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://fraxscan.com/address/0x69522fb5337663d3B4dFB0030b881c1A750Adb4f#code) |
 | :logos-polygon: `Polygon` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://polygonscan.com/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-gnosis: `Gnosis` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://gnosisscan.io/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
-| :logos-avalanche: `Avalanche` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://snowtrace.io/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
+| :logos-avalanche: `Avalanche` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://snowscan.xyz/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-fantom: `Fantom` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://ftmscan.com/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-bsc: `Binance Smart Chain` | [0xd6681e74eEA20d196c15038C580f721EF2aB6320](https://bscscan.com/address/0xd6681e74eEA20d196c15038C580f721EF2aB6320#code) |
 | :logos-celo: `Celo`| [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://celoscan.io/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
@@ -1169,7 +1169,7 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 | :logos-fraxtal: `Fraxtal` | [0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF](https://fraxscan.com/address/0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF#code) |
 | :logos-polygon: `Polygon` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://polygonscan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-gnosis: `Gnosis` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://gnosisscan.io/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
-| :logos-avalanche: `Avalanche` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://snowtrace.io/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
+| :logos-avalanche: `Avalanche` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://snowscan.xyz/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-fantom: `Fantom` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://ftmscan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-bsc: `Binance Smart Chain` | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://bscscan.com/address/0x4f37A9d177470499A2dD084621020b023fcffc1F#code) |
 | :logos-kava: `Kava` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://kavascan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#contracts) |
