@@ -1,10 +1,17 @@
 <h1>Curve Address Provider</h1>
 
 
-The `Curve Address Provider` is an **entrypoint contract for Curve's various registries**.
+The `CurveAddressProvider` is an **entrypoint contract for Curve's various registries**. 
+
+For the full mapping of IDs please see [`get_id_info`](#get_id_info).
 
 
-*Address information is stored in a `struct`, containing an address, a detailed description, its version, and the timestamp marking its most recent modification:*
+---
+
+
+## **Reading IDs**
+
+*ID information is stored in a `struct`, containing an address, a detailed description, its version, and the timestamp marking its most recent modification:*
 
 ```shell
 struct AddressInfo:
@@ -14,11 +21,6 @@ struct AddressInfo:
     last_modified: uint256
 ```
 
-
----
-
-
-## **Reading ID's**
 
 ### `ids`
 !!! description "`AddressProvider.ids() -> DynArray[uint256, 1000]:`"
@@ -214,9 +216,10 @@ struct AddressInfo:
 ---
 
 
-## **Adding, Removing and Updating ID's**
+## **Adding, Removing and Updating IDs**
 
-ID's can be added, removed or adjusted by the `admin` of the contract.
+IDs can be added, removed, or adjusted by the `admin` of the contract.
+
 
 
 ### `update_id`
@@ -285,6 +288,9 @@ ID's can be added, removed or adjusted by the `admin` of the contract.
 ### `update_address`
 !!! description "`AddressProvider.update_address(_id: uint256, _address: address):`"
 
+    !!!guard "Guarded Methods"
+        This function can only be called by the `admin` of the contract.
+
     Function to update the address of an ID.
 
     Emits: `EntryModified`
@@ -341,6 +347,9 @@ ID's can be added, removed or adjusted by the `admin` of the contract.
 ### `update_description`
 !!! description "`AddressProvider.update_description(_id: uint256, _description: String[256]):`"
 
+    !!!guard "Guarded Methods"
+        This function can only be called by the `admin` of the contract.
+
     Function to update the description of an ID.
 
     Emits: `EntryModified`
@@ -354,7 +363,7 @@ ID's can be added, removed or adjusted by the `admin` of the contract.
 
         === "CurveAddressProvider.vy"
 
-            ```py 
+            ```vyper 
             event EntryModified:
                 id: indexed(uint256)
                 version: uint256
