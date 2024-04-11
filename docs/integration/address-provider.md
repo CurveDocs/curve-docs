@@ -23,7 +23,7 @@ struct AddressInfo:
 ### `ids`
 !!! description "`AddressProvider.ids() -> DynArray[uint256, 1000]:`"
 
-    Getter for the IDs of active registry items in the AddressProvider.
+    Getter function for all the IDs of active registry items in the AddressProvider.
 
     Returns: active ids (`DynArray[uint256, 1000]`)
 
@@ -59,16 +59,11 @@ struct AddressInfo:
 ### `get_id_info`
 !!! description "`AddressProvider.get_id_info(arg0: uint256) -> tuple: view`"
 
-    Getter function to retrieve informations about ID `arg0`.
+    Getter function to retrieve informations about a specific ID.
 
     Returns: struct containing of the addr (`address`), description (`String[256]`), version (`uint256`) and last_modified (`uint256`). 
 
-    | Input      | Type      | Description                  |
-    | ---------- | --------- | ---------------------------- |
-    | `arg0`     | `uint256` | ID to get the info for       |
-
-    Descriptions:
-
+        Descriptions:
         0: Stableswap Custom Pool Registry
         1: PoolInfo Getters
         2: Exchange Router
@@ -95,6 +90,10 @@ struct AddressInfo:
         23: Emergency Admin
         24: CurveDAO Vault
 
+    | Input      | Type      | Description                  |
+    | ---------- | --------- | ---------------------------- |
+    | `arg0`     | `uint256` | ID to get the informations for |
+
     ??? quote "Source code"
 
         === "CurveAddressProvider.vy"
@@ -118,16 +117,17 @@ struct AddressInfo:
         '0x0000000000000000000000000000000000000000,,0,0'
         ```
 
+
 ### `get_address`
 !!! description "`AddressProvider.get_address(arg0: uint256) -> address: view`"
 
-    Getter for the address of a ID.
+    Getter for the contract address of a ID.
 
-    Returns: ID address (`address`).
+    Returns: contract (`address`).
 
-    | Input      | Type      | Description                  |
-    | ---------- | --------- | ---------------------------- |
-    | `arg0`     | `uint256` | ID to get the address for    |
+    | Input      | Type      | Description                           |
+    | ---------- | --------- | ------------------------------------- |
+    | `arg0`     | `uint256` | ID to get the contract address for    |
 
     ??? quote "Source code"
 
@@ -161,11 +161,10 @@ struct AddressInfo:
         ```
 
 
-
 ### `check_id_exists`
 !!! description "`AddressProvider.check_id_exists(arg0: uint256) -> bool: view`"
 
-    Function to check if a ID exists.
+    Function to check if an ID exists.
 
     Returns: true or false (`bool`).
 
@@ -193,7 +192,7 @@ struct AddressInfo:
 ### `num_entries`
 !!! description "`AddressProvider.num_entries() -> uint256: view`"
 
-    Getter for the number of entries. Increments by one when calling `_add_new_id`, decreases by one when calling `_remove_id`.
+    Getter for the number of entries. The count increments by one upon calling `_add_new_id` and decreases by one upon calling `_remove_id`.
 
     Returns: number of entries (`uint256`).
 
@@ -211,13 +210,17 @@ struct AddressInfo:
         20
         ```
 
+
 ---
 
 
 ## **Adding, Removing and Updating ID's**
 
+ID's can be added, removed or adjusted by the `admin` of the contract.
+
+
 ### `update_id`
-!!! description "`AddressProvider.update_id() -> `"
+!!! description "`AddressProvider.update_id(_id: uint256, _new_address: address, _new_description: String[64]):`"
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
@@ -331,8 +334,7 @@ struct AddressInfo:
 
     === "Example"
         ```shell
-        >>> AddressProvider.
-        'todo'
+        >>> soon
         ```
 
 
@@ -390,7 +392,6 @@ struct AddressInfo:
         ```shell
         >>> soon
         ```
-
 
 
 ### `add_new_id`
@@ -463,8 +464,7 @@ struct AddressInfo:
 
     === "Example"
         ```shell
-        >>> AddressProvider.
-        'todo'
+        >>> soon
         ```
 
 
@@ -559,6 +559,8 @@ struct AddressInfo:
 
     Function to remove a registry item from the AddressProvider.
 
+    Returns: true (`bool`).
+
     Emits: `EntryRemoved`
 
     | Input | Type      | Description   |
@@ -619,6 +621,8 @@ struct AddressInfo:
         This function can only be called by the `admin` of the contract.
 
     Function to remove mutiple registry items from the AddressProvider at once.
+
+    Returns: true (`bool`).
 
     Emits: `EntryRemoved`
 
