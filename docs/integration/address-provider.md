@@ -4,7 +4,7 @@
 The `Curve Address Provider` is an **entrypoint contract for Curve's various registries**.
 
 
-*Address Information is organized as follows, containing an address, a detailed description, its version, and the timestamp marking its most recent modification:*
+*Address information is stored in a `struct`, containing an address, a detailed description, its version, and the timestamp marking its most recent modification:*
 
 ```shell
 struct AddressInfo:
