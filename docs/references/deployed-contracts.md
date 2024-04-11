@@ -520,11 +520,11 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://snowtrace.io/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B#code) |
-| `Views`     | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://snowtrace.io/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
-| `Factory`   | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://snowtrace.io/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#code) |
-| `Plain AMM` | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://snowtrace.io/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
-| `Meta AMM`  | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://snowtrace.io/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
+| `Math`      | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://snowscan.xyz/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B#code) |
+| `Views`     | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://snowscan.xyz/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
+| `Factory`   | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://snowscan.xyz/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#code) |
+| `Plain AMM` | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://snowscan.xyz/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
+| `Meta AMM`  | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://snowscan.xyz/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
 
 
 **:logos-fantom: Fantom**
