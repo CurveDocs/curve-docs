@@ -291,6 +291,9 @@ nav:
       - Deployer API: factory/tricryptoNG/deployer-api.md
     
 
+  - Integration Docs: 
+    - Address Provider: integration/address-provider.md
+
   - References:
     - Audits: references/audits.md
     - Whitepapers: 
