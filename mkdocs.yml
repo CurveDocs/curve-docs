@@ -205,6 +205,7 @@ nav:
 
   - StableSwap Exchange:
     - Overview: stableswap-exchange/overview.md
+
     - Stableswap:    
       - Pools:
         - Overview: stableswap-exchange/stableswap/pools/overview.md
@@ -290,6 +291,11 @@ nav:
       - Overview: factory/tricryptoNG/overview.md
       - Deployer API: factory/tricryptoNG/deployer-api.md
     
+
+  - Integration Docs: 
+    - Overview: integration/overview.md
+    - Address Provider: integration/address-provider.md
+
 
   - References:
     - Audits: references/audits.md
