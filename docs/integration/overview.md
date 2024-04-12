@@ -30,14 +30,10 @@
 
     *soon*
 
-    [:octicons-arrow-right-24: Getting started](#)
-
 -   :simple-oracle: **Oracles**
 
     ---
 
     *soon*
-
-    [:octicons-arrow-right-24: Getting started](#)
 
 </div>
