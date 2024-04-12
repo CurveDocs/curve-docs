@@ -171,4 +171,15 @@ hide:
 
     [:octicons-arrow-right-24: PDF](../assets/pdf/ChainSecurity_Curve_PegKeeperV2_audit.pdf)
 
+-   **Curve Lending**
+
+    ---
+
+    Code Asessment of Curve Lending Infrastructure.
+
+    *Auditor: StateMind*  
+    *Date: 2. February, 2024*
+
+    [:octicons-arrow-right-24: PDF](../assets/pdf/StateMind_Curve_Lending.pdf)
+
 </div>
