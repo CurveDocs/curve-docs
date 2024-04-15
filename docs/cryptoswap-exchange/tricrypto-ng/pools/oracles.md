@@ -14,7 +14,7 @@
 </div>
 
 
-!!!example "Oracle Price for TriCRV"
+!!!example "Example: Price Oracle for TriCRV"
 
     The [`TriCRV`](https://etherscan.io/address/0x4ebdf703948ddcea3b11f675b4d1fba9d2414a14) pool consists of `crvUSD <> wETH <> CRV`.
 
@@ -111,11 +111,11 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
             ```
 
 
-- `last_prices_packed` stores the latest prices of all coins, packaging them into a single variable. To access these prices, they must be unpacked using the `_unpack_prices` method.
+- `last_prices_packed` stores the latest prices of all coins, packaging them into a single variable. When using the prices, they must be unpacked using the `_unpack_prices` method.
 
-- `price_oracle_packed` consolidates the moving averages of the coins in a three-coin pool. This variable includes two values: the first represents the moving average for coin(1) relative to coin(0), and the second represents the moving average for coin(2) relative to coin(0).
+- `price_oracle_packed` stores the moving average values of the coins. This variable includes two values: the first represents the moving average for coin(1) relative to coin(0), and the second represents the moving average for coin(2) relative to coin(0). The `price_oracle` method unpacks these values and return the price oracle of the coin at index `k`.
 
-- `price_scale_packed` functions similarly by packing the price scales of coin 1 and 2 with respect to coin 0. The `price_scale` method unpacks these values and returns the price scale at index `k`.
+- `price_scale_packed` functions similarly by packing the price scales of coin 1 and 2 with respect to coin 0. The `price_scale` method unpacks these values and returns the price scale of the coin at index `k`.
 
 - `last_prices_timestamp` marks the timestamp when the `price_oracle` for a coin was last updated.
 
@@ -124,7 +124,7 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
 ---
 
 
-## **Price Oracle**
+## **Oracle and Price Methods**
 
 ### `price_oracle`
 !!! description "`CurveTricryptoOptimizedWETH.price_oracle(k: uint256) -> uint256:`"
