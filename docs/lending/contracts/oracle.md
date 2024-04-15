@@ -3,7 +3,7 @@
 !!!github "GitHub"
     The source code of the `CryptoFromPool.vy` oracle contract can be found on [GitHub :material-github:](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/price_oracles/CryptoFromPool.vy).
 
-The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a `create_from_pool` method which deploys the full lending market infrastucture alsong with a price oracle using a `stableswap-ng`, `twocrypto-ng` or `tricrypto-ng` pool. These pools all have a suitable exponential moving-average (EMA) oracle, which can be used in lending markets.
+The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](./oneway-factory.md#create_from_pool) method which deploys the full lending market infrastucture alsong with a price oracle using a `stableswap-ng`, `twocrypto-ng` or `tricrypto-ng` pool. These pools all have a suitable exponential moving-average (EMA) oracle, which can be used in lending markets.
 
 ???quote "Source code: `create_from_pool`"
 
