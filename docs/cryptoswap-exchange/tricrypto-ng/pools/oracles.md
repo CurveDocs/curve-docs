@@ -280,7 +280,7 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
 
         === "Packing"
 
-            ```py
+            ```vyper
             PRICE_SIZE: constant(uint128) = 256 / (N_COINS - 1)
             PRICE_MASK: constant(uint256) = 2**PRICE_SIZE - 1
 
@@ -306,7 +306,7 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
 
         === "Unpacking"
 
-            ```py
+            ```vyper
             PRICE_SIZE: constant(uint128) = 256 / (N_COINS - 1)
             PRICE_MASK: constant(uint256) = 2**PRICE_SIZE - 1
 
@@ -365,7 +365,7 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
 
         === "CurveTricryptoOptimizedWETH.vy"
 
-            ```python
+            ```vyper
             price_scale_packed: uint256  # <------------------------ Internal price scale.
             price_oracle_packed: uint256  # <------- Price target given by moving average.
 
@@ -438,7 +438,7 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
 
         === "CurveTricryptoOptimizedWETH.vy"
 
-            ```python
+            ```vyper
             price_scale_packed: uint256  # <------------------------ Internal price scale.
 
             @external
@@ -483,7 +483,7 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
 
         === "CurveTricryptoOptimizedWETH.vy"
 
-            ```python
+            ```vyper
             last_prices_packed: uint256
 
             @external
@@ -540,7 +540,7 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
 
         === "CurveTricryptoOptimizedWETH.vy"
 
-            ```python
+            ```vyper
             last_prices_timestamp: public(uint256)
             ```
 
@@ -562,7 +562,7 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
 
         === "CurveTricryptoOptimizedWETH.vy"
 
-            ```python
+            ```vyper
 
             ```
 
@@ -586,7 +586,7 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
 
         === "CurveTricryptoOptimizedWETH.vy"
 
-            ```python
+            ```vyper
             price_oracle_packed: uint256  # <------- Price target given by moving average.
                         
             @external
@@ -625,7 +625,7 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
 
         === "CurveTricryptoOptimizedWETH.vy"
 
-            ```python
+            ```vyper
             totalSupply: public(uint256)
 
             @external
@@ -659,7 +659,7 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
 
         === "CurveTricryptoOptimizedWETH.vy"
 
-            ```python
+            ```vyper
             virtual_price: public(uint256)  # <------ Cached (fast to read) virtual price.
             #                          The cached `virtual_price` is also used internally.
             ```
@@ -687,7 +687,7 @@ The `tweak_price` function is called whenever there is an unbalanced liquidity o
 
 ??? quote "Source Code"
 
-    ```py
+    ```vyper
     @internal
     def tweak_price(
         A_gamma: uint256[2],
