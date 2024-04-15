@@ -24,6 +24,21 @@
 
 </div>
 
+!!!example "Example: Price Oracle for crvUSD/USDC"
+
+    The [`crvUSD/USDC`](https://etherscan.io/address/0x4dece678ceceb27446b35c672dc7d61f30bad69e) pool consists of `crvUSD <> USDC`.
+
+    Because `USDC` is the coin at index 0, `price_oracle()` returns the price of `crvUSD` with regard to `USDC`. 
+
+    ```vyper
+    >>> price_oracle() = 999043303185591283
+    0.99904330318       # price of crvUSD w.r.t USDC
+    ```
+
+    *In order to get the reverse EMA (price of `USDC` with regard to `crvUSD`):*
+
+    $\frac{10^{36}}{\text{price_oracle()}} = 1.0009576e+18$
+
 
 ---
 
