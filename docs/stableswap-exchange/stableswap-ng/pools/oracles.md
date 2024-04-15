@@ -52,7 +52,7 @@ The AMM implementation utilizes two private variables, `last_prices_packed` and 
 
     ???quote "`_calc_moving_average`"
 
-        ```py
+        ```vyper
         @internal
         @view
         def _calc_moving_average(
