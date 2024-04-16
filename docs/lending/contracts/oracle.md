@@ -1,71 +1,61 @@
 <h1>Curve Lending: Oracles</h1>
 
 !!!github "GitHub"
-    The source code of the `CryptoFromPool.vy` oracle contract can be found on [GitHub :material-github:](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/price_oracles/CryptoFromPool.vy).
+    The source code of the `CryptoFromPool.vy` and all other oracle contracts can be found on [GitHub :material-github:](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/price_oracles/).
 
 The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](./oneway-factory.md#create_from_pool) method which deploys the full lending market infrastucture alsong with a price oracle using a `stableswap-ng`, `twocrypto-ng` or `tricrypto-ng` pool. These pools all have a suitable exponential moving-average (EMA) oracle, which can be used in lending markets.
 
-???quote "Source code: `create_from_pool`"
-
-    ```py hl_lines="50 51"
-    @external
-    @nonreentrant('lock')
-    def create_from_pool(
-            borrowed_token: address,
-            collateral_token: address,
-            A: uint256,
-            fee: uint256,
-            loan_discount: uint256,
-            liquidation_discount: uint256,
-            pool: address,
-            name: String[64],
-            min_borrow_rate: uint256 = 0,
-            max_borrow_rate: uint256 = 0
-        ) -> Vault:
-        """
-        @notice Creation of the vault using existing oraclized Curve pool as a price oracle
-        @param borrowed_token Token which is being borrowed
-        @param collateral_token Token used for collateral
-        @param A Amplification coefficient: band size is ~1/A
-        @param fee Fee for swaps in AMM (for ETH markets found to be 0.6%)
-        @param loan_discount Maximum discount. LTV = sqrt(((A - 1) / A) ** 4) - loan_discount
-        @param liquidation_discount Liquidation discount. LT = sqrt(((A - 1) / A) ** 4) - liquidation_discount
-        @param pool Curve tricrypto-ng, twocrypto-ng or stableswap-ng pool which has non-manipulatable price_oracle().
-                    Must contain both collateral_token and borrowed_token.
-        @param name Human-readable market name
-        @param min_borrow_rate Custom minimum borrow rate (otherwise min_default_borrow_rate)
-        @param max_borrow_rate Custom maximum borrow rate (otherwise max_default_borrow_rate)
-        """
-        # Find coins in the pool
-        borrowed_ix: uint256 = 100
-        collateral_ix: uint256 = 100
-        N: uint256 = 0
-        for i in range(10):
-            success: bool = False
-            res: Bytes[32] = empty(Bytes[32])
-            success, res = raw_call(
-                pool,
-                _abi_encode(i, method_id=method_id("coins(uint256)")),
-                max_outsize=32, is_static_call=True, revert_on_failure=False)
-            coin: address = convert(res, address)
-            if not success or coin == empty(address):
-                break
-            N += 1
-            if coin == borrowed_token:
-                borrowed_ix = i
-            elif coin == collateral_token:
-                collateral_ix = i
-        if collateral_ix == 100 or borrowed_ix == 100:
-            raise "Tokens not in pool"
-        price_oracle: address = create_from_blueprint(
-            self.pool_price_oracle_impl, pool, N, borrowed_ix, collateral_ix, code_offset=3)
-
-        return self._create(borrowed_token, collateral_token, A, fee, loan_discount, liquidation_discount,
-                            price_oracle, name, min_borrow_rate, max_borrow_rate)
-    ```
-
 Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitrum) take the status of the sequencer into consideration.
 
+
+!!!example "Example: CRV long market"
+
+    In the CRV short market, `CRV` serves as the collateral token, while `crvUSD` is the borrowable token. This lending market utilizes the price oracle sourced from the [TriCRV liquidity pool](https://etherscan.io/address/0x4ebdf703948ddcea3b11f675b4d1fba9d2414a14).
+
+    When calling the `create_from_pool` function, the code automatically checks the index of the tokens within the liquidity pool. Subsequently, it passes these values as constructor arguments during the creation of the oracle contract from the blueprint implementation.
+
+    ???quote "`__init__`"
+
+        ```py
+        @external
+        def __init__(
+                pool: Pool,
+                N: uint256,
+                borrowed_ix: uint256,
+                collateral_ix: uint256
+            ):
+            assert borrowed_ix != collateral_ix
+            assert borrowed_ix < N
+            assert collateral_ix < N
+            POOL = pool
+            N_COINS = N
+            BORROWED_IX = borrowed_ix
+            COLLATERAL_IX = collateral_ix
+
+            no_argument: bool = False
+            if N == 2:
+                success: bool = False
+                res: Bytes[32] = empty(Bytes[32])
+                success, res = raw_call(
+                    pool.address,
+                    _abi_encode(empty(uint256), method_id=method_id("price_oracle(uint256)")),
+                    max_outsize=32, is_static_call=True, revert_on_failure=False)
+                if not success
+                    no_argument = True
+            NO_ARGUMENT = no_argument
+        ```
+
+
+    ```py
+    # the following arguments will be passed into the `__init__` function:
+    pool = '0x4ebdf703948ddcea3b11f675b4d1fba9d2414a14'
+    N = 3
+    borrow_ix = 0               # crvUSD
+    collateral_ix = 2           # CRV
+    ```
+
+
+---
 
 
 ## **Ethereum**
@@ -120,7 +110,7 @@ Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitru
 ### `price_w`
 !!! description "`CryptoFromPool.price_w() -> uint256:`"
 
-    Function to return the price and update the state of the blockchain.
+    Function to return the price and update the state of the blockchain. This function is called whenever the `_exchange` function from the LLAMMA is called.
 
     Returns: price (`uint256`).
 
@@ -153,6 +143,36 @@ Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitru
                         p_collateral = POOL.price_oracle(COLLATERAL_IX - 1)
 
                 return p_collateral * 10**18 / p_borrowed
+            ```
+
+        === "LLAMMA.vy"
+
+            ```vyper hl_lines="3 22"
+            @internal
+            def _price_oracle_w() -> uint256[2]:
+                p: uint256[2] = self.limit_p_o(price_oracle_contract.price_w())
+                self.prev_p_o_time = block.timestamp
+                self.old_p_o = p[0]
+                self.old_dfee = p[1]
+                return p
+
+            @internal
+            def _exchange(i: uint256, j: uint256, amount: uint256, minmax_amount: uint256, _for: address, use_in_amount: bool) -> uint256[2]:
+                """
+                @notice Exchanges two coins, callable by anyone
+                @param i Input coin index
+                @param j Output coin index
+                @param amount Amount of input/output coin to swap
+                @param minmax_amount Minimal/maximum amount to get as output/input
+                @param _for Address to send coins to
+                @param use_in_amount Whether input or output amount is specified
+                @return Amount of coins given in and out
+                """
+                assert (i == 0 and j == 1) or (i == 1 and j == 0), "Wrong index"
+                p_o: uint256[2] = self._price_oracle_w()  # Let's update the oracle even if we exchange 0
+                if amount == 0:
+                    return [0, 0]
+                ...
             ```
 
     === "Example"
@@ -214,9 +234,9 @@ Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitru
 ### `BORROWED_IX`
 !!! description "`CryptoFromPool.BORROWED_IX() -> uint256: view`"
 
-    Getter for the index of the borrowed coin in `POOL`.
+    Getter for the index of the borrowed coin in the liquidity pool from which the price oracle is taken from.
 
-    Returns: coin index in the pool (`uint256`).
+    Returns: coin index (`uint256`).
 
     ??? quote "Source code"
 
@@ -263,9 +283,9 @@ Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitru
 ### `COLLATERAL_IX`
 !!! description "`CryptoFromPool.COLLATERAL_IX() -> uint256: view`"
 
-    Getter for the index of the collateral coin in `POOL`.
+    Getter for the index of the collateral coin in the liquidity pool from which the price oracle is taken from.
 
-    Returns: coin index in the pool (`uint256`).
+    Returns: coin index (`uint256`).
 
     ??? quote "Source code"
 
@@ -305,7 +325,7 @@ Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitru
     === "Example"
         ```shell
         >>> CryptoFromPool.COLLATERAL_IX()
-        1
+        2
         ```
 
 
@@ -361,7 +381,8 @@ Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitru
 ### `NO_ARGUMENT`
 !!! description "`CryptoFromPool.NO_ARGUMENT() -> bool: view`"
 
-    Fucntion to...
+    Getter for the info on <todo>. The variable is set to `false` if the pool where the price oracle is taken from only has two coins.
+
     Is `false` when the liquidity pool from with the price oracle is taken only has two coins. Else
 
 
@@ -416,9 +437,12 @@ Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitru
 
 ## **Arbitrum**
 
-Additionally, the oracles on Arbitrum utilize a [Chainlink](https://chain.link/) oracle to monitor and verify any potential downtime of the sequencer. 
+In addition to the aforementioned functions, oracle contracts on Arbitrum use a [Chainlink Uptime Feed Oracle](https://arbiscan.io/address/0xFdB631F5EE196F0ed6FAa767959853A9F217697D) to monitor and validate any potential downtime of the [sequencer](https://docs.arbitrum.io/sequencer).
 
-```py
+Should the internal `_raw_price` function, responsible for fetching the price, encounter an indication from the uptime oracle that the Arbitrum sequencer is presently offline, or if it has experienced recent downtime and the `DOWNTIME_WAIT` period of 3988 seconds has not yet elapsed, it will revert.
+
+
+```vyper
 interface ChainlinkOracle:
     def latestRoundData() -> ChainlinkAnswer: view
 
@@ -439,7 +463,6 @@ def _raw_price() -> uint256:
     ...
 ```
 
-The `price_w` function will revert if the [Chainlink Uptime Feed](https://etherscan.io/address/0xFdB631F5EE196F0ed6FAa767959853A9F217697D) answer indicates that the Arbitrum sequencer is currently down, or if it was recently offline and the `DOWNTIME_WAIT` period of 3988 seconds has not yet passed.
 
 
 
