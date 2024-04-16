@@ -64,7 +64,7 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
                             price_oracle, name, min_borrow_rate, max_borrow_rate)
     ```
 
-Additionally, the price [oracle contracts on Arbitrum](#arbitrum) take the status of the sequencer into consideration.
+Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitrum) take the status of the sequencer into consideration.
 
 
 
