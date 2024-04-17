@@ -98,7 +98,7 @@ $$\text{EMA} = \frac{\text{last_spot_value} \times (10^{18} - \alpha) + \text{la
 
 
 `price_oracle` calculation is based on the two values stored in `last_prices_packed`, `last_price` and `ema_price`. These values are conditionally updated:
-Generally speaking, both values are simultaneously updated whenever `upkeep_oracles` is called. This happens at certain actions, see [here](#upkeeping-oracles).
+Generally speaking, both values are simultaneously updated whenever `upkeep_oracles` is called. This happens at certain actions, see [here](#updating-oracles).
 
 While `last_price` (spot price) is always updated at every relevant action, the `ema_price` is maximally updated once per block. There might be the case that there is more than one relevant action within the same block. Let's say there are two relevant actions within the block which would update both values:
 If this is the case, `last_price` is updated at every action, so there will be two updated. `ema_price` on the other hand will only be updated once (at the first action) and will not change a second time. Reasoning behind this is to prevent single-block manipulation. The `ema_price` will just be updated at the next action outside of this block.
