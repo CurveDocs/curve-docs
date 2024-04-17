@@ -201,6 +201,7 @@ nav:
     - LLAMMA and Controller: lending/contracts/controller-llamma.md
     - OneWay Lending Factory: lending/contracts/oneway-factory.md
     - SemiLog Monetary Policy: lending/contracts/semilog-mp.md
+    - Oracle Contracts: lending/contracts/oracle.md
 
 
   - StableSwap Exchange:
