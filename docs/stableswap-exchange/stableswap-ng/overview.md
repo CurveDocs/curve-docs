@@ -1,3 +1,9 @@
+---
+hide:
+  - toc
+---
+
+
 <h1>StableSwap-NG: Overview </h1>
 
 !!!deploy "Contract Source & Deployment"
