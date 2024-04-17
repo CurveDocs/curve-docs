@@ -3,7 +3,7 @@
 !!!github "GitHub"
     The source code of the `CryptoFromPool.vy` and all other oracle contracts can be found on [GitHub :material-github:](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/price_oracles/).
 
-The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](./oneway-factory.md#create_from_pool) method which deploys the full lending market infrastucture alsong with a price oracle using a [`stableswap-ng`](../../stableswap-exchange/stableswap-ng/pools/oracles.md), `twocrypto-ng` or `tricrypto-ng` pool. These pools all have a suitable exponential moving-average (EMA) oracle, which can be used in lending markets.
+The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](./oneway-factory.md#create_from_pool) method which deploys the full lending market infrastucture along with a price oracle using a [`stableswap-ng`](../../stableswap-exchange/stableswap-ng/pools/oracles.md), `twocrypto-ng` or `tricrypto-ng` pool. These pools all have a suitable exponential moving-average (EMA) oracle, which can be used in lending markets.
 
 Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitrum) take the status of the sequencer into consideration.
 
@@ -332,7 +332,7 @@ Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitru
 ### `N_COINS`
 !!! description "`CryptoFromPool.N_COINS() -> uint256: view`"
 
-    Getter for the total number of coin in the liquidity pool.
+    Getter for the total number of coins in the liquidity pool.
 
     Returns: coins count (`uint256`).
 
@@ -381,14 +381,10 @@ Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitru
 ### `NO_ARGUMENT`
 !!! description "`CryptoFromPool.NO_ARGUMENT() -> bool: view`"
 
-    Getter for the info on <todo>. The variable is set to `false` if the pool where the price oracle is taken from only has two coins.
+    Getter for the `NO_ARGUMENT` storage variable. This is an additional variable to ensure the correct price oracle is fetched from a pool with more than two coins.
+    The variable is set to `false` if the pool from which the price oracle is taken has only two coins.
 
-    Is `false` when the liquidity pool from with the price oracle is taken only has two coins. Else
-
-
-    Returns: 
-
-    Emits:
+    Returns: true or false (`bool`)
 
     ??? quote "Source code"
 
