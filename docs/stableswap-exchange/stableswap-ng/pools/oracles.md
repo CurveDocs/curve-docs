@@ -78,7 +78,9 @@ The AMM implementation utilizes two private variables, `last_prices_packed` and 
 
 *The formula to calculate the exponential moving-average essentially comes down to:*
 
-$$\alpha = e^{\left(\frac{(\text{block.timestamp} - \text{ma_last_time}) \times 10^{18}}{\text{averaging_window}}\right)}$$
+$$\alpha = e^{\text{power}}$$
+
+$$\text{power} = \frac{(\text{block.timestamp} - \text{ma_last_time}) \times 10^{18}}{\text{ma_time}}$$
 
 $$\text{EMA} = \frac{\text{last_spot_value} \times (10^{18} - \alpha) + \text{last_ema_value} \times \alpha}{10^{18}}$$
 
