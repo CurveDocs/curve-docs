@@ -249,7 +249,10 @@
     ```
 
 
-$$\alpha = e^{\left(\frac{(\text{block.timestamp} - \text{last_prices_timestamp}) \times 10^{18}}{\text{ma_time}}\right)}$$
+$$\alpha = e^{\text{power}}$$
+
+
+$$\text{power} = \frac{(\text{block.timestamp} - \text{last_prices_timestamp}) \times 10^{18}}{\text{ma_time}}$$
 
 
 $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \times (10^{18} - \alpha) + \text{price_oracle} \times \alpha}{10^{18}}$$
@@ -554,7 +557,7 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
 ### `ma_time`
 !!! description "`CurveTricryptoOptimizedWETH.ma_time() -> uint256: view`"
 
-    Getter fir the exponential moving average time for the price oracle. This value can be adjusted via `commit_new_parameters()`, as detailed in the [admin controls](./admin-controls.md#commit_new_parameters) section.
+    Getter for the exponential moving average time for the price oracle. This value can be adjusted via `commit_new_parameters()`, as detailed in the [admin controls](./admin-controls.md#commit_new_parameters) section.
 
     Returns: periodicity of the EMA (`uint256`) 
 
