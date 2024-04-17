@@ -1,4 +1,4 @@
-**Tricrypto-NG pool contanins of three non-pegged assets.**
+**Tricrypto-NG pool contains of three non-pegged assets.**
 
 !!!info "Liquidity Pool (LP) Token"
     The LP token is directly integrated into the exchange contract. Pool and LP token share the same address. 
