@@ -1,29 +1,79 @@
+---
+hide:
+  - toc
+---
+
+
 <h1>StableSwap-NG: Overview </h1>
 
 !!!deploy "Contract Source & Deployment"
-    Source code available on [GitHub](https://github.com/curvefi/stableswap-ng). The following documentation covers all commits up until [5f582a6](https://github.com/curvefi/stableswap-ng/commit/5f582a6b8f709d863825c5fbe026cd3b4fa2d840).  
-    All stableswap-ng deployments can be found in the [Deployment Addresses](../../references/deployed-contracts.md#stableswap-ng) section.
+
+    Source code is available on [:material-github: GitHub](https://github.com/curvefi/stableswap-ng). The following documentation covers source code up until commit number [`5f582a6`](https://github.com/curvefi/stableswap-ng/commit/5f582a6b8f709d863825c5fbe026cd3b4fa2d840).
+
+    All stableswap-ng deployments can be found in the "Deployment Addresses" section. [:material-arrow-up-right:](../../references/deployed-contracts.md#stableswap-ng)
+
 
 For an in-depth understanding of the StableSwap invariant design, please refer to the official [StableSwap whitepaper](../../assets/pdf/stableswap-paper.pdf).
 
+
+---
+
+
 **The Stableswap-NG AMM infrastructure represents a technically enhanced iteration of the previous stableswap implementation. It comprises the following key components:**
 
-- Pool Factory
-- Math Contract
-- Views Contract
-- AMM blueprint contracts
-- LiquidityGauge blueprint contract
+<div class="grid cards" markdown>
 
-!!!warning "Liquidity Gauges"
-    The LiquidityGauge blueprint contract is only implemented on Ethereum.
+-   :octicons-code-16: **AMM Blueprint Contracts**
 
+    ---
 
-## **Pool Factory and Blueprint Contracts**
+    *Stableswap-NG has two main implementations:*
 
-The Pool Factory is the contract used to deploy new plain and meta-pools, as well as liquidity gauges. It also acts a registry for finding the deployed pools and querying information about them.
-Pools and gauges are deployed via blueprints contracts ([EIP-5202](https://eips.ethereum.org/EIPS/eip-5202)). 
+    - **Plain Pools** [:material-arrow-up-right:](./pools/plainpool.md)
+    - **Metapools** [:material-arrow-up-right:](./pools/metapool.md)
+
+    The **admin controls** for pools are documented separately. [:material-arrow-up-right:](./pools/admin_controls.md)
 
 
-## **Math and View Contracts**
+-   :octicons-code-16: **Pool and Gauge Factory**
 
-Math and Views are utility contracts used within the AMM. CurveStableSwapNGMath contract contains math for the pool implementation contracts, while the CurveStableSwapNGViews contract provides external view-only methods that can be gas-inefficient when called from smart contracts.
+    ---
+
+    The Pool Factory is used to **permissionlessly deploy new plain and metapools**, as well as **liquidity gauges**. It also acts as a registry for finding the deployed pools and querying information about them.
+
+    [:octicons-arrow-right-24: `CurveStableSwapFactoryNG.vy`](../../factory/stableswapNG/overview.md)
+
+-   :octicons-code-16: **Math Contract**
+
+    ---
+
+    Contract which provides **mathematical utilities** for the AMM blueprint contracts.
+
+    [:octicons-arrow-right-24: `CurveStableSwapNGMath.vy`](./utility_contracts/math.md)
+
+-   :octicons-code-16: **Views Contract**
+
+    ---
+
+    Contract targeted at **integrators**. Contains **view-only external methods** for the AMMs.
+
+    [:octicons-arrow-right-24: `CurveStableSwapNGViews.vy`](./utility_contracts/views.md)
+
+-   :octicons-code-16: **Liquidity Gauge Blueprint Contract**
+
+    ---
+
+    A liquidity gauge blueprint implementation which deploys a liquidity gauge of a pool on Ethereum. Gauges on sidechains must be deployed via the [`RootChainGaugeFactory`](./../../curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md).
+
+    `LiquidityGauge.vy` :octicons-arrow-right-24: soon
+
+
+-   :octicons-code-16: **Oracles**
+
+    ---
+
+    Exponential moving-average oracles for the `D` invariant and for the prices of coins within the AMM.
+
+    [:octicons-arrow-right-24: `Oracles`](./pools/oracles.md)
+
+</div>

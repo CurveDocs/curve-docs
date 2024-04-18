@@ -265,6 +265,7 @@ nav:
       - Overview: cryptoswap-exchange/tricrypto-ng/overview.md
       - Pools:
         - TriCrypto Pool: cryptoswap-exchange/tricrypto-ng/pools/tricrypto.md
+        - Oracles: cryptoswap-exchange/tricrypto-ng/pools/oracles.md
         - Admin Controls: cryptoswap-exchange/tricrypto-ng/pools/admin-controls.md
       - Utility Contracts: 
         - Math: cryptoswap-exchange/tricrypto-ng/utility-contracts/math.md

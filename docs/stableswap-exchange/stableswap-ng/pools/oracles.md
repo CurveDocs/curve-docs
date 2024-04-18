@@ -1,4 +1,4 @@
-<h1>StableSwap-NG Oracles</h1>
+<h1>StableSwap-NG Oracles</h1> 
 
 
 ## **Price and D Oracles**
@@ -24,6 +24,21 @@
 
 </div>
 
+!!!example "Example: Price Oracle for crvUSD/USDC"
+
+    The [`crvUSD/USDC`](https://etherscan.io/address/0x4dece678ceceb27446b35c672dc7d61f30bad69e) pool consists of `crvUSD <> USDC`.
+
+    Because `USDC` is the coin at index 0, `price_oracle()` returns the price of `crvUSD` with regard to `USDC`. 
+
+    ```vyper
+    >>> price_oracle() = 999043303185591283
+    0.99904330318       # price of crvUSD w.r.t USDC
+    ```
+
+    *In order to get the reverse EMA (price of `USDC` with regard to `crvUSD`):*
+
+    $\frac{10^{36}}{\text{price_oracle()}} = 1.0009576e+18$
+
 
 ---
 
@@ -37,7 +52,7 @@ The AMM implementation utilizes two private variables, `last_prices_packed` and 
 
     ???quote "`_calc_moving_average`"
 
-        ```py
+        ```vyper
         @internal
         @view
         def _calc_moving_average(
@@ -63,25 +78,27 @@ The AMM implementation utilizes two private variables, `last_prices_packed` and 
 
 *The formula to calculate the exponential moving-average essentially comes down to:*
 
-$$\alpha = \text{exp}\left(\frac{(\text{block.timestamp} - \text{ma_last_time}) * 10^{18}}{\text{averaging_window}}\right)$$
+$$\alpha = e^{\text{power}}$$
 
-$$\text{EMA} = \frac{\text{last_spot_value} * (10^{18} - \alpha) + \text{last_ema_value} * \alpha}{10^{18}}$$
+$$\text{power} = \frac{(\text{block.timestamp} - \text{ma_last_time}) \times 10^{18}}{\text{ma_time}}$$
+
+$$\text{EMA} = \frac{\text{last_spot_value} \times (10^{18} - \alpha) + \text{last_ema_value} \times \alpha}{10^{18}}$$
 
 *with:*
 
 | Variable           | Description                                          |
 | ------------------ | ---------------------------------------------------- |
-| `block.timestamp`  | Timestamp of the block. Since all transactions within a block share the same timestamp, the ema_oracles can only be updated once per block. |
-| `ma_last_time`     | Last time the ma oracle was updated.                 |
-| `averaging_window` | Time window for the moving average oracle; for the `price_oracle` it's `ma_exp_time`, and for the `D_oracle` it's `D_ma_time`. |
+| `block.timestamp`  | Timestamp of the block. Since all transactions within a block share the same timestamp, the EMA oracles can only be updated once per block. |
+| `last_prices_timestamp` | Last time the ma oracle was updated. Differentiates between D and price. |
+| `ma_time` | Time window for the moving-average oracle; for the `price_oracle` it's `ma_exp_time`, and for the `D_oracle` it's `D_ma_time`. |
 | `last_spot_value`  | Last price within the AMM; for the `price_oracle` it's `last_price`, which is the first value of `last_prices_packed`. For calculating `D_oracle`, it's `last_D`, which is the first value in `last_D_packed`. |
-| `last_ema_value`   | Last ema value; for calculating `price_oracle` it's `ma_price`, which is the second value packed in `last_prices_packed`. For calculating `D_oracle` it's `ma_D`, also the second value in `last_D_packed`. |
+| `last_ema_value`   | Last EMA value; for calculating `price_oracle` it's `ma_price`, which is the second value packed in `last_prices_packed`. For calculating `D_oracle` it's `ma_D`, also the second value in `last_D_packed`. |
 | `alpha`            | Weighting multiplier that adjusts the impact of the latest spot value versus the previous EMA value in the new EMA calculation. |
 | `exp`            | Function that calculates the natural exponential function of a signed integer with a precision of 1e18. |
 
 
 `price_oracle` calculation is based on the two values stored in `last_prices_packed`, `last_price` and `ema_price`. These values are conditionally updated:
-Generally speaking, both values are simultaneously updated whenever `upkeep_oracles` is called. This happens at certain actions, see [here](#upkeeping-oracles).
+Generally speaking, both values are simultaneously updated whenever `upkeep_oracles` is called. This happens at certain actions, see [here](#updating-oracles).
 
 While `last_price` (spot price) is always updated at every relevant action, the `ema_price` is maximally updated once per block. There might be the case that there is more than one relevant action within the same block. Let's say there are two relevant actions within the block which would update both values:
 If this is the case, `last_price` is updated at every action, so there will be two updated. `ema_price` on the other hand will only be updated once (at the first action) and will not change a second time. Reasoning behind this is to prevent single-block manipulation. The `ema_price` will just be updated at the next action outside of this block.
@@ -105,11 +122,11 @@ If this is the case, `last_price` is updated at every action, so there will be t
     
     `i = 0` will return the price oracle of `coin[1]`, `i = 1` the price oracle of `coin[2]`, and so on.
 
-    Returns: ema price oracle (`uint256`).
+    Returns: EMA price of coin `i` (`uint256`).
 
     | Input  | Type      | Description                        |
     | ------ | --------- | ---------------------------------- |
-    | `i`    | `uint256` | Index value of the coin to calculate the ema price for. i = 0 returns the price oracle for coin(1). |
+    | `i`    | `uint256` | Index value of the coin to calculate the EMA price for. i = 0 returns the price oracle for coin(1). |
 
     ??? quote "Source code"
 
@@ -259,7 +276,7 @@ If this is the case, `last_price` is updated at every action, so there will be t
 
     Getter method for the last stored exponential moving-average (EMA) price of the coin at index value `i`, retrieved from `last_prices_packed`. The EMA price is obtained by shifting the value in `last_prices_packed` to the right by 128 bits. This value is updated whenever the `upkeep_oracles()` function is internally called.
     
-    `i = 0` will return the last ema price of `coin[1]`, `i = 1` of `coin[2]`, and so on.
+    `i = 0` will return the last EMA price of `coin[1]`, `i = 1` of `coin[2]`, and so on.
 
     Returns: the last stored EMA price of coin `i` (`uint256`).
 
@@ -403,7 +420,7 @@ If this is the case, `last_price` is updated at every action, so there will be t
 ### `ma_exp_time`
 !!! description "`StableSwap.ma_exp_time() -> uint256: view`"
 
-    Getter for the exponential moving-average time for the price oracle (`price_oracle`). This value can be adjusted via `set_ma_exp_time()`, as detailed in [admin controls](../pools/admin_controls.md#set_ma_exp_time).
+    Getter for the exponential moving-average time for the price oracle (`price_oracle`). This value can be adjusted via `set_ma_exp_time()`, as detailed in the [admin controls](../pools/admin_controls.md#set_ma_exp_time) section.
 
     Returns: EMA time for the price oracle (`uint256`).
 
@@ -424,7 +441,7 @@ If this is the case, `last_price` is updated at every action, so there will be t
 ### `D_ma_time`
 !!! description "`StableSwap.D_ma_time() -> uint256: view`"
 
-    Getter for the exponential moving average time for the D oracle. This value can be adjusted via `set_ma_exp_time()`, as detailed in [admin controls](../pools/admin_controls.md#set_ma_exp_time).
+    Getter for the exponential moving-average time for the D oracle. This value can be adjusted via `set_ma_exp_time()`, as detailed in [admin controls](../pools/admin_controls.md#set_ma_exp_time).
 
     Returns: EMA time for the D oracle (`uint256`).
 
@@ -452,7 +469,6 @@ If this is the case, `last_price` is updated at every action, so there will be t
 
     Returns: packed value (`uint256`).
 
-
     ??? quote "Source code"
 
         ```vyper 
@@ -476,7 +492,7 @@ If this is the case, `last_price` is updated at every action, so there will be t
 ---
 
 
-## **Upkeeping Oracles**
+## **Updating Oracles**
 
 The internal `upkeep_oracles` method is responsible for updating the price and D oracle.
 
@@ -579,7 +595,7 @@ self.last_prices_packed = last_prices_packed_new
 ```
 
 
-1. `last_price` which represents the last stored spot price within the AMM is calculated using `_get_p`. Additionally, the value is capped at `2 * 10**18` to prevent price oracle manipulation. Note: It's not actually the spot price which is capped, but rather the spot price that is used in the calculation for the ema price oracle.
+1. `last_price` which represents the last stored spot price within the AMM is calculated using `_get_p`. Additionally, the value is capped at `2 * 10**18` to prevent price oracle manipulation. Note: It's not actually the spot price which is capped, but rather the spot price that is used in the calculation for the EMA price oracle.
 
     ???quote "`_get_p`"
 
