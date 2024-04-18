@@ -61,7 +61,7 @@ For an in-depth understanding of the Cryptoswap invariant design, please refer t
 
     A liquidity gauge blueprint implementation which deploys a liquidity gauge of a pool on Ethereum. Gauges on sidechains must be deployed via the [RootChainGaugeFactory](./../../curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md).
 
-    [:octicons-arrow-right-24: `LiquidityGauge.vy`]()
+    `LiquidityGauge.vy` :octicons-arrow-right-24: soon
 
 -   :octicons-code-16: **Price Oracles**
 
