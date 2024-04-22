@@ -1,107 +1,46 @@
+<h1>Liquidity Gauge</h1>
 
 
-gauge: https://etherscan.io/address/0xda8769595ff12b0ac0561a7622957e76d543b79a#code
+## **Overview**
 
+A liquidity gauge measures the liquidity provided by users and distributes rewards based on each user's share of liquidity and [boost](#boosting-your-lp-tokens). Gauges can be added not only for liquidity pools and lending vaults but also for a variety of other use cases, such as [fundraising gauges](https://github.com/vefunder/crvfunder) and more.
 
-https://etherscan.io/address/0xc0806d02b4e9ac39278300a1d169564758b02433#readContract
-
-vyper version 3.10.0
-add vyper admonition!
-
-
-
-
-
-
-$$I_{u} = \int \frac{r'(t)b_{u}(t)}{S(t)}dt$$
-
-| Variable | Description |
-| :------: | --- |
-| $I_{u}$ | Amount of tokens the user has to have minted to him |
-| $r'(t)$ | |
-
-
-
-Example without boosting:
-
-```
-inflation rate: r = 10%
-gauge weight: w_g = 0.3 (30%)
-gauge type weight: w_t = 1 (100%)
-
-adjusted inflation rate: r' = w_g * w_t * r = 0.3 * 1 * 0.1 = 0.03 or 3% of the CRV emissions allocated to the gauge annualy (no changes assumed).
-
-users balance:      b_u(t) = 1_000 LP tokens
-total liquidity:    S(t) = 10_000 LP tokens
-time period:        Δt = 1 year (for simplification)
-```
-
-calculation assuming no boost:
-I_u = (0.3 * 1000)/10000 * 1 = 0.003 or 0.3% of the total CRV emissions allocated to the user.
-
-
-with boost:
-when the user has a boost, the b_u(t) is adjusted:
-
-b_u(t) = min(0.4 * b_u + 0.6 * S * (w_i / W), b_u)
-
+!!!github "GitHub"
+    There are several versions of liquidity gauge contracts in use. Source code for all the liquidity gauges can be found on [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges).
 
 ---
 
-$w_i: b_u^* = \min(0.4 \times b_u + 0.6 \times S \times \frac{w_i}{W}, b_u)$
+*Liquidity gauges have two types of rewards:*
 
-| Variable | Description |
-| :------: | --- |
-| $w_i$ | vecrv balance of user |
-| $b_u$ | LP token balance deposited into the gauge |
-| $S$ | total LP tokens deposited into the gauge |
-| $W$ | total veCRV |
-| $b_u^*$ | boosted balance of the user |
+### CRV Emissions
+
+Curve operates such that veCRV holders can decide where future CRV emissions are directed to. Typically, these emissions are allocated to a liquidity gauge. However, before gauges are eligible to receive CRV emissions, they must be added to the `GaugeController.vy` contract. This addition requires a successfully passed DAO vote. Once added, the gauge becomes eligible for gauge weight voting. When a gauge receives gauge weight through user votes, it starts to receive CRV emissions. Changes in weight take effect every Thursday at 00:00 UTC. 
+
+Gauges contain logic that enables users to boost their provided liquidity up to 2.5x by locking CRV for veCRV.
+
+
+### External Rewards
+
+Besides CRV emissions, there is also the possibility to add "external (also called permissionless) rewards" to the gauge. More on this [here](#permissionless-rewards).
+
+Unlike native CRV rewards, these kinds of rewards cannot be boosted.
 
 
 
 ---
 
-## Overview
-
-What is a gauge? what does it do?
-- stake lp tokens in the gauge
-- gauge measures liquidity across every depositor and distributes rewards accordingly
-- gauges are always specified to one liquitiy pool. every pool needs its own gauge.
 
 
+## **Depositing and Withdrawing**
 
+Liquidity pool (LP) tokens can be deposited into or withdrawn from a gauge at any time.
 
-A liquidity gauge essentially measures the liquidity provided by users. These gauges can be used to incentivise users to provide liquitiy by directying rewards to it. Generally, there are two ways to add rewards to a gauge:
+In user interfaces and documentation, the terms "staking" and "unstaking" are often used when referring to gauges. However, the terminology used in the actual source code is `deposit` and `withdraw`.
 
-**CRV Emissions**
+When LP tokens are deposited into a gauge, the smart contract mints an equivalent amount of "gauge tokens" to the depositor. This mechanism ensures that when tokens are withdrawn, the depositor receives the same amount of LP tokens originally deposited. LP tokens are ERC20 tokens and transferable.
 
-CRV Emissions: Curve works in a way that veCRV holders can decide where future CRV emissions go to. A possible destination is a liquidity gauge. Before gauges are elegible to receive CRV emissions, they need to be added to the `GaugeController.vy` contract. Adding requires a successfully passed DAO vote. Once added, the gauge is elegible to be voted for (so called gauge weight voting). Once a gauge receives gauge weight by users voting for it, the gauge receives CRV emissions. Weight changes always take effect every Thursday at 00:00 UTC. Depending on the weight, the gauge essentially receives a fixed amount of CRV over the next 7 days until the gauge weights update again.
-
-
-**External Rewards**
-
-Besides receiving CRV emissions due to voting for the gauge weight, addresses with certain rights can add external rewards to a gauge.
-todo
-
----
-
-
-## Depositing and Withdrawing
-
-Liquidity pool (LP) tokens can be deposited into or withdrawn from the gauge at any time.
-
-In user interfaces and documentation, the terms "staking" and "unstaking" are often used in relation to gauges. However, the source code for the smart contract employs the terms `deposit` and `withdraw` instead.
-
-When LP tokens are deposited into the gauge, the smart contract issues an equivalent amount of "gauge tokens" to the depositor. This ensures that when tokens are withdrawn, the depositor receives the exact amount of LP tokens originally deposited, maintaining the value of the initial investment. It's important to note that LP tokens are transferable.
-
-!!!example
-    Alice deposits 100 crvUSD into the crvUSD/USDC liquidity pool and receives 99 LP tokens in return. Observing significant gauge weight and subsequent CRV emissions in this pool, she opts to deposit her LP tokens into the gauge. Consequently, she begins to earn CRV rewards based on her liquidity share and her boost factor within the pool.
-
-
-todo:
-- explain boost
-
+!!! example "Example of Depositing and Earning Rewards"
+    Alice deposits 100 crvUSD into the crvUSD/USDC liquidity pool and receives 99 LP tokens in return. Observing significant gauge weight and subsequent CRV emissions to this pool, she decides to deposit (stake) her LP tokens into the gauge. Consequently, she begins to earn CRV rewards based on her liquidity share and her boost factor within the pool. Alice can claim rewards or withdraw her LP tokens at any point in time.
 
 
 ### `deposit`
@@ -113,9 +52,9 @@ todo:
 
     | Input            | Type      | Description                        |
     | ---------------- | --------- | ---------------------------------- |
-    | `_value`         | `uint256` | Number of LP tokens to deposit. |
+    | `_value`         | `uint256` | Number of LP tokens to deposit.    |
     | `_addr`          | `address` | Address to deposit the LP tokens for. Defaults to `msg.sender`. |
-    | `_claim_rewards` | `bool`    | todo |
+    | `_claim_rewards` | `bool`    | Whether to additionally claim rewards or not. |
 
     ??? quote "Source code"
 
@@ -171,14 +110,14 @@ todo:
 ### `withdraw`
 !!! description "`LiquidityGaugeV6.withdraw(_value: uint256, _claim_rewards: bool = False)`"
 
-    Function to withdraw `_value` of LP tokens.
+    Function to withdraw `_value` of LP tokens from the gauge.
 
     Emits: `Withdraw` and `Transfer`
 
     | Input            | Type      | Description                        |
     | ---------------- | --------- | ---------------------------------- |
     | `_value`         | `uint256` | Number of LP tokens to withdraw. |
-    | `_claim_rewards` | `bool`    | todo |
+    | `_claim_rewards` | `bool`    | Whether to additionally claim rewards or not. |
 
     ??? quote "Source code"
 
@@ -228,87 +167,92 @@ todo:
         >>> soon
         ```
 
+
 ---
 
 
-## Claiming Rewards
+## **Claiming Rewards**
 
-Reward tokens can be claimed using the `claim_rewards` function. This claims externally added rewards from the gauge. 
+Reward tokens can be claimed using the `claim_rewards` function. This function claims all externally added rewards from the gauge in a single transaction.
 
-To claim CRV rewards, which were directed through the gauge weight, the user needs to claim those from the `Minter.vy` using the `mint` function.
+!!! warning "Which rewards does `claim_rewards` claim?"
+    The `claim_rewards` function only claims ["permissionless rewards"](#permissionless-rewards), not CRV emissions directed to the gauge. If there are multiple reward tokens, calling the function will result in a claim of all reward tokens at once.
 
+    CRV emissions directed to the gauge are claimable from the [`Minter.vy`](../minter.md) contract using the [`mint`](../minter.md#mint) function.
 
+The liquidity gauge records checkpoints to determine how much external rewards each user is entitled to claim. 
 
+???quote "`_checkpoint_rewards`"
 
-can you claim someone elses rewards for him?
+    ```py
+    @internal
+    def _checkpoint_rewards(_user: address, _total_supply: uint256, _claim: bool, _receiver: address):
+        """
+        @notice Claim pending rewards and checkpoint rewards for a user
+        """
 
-
-checks `reward_count` to see how many tokens need to be claimed.
-
-```py
-@internal
-def _checkpoint_rewards(_user: address, _total_supply: uint256, _claim: bool, _receiver: address):
-    """
-    @notice Claim pending rewards and checkpoint rewards for a user
-    """
-
-    user_balance: uint256 = 0
-    receiver: address = _receiver
-    if _user != empty(address):
-        user_balance = self.balanceOf[_user]
-        if _claim and _receiver == empty(address):
-            # if receiver is not explicitly declared, check if a default receiver is set
-            receiver = self.rewards_receiver[_user]
-            if receiver == empty(address):
-                # if no default receiver is set, direct claims to the user
-                receiver = _user
-
-    reward_count: uint256 = self.reward_count
-    for i in range(MAX_REWARDS):
-        if i == reward_count:
-            break
-        token: address = self.reward_tokens[i]
-
-        integral: uint256 = self.reward_data[token].integral
-        last_update: uint256 = min(block.timestamp, self.reward_data[token].period_finish)
-        duration: uint256 = last_update - self.reward_data[token].last_update
-
-        if duration != 0 and _total_supply != 0:
-            self.reward_data[token].last_update = last_update
-            integral += duration * self.reward_data[token].rate * 10**18 / _total_supply
-            self.reward_data[token].integral = integral
-
+        user_balance: uint256 = 0
+        receiver: address = _receiver
         if _user != empty(address):
-            integral_for: uint256 = self.reward_integral_for[token][_user]
-            new_claimable: uint256 = 0
+            user_balance = self.balanceOf[_user]
+            if _claim and _receiver == empty(address):
+                # if receiver is not explicitly declared, check if a default receiver is set
+                receiver = self.rewards_receiver[_user]
+                if receiver == empty(address):
+                    # if no default receiver is set, direct claims to the user
+                    receiver = _user
 
-            if integral_for < integral:
-                self.reward_integral_for[token][_user] = integral
-                new_claimable = user_balance * (integral - integral_for) / 10**18
+        reward_count: uint256 = self.reward_count
+        for i in range(MAX_REWARDS):
+            if i == reward_count:
+                break
+            token: address = self.reward_tokens[i]
 
-            claim_data: uint256 = self.claim_data[_user][token]
-            total_claimable: uint256 = (claim_data >> 128) + new_claimable
-            if total_claimable > 0:
-                total_claimed: uint256 = claim_data % 2**128
-                if _claim:
-                    assert ERC20(token).transfer(receiver, total_claimable, default_return_value=True)
-                    self.claim_data[_user][token] = total_claimed + total_claimable
-                elif new_claimable > 0:
-                    self.claim_data[_user][token] = total_claimed + (total_claimable << 128)
-```
+            integral: uint256 = self.reward_data[token].integral
+            last_update: uint256 = min(block.timestamp, self.reward_data[token].period_finish)
+            duration: uint256 = last_update - self.reward_data[token].last_update
+
+            if duration != 0 and _total_supply != 0:
+                self.reward_data[token].last_update = last_update
+                integral += duration * self.reward_data[token].rate * 10**18 / _total_supply
+                self.reward_data[token].integral = integral
+
+            if _user != empty(address):
+                integral_for: uint256 = self.reward_integral_for[token][_user]
+                new_claimable: uint256 = 0
+
+                if integral_for < integral:
+                    self.reward_integral_for[token][_user] = integral
+                    new_claimable = user_balance * (integral - integral_for) / 10**18
+
+                claim_data: uint256 = self.claim_data[_user][token]
+                total_claimable: uint256 = (claim_data >> 128) + new_claimable
+                if total_claimable > 0:
+                    total_claimed: uint256 = claim_data % 2**128
+                    if _claim:
+                        assert ERC20(token).transfer(receiver, total_claimable, default_return_value=True)
+                        self.claim_data[_user][token] = total_claimed + total_claimable
+                    elif new_claimable > 0:
+                        self.claim_data[_user][token] = total_claimed + (total_claimable << 128)
+    ```
 
 
+*These checkpoints occur:*
 
+- When a reward token is deposited (this does not record a checkpoint for an individual user but creates a general checkpoint).
+- When transferring LP tokens (records a checkpoint for both the sender and the receiver).
+- When depositing (staking) LP tokens into the gauge.
+- When withdrawing (unstaking) LP tokens from the gauge.
+- When rewards (excluding CRV emission rewards, which are claimed via the `Minter.vy` contract) are claimed.
 
 
 ### `claim_rewards`
 !!! description "`LiquidityGaugeV6.claim_rewards(_addr: address = msg.sender, _receiver: address = empty(address))`"
 
     !!!warning "Claiming for another user"
-        When claiming for another user, the rewards can not be redirected to another wallet. Rewards can only be "claimed into" the users wallet which accurred the rewards. Otherwise the transaction reverts.
+        When claiming for another user, the rewards can not be redirected to another wallet.
     
-
-    Function to claim rewards from the gauge and makes a checkpoint <todo>.
+    Function to claim rewards from the gauge.
 
     | Input       | Type      | Description                        |
     | ----------- | --------- | ---------------------------------- |
@@ -387,15 +331,14 @@ def _checkpoint_rewards(_user: address, _total_supply: uint256, _claim: bool, _r
 
     === "Example"
         ```shell
-        >>> LiquidityGaugeV6.
-        ''
+        >>> soon
         ```
 
 
 ### `claimed_reward`
 !!! description "`LiquidityGaugeV6.claimed_reward(_addr: address, _token: address) -> uint256:`"
 
-    Getter for the total amount of `_tokens` claimed by `_addr`.
+    Getter for the total amount of `_token` claimed by `_addr`.
 
     Returns: claimed tokens (`uint256`).
 
@@ -448,6 +391,8 @@ def _checkpoint_rewards(_user: address, _total_supply: uint256, _claim: bool, _r
         === "LiquidityGaugeV6.vy"
 
             ```python
+            reward_integral_for: public(HashMap[address, HashMap[address, uint256]])
+
             @view
             @external
             def claimable_reward(_user: address, _reward_token: address) -> uint256:
@@ -538,23 +483,21 @@ def _checkpoint_rewards(_user: address, _total_supply: uint256, _claim: bool, _r
         ```
 
 
+
 ---
 
 
 
-## Permissionless Rewards
+## **Permissionless Rewards**
 
-Newer liquidity gauges open the possibility to add permissionless rewards. Permissionless may be a weird terminology for this. Only the deployer of the gauge can add third-party rewards. This makes sense as otherwise users could spam the gauge with random shitcoins. 
+Newer liquidity gauges (from `LiquidityGaugeV3.vy` and upwards) introduce the possibility to add what are termed "permissionless rewards." However, the term "permissionless" might be misleading as only a `distributor` address, set by the gauge's `manager`, can add these rewards. The `manager` address is set to [`tx.origin`](https://docs.vyperlang.org/en/stable/constants-and-vars.html?highlight=tx.origin#block-and-transaction-properties) at the time of contract deployment.
 
-There is a gauge `manager` set to `tx.origin` for each gauge.
+To add rewards to a gauge, a reward token and a distributor must be set by calling the `set_reward_distributor` function. This action can only be performed by the `manager` or the `admin` of the Factory contract, wich deployed the pool. Each reward token can have only one distributor. The "right to add a reward token" can be transfered. Tokens are added as rewards to the gauge via the `add_reward` method.
 
-To be able to add rewards to the gauge, a reward token and distributor needs to be added by calling the `add_reward` funtion. This can only be done by the `manager` or the `admin` of the Factory. There can only be one distributor for a reward tokens. The distributor himself can transfer the ability to add the specific reward token.
+!!!warning "NOT BOOSTABLE: Distribution of Externally Added Rewards"
+    Externally added rewards are not boostable and are distributed purely based on the user's unboosted share of liquidity in the gauge.
 
-
-!!!warning
-    Externally added rewards are not boostable. They are distributed according to the user's liquidity share in the gauge.
-
-    E.g. if Alice amounts to a total of 10% of LP tokens staked in the gauge, she will receive 10% of the externally added rewards assuming no changes if liquidity share or reward amount.
+    For example, if Alice holds 10% of the LP tokens staked in the gauge, she will receive 10% of the externally added rewards, assuming there are no changes in her liquidity share or the amount of rewards.
 
 
 
@@ -647,6 +590,40 @@ To be able to add rewards to the gauge, a reward token and distributor needs to 
         ```
 
 
+### `manager`
+!!! description "`LiquidityGaugeV6.manager() -> address: view`"
+
+    Getter for the gauge manager. This address can add new reward tokens or set distributors for those tokens. The variable is populated when initializing the contract and is set to `tx.origin`, meaning the signer of the transaction which deploys the gauge is assigned as the gauge manager. The gauge manager is upgradable. It can be changed via the `set_gauge_manager` function.
+
+    Returns: gauge manager (`address`).
+
+    ??? quote "Source code"
+
+        === "LiquidityGaugeV6.vy"
+
+            ```python
+            manager: public(address)
+
+            @external
+            def __init__(_lp_token: address):
+                """
+                @notice Contract constructor
+                @param _lp_token Liquidity Pool contract address
+                """
+                self.lp_token = _lp_token
+                self.factory = msg.sender
+                self.manager = tx.origin
+
+                ...
+            ```
+
+    === "Example"
+        ```shell
+        >>> LiquidityGaugeV6.manager()
+        '0xC56706334afE5a1638845ED9168E2ca3b3dbCCe7'
+        ```
+
+
 ### `add_reward`
 !!! description "`LiquidityGaugeV6.add_reward(_reward_token: address, _distributor: address):`"
 
@@ -687,40 +664,6 @@ To be able to add rewards to the gauge, a reward token and distributor needs to 
     === "Example"
         ```shell
         >>> soon
-        ```
-
-
-### `manager`
-!!! description "`LiquidityGaugeV6.manager() -> address: view`"
-
-    Getter for the gauge manager. This address can add new reward tokens or set distributors for those tokens. The variable is populated when initializing the contract and is set to `tx.origin`, meaning the signer of the transaction which deploys the gauge is assigned as the gauge manager. The gauge manager is upgradable. It can be changed via the `set_gauge_manager` function.
-
-    Returns: gauge manager (`address`).
-
-    ??? quote "Source code"
-
-        === "LiquidityGaugeV6.vy"
-
-            ```python
-            manager: public(address)
-
-            @external
-            def __init__(_lp_token: address):
-                """
-                @notice Contract constructor
-                @param _lp_token Liquidity Pool contract address
-                """
-                self.lp_token = _lp_token
-                self.factory = msg.sender
-                self.manager = tx.origin
-
-                ...
-            ```
-
-    === "Example"
-        ```shell
-        >>> LiquidityGaugeV6.manager()
-        '0xC56706334afE5a1638845ED9168E2ca3b3dbCCe7'
         ```
 
 
@@ -884,299 +827,24 @@ To be able to add rewards to the gauge, a reward token and distributor needs to 
         >>> soon
         ```
 
----
-
-
-## Killing Gauges
-
-Liquidity gauges have a "killed status" stored in `is_killed`. This status can be set by the `admin` of the Factory, which was used to initially deploy the gauge using the `set_killed` function. If the status is set to `True`, the gauges `rate` and `future_rate` will be set to zero and it will not be eligible to receive any more CRV emissions.
-
-"Killing a gauge" can be undone by simply setting the `is_killed` status back to `false` using the `set_killed` function again.
-
-
-todo: what happens with permissionless rewards?
-
-
-### `is_killed`
-!!! description "`LiquidityGaugeV6.is_killed() -> bool: view`"
-
-    Getter function to check if the gauge is killed. If `ture`, the inflation rate for the gauge will be set to zero.
-
-    Returns: killed status (`bool`).
-
-    ??? quote "Source code"
-
-        === "LiquidityGaugeV6.vy"
-
-            ```python
-            is_killed: public(bool)
-
-            @internal
-            def _checkpoint(addr: address):
-                """
-                @notice Checkpoint for a user
-                @dev Updates the CRV emissions a user is entitled to receive
-                @param addr User address
-                """
-                _period: int128 = self.period
-                _period_time: uint256 = self.period_timestamp[_period]
-                _integrate_inv_supply: uint256 = self.integrate_inv_supply[_period]
-
-                inflation_params: uint256 = self.inflation_params
-                prev_future_epoch: uint256 = inflation_params >> 216
-                gauge_is_killed: bool = self.is_killed
-
-                rate: uint256 = inflation_params % 2 ** 216
-                new_rate: uint256 = rate
-                if gauge_is_killed:
-                    rate = 0
-                    new_rate = 0
-                ...
-            ```
-
-    === "Example"
-        ```shell
-        >>> LiquidityGaugeV6.is_killed()
-        'False'
-        ```
-
-
-### `set_killed`
-!!! description "`LiquidityGaugeV6.set_killed(_is_killed: bool)`"
-
-    !!!guard "Guarded Methods"
-        This function can only be called by the `admin` of the Factory.
-
-    Function to kill a gauge.
-
-    | Input        | Type   | Description                        |
-    | ------------ | ------ | ---------------------------------- |
-    | `_is_killed` | `bool` | Status to set the killed status to.  |
-
-    ??? quote "Source code"
-
-        === "LiquidityGaugeV6.vy"
-
-            ```python
-            is_killed: public(bool)
-
-            @external
-            def set_killed(_is_killed: bool):
-                """
-                @notice Set the killed status for this contract
-                @dev When killed, the gauge always yields a rate of 0 and so cannot mint CRV
-                @param _is_killed Killed status to set
-                """
-                assert msg.sender == Factory(self.factory).admin()  # dev: only owner
-
-                self.is_killed = _is_killed
-            ```
-
-    === "Example"
-        ```shell
-        >>> soon
-        ```
-
 
 ---
 
 
-## Contract Info Methods
+## **Boosting Your LP Tokens**
 
-### `period`
-!!! description "`LiquidityGaugeV6.period() -> int128: view`"
+Provided liquidity is boosted by the veCRV balance of the user, allowing for boosts up to 2.5 times. Gauges measure liquidity with respect to the user's boost in the `working_balances` variable. The total liquidity deposited in the gauge is represented by the `working_supply` method.
 
-    Getter for the period of <todo>.
+The [`working_balances`](#working_balances) of a user and the total [`working_supply`](#working_supply) are adjusted via the internal `_update_liquidity_limit` function when the following actions occur:
 
-    Returns: period (`int128`).
-
-    ??? quote "Source code"
-
-        === "LiquidityGaugeV6.vy"
-
-            ```python
-            period: public(int128)
-            ```
-
-    === "Example"
-        ```shell
-        >>> LiquidityGaugeV6.period()
-        6
-        ```
+- **Transferring Tokens**: `working_balances` are adjusted for both the sender and the receiver of the LP tokens.
+- **Depositing LP Tokens into the Gauge**: Adjusts the balance to reflect the new total.
+- **Withdrawing LP Tokens from the Gauge**: Reduces the balance according to the amount withdrawn.
+- **Performing a Manual Checkpoint**: Using the `user_checkpoint` function.
+- **When a User is 'Kicked' for Abusing Their Boost**: For more information on what constitutes abuse and the repercussions, see [here](#kick).
 
 
-### `period_timestamp`
-!!! description "`LiquidityGaugeV6.period_timestamp(arg0: uint256) -> uint256: view`"
-
-    Getter for the timestamp <todo>. everytime a user interacts with the gauge?
-
-    Returns: timestamp
-
-    | Input  | Type      | Description                        |
-    | ------ | --------- | ---------------------------------- |
-    | `i`    | `uint256` | Period |
-
-    ??? quote "Source code"
-
-        === "LiquidityGaugeV6.vy"
-
-            ```python
-            period_timestamp: public(uint256[100000000000000000000000000000])
-            ```
-
-    === "Example"
-        ```shell
-        >>> LiquidityGaugeV6.
-        ''
-        ```
-
-
-### `inflation_rate`
-!!! description "`LiquidityGaugeV6.inflation_rate() -> uint256: view`"
-
-    Getter for the current inflation rate per second of CRV. This getter retrieves the lower 216 bits of `inflation_params`, which stores the inflation rate and the future epoch time.
-
-    Returns: CRV inflation rate (`uint256`).
-
-    ??? quote "Source code"
-
-        === "LiquidityGaugeV6.vy"
-
-            ```python
-            inflation_params: uint256
-
-            @view
-            @external
-            def inflation_rate() -> uint256:
-                """
-                @notice Get the locally stored CRV inflation rate
-                """
-                return self.inflation_params % 2 ** 216
-            ```
-
-    === "Example"
-        ```shell
-        >>> LiquidityGaugeV6.inflation_rate()
-        5181574864521283150
-        ```
-
-
-### `future_epoch_time`
-!!! description "`LiquidityGaugeV6.future_epoch_time() -> uint256: view`"
-
-    Getter for the future epoch time. This getter retrieves the upper 216 bits of `inflation_params`, which stores the inflation rate and the future epoch time.
-
-    Returns: future epoch time (`uint256`).
-
-    ??? quote "Source code"
-
-        === "LiquidityGaugeV6.vy"
-
-            ```python
-            inflation_params: uint256
-
-            @view
-            @external
-            def future_epoch_time() -> uint256:
-                """
-                @notice Get the locally stored CRV future epoch start time
-                """
-                return self.inflation_params >> 216
-            ```
-
-    === "Example"
-        ```shell
-        >>> LiquidityGaugeV6.future_epoch_time()
-        1723501048
-        ```
-
-
-### `factory`
-!!! description "`LiquidityGaugeV6.factory() -> address: view`"
-
-    Getter for the factory which deployed the gauge.
-
-    Returns: factory (`address`).
-
-    ??? quote "Source code"
-
-        === "LiquidityGaugeV6.vy"
-
-            ```python
-            factory: public(address)
-
-            @external
-            def __init__(_lp_token: address):
-                """
-                @notice Contract constructor
-                @param _lp_token Liquidity Pool contract address
-                """
-                self.lp_token = _lp_token
-                self.factory = msg.sender
-                self.manager = tx.origin
-                ...
-            ```
-
-    === "Example"
-        ```shell
-        >>> LiquidityGaugeV6.factory()
-        '0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F'
-        ```
-
-
-### `lp_token`
-!!! description "`LiquidityGaugeV6.lp_token() -> address: view`"
-
-    Getter for the LP token which can be deposited into the gauge.
-
-    Returns: LP token (`address`).
-
-    ??? quote "Source code"
-
-        === "LiquidityGaugeV6.vy"
-
-            ```python
-            lp_token: public(address)
-
-            @external
-            def __init__(_lp_token: address):
-                """
-                @notice Contract constructor
-                @param _lp_token Liquidity Pool contract address
-                """
-                self.lp_token = _lp_token
-                self.factory = msg.sender
-                self.manager = tx.origin
-                ...
-            ```
-
-    === "Example"
-        ```shell
-        >>> LiquidityGaugeV6.lp_token()
-        '0x86EA1191a219989d2dA3a85c949a12A92f8ED3Db'
-        ```
-
-
----
-
-
-## Boosting your LP tokens
-
-Provided liquidity is boosted by the veCRV balance of the user. Liquidity can be boosted up to 2.5 times. The gauges adjust the `working_balances` of users according to a user's boost.
-
-The [`working_balances`](#working_balances) of a user are adjusted whenever their LP token balance changes:
-
-- Transferring tokens: `working_balances` are adjusted for both the sender and receiver of the LP tokens.
-- Depositing LP tokens into the gauge.
-- Withdrawing LP tokens from the gauge.
-- A manual checkpoint was done using the `user_checkpoint` function.
-- When a user is "kicked" for abusing their boost (more [here](#kick)).
-
-
-
-???quote "calculating the working supply"
-
-    Function to calculate the working supply of a specific user.
+???quote "`_update_liquidity_limit`"
 
     ```py
     TOKENLESS_PRODUCTION: constant(uint256) = 40
@@ -1245,11 +913,11 @@ voting_balance_user2 = 500                  # veCRV balance user2
 voting_total = 10000                        # total veCRV balance
 ```
 
+---
 
+**NO BOOST**
 
-### NO BOOST
-
-*Lets calculate the LP position of a user that has a vecrv balance of 0.*
+*Lets calculate the LP position of a user that has a vecrv balance of 0:*
 
 $\text{lim} = 1000 * 0.4 = 400$
 
@@ -1265,9 +933,9 @@ $\text{boost factor} = \frac{400}{400} = 1$
 ---
 
 
-### BOOST
+**BOOST**
 
-*Lets calculate the LP position of a user that has a vecrv balance of 500.*
+*Lets calculate the LP position of a user that has a vecrv balance of 500 and therefore receives a boost on his provided liquidity:*
 
 $\text{lim} = 1000 * 0.4 = 400$
 
@@ -1286,7 +954,13 @@ $\text{boost factor} = \frac{1000}{400} = 2.5$
 ### `working_balances`
 !!! description "`LiquidityGaugeV6.working_balances(arg0: address) -> uint256: view`"
 
-    Getter for the working balances of a user. This is the effective balance of a user which is used to calculate the CRV rewards. Essentially the boosted balance of a user if he has some veCRV. If a user has no boost at all, tis `working_balance` will be 40% of his LP tokens. If the position is fully boosted (2.5x), his `working_balance` will be equal to his LP tokens.
+    Getter for the working balances of a user. This represents the effective liquidity of a user, which is used to calculate the CRV rewards they are entitled to. Essentially, it's the boosted balance of a user if they have some veCRV. If a user has no boost at all, their `working_balance` will be 40% of their LP tokens. If the position is fully boosted (2.5x), their `working_balance` will be equal to their LP tokens.
+
+    *For example:*
+
+    - 1 LP token with no boost = `working_balances(user) = 0.4`
+    - 1 LP token with 1.5 boost = `working_balances(user) = 1.5`
+    - 1 LP token with 2.5 boost = `working_balances(user) = 2.5`
 
     Returns: working balance (`uint256`).
 
@@ -1351,7 +1025,7 @@ $\text{boost factor} = \frac{1000}{400} = 2.5$
             ```python
             working_supply: public(uint256) 
 
-                        @internal
+            @internal
             def _update_liquidity_limit(addr: address, l: uint256, L: uint256):
                 """
                 @notice Calculate limits which depend on the amount of CRV token per-user.
@@ -1386,101 +1060,154 @@ $\text{boost factor} = \frac{1000}{400} = 2.5$
 
 
 
-## todo
-
-### `integrate_checkpoint`
-!!! description "`LiquidityGaugeV6.integrate_checkpoint() -> uint256`"
-
-    Getter for the timestamp of the last recorded checkpoint.
-
-    Returns: timestamp (`uint256`).
-
-    ??? quote "Source code"
-
-        === "LiquidityGaugeV6.vy"
-
-            ```python
-            period_timestamp: public(uint256[100000000000000000000000000000])
-
-            @view
-            @external
-            def integrate_checkpoint() -> uint256:
-                """
-                @notice Get the timestamp of the last checkpoint
-                """
-                return self.period_timestamp[self.period]
-            ```
-
-    === "Example"
-        ```shell
-        >>> LiquidityGaugeV6.integrate_checkpoint()
-        1713351359
-        ```
+---
 
 
-### `integrate_checkpoint_of`
-!!! description "`LiquidityGaugeV6.integrate_checkpoint_of(arg0: address) -> uint256: view`"
 
-    Getter for the timestamp of the last recorded checkpoint for a specific user.
-
-    Returns: timestamp (`uint256`).
-
-    | Input  | Type      | Description                        |
-    | ------ | --------- | ---------------------------------- |
-    | `arg0` | `address` | Address to check the timestamp of the last checkpoint. |
-
-    ??? quote "Source code"
-
-        === "LiquidityGaugeV6.vy"
-
-            ```python
-            integrate_checkpoint_of: public(HashMap[address, uint256])
-            ```
-
-    === "Example"
-        ```shell
-        >>> LiquidityGaugeV6.integrate_checkpoint_of('0x989AEb4d175e16225E39E87d0D97A3360524AD80')
-        1713351359
-        ```
+## **Checkpoints**
 
 
-### `integrate_fraction`
-!!! description "`LiquidityGaugeV6.`"
-
-    todo: Getter for the 
-
-    Returns:
-
-    Emits: 
-
-    | Input  | Type      | Description                        |
-    | ------ | --------- | ---------------------------------- |
-    | `i`    | `uint256` |  |
-
-    ??? quote "Source code"
-
-        === "LiquidityGaugeV6.vy"
-
-            ```python
-            ```
-
-    === "Example"
-        ```shell
-        >>> LiquidityGaugeV6.integrate_fraction('0x989AEb4d175e16225E39E87d0D97A3360524AD80')
-        1662908936954145
-        ```
-
-
-### `integrate_inv_supply`
-### `integrate_inv_supply_of`
-### `reward_integral_for`
 ### `user_checkpoint`
+!!! description "`LiquidityGaugeV6.user_checkpoint(addr: address) -> bool`"
+
+    !!!guard "Guarded Methods"
+        This function can only be called by the `addr` himself or the `Minter.vy` contract.
+
+    Function to record a checkpoint for `addr`.
+
+    Returns: True (`bool`).
+
+    | Input  | Type      | Description                            |
+    | ------ | --------- | -------------------------------------- |
+    | `addr` | `address` | Address who's checkpoint is recoreded. |
+
+    ??? quote "Source code"
+
+        === "LiquidityGaugeV6.vy"
+
+            ```python
+            @external
+            def user_checkpoint(addr: address) -> bool:
+                """
+                @notice Record a checkpoint for `addr`
+                @param addr User address
+                @return bool success
+                """
+                assert msg.sender in [addr, MINTER]  # dev: unauthorized
+                self._checkpoint(addr)
+                self._update_liquidity_limit(addr, self.balanceOf[addr], self.totalSupply)
+                return True
+
+            @internal
+            def _checkpoint(addr: address):
+                """
+                @notice Checkpoint for a user
+                @dev Updates the CRV emissions a user is entitled to receive
+                @param addr User address
+                """
+                _period: int128 = self.period
+                _period_time: uint256 = self.period_timestamp[_period]
+                _integrate_inv_supply: uint256 = self.integrate_inv_supply[_period]
+
+                inflation_params: uint256 = self.inflation_params
+                prev_future_epoch: uint256 = inflation_params >> 216
+                gauge_is_killed: bool = self.is_killed
+
+                rate: uint256 = inflation_params % 2 ** 216
+                new_rate: uint256 = rate
+                if gauge_is_killed:
+                    rate = 0
+                    new_rate = 0
+
+                if prev_future_epoch >= _period_time:
+                    future_epoch_time_write: uint256 = CRV20(CRV).future_epoch_time_write()
+                    if not gauge_is_killed:
+                        new_rate = CRV20(CRV).rate()
+                    self.inflation_params = (future_epoch_time_write << 216) + new_rate
+
+                # Update integral of 1/supply
+                if block.timestamp > _period_time:
+                    _working_supply: uint256 = self.working_supply
+                    Controller(GAUGE_CONTROLLER).checkpoint_gauge(self)
+                    prev_week_time: uint256 = _period_time
+                    week_time: uint256 = min((_period_time + WEEK) / WEEK * WEEK, block.timestamp)
+
+                    for i in range(500):
+                        dt: uint256 = week_time - prev_week_time
+                        w: uint256 = Controller(GAUGE_CONTROLLER).gauge_relative_weight(self, prev_week_time)
+
+                        if _working_supply > 0:
+                            if prev_future_epoch >= prev_week_time and prev_future_epoch < week_time:
+                                # If we went across one or multiple epochs, apply the rate
+                                # of the first epoch until it ends, and then the rate of
+                                # the last epoch.
+                                # If more than one epoch is crossed - the gauge gets less,
+                                # but that'd meen it wasn't called for more than 1 year
+                                _integrate_inv_supply += rate * w * (prev_future_epoch - prev_week_time) / _working_supply
+                                rate = new_rate
+                                _integrate_inv_supply += rate * w * (week_time - prev_future_epoch) / _working_supply
+                            else:
+                                _integrate_inv_supply += rate * w * dt / _working_supply
+                            # On precisions of the calculation
+                            # rate ~= 10e18
+                            # last_weight > 0.01 * 1e18 = 1e16 (if pool weight is 1%)
+                            # _working_supply ~= TVL * 1e18 ~= 1e26 ($100M for example)
+                            # The largest loss is at dt = 1
+                            # Loss is 1e-9 - acceptable
+
+                        if week_time == block.timestamp:
+                            break
+                        prev_week_time = week_time
+                        week_time = min(week_time + WEEK, block.timestamp)
+
+                _period += 1
+                self.period = _period
+                self.period_timestamp[_period] = block.timestamp
+                self.integrate_inv_supply[_period] = _integrate_inv_supply
+
+                # Update user-specific integrals
+                _working_balance: uint256 = self.working_balances[addr]
+                self.integrate_fraction[addr] += _working_balance * (_integrate_inv_supply - self.integrate_inv_supply_of[addr]) / 10 ** 18
+                self.integrate_inv_supply_of[addr] = _integrate_inv_supply
+                self.integrate_checkpoint_of[addr] = block.timestamp
+
+            @internal
+            def _update_liquidity_limit(addr: address, l: uint256, L: uint256):
+                """
+                @notice Calculate limits which depend on the amount of CRV token per-user.
+                        Effectively it calculates working balances to apply amplification
+                        of CRV production by CRV
+                @param addr User address
+                @param l User's amount of liquidity (LP tokens)
+                @param L Total amount of liquidity (LP tokens)
+                """
+                # To be called after totalSupply is updated
+                voting_balance: uint256 = VotingEscrowBoost(VEBOOST_PROXY).adjusted_balance_of(addr)
+                voting_total: uint256 = ERC20(VOTING_ESCROW).totalSupply()
+
+                lim: uint256 = l * TOKENLESS_PRODUCTION / 100
+                if voting_total > 0:
+                    lim += L * voting_balance / voting_total * (100 - TOKENLESS_PRODUCTION) / 100
+
+                lim = min(l, lim)
+                old_bal: uint256 = self.working_balances[addr]
+                self.working_balances[addr] = lim
+                _working_supply: uint256 = self.working_supply + lim - old_bal
+                self.working_supply = _working_supply
+
+                log UpdateLiquidityLimit(addr, l, L, lim, _working_supply)
+            ```
+
+    === "Example"
+        ```shell
+        >>> soon
+        ```
 
 
 ### `kick`
 !!! description "`LiquidityGaugeV6.kick(addr: address)`"
 
-    Function to kick a user for abusing their boost. A user can only be kicked if they either had another voting event or their voting escrow lock expired.
+    Function to trigger a checkpoint for `addr` and therefore updating their boost. A user can only be kicked if they either had another voting event or their voting escrow lock expired. This function ensures no abusive usage of a boost.
 
     Emits: `UpdateLiquidityLimit`
 
@@ -1621,136 +1348,306 @@ $\text{boost factor} = \frac{1000}{400} = 2.5$
 
     === "Example"
         ```shell
-        >>> LiquidityGaugeV6.
-        ''
+        >>> soon
         ```
-
-
 
 
 ---
 
+## **Killing Gauges**
 
-!!!guard "Guarded Methods"
-    This function can only be called by the `admin` of the contract.
+Liquidity gauges have a "killed status" stored in the `is_killed` variable. This status can be set by the `admin` of the Factory, which was used to initially deploy the gauge, using the `set_killed` function. If the status is set to `True`, the gauges' `rate` and `future_rate` will be set to zero, and it will not be eligible to receive any more CRV emissions.
 
-!!! description "`LiquidityGaugeV6.`"
+"Killing a gauge" can be undone by simply setting the `is_killed` status back to `false` using the `set_killed` function again.
 
-    Function to
+!!!warning "Effect of Killing Gauges on Rewards"
+    "Killing a gauge" affects only CRV emissions; externally added rewards will still be distributed.
 
-    Returns:
 
-    Emits: 
+### `is_killed`
+!!! description "`LiquidityGaugeV6.is_killed() -> bool: view`"
 
-    | Input  | Type      | Description                        |
-    | ------ | --------- | ---------------------------------- |
-    | `i`    | `uint256` |  |
+    Getter function to check if the gauge is killed. If `ture`, the inflation rate for the gauge will be set to zero.
+
+    Returns: killed status (`bool`).
 
     ??? quote "Source code"
 
         === "LiquidityGaugeV6.vy"
 
             ```python
+            is_killed: public(bool)
+
+            @internal
+            def _checkpoint(addr: address):
+                """
+                @notice Checkpoint for a user
+                @dev Updates the CRV emissions a user is entitled to receive
+                @param addr User address
+                """
+                _period: int128 = self.period
+                _period_time: uint256 = self.period_timestamp[_period]
+                _integrate_inv_supply: uint256 = self.integrate_inv_supply[_period]
+
+                inflation_params: uint256 = self.inflation_params
+                prev_future_epoch: uint256 = inflation_params >> 216
+                gauge_is_killed: bool = self.is_killed
+
+                rate: uint256 = inflation_params % 2 ** 216
+                new_rate: uint256 = rate
+                if gauge_is_killed:
+                    rate = 0
+                    new_rate = 0
+                ...
             ```
 
     === "Example"
         ```shell
-        >>> LiquidityGaugeV6.
-        ''
+        >>> LiquidityGaugeV6.is_killed()
+        'False'
         ```
 
 
+### `set_killed`
+!!! description "`LiquidityGaugeV6.set_killed(_is_killed: bool)`"
 
-## Checkpointing a Gauge
+    !!!guard "Guarded Methods"
+        This function can only be called by the `admin` of the Factory.
 
-What does a gauge actually do?
+    Function to kill a gauge.
 
-It updates general stuff like:
+    | Input        | Type   | Description                        |
+    | ------------ | ------ | ---------------------------------- |
+    | `_is_killed` | `bool` | Status to set the killed status to.  |
 
-- `period`
-- `period_timestamp`
-- `integrate_inv_supply`
+    ??? quote "Source code"
 
-Updates user-specific integrals:
+        === "LiquidityGaugeV6.vy"
 
-- `integrate_fraction`
-- `integrate_inv_supply_of`
-- `integrate_checkpoint_of`
+            ```python
+            is_killed: public(bool)
+
+            @external
+            def set_killed(_is_killed: bool):
+                """
+                @notice Set the killed status for this contract
+                @dev When killed, the gauge always yields a rate of 0 and so cannot mint CRV
+                @param _is_killed Killed status to set
+                """
+                assert msg.sender == Factory(self.factory).admin()  # dev: only owner
+
+                self.is_killed = _is_killed
+            ```
+
+    === "Example"
+        ```shell
+        >>> soon
+        ```
 
 
+---
 
 
-```py
-@internal
-def _checkpoint(addr: address):
-    """
-    @notice Checkpoint for a user
-    @dev Updates the CRV emissions a user is entitled to receive
-    @param addr User address
-    """
-    _period: int128 = self.period
-    _period_time: uint256 = self.period_timestamp[_period]
-    _integrate_inv_supply: uint256 = self.integrate_inv_supply[_period]
+## **Contract Info Methods**
 
-    inflation_params: uint256 = self.inflation_params
-    prev_future_epoch: uint256 = inflation_params >> 216
-    gauge_is_killed: bool = self.is_killed
+*Basic contract informations:*
 
-    rate: uint256 = inflation_params % 2 ** 216
-    new_rate: uint256 = rate
-    if gauge_is_killed:
-        rate = 0
-        new_rate = 0
+### `integrate_fraction`
+!!! description "`LiquidityGaugeV6.integrate_fraction(arg0: address) -> uint256: view`"
 
-    if prev_future_epoch >= _period_time:
-        future_epoch_time_write: uint256 = CRV20(CRV).future_epoch_time_write()
-        if not gauge_is_killed:
-            new_rate = CRV20(CRV).rate()
-        self.inflation_params = (future_epoch_time_write << 216) + new_rate
+    Getter for the total amount of CRV, both mintable and already minted, that has been allocated to `arg0` from this gauge.
 
-    # Update integral of 1/supply
-    if block.timestamp > _period_time:
-        _working_supply: uint256 = self.working_supply
-        Controller(GAUGE_CONTROLLER).checkpoint_gauge(self)
-        prev_week_time: uint256 = _period_time
-        week_time: uint256 = min((_period_time + WEEK) / WEEK * WEEK, block.timestamp)
+    Returns: integral of accrued rewards (`uint256`).
 
-        for i in range(500):
-            dt: uint256 = week_time - prev_week_time
-            w: uint256 = Controller(GAUGE_CONTROLLER).gauge_relative_weight(self, prev_week_time)
+    | Input  | Type      | Description                        |
+    | ------ | --------- | ---------------------------------- |
+    | `arg0` | `address` | Address to check for.              |
 
-            if _working_supply > 0:
-                if prev_future_epoch >= prev_week_time and prev_future_epoch < week_time:
-                    # If we went across one or multiple epochs, apply the rate
-                    # of the first epoch until it ends, and then the rate of
-                    # the last epoch.
-                    # If more than one epoch is crossed - the gauge gets less,
-                    # but that'd meen it wasn't called for more than 1 year
-                    _integrate_inv_supply += rate * w * (prev_future_epoch - prev_week_time) / _working_supply
-                    rate = new_rate
-                    _integrate_inv_supply += rate * w * (week_time - prev_future_epoch) / _working_supply
-                else:
-                    _integrate_inv_supply += rate * w * dt / _working_supply
-                # On precisions of the calculation
-                # rate ~= 10e18
-                # last_weight > 0.01 * 1e18 = 1e16 (if pool weight is 1%)
-                # _working_supply ~= TVL * 1e18 ~= 1e26 ($100M for example)
-                # The largest loss is at dt = 1
-                # Loss is 1e-9 - acceptable
+    ??? quote "Source code"
 
-            if week_time == block.timestamp:
-                break
-            prev_week_time = week_time
-            week_time = min(week_time + WEEK, block.timestamp)
+        === "LiquidityGaugeV6.vy"
 
-    _period += 1
-    self.period = _period
-    self.period_timestamp[_period] = block.timestamp
-    self.integrate_inv_supply[_period] = _integrate_inv_supply
+            ```python
+            integrate_fraction: public(HashMap[address, uint256])
+            ```
 
-    # Update user-specific integrals
-    _working_balance: uint256 = self.working_balances[addr]
-    self.integrate_fraction[addr] += _working_balance * (_integrate_inv_supply - self.integrate_inv_supply_of[addr]) / 10 ** 18
-    self.integrate_inv_supply_of[addr] = _integrate_inv_supply
-    self.integrate_checkpoint_of[addr] = block.timestamp
-```
+    === "Example"
+        ```shell
+        >>> LiquidityGaugeV6.integrate_fraction('0x989AEb4d175e16225E39E87d0D97A3360524AD80')
+        1662908936954145
+        ```
+
+
+### `period`
+!!! description "`LiquidityGaugeV6.period() -> int128: view`"
+
+    Getter for the period of the gauge. This variable is incremented by one each time a checkpoint was made.
+
+    Returns: current period (`int128`).
+
+    ??? quote "Source code"
+
+        === "LiquidityGaugeV6.vy"
+
+            ```python
+            period: public(int128)
+            ```
+
+    === "Example"
+        ```shell
+        >>> LiquidityGaugeV6.period()
+        6
+        ```
+
+
+### `period_timestamp`
+!!! description "`LiquidityGaugeV6.period_timestamp(arg0: uint256) -> uint256: view`"
+
+    Getter for the timestamp of a period.
+
+    Returns: timestamp
+
+    | Input  | Type      | Description                        |
+    | ------ | --------- | ---------------------------------- |
+    | `arg0`    | `uint256` | Period to get the timestamp for.   |
+
+    ??? quote "Source code"
+
+        === "LiquidityGaugeV6.vy"
+
+            ```python
+            period_timestamp: public(uint256[100000000000000000000000000000])
+            ```
+
+    === "Example"
+        ```shell
+        >>> LiquidityGaugeV6.period_timestamp(7)
+        1713351359
+        ```
+
+
+### `inflation_rate`
+!!! description "`LiquidityGaugeV6.inflation_rate() -> uint256: view`"
+
+    Getter for the current inflation rate per second of CRV. This getter retrieves the lower 216 bits of `inflation_params`, which stores the inflation rate and the future epoch time.
+
+    Returns: CRV inflation rate (`uint256`).
+
+    ??? quote "Source code"
+
+        === "LiquidityGaugeV6.vy"
+
+            ```python
+            inflation_params: uint256
+
+            @view
+            @external
+            def inflation_rate() -> uint256:
+                """
+                @notice Get the locally stored CRV inflation rate
+                """
+                return self.inflation_params % 2 ** 216
+            ```
+
+    === "Example"
+        ```shell
+        >>> LiquidityGaugeV6.inflation_rate()
+        5181574864521283150             # 5.18157486452 CRV per second    
+        ```
+
+
+### `future_epoch_time`
+!!! description "`LiquidityGaugeV6.future_epoch_time() -> uint256: view`"
+
+    Getter for the future epoch time. This getter retrieves the upper 216 bits of `inflation_params`, which stores the inflation rate and the future epoch time.
+
+    Returns: future epoch time (`uint256`).
+
+    ??? quote "Source code"
+
+        === "LiquidityGaugeV6.vy"
+
+            ```python
+            inflation_params: uint256
+
+            @view
+            @external
+            def future_epoch_time() -> uint256:
+                """
+                @notice Get the locally stored CRV future epoch start time
+                """
+                return self.inflation_params >> 216
+            ```
+
+    === "Example"
+        ```shell
+        >>> LiquidityGaugeV6.future_epoch_time()
+        1723501048
+        ```
+
+
+### `factory`
+!!! description "`LiquidityGaugeV6.factory() -> address: view`"
+
+    Getter for the factory which deployed the gauge.
+
+    Returns: factory (`address`).
+
+    ??? quote "Source code"
+
+        === "LiquidityGaugeV6.vy"
+
+            ```python
+            factory: public(address)
+
+            @external
+            def __init__(_lp_token: address):
+                """
+                @notice Contract constructor
+                @param _lp_token Liquidity Pool contract address
+                """
+                self.lp_token = _lp_token
+                self.factory = msg.sender
+                self.manager = tx.origin
+                ...
+            ```
+
+    === "Example"
+        ```shell
+        >>> LiquidityGaugeV6.factory()
+        '0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F'
+        ```
+
+
+### `lp_token`
+!!! description "`LiquidityGaugeV6.lp_token() -> address: view`"
+
+    Getter for the LP token which is deposited into of withdrawn from the gauge.
+
+    Returns: LP token (`address`).
+
+    ??? quote "Source code"
+
+        === "LiquidityGaugeV6.vy"
+
+            ```python
+            lp_token: public(address)
+
+            @external
+            def __init__(_lp_token: address):
+                """
+                @notice Contract constructor
+                @param _lp_token Liquidity Pool contract address
+                """
+                self.lp_token = _lp_token
+                self.factory = msg.sender
+                self.manager = tx.origin
+                ...
+            ```
+
+    === "Example"
+        ```shell
+        >>> LiquidityGaugeV6.lp_token()
+        '0x86EA1191a219989d2dA3a85c949a12A92f8ED3Db'
+        ```
+    
