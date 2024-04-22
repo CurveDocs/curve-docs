@@ -97,6 +97,7 @@ struct AddressInfo:
         22: Parameter Admin
         23: Emergency Admin
         24: CurveDAO Vault
+        25: crvUSD Token
 
     | Input      | Type      | Description                  |
     | ---------- | --------- | ---------------------------- |
