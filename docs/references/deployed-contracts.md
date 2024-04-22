@@ -395,6 +395,8 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 
 ## **Address Provider**
 
+Contract functionality is documented [here :material-arrow-up-right:](../integration/address-provider.md).
+
 !!!github
     The source code for `AddressProviderNG.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/AddressProviderNG.vy).
 
