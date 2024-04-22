@@ -6,6 +6,12 @@ The `CurveAddressProvider` is an **entrypoint contract for Curve's various regis
 For the full mapping of IDs please see [`get_id_info`](#get_id_info).
 
 
+!!!deploy "Contract Source & Deployment"
+    Source code is avaliable on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/AddressProviderNG.vy).
+
+    A list of all deployed address providers can be found [here](../references/deployed-contracts.md).
+
+
 ---
 
 
@@ -91,6 +97,7 @@ struct AddressInfo:
         22: Parameter Admin
         23: Emergency Admin
         24: CurveDAO Vault
+        25: crvUSD Token
 
     | Input      | Type      | Description                  |
     | ---------- | --------- | ---------------------------- |
