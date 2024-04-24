@@ -1,35 +1,4 @@
-<h1>Liquidity Gauge</h1>
-
-
-## **Overview**
-
-A liquidity gauge measures the liquidity provided by users and distributes rewards based on each user's share of liquidity and [boost](#boosting-your-lp-tokens). Gauges can be added not only for liquidity pools and lending vaults but also for a variety of other use cases, such as [fundraising gauges](https://github.com/vefunder/crvfunder) and more.
-
-!!!github "GitHub"
-    There are several versions of liquidity gauge contracts in use. Source code for all the liquidity gauges can be found on [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges).
-
----
-
-*Liquidity gauges have two types of rewards:*
-
-### CRV Emissions
-
-Curve operates such that veCRV holders can decide where future CRV emissions are directed to. Typically, these emissions are allocated to a liquidity gauge. However, before gauges are eligible to receive CRV emissions, they must be added to the `GaugeController.vy` contract. This addition requires a successfully passed DAO vote. Once added, the gauge becomes eligible for gauge weight voting. When a gauge receives gauge weight through user votes, it starts to receive CRV emissions. Changes in weight take effect every Thursday at 00:00 UTC. 
-
-Gauges contain logic that enables users to boost their provided liquidity up to 2.5x by locking CRV for veCRV.
-
-
-### External Rewards
-
-Besides CRV emissions, there is also the possibility to add "external (also called permissionless) rewards" to the gauge. More on this [here](#permissionless-rewards).
-
-Unlike native CRV rewards, these kinds of rewards cannot be boosted.
-
-
-
----
-
-
+<h1></h1>
 
 ## **Depositing and Withdrawing**
 
