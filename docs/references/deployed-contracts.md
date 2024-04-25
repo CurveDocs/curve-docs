@@ -451,7 +451,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
 | `Math`      | [0xc9CBC565A9F4120a2740ec6f64CC24AeB2bB3E5E](https://etherscan.io/address/0xc9CBC565A9F4120a2740ec6f64CC24AeB2bB3E5E#code) |
-| `Views`     | [0xe0B15824862f3222fdFeD99FeBD0f7e0EC26E1FA](https://etherscan.io/address/0xe0B15824862f3222fdFeD99FeBD0f7e0EC26E1FA#code) |
+| `Views`     | [0x13526206545e2DC7CcfBaF28dC88F440ce7AD3e0](https://etherscan.io/address/0x13526206545e2DC7CcfBaF28dC88F440ce7AD3e0#code) |
 | `Factory`   | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://etherscan.io/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf#code) |
 | `Gauge`     | [0x38D9BdA812da2C68dFC6aDE85A7F7a54E77F8325](https://etherscan.io/address/0x38D9BdA812da2C68dFC6aDE85A7F7a54E77F8325#code) |
 | `Plain AMM` | [0xDCc91f930b42619377C200BA05b7513f2958b202](https://etherscan.io/address/0xDCc91f930b42619377C200BA05b7513f2958b202#code) |
@@ -474,7 +474,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
 | `Math`      | [0xD4a8bd4d59d65869E99f20b642023a5015619B34](https://arbiscan.io/address/0xD4a8bd4d59d65869E99f20b642023a5015619B34#code) |
-| `Views`     | [0x9293f068912bae932843a1bA01806c54f416019D](https://arbiscan.io/address/0x9293f068912bae932843a1bA01806c54f416019D#code) |
+| `Views`     | [0xDD7EBB1C49780519dD9755B8B1A23a6f42CE099E](https://arbiscan.io/address/0xDD7EBB1C49780519dD9755B8B1A23a6f42CE099E#code) |
 | `Factory`   | [0x9AF14D26075f142eb3F292D5065EB3faa646167b](https://arbiscan.io/address/0x9AF14D26075f142eb3F292D5065EB3faa646167b#code) |
 | `Plain AMM` | [0xf6841C27fe35ED7069189aFD5b81513578AFD7FF](https://arbiscan.io/address/0xf6841C27fe35ED7069189aFD5b81513578AFD7FF#code) |
 | `Meta AMM`  | [0xFf02cBD91F57A778Bab7218DA562594a680B8B61](https://arbiscan.io/address/0xFf02cBD91F57A778Bab7218DA562594a680B8B61#code) |
@@ -485,7 +485,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
 | `Math`      | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://optimistic.etherscan.io/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
-| `Views`     | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://optimistic.etherscan.io/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a#code) |
+| `Views`     | [0xf6841C27fe35ED7069189aFD5b81513578AFD7FF](https://optimistic.etherscan.io/address/0xf6841C27fe35ED7069189aFD5b81513578AFD7FF#code) |
 | `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://optimistic.etherscan.io/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
 | `Plain AMM` | [0x635742dCC8313DCf8c904206037d962c042EAfBd](https://optimistic.etherscan.io/address/0x635742dCC8313DCf8c904206037d962c042EAfBd#code) |
 | `Meta AMM`  | [0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499](https://optimistic.etherscan.io/address/0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499#code) |
@@ -496,7 +496,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
 | `Math`      | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://basescan.org/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
-| `Views`     | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://basescan.org/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
+| `Views`     | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://basescan.org/address/0xC1b393EfEF38140662b91441C6710Aa704973228#code) |
 | `Factory`   | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://basescan.org/address/0xd2002373543Ce3527023C75e7518C274A51ce712#code) |
 | `Plain AMM` | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://basescan.org/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a#code) |
 | `Meta AMM`  | [0x635742dCC8313DCf8c904206037d962c042EAfBd](https://basescan.org/address/0x635742dCC8313DCf8c904206037d962c042EAfBd#code) |
@@ -507,7 +507,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
 | `Math`      | [0x506F594ceb4E33F5161139bAe3Ee911014df9f7f](https://fraxscan.com/address/0x506F594ceb4E33F5161139bAe3Ee911014df9f7f#code) |
-| `Views`     | [0x87FE17697D0f14A222e8bEf386a0860eCffDD617](https://fraxscan.com/address/0x87FE17697D0f14A222e8bEf386a0860eCffDD617#code) |
+| `Views`     | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://fraxscan.com/address/0xFAbC421e3368D158d802684A217a83c083c94CeB#code) |
 | `Factory`   | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://fraxscan.com/address/0xd2002373543Ce3527023C75e7518C274A51ce712#code) |
 | `Plain AMM` | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://fraxscan.com/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#code) |
 | `Meta AMM`  | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://fraxscan.com/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
@@ -519,7 +519,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
 | `Math`      | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://polygonscan.com//address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B#code) |
-| `Views`     | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://polygonscan.com/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
+| `Views`     | [0x20D1c021525C85D9617Ccc64D8f547d5f730118A](https://polygonscan.com/address/0x20D1c021525C85D9617Ccc64D8f547d5f730118A#code) |
 | `Factory`   | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://polygonscan.com/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#code) |
 | `Plain AMM` | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://polygonscan.com/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
 | `Meta AMM`  | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://polygonscan.com/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
@@ -541,7 +541,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
 | `Math`      | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://gnosisscan.io/address/0xFAbC421e3368D158d802684A217a83c083c94CeB#code) |
-| `Views`     | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://gnosisscan.io/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf#code) |
+| `Views`     | [0x33e72383472f77B0C6d8F791D1613C75aE2C5915](https://gnosisscan.io/address/0x33e72383472f77B0C6d8F791D1613C75aE2C5915#code) |
 | `Factory`   | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://gnosisscan.io/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
 | `Plain AMM` | [0x3d6cb2f6dcf47cdd9c13e4e3beae9af041d8796a](https://gnosisscan.io/address/0x3d6cb2f6dcf47cdd9c13e4e3beae9af041d8796a#code) |
 | `Meta AMM`  | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://gnosisscan.io/address/0xC1b393EfEF38140662b91441C6710Aa704973228#code) |
@@ -552,7 +552,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
 | `Math`      | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://snowscan.xyz/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B#code) |
-| `Views`     | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://snowscan.xyz/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
+| `Views`     | [0x8F7632122125699da7E22d465fa16EdE4f687Fa4](https://snowscan.xyz/address/0x8F7632122125699da7E22d465fa16EdE4f687Fa4#code) |
 | `Factory`   | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://snowscan.xyz/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#code) |
 | `Plain AMM` | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://snowscan.xyz/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
 | `Meta AMM`  | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://snowscan.xyz/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
@@ -563,7 +563,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
 | `Math`      | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://ftmscan.com/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a#code) |
-| `Views`     | [0x635742dCC8313DCf8c904206037d962c042EAfBd](https://ftmscan.com/address/0x635742dCC8313DCf8c904206037d962c042EAfBd#code) |
+| `Views`     | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://ftmscan.com/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf#code) |
 | `Factory`   | [0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b](https://ftmscan.com/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b#code) |
 | `Plain AMM` | [0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499](https://ftmscan.com/address/0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499#code) |
 | `Meta AMM`  | [0x046207cB759F527b6c10C2D61DBaca45513685CC](https://ftmscan.com/address/0x046207cB759F527b6c10C2D61DBaca45513685CC#code) |
@@ -574,7 +574,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
 | `Math`      | [0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5](https://bscscan.com/address/0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5#code) |
-| `Views`     | [0x5Ea9DD3b6f042A34Df818C6c1324BC5A7c61427a](https://bscscan.com/address/0x5Ea9DD3b6f042A34Df818C6c1324BC5A7c61427a#code) |
+| `Views`     | [0xFf02cBD91F57A778Bab7218DA562594a680B8B61](https://bscscan.com/address/0xFf02cBD91F57A778Bab7218DA562594a680B8B61#code) |
 | `Factory`   | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://bscscan.com/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B#code) |
 | `Plain AMM` | [0x505d666E4DD174DcDD7FA090ed95554486d2Be44](https://bscscan.com/address/0x505d666E4DD174DcDD7FA090ed95554486d2Be44#code) |
 | `Meta AMM`  | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://bscscan.com/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC#code) |
@@ -585,7 +585,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
 | `Math`      | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://lineascan.build/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
-| `Views`     | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://lineascan.build/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
+| `Views`     | [0x3E3B5F27bbf5CC967E074b70E9f4046e31663181](https://lineascan.build/address/0x3E3B5F27bbf5CC967E074b70E9f4046e31663181#code) |
 | `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://lineascan.build/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
 | `Plain AMM` | [0xa7b9d886a9a374a1c86dc52d2ba585c5cdfdac26](https://lineascan.build/address/0xa7b9d886a9a374a1c86dc52d2ba585c5cdfdac26#code) |
 | `Meta AMM`  | [0xf3a6aa40cf048a3960e9664847e9a7be025a390a](https://lineascan.build/address/0xf3a6aa40cf048a3960e9664847e9a7be025a390a#code) |
@@ -596,7 +596,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
 | `Math`      | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://scroll.l2scan.co/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8) |
-| `Views`     | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://scroll.l2scan.co/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
+| `Views`     | [0x20D1c021525C85D9617Ccc64D8f547d5f730118A](https://scroll.l2scan.co/address/0x20D1c021525C85D9617Ccc64D8f547d5f730118A#code) |
 | `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://scroll.l2scan.co/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
 | `Plain AMM`   | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://scroll.l2scan.co/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
 | `Meta AMM`   | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://scroll.l2scan.co/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a#code) |
@@ -607,7 +607,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
 | `Math`      | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://mantlescan.info/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6#code-5000) |
-| `Views`     | [0x506F594ceb4E33F5161139bAe3Ee911014df9f7f](https://mantlescan.info/address/0x506F594ceb4E33F5161139bAe3Ee911014df9f7f#code-5000) |
+| `Views`     | [0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5](https://mantlescan.info/address/0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5#code-5000) |
 | `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://mantlescan.info/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E) |
 | `Plain AMM` | [0x87FE17697D0f14A222e8bEf386a0860eCffDD617](https://mantlescan.info/address/0x87FE17697D0f14A222e8bEf386a0860eCffDD617) |
 | `Meta AMM`  | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://mantlescan.info/address/0x1764ee18e8B3ccA4787249Ceb249356192594585) |
@@ -618,7 +618,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
 | `Math`      | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://celoscan.io/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B#code) |
-| `Views`     | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://celoscan.io/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#code) |
+| `Views`     | [0x8F7632122125699da7E22d465fa16EdE4f687Fa4](https://celoscan.io/address/0x8F7632122125699da7E22d465fa16EdE4f687Fa4#code) |
 | `Factory`   | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://celoscan.io/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#code) |
 | `Plain AMM`   | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://celoscan.io/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#code) |
 | `Meta AMM`   | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://celoscan.io/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
@@ -629,7 +629,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
 | `Math`      | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://kavascan.com/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B#contracts) |
-| `Views`     | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://kavascan.com/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8#contracts) |
+| `Views`     | [0x20D1c021525C85D9617Ccc64D8f547d5f730118A](https://kavascan.com/address/0x20D1c021525C85D9617Ccc64D8f547d5f730118A#contracts) |
 | `Factory`   | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://kavascan.com/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#contracts) |
 | `Plain AMM` | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://kavascan.com/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3#contracts) |
 | `Meta AMM`  | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://kavascan.com/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#contracts) |
@@ -640,7 +640,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
 | `Math`      | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://explorer.aurora.dev/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8/contracts) |
-| `Views`     | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://explorer.aurora.dev/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3/contracts) |
+| `Views`     | [0x20D1c021525C85D9617Ccc64D8f547d5f730118A](https://explorer.aurora.dev/address/0x20D1c021525C85D9617Ccc64D8f547d5f730118A/contracts) |
 | `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://explorer.aurora.dev/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E/contracts) |
 | `Plain AMM` | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://explorer.aurora.dev/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26/contracts) |
 | `Meta AMM`  | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://explorer.aurora.dev/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a/contracts) |
