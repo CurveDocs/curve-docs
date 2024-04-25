@@ -292,9 +292,10 @@ nav:
       - Deployer API: factory/tricryptoNG/deployer-api.md
     
 
-  - Integration Docs: 
+  - Integration & Guides: 
     - Overview: integration/overview.md
     - Address Provider: integration/address-provider.md
+    - Meta Registry: integration/metaregistry.md
 
 
   - References:
