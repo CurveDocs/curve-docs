@@ -1,15 +1,13 @@
 <h1>Curve Meta Registry</h1>
 
-The `Curve Meta Registry` is a powerful tool designed for integrators.
-
-For complete and detailed documentation on the MetaRegistry contract, please see [here](../registry/overview.md).
+For complete and detailed documentation on the MetaRegistry contract, please see [here :material-arrow-up-right:](../registry/overview.md) .
 
 !!!warning "Requirements"
     The MetaRegistry requires that all Factory contracts, which deploy pools and gauges, are added to the Meta Registry. Without this, the MetaRegistry cannot retrieve specific information. To see which handlers and registries are added, see [Handlers and Registries](#handlers-and-registries).
 
 
-
 ---
+
 
 ## **Handlers and Registries**
 
@@ -29,7 +27,7 @@ New handlers can be added or existing ones can be updated by the `owner` of the 
     A Jupyter notebook showcasing how to query registries or add/update them can be found [here :material-arrow-up-right:](https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/integratooors/metaregistry/base_setup.ipynb).
 
 
-*Currently Integrated Base Registries and Handlers:*
+*Currently integrated Base Registries and Handlers:*
 
 | `Base Registry`                              | `Handler`                                     | `Description`                              |
 | :------------------------------------------: | :-------------------------------------------: | :----------------------------------------: |
@@ -44,26 +42,19 @@ New handlers can be added or existing ones can be updated by the `owner` of the 
 ---
 
 
-## **Fetching Pools**
+## **Fetching Liquidity Pools**
 
 Deployment of Curve pools is permissionless, leading to a significant number of pools being deployed. Managing this vast array of pools can be challenging, and relying solely on a UI may not be the most effective approach. The `Curve Meta Registry` serves as an ideal tool for querying specific pools directly from the blockchain.
 
-!!!notebook "Jupyter Notebook"
-    A Jupyter notebook showcasing how to fetch pools directly from the blockchain, which contain two specific assets, can be found [here :material-arrow-up-right:](https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/integratooors/metaregistry/fetching_pools.ipynb).
+!!!info "Understanding Base- and Metapool Logic"
+    The `Meta Registry` considers metapools as well[^1]. For example, the [mkUSD/3CRV pool](https://etherscan.io/address/0x0CFe5C777A7438C9Dd8Add53ed671cEc7A5FAeE5) pairs mkUSD with the 3CRV LP Token, which consists of USDT, USDC, and DAI. The contract identifies this logic and returns this pool when querying for `find_pools_for_coins(mkUSD, USDC)`, because mkUSD and USDC can be exchanged through this pool.
+    [^1]: Metapools are liquidity pools that pair a token against the LP token of another pool.
 
 
 *Key Methods for Querying Pools:*
 
-- `find_pools_for_coins`: Returns a list of all pools containing two specific tokens.
-- `find_pool_for_coins`: Selects a single pool from the list returned by `find_pools_for_coins`.
+- `find_pools_for_coins`: This method returns a list of all pools containing two specific tokens, e.g. pools that include both `crvUSD` and `USDC`.
+- `find_pool_for_coins`: Returns a single pool according to the input index from the list returned by `find_pools_for_coins`.
 
-The meta registry also takes metapools into consideration[^1]. For instance, the [mkUSD/3CRV pool](https://etherscan.io/address/0x0CFe5C777A7438C9Dd8Add53ed671cEc7A5FAeE5) pairs mkUSD against the 3CRV LP Token, which consists of USDT, USDC, and DAI. The contract recognizes this configuration and returns this pool when querying for `find_pools_for_coins(mkUSD, USDC)`.
-
-[^1]: Metapools are liquidity pools that pair a token against the LP token of another pool.
-
-
----
-
-
-###
-
+!!!notebook "Jupyter Notebook"
+    A Jupyter notebook showcasing how to fetch pools directly from the blockchain, which contain two specific assets, can be found [here :material-arrow-up-right:](https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/integratooors/metaregistry/fetching_pools.ipynb).
