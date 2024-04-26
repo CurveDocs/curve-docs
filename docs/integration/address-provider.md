@@ -1,21 +1,21 @@
 <h1>Curve Address Provider</h1>
 
 
-The `CurveAddressProvider` is an **entrypoint contract for Curve's various registries**. 
-
-For the full mapping of IDs please see [`get_id_info`](#get_id_info).
+The `CurveAddressProvider` serves as the **entry point contract for Curve's various registries** and is deployed on all chains where Curve is operational.
 
 
 !!!deploy "Contract Source & Deployment"
     Source code is avaliable on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/AddressProviderNG.vy).
 
-    A list of all deployed address providers can be found [here](../references/deployed-contracts.md#address-provider).
+    A list of all deployed `AddressProvider` can be found [here :material-arrow-up-right:](../references/deployed-contracts.md#address-provider).
 
 
 ---
 
 
 ## **Reading IDs**
+
+For the full mapping of IDs please see [`get_id_info`](#get_id_info).
 
 *ID information is stored in a `struct`, containing an address, a detailed description, its version, and the timestamp marking its most recent modification:*
 
