@@ -1,10 +1,6 @@
 <h1>Integration Docs</h1>
 
-
 ---
-
-*Documentation targeted to simplify the integration process for developers.*
-
 
 <div class="grid cards" markdown>
 
@@ -12,17 +8,19 @@
 
     ---
 
-    `AddressProvider` contract which acts as an entrypoint for Curve's various registries.
+    The `AddressProvider` contract acts as an entry point for Curve's various registries, deployed across all chains where Curve infrastructure is present.
 
-    [:octicons-arrow-right-24: Getting started](./address-provider.md)
+
+    [:octicons-arrow-right-24: `CurveAddressProvider.vy`](./address-provider.md)
 
 -   :material-page-next: **MetaRegistry**
 
     ---
 
-    The MetaRegistry functions as a Curve Finance Pool Registry Aggregator and offers an on-chain API for various properties of Curve pools by **consolidating different registries into a single contract**.
+    The `MetaRegistry` serves as a Curve Finance Pool Registry Aggregator, providing an on-chain API that consolidates various properties of Curve pools by **integrating multiple registries into a single contract**.
 
-    [:octicons-arrow-right-24: Getting started](../registry/overview.md)
+
+    [:octicons-arrow-right-24: `CurveMetaRegistry.vy`](./metaregistry.md)
 
 -   :material-swap-horizontal: **AMMs**
 
@@ -37,3 +35,14 @@
     *soon*
 
 </div>
+
+
+---
+
+
+## **Guides**
+
+*Below are some basic guides and examples.*
+
+### **Fetching Pools** 
+[:octicons-link-16:](./metaregistry.md#fetching-liquidity-pools) Discover how to check on-chain pools containing two specific assets.
