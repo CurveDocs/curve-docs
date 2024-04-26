@@ -1,22 +1,31 @@
-<h1>MetaRegistry: Overview </h1>
+<h1>MetaRegistry: Overview</h1>
 
 The MetaRegistry functions as a Curve Finance Pool Registry Aggregator and offers an on-chain API for various properties of Curve pools by **consolidating different registries into a single contract**.
 
-This is done by integrating multiple **`ChildRegistries`**, each accompanied by a **`RegistryHandler`**. This handler acts as a wrapper around its respective ChildRegistry, ensuring compatibility with the MetaRegistry's ABI standards.
+This is achieved by integrating multiple `ChildRegistries`[^1], each paired with a `RegistryHandler`. This handler serves as a wrapper around its respective ChildRegistry, ensuring compatibility with the MetaRegistry's ABI standards.
+
+Curve Factory contracts, which allow the permissionless deployment of pools and gauges, are such a `ChildRegistry`. When deploying pools or gauges, the respective information is picked up by the registry and then plugged into the MetaRegistry via a `Handler`[^2].
+
+[^1]: Also referred to as `BaseRegistry`.
+[^2]: The Handler needs to be added to the `MetaRegistry` using the `add_registry_handler` function.
 
 
 !!!deploy "Contract Source & Deployment"
-    **Currently, a MetaRegistry does only exist on Ethereum**. Source code is available on [Github](https://github.com/curvefi/metaregistry/blob/main/contracts/mainnet/MetaRegistry.vy).  
-    The **MetaRegistry** contract is deployed to the Ethereum mainnet at: [0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC](https://etherscan.io/address/0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC#code).
+    **Currently, the MetaRegistry is only deployed on Ethereum**, located at [`0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC`](https://etherscan.io/address/0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC#code).
+    
+    The source code is available on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/mainnet/MetaRegistry.vy).
+
+
+---
 
 
 <div align="center">
 ```mermaid
 flowchart BT
     mr[(MetaRegistry)]
-    cr1(ChildRegistry) -.- rh1([RegistryHandler])
-    cr2(ChildRegistry) -.- rh2([RegistryHandler])
-    cr3(ChildRegistry) -.- rh3([RegistryHandler])
+    cr1(ChildRegistry1) -.- rh1(RegistryHandler1)
+    cr2(ChildRegistry2) -.- rh2(RegistryHandler2)
+    cr3(ChildRegistry3) -.- rh3(RegistryHandler3)
     rh1 -.-> mr
     rh2 -.-> mr
     rh3 -.-> mr
@@ -24,22 +33,10 @@ flowchart BT
 </div>
 
 
-!!!info
-    If a ChildRegistry already meets these standards, it doesn't require a handler. Nonetheless, wrappers can be **useful for hotfixing bugs in production**, especially when direct modifications to the ChildRegistry would lead to significant breaking changes.
+!!!info "Registries with Already Compliant ABI Standards"
+    If a ChildRegistry already meets these standards, it does not require a handler. Nonetheless, wrappers can be **useful for hotfixing bugs in production**, especially when direct modifications to the ChildRegistry would lead to significant breaking changes.
 
-
-| Description | Registry Handler | Child Registry | 
-| :---------: | :--------------: | :-----------: |
-| `Curve Registry for v1` | [0x46a8a9CF4Fc8e99EC3A14558ACABC1D93A27de68](https://etherscan.io/address/0x46a8a9CF4Fc8e99EC3A14558ACABC1D93A27de68#code) | [0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5](https://etherscan.io/address/0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5#code) |
-| `Curve Registry for v1 (latest)` | [0x127db66E7F0b16470Bec194d0f496F9Fa065d0A9](https://etherscan.io/address/0x127db66E7F0b16470Bec194d0f496F9Fa065d0A9#code) | [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4#code) |
-| `Curve Registry for v2 Crypto` | [0x5f493fEE8D67D3AE3bA730827B34126CFcA0ae94](https://etherscan.io/address/0x5f493fEE8D67D3AE3bA730827B34126CFcA0ae94#code) | [0x9a32aF1A11D9c937aEa61A3790C2983257eA8Bc0](https://etherscan.io/address/0x9a32aF1A11D9c937aEa61A3790C2983257eA8Bc0#code) |
-| `Curve Registry for v2 Factory` | [0xC4F389020002396143B863F6325aA6ae481D19CE](https://etherscan.io/address/0xC4F389020002396143B863F6325aA6ae481D19CE#code) |  [0xF18056Bbd320E96A48e3Fbf8bC061322531aac99](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99#code) |
-| `crvUSD Pool Registry ` | [0x538E984C2d5f821d51932dd9C570Dff192D3DF2D](https://etherscan.io/address/0x538E984C2d5f821d51932dd9C570Dff192D3DF2D#code) |  [0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d](https://etherscan.io/address/0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d#code) |
-| `Curve Tricrypto Factory` | [0x30a4249C42be05215b6063691949710592859697](https://etherscan.io/address/0x30a4249C42be05215b6063691949710592859697#code) | [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963#code) |
-| `Curve BasePool Registry` |  | [0xDE3eAD9B2145bBA2EB74007e58ED07308716B725](https://etherscan.io/address/0xDE3eAD9B2145bBA2EB74007e58ED07308716B725#code) |
-
-*These registry handlers are then added to the MetaRegistry using the **`add_registry_handler`** function, see [here](../registry/admin-controls.md#add_registry_handler).*
-
+---
 
 ## **Who should use the MetaRegistry?**
 
