@@ -172,7 +172,6 @@ nav:
   - Registry:
     - Overview: registry/overview.md
     - MetaRegistry API: registry/MetaRegistryAPI.md
-    - Admin Controls: registry/admin-controls.md
 
 
   - Curve API:
