@@ -242,7 +242,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 ### `create_loan_extended`
 !!! description "`Controller.create_loan_extended(collateral: uint256, debt: uint256, N: uint256, callbacker: address, callback_args: DynArray[uint256,5], callback_bytes: Bytes[10**4] = b"")`"
 
-    Function to create a new loan using callbacks. This function passes the stablecoin to a callback first, enabling the construction of leverage. Earlier implementations of the contract did not have `callback_bytes` argument. This was added to enable [leveraging/de-leveraging using the 1inch router](./leverage/LeverageZap1inch.md).
+    Function to create a new loan using callbacks. This function passes the stablecoin to a callback first, enabling the construction of leverage. Earlier implementations of the contract did not have `callback_bytes` argument. This was added to enable [leveraging/de-leveraging using the 1inch router](./leverage/LeverageZap1inch.md#building-leverage).
 
     Emits: `UserState`, `Borrow`, `Deposit`, and `Transfer`
 
@@ -907,7 +907,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 ### `repay_extended`
 !!! description "`Controller.repay_extended(callbacker: address, callback_args: DynArray[uint256,5], callback_bytes: Bytes[10**4] = b"")`"
 
-    Extended function to repay a loan but obtain a stablecoin for that from a callback (to deleverage). Earlier implementations of the contract did not have `callback_bytes` argument. This was added to enable [leveraging/de-leveraging using the 1inch router](./leverage/LeverageZap1inch.md).
+    Extended function to repay a loan but obtain a stablecoin for that from a callback (to deleverage). Earlier implementations of the contract did not have `callback_bytes` argument. This was added to enable [leveraging/de-leveraging using the 1inch router](./leverage/LeverageZap1inch.md#unwinding-leverage).
 
     Emits: `UserState` and `Repay`
 
@@ -1722,7 +1722,7 @@ An already existing loan can be managed in different ways:
 ### `borrow_more_extended`
 !!! description "`Controller.borrow_more_extended(collateral: uint256, debt: uint256, callbacker: address, callback_args: DynArray[uint256,5], callback_bytes: Bytes[10**4] = b"")`"
 
-    Function to borrow more assets while adding more collateral. This method uses callacks to build up leverage. Earlier implementations of the contract did not have `callback_bytes` argument. This was added to enable [leveraging/de-leveraging using the 1inch router](./leverage/LeverageZap1inch.md).
+    Function to borrow more assets while adding more collateral. This method uses callacks to build up leverage. Earlier implementations of the contract did not have `callback_bytes` argument. This was added to enable [leveraging/de-leveraging using the 1inch router](./leverage/LeverageZap1inch.md#building-leverage).
 
     Emits: `UserState` and `Borrow`
 
