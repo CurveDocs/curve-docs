@@ -263,7 +263,7 @@ To build up leverage, the `LeverageZap1inch.vy` contract uses the `callback_depo
 
     Function to create a leveraged loan using a callback.
     
-    The following callback arguments need to be passed into this function via `create_loan_extended` or `borrow_more_extended`:
+    The following callback arguments need to be passed to this function via `create_loan_extended` or `borrow_more_extended`:
 
     - `callback_args[0] = factory_id`: depending on which factory (crvusd or lending).
     - `callback_args[1] = controller_id`: index of the controller in the factory contract fetched from `Factory.controllers(controller_id)`.
@@ -482,7 +482,7 @@ For a complete JavaScript library, see [:material-github: GitHub](https://github
 
     Function to de-leverage a loan using a callback.
 
-    The following callback arguments need to be passed into this function via `repay_extended`:
+    The following `callback_args` need to be passed to this function via `repay_extended`:
 
     - `callback_args[0] = factory_id`: depending on which factory (crvusd or lending).
     - `callback_args[1] = controller_id`: index of the controller in the factory contract fetched from `Factory.controllers(controller_id)`.
