@@ -5,7 +5,7 @@ hide:
 
 <h1>Curve Finance Audits</h1>
 
-[**:octicons-arrow-left-24: Back**](../protocol-overview.md)
+[**:octicons-arrow-left-24: Back**](../documentation-overview.md)
 
 !!!deploy "GitHub"
     All audits and security disclosures are hosted on the [`security-incident-reports` repository on GitHub](https://github.com/curvefi/security-incident-reports).
