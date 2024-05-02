@@ -1,4 +1,4 @@
-<h1></h1>
+<h1>Liquidity Gauge V6</h1>
 
 ## **Depositing and Withdrawing**
 
