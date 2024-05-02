@@ -1,12 +1,18 @@
-The Curve router can perform **up to five swaps in a single transaction**. Additionally, it can **perform estimations with `get_dy` and `get_dx`.**
-The contract utilizes interfaces for all relevant Curve pools, such as StableSwap, CryptoSwap, LLAMMA, and others, to execute swaps.
+<h1>Curve Router NG</h1>
+
+The `CurveRouterNG` is used to perform token exchanges. It can **swap up to five tokens in a single transaction**.
+
+Additionally, the contract provides **functions to calculate input and output amounts** with [`get_dy`](#get_dy) and [`get_dx`](#get_dx).
 
 !!!deploy "Contract Source & Deployment"
-    All contract deployments can be found [here](../../references/deployed-contracts.md#curve-router).  
-    Source code available on [Github](https://github.com/curvefi/curve-router-ng/tree/master/contracts).
+    The `CurveRouterNG` contract has been deployed on most chains where Curve liquidity pools exist. For a full list of all deployments, see [here](../../references/deployed-contracts.md#curve-router).
+
+    Source code for the contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-router-ng/tree/master/contracts).
 
 
-??? quote "Interfaces"
+The contract utilizes **interfaces for all relevant Curve pools**, such as StableSwap, CryptoSwap, LLAMMA, and others, to execute swaps.
+
+??? quote "Used Interfaces"
 
     ```vyper
     interface StablePool:
@@ -130,27 +136,34 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
     ```
 
 
+---
+
+
+## **Exchanging Tokens**
+
+The router has a single `exchange` function, which allows up to 5 swaps in a single transaction. 
+
+Routing and swap parameters need to be determined off-chain. The exchange functionality of the router is designed for gas efficiency over ease-of-use. A according JavaScript library can be found on [:material-github: GitHub](https://github.com/curvefi/curve-router-js).
+
+
 ### `exchange`
 !!! description "`Router.exchange(_route: address[11], _swap_params: uint256[5][5], _amount: uint256, _expected: uint256, _pools: address[5] = empty(address[5]), _receiver: address = msg.sender) -> uint256:`"
 
-    !!!warning
-        Routing and swap parameters must be determined off-chain. The router is designed for gas efficiency over ease-of-use.
+    Function to perform a token exchange with up to 5 swaps in a single transaction.
 
-    Function to perform an exchange up to 5 tokens.
+    Returns: received amount of final output token (`uint256`).
 
-    Retuns: received amount of final output token (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_route` |  `address[11]` | Array of [initial token, pool or zap, token, pool or zap, token, ...]. The array is iterated until a pool address of `ZERO_ADDRESS`, then the last given token is transferred to `_receiver` |
-    | `_swap_params` |  `uint256[5][5]` | Multidimensional array of **`[i, j, swap_type, pool_type, n_coins]`** where `i` is the index of input token and `j` is the index of output token, with `pool_type`: 1 - stable, 2 - crypto, 3 - tricrypto, 4 - llamma and `n_coins` is the number of coins in pool.  |
-    | `_amount` |  `uint256` | The amount of input token (`_route[0]`) to be sent. |
-    | `_expected` |  `uint256` | The minimum amount received after the final swap. |
-    | `_pools` |  `address[5]` | Array of pools for swaps via zap contracts. This parameter is only needed for `swap_type = 3`. |
-    | `receiver` |  `address` | Address to transfer the final output token to. Defaults to `msg.sender`. |
+    | Input          | Type           | Description |
+    | -------------- | -------------- | ----------- |
+    | `_route`       | `address[11]`  | Array of [initial token, pool or zap, token, pool or zap, token, ...]. The array is iterated until a pool address of `ZERO_ADDRESS`, then the last given token is transferred to `_receiver`. |
+    | `_swap_params` | `uint256[5][5]`| Multidimensional array of **`[i, j, swap_type, pool_type, n_coins]`** where `i` is the index of input token and `j` is the index of output token, with `pool_type`: 1 - stable, 2 - crypto, 3 - tricrypto, 4 - llamma and `n_coins` is the number of coins in pool. |
+    | `_amount`      | `uint256`      | The amount of input token (`_route[0]`) to be sent. |
+    | `_expected`    | `uint256`      | The minimum amount received after the final swap. |
+    | `_pools`       | `address[5]`   | Array of pools for swaps via zap contracts. This parameter is only needed for `swap_type = 3`. |
+    | `receiver`     | `address`      | Address to transfer the final output token to. Defaults to `msg.sender`. |
 
     **The `swap_type` should be:**
-    
+
     1. for `exchange`   
     2. for `exchange_underlying`    
     3. for underlying exchange via zap: factory stable metapools with lending base pool `exchange_underlying` and factory crypto-meta pools underlying exchange (`exchange` method in zap)  
@@ -160,6 +173,7 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
     7. for LP token -> lending or fake pool underlying coin "exchange" (actually `remove_liquidity_one_coin`)  
     8. for ETH <-> WETH, ETH -> stETH or ETH -> frxETH, stETH <-> wstETH, frxETH <-> sfrxETH, ETH -> wBETH  
     9. for SNX swaps (sUSD, sEUR, sETH, sBTC)
+
 
     ??? quote "Source code"
 
@@ -378,32 +392,45 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
             [0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0]],
             2697000000000000000000, # _amount
-            ? , # _expected
+            0, # _expected
             [0x3b21C2868B6028CfB38Ff86127eF22E68d16d53B,    # cvxPRISMA/PRISMA pool
             0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B,     # PRISMA/ETH pool
             0x0000000000000000000000000000000000000000,
             0x0000000000000000000000000000000000000000,
             0x0000000000000000000000000000000000000000])
+
         393335776549796040  # final output
         ```
+
+
+---
+
+
+## **Helper Functions**
+
+There are two function to estimate input and output token amounts:
+
+- `get_dy` to estimate the amount of output tokens when exchanging a certain amount of input token
+- `get_dx` to estimate the amount of input tokens when exchanging for a certain amount of output tokens
+
 
 
 ### `get_dy`
 !!! description "`Router.get_dy(_route: address[11], _swap_params: uint256[5][5], _amount: uint256, _pools: address[5] = empty(address[5])) -> uint256:`"
 
-    Getter for the amount of the final output token received in an exchange.
+    Function to calculate the amount of final output tokens received when performing an exchange.
 
-    Retuns: **expected** amount of final output token (`uint256`).
+    Retuns: expected amount of final output token (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_route` |  `address[11]` | Array of [initial token, pool or zap, token, pool or zap, token, ...]. The array is iterated until a pool address of `ZERO_ADDRESS`. |
-    | `_swap_params` |  `uint256[5][5]` | Multidimensional array of **`[i, j, swap_type, pool_type, n_coins]`** where `i` is the index of input token and `j` is the index of output token, with `pool_type`: 1 - stable, 2 - crypto, 3 - tricrypto, 4 - llamma and `n_coins` is the number of coins in pool. |
-    | `_amount` |  `uint256` | The amount of input token (`_route[0]`) to be sent. |
-    | `_pools` |  `address[5]=empty(address[5])` | Array of pools for swaps via zap contracts. This parameter is only needed for `swap_type = 3`. |
+    | Input          | Type          | Description |
+    | -------------- | ------------- | ----------- |
+    | `_route`       | `address[11]` | Array of [initial token, pool or zap, token, pool or zap, token, ...]. The array is iterated until a pool address of `ZERO_ADDRESS`. |
+    | `_swap_params` | `uint256[5][5]` | Multidimensional array of **`[i, j, swap_type, pool_type, n_coins]`** where `i` is the index of input token and `j` is the index of output token, with `pool_type`: 1 - stable, 2 - crypto, 3 - tricrypto, 4 - llamma and `n_coins` is the number of coins in pool. |
+    | `_amount`      | `uint256`     | The amount of input token (`_route[0]`) to be sent. |
+    | `_pools`       | `address[5]=empty(address[5])` | Array of pools for swaps via zap contracts. This parameter is only needed for `swap_type = 3`. |
 
     **The `swap_type` should be:**
-    
+
     1. for `exchange`   
     2. for `exchange_underlying`    
     3. for underlying exchange via zap: factory stable metapools with lending base pool `exchange_underlying` and factory crypto-meta pools underlying exchange (`exchange` method in zap)  
@@ -416,172 +443,174 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
 
     ??? quote "Source code"
 
-        ```vyper
-        event Exchange:
-            sender: indexed(address)
-            receiver: indexed(address)
-            route: address[11]
-            swap_params: uint256[5][5]
-            pools: address[5]
-            in_amount: uint256
-            out_amount: uint256
+        === "CurveRouterNG.vy"
 
-        ETH_ADDRESS: constant(address) = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE
-        STETH_ADDRESS: constant(address) = 0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84
-        WSTETH_ADDRESS: constant(address) = 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0
-        FRXETH_ADDRESS: constant(address) = 0x5E8422345238F34275888049021821E8E08CAa1f
-        SFRXETH_ADDRESS: constant(address) = 0xac3E018457B222d93114458476f3E3416Abbe38F
-        WBETH_ADDRESS: constant(address) = 0xa2E3356610840701BDf5611a53974510Ae27E2e1
-        WETH_ADDRESS: immutable(address)
+            ```vyper
+            event Exchange:
+                sender: indexed(address)
+                receiver: indexed(address)
+                route: address[11]
+                swap_params: uint256[5][5]
+                pools: address[5]
+                in_amount: uint256
+                out_amount: uint256
 
-        # SNX
-        # https://github.com/Synthetixio/synthetix-docs/blob/master/content/addresses.md
-        SNX_ADDRESS_RESOLVER: constant(address) = 0x823bE81bbF96BEc0e25CA13170F5AaCb5B79ba83
-        SNX_TRACKING_CODE: constant(bytes32) = 0x4355525645000000000000000000000000000000000000000000000000000000  # CURVE
-        SNX_EXCHANGER_NAME: constant(bytes32) = 0x45786368616E6765720000000000000000000000000000000000000000000000  # Exchanger
-        snx_currency_keys: HashMap[address, bytes32]
+            ETH_ADDRESS: constant(address) = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE
+            STETH_ADDRESS: constant(address) = 0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84
+            WSTETH_ADDRESS: constant(address) = 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0
+            FRXETH_ADDRESS: constant(address) = 0x5E8422345238F34275888049021821E8E08CAa1f
+            SFRXETH_ADDRESS: constant(address) = 0xac3E018457B222d93114458476f3E3416Abbe38F
+            WBETH_ADDRESS: constant(address) = 0xa2E3356610840701BDf5611a53974510Ae27E2e1
+            WETH_ADDRESS: immutable(address)
 
-        @view
-        @external
-        def get_dy(
-            _route: address[11],
-            _swap_params: uint256[5][5],
-            _amount: uint256,
-            _pools: address[5]=empty(address[5])
-        ) -> uint256:
-            """
-            @notice Get amount of the final output token received in an exchange
-            @dev Routing and swap params must be determined off-chain. This
-                functionality is designed for gas efficiency over ease-of-use.
-            @param _route Array of [initial token, pool or zap, token, pool or zap, token, ...]
-                        The array is iterated until a pool address of 0x00, then the last
-                        given token is transferred to `_receiver`
-            @param _swap_params Multidimensional array of [i, j, swap type, pool_type, n_coins] where
-                                i is the index of input token
-                                j is the index of output token
+            # SNX
+            # https://github.com/Synthetixio/synthetix-docs/blob/master/content/addresses.md
+            SNX_ADDRESS_RESOLVER: constant(address) = 0x823bE81bbF96BEc0e25CA13170F5AaCb5B79ba83
+            SNX_TRACKING_CODE: constant(bytes32) = 0x4355525645000000000000000000000000000000000000000000000000000000  # CURVE
+            SNX_EXCHANGER_NAME: constant(bytes32) = 0x45786368616E6765720000000000000000000000000000000000000000000000  # Exchanger
+            snx_currency_keys: HashMap[address, bytes32]
 
-                                The swap_type should be:
-                                1. for `exchange`,
-                                2. for `exchange_underlying`,
-                                3. for underlying exchange via zap: factory stable metapools with lending base pool `exchange_underlying`
-                                and factory crypto-meta pools underlying exchange (`exchange` method in zap)
-                                4. for coin -> LP token "exchange" (actually `add_liquidity`),
-                                5. for lending pool underlying coin -> LP token "exchange" (actually `add_liquidity`),
-                                6. for LP token -> coin "exchange" (actually `remove_liquidity_one_coin`)
-                                7. for LP token -> lending or fake pool underlying coin "exchange" (actually `remove_liquidity_one_coin`)
-                                8. for ETH <-> WETH, ETH -> stETH or ETH -> frxETH, stETH <-> wstETH, frxETH <-> sfrxETH, ETH -> wBETH
-                                9. for SNX swaps (sUSD, sEUR, sETH, sBTC)
+            @view
+            @external
+            def get_dy(
+                _route: address[11],
+                _swap_params: uint256[5][5],
+                _amount: uint256,
+                _pools: address[5]=empty(address[5])
+            ) -> uint256:
+                """
+                @notice Get amount of the final output token received in an exchange
+                @dev Routing and swap params must be determined off-chain. This
+                    functionality is designed for gas efficiency over ease-of-use.
+                @param _route Array of [initial token, pool or zap, token, pool or zap, token, ...]
+                            The array is iterated until a pool address of 0x00, then the last
+                            given token is transferred to `_receiver`
+                @param _swap_params Multidimensional array of [i, j, swap type, pool_type, n_coins] where
+                                    i is the index of input token
+                                    j is the index of output token
 
-                                pool_type: 1 - stable, 2 - crypto, 3 - tricrypto, 4 - llamma
-                                n_coins is the number of coins in pool
-            @param _amount The amount of input token (`_route[0]`) to be sent.
-            @param _pools Array of pools for swaps via zap contracts. This parameter is needed only for swap_type = 3.
-            @return Expected amount of the final output token.
-            """
-            input_token: address = _route[0]
-            output_token: address = empty(address)
-            amount: uint256 = _amount
+                                    The swap_type should be:
+                                    1. for `exchange`,
+                                    2. for `exchange_underlying`,
+                                    3. for underlying exchange via zap: factory stable metapools with lending base pool `exchange_underlying`
+                                    and factory crypto-meta pools underlying exchange (`exchange` method in zap)
+                                    4. for coin -> LP token "exchange" (actually `add_liquidity`),
+                                    5. for lending pool underlying coin -> LP token "exchange" (actually `add_liquidity`),
+                                    6. for LP token -> coin "exchange" (actually `remove_liquidity_one_coin`)
+                                    7. for LP token -> lending or fake pool underlying coin "exchange" (actually `remove_liquidity_one_coin`)
+                                    8. for ETH <-> WETH, ETH -> stETH or ETH -> frxETH, stETH <-> wstETH, frxETH <-> sfrxETH, ETH -> wBETH
+                                    9. for SNX swaps (sUSD, sEUR, sETH, sBTC)
 
-            for i in range(1, 6):
-                # 5 rounds of iteration to perform up to 5 swaps
-                swap: address = _route[i*2-1]
-                pool: address = _pools[i-1] # Only for Polygon meta-factories underlying swap (swap_type == 4)
-                output_token = _route[i * 2]
-                params: uint256[5] = _swap_params[i-1]  # i, j, swap_type, pool_type, n_coins
+                                    pool_type: 1 - stable, 2 - crypto, 3 - tricrypto, 4 - llamma
+                                    n_coins is the number of coins in pool
+                @param _amount The amount of input token (`_route[0]`) to be sent.
+                @param _pools Array of pools for swaps via zap contracts. This parameter is needed only for swap_type = 3.
+                @return Expected amount of the final output token.
+                """
+                input_token: address = _route[0]
+                output_token: address = empty(address)
+                amount: uint256 = _amount
 
-                # Calc output amount according to the swap type
-                if params[2] == 1:
-                    if params[3] == 1:  # stable
-                        amount = StablePool(swap).get_dy(convert(params[0], int128), convert(params[1], int128), amount)
-                    else:  # crypto or llamma
-                        amount = CryptoPool(swap).get_dy(params[0], params[1], amount)
-                elif params[2] == 2:
-                    if params[3] == 1:  # stable
-                        amount = StablePool(swap).get_dy_underlying(convert(params[0], int128), convert(params[1], int128), amount)
-                    else:  # crypto
-                        amount = CryptoPool(swap).get_dy_underlying(params[0], params[1], amount)
-                elif params[2] == 3:  # SWAP IS ZAP HERE !!!
-                    if params[3] == 1:  # stable
-                        amount = StablePool(pool).get_dy_underlying(convert(params[0], int128), convert(params[1], int128), amount)
-                    else:  # crypto
-                        amount = CryptoMetaZap(swap).get_dy(pool, params[0], params[1], amount)
-                elif params[2] in [4, 5]:
-                    if params[3] == 1: # stable
-                        amounts: uint256[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                        amounts[params[0]] = amount
-                        amount = STABLE_CALC.calc_token_amount(swap, output_token, amounts, params[4], True, True)
+                for i in range(1, 6):
+                    # 5 rounds of iteration to perform up to 5 swaps
+                    swap: address = _route[i*2-1]
+                    pool: address = _pools[i-1] # Only for Polygon meta-factories underlying swap (swap_type == 4)
+                    output_token = _route[i * 2]
+                    params: uint256[5] = _swap_params[i-1]  # i, j, swap_type, pool_type, n_coins
+
+                    # Calc output amount according to the swap type
+                    if params[2] == 1:
+                        if params[3] == 1:  # stable
+                            amount = StablePool(swap).get_dy(convert(params[0], int128), convert(params[1], int128), amount)
+                        else:  # crypto or llamma
+                            amount = CryptoPool(swap).get_dy(params[0], params[1], amount)
+                    elif params[2] == 2:
+                        if params[3] == 1:  # stable
+                            amount = StablePool(swap).get_dy_underlying(convert(params[0], int128), convert(params[1], int128), amount)
+                        else:  # crypto
+                            amount = CryptoPool(swap).get_dy_underlying(params[0], params[1], amount)
+                    elif params[2] == 3:  # SWAP IS ZAP HERE !!!
+                        if params[3] == 1:  # stable
+                            amount = StablePool(pool).get_dy_underlying(convert(params[0], int128), convert(params[1], int128), amount)
+                        else:  # crypto
+                            amount = CryptoMetaZap(swap).get_dy(pool, params[0], params[1], amount)
+                    elif params[2] in [4, 5]:
+                        if params[3] == 1: # stable
+                            amounts: uint256[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                            amounts[params[0]] = amount
+                            amount = STABLE_CALC.calc_token_amount(swap, output_token, amounts, params[4], True, True)
+                        else:
+                            # Tricrypto pools have stablepool interface for calc_token_amount
+                            if params[4] == 2:
+                                amounts: uint256[2] = [0, 0]
+                                amounts[params[0]] = amount
+                                if params[3] == 2:  # crypto
+                                    amount = CryptoPool2Coins(swap).calc_token_amount(amounts)
+                                else:  # tricrypto
+                                    amount = StablePool2Coins(swap).calc_token_amount(amounts, True)
+                            elif params[4] == 3:
+                                amounts: uint256[3] = [0, 0, 0]
+                                amounts[params[0]] = amount
+                                if params[3] == 2:  # crypto
+                                    amount = CryptoPool3Coins(swap).calc_token_amount(amounts)
+                                else:  # tricrypto
+                                    amount = StablePool3Coins(swap).calc_token_amount(amounts, True)
+                            elif params[4] == 4:
+                                amounts: uint256[4] = [0, 0, 0, 0]
+                                amounts[params[0]] = amount
+                                if params[3] == 2:  # crypto
+                                    amount = CryptoPool4Coins(swap).calc_token_amount(amounts)
+                                else:  # tricrypto
+                                    amount = StablePool4Coins(swap).calc_token_amount(amounts, True)
+                            elif params[4] == 5:
+                                amounts: uint256[5] = [0, 0, 0, 0, 0]
+                                amounts[params[0]] = amount
+                                if params[3] == 2:  # crypto
+                                    amount = CryptoPool5Coins(swap).calc_token_amount(amounts)
+                                else:  # tricrypto
+                                    amount = StablePool5Coins(swap).calc_token_amount(amounts, True)
+                    elif params[2] in [6, 7]:
+                        if params[3] == 1:  # stable
+                            amount = StablePool(swap).calc_withdraw_one_coin(amount, convert(params[1], int128))
+                        else:  # crypto
+                            amount = CryptoPool(swap).calc_withdraw_one_coin(amount, params[1])
+                    elif params[2] == 8:
+                        if input_token == WETH_ADDRESS or output_token == WETH_ADDRESS or \
+                                (input_token == ETH_ADDRESS and output_token == STETH_ADDRESS) or \
+                                (input_token == ETH_ADDRESS and output_token == FRXETH_ADDRESS):
+                            # ETH <--> WETH rate is 1:1
+                            # ETH ---> stETH rate is 1:1
+                            # ETH ---> frxETH rate is 1:1
+                            pass
+                        elif input_token == WSTETH_ADDRESS:
+                            amount = wstETH(swap).getStETHByWstETH(amount)
+                        elif output_token == WSTETH_ADDRESS:
+                            amount = wstETH(swap).getWstETHByStETH(amount)
+                        elif input_token == SFRXETH_ADDRESS:
+                            amount = sfrxETH(swap).convertToAssets(amount)
+                        elif output_token == SFRXETH_ADDRESS:
+                            amount = sfrxETH(swap).convertToShares(amount)
+                        elif output_token == WBETH_ADDRESS:
+                            amount = amount * 10**18 / wBETH(swap).exchangeRate()
+                        else:
+                            raise "Swap type 8 is only for ETH <-> WETH, ETH -> stETH or ETH -> frxETH, stETH <-> wstETH, frxETH <-> sfrxETH, ETH -> wBETH"
+                    elif params[2] == 9:
+                        snx_exchanger: address = SynthetixAddressResolver(SNX_ADDRESS_RESOLVER).getAddress(SNX_EXCHANGER_NAME)
+                        atomic_amount_and_fee: AtomicAmountAndFee = SynthetixExchanger(snx_exchanger).getAmountsForAtomicExchange(
+                            amount, self.snx_currency_keys[input_token], self.snx_currency_keys[output_token]
+                        )
+                        amount = atomic_amount_and_fee.amountReceived
                     else:
-                        # Tricrypto pools have stablepool interface for calc_token_amount
-                        if params[4] == 2:
-                            amounts: uint256[2] = [0, 0]
-                            amounts[params[0]] = amount
-                            if params[3] == 2:  # crypto
-                                amount = CryptoPool2Coins(swap).calc_token_amount(amounts)
-                            else:  # tricrypto
-                                amount = StablePool2Coins(swap).calc_token_amount(amounts, True)
-                        elif params[4] == 3:
-                            amounts: uint256[3] = [0, 0, 0]
-                            amounts[params[0]] = amount
-                            if params[3] == 2:  # crypto
-                                amount = CryptoPool3Coins(swap).calc_token_amount(amounts)
-                            else:  # tricrypto
-                                amount = StablePool3Coins(swap).calc_token_amount(amounts, True)
-                        elif params[4] == 4:
-                            amounts: uint256[4] = [0, 0, 0, 0]
-                            amounts[params[0]] = amount
-                            if params[3] == 2:  # crypto
-                                amount = CryptoPool4Coins(swap).calc_token_amount(amounts)
-                            else:  # tricrypto
-                                amount = StablePool4Coins(swap).calc_token_amount(amounts, True)
-                        elif params[4] == 5:
-                            amounts: uint256[5] = [0, 0, 0, 0, 0]
-                            amounts[params[0]] = amount
-                            if params[3] == 2:  # crypto
-                                amount = CryptoPool5Coins(swap).calc_token_amount(amounts)
-                            else:  # tricrypto
-                                amount = StablePool5Coins(swap).calc_token_amount(amounts, True)
-                elif params[2] in [6, 7]:
-                    if params[3] == 1:  # stable
-                        amount = StablePool(swap).calc_withdraw_one_coin(amount, convert(params[1], int128))
-                    else:  # crypto
-                        amount = CryptoPool(swap).calc_withdraw_one_coin(amount, params[1])
-                elif params[2] == 8:
-                    if input_token == WETH_ADDRESS or output_token == WETH_ADDRESS or \
-                            (input_token == ETH_ADDRESS and output_token == STETH_ADDRESS) or \
-                            (input_token == ETH_ADDRESS and output_token == FRXETH_ADDRESS):
-                        # ETH <--> WETH rate is 1:1
-                        # ETH ---> stETH rate is 1:1
-                        # ETH ---> frxETH rate is 1:1
-                        pass
-                    elif input_token == WSTETH_ADDRESS:
-                        amount = wstETH(swap).getStETHByWstETH(amount)
-                    elif output_token == WSTETH_ADDRESS:
-                        amount = wstETH(swap).getWstETHByStETH(amount)
-                    elif input_token == SFRXETH_ADDRESS:
-                        amount = sfrxETH(swap).convertToAssets(amount)
-                    elif output_token == SFRXETH_ADDRESS:
-                        amount = sfrxETH(swap).convertToShares(amount)
-                    elif output_token == WBETH_ADDRESS:
-                        amount = amount * 10**18 / wBETH(swap).exchangeRate()
-                    else:
-                        raise "Swap type 8 is only for ETH <-> WETH, ETH -> stETH or ETH -> frxETH, stETH <-> wstETH, frxETH <-> sfrxETH, ETH -> wBETH"
-                elif params[2] == 9:
-                    snx_exchanger: address = SynthetixAddressResolver(SNX_ADDRESS_RESOLVER).getAddress(SNX_EXCHANGER_NAME)
-                    atomic_amount_and_fee: AtomicAmountAndFee = SynthetixExchanger(snx_exchanger).getAmountsForAtomicExchange(
-                        amount, self.snx_currency_keys[input_token], self.snx_currency_keys[output_token]
-                    )
-                    amount = atomic_amount_and_fee.amountReceived
-                else:
-                    raise "Bad swap type"
+                        raise "Bad swap type"
 
-                # check if this was the last swap
-                if i == 5 or _route[i*2+1] == empty(address):
-                    break
-                # if there is another swap, the output token becomes the input for the next round
-                input_token = output_token
+                    # check if this was the last swap
+                    if i == 5 or _route[i*2+1] == empty(address):
+                        break
+                    # if there is another swap, the output token becomes the input for the next round
+                    input_token = output_token
 
-            return amount - 1
-        ```
+                return amount - 1
+            ```
 
     === "Example"
         ```shell
@@ -615,21 +644,21 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
 ### `get_dx`
 !!! description "`Router.get_dx(_route: address[11], _swap_params: uint256[5][5], _out_amount: uint256, _pools: address[5], _base_pools: address[5]=empty(address[5]), _base_tokens: address[5] = empty(address[5])) -> uint256:`"
 
-    Getter method to calculate the input amount required to receive the desired output amount.
+    Function to calculate the amount of input tokens to receive the desired amount of output tokens.
 
     Retuns: required amount of input token (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_route` |  `address[11]` | Array of [initial token, pool or zap, token, pool or zap, token, ...]. The array is iterated until a pool address of `ZERO_ADDRESS`. |
-    | `_swap_params` |  `uint256[5][5]` | Multidimensional array of **`[i, j, swap_type, pool_type, n_coins]`** where `i` is the index of input token and `j` is the index of output token, with `pool_type`: 1 - stable, 2 - crypto, 3 - tricrypto, 4 - llamma and `n_coins` is the number of coins in pool. |
-    | `_out_amount` |  `uint256` | The desired amount of output coin to receive. |
-    | `_pools` |  `address[5]` | Array of pools. |
-    | `_base_pools` |  `address[5]=empty(address[5])` | Array of base pools (for meta pools). |
-    | `_base_tokens` |  `address[5]=empty(address[5])` | Array of base lp tokens (for meta pools). Should be a zap address for double meta pools. |
+    | Input          | Type          | Description |
+    | -------------- | ------------- | ----------- |
+    | `_route`       | `address[11]` | Array of [initial token, pool or zap, token, pool or zap, token, ...]. The array is iterated until a pool address of `ZERO_ADDRESS`. |
+    | `_swap_params` | `uint256[5][5]` | Multidimensional array of **`[i, j, swap_type, pool_type, n_coins]`** where `i` is the index of input token and `j` is the index of output token, with `pool_type`: 1 - stable, 2 - crypto, 3 - tricrypto, 4 - llamma and `n_coins` is the number of coins in pool. |
+    | `_out_amount`  | `uint256`     | The desired amount of output coin to receive. |
+    | `_pools`       | `address[5]`  | Array of pools. |
+    | `_base_pools`  | `address[5]=empty(address[5])` | Array of base pools (for meta pools). |
+    | `_base_tokens` | `address[5]=empty(address[5])` | Array of base lp tokens (for meta pools). Should be a zap address for double meta pools. |
 
     **The `swap_type` should be:**
-    
+
     1. for `exchange`   
     2. for `exchange_underlying`    
     3. for underlying exchange via zap: factory stable metapools with lending base pool `exchange_underlying` and factory crypto-meta pools underlying exchange (`exchange` method in zap)  
@@ -639,6 +668,7 @@ The contract utilizes interfaces for all relevant Curve pools, such as StableSwa
     7. for LP token -> lending or fake pool underlying coin "exchange" (actually `remove_liquidity_one_coin`)  
     8. for ETH <-> WETH, ETH -> stETH or ETH -> frxETH, stETH <-> wstETH, frxETH <-> sfrxETH, ETH -> wBETH  
     9. for SNX swaps (sUSD, sEUR, sETH, sBTC) |
+
 
     ??? quote "Source code"
 
