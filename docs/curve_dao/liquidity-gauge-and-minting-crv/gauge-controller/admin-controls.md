@@ -1,6 +1,8 @@
-<h1> </h1>
+<h1>GaugeController: Admin Controls</h1>
 
-These functions are guarded, meaning they can only be executed by the contract's **`admmin`**.
+These functions are guarded, meaning they can only be executed by the contract's **`admin`**.
+
+---
 
 ## **Adding New Gauges and Types**
 
@@ -187,6 +189,8 @@ In order for a liquidity gauge to be elegible to receive CRV emission, its addre
         todo
         ```
 
+
+---
 
 
 ## **Contract Ownership** 
