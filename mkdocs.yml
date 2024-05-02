@@ -115,11 +115,9 @@ repo_url: https://github.com/CurveDocs/curve-docs
 
 
 nav:
-  - Protocol Overview: protocol-overview.md
+  - Documentation Overview: documentation-overview.md
   - Curve DAO:
-    - Curve DAO Token:
-      - CRV Token: curve_dao/curve-dao-token/crv-token.md
-      - Admin Controls: curve_dao/curve-dao-token/admin-controls.md
+    - Curve DAO Token: curve_dao/crv-token.md
     - Vote-Escrowed CRV:
       - VotingEscrow:
         - Contract Methods: curve_dao/voting-escrow/voting-escrow.md
