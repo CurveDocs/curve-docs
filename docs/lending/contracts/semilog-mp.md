@@ -3,6 +3,10 @@
 The **borrow rate** in the semi-logarithmic MonetaryPolicy contract is **intricately linked to the utilization ratio of the lending markets**. This ratio plays a crucial role in determining the cost of borrowing, with its value ranging between 0 and 1. At a **utilization rate of 0**, indicating no borrowed assets, the borrowing **rate aligns with the minimum threshold, `min_rate`**. Conversely, a **utilization rate of 1**, where all available assets are borrowed, escalates the **borrowing rate to its maximum limit, `max_rate`**.
 
 
+!!!github "GitHub"
+    The source code of the `SemilogMonetaryPolicy.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/mpolicies/SemilogMonetaryPolicy.vy).
+
+
 *The function is as simple as:*
 
 $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{max}}}{\text{rate}_{\text{min}}}\right)^{\text{utilization}}$$

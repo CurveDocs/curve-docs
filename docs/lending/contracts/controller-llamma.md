@@ -1,11 +1,11 @@
 <h1>LLAMMA and Controller</h1>
 
-!!!deploy "Contract Source & Deployment"
-    The source code for both contracts, `AMM.vy` and `Controller.vy`, is available on [GitHub](https://github.com/curvefi/curve-stablecoin/tree/lending/contracts).
+!!!github "GitHub"
+    The source code for both contracts, `AMM.vy` and `Controller.vy`, is available on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/tree/lending/contracts).
 
 Because Curve Lending operates very similarly to the system for minting crvUSD, both `Controller.vy` and `AMM.vy` can be used for lending markets. To ensure full compatibility with both systems, **several modifications have been made to the codebase**:
 
-
+---
 
 ## **AMM.vy**
 

@@ -2,6 +2,9 @@
 
 A one-way lending market is a **non-rehypothecating** market where one token is considered the collateral token and another token is the borrow token. This means the **deposited collateral cannot be lent out** but can only be used as collateral. 
 
+!!!github "GitHub"
+    The source code of the `OneWayLendingFactory.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/lending/OneWayLendingFactory.vy).
+
 *Later on, two-way lending markets will be established, allowing the collateral provided to be lent out and used as liquidity to borrow.*
 
 

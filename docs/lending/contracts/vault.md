@@ -2,6 +2,9 @@
 
 The vault is an **implementation of a [ERC-4626](https://ethereum.org/developers/docs/standards/tokens/erc-4626)** vault which **deposits the underlying asset into the controller** and **tracks the progress of the fees earned**. 
 
+!!!github "GitHub"
+    The source code of the `Vault.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/lending/Vault.vy).
+
 ERC-4626 vaults are **yield-bearing**, meaning the shares received when depositing assets increase in value due to the interest earned from lending out assets. The share balance does not increase, only its value. **Shares are transferable**.
 
 It is a proxy contract (EIP1167-compliant) duplicating the logic of the factory's vault implementation contract. Upon initialization it also creates the market's AMM and Controller using blueprint contracts.
