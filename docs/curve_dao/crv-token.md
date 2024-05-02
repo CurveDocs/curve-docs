@@ -404,7 +404,7 @@ New CRV tokens can only be minted by the `minter` contract.
 ### `burn`
 !!! description "`CRV.burn(_value: uint256) -> bool`"
     
-    Function to burn `_value` tokens of the function caller by sending them to [`ZERO_ADDRESS`]([0x0000000000000000000000000000000000000000](https://etherscan.io/address/0x0000000000000000000000000000000000000000)).
+    Function to burn `_value` tokens of the function caller by sending them to [`ZERO_ADDRESS`](https://etherscan.io/address/0x0000000000000000000000000000000000000000).
 
     Retruns: true (`bool`).
 
@@ -440,7 +440,7 @@ New CRV tokens can only be minted by the `minter` contract.
     === "Example"   
         ```shell
         >>> CRV.burn(1000000000000000000)
-        ' '
+        'True'
         ```
 
 
