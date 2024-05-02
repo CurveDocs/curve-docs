@@ -1092,7 +1092,7 @@ Additionally, there are helper functions available to retrieve essential data, s
 ## **Registry Contracts**
 
 !!!warning "Outdated"
-    The contract retrieves pool data from various registries sourced from the [`AddressProvider`](https://etherscan.io/address/0x0000000022d53366457f9d5e68ec105046fc4383). Since its deployment, a [new `AddressProvider`](../../integration/address-provider.md) along with additional registries have been deployed.
+    The contract retrieves pool data from various registries sourced from the [`AddressProvider`](https://etherscan.io/address/0x0000000022d53366457f9d5e68ec105046fc4383). Since its deployment, a [new `AddressProvider`](../integration/address-provider.md) along with additional registries have been deployed.
 
 
 ### `registry`

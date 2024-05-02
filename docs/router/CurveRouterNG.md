@@ -5,14 +5,14 @@ The `CurveRouterNG` is used to perform token exchanges. It can **swap up to five
 Additionally, the contract provides **functions to calculate input and output amounts** with [`get_dy`](#get_dy) and [`get_dx`](#get_dx).
 
 !!!deploy "Contract Source & Deployment"
-    The `CurveRouterNG` contract has been deployed on most chains where Curve liquidity pools exist. For a full list of all deployments, see [here](../../references/deployed-contracts.md#curve-router).
+    The `CurveRouterNG` contract has been deployed on most chains where Curve liquidity pools exist. For a full list of all deployments, see [here](../references/deployed-contracts.md#curve-router).
 
     Source code for the contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-router-ng/tree/master/contracts).
 
 
 The contract utilizes **interfaces for all relevant Curve pools**, such as StableSwap, CryptoSwap, LLAMMA, and others, to execute swaps.
 
-??? quote "Used Interfaces"
+??? quote "Interfaces"
 
     ```vyper
     interface StablePool:
