@@ -179,8 +179,8 @@ nav:
 
 
   - Exchange Routers:
-    - CurveRouterNG: curve_dao/router/CurveRouterNG.md
-    - CurveRegistryExchange: curve_dao/router/CurveRegistryExchange.md
+    - CurveRouterNG: router/CurveRouterNG.md
+    - CurveRegistryExchange: router/CurveRegistryExchange.md
 
 
   - Curve Stablecoin:
