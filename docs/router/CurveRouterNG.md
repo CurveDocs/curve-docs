@@ -139,6 +139,93 @@ The contract utilizes **interfaces for all relevant Curve pools**, such as Stabl
 ---
 
 
+## **Route and Swap Parameters**
+
+The two most curcial input values when using the `CurveRouter` are `_route`, which determins the route of the exchange and `_swap_params`, which includes swap parameters such as input and output token, swap type, pool type and number of coins in the pool.
+
+
+### `_route`
+
+The route input is an array of up to 11 addresses. When calling the function, the array must always include 11 addresses. Not used spots in the array need to be filled with `ZERO_ADDRESS`. The route consists of tokens and pools or zaps. The first address is always the input token, the last one always the output token. The addresses inbetween compose the route the user wants to trade.
+
+
+=== "Example"
+
+    ```py 
+    [
+        '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',   # initial token: wETH
+        '0x7f86bf177dd4f3494b841a37e810a34dd56c829b',   # pool1: TricryptoUSDC (USDC, wBTC, wETH)
+        '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',   # token in between: USDC
+        '0x4dece678ceceb27446b35c672dc7d61f30bad69e',   # pool2: crvUSD/USDC
+        '0xf939e0a03fb07f59a73314e73794be0e57ac1b4e',   # output token: crvUSD
+        '0x0000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000',
+    ]
+    ```
+
+*The example demonstrates a swap of [wETH](https://etherscan.io/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2) for [crvUSD](https://etherscan.io/token/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E). The process involves two stages. First, wETH is swapped for [USDC](https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48) using the [tricryptoUSDC](https://etherscan.io/address/0x7f86bf177dd4f3494b841a37e810a34dd56c829b) pool. Subsequently, USDC is exchanged for crvUSD using the [crvUSD/USDC](https://etherscan.io/address/0x4dece678ceceb27446b35c672dc7d61f30bad69e) pool.*
+
+
+
+---
+
+
+### `_swap_params`
+
+Swap parameters are defined in a multidimensional array which provides essential information about which tokens to swap using a specified pool.
+
+The array structure includes the following elements: **`[i, j, swap_type, pool_type, n_coins]`**. The first array of this multidimensional setup corresponds to the initial token exchange in the swap sequence.
+
+**`i`**: Index of the input token, fetched from `pool.coins('token address')`.
+
+**`j`**: Index of the output token, fetched from `pool.coins('token address')`.
+
+| `swap_type` | Description |
+| :---: | ----------- |
+| 1 | Standard token `exchange` |
+| 2 | Underlying token `exchange_underlying` |
+| 3 | Underlying exchange via zap for factory stable metapools and crypto-meta pools (`exchange_underlying` for stable, `exchange` in zap for crypto) |
+| 4 | Coin to LP token "exchange" (effectively `add_liquidity`) |
+| 5 | Lending pool underlying coin to LP token "exchange" (effectively `add_liquidity`) |
+| 6 | LP token to coin "exchange" (effectively `remove_liquidity_one_coin`) |
+| 7 | LP token to lending or fake pool underlying coin "exchange" (effectively `remove_liquidity_one_coin`) |
+| 8 | Specialized swaps like ETH <-> WETH, ETH -> stETH or frxETH, and cross-liquidity between staked tokens (e.g., stETH <-> wstETH, frxETH <-> sfrxETH) |
+| 9 | SNX-related swaps (e.g., sUSD, sEUR, sETH, sBTC) |
+
+| `pool_type` | Description |
+| :---------: | ----------- |
+| 1 | Stable pools using the Stableswap algorithm |
+| 2 | Two-coin Crypto pools using the Cryptoswap algorithm |
+| 3 | Tricrypto pools with three coins using the Cryptoswap algorithm |
+| 4 | Llamma pools, typically used in crvUSD and lending markets |
+
+**`n_coins`**: Number of coins contained within the pool.
+
+
+=== "Example"
+
+    ```py
+    [
+        [2, 0, 1, 3, 3],    # first swap:  wETH -> USDC using tricryptoUSDC pool
+        [0, 1, 1, 1, 2],    # second swap: USDC -> crvUSD using crvUSD/USDC pool
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+    ]
+    ```
+
+*Let's take a closer look at the first array, which represents the swap parameters for the first exchange (wETH -> USDC). `i = 2` because the coin index value of wETH in the tricryptoUSDC pool is 2. This can be obtained by calling `tricryptoUSDC.coins(n)`. Similarly, `j = 0` because USDC has the coin index value of 0. The swap type is a regular exchange, represented by `0`. The `pool_type` is 3, as it is a tricrypto pool (a cryptoswap algorithm consisting of three coins: USDC, wBTC, and wETH). The last value in the array represents the number of coins in the pool, which is 3.*
+
+*The values of the second array should be set according to the crvUSD/USDC pool.*
+
+
+---
+
+
 ## **Exchanging Tokens**
 
 The router has a single `exchange` function, which allows up to 5 swaps in a single transaction. 
@@ -151,29 +238,16 @@ Routing and swap parameters need to be determined off-chain. The exchange functi
 
     Function to perform a token exchange with up to 5 swaps in a single transaction.
 
-    Returns: received amount of final output token (`uint256`).
+    Returns: received amount of the final output token (`uint256`).
 
-    | Input          | Type           | Description |
-    | -------------- | -------------- | ----------- |
-    | `_route`       | `address[11]`  | Array of [initial token, pool or zap, token, pool or zap, token, ...]. The array is iterated until a pool address of `ZERO_ADDRESS`, then the last given token is transferred to `_receiver`. |
-    | `_swap_params` | `uint256[5][5]`| Multidimensional array of **`[i, j, swap_type, pool_type, n_coins]`** where `i` is the index of input token and `j` is the index of output token, with `pool_type`: 1 - stable, 2 - crypto, 3 - tricrypto, 4 - llamma and `n_coins` is the number of coins in pool. |
-    | `_amount`      | `uint256`      | The amount of input token (`_route[0]`) to be sent. |
-    | `_expected`    | `uint256`      | The minimum amount received after the final swap. |
-    | `_pools`       | `address[5]`   | Array of pools for swaps via zap contracts. This parameter is only needed for `swap_type = 3`. |
-    | `receiver`     | `address`      | Address to transfer the final output token to. Defaults to `msg.sender`. |
-
-    **The `swap_type` should be:**
-
-    1. for `exchange`   
-    2. for `exchange_underlying`    
-    3. for underlying exchange via zap: factory stable metapools with lending base pool `exchange_underlying` and factory crypto-meta pools underlying exchange (`exchange` method in zap)  
-    4. for coin -> LP token "exchange" (actually `add_liquidity`)  
-    5. for lending pool underlying coin -> LP token "exchange" (actually `add_liquidity`)  
-    6. for LP token -> coin "exchange" (actually `remove_liquidity_one_coin`)  
-    7. for LP token -> lending or fake pool underlying coin "exchange" (actually `remove_liquidity_one_coin`)  
-    8. for ETH <-> WETH, ETH -> stETH or ETH -> frxETH, stETH <-> wstETH, frxETH <-> sfrxETH, ETH -> wBETH  
-    9. for SNX swaps (sUSD, sEUR, sETH, sBTC)
-
+    | Input          | Type            | Description |
+    | -------------- | --------------- | ----------- |
+    | `_route`       | `address[11]`   | Route data: [see here](#_route) |
+    | `_swap_params` | `uint256[5][5]` | Swap parameters: [see here](#_swap_params) |
+    | `_amount`      | `uint256`       | The amount of the input token (`_route[0]`) to be sent. |
+    | `_expected`    | `uint256`       | The minimum amount received after the final swap. |
+    | `_pools`       | `address[5]`    | Array of pools for swaps via zap contracts. This parameter is only needed for `swap_type = 3`. |
+    | `receiver`     | `address`       | Address to transfer the final output token to. Defaults to `msg.sender`. |
 
     ??? quote "Source code"
 
@@ -414,32 +488,24 @@ There are two function to estimate input and output token amounts:
 - `get_dx` to estimate the amount of input tokens when exchanging for a certain amount of output tokens
 
 
-
 ### `get_dy`
 !!! description "`Router.get_dy(_route: address[11], _swap_params: uint256[5][5], _amount: uint256, _pools: address[5] = empty(address[5])) -> uint256:`"
 
+    !!!notebook "Jupyter Notebook"
+        An easy-to-follow Jupyter Notebook with some examples on how `get_dy` can be used can be found here: [https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/integratooors/curve-router/get_dy.ipynb](https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/integratooors/curve-router/get_dy.ipynb)
+
+
+
     Function to calculate the amount of final output tokens received when performing an exchange.
 
-    Retuns: expected amount of final output token (`uint256`).
+    Returns: expected amount of final output token (`uint256`).
 
-    | Input          | Type          | Description |
-    | -------------- | ------------- | ----------- |
-    | `_route`       | `address[11]` | Array of [initial token, pool or zap, token, pool or zap, token, ...]. The array is iterated until a pool address of `ZERO_ADDRESS`. |
-    | `_swap_params` | `uint256[5][5]` | Multidimensional array of **`[i, j, swap_type, pool_type, n_coins]`** where `i` is the index of input token and `j` is the index of output token, with `pool_type`: 1 - stable, 2 - crypto, 3 - tricrypto, 4 - llamma and `n_coins` is the number of coins in pool. |
-    | `_amount`      | `uint256`     | The amount of input token (`_route[0]`) to be sent. |
-    | `_pools`       | `address[5]=empty(address[5])` | Array of pools for swaps via zap contracts. This parameter is only needed for `swap_type = 3`. |
-
-    **The `swap_type` should be:**
-
-    1. for `exchange`   
-    2. for `exchange_underlying`    
-    3. for underlying exchange via zap: factory stable metapools with lending base pool `exchange_underlying` and factory crypto-meta pools underlying exchange (`exchange` method in zap)  
-    4. for coin -> LP token "exchange" (actually `add_liquidity`)  
-    5. for lending pool underlying coin -> LP token "exchange" (actually `add_liquidity`)  
-    6. for LP token -> coin "exchange" (actually `remove_liquidity_one_coin`)  
-    7. for LP token -> lending or fake pool underlying coin "exchange" (actually `remove_liquidity_one_coin`)  
-    8. for ETH <-> WETH, ETH -> stETH or ETH -> frxETH, stETH <-> wstETH, frxETH <-> sfrxETH, ETH -> wBETH  
-    9. for SNX swaps (sUSD, sEUR, sETH, sBTC) |
+    | Input          | Type             | Description |
+    | -------------- | ---------------- | ----------- |
+    | `_route`       | `address[11]`    | Route data: [see here](#_route) |
+    | `_swap_params` | `uint256[5][5]`  | Swap parameters: [see here](#_swap_params) |
+    | `_amount`      | `uint256`        | The amount of input token (`_route[0]`) to be sent. |
+    | `_pools`       | `address[5]`     | Array of pools for swaps via zap contracts. This parameter defaults to an empty array and is only needed for `swap_type = 3`. |
 
     ??? quote "Source code"
 
@@ -644,31 +710,21 @@ There are two function to estimate input and output token amounts:
 ### `get_dx`
 !!! description "`Router.get_dx(_route: address[11], _swap_params: uint256[5][5], _out_amount: uint256, _pools: address[5], _base_pools: address[5]=empty(address[5]), _base_tokens: address[5] = empty(address[5])) -> uint256:`"
 
-    Function to calculate the amount of input tokens to receive the desired amount of output tokens.
+    !!!notebook "Jupyter Notebook"
+        An easy-to-follow Jupyter Notebook with some examples on how `get_dx` can be used can be found here: [https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/integratooors/curve-router/get_dx.ipynb](https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/integratooors/curve-router/get_dx.ipynb).
 
-    Retuns: required amount of input token (`uint256`).
+    Function to calculate the amount of input tokens required to receive the desired amount of output tokens.
 
-    | Input          | Type          | Description |
-    | -------------- | ------------- | ----------- |
-    | `_route`       | `address[11]` | Array of [initial token, pool or zap, token, pool or zap, token, ...]. The array is iterated until a pool address of `ZERO_ADDRESS`. |
-    | `_swap_params` | `uint256[5][5]` | Multidimensional array of **`[i, j, swap_type, pool_type, n_coins]`** where `i` is the index of input token and `j` is the index of output token, with `pool_type`: 1 - stable, 2 - crypto, 3 - tricrypto, 4 - llamma and `n_coins` is the number of coins in pool. |
-    | `_out_amount`  | `uint256`     | The desired amount of output coin to receive. |
-    | `_pools`       | `address[5]`  | Array of pools. |
-    | `_base_pools`  | `address[5]=empty(address[5])` | Array of base pools (for meta pools). |
-    | `_base_tokens` | `address[5]=empty(address[5])` | Array of base lp tokens (for meta pools). Should be a zap address for double meta pools. |
+    Returns: required amount of input token (`uint256`).
 
-    **The `swap_type` should be:**
-
-    1. for `exchange`   
-    2. for `exchange_underlying`    
-    3. for underlying exchange via zap: factory stable metapools with lending base pool `exchange_underlying` and factory crypto-meta pools underlying exchange (`exchange` method in zap)  
-    4. for coin -> LP token "exchange" (actually `add_liquidity`)  
-    5. for lending pool underlying coin -> LP token "exchange" (actually `add_liquidity`)  
-    6. for LP token -> coin "exchange" (actually `remove_liquidity_one_coin`)  
-    7. for LP token -> lending or fake pool underlying coin "exchange" (actually `remove_liquidity_one_coin`)  
-    8. for ETH <-> WETH, ETH -> stETH or ETH -> frxETH, stETH <-> wstETH, frxETH <-> sfrxETH, ETH -> wBETH  
-    9. for SNX swaps (sUSD, sEUR, sETH, sBTC) |
-
+    | Input          | Type            | Description |
+    | -------------- | --------------- | ----------- |
+    | `_route`       | `address[11]`   | Route data: [see here](#_route) |
+    | `_swap_params` | `uint256[5][5]` | Swap parameters: [see here](#_swap_params) |
+    | `_out_amount`  | `uint256`       | The desired amount of output coin to receive. |
+    | `_pools`       | `address[5]`    | Array of pools. |
+    | `_base_pools`  | `address[5]`    | Array of base pools (for meta pools). Defaults to an empty array. |
+    | `_base_tokens` | `address[5]`    | Array of base LP tokens (for meta pools). Should be a zap address for double meta pools. Defaults to an empty array. |
 
     ??? quote "Source code"
 
