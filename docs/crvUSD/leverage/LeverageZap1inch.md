@@ -1,19 +1,22 @@
 <h1>LeverageZap1inch.vy</h1>
 
-This Zap contract is specifically designed to create or repay leveraged loans utilizing the [**1inch router**](https://1inch.io/aggregation-protocol/) using callbacks.
+This Zap contract is specifically designed to **create or repay leveraged loans** using the [**1inch router**](https://1inch.io/aggregation-protocol/).
 
 !!!github "GitHub"
     The source code for `LeverageZap1inch.vy` is available on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/zaps/LeverageZap1inch.vy).
 
     JavaScript library for Curve Lending can be found here: [:material-github: GitHub](https://github.com/curvefi/curve-lending-js?tab=readme-ov-file#leverage-createloan-borrowmore-repay)
 
-Previously, building leverage for crvUSD markets relied solely on the [`Curve Router`](../../curve_dao/router/router.md). Leveraging large positions often led to a significant price impact due to the exclusive use of Curve liquidity pools. The new `Leverage Zap` allows users to leverage loans for crvUSD markets and lending markets using the 1inch router, which considers a broader range of liquidity sources across DeFi[^1].
+Previously, building leverage for crvUSD markets relied solely on the [`Curve Router`](../../curve_dao/router/router.md). Leveraging large positions often led to significant price impact due to the exclusive use of Curve liquidity pools. This new Zap contract allows users to leverage loans for crvUSD and lending markets using the 1inch router, which considers liquidity sources across DeFi.[^1]
 
 [^1]: The premise is that these liquidity sources are integrated within the 1inch router.
 
+
 ---
 
-*The function to execute callbacks is located in the `Controller.vy` contract:*
+
+
+Leverage is built using a **callback method**. The function to execute callbacks is located in the `Controller.vy` contract:
 
 ???quote "`execute_callback`"
 
@@ -66,9 +69,10 @@ Previously, building leverage for crvUSD markets relied solely on the [`Curve Ro
             return data
         ```
 
-**Required Changes to `Controller.vy`**
 
-To enable the functionality of such Zap contracts, minor modifications were necessary in the `Controller.vy` contract. Functions such as `create_loan_extended`, `borrow_more_extended`, `repay_extended`, `_liquidity`, and `liquidate_extended` were enhanced with an additional constructor argument `callback_bytes: Bytes[10**4]`. This allows users to pass bytes to the Zap contract. Additionally, the internal `execute_callback` function, which manages the callbacks, was also updated.
+!!!info "Required Changes to `Controller.vy`"
+    To enable the functionality of such Zap contracts, minor modifications were necessary in the `Controller.vy` contract. Functions such as `create_loan_extended`, `borrow_more_extended`, `repay_extended`, `_liquidity`, and `liquidate_extended` were enhanced with an additional constructor argument `callback_bytes: Bytes[10**4]`. This allows users to pass bytes to the Zap contract. Additionally, the internal `execute_callback` function, which manages the callbacks, was also updated.
+
 
 ---
 
@@ -80,9 +84,9 @@ To build up leverage, the `LeverageZap1inch.vy` contract uses the `callback_depo
 
 *Flow of building leverage:*
 
-1. User calls [`create_loan_extended`](../controller.md#create_loan_extended) or [`borrow_more_extended`](../controller.md#borrow_more_extended) and passes `collateral`, `debt`, `N`, `callbacker`, `callback_args`, and `callback_bytes` into the function.
+1. User calls [`create_loan_extended`](../controller.md#create_loan_extended) or [`borrow_more_extended`](../controller.md#borrow_more_extended) and passes `collateral`, `debt`, `N`, `callbacker`, `callback_args`, and `callback_bytes` into the function.[^2]
 2. The debt which is taken on by the user is then transferred to the `callbacker`, in our case the `LeverageZap1inch.vy` contract.
-3. After the transfer, the callback is executed using the internal `execute_callback` in the `Controller.vy` contract.
+3. After the transfer, the callback is executed using the internal `execute_callback` in the `Controller.vy` contract. This step builds up the leverage.
 
     ???quote "`execute_callback`"
 
@@ -131,128 +135,12 @@ To build up leverage, the `LeverageZap1inch.vy` contract uses the `callback_depo
                 return data
             ```
 
-    The function uses Vyper's built-in [`raw_call`](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=raw_call#raw_call) function to call the desired method (in this case `callback_deposit`) with the according `callback_bytes`. This function builds up the leverage.
+    The function uses Vyper's built-in [`raw_call`](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=raw_call#raw_call) function to call the desired method (in this case `callback_deposit`) with the according `callback_bytes`.
 
-4. After executing the callback, the Controller either creates a new loan or adds the additional collateral to the already existing loan and transfers the collateral into the AMM.
-
-
-### `max_borrowable`
-!!! description "`LeverageZap1inch.max_borrowable(controller: address, _user_collateral: uint256, _leverage_collateral: uint256, N: uint256, p_avg: uint256) -> uint256`"
-
-    Function to calculate the maximum borrowable using leverage. The maximum borrowable amount essentially comes down to:
-
-    $$\text{max_borrowable} = \frac{\text{collateral}}{\frac{1}{\text{k_effective} \times \text{max_p_base}} - \frac{1}{\text{p_avg}}}$$
-
-    with $\text{k_effective}$ and $\text{max_p_base}$ being calculated with the internal `_get_k_effective` and `_max_p_base` methods. $\text{p_avg}$ is the average price of the collateral.
-
-    Returns: maximum amount to borrow (`uint256`). The maximum value to return is either the maximum a user can borrow and is ultimately limited by the amount of coins the Controller has.
-
-    | Input                  | Type      | Description  |
-    | ---------------------- | --------- | ------------ |
-    | `controller`           | `address` | Controller of the market to borrow from. | 
-    | `_user_collateral`     | `uint256` | Amount of collateral at its native precision. | 
-    | `_leverage_collateral` | `uint256` | Additional collateral to use for leveraging. | 
-    | `N`                    | `uint256` | Number of bands to deposit into. | 
-    | `p_avg`                | `uint256` | Average price of the collateral. | 
+4. After executing the callback, the Controller either creates a new loan or adds the additional collateral borrowed to the already existing loan and deposits the collateral into the AMM.
 
 
-    ??? quote "Source code"
-
-        === "LeverageZap1inch.vy"
-
-            ```python
-            @external
-            @view
-            def max_borrowable(controller: address, _user_collateral: uint256, _leverage_collateral: uint256, N: uint256, p_avg: uint256) -> uint256:
-                """
-                @notice Calculation of maximum which can be borrowed with leverage
-                @param collateral Amount of collateral (at its native precision)
-                @param N Number of bands to deposit into
-                @param route_idx Index of the route which should be use for exchange stablecoin to collateral
-                @return Maximum amount of stablecoin to borrow with leverage
-                """
-                # max_borrowable = collateral / (1 / (k_effective * max_p_base) - 1 / p_avg)
-                AMM: LLAMMA = LLAMMA(Controller(controller).amm())
-                BORROWED_TOKEN: address = AMM.coins(0)
-                COLLATERAL_TOKEN: address = AMM.coins(1)
-                COLLATERAL_PRECISION: uint256 = pow_mod256(10, 18 - ERC20(COLLATERAL_TOKEN).decimals())
-
-                user_collateral: uint256 = _user_collateral * COLLATERAL_PRECISION
-                leverage_collateral: uint256 = _leverage_collateral * COLLATERAL_PRECISION
-                k_effective: uint256 = self._get_k_effective(controller, user_collateral + leverage_collateral, N)
-                max_p_base: uint256 = self._max_p_base(controller)
-                max_borrowable: uint256 = user_collateral * 10**18 / (10**36 / k_effective * 10**18 / max_p_base - 10**36 / p_avg)
-
-                return min(max_borrowable * 999 / 1000, ERC20(BORROWED_TOKEN).balanceOf(controller)) # Cannot borrow beyond the amount of coins Controller has
-
-            @internal
-            @view
-            def _get_k_effective(controller: address, collateral: uint256, N: uint256) -> uint256:
-                """
-                @notice Intermediary method which calculates k_effective defined as x_effective / p_base / y,
-                        however discounted by loan_discount.
-                        x_effective is an amount which can be obtained from collateral when liquidating
-                @param N Number of bands the deposit is made into
-                @return k_effective
-                """
-                # x_effective = sum_{i=0..N-1}(y / N * p(n_{n1+i})) =
-                # = y / N * p_oracle_up(n1) * sqrt((A - 1) / A) * sum_{0..N-1}(((A-1) / A)**k)
-                # === d_y_effective * p_oracle_up(n1) * sum(...) === y * k_effective * p_oracle_up(n1)
-                # d_k_effective = 1 / N / sqrt(A / (A - 1))
-                # d_k_effective: uint256 = 10**18 * unsafe_sub(10**18, discount) / (SQRT_BAND_RATIO * N)
-                # Make some extra discount to always deposit lower when we have DEAD_SHARES rounding
-                CONTROLLER: Controller = Controller(controller)
-                A: uint256 = LLAMMA(CONTROLLER.amm()).A()
-                SQRT_BAND_RATIO: uint256 = isqrt(unsafe_div(10 ** 36 * A, unsafe_sub(A, 1)))
-
-                discount: uint256 = CONTROLLER.loan_discount()
-                d_k_effective: uint256 = 10**18 * unsafe_sub(
-                    10**18, min(discount + (DEAD_SHARES * 10**18) / max(collateral / N, DEAD_SHARES), 10**18)
-                ) / (SQRT_BAND_RATIO * N)
-                k_effective: uint256 = d_k_effective
-                for i in range(1, MAX_TICKS_UINT):
-                    if i == N:
-                        break
-                    d_k_effective = unsafe_div(d_k_effective * (A - 1), A)
-                    k_effective = unsafe_add(k_effective, d_k_effective)
-                return k_effective
-
-            @internal
-            @view
-            def _max_p_base(controller: address) -> uint256:
-                """
-                @notice Calculate max base price including skipping bands
-                """
-                AMM: LLAMMA = LLAMMA(Controller(controller).amm())
-                A: uint256 = AMM.A()
-                LOGN_A_RATIO: int256 = self.wad_ln(A * 10**18 / (A - 1))
-
-                p_oracle: uint256 = AMM.price_oracle()
-                # Should be correct unless price changes suddenly by MAX_P_BASE_BANDS+ bands
-                n1: int256 = self.wad_ln(AMM.get_base_price() * 10**18 / p_oracle)
-                if n1 < 0:
-                    n1 -= LOGN_A_RATIO - 1  # This is to deal with vyper's rounding of negative numbers
-                n1 = unsafe_div(n1, LOGN_A_RATIO) + MAX_P_BASE_BANDS
-                n_min: int256 = AMM.active_band_with_skip()
-                n1 = max(n1, n_min + 1)
-                p_base: uint256 = AMM.p_oracle_up(n1)
-
-                for i in range(MAX_SKIP_TICKS + 1):
-                    n1 -= 1
-                    if n1 <= n_min:
-                        break
-                    p_base_prev: uint256 = p_base
-                    p_base = unsafe_div(p_base * A, A - 1)
-                    if p_base > p_oracle:
-                        return p_base_prev
-
-                return p_base
-            ```
-
-    === "Example"
-        ```shell
-        >>> soon
-        ```
+[^2]: `collateral` is the amount of collateral tokens used, `debt` is the amount of debt to take on, `N` represents the number of bands, `callbacker` is the callback contract, `callback_args` are some extra arguments passed to the callbacker, and `callback_bytes`.
 
 
 ### `callback_deposit`
@@ -275,7 +163,7 @@ To build up leverage, the `LeverageZap1inch.vy` contract uses the `callback_depo
 
     | Input             | Type                    | Description  |
     | ----------------- | ----------------------- | ------------ |
-    | `user`            | `address`               | User address to leverage for. |
+    | `user`            | `address`               | User address to create a leveraged position for. |
     | `stablecoins`     | `uint256`               | Always 0. |
     | `user_collateral` | `uint256`               | Amount of collateral token provided by the user. |
     | `d_debt`          | `uint256`               | Amount to be borrowed (in addition to what has already been borrowed). |
@@ -407,6 +295,126 @@ To build up leverage, the `LeverageZap1inch.vy` contract uses the `callback_depo
         ```
 
 
+
+### `max_borrowable`
+!!! description "`LeverageZap1inch.max_borrowable(controller: address, _user_collateral: uint256, _leverage_collateral: uint256, N: uint256, p_avg: uint256) -> uint256`"
+
+    Function to calculate the maximum borrowable using leverage. The maximum borrowable amount essentially comes down to:
+
+    $$\text{max_borrowable} = \frac{\text{collateral}}{\frac{1}{\text{k_effective} \times \text{max_p_base}} - \frac{1}{\text{p_avg}}}$$
+
+    with $\text{k_effective}$ and $\text{max_p_base}$ being calculated with the internal `_get_k_effective` and `_max_p_base` methods. $\text{p_avg}$ is the average price of the collateral.
+
+    Returns: maximum amount to borrow (`uint256`). The maximum value to return is either the maximum a user can borrow and is ultimately limited by the amount of coins the Controller has.
+
+    | Input                  | Type      | Description  |
+    | ---------------------- | --------- | ------------ |
+    | `controller`           | `address` | Controller of the market to borrow from. | 
+    | `_user_collateral`     | `uint256` | Amount of collateral at its native precision. | 
+    | `_leverage_collateral` | `uint256` | Additional collateral to use for leveraging. | 
+    | `N`                    | `uint256` | Number of bands to deposit into. | 
+    | `p_avg`                | `uint256` | Average price of the collateral. | 
+
+
+    ??? quote "Source code"
+
+        === "LeverageZap1inch.vy"
+
+            ```python
+            @external
+            @view
+            def max_borrowable(controller: address, _user_collateral: uint256, _leverage_collateral: uint256, N: uint256, p_avg: uint256) -> uint256:
+                """
+                @notice Calculation of maximum which can be borrowed with leverage
+                @param collateral Amount of collateral (at its native precision)
+                @param N Number of bands to deposit into
+                @param route_idx Index of the route which should be use for exchange stablecoin to collateral
+                @return Maximum amount of stablecoin to borrow with leverage
+                """
+                # max_borrowable = collateral / (1 / (k_effective * max_p_base) - 1 / p_avg)
+                AMM: LLAMMA = LLAMMA(Controller(controller).amm())
+                BORROWED_TOKEN: address = AMM.coins(0)
+                COLLATERAL_TOKEN: address = AMM.coins(1)
+                COLLATERAL_PRECISION: uint256 = pow_mod256(10, 18 - ERC20(COLLATERAL_TOKEN).decimals())
+
+                user_collateral: uint256 = _user_collateral * COLLATERAL_PRECISION
+                leverage_collateral: uint256 = _leverage_collateral * COLLATERAL_PRECISION
+                k_effective: uint256 = self._get_k_effective(controller, user_collateral + leverage_collateral, N)
+                max_p_base: uint256 = self._max_p_base(controller)
+                max_borrowable: uint256 = user_collateral * 10**18 / (10**36 / k_effective * 10**18 / max_p_base - 10**36 / p_avg)
+
+                return min(max_borrowable * 999 / 1000, ERC20(BORROWED_TOKEN).balanceOf(controller)) # Cannot borrow beyond the amount of coins Controller has
+
+            @internal
+            @view
+            def _get_k_effective(controller: address, collateral: uint256, N: uint256) -> uint256:
+                """
+                @notice Intermediary method which calculates k_effective defined as x_effective / p_base / y,
+                        however discounted by loan_discount.
+                        x_effective is an amount which can be obtained from collateral when liquidating
+                @param N Number of bands the deposit is made into
+                @return k_effective
+                """
+                # x_effective = sum_{i=0..N-1}(y / N * p(n_{n1+i})) =
+                # = y / N * p_oracle_up(n1) * sqrt((A - 1) / A) * sum_{0..N-1}(((A-1) / A)**k)
+                # === d_y_effective * p_oracle_up(n1) * sum(...) === y * k_effective * p_oracle_up(n1)
+                # d_k_effective = 1 / N / sqrt(A / (A - 1))
+                # d_k_effective: uint256 = 10**18 * unsafe_sub(10**18, discount) / (SQRT_BAND_RATIO * N)
+                # Make some extra discount to always deposit lower when we have DEAD_SHARES rounding
+                CONTROLLER: Controller = Controller(controller)
+                A: uint256 = LLAMMA(CONTROLLER.amm()).A()
+                SQRT_BAND_RATIO: uint256 = isqrt(unsafe_div(10 ** 36 * A, unsafe_sub(A, 1)))
+
+                discount: uint256 = CONTROLLER.loan_discount()
+                d_k_effective: uint256 = 10**18 * unsafe_sub(
+                    10**18, min(discount + (DEAD_SHARES * 10**18) / max(collateral / N, DEAD_SHARES), 10**18)
+                ) / (SQRT_BAND_RATIO * N)
+                k_effective: uint256 = d_k_effective
+                for i in range(1, MAX_TICKS_UINT):
+                    if i == N:
+                        break
+                    d_k_effective = unsafe_div(d_k_effective * (A - 1), A)
+                    k_effective = unsafe_add(k_effective, d_k_effective)
+                return k_effective
+
+            @internal
+            @view
+            def _max_p_base(controller: address) -> uint256:
+                """
+                @notice Calculate max base price including skipping bands
+                """
+                AMM: LLAMMA = LLAMMA(Controller(controller).amm())
+                A: uint256 = AMM.A()
+                LOGN_A_RATIO: int256 = self.wad_ln(A * 10**18 / (A - 1))
+
+                p_oracle: uint256 = AMM.price_oracle()
+                # Should be correct unless price changes suddenly by MAX_P_BASE_BANDS+ bands
+                n1: int256 = self.wad_ln(AMM.get_base_price() * 10**18 / p_oracle)
+                if n1 < 0:
+                    n1 -= LOGN_A_RATIO - 1  # This is to deal with vyper's rounding of negative numbers
+                n1 = unsafe_div(n1, LOGN_A_RATIO) + MAX_P_BASE_BANDS
+                n_min: int256 = AMM.active_band_with_skip()
+                n1 = max(n1, n_min + 1)
+                p_base: uint256 = AMM.p_oracle_up(n1)
+
+                for i in range(MAX_SKIP_TICKS + 1):
+                    n1 -= 1
+                    if n1 <= n_min:
+                        break
+                    p_base_prev: uint256 = p_base
+                    p_base = unsafe_div(p_base * A, A - 1)
+                    if p_base > p_oracle:
+                        return p_base_prev
+
+                return p_base
+            ```
+
+    === "Example"
+        ```shell
+        >>> soon
+        ```
+
+
 ---
 
 
@@ -420,7 +428,7 @@ For a complete JavaScript library, see [:material-github: GitHub](https://github
 
 1. User calls `repay_extended` and passes `callbacker`, `callback_args`, and `callback_bytes` into the function.
 2. The Controller withdraws 100% of the collateral from the AMM and transfers all of it to the `callbacker` contract.
-3. After the transfer, the callback is executed using the internal `execute_callback` in the `Controller.vy` contract.
+3. After the transfer, the callback is executed using the internal `execute_callback` in the `Controller.vy` contract. This function unwinds the leverage.
 
     ???quote "`execute_callback`"
 
@@ -469,7 +477,7 @@ For a complete JavaScript library, see [:material-github: GitHub](https://github
                 return data
             ```
 
-    The function uses Vyper's built-in [`raw_call`](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=raw_call#raw_call) function to call the desired method (in this case `callback_repay`) with the according `callback_bytes`. This function unwinds the leverage.
+    The function uses Vyper's built-in [`raw_call`](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=raw_call#raw_call) function to call the desired method (in this case `callback_repay`) with the according `callback_bytes`.
 
 4. After executing the callback, the Controller checks and does a full repayment and closes the position when possible. Else, it does a partial repayment (deleverage).
 
@@ -495,7 +503,7 @@ For a complete JavaScript library, see [:material-github: GitHub](https://github
 
     | Input             | Type                    | Description  |
     | ----------------- | ----------------------- | ------------ |
-    | `user`            | `address`               | User address to repay for. |
+    | `user`            | `address`               | User address to unwind a leveraged position for. |
     | `stablecoins`     | `uint256`               | Value returned from `user_state`. |
     | `user_collateral` | `uint256`               | Value returned from `user_state`. |
     | `d_debt`          | `uint256`               | Value returned from `user_state`. |
@@ -591,6 +599,8 @@ For a complete JavaScript library, see [:material-github: GitHub](https://github
 
 
 ## **Contract Info Methods**
+
+The contract has two public getters, one for the 1inch router contract and one for the two factory contracts for crvUSD and lending markets.
 
 ### `ROUTER_1INCH`
 !!! description "`LeverageZap1inch.ROUTER_1INCH() -> address: view`"
