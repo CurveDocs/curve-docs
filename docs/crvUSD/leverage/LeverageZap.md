@@ -459,18 +459,18 @@ Routes are predetermined paths for token exchanges. These routes are added when 
         ```
 
 
-### `route_params` todo
+### `route_params`
 !!! description "`LeverageZap.route_params(arg0: uint256, arg1: uint256, arg2: uint256) -> uint256: view`"
 
-    todo
+    Getter for the route parameters.
 
-    Returns:
+    Returns: route parameter (`uint256`).
 
-    | Input  | Type      | Description  |
-    | ------ | --------- | ------------ |
-    | `arg0` | `uint256` | Index of the route. | 
-    | `arg1` | `uint256` | todo | 
-    | `arg2` | `uint256` | todo | 
+    | Input  | Type      | Description                                          |
+    | ------ | --------- | ---------------------------------------------------- |
+    | `arg0` | `uint256` | Index of the route.                                  |
+    | `arg1` | `uint256` | Exchange index within the route. The first exchange is indexed as 0, the second as 1, etc. |
+    | `arg2` | `uint256` | Route parameter value. `0` for input token, `1` for output token, `2` for swap type. |
 
     ??? quote "Source code"
 
@@ -515,22 +515,46 @@ Routes are predetermined paths for token exchanges. These routes are added when 
             ```
 
     === "Example"
+
         ```shell
-        >>> soon
+        # first exchange: exchanging crvUSD for USDC using crvUSD/USDC pool
+        >>> LeverageZap.route_params(0, 0, 0)   # route 0, first exchange (index 0), fist parameter value (index 0) 
+        1   # i = crvUSD
+        >>> LeverageZap.route_params(0, 0, 1)   # route 0, first exchange (index 0), second parameter value (index 1)
+        0   # j = USDC
+        >>> LeverageZap.route_params(0, 0, 2)   # route 0, first exchange (index 0), third parameter value (index 2)
+        1   # swap type 1 = stableswap exchange
+
+        # second exchange: exchanging USDC for USDT using threepool
+        >>> LeverageZap.route_params(0, 1, 0)   # route 0, second exchange (index 1), fist parameter value (index 0) 
+        1   # i = USDC
+        >>> LeverageZap.route_params(0, 1, 1)   # route 0, second exchange (index 1), second parameter value (index 1) 
+        2   # j = USDT
+        >>> LeverageZap.route_params(0, 1, 2)   # route 0, second exchange (index 1), third parameter value (index 2) 
+        1   # swap type 1 = stableswap exchange
+
+        # third exchange: exchanging USDT for BTC using tricrypto2 pool
+        >>> LeverageZap.route_params(0, 2, 0)   # route 0, third exchange (index 2), fist parameter value (index 0) 
+        0   # i = USDT
+        >>> LeverageZap.route_params(0, 2, 1)   # route 0, third exchange (index 2), second parameter value (index 1)
+        1   # j = wBTC
+        >>> LeverageZap.route_params(0, 2, 2)   # route 0, third exchange (index 2), third parameter value (index 2)
+        3   # swap type 3 = cryptoswap exchange
+
         ```
 
 
 ### `route_pools`
 !!! description "`LeverageZap.route_pools(arg0: uint256, arg1: uint256) -> address: view`"
 
-    Getter for the zap contracts used for a specific route, if there are any.
+    Getter for the zap contracts used for a specific exchange in a route, if there are any.
 
     Returns: zap contract (`address`).
 
-    | Input  | Type      | Description            |
-    | ------ | --------- | ---------------------- |
-    | `arg0` | `uint256` | Index of the route.    |
-    | `arg1` | `uint256` | todo.    |
+    | Input  | Type      | Description                                         |
+    | ------ | --------- | --------------------------------------------------- |
+    | `arg0` | `uint256` | Index of the route.                                 |
+    | `arg1` | `uint256` | Index of the exchange. The first exchange is index 0, the second exchange is index 1, etc. |
 
     ??? quote "Source code"
 
