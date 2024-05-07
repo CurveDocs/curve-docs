@@ -190,8 +190,8 @@ nav:
     - Oracle: crvUSD/oracle.md
     - Leverage:
       - Overview: crvUSD/leverage/overview.md
-      - Curve: crvUSD/leverage/LeverageZap.md
-      - 1inch: crvUSD/leverage/LeverageZap1inch.md
+      - Curve Pools: crvUSD/leverage/LeverageZap.md
+      - 1inch Router: crvUSD/leverage/LeverageZap1inch.md
     - Factory: 
       - Overview: crvUSD/factory/overview.md
       - Deployer API: crvUSD/factory/deployer-api.md
