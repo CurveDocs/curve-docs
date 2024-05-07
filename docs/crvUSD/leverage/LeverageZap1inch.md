@@ -5,9 +5,9 @@ This Zap contract is specifically designed to **create or repay leveraged loans*
 !!!github "GitHub"
     The source code for `LeverageZap1inch.vy` is available on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/zaps/LeverageZap1inch.vy).
 
-    JavaScript library for Curve Lending can be found here: [:material-github: GitHub](https://github.com/curvefi/curve-lending-js?tab=readme-ov-file#leverage-createloan-borrowmore-repay)
+    An accompanying JavaScript library for Curve Lending can be found here: [:material-github: GitHub](https://github.com/curvefi/curve-lending-js).
 
-Previously, building leverage for crvUSD markets relied solely on the [`Curve Router`](../../curve_dao/router/router.md). Leveraging large positions often led to significant price impact due to the exclusive use of Curve liquidity pools. This new Zap contract allows users to leverage loans for crvUSD and lending markets using the 1inch router, which considers liquidity sources across DeFi.[^1]
+Previously, building leverage for crvUSD markets relied solely on predefined routes using only Curve pools. Leveraging large positions often led to significant price impact due to the exclusive use of Curve liquidity pools. This new Zap contract allows users to leverage loans for crvUSD and lending markets using the 1inch router, which considers liquidity sources across DeFi.[^1]
 
 [^1]: The premise is that these liquidity sources are integrated within the 1inch router.
 
@@ -71,6 +71,8 @@ Leverage is built using a **callback method**. The function to execute callbacks
 
 
 !!!info "Required Changes to `Controller.vy`"
+    This zap only works for crvUSD and lending markets which were deployed using the blueprint implementation at [`0x4c5d4F542765B66154B2E789abd8E69ed4504112`](https://etherscan.io/address/0x4c5d4F542765B66154B2E789abd8E69ed4504112). Markets deployed prior to that can only make use of the regular [`LeverageZap.vy`](./LeverageZap.md).
+
     To enable the functionality of such Zap contracts, minor modifications were necessary in the `Controller.vy` contract. Functions such as `create_loan_extended`, `borrow_more_extended`, `repay_extended`, `_liquidity`, and `liquidate_extended` were enhanced with an additional constructor argument `callback_bytes: Bytes[10**4]`. This allows users to pass bytes to the Zap contract. Additionally, the internal `execute_callback` function, which manages the callbacks, was also updated.
 
 
@@ -79,7 +81,7 @@ Leverage is built using a **callback method**. The function to execute callbacks
 
 ## **Building Leverage**
 
-To build up leverage, the `LeverageZap1inch.vy` contract uses the `callback_deposit` function. Additionally, there is a `max_borrowable` function that calculates the maximum borrowable amount when using leverage. For a complete JavaScript library, see [:material-github: GitHub](https://github.com/curvefi/curve-lending-js?tab=readme-ov-file#leverage-createloan-borrowmore-repay).
+To build up leverage, the `LeverageZap1inch.vy` contract uses the `callback_deposit` function. Additionally, there is a `max_borrowable` function that calculates the maximum borrowable amount when using leverage. For an accompanying JavaScript library, see [:material-github: GitHub](https://github.com/curvefi/curve-lending-js?tab=readme-ov-file#leverage-createloan-borrowmore-repay).
 
 
 *Flow of building leverage:*
@@ -422,7 +424,7 @@ To build up leverage, the `LeverageZap1inch.vy` contract uses the `callback_depo
 
 To deleverage loans, the `LeverageZap1inch.vy` contract uses the `callback_repay` function.
 
-For a complete JavaScript library, see [:material-github: GitHub](https://github.com/curvefi/curve-lending-js?tab=readme-ov-file#leverage-createloan-borrowmore-repay).
+For an accompanying JavaScript library, see [:material-github: GitHub](https://github.com/curvefi/curve-lending-js?tab=readme-ov-file#leverage-createloan-borrowmore-repay).
 
 *Flow of deleveraging:*
 
