@@ -141,12 +141,12 @@ The contract utilizes **interfaces for all relevant Curve pools**, such as Stabl
 
 ## **Route and Swap Parameters**
 
-The two most curcial input values when using the `CurveRouter` are `_route`, which determins the route of the exchange and `_swap_params`, which includes swap parameters such as input and output token, swap type, pool type and number of coins in the pool.
+The two most curcial input values when using the `CurveRouter` are `_route`, which determines the route of the exchange and `_swap_params`, which includes swap parameters such as input and output token, swap type, pool type and number of coins in the pool.
 
 
 ### `_route`
 
-The route input is an array of up to 11 addresses. When calling the function, the array must always include 11 addresses. Not used spots in the array need to be filled with `ZERO_ADDRESS`. The route consists of tokens and pools or zaps. The first address is always the input token, the last one always the output token. The addresses inbetween compose the route the user wants to trade.
+The route input is an array of up to 11 addresses. When calling the function, the array must always include 11 addresses. Unused spots in the array need to be filled with `ZERO_ADDRESS`. The route consists of tokens and pools or zaps. The first address is always the input token, the last one always the output token. The addresses inbetween compose the route the user wants to trade.
 
 
 === "Example"
@@ -230,7 +230,7 @@ The array structure includes the following elements: **`[i, j, swap_type, pool_t
 
 The router has a single `exchange` function, which allows up to 5 swaps in a single transaction. 
 
-Routing and swap parameters need to be determined off-chain. The exchange functionality of the router is designed for gas efficiency over ease-of-use. A according JavaScript library can be found on [:material-github: GitHub](https://github.com/curvefi/curve-router-js).
+Routing and swap parameters need to be determined off-chain. The exchange functionality of the router is designed for gas efficiency over ease-of-use. An accompanying JavaScript library can be found on [:material-github: GitHub](https://github.com/curvefi/curve-router-js), which is used in the Curve UI to determine route and swap parameters.
 
 
 ### `exchange`

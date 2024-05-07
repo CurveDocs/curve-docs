@@ -178,7 +178,7 @@ nav:
     - curve-prices: curve-api/curve-prices.md
 
 
-  - Exchange Routers:
+  - Routers:
     - CurveRouterNG: router/CurveRouterNG.md
     - CurveRegistryExchange: router/CurveRegistryExchange.md
 
