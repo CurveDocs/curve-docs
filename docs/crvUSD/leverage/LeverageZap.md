@@ -251,457 +251,6 @@ This leverage zap allows up to five values to be passed for `callback_args`, but
                 return amount
             ```
 
-    === "Example"
-        [**Jupyter Notebook**](https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/curve%20lending/loans/create_loan_extended.ipynb)
-
-
-### `calculate_debt_n1`
-!!! description "`LeverageZap.calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256, route_idx: uint256) -> int256`"
-
-    Function to calculate the upper band number for the deposit to sit in, to support the given debt with full leverage. This essentially means that all borrowed stablecoin is converted to the collateral token and deposited in addition to the collateral provided by the user. The method reverts if the requested debt is too high.
-
-    Returns: upper band to deposit into (`int256`).
-
-    | Input        | Type      | Description                                  |
-    | ------------ | --------- | -------------------------------------------- |
-    | `collateral` | `address` | Address of the collateral token.             |
-    | `debt`       | `uint256` | Amount of requested debt.                    |
-    | `N`          | `uint256` | Number of bands to deposit into.             |
-    | `route_idx`  | `uint256` | Index of the route to be used for conversion.|
-
-
-    ??? quote "Source code"
-
-        === "LeverageZap.vy"
-
-            ```python
-            @external
-            @view
-            def calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256, route_idx: uint256) -> int256:
-                """
-                @notice Calculate the upper band number for the deposit to sit in to support
-                        the given debt with full leverage, which means that all borrowed
-                        stablecoin is converted to collateral coin and deposited in addition
-                        to collateral provided by user. Reverts if requested debt is too high.
-                @param collateral Amount of collateral (at its native precision)
-                @param debt Amount of requested debt
-                @param N Number of bands to deposit into
-                @param route_idx Index of the route which should be use for exchange stablecoin to collateral
-                @return Upper band n1 (n1 <= n2) to deposit into. Signed integer
-                """
-                leverage_collateral: uint256 = self._get_collateral(debt, route_idx)
-                return Controller(CONTROLLER).calculate_debt_n1(collateral + leverage_collateral, debt, N)
-            ```
-
-        === "Controller.vy"
-
-            ```py
-            @external
-            @view
-            @nonreentrant('lock')
-            def calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256) -> int256:
-                """
-                @notice Calculate the upper band number for the deposit to sit in to support
-                        the given debt. Reverts if requested debt is too high.
-                @param collateral Amount of collateral (at its native precision)
-                @param debt Amount of requested debt
-                @param N Number of bands to deposit into
-                @return Upper band n1 (n1 <= n2) to deposit into. Signed integer
-                """
-                return self._calculate_debt_n1(collateral, debt, N)
-
-            @internal
-            @view
-            def _calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256) -> int256:
-                """
-                @notice Calculate the upper band number for the deposit to sit in to support
-                        the given debt. Reverts if requested debt is too high.
-                @param collateral Amount of collateral (at its native precision)
-                @param debt Amount of requested debt
-                @param N Number of bands to deposit into
-                @return Upper band n1 (n1 <= n2) to deposit into. Signed integer
-                """
-                assert debt > 0, "No loan"
-                n0: int256 = AMM.active_band()
-                p_base: uint256 = AMM.p_oracle_up(n0)
-
-                # x_effective = y / N * p_oracle_up(n1) * sqrt((A - 1) / A) * sum_{0..N-1}(((A-1) / A)**k)
-                # === d_y_effective * p_oracle_up(n1) * sum(...) === y_effective * p_oracle_up(n1)
-                # d_y_effective = y / N / sqrt(A / (A - 1))
-                y_effective: uint256 = self.get_y_effective(collateral * COLLATERAL_PRECISION, N, self.loan_discount)
-                # p_oracle_up(n1) = base_price * ((A - 1) / A)**n1
-
-                # We borrow up until min band touches p_oracle,
-                # or it touches non-empty bands which cannot be skipped.
-                # We calculate required n1 for given (collateral, debt),
-                # and if n1 corresponds to price_oracle being too high, or unreachable band
-                # - we revert.
-
-                # n1 is band number based on adiabatic trading, e.g. when p_oracle ~ p
-                y_effective = y_effective * p_base / (debt + 1)  # Now it's a ratio
-
-                # n1 = floor(log2(y_effective) / self.logAratio)
-                # EVM semantics is not doing floor unlike Python, so we do this
-                assert y_effective > 0, "Amount too low"
-                n1: int256 = self.log2(y_effective)  # <- switch to faster ln() XXX?
-                if n1 < 0:
-                    n1 -= LOG2_A_RATIO - 1  # This is to deal with vyper's rounding of negative numbers
-                n1 /= LOG2_A_RATIO
-
-                n1 = min(n1, 1024 - convert(N, int256)) + n0
-                if n1 <= n0:
-                    assert AMM.can_skip_bands(n1 - 1), "Debt too high"
-
-                # Let's not rely on active_band corresponding to price_oracle:
-                # this will be not correct if we are in the area of empty bands
-                assert AMM.p_oracle_up(n1) < AMM.price_oracle(), "Debt too high"
-
-                return n1
-            ```
-
-    === "Example"
-        ```shell
-        >>> LeverageZap.calculate_debt_n1(100000000, 300000000000000000000000. 4, 0)
-        -60
-        ```
-
-
----
-
-
-## **Routes**
-
-Routes are predetermined paths for token exchanges. These routes are added when initializing the contract. Additional routes cannot be added after the contract's deployment.
-
-
-### `routes`
-!!! description "`LeverageZap.routes(arg0: uint256, arg1: uint256) -> address: view`"
-
-    Getter for the specific route of a route index. The route consists of alternating tokens and pools, formatted as `token -> pool -> token -> pool`, etc.
-
-    Returns: address of the pool or coin (`address`).
-
-    | Input  | Type      | Description                          |
-    | ------ | --------- | ------------------------------------ |
-    | `arg0` | `uint256` | Index of the route.                  |
-    | `arg1` | `uint256` | Position in the route to retrieve the pool or coin. |
-
-    ??? quote "Source code"
-
-        === "LeverageZap.vy"
-
-            ```python
-            routes: public(HashMap[uint256, address[9]])
-
-            @external
-            def __init__(
-                    _controller: address,
-                    _collateral: address,
-                    _router: address,
-                    _routes: DynArray[address[9], 20],
-                    _route_params: DynArray[uint256[3][4], 20],
-                    _route_pools: DynArray[address[4], 20],
-                    _route_names: DynArray[String[64], 20],
-            ):
-                CONTROLLER = _controller
-                ROUTER = Router(_router)
-
-                amm: address = Controller(_controller).amm()
-                AMM = LLAMMA(amm)
-                _A: uint256 = LLAMMA(amm).A()
-                A = _A
-                Aminus1 = _A - 1
-                LOG2_A_RATIO = self.log2(_A * 10 ** 18 / unsafe_sub(_A, 1))
-                SQRT_BAND_RATIO = isqrt(unsafe_div(10 ** 36 * _A, unsafe_sub(_A, 1)))
-                COLLATERAL_PRECISION = pow_mod256(10, 18 - ERC20(_collateral).decimals())
-
-                for i in range(20):
-                    if i >= len(_routes):
-                        break
-                    self.routes[i] = _routes[i]
-                    self.route_params[i] = _route_params[i]
-                    self.route_pools[i] = _route_pools[i]
-                    self.route_names[i] = _route_names[i]
-                self.routes_count = len(_routes)
-
-                ERC20(CRVUSD).approve(_router, max_value(uint256), default_return_value=True)
-                ERC20(_collateral).approve(_controller, max_value(uint256), default_return_value=True)
-            ```
-
-    === "Example"
-
-        *This example shows the route for the route at index 0 `'crvUSD/USDC --> 3pool --> tricrypto2'`.*
-
-        ```shell
-        >>> LeverageZap.route_name(0) 
-        'crvUSD/USDC --> 3pool --> tricrypto2'
-
-        >>> LeverageZap.routes(0, 0)
-        '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'    # crvUSD
-
-        >>> LeverageZap.routes(0, 1)
-        '0x4DEcE678ceceb27446b35C672dC7d61F30bAD69E'    # crvUSD/USDC pool
-
-        >>> LeverageZap.routes(0, 2)
-        '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'    # USDC
-
-        >>> LeverageZap.routes(0, 3)
-        '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7'    # threpool (DAI<>USDC<>USDT) pool
-
-        >>> LeverageZap.routes(0, 4)
-        '0xdAC17F958D2ee523a2206206994597C13D831ec7'    # USDT
-
-        >>> LeverageZap.routes(0, 5)
-        '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46'    # tricrypto2 (USDT, wETH, wBTC) pool
-
-        >>> LeverageZap.routes(0, 6)
-        '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599'    # wBTC
-        ```
-
-
-### `route_params`
-!!! description "`LeverageZap.route_params(arg0: uint256, arg1: uint256, arg2: uint256) -> uint256: view`"
-
-    Getter for the route parameters.
-
-    Returns: route parameter (`uint256`).
-
-    | Input  | Type      | Description                                          |
-    | ------ | --------- | ---------------------------------------------------- |
-    | `arg0` | `uint256` | Index of the route.                                  |
-    | `arg1` | `uint256` | Exchange index within the route. The first exchange is indexed as 0, the second as 1, etc. |
-    | `arg2` | `uint256` | Route parameter value. `0` for input token, `1` for output token, `2` for swap type. |
-
-    ??? quote "Source code"
-
-        === "LeverageZap.vy"
-
-            ```python
-            route_params: public(HashMap[uint256, uint256[3][4]])
-
-            @external
-            def __init__(
-                    _controller: address,
-                    _collateral: address,
-                    _router: address,
-                    _routes: DynArray[address[9], 20],
-                    _route_params: DynArray[uint256[3][4], 20],
-                    _route_pools: DynArray[address[4], 20],
-                    _route_names: DynArray[String[64], 20],
-            ):
-                CONTROLLER = _controller
-                ROUTER = Router(_router)
-
-                amm: address = Controller(_controller).amm()
-                AMM = LLAMMA(amm)
-                _A: uint256 = LLAMMA(amm).A()
-                A = _A
-                Aminus1 = _A - 1
-                LOG2_A_RATIO = self.log2(_A * 10 ** 18 / unsafe_sub(_A, 1))
-                SQRT_BAND_RATIO = isqrt(unsafe_div(10 ** 36 * _A, unsafe_sub(_A, 1)))
-                COLLATERAL_PRECISION = pow_mod256(10, 18 - ERC20(_collateral).decimals())
-
-                for i in range(20):
-                    if i >= len(_routes):
-                        break
-                    self.routes[i] = _routes[i]
-                    self.route_params[i] = _route_params[i]
-                    self.route_pools[i] = _route_pools[i]
-                    self.route_names[i] = _route_names[i]
-                self.routes_count = len(_routes)
-
-                ERC20(CRVUSD).approve(_router, max_value(uint256), default_return_value=True)
-                ERC20(_collateral).approve(_controller, max_value(uint256), default_return_value=True)
-            ```
-
-    === "Example"
-
-        ```shell
-        # first exchange: exchanging crvUSD for USDC using crvUSD/USDC pool
-        >>> LeverageZap.route_params(0, 0, 0)   # route 0, first exchange (index 0), fist parameter value (index 0) 
-        1                                       # i = crvUSD
-        >>> LeverageZap.route_params(0, 0, 1)   # route 0, first exchange (index 0), second parameter value (index 1)
-        0                                       # j = USDC
-        >>> LeverageZap.route_params(0, 0, 2)   # route 0, first exchange (index 0), third parameter value (index 2)
-        1                                       # swap type 1 = stableswap exchange
-
-
-        # second exchange: exchanging USDC for USDT using threepool
-        >>> LeverageZap.route_params(0, 1, 0)   # route 0, second exchange (index 1), fist parameter value (index 0) 
-        1                                       # i = USDC
-        >>> LeverageZap.route_params(0, 1, 1)   # route 0, second exchange (index 1), second parameter value (index 1) 
-        2                                       # j = USDT
-        >>> LeverageZap.route_params(0, 1, 2)   # route 0, second exchange (index 1), third parameter value (index 2) 
-        1                                       # swap type 1 = stableswap exchange
-
-
-        # third exchange: exchanging USDT for BTC using tricrypto2 pool
-        >>> LeverageZap.route_params(0, 2, 0)   # route 0, third exchange (index 2), fist parameter value (index 0) 
-        0                                       # i = USDT
-        >>> LeverageZap.route_params(0, 2, 1)   # route 0, third exchange (index 2), second parameter value (index 1)
-        1                                       # j = wBTC
-        >>> LeverageZap.route_params(0, 2, 2)   # route 0, third exchange (index 2), third parameter value (index 2)
-        3                                       # swap type 3 = cryptoswap exchange
-
-        ```
-
-
-### `route_pools`
-!!! description "`LeverageZap.route_pools(arg0: uint256, arg1: uint256) -> address: view`"
-
-    Getter for the zap contracts used for a specific exchange in a route, if there are any.
-
-    Returns: zap contract (`address`).
-
-    | Input  | Type      | Description                                         |
-    | ------ | --------- | --------------------------------------------------- |
-    | `arg0` | `uint256` | Index of the route.                                 |
-    | `arg1` | `uint256` | Index of the exchange. The first exchange is index 0, the second exchange is index 1, etc. |
-
-    ??? quote "Source code"
-
-        === "LeverageZap.vy"
-
-            ```python
-            route_pools: public(HashMap[uint256, address[4]])
-
-            @external
-            def __init__(
-                    _controller: address,
-                    _collateral: address,
-                    _router: address,
-                    _routes: DynArray[address[9], 20],
-                    _route_params: DynArray[uint256[3][4], 20],
-                    _route_pools: DynArray[address[4], 20],
-                    _route_names: DynArray[String[64], 20],
-            ):
-                CONTROLLER = _controller
-                ROUTER = Router(_router)
-
-                amm: address = Controller(_controller).amm()
-                AMM = LLAMMA(amm)
-                _A: uint256 = LLAMMA(amm).A()
-                A = _A
-                Aminus1 = _A - 1
-                LOG2_A_RATIO = self.log2(_A * 10 ** 18 / unsafe_sub(_A, 1))
-                SQRT_BAND_RATIO = isqrt(unsafe_div(10 ** 36 * _A, unsafe_sub(_A, 1)))
-                COLLATERAL_PRECISION = pow_mod256(10, 18 - ERC20(_collateral).decimals())
-
-                for i in range(20):
-                    if i >= len(_routes):
-                        break
-                    self.routes[i] = _routes[i]
-                    self.route_params[i] = _route_params[i]
-                    self.route_pools[i] = _route_pools[i]
-                    self.route_names[i] = _route_names[i]
-                self.routes_count = len(_routes)
-
-                ERC20(CRVUSD).approve(_router, max_value(uint256), default_return_value=True)
-                ERC20(_collateral).approve(_controller, max_value(uint256), default_return_value=True)
-            ```
-
-    === "Example"
-        ```shell
-        >>> LeverageZap.route_pools(0, 0)
-        '0x0000000000000000000000000000000000000000'
-
-        >>> LeverageZap.route_pools(0, 1)
-        '0x0000000000000000000000000000000000000000'
-        ```
-
-
-### `route_names`
-!!! description "`LeverageZap.route_names(arg0: uint256) -> String[64]: view`"
-
-    Getter for the route name of a route.
-
-    Returns: route name (`String[64]`).
-
-    | Input | Type      | Description          |
-    | ------| --------- | -------------------- |
-    | `arg0`| `uint256` | Index of the route.  |
-
-    ??? quote "Source code"
-
-        === "LeverageZap.vy"
-
-            ```python
-            route_names: public(HashMap[uint256, String[64]])
-
-            @external
-            def __init__(
-                    _controller: address,
-                    _collateral: address,
-                    _router: address,
-                    _routes: DynArray[address[9], 20],
-                    _route_params: DynArray[uint256[3][4], 20],
-                    _route_pools: DynArray[address[4], 20],
-                    _route_names: DynArray[String[64], 20],
-            ):
-                ...
-                for i in range(20):
-                    if i >= len(_routes):
-                        break
-                    self.routes[i] = _routes[i]
-                    self.route_params[i] = _route_params[i]
-                    self.route_pools[i] = _route_pools[i]
-                    self.route_names[i] = _route_names[i]
-                self.routes_count = len(_routes)
-                ...
-            ```
-
-    === "Example"
-        ```shell
-        >>> LeverageZap.route_names(0)
-        'crvUSD/USDC --> 3pool --> tricrypto2'
-
-        >>> LeverageZap.route_names(1)
-        'crvUSD/USDT --> tricrypto2'
-        ```
-
-
-### `route_count`
-!!! description "`LeverageZap.route_count() -> uint256: view`"
-
-    Getter for the total amount of routes included.
-
-    Returns: amount of routes (`uint256`).
-
-    ??? quote "Source code"
-
-        === "LeverageZap.vy"
-
-            ```python
-            routes_count: public(uint256)
-
-            @external
-            def __init__(
-                    _controller: address,
-                    _collateral: address,
-                    _router: address,
-                    _routes: DynArray[address[9], 20],
-                    _route_params: DynArray[uint256[3][4], 20],
-                    _route_pools: DynArray[address[4], 20],
-                    _route_names: DynArray[String[64], 20],
-            ):
-                ...
-                for i in range(20):
-                    if i >= len(_routes):
-                        break
-                    self.routes[i] = _routes[i]
-                    self.route_params[i] = _route_params[i]
-                    self.route_pools[i] = _route_pools[i]
-                    self.route_names[i] = _route_names[i]
-                self.routes_count = len(_routes)
-                ...
-            ```
-
-    === "Example"
-        ```shell
-        >>> LeverageZap.route_count()
-        5
-        ```
-
 
 ---
 
@@ -1297,4 +846,452 @@ Routes are predetermined paths for token exchanges. These routes are added when 
 
         >>> LeverageZap.max_borrowable_and_collateral(100000000, 50, 0)
         144607094555240096128757, 321798242
+        ```
+
+
+### `calculate_debt_n1`
+!!! description "`LeverageZap.calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256, route_idx: uint256) -> int256`"
+
+    Function to calculate the upper band number for the deposit to sit in, to support the given debt with full leverage. This essentially means that all borrowed stablecoin is converted to the collateral token and deposited in addition to the collateral provided by the user. The method reverts if the requested debt is too high.
+
+    Returns: upper band to deposit into (`int256`).
+
+    | Input        | Type      | Description                                  |
+    | ------------ | --------- | -------------------------------------------- |
+    | `collateral` | `address` | Address of the collateral token.             |
+    | `debt`       | `uint256` | Amount of requested debt.                    |
+    | `N`          | `uint256` | Number of bands to deposit into.             |
+    | `route_idx`  | `uint256` | Index of the route to be used for conversion.|
+
+
+    ??? quote "Source code"
+
+        === "LeverageZap.vy"
+
+            ```python
+            @external
+            @view
+            def calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256, route_idx: uint256) -> int256:
+                """
+                @notice Calculate the upper band number for the deposit to sit in to support
+                        the given debt with full leverage, which means that all borrowed
+                        stablecoin is converted to collateral coin and deposited in addition
+                        to collateral provided by user. Reverts if requested debt is too high.
+                @param collateral Amount of collateral (at its native precision)
+                @param debt Amount of requested debt
+                @param N Number of bands to deposit into
+                @param route_idx Index of the route which should be use for exchange stablecoin to collateral
+                @return Upper band n1 (n1 <= n2) to deposit into. Signed integer
+                """
+                leverage_collateral: uint256 = self._get_collateral(debt, route_idx)
+                return Controller(CONTROLLER).calculate_debt_n1(collateral + leverage_collateral, debt, N)
+            ```
+
+        === "Controller.vy"
+
+            ```py
+            @external
+            @view
+            @nonreentrant('lock')
+            def calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256) -> int256:
+                """
+                @notice Calculate the upper band number for the deposit to sit in to support
+                        the given debt. Reverts if requested debt is too high.
+                @param collateral Amount of collateral (at its native precision)
+                @param debt Amount of requested debt
+                @param N Number of bands to deposit into
+                @return Upper band n1 (n1 <= n2) to deposit into. Signed integer
+                """
+                return self._calculate_debt_n1(collateral, debt, N)
+
+            @internal
+            @view
+            def _calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256) -> int256:
+                """
+                @notice Calculate the upper band number for the deposit to sit in to support
+                        the given debt. Reverts if requested debt is too high.
+                @param collateral Amount of collateral (at its native precision)
+                @param debt Amount of requested debt
+                @param N Number of bands to deposit into
+                @return Upper band n1 (n1 <= n2) to deposit into. Signed integer
+                """
+                assert debt > 0, "No loan"
+                n0: int256 = AMM.active_band()
+                p_base: uint256 = AMM.p_oracle_up(n0)
+
+                # x_effective = y / N * p_oracle_up(n1) * sqrt((A - 1) / A) * sum_{0..N-1}(((A-1) / A)**k)
+                # === d_y_effective * p_oracle_up(n1) * sum(...) === y_effective * p_oracle_up(n1)
+                # d_y_effective = y / N / sqrt(A / (A - 1))
+                y_effective: uint256 = self.get_y_effective(collateral * COLLATERAL_PRECISION, N, self.loan_discount)
+                # p_oracle_up(n1) = base_price * ((A - 1) / A)**n1
+
+                # We borrow up until min band touches p_oracle,
+                # or it touches non-empty bands which cannot be skipped.
+                # We calculate required n1 for given (collateral, debt),
+                # and if n1 corresponds to price_oracle being too high, or unreachable band
+                # - we revert.
+
+                # n1 is band number based on adiabatic trading, e.g. when p_oracle ~ p
+                y_effective = y_effective * p_base / (debt + 1)  # Now it's a ratio
+
+                # n1 = floor(log2(y_effective) / self.logAratio)
+                # EVM semantics is not doing floor unlike Python, so we do this
+                assert y_effective > 0, "Amount too low"
+                n1: int256 = self.log2(y_effective)  # <- switch to faster ln() XXX?
+                if n1 < 0:
+                    n1 -= LOG2_A_RATIO - 1  # This is to deal with vyper's rounding of negative numbers
+                n1 /= LOG2_A_RATIO
+
+                n1 = min(n1, 1024 - convert(N, int256)) + n0
+                if n1 <= n0:
+                    assert AMM.can_skip_bands(n1 - 1), "Debt too high"
+
+                # Let's not rely on active_band corresponding to price_oracle:
+                # this will be not correct if we are in the area of empty bands
+                assert AMM.p_oracle_up(n1) < AMM.price_oracle(), "Debt too high"
+
+                return n1
+            ```
+
+    === "Example"
+        ```shell
+        >>> LeverageZap.calculate_debt_n1(100000000, 300000000000000000000000. 4, 0)
+        -60
+        ```
+
+
+---
+
+
+## **Routes**
+
+Routes are predetermined paths for token exchanges. These routes are added when initializing the contract. Additional routes cannot be added after the contract's deployment.
+
+
+### `routes`
+!!! description "`LeverageZap.routes(arg0: uint256, arg1: uint256) -> address: view`"
+
+    Getter for the specific route of a route index. The route consists of alternating tokens and pools, formatted as `token -> pool -> token -> pool`, etc.
+
+    Returns: address of the pool or coin (`address`).
+
+    | Input  | Type      | Description                          |
+    | ------ | --------- | ------------------------------------ |
+    | `arg0` | `uint256` | Index of the route.                  |
+    | `arg1` | `uint256` | Position in the route to retrieve the pool or coin. |
+
+    ??? quote "Source code"
+
+        === "LeverageZap.vy"
+
+            ```python
+            routes: public(HashMap[uint256, address[9]])
+
+            @external
+            def __init__(
+                    _controller: address,
+                    _collateral: address,
+                    _router: address,
+                    _routes: DynArray[address[9], 20],
+                    _route_params: DynArray[uint256[3][4], 20],
+                    _route_pools: DynArray[address[4], 20],
+                    _route_names: DynArray[String[64], 20],
+            ):
+                CONTROLLER = _controller
+                ROUTER = Router(_router)
+
+                amm: address = Controller(_controller).amm()
+                AMM = LLAMMA(amm)
+                _A: uint256 = LLAMMA(amm).A()
+                A = _A
+                Aminus1 = _A - 1
+                LOG2_A_RATIO = self.log2(_A * 10 ** 18 / unsafe_sub(_A, 1))
+                SQRT_BAND_RATIO = isqrt(unsafe_div(10 ** 36 * _A, unsafe_sub(_A, 1)))
+                COLLATERAL_PRECISION = pow_mod256(10, 18 - ERC20(_collateral).decimals())
+
+                for i in range(20):
+                    if i >= len(_routes):
+                        break
+                    self.routes[i] = _routes[i]
+                    self.route_params[i] = _route_params[i]
+                    self.route_pools[i] = _route_pools[i]
+                    self.route_names[i] = _route_names[i]
+                self.routes_count = len(_routes)
+
+                ERC20(CRVUSD).approve(_router, max_value(uint256), default_return_value=True)
+                ERC20(_collateral).approve(_controller, max_value(uint256), default_return_value=True)
+            ```
+
+    === "Example"
+
+        *This example shows the route for the route at index 0 `'crvUSD/USDC --> 3pool --> tricrypto2'`.*
+
+        ```shell
+        >>> LeverageZap.route_name(0) 
+        'crvUSD/USDC --> 3pool --> tricrypto2'
+
+        >>> LeverageZap.routes(0, 0)
+        '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'    # crvUSD
+
+        >>> LeverageZap.routes(0, 1)
+        '0x4DEcE678ceceb27446b35C672dC7d61F30bAD69E'    # crvUSD/USDC pool
+
+        >>> LeverageZap.routes(0, 2)
+        '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'    # USDC
+
+        >>> LeverageZap.routes(0, 3)
+        '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7'    # threpool (DAI<>USDC<>USDT) pool
+
+        >>> LeverageZap.routes(0, 4)
+        '0xdAC17F958D2ee523a2206206994597C13D831ec7'    # USDT
+
+        >>> LeverageZap.routes(0, 5)
+        '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46'    # tricrypto2 (USDT, wETH, wBTC) pool
+
+        >>> LeverageZap.routes(0, 6)
+        '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599'    # wBTC
+        ```
+
+
+### `route_params`
+!!! description "`LeverageZap.route_params(arg0: uint256, arg1: uint256, arg2: uint256) -> uint256: view`"
+
+    Getter for the route parameters.
+
+    Returns: route parameter (`uint256`).
+
+    | Input  | Type      | Description                                          |
+    | ------ | --------- | ---------------------------------------------------- |
+    | `arg0` | `uint256` | Index of the route.                                  |
+    | `arg1` | `uint256` | Exchange index within the route. The first exchange is indexed as 0, the second as 1, etc. |
+    | `arg2` | `uint256` | Route parameter value. `0` for input token, `1` for output token, `2` for swap type. |
+
+    ??? quote "Source code"
+
+        === "LeverageZap.vy"
+
+            ```python
+            route_params: public(HashMap[uint256, uint256[3][4]])
+
+            @external
+            def __init__(
+                    _controller: address,
+                    _collateral: address,
+                    _router: address,
+                    _routes: DynArray[address[9], 20],
+                    _route_params: DynArray[uint256[3][4], 20],
+                    _route_pools: DynArray[address[4], 20],
+                    _route_names: DynArray[String[64], 20],
+            ):
+                CONTROLLER = _controller
+                ROUTER = Router(_router)
+
+                amm: address = Controller(_controller).amm()
+                AMM = LLAMMA(amm)
+                _A: uint256 = LLAMMA(amm).A()
+                A = _A
+                Aminus1 = _A - 1
+                LOG2_A_RATIO = self.log2(_A * 10 ** 18 / unsafe_sub(_A, 1))
+                SQRT_BAND_RATIO = isqrt(unsafe_div(10 ** 36 * _A, unsafe_sub(_A, 1)))
+                COLLATERAL_PRECISION = pow_mod256(10, 18 - ERC20(_collateral).decimals())
+
+                for i in range(20):
+                    if i >= len(_routes):
+                        break
+                    self.routes[i] = _routes[i]
+                    self.route_params[i] = _route_params[i]
+                    self.route_pools[i] = _route_pools[i]
+                    self.route_names[i] = _route_names[i]
+                self.routes_count = len(_routes)
+
+                ERC20(CRVUSD).approve(_router, max_value(uint256), default_return_value=True)
+                ERC20(_collateral).approve(_controller, max_value(uint256), default_return_value=True)
+            ```
+
+    === "Example"
+
+        ```shell
+        # first exchange: exchanging crvUSD for USDC using crvUSD/USDC pool
+        >>> LeverageZap.route_params(0, 0, 0)   # route 0, first exchange (index 0), fist parameter value (index 0) 
+        1                                       # i = crvUSD
+        >>> LeverageZap.route_params(0, 0, 1)   # route 0, first exchange (index 0), second parameter value (index 1)
+        0                                       # j = USDC
+        >>> LeverageZap.route_params(0, 0, 2)   # route 0, first exchange (index 0), third parameter value (index 2)
+        1                                       # swap type 1 = stableswap exchange
+
+
+        # second exchange: exchanging USDC for USDT using threepool
+        >>> LeverageZap.route_params(0, 1, 0)   # route 0, second exchange (index 1), fist parameter value (index 0) 
+        1                                       # i = USDC
+        >>> LeverageZap.route_params(0, 1, 1)   # route 0, second exchange (index 1), second parameter value (index 1) 
+        2                                       # j = USDT
+        >>> LeverageZap.route_params(0, 1, 2)   # route 0, second exchange (index 1), third parameter value (index 2) 
+        1                                       # swap type 1 = stableswap exchange
+
+
+        # third exchange: exchanging USDT for BTC using tricrypto2 pool
+        >>> LeverageZap.route_params(0, 2, 0)   # route 0, third exchange (index 2), fist parameter value (index 0) 
+        0                                       # i = USDT
+        >>> LeverageZap.route_params(0, 2, 1)   # route 0, third exchange (index 2), second parameter value (index 1)
+        1                                       # j = wBTC
+        >>> LeverageZap.route_params(0, 2, 2)   # route 0, third exchange (index 2), third parameter value (index 2)
+        3                                       # swap type 3 = cryptoswap exchange
+
+        ```
+
+
+### `route_pools`
+!!! description "`LeverageZap.route_pools(arg0: uint256, arg1: uint256) -> address: view`"
+
+    Getter for the zap contracts used for a specific exchange in a route, if there are any.
+
+    Returns: zap contract (`address`).
+
+    | Input  | Type      | Description                                         |
+    | ------ | --------- | --------------------------------------------------- |
+    | `arg0` | `uint256` | Index of the route.                                 |
+    | `arg1` | `uint256` | Index of the exchange. The first exchange is index 0, the second exchange is index 1, etc. |
+
+    ??? quote "Source code"
+
+        === "LeverageZap.vy"
+
+            ```python
+            route_pools: public(HashMap[uint256, address[4]])
+
+            @external
+            def __init__(
+                    _controller: address,
+                    _collateral: address,
+                    _router: address,
+                    _routes: DynArray[address[9], 20],
+                    _route_params: DynArray[uint256[3][4], 20],
+                    _route_pools: DynArray[address[4], 20],
+                    _route_names: DynArray[String[64], 20],
+            ):
+                CONTROLLER = _controller
+                ROUTER = Router(_router)
+
+                amm: address = Controller(_controller).amm()
+                AMM = LLAMMA(amm)
+                _A: uint256 = LLAMMA(amm).A()
+                A = _A
+                Aminus1 = _A - 1
+                LOG2_A_RATIO = self.log2(_A * 10 ** 18 / unsafe_sub(_A, 1))
+                SQRT_BAND_RATIO = isqrt(unsafe_div(10 ** 36 * _A, unsafe_sub(_A, 1)))
+                COLLATERAL_PRECISION = pow_mod256(10, 18 - ERC20(_collateral).decimals())
+
+                for i in range(20):
+                    if i >= len(_routes):
+                        break
+                    self.routes[i] = _routes[i]
+                    self.route_params[i] = _route_params[i]
+                    self.route_pools[i] = _route_pools[i]
+                    self.route_names[i] = _route_names[i]
+                self.routes_count = len(_routes)
+
+                ERC20(CRVUSD).approve(_router, max_value(uint256), default_return_value=True)
+                ERC20(_collateral).approve(_controller, max_value(uint256), default_return_value=True)
+            ```
+
+    === "Example"
+        ```shell
+        >>> LeverageZap.route_pools(0, 0)
+        '0x0000000000000000000000000000000000000000'
+
+        >>> LeverageZap.route_pools(0, 1)
+        '0x0000000000000000000000000000000000000000'
+        ```
+
+
+### `route_names`
+!!! description "`LeverageZap.route_names(arg0: uint256) -> String[64]: view`"
+
+    Getter for the route name of a route.
+
+    Returns: route name (`String[64]`).
+
+    | Input | Type      | Description          |
+    | ------| --------- | -------------------- |
+    | `arg0`| `uint256` | Index of the route.  |
+
+    ??? quote "Source code"
+
+        === "LeverageZap.vy"
+
+            ```python
+            route_names: public(HashMap[uint256, String[64]])
+
+            @external
+            def __init__(
+                    _controller: address,
+                    _collateral: address,
+                    _router: address,
+                    _routes: DynArray[address[9], 20],
+                    _route_params: DynArray[uint256[3][4], 20],
+                    _route_pools: DynArray[address[4], 20],
+                    _route_names: DynArray[String[64], 20],
+            ):
+                ...
+                for i in range(20):
+                    if i >= len(_routes):
+                        break
+                    self.routes[i] = _routes[i]
+                    self.route_params[i] = _route_params[i]
+                    self.route_pools[i] = _route_pools[i]
+                    self.route_names[i] = _route_names[i]
+                self.routes_count = len(_routes)
+                ...
+            ```
+
+    === "Example"
+        ```shell
+        >>> LeverageZap.route_names(0)
+        'crvUSD/USDC --> 3pool --> tricrypto2'
+
+        >>> LeverageZap.route_names(1)
+        'crvUSD/USDT --> tricrypto2'
+        ```
+
+
+### `route_count`
+!!! description "`LeverageZap.route_count() -> uint256: view`"
+
+    Getter for the total amount of routes included.
+
+    Returns: amount of routes (`uint256`).
+
+    ??? quote "Source code"
+
+        === "LeverageZap.vy"
+
+            ```python
+            routes_count: public(uint256)
+
+            @external
+            def __init__(
+                    _controller: address,
+                    _collateral: address,
+                    _router: address,
+                    _routes: DynArray[address[9], 20],
+                    _route_params: DynArray[uint256[3][4], 20],
+                    _route_pools: DynArray[address[4], 20],
+                    _route_names: DynArray[String[64], 20],
+            ):
+                ...
+                for i in range(20):
+                    if i >= len(_routes):
+                        break
+                    self.routes[i] = _routes[i]
+                    self.route_params[i] = _route_params[i]
+                    self.route_pools[i] = _route_pools[i]
+                    self.route_names[i] = _route_names[i]
+                self.routes_count = len(_routes)
+                ...
+            ```
+
+    === "Example"
+        ```shell
+        >>> LeverageZap.route_count()
+        5
         ```
