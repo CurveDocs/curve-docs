@@ -159,7 +159,6 @@ nav:
         - Relayer.vy: curve_dao/governance/curve-xgov/relayer.md
         - Agent.vy: curve_dao/governance/curve-xgov/agents.md
         - Vault.vy: curve_dao/governance/curve-xgov/vault.md
-    - Exchange Router: curve_dao/router/router.md
 
 
   - Registry:
@@ -170,6 +169,11 @@ nav:
   - Curve API:
     - curve-api: curve-api/curve-api.md
     - curve-prices: curve-api/curve-prices.md
+
+
+  - Routers:
+    - CurveRouterNG: router/CurveRouterNG.md
+    - CurveRegistryExchange: router/CurveRegistryExchange.md
 
 
   - Curve Stablecoin:
