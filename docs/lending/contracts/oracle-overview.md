@@ -37,7 +37,8 @@ hide:
 
 This sections aims to give examples on the various oracle contract combinations, focusing on [`CryptoFromPool.vy`](../contracts/cryptofrompool.md) and [`CryptoFromPoolsRate.vy`](../contracts/cryptofrompoolsrate.md).
 
-todo: oracles on arbitrum. explain the difference to mainnet oracles (arbitrum sequencer etc...).
+
+---
 
 
 ## **Single Curve-Pool Oracle (e.g. CRV)**
@@ -46,6 +47,8 @@ The [oracle contract](https://etherscan.io/address/0xE0a4C53408f5ACf3246c83b9b8b
 
 *The `CryptoFromPool.vy` contract is specifically designed for these types of oracles. Full documentation is available [here](../contracts/cryptofrompool.md).*
 
+
+---
 
 
 ## **Chained Oracles without Rates (FXN)**
@@ -75,6 +78,9 @@ $$\text{price} = \frac{\text{FXN/ETH} \times \text{ETH/crvUSD}}{10^{18}}$$
 $$\text{price} = \frac{43130436331749331 \times 3011786169374663706441}{10^{18}} = 129899651623057139817$$
 
 *This final value represents the price of FXN in terms of crvUSD by chaining together two oracles. All values are based on a scale of 1e18; hence, 129899651623057139817 would approximate to 129.71 crvUSD per FXN token.*
+
+
+---
 
 
 ### **Chained Oracles with Rates (pufETH)**
