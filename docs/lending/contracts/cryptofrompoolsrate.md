@@ -97,15 +97,11 @@ The price is determined by combining two different oracle prices. When necessary
 
 
 ### `price`
-!!! description "`CryptoFromPoolsRate.`"
+!!! description "`CryptoFromPoolsRate.price() -> uint256`"
 
     Getter for the price of the collateral denomintaed against the borrowed token. E.g. a market with pufETH as collateral and crvUSD borrowable, the price will return the pufETH price with regard to crvUSD.
 
     Returns: oracle price (`uint256`).
-
-    | Input  | Type      | Description |
-    | ------ | --------- | ----------- |
-    | `arg0` | `uint256` | Pool index. |
 
     ??? quote "Source code"
 
@@ -485,8 +481,6 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
 ## **Contract Info Methods**
 
-
-
 ### `BORROWED_IX`
 !!! description "`CryptoFromPoolsRate.BORROWED_IX(arg0: uint256) -> uint256: view`"
 
@@ -597,9 +591,9 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
 
 ### `NO_ARGUMENT`
-!!! description "`CryptoFromPoolsRate.`"
+!!! description "`CryptoFromPoolsRate.NO_ARGUMENT(arg0: uin256) -> bool: view`"
 
-    Getter for the `NO_ARGUMENT` storage variable. This is an additional variable to ensure the correct price oracle is fetched from a pool with more than two coins. The variable is set to false if the pool from which the price oracle is taken has only two coins.
+    Getter for the `NO_ARGUMENT` storage variable. This is an additional variable to ensure the correct price oracle is fetched from a pool.
 
     Returns: true or false (bool)
 
@@ -612,6 +606,7 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
         === "CryptoFromPoolsRate.vy"
 
             ```python
+            NO_ARGUMENT: public(immutable(DynArray[bool, MAX_POOLS]))
             ```
 
     === "Example"
