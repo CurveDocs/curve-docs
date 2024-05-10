@@ -185,7 +185,7 @@ The price is determined by combining two different oracle prices. When necessary
 ### `price_w`
 !!! description "`CryptoFromPoolsRate.price_w() -> uint256`"
 
-    Function to calculate and write the price and updates `cached_rate` and `cached_timestamp`. This function is called whenever the `_exchange` function is called within the AMM contract of the lending market. 
+    This function calculates and writes the price while updating `cached_rate` and `cached_timestamp`. It is invoked whenever the `_exchange` function is called within the AMM contract of the lending market.
 
     Returns: oracle price (`uint256`).
 
@@ -257,6 +257,7 @@ The price is determined by combining two different oracle prices. When necessary
     === "Example"
         ```shell
         >>> CryptoFromPoolsRate.price_w()
+        3110715001971074513929
         ```
 
 
