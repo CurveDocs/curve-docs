@@ -8,7 +8,7 @@ This oracle contract integrates multiple oracles, applying `stored_rates` to tok
 
 
 !!!warning "Oracle Immutability"
-    The oracle contracts are fully immutable. Once deployed, it can not change any parameters, stop the price or change the information source to calculate the prices. All relevant data for the oracle to function is passed into the `__init__` function when deploying the contract. 
+    The oracle contracts are fully immutable. Once deployed, they cannot change any parameters, stop the price updates, or alter the information source used to calculate the prices. All relevant data required for the oracle to function is passed into the `__init__` function during the deployment of the contract.
 
     ???quote "`__init__`"
         
