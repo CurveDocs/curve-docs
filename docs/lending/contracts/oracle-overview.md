@@ -97,3 +97,12 @@ The pufETH/wstETH exchange rate is nearly 1:1. We take this exchange rate and mu
 2. Obtain the wstETH price with respect to crvUSD from the tryLSD pool.
 3. Multiply these values to calculate the oracle price of pufETH in terms of crvUSD.
 4. To derive the complete price, apply the `stored_rates` from the stableswap pool, as provided by the oracle contract.
+
+
+!!!info "`stored_rates`"
+
+    Specific tokens have a rate which is denominated against another asset. For example, wstETH has a rate against stETH as the token can always be redeemed for a certain amount of stETH based on the rate. At origin, wstETH and stETH were 1:1, but as time passed and wstETH earned yield, the underlying amount of stETH increased. So, for example, after 1 year, 1 wstETH would be worth 1.1 stETH. Therefore, the rate would be 1.1 and is stored in the `stored_rates` variable in the stableswap pool.
+
+    The same applies to ERC4626 tokens like pufETH with a `convertToAssets` method. This kind of rate is also stored in the `stored_rates` variable.
+
+    The stableswap pool uses these rates to ensure accurate calculations when, for example, exchanging tokens or adding liquidity.
