@@ -1,4 +1,4 @@
-<h1>CryptoFromPool.vy</h1>
+<h1>CryptoFromPool</h1>
 
 Oracle contract for a collateral token that **fetches its price from a single Curve pool**.
 
