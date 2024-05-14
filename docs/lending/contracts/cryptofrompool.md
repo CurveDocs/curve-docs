@@ -1,11 +1,13 @@
-<h1>Curve Lending: Oracles</h1>
+<h1>CryptoFromPool.vy</h1>
+
+Oracle contract for a collateral token that **fetches its price from a single Curve pool**.
 
 !!!github "GitHub"
     The source code of the `CryptoFromPool.vy` and all other oracle contracts can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/price_oracles/).
 
-The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](./oneway-factory.md#create_from_pool) method which deploys the full lending market infrastucture along with a price oracle using a [`stableswap-ng`](../../stableswap-exchange/stableswap-ng/pools/oracles.md), `twocrypto-ng` or `tricrypto-ng` pool. These pools all have a suitable exponential moving-average (EMA) oracle, which can be used in lending markets.
+The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](./oneway-factory.md#create_from_pool) method which deploys the full lending market infrastucture along with a price oracle using a [`stableswap-ng`](../../stableswap-exchange/stableswap-ng/pools/oracles.md), [`twocrypto-ng`](../../cryptoswap-exchange/twocrypto-ng/overview.md) or [`tricrypto-ng`](../../cryptoswap-exchange/tricrypto-ng/pools/oracles.md) pool. These pools all have a suitable exponential moving-average (EMA) oracle, which can be used in lending markets.
 
-Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitrum) take the status of the sequencer into consideration.
+Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitrum) take the status of the [sequencer](https://docs.arbitrum.io/sequencer) into consideration.
 
 
 !!!example "Example: CRV long market"
