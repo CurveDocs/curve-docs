@@ -8,7 +8,7 @@ This oracle contract integrates multiple oracles, applying `stored_rates` to tok
 
 
 !!!warning "Oracle Immutability"
-    The oracle contracts are fully immutable. Once deployed, they cannot change any parameters, stop the price updates, or alter the information source used to calculate the prices. All relevant data required for the oracle to function is passed into the `__init__` function during the deployment of the contract.
+    The oracle contracts are fully immutable. Once deployed, they cannot change any parameters, stop the price updates, or alter the pools used to calculate the prices. All relevant data required for the oracle to function is passed into the `__init__` function during the deployment of the contract.
 
     ???quote "`__init__`"
         
@@ -99,7 +99,7 @@ The price is determined by combining two different oracle prices. When necessary
 ### `price`
 !!! description "`CryptoFromPoolsRate.price() -> uint256`"
 
-    Getter for the price of the collateral denomintaed against the borrowed token. E.g. a market with pufETH as collateral and crvUSD borrowable, the price will return the pufETH price with regard to crvUSD.
+    Getter for the price of the collateral denominated against the borrowed token. E.g. a market with pufETH as collateral and crvUSD borrowable, the price will return the pufETH price with regard to crvUSD.
 
     Returns: oracle price (`uint256`).
 
@@ -412,7 +412,7 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
         ```
 
 
-### `chached_timestamp`
+### `cached_timestamp`
 !!! description "`CryptoFromPoolsRate.cached_timestamp() -> uint256: view`"
 
     Getter for the cached timestamp. This value is updated whenever the `price_w` method is called.
@@ -443,7 +443,7 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
     === "Example"
         ```shell
-        >>> CryptoFromPoolsRate.chached_timestamp()
+        >>> CryptoFromPoolsRate.cached_timestamp()
         1714877987
         ```
 
@@ -514,7 +514,7 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 ### `COLLATERAL_IX`
 !!! description "`CryptoFromPoolsRate.COLLATERAL_IX(arg0: uint256) -> uint256: view`"
 
-    Getter for the index of the collateral token within the pool. TODO
+    Getter for the index of the collateral token within the pool.
 
     Returns: coin index (`uint256`).
 
