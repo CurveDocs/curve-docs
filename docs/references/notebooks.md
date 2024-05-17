@@ -41,3 +41,4 @@ After setting up these two secrets, the notebook can successfully be run directl
 | [`Vault`](../lending/contracts/vault.md) | Withdrawing Assets: `withdraw` and `redeem`  | [:logos-googlecolab: here](https://colab.research.google.com/drive/1Ta69fsIc7zmtjFlQ94a8MDYYLeo4GJJI?usp=sharing)  |
 | [`OneWayLendingFactory`](../lending/contracts/oneway-factory.md) | Changing default borrow rates: `set_default_rates`  | [:logos-googlecolab: here](https://colab.research.google.com/drive/1mQV5yDyBqZrVSIOweP2g1Qu3WWjsgZtv?usp=sharing)  |
 | [`OneWayLendingFactory`](../lending/contracts/oneway-factory.md) | Changing implementations: `set_implementations`  | [:logos-googlecolab: here](https://colab.research.google.com/drive/1r3Vhb28Wy8iX_YRBNpfnwjzS4dKuMADf?usp=sharing)  |
+| [`Controller`](../crvUSD/controller.md) | Creating a simple loan: `create_loan` | [:logos-googlecolab: here](https://colab.research.google.com/drive/1MTtpbdeTDVB3LxzGhFc4vwLsDM_xJWKz?usp=sharing)  |
