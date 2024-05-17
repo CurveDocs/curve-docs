@@ -83,9 +83,20 @@ This documentation outlines the technical implementation of the core Curve proto
 
     [**:octicons-arrow-right-24: Getting started**](./curve-api/curve-api.md)
 
--   >:material-chart-line: **Oracles**
+-   :: **Integration Section**
 
     ---
 
-    *__coming soon__*
+    Section targeted at integrators covering contracts like `AddressProvider` or `MetaRegistry`.
+    
+    [**:octicons-arrow-right-24: Getting started**](./integration/overview.md)
+
+-   :: **Notebooks**
+
+    ---
+
+    Interactive Jupyter notebooks hosted on Google Colab, which showcase the functionality of different Smart Contracts.
+
+    [**:octicons-arrow-right-24: Getting started**](./references/notebooks.md).
+
 </div>
