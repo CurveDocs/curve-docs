@@ -106,16 +106,20 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 
 ## **Depositing Assets and Minting Shares**
 
-*Two methods for acquiring shares in an ERC4626 Vault:*
+!!!colab "Google Colab Notebook"
+    A google colab notebook on how to use the `deposit` and `mint` functions can be found here: [https://colab.research.google.com/drive/1Qj9nOk5TYXp6j6go3VIh6--r5VILnoo9?usp=sharing](https://colab.research.google.com/drive/1Qj9nOk5TYXp6j6go3VIh6--r5VILnoo9?usp=sharing).
+
+*Two methods for obtaining shares directly from an ERC4626 Vault:*
 
 - **Deposit**: A lender deposits a specified amount of the underlying (borrowable) token into the vault. In exchange, the user receives an equivalent number of shares.
 - **Mint**: A lender specifies the desired number of shares to receive and deposits the required amount of the underlying (borrowable) asset to mint these shares. This method allows a user to obtain a precise number of shares.
 
+Because shares are transferable, a user can also acquire shares by means other than depositing assets and minting shares.
 
 ### `deposit`
 !!! description "`Vault.deposit(assets: uint256, receiver: address = msg.sender) -> uint256:`"
 
-    Function to deposit a specified number of assets of the underlying token (`borrowed_token`) into the vault and mint the corresponding amount of shares to `receiver`.
+    Function to deposit a specified number of assets of the underlying token (`borrowed_token`) into the vault and mint the corresponding amount of shares to `receiver`. There is no cap when depositing assets into the vault - as many token as desired can be deposited into it.
 
     Returns: minted shares (`uint256`).
 
@@ -123,7 +127,7 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 
     | Input       | Type      | Description                                                           |
     |-------------|-----------|-----------------------------------------------------------------------|
-    | `assets`    | `uint256` | Number of assets to deposit.                                          |
+    | `assets`    | `uint256` | Amount of assets to deposit.                                          |
     | `receiver`  | `address` | Receiver of the minted shares. Defaults to `msg.sender`.              |
 
     ??? quote "Source code"
@@ -372,9 +376,9 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 ### `mint`
 !!! description "`Vault.mint(shares: uint256, receiver: address = msg.sender) -> uint256:`"
 
-    Function to mint a specific amount of shares (`shares`) to `receiver` by depositing the necessary number of assets into the vault.
+    Function to mint a specific amount of shares (`shares`) to `receiver` by depositing the necessary number of assets into the vault. 
 
-    Returns: number of assets deposited (`uint256`).
+    Returns: amount of assets deposited (`uint256`).
 
     Emits: `Deposit`, `Transfer` and `SetRate`
 
@@ -537,7 +541,7 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
         In  [1]:  Vault.balanceOf(trader)
         Out [1]:  997552662404145514069
 
-        In  [2]:  Vault.deposit(100000000000000000000)
+        In  [2]:  Vault.mint(100000000000000000000)
 
         In  [3]:  Vault.balanceOf(trader)
         Out [3]:  1097552662404145514069
@@ -694,10 +698,20 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 
 ## **Withdrawing Assets and Redeeming Shares**
 
-*Two ways to retrieve the underlying asset from an ERC4626 Vault:*
+!!!colab "Google Colab Notebook"
+    A Google Colab notebook on how to use the `withdraw` and `mint` functions, as well as how shares are priced, can be found here: [https://colab.research.google.com/drive/1Ta69fsIc7zmtjFlQ94a8MDYYLeo4GJJI?usp=sharing](https://colab.research.google.com/drive/1Ta69fsIc7zmtjFlQ94a8MDYYLeo4GJJI?usp=sharing).
+
+
+*Two ways to retrieve the underlying asset directly from the according ERC4626 Vault:*
 
 - **Withdraw**: A user withdraws a predefined number of the underlying asset and burns the corresponding amount of shares. This action reduces the user's shares in exchange for the underlying asset.
 - **Redeem**: A user redeems (and burns) a predefined number of shares to receive the corresponding amount of the underlying assets. This process decreases the shares owned by the user while increasing their holding of the underlying asset.
+
+
+!!!warning "Withdrawing and Redeeming Assets When Utilization is High"
+    Withdrawing assets (or redeeming shares) from the vault is generally always possible. However, there might be cases where a lending market has very high utilization, which could hinder the withdrawal of assets. For example, if a market has a utilization rate of 100%, meaning every supplied asset in the vault is borrowed, then a user cannot redeem their vault shares for assets. They would need to wait for the utilization rate to go down.
+
+    To prevent this scenario, the borrow rate is based on the utilization rate of the lending market. If the utilization reaches 100%, this would cause the interest rate to skyrocket to the maximum value, incentivizing either the borrowers to repay debt or lenders to supply more assets to the vault.
 
 
 ### `withdraw`
@@ -999,7 +1013,7 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 
     | Input     | Type      | Description                                        |
     |-----------|-----------|----------------------------------------------------|
-    | `assets`  | `uint256` | Amount of shares to redeem.                        |
+    | `shares`  | `uint256` | Amount of shares to redeem.                        |
     | `receiver`| `address` | Receiver of the shares. Defaults to `msg.sender`. |
     | `owner`   | `address` | Address of whose shares to burn. Defaults to `msg.sender`. |
 

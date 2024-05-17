@@ -312,4 +312,5 @@ nav:
       - CryptoSwap: references/whitepapers/cryptoswap.md
       - Curve Stablecoin: references/whitepapers/curve-stablecoin.md
     - Useful Resources: references/useful.md
+    - Notebooks: references/notebooks.md
     - Deployment Addresses: references/deployed-contracts.md
