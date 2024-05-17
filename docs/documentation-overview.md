@@ -83,7 +83,7 @@ This documentation outlines the technical implementation of the core Curve proto
 
     [**:octicons-arrow-right-24: Getting started**](./curve-api/curve-api.md)
 
--   :: **Integration Section**
+-   :simple-knowledgebase: **Integration Section**
 
     ---
 
@@ -91,7 +91,7 @@ This documentation outlines the technical implementation of the core Curve proto
     
     [**:octicons-arrow-right-24: Getting started**](./integration/overview.md)
 
--   :: **Notebooks**
+-   :logos-googlecolab: **Notebooks**
 
     ---
 
