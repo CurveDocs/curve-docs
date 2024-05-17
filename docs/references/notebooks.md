@@ -36,6 +36,8 @@ After setting up these two secrets, the notebook can successfully be run directl
 ### **Curve Lending**
 
 | Conatract | Description | Link    |
-| :-------: | :---------: | :-----: |
+| :-------: | ----------- | :-----: |
 | [`Vault`](../lending/contracts/vault.md) | Obtaining Vault Shares: `deposit` and `mint` | [:logos-googlecolab: here](https://colab.research.google.com/drive/1Qj9nOk5TYXp6j6go3VIh6--r5VILnoo9?usp=sharing)  |
 | [`Vault`](../lending/contracts/vault.md) | Withdrawing Assets: `withdraw` and `redeem`  | [:logos-googlecolab: here](https://colab.research.google.com/drive/1Ta69fsIc7zmtjFlQ94a8MDYYLeo4GJJI?usp=sharing)  |
+| [`OneWayLendingFactory`](../lending/contracts/oneway-factory.md) | Changing default borrow rates: `set_default_rates`  | [:logos-googlecolab: here](https://colab.research.google.com/drive/1mQV5yDyBqZrVSIOweP2g1Qu3WWjsgZtv?usp=sharing)  |
+| [`OneWayLendingFactory`](../lending/contracts/oneway-factory.md) | Changing implementations: `set_implementations`  | [:logos-googlecolab: here](https://colab.research.google.com/drive/1r3Vhb28Wy8iX_YRBNpfnwjzS4dKuMADf?usp=sharing)  |
