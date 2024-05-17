@@ -97,6 +97,6 @@ This documentation outlines the technical implementation of the core Curve proto
 
     Interactive Jupyter notebooks hosted on Google Colab, which showcase the functionality of different Smart Contracts.
 
-    [**:octicons-arrow-right-24: Getting started**](./references/notebooks.md).
+    [**:octicons-arrow-right-24: Getting started**](./references/notebooks.md)
 
 </div>
