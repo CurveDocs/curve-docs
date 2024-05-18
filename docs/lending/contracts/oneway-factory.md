@@ -423,8 +423,8 @@ If no value is given when deploying a new market, the default rates are applied.
 
 $$\text{Annualized Rate} = \text{rate} \times 86400 \times  365$$
 
-!!!notebook "Jupyter Notebook"
-    A notebook on how to change implementations can be found [here](https://try.vyperlang.org/user/mo-anon/lab/tree/shared/mo-anon/curve%20lending/factory/implementations.ipynb).
+!!!colab "Google Colab Notebook"
+    A notebook on how to change default borrow rates and how to calculate annualized rates can be found here: [https://colab.research.google.com/drive/1mQV5yDyBqZrVSIOweP2g1Qu3WWjsgZtv?usp=sharing](https://colab.research.google.com/drive/1mQV5yDyBqZrVSIOweP2g1Qu3WWjsgZtv?usp=sharing).
 
 
 ### `MIN_RATE`
@@ -625,9 +625,8 @@ $$\text{Annualized Rate} = \text{rate} \times 86400 \times  365$$
 
 The implementations of the Factory can be upgraded by the `admin`, which is the Curve DAO. 
 
-!!!notebook "Jupyter Notebook"
-    A notebook on how to change implementations can be found [here](https://try.vyperlang.org/user/mo-anon/lab/tree/shared/mo-anon/curve%20lending/factory/implementations.ipynb).
-
+!!!colab "Google Colab Notebook"
+    A notebook on how to change implementations using the `set_implementations` function can be found here: [https://colab.research.google.com/drive/1r3Vhb28Wy8iX_YRBNpfnwjzS4dKuMADf?usp=sharing](https://colab.research.google.com/drive/1r3Vhb28Wy8iX_YRBNpfnwjzS4dKuMADf?usp=sharing)
 
 
 ### `controller_impl`

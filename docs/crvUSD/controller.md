@@ -55,6 +55,8 @@ The loan-to-value (LTV) ratio depends on the number of bands `N` and the paramet
 
 $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
+!!!colab "Google Colab Notebook"
+    A simple notebook showcasing how to create a loan using `create_loan` and then how to read loan information can be found here: [https://colab.research.google.com/drive/1MTtpbdeTDVB3LxzGhFc4vwLsDM_xJWKz?usp=sharing](https://colab.research.google.com/drive/1MTtpbdeTDVB3LxzGhFc4vwLsDM_xJWKz?usp=sharing)
 
 
 ### `create_loan`
@@ -66,8 +68,8 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
     | Input        | Type      | Description                           |
     | ------------ | --------- | ------------------------------------- |
-    | `collateral` | `uint256` | Amount of collateral to use.          |
-    | `debt`       | `uint256` | Amount of debt to take.               |
+    | `collateral` | `uint256` | Amount of collateral token to put up as collateral (at its native precision). |
+    | `debt`       | `uint256` | Amount of debt to take on.            |
     | `N`          | `uint256` | Number of bands to deposit into; must range between `MIN_TICKS` and `MAX_TICKS` |
 
     ??? quote "Source code"
@@ -248,7 +250,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
     | Input           | Type                  | Description                                           |
     | --------------- | --------------------- | ----------------------------------------------------- |
-    | `collateral`    | `uint256`             | Amount of collateral to use.                          |
+    | `collateral`    | `uint256`             | Amount of collateral token to put up as collateral (at its native precision). |
     | `debt`          | `uint256`             | Amount of debt to take.                               |
     | `N`             | `uint256`             | Number of bands to deposit into.                      |
     | `callbacker`    | `address`             | Address of the callback contract.                     |
@@ -447,7 +449,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
     | Input       | Type      | Description          |
     | ----------- | --------- | -------------------- |
-    | `collateral`| `uint256` | Collateral amount.   |
+    | `collateral`| `uint256` | Collateral amount (at its native precision).   |
     | `N`         | `uint256` | Number of bands.     |
 
     ??? quote "Source code"
