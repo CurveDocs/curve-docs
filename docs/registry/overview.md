@@ -11,7 +11,7 @@ Curve Factory contracts, which allow the permissionless deployment of pools and 
 
 
 !!!deploy "Contract Source & Deployment"
-    **Currently, the MetaRegistry is only deployed on Ethereum**, located at [`0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC`](https://etherscan.io/address/0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC#code).
+    The MetaRegistry is deployed across multiple networks. A full list of deployments can be found [here](../references/deployed-contracts.md#meta-registry).
     
     The source code is available on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/mainnet/MetaRegistry.vy).
 
