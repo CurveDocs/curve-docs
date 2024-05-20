@@ -401,7 +401,6 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
     The source code for `AddressProviderNG.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/AddressProviderNG.vy).
 
 
-
 | Chain                         | Contract Address |
 | ----------------------------- | ---------------- |
 | :logos-ethereum: Ethereum     | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://etherscan.io/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
@@ -425,6 +424,39 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 
 ---
 
+## **Meta Registry**
+
+Contract functionality is documented [here :material-arrow-up-right:](../integration/metaregistry.md).
+
+!!!github
+    The source code for `MetaRegistry.vy` and `MetaRegistryL2.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/tree/main/contracts).
+
+
+The contract address of the Meta Registry is also embedded into the [`AddressProvider`](#address-provider) and can be fetched by calling `get_address(7)`.
+
+| Chain                         | Contract Address |
+| ----------------------------- | ---------------- |
+| :logos-ethereum: Ethereum     | [0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC](https://etherscan.io/address/0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC) |
+| :logos-arbitrum: Arbitrum     | [0xE12374F193f91f71CE40D53E0db102eBaA9098D5](https://arbiscan.io/address/0xE12374F193f91f71CE40D53E0db102eBaA9098D5) |
+| :logos-optimism: Optimism     | [0xB6845b562F01eB02ef20CBB63553d2a768e5a1Cb](https://optimistic.etherscan.io/address/0xB6845b562F01eB02ef20CBB63553d2a768e5a1Cb) |
+| :logos-base: Base             | [0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD](https://basescan.org/address/0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD) |
+| :logos-bsc: BinanceSmartChain | [0x4C7A5A5D57F98D362f1c00D7135F0dA5B6f82227](https://bscscan.com/address/0x4C7A5A5D57F98D362f1c00D7135F0dA5B6f82227) |
+| :logos-polygon: Polygon       | [0x1FE2a06c8bd81AE65FD1C5036451890b37976369](https://polygonscan.com/address/0x1FE2a06c8bd81AE65FD1C5036451890b37976369) |
+| :logos-fantom: Fantom         | [0xF5617D4f7514bE35fce829a1C19AE7f6c9106979](https://ftmscan.com/address/0xF5617D4f7514bE35fce829a1C19AE7f6c9106979) |
+| :logos-gnosis: Gnosis         | [0xeEcCd039d7228530D5F0c3ce7291Dd9677CCFFb1](https://gnosisscan.io/address/0xeEcCd039d7228530D5F0c3ce7291Dd9677CCFFb1) |
+| :logos-aurora: Aurora         | *not deployed yet* |
+| :logos-celo: Celo             | [0x19bd1AB34d6ABB584b9C1D5519093bfAA7f6c7d2](https://celoscan.io/address/0x19bd1AB34d6ABB584b9C1D5519093bfAA7f6c7d2) |
+| :logos-mantle: Mantle         | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://explorer.mantle.xyz/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf) |
+| :logos-linea: Linea           | [0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c](https://lineascan.build/address/0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c) |
+| :logos-polygon: Polygon zkEVM | [0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c](https://zkevm.polygonscan.com/address/0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c) |
+| :logos-scroll: Scroll         | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://scrollscan.com/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf) |
+| :logos-fraxtal: Fraxtal       | [0xd125E7a0cEddF89c6473412d85835450897be6Dc](https://fraxscan.com/address/0xd125E7a0cEddF89c6473412d85835450897be6Dc) |
+| :logos-avalanche: Avalanche   | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://snowscan.xyz/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf) |
+| :logos-kava: Kava             | *needs verification* |
+
+
+
+---
 
 ## **Stableswap-NG**
 
