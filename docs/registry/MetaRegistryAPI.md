@@ -2,9 +2,19 @@
 
 The MetaRegistry offers an **on-chain API** for various properties of Curve pools.  
 
+A full list of all deployment addresses can be found [here](../references/deployed-contracts.md#meta-registry).
+
+
+---
+
+
 ## **Finding Pools**
 
-For a [Jupyter notebook :simple-jupyter:](https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/integratooors/metaregistry/fetching_pools.ipynb) example on how to find pools, see [here :material-arrow-up-right:](../integration/metaregistry.md#fetching-liquidity-pools).
+!!!colab "Google Colab Notebook"
+    A guide on how to find liquidity pools which hold specific coins can be found [here](../integration/metaregistry.md#fetching-liquidity-pools).
+
+    A Jupyter notebook showcasing how to fetch pools directly from the blockchain, which contain two specific assets, can be found [here](https://colab.research.google.com/drive/1QsxqxQu7Um8gYPda30304W8ZcYbnbr1b?usp=sharing).
+
 
 ### `find_pools_for_coins`
 !!! description "`MetaRegistry.find_pools_for_coins(_from: address, _to: address) -> DynArray[address, 1000]:`"
@@ -1240,7 +1250,8 @@ The factory has a similar API to that of the main Registry, which can be used to
 
 New registries can be added by the `owner` of the contract using the [`add_registry_handler`](#add_registry_handler) function. Existing ones can be updated using the [`update_registry_handler`](#update_registry_handler) function.
 
-A [Jupyter notebook :simple-jupyter:](https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/integratooors/metaregistry/base_setup.ipynb) on how to add or update registries can be found [here :material-arrow-up-right:](../integration/metaregistry.md#handlers-and-registries).
+!!!colab "Google Colab Notebook"
+    A Google Colab notebook showcasing how to query registries or add/update them can be found [:logos-googlecolab: here](https://colab.research.google.com/drive/1wFvIeNKpKhy58xkGSfKw0XzEPnwn9Zym?usp=sharing).
 
 
 ### `owner`

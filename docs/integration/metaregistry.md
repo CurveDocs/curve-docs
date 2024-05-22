@@ -1,9 +1,15 @@
 <h1>Curve Meta Registry</h1>
 
-For complete and detailed documentation on the MetaRegistry contract, please see [here :material-arrow-up-right:](../registry/overview.md) .
+The MetaRegistry functions as a Curve Finance Pool Registry Aggregator and offers an on-chain API for various properties of Curve pools by **consolidating different registries into a single contract**.
 
-!!!warning "Requirements"
-    The MetaRegistry requires that all Factory contracts, which deploy pools and gauges, are added to the Meta Registry. Without this, the MetaRegistry cannot retrieve specific information. To see which handlers and registries are added, see [Handlers and Registries](#handlers-and-registries).
+For complete and detailed documentation on the MetaRegistry contract, please see [here :material-arrow-up-right:](../registry/overview.md).
+
+For a list of all deployments, see [here](../references/deployed-contracts.md#meta-registry).
+
+!!!warning "Requirements & Implementations"
+    The MetaRegistry requires that all Factory contracts, which deploy pools and gauges, are added to the MetaRegistry. Without this, the MetaRegistry cannot retrieve specific information. To see which handlers and registries are added, see [Handlers and Registries](#handlers-and-registries).
+
+    The newly deployed MetaRegistries on sidechains currently only pick up new-generation (NG) pools. Although earlier pools will be added as soon as possible, this requires some time as it involves quite a bit of manual work.
 
 
 ---
@@ -23,8 +29,8 @@ New handlers can be added or existing ones can be updated by the `owner` of the 
 - `get_registry_handlers_from_pool`: Fetches the handler from pools.
 
 
-!!!notebook "Jupyter Notebook"
-    A Jupyter notebook showcasing how to query registries or add/update them can be found [here :material-arrow-up-right:](https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/integratooors/metaregistry/base_setup.ipynb).
+!!!colab "Google Colab Notebook"
+    A Google Colab notebook showcasing how to query registries or add/update them can be found [here :material-arrow-up-right:](https://colab.research.google.com/drive/1wFvIeNKpKhy58xkGSfKw0XzEPnwn9Zym?usp=sharing).
 
 
 *Currently integrated Base Registries and Handlers:*
@@ -56,5 +62,6 @@ Deployment of Curve pools is permissionless, leading to a significant number of 
 - `find_pools_for_coins`: This method returns a list of all pools containing two specific tokens, e.g. pools that include both `crvUSD` and `USDC`.
 - `find_pool_for_coins`: Returns a single pool according to the input index from the list returned by `find_pools_for_coins`.
 
-!!!notebook "Jupyter Notebook"
-    A Jupyter notebook showcasing how to fetch pools directly from the blockchain, which contain two specific assets, can be found [here :material-arrow-up-right:](https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/integratooors/metaregistry/fetching_pools.ipynb).
+
+!!!colab "Google Colab Notebook"
+    A Jupyter notebook showcasing how to fetch pools directly from the blockchain, which contain two specific assets, can be found [:logos-googlecolab: here](https://colab.research.google.com/drive/1QsxqxQu7Um8gYPda30304W8ZcYbnbr1b?usp=sharing).
