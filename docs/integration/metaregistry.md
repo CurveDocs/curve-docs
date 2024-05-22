@@ -64,4 +64,4 @@ Deployment of Curve pools is permissionless, leading to a significant number of 
 
 
 !!!colab "Google Colab Notebook"
-    A Jupyter notebook showcasing how to fetch pools directly from the blockchain, which contain two specific assets, can be found [here :material-arrow-up-right:](https://colab.research.google.com/drive/1QsxqxQu7Um8gYPda30304W8ZcYbnbr1b?usp=sharing).
+    A Jupyter notebook showcasing how to fetch pools directly from the blockchain, which contain two specific assets, can be found [:logos-googlecolab: here](https://colab.research.google.com/drive/1QsxqxQu7Um8gYPda30304W8ZcYbnbr1b?usp=sharing).

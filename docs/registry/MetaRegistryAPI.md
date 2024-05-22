@@ -1251,7 +1251,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 New registries can be added by the `owner` of the contract using the [`add_registry_handler`](#add_registry_handler) function. Existing ones can be updated using the [`update_registry_handler`](#update_registry_handler) function.
 
 !!!colab "Google Colab Notebook"
-    A Google Colab notebook showcasing how to query registries or add/update them can be found [here :material-arrow-up-right:](https://colab.research.google.com/drive/1wFvIeNKpKhy58xkGSfKw0XzEPnwn9Zym?usp=sharing).
+    A Google Colab notebook showcasing how to query registries or add/update them can be found [:logos-googlecolab: here](https://colab.research.google.com/drive/1wFvIeNKpKhy58xkGSfKw0XzEPnwn9Zym?usp=sharing).
 
 
 ### `owner`
