@@ -12,7 +12,8 @@ This design ensures that when the target utilization is met, the borrow rate in 
 ## **Calculations**
 
 !!!colab "Google Colab Notebook"
-    A interactive google colab notebook which plots the interest rate depending on utilization can be found here: [https://colab.research.google.com/drive/1lU0SWtvQoJHNe7pLiKD33nYBKacljhck?usp=sharing](https://colab.research.google.com/drive/1lU0SWtvQoJHNe7pLiKD33nYBKacljhck?usp=sharing).
+    An interactive Google Colab notebook that plots the interest rate depending on utilization can be found here: [https://colab.research.google.com/drive/1lU0SWtvQoJHNe7pLiKD33nYBKacljhck?usp=sharing](https://colab.research.google.com/drive/1lU0SWtvQoJHNe7pLiKD33nYBKacljhck?usp=sharing).
+
 
 ### **Borrow Rate**
 
