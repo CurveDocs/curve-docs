@@ -200,7 +200,9 @@ nav:
     - Vault: lending/contracts/vault.md
     - LLAMMA and Controller: lending/contracts/controller-llamma.md
     - OneWay Lending Factory: lending/contracts/oneway-factory.md
-    - SemiLog Monetary Policy: lending/contracts/semilog-mp.md
+    - Monetary Policies:
+      - SemiLog Monetary Policy: lending/contracts/semilog-mp.md
+      - Secondary Monetary Policy: lending/contracts/secondary-mp.md
     - Oracles Contracts:
       - Overview & Examples: lending/contracts/oracle-overview.md
       - CryptoFromPool.vy: lending/contracts/cryptofrompool.md
