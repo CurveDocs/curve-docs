@@ -52,6 +52,8 @@ Alpha ($\alpha$) and Beta ($\beta$) essentially determine how the borrow rate sc
 !!!info "Setting Parameters"
     `target_utilization`, `low_ratio`, and `high_ratio` are set when deploying the contract. The values can later only be changed by the `admin` of the contract. For more, see here: [`set_parameters`](#set_parameters).
 
+    Also, the `A` parameter has nothing to do with the amplification coefficient used in Curve AMMs.
+
 
 ---
 
