@@ -7,7 +7,7 @@ The **borrow rate** in the semi-logarithmic MonetaryPolicy contract is **intrica
     The source code of the `SemilogMonetaryPolicy.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/mpolicies/SemilogMonetaryPolicy.vy).
 
 
-*The function is as simple as:*
+*The function for the rate is as simple as:*
 
 $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{max}}}{\text{rate}_{\text{min}}}\right)^{\text{utilization}}$$
 
@@ -242,7 +242,7 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
 
 ## **Rates**
 
-**The rate values are based on 1e18 and are NOT annualized.** 
+**The rate values are based on 1e18 and NOT annualized.** 
 
 *To calculate the Borrow APR:*
 
@@ -314,7 +314,7 @@ Rate calculations occur within the MonetaryPolicy contract. The rate is regularl
 
 
 ### `rate`
-!!! description "`SemiLogMonetaryPolicy.rate(_for: address = msg.sender) -> uint256:`"
+!!! description "`SemiLogMonetaryPolicy.rate(_for: address = msg.sender) -> uint256`"
 
     Getter for the borrow rate for a specific lending market.
 
@@ -358,7 +358,7 @@ Rate calculations occur within the MonetaryPolicy contract. The rate is regularl
 
 
 ### `future_rate`
-!!! description "`SemiLogMonetaryPolicy.future_rate(_for: address, d_reserves: int256, d_debt: int256) -> uint256:`"
+!!! description "`SemiLogMonetaryPolicy.future_rate(_for: address, d_reserves: int256, d_debt: int256) -> uint256`"
 
     Function to calculate the future borrow rate for a lending market given a specific change of reserves and debt.
 
@@ -406,7 +406,7 @@ Rate calculations occur within the MonetaryPolicy contract. The rate is regularl
 ### `rate_write`
 !!! description "`SemiLogMonetaryPolicy.rate_write(_for: address = msg.sender) -> uint256:`"
 
-    Function to manually update the rate of a lending market.
+    Function to update the rate of a lending market.
 
     Returns: rate (`uint256`)
 
@@ -462,7 +462,7 @@ Rates within the MonetaryPolicy contract can only be **changed by the `admin` of
 
 
 ### `set_rates`
-!!! description "`SemiLogMonetaryPolicy.set_rates(min_rate: uint256, max_rate: uint256):`"
+!!! description "`SemiLogMonetaryPolicy.set_rates(min_rate: uint256, max_rate: uint256)`"
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of `FACTORY`.
