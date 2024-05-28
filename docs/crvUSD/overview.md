@@ -56,7 +56,7 @@ crvUSD is designed to provide a more **capital-efficient** stablecoin mechanism 
 
     PegKeepers are contracts that help **stabilize the peg of crvUSD**. They are allocated a specific amount of crvUSD to secure the peg. 
 
-    [:octicons-arrow-right-24: Learn more](./pegkeeper.md)
+    [:octicons-arrow-right-24: Learn more](./pegkeepers/overview.md)
 
 -   **Price Aggregator**
 
