@@ -13,12 +13,13 @@ Technically speaking, allowance is always granted but if certain checks do not p
 
 ## **Providing**
 
-*The Regulator will only grant allowance to the PegKeeper to provide crvUSD to the pool if the requirements below are met. Otherwise, the function will return 0, and the transaction will ultimately revert:*
+*The Regulator will only grant allowance to the PegKeeper to provide crvUSD to the pool if the following requirements are met. If any of these conditions are not satisfied, the function will return 0, causing the transaction to ultimately revert:*
 
-- Providing is not paused (can be checked with the `is_killed` method).
-- The aggregated crvUSD price is higher than 1.0 (`10**18`).
-- `get_p` (AMM state price) and `price_oracle` (AMM EMA Price Oracle) are within a certain deviation range (`price_deviation`). This check is done to prevent spam attacks.
-- The highest price among the pools that other PegKeepers are stabilizing (defined as `price_oracle` of the pools) is smaller than the difference between the price (`price_oracle`) of the AMM the PegKeeper stabilizes and a certain threshold (`worst_price_threshold`).
+- **Providing is not paused**: This is checked using the `is_killed` method. If providing is paused, no crvUSD can be added to the pool.
+- **Aggregated crvUSD price is higher than 1.0**: The crvUSD price, obtained from the `aggregator`, must be above 1.0 (`10**18`). If the price is equal to or below 1.0, providing crvUSD is not allowed.
+- **Price consistency check**: The `get_p` (current AMM state price) and `price_oracle` (AMM EMA Price Oracle) must be within a specified deviation range (`price_deviation`). This is to prevent spam attacks by ensuring that the current price is not significantly deviating from the oracle price.
+- **Depeg threshold check**: To ensure that the price of an asset has not depegged significantly, the current price is compared against a `worst_price_threshold`. This check ensures that prices across the pools with PegKeepers are within an acceptable range of deviation. If the price deviation is within the threshold, the PegKeeper is allowed to provide crvUSD.
+
 
 ---
 
@@ -44,7 +45,7 @@ Where:
 - \( r_i \) represents the debt ratios of the other PegKeepers.
 
 
-!!!example "Amount allowed to provide with all empty PegKeepers"
+!!!example "Example: Amount allowed to provide with all empty PegKeepers"
     Let's take a look at the scenario when all PegKeepers are empty, therefore  $r = [0, 0, 0, 0]$.
 
     $\text{rsum} = \sqrt{0 \times 10^{18}} + \sqrt{0 \times 10^{18}} + \sqrt{0 \times 10^{18}} + \sqrt{0 \times 10^{18}} = 0$
@@ -198,7 +199,7 @@ Where:
 
 ## **Withdrawing**
 
-*The Regulator will grant allowance to the PegKeeper to provide crvUSD to the pool when:*
+*The Regulator will grant allowance to the PegKeeper to withdraw crvUSD to the pool when:*
 
 - Withdrawing is not paused (can be checked with the `is_killed` method).
 - The aggregated crvUSD price is less than 1.0 (`10**18`).
@@ -579,7 +580,7 @@ A PegKeeper can be added by the `admin` through the `add_peg_keepers` function a
 
     | Input  | Type      | Description |
     | ------ | --------- | ----------- |
-    | `arg0` | `address` | Index of the PegKeeper. Starts at 1. |
+    | `arg0` | `address` | Index of the PegKeeper. Starts at 0. |
 
     ??? quote "Source code"
 
@@ -597,7 +598,11 @@ A PegKeeper can be added by the `admin` through the `add_peg_keepers` function a
 
     === "Example"
         ```shell
-        >>> reverts because no peg keeper added yet (DAO vote pending)
+        >>> PegKeeperRegulator.peg_keepers(0)
+        '0x5b49b9add1ecfe53e19cc2cfc8a33127cd6ba4c6'
+
+        >>> PegKeeperRegulator.peg_keepers(1)
+        '0xff78468340ee322ed63c432bf74d817742b392bf'
         ```
 
 
@@ -949,12 +954,40 @@ Both their ownerships can be transferred using the corresponding `set_admin` or 
 ---
 
 
-## **Contract Info Methods**
+## **Fee Receiver and Aggregator Contract**
+
+### `fee_receiver`
+!!! description "`PegKeeperRegulator.fee_receiver() -> address: view`"
+
+    Getter for the fee receiver. The fee receiver can be changed via the [`set_fee_receiver`](#set_fee_receiver) function.
+
+    Returns: fee receiver (`address`).
+
+    ??? quote "Source code"
+
+        === "PegKeeperRegulator.vy"
+
+            ```vyper
+            fee_receiver: public(address)
+
+            @external
+            def __init__(_stablecoin: ERC20, _agg: Aggregator, _fee_receiver: address, _admin: address, _emergency_admin: address): 
+                ...
+                self.fee_receiver = _fee_receiver
+                ...
+            ```
+
+    === "Example"
+        ```shell
+        >>> PegKeeperRegulator.fee_receiver()
+        '0xeCb456EA5365865EbAb8a2661B0c503410e9B347'
+        ```
+
 
 ### `aggregator`
 !!! description "`PegKeeperRegulator.aggregator() -> address: view`"
 
-    Getter for the crvusd price aggregator contract. This address is set when intializing the contract and can not be changed.
+    Getter for the crvusd price aggregator contract. This address is set when intializing the contract and can be changed using [`set_aggregator`](#set_aggregator).
 
     Returns: price aggregator contract (`address`).
 
@@ -971,7 +1004,7 @@ Both their ownerships can be transferred using the corresponding `set_admin` or 
 
             @external
             def __init__(_stablecoin: ERC20, _agg: Aggregator, _admin: address, _emergency_admin: address):
-                STABLECOIN = _stablecoin
+                ...
                 self.aggregator = _agg
                 ...
             ```
@@ -982,6 +1015,91 @@ Both their ownerships can be transferred using the corresponding `set_admin` or 
         '0x18672b1b0c623a30089A280Ed9256379fb0E4E62'
         ```
 
+
+### `set_fee_receiver`
+!!! description "`PegKeeperRegulator.set_fee_receiver(_fee_receiver: address)`"
+
+    !!!guard "Guarded Methods"
+        This function can only be called by the `admin` of the contract.
+
+    Function to set a new fee receiver.
+
+    Emits: `SetFeeReceiver`
+
+    | Input    | Type      | Description  |
+    | -------- | --------- | ------------ |
+    | `_fee_receiver` | `address` | New fee receiver address. |
+
+    ??? quote "Source code"
+
+        === "PegKeeperRegulator.vy"
+
+            ```vyper
+            fee_receiver: public(address)
+
+            event SetFeeReceiver:
+                fee_receiver: address
+
+            @external
+            def set_fee_receiver(_fee_receiver: address):
+                """
+                @notice Set new PegKeeper's profit receiver
+                """
+                assert msg.sender == self.admin
+                self.fee_receiver = _fee_receiver
+                log SetFeeReceiver(_fee_receiver)
+            ```
+
+    === "Example"
+        ```shell
+        >>> soon
+        ```
+
+
+### `set_aggregator`
+!!! description "`PegKeeperRegulator.set_aggregator(_agg: Aggregator):`"
+
+    !!!guard "Guarded Methods"
+        This function can only be called by the `admin` of the contract.
+
+    Function to set a new aggregator contract.
+
+    Emits: `SetAggregator`
+
+    | Input    | Type      | Description  |
+    | -------- | --------- | ------------ |
+    | `_fee_receiver` | `address` | New aggregator contract. |
+
+    ??? quote "Source code"
+
+        === "PegKeeperRegulator.vy"
+
+            ```vyper
+            event SetAggregator:
+                aggregator: address
+
+            aggregator: public(Aggregator)
+
+            @external
+            def set_aggregator(_agg: Aggregator):
+                """
+                @notice Set new crvUSD price aggregator
+                """
+                assert msg.sender == self.admin
+                self.aggregator = _agg
+                log SetAggregator(_agg.address)
+            ```
+
+    === "Example"
+        ```shell
+        >>> soon
+        ```
+
+
+---
+
+
+## **Contract Info Methods**
 
 ### `stablecoin`
 !!! description "`PegKeeperRegulator.stablecoin() -> address: view`"
@@ -1015,88 +1133,4 @@ Both their ownerships can be transferred using the corresponding `set_admin` or 
         ```shell
         >>> PegKeeperRegulator.stablecoin()
         '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
-        ```
-
-
----
-
-
-## **Fee Receiver**
-
-
-### `fee_receiver`
-!!! description "`PegKeeperRegulator.fee_receiver() -> address: view`"
-
-    Getter for the fee receiver. The fee receiver can be changed via the `set_fee_receiver` function.
-
-    Returns: fee receiver (`address`).
-
-    ??? quote "Source code"
-
-        === "PegKeeperRegulator.vy"
-
-            ```vyper
-            fee_receiver: public(address)
-
-            @external
-            def __init__(_stablecoin: ERC20, _agg: Aggregator, _fee_receiver: address, _admin: address, _emergency_admin: address):
-                STABLECOIN = _stablecoin
-                self.aggregator = _agg
-                self.fee_receiver = _fee_receiver
-                self.admin = _admin
-                self.emergency_admin = _emergency_admin
-                log SetAdmin(_admin)
-                log SetEmergencyAdmin(_emergency_admin)
-
-                self.worst_price_threshold = 3 * 10 ** (18 - 4)  # 0.0003
-                self.price_deviation = 5 * 10 ** (18 - 4) # 0.0005 = 0.05%
-                self.alpha = ONE / 2 # 1/2
-                self.beta = ONE / 4  # 1/4
-                log WorstPriceThreshold(self.worst_price_threshold)
-                log PriceDeviation(self.price_deviation)
-                log DebtParameters(self.alpha, self.beta)
-            ```
-
-    === "Example"
-        ```shell
-        >>> PegKeeperRegulator.fee_receiver()
-        '0xeCb456EA5365865EbAb8a2661B0c503410e9B347'
-        ```
-
-
-### `set_fee_receiver`
-!!! description "`PegKeeperRegulator.fee_receiver() -> address: view`"
-
-    !!!guard "Guarded Methods"
-        This function can only be called by the `admin` of the contract.
-
-    Getter for the fee receiver.
-
-    Returns: stablecoin (`address`).
-
-    Emits: `SetFeeReceiver`
-
-    ??? quote "Source code"
-
-        === "PegKeeperRegulator.vy"
-
-            ```vyper
-            fee_receiver: public(address)
-
-            event SetFeeReceiver:
-                fee_receiver: address
-
-            @external
-            def set_fee_receiver(_fee_receiver: address):
-                """
-                @notice Set new PegKeeper's profit receiver
-                """
-                assert msg.sender == self.admin
-                self.fee_receiver = _fee_receiver
-                log SetFeeReceiver(_fee_receiver)
-            ```
-
-    === "Example"
-        ```shell
-        >>> soon
         ```
