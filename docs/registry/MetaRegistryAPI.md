@@ -2,9 +2,19 @@
 
 The MetaRegistry offers an **on-chain API** for various properties of Curve pools.  
 
+A full list of all deployment addresses can be found [here](../references/deployed-contracts.md#meta-registry).
+
+
+---
+
+
 ## **Finding Pools**
 
-The following getter methods are available for finding pools containing a specific set of coins:
+!!!colab "Google Colab Notebook"
+    A guide on how to find liquidity pools which hold specific coins can be found [here](../integration/metaregistry.md#fetching-liquidity-pools).
+
+    A Jupyter notebook showcasing how to fetch pools directly from the blockchain, which contain two specific assets, can be found [here](https://colab.research.google.com/drive/1QsxqxQu7Um8gYPda30304W8ZcYbnbr1b?usp=sharing).
+
 
 ### `find_pools_for_coins`
 !!! description "`MetaRegistry.find_pools_for_coins(_from: address, _to: address) -> DynArray[address, 1000]:`"
@@ -13,10 +23,10 @@ The following getter methods are available for finding pools containing a specif
 
     Returns: pool list (`DynArray[address, 1000]`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_from` |  `address` |  address of coin to be sent |
-    | `_to` |  `address` |  address of coin to be received |
+    | Input   | Type      | Description                    |
+    | ------- | --------- | ------------------------------ |
+    | `_from` | `address` | Address of coin to be sent     |
+    | `_to`   | `address` | Address of coin to be received |
 
     ??? quote "Source code"
 
@@ -73,11 +83,11 @@ The following getter methods are available for finding pools containing a specif
 
     Returns: pool (`address`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_from` |  `address` |  address of coin to be sent |
-    | `_to` |  `address` |  address of coin to be received |
-    | `i` |  `uint256` |  index of the pool to return |
+    | Input   | Type      | Description                    |
+    | ------- | --------- | ------------------------------ |
+    | `_from` | `address` | Address of coin to be sent     |
+    | `_to`   | `address` | Address of coin to be received |
+    | `i`     | `uint256` | Index of the pool to return    |
 
     ??? quote "Source code" 
 
@@ -124,7 +134,11 @@ The following getter methods are available for finding pools containing a specif
         ```
 
 
-## **Pool Informations**
+---
+
+
+## **MetaRegistry Specific Informations**
+
 The factory has a similar API to that of the main Registry, which can be used to query information about existing pools.
 
 ### `pool_count`
@@ -167,9 +181,9 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     Returns: pool (`address`)
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_index` |  `uint256` | index of pool |
+    | Input    | Type      | Description       |
+    | -------  | --------- | ----------------- |
+    | `_index` | `uint256` | Index of the pool |
 
     ??? quote "Source code"
 
@@ -201,6 +215,13 @@ The factory has a similar API to that of the main Registry, which can be used to
         ```
 
 
+---
+
+
+## **Pool Specific Informations**
+
+*The following methods are used to fetch pool specific informations:*
+
 ### `get_pool_name`
 !!! description "`MetaRegistry.get_pool_name(_pool: address, _handler_id: uint256 = 0) -> String[64]:`"
 
@@ -208,10 +229,10 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     Returns: pool name (`String[64]`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | pool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -242,12 +263,12 @@ The factory has a similar API to that of the main Registry, which can be used to
     Returns: true or false (`bool`).
 
     !!!example
-        An example is the [LUSD-3CRV](https://etherscan.io/address/0xed279fdd11ca84beef15af5d39bb4d4bee23f0ca) pool which pairs [Liquity's](https://www.liquity.org/) [LUSD](https://etherscan.io/address/0x5f98805a4e8be255a32880fdec7f6728c6568ba0) against [3CRV](https://etherscan.io/address/0x6c3f90f043a72fa612cbac8115ee7e52bde6e490), where 3CRV is a liquidity pool token that represents a share of a pool containing DAI, USDC and USDT:
+        An example is the [LUSD-3CRV](https://etherscan.io/address/0xed279fdd11ca84beef15af5d39bb4d4bee23f0ca) pool which pairs [Liquity's](https://www.liquity.org/) [LUSD](https://etherscan.io/address/0x5f98805a4e8be255a32880fdec7f6728c6568ba0) against [3CRV](https://etherscan.io/address/0x6c3f90f043a72fa612cbac8115ee7e52bde6e490), where 3CRV is a liquidity pool token that represents a share of a pool containing DAI, USDC and USDT.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | pool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -274,17 +295,17 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `get_base_pool`
 !!! description "`MetaRegistry.get_base_pool(_pool: address, _handler_id: uint256 = 0) -> address:`"
 
-    Getter for the base pool of a metapool. If there is no base pool, it will return **`ZERO_ADDRESS`**.
+    Getter for the base pool of a metapool. If there is no base pool, it will return `ZERO_ADDRESS`.
 
     Returns: base pool (`address`).
 
     !!!example
-        In the case of the LUSD-3CRV pool example, the pool containing 3CRV underlying coins is the base pool of the LUSD-3CRV pool, which is the [3pool](https://etherscan.io/address/0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7):
+        In the case of the LUSD-3CRV pool example, the pool containing 3CRV underlying coins is the base pool of the LUSD-3CRV pool, which is the [3pool](https://etherscan.io/address/0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | metapool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -312,14 +333,15 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `get_fees`
 !!! description "`MetaRegistry.get_fees(_pool: address, _handler_id: uint256 = 0) -> uint256[10]:`"
 
-    Getter for the fees that a Curve pool charges per swap. The returned fee data differs for StableSwap pools (which use a single parameter for fees, other than admin fees) than CryptoSwap pools (which use multiple fee parameters due to its dynamic fee structure).
+    Getter for the fees that a Curve pool charges per swap. The fee data returned varies depending on the type of pool:
 
-    For Stableswap, the getter returns the `fee` per swap and the `admin_fee` percentage. For the `3pool`, it shows that the pool charges 1 basis point per swap, 50% of which goes to the DAO.
+    - **StableSwap pools:** Use a single fee parameter.
+    - **CryptoSwap pools:** Use multiple fee parameters due to their dynamic fee structure.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` |  pool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -341,12 +363,15 @@ The factory has a similar API to that of the main Registry, which can be used to
             return RegistryHandler(self._get_registry_handlers_from_pool(_pool)[_handler_id]).get_fees(_pool)
         ```
 
+    For Stableswap, the getter returns the `fee` per swap and the `admin_fee` percentage. For the `3pool`, it shows that the pool charges 1 basis point per swap, 50% of which goes to the DAO.
+
     === "Example"
         ```shell
         >>> MetaRegistry.get_fees("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7")
         1000000, 5000000000, 0, 0, 0, 0, 0, 0, 0, 0
         ```
 
+    ---
 
     For **CryptoSwap**, the getter returns: `fee`, `admin_fee` percentage, `mid_fee` and `out_fee`. The fee is the dynamic fee charged per swap, and depends on the `mid_fee` (fee when the CryptoSwap pool is pegged) and the `out_fee`. To understand the dynamic fee algorithm, the reader is pointed to the CryptoSwap Paper.
 
@@ -360,16 +385,14 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `get_pool_params`
 !!! description "`MetaRegistry.get_pool_params(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_POOL_PARAMS]:`"
 
-    Getter for a pool's parameters.
+    Getter for the parameters of a pool.
 
     Returns: parameters (`uint256[MAX_POOL_PARAMS]`).
 
-    For **StableSwap**, the getter returns the pool's amplification coefficient (`A`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` |  pool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -387,13 +410,16 @@ The factory has a similar API to that of the main Registry, which can be used to
             return RegistryHandler(registry_handler).get_pool_params(_pool)
         ```
 
+    For **StableSwap**, the getter returns the pool's amplification coefficient (`A`).
+
     === "Example"
         ```shell
         >>> MetaRegistry.metaregistry.get_pool_params("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7")
         2000, ...
         ```
 
-
+    ---
+    
     For **CryptoSwap**, the getter returns:
 
     1. Amplification coefficient (A)  
@@ -414,14 +440,14 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `get_lp_token`
 !!! description "`MetaRegistry.get_lp_token(_pool: address, _handler_id: uint256 = 0) -> address:`"
 
-    Getter for the address of the liquidity pool token minted by a pool.
+    Getter for the LP token of a liquidity pool.
 
     Returns: LP Token (`address`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` |  pool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -452,10 +478,10 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     Returns: asset type id (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` |  pool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -478,18 +504,18 @@ The factory has a similar API to that of the main Registry, which can be used to
         0
         ```
 
-        
+
 ### `get_pool_from_lp_token`
 !!! description "`MetaRegistry.get_pool_from_lp_token(_token: address, _handler_id: uint256 = 0) -> address:`"
 
-    Getter for the pool associated with a liquidity pool token.
+    Getter for the liquidity pool associated with a LP token.
 
-    Returns: pool (`address`).
+    Returns: liquidity pool (`address`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_lp_token` |  `address` |  lp token address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -519,10 +545,10 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     Returns: virtual price of the lp token (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_lp_token` |  `address` |  lp token address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -551,14 +577,14 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `is_registered`
 !!! description "`MetaRegistry.is_registered(_pool: address, _handler_id: uint256 = 0) -> bool:`"
 
-    Method to check if a pool is in the metaregistry using **`get_n_coins`**.
+    Method to check if a pool is in the `MetaRegistry` using `get_n_coins`.
 
     Returns: true or false (`bool`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | pool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -585,14 +611,14 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `get_gauge`
 !!! description "`MetaRegistry.get_gauge(_pool: address, gauge_idx: uint256 = 0, _handler_id: uint256 = 0) -> address:`"
 
-    Getter for the gauge that receives `CRV` token inflation for depositing the LP token of a pool.
+    Getter for the liquidity gauge of a pool.
 
     Returns: gauge address (`address`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | pool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -622,15 +648,15 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `get_gauge_type`
 !!! description "`MetaRegistry.get_gauge_type(_pool: address, gauge_idx: uint256 = 0, _handler_id: uint256 = 0) -> int128:`"
 
-    Getter for the gauge type of the gauge associated with a pool.
+    Getter for the gauge type of the gauge associated with a liquidity pool.
 
     Returns: gauge type (`int128`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` |  pool address |
-    | `gauge_idx` |  `uint256` | index of gauge to return; defaults to 0 |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type   | Description |
+    | ------------  | -------| ----|
+    | `_pool`       | `address` |  Address of the pool |
+    | `gauge_idx`   | `uint256` | Index of gauge to return; defaults to 0 |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -657,19 +683,24 @@ The factory has a similar API to that of the main Registry, which can be used to
         ```
 
 
-## **Coin Informations**
+---
+
+
+## **Coin Specific Informations**
+
+*The following methods are used to fetch coin specific informations:*
 
 ### `get_coins`
 !!! description "`MetaRegistry.get_coins(_pool: address, _handler_id: uint256 = 0) -> address[MAX_COINS]:`"
 
-    Getter for the coins in a pool. If the pool is a metapool, it then returns the LP token associated with the base pool, and not the underlying coins.
+    Getter method for the coins in a pool. If the pool is a metapool, it then returns the LP token of the base pool, and not the underlying coins.
 
     Retuns: coin addresses (`address[MAX_COINS]`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` |  pool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -689,9 +720,9 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     === "Example"
         ```shell
-        >>> MetaRegistry.get_coins("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA")
-        [[0x5f98805A4E8be255a32880FDeC7F6728C6568bA0]
-        [0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490]
+        >>> MetaRegistry.get_coins("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA")    # LUSD-3CRV pool
+        [[0x5f98805A4E8be255a32880FDeC7F6728C6568bA0]                               # LUSD
+        [0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490]                                # 3CRV (basepool LP token)
         [0x0000000000000000000000000000000000000000]
         [0x0000000000000000000000000000000000000000]
         [0x0000000000000000000000000000000000000000]
@@ -708,10 +739,10 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     Returns: number of coins (`uint256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` |  pool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -738,14 +769,14 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `get_decimals`
 !!! description "`MetaRegistry.get_decimals(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:`"
 
-    Getter for the decimals of the coins that are returned by `get_coins`.
+    Getter for the decimals of the coins that are returned by `get_coins`. When querying for metapools, this method returns the decimals of the metapool token and the LP token of the basepool.
 
     Returns: number of decimals (`uint256[MAX_COINS]`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` |  pool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -766,20 +797,24 @@ The factory has a similar API to that of the main Registry, which can be used to
     === "Example"
         ```shell
         >>> MetaRegistry.get_decimals("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7")
-        18, 6, 6, 0, 0, 0, 0, 0
+        18, 6, 6, 0, 0, 0, 0, 0         # decimals of DAI, USDT, USDC
+
+        >>> MetaRegistry.get_decimals("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA")
+        18, 18, 0, 0, 0, 0, 0, 0        # decimals of LUSD, 3CRV
         ```
+
 
 ### `get_balances`
 !!! description "`MetaRegistry.get_balances(_pool: address, _handler_id: uint256 = 0)  -> uint256[MAX_COINS]:`"
 
-    Getter for the balance of each coin within a pool.
+    Getter for the balance of each coin within a pool. When querying for metapools, this method returns the balances of the metapool token and the LP token of the basepool. To also fetch the underlying balances of the basepool, see [`get_underlying_balances`](#get_underlying_balances).
 
     Returns: balances (`uint256[MAX_COINS]`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | pool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -801,6 +836,9 @@ The factory has a similar API to that of the main Registry, which can be used to
         ```shell
         >>> MetaRegistry.get_balances("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7")
         147006104035945155794243533, 141336760960804, 94869577680718, 0, 0, 0, 0, 0
+
+        >>> MetaRegistry.get_balances("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA") 
+        6781730641038140101957300, 5934556341193690490470482, 0, 0, 0, 0, 0, 0
         ```
 
 
@@ -811,10 +849,10 @@ The factory has a similar API to that of the main Registry, which can be used to
     
     Returns: underlying coins (`address[MAX_COINS]`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | pool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -834,11 +872,11 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     === "Example"
         ```shell
-        >>> MetaRegistry.get_underlying_coins("0xed279fdd11ca84beef15af5d39bb4d4bee23f0ca")
-        [[0x5f98805A4E8be255a32880FDeC7F6728C6568bA0]
-        [0x6B175474E89094C44Da98b954EedeAC495271d0F]
-        [0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48]
-        [0xdAC17F958D2ee523a2206206994597C13D831ec7]
+        >>> MetaRegistry.get_underlying_coins("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA")
+        [[0x5f98805A4E8be255a32880FDeC7F6728C6568bA0]       # LUSD
+        [0x6B175474E89094C44Da98b954EedeAC495271d0F]        # DAI
+        [0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48]        # USDC
+        [0xdAC17F958D2ee523a2206206994597C13D831ec7]        # USDT
         [0x0000000000000000000000000000000000000000]
         [0x0000000000000000000000000000000000000000]
         [0x0000000000000000000000000000000000000000]
@@ -849,14 +887,14 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `get_n_underlying_coins`
 !!! description "`MetaRegistry.get_n_underlying_coins(_pool: address, _handler_id: uint256 = 0) -> uint256:`"
 
-    Getter for the total number of underlying coins in a pool. For non-metapools it returns the same value as **`get_n_coins`**.
+    Getter method for the total number of underlying coins in a pool. For non-metapools it returns the same value as [`get_n_coins`](#get_n_coins).
 
     Returns: number of underlying coins (`uin256`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` |  pool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -875,7 +913,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     === "Example"
         ```shell
-        >>> MetaRegistry.get_n_underlying_coins("0xed279fdd11ca84beef15af5d39bb4d4bee23f0ca")
+        >>> MetaRegistry.get_n_underlying_coins("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA")
         4
         ```
 
@@ -883,14 +921,14 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `get_underlying_decimals`
 !!! description "`MetaRegistry.get_underlying_decimals(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:`"
 
-    Getter for the decimal of each underlying coin within a pool.
+    Getter method for the decimal of each underlying coin within a pool.
 
     Returns: number of decimals (`uint256[MAX_COINS]`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` |  pool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -910,22 +948,22 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     === "Example"
         ```shell
-        >>> MetaRegistry.get_decimals("0xed279fdd11ca84beef15af5d39bb4d4bee23f0ca")
-        18, 18, 6, 6, 0, 0, 0, 0
+        >>> MetaRegistry.get_decimals("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA")
+        18, 18, 6, 6, 0, 0, 0, 0        # decimals of LUSD, DAI, USDC, USDT
         ```
 
 
 ### `get_underlying_balances`
 !!! description "`MetaRegistry.get_underlying_balances(_pool: address, _handler_id: uint256 = 0) -> uint256[MAX_COINS]:`"
 
-    Getter for a pool's balances of the underlying coins which are returned by **`get_underlying_coins`**.
+    Getter method for a pool's balances of the underlying coins which are returned by [`get_underlying_coins`](#get_underlying_coins).
 
     Returns: balances (`uint256[MAX_COINS]`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | pool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -945,8 +983,9 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     === "Example"
         ```shell
-        >>> MetaRegistry.get_balances("0xed279fdd11ca84beef15af5d39bb4d4bee23f0ca")
+        >>> MetaRegistry.get_balances("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA")
         4362795413803847111710482, 7574850164613791626778647, 7282723353910, 4888387736171, 0, 0, 0, 0
+        # balances of LUSD, DAI, USDC, USDT
         ```
 
 
@@ -957,10 +996,10 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     Returns: admin balances (`uint256[MAX_COINS]`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | pool address |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -981,23 +1020,26 @@ The factory has a similar API to that of the main Registry, which can be used to
     === "Example"
         ```shell
         >>> MetaRegistry.get_admin_balances("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7")
-        1590779934844205413773, 3866051363, 5204415383, 0, 0, 0, 0, 0
+        1590779934844205413773, 3866051363, 5204415383, 0, 0, 0, 0, 0           # admin balances of DAI, USDC, USDT
+
+        >>> MetaRegistry.get_admin_balances("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA")
+        574625025164093926144, 321761837541842998875, 0, 0, 0, 0, 0, 0          # admin balances of LUSD, 3CRV
         ```
 
 
-### `get_coin_indices`
+### `get_coin_indices` todo
 !!! description "`MetaRegistry.get_coin_indices(_pool: address, _from: address, _to: address, _handler_id: uint256 = 0) -> (int128, int128, bool):`"
 
     Getter method which converts coin addresses to indices for use with pool methods.
 
     Returns: from index (`int128`), to index (`int128`) and whether the market is underlying or not (`bool`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` |  pool address |
-    | `_from` |  `address` |  coin address to be used as `i` within the pool |
-    | `_to` |  `address` |  coin address to be used as `j` within the pool |
-    | `_handler_id` |  `uint256` | registry handler id; defaults to 0 |
+    | Input         | Type      | Description                                    |
+    | ------------- | --------- | ---------------------------------------------- |
+    | `_pool`       | `address` | Address of the pool                            |
+    | `_from`       | `address` | Coin address to be used as `i` within the pool |
+    | `_to`         | `address` | Coin address to be used as `j` within the pool |
+    | `_handler_id` | `uint256` | ID of the `RegistryHandler`; defaults to 0     |
 
     ??? quote "Source code"
 
@@ -1019,23 +1061,32 @@ The factory has a similar API to that of the main Registry, which can be used to
     === "Example"
         ```shell
         >>> MetaRegistry.metaregistry.get_coin_indices("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7", "0x6B175474E89094C44Da98b954EedeAC495271d0F", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48")
-        0, 1, false
+        0, 1, false     # DAI is coin index0, USDC is coin index1 and no underlying coins
+
+        >>> MetaRegistry.metaregistry.get_coin_indices("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA", "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0", "0xdAC17F958D2ee523a2206206994597C13D831ec7")
+
+        0, 3, false     # LUSD is coin index0, USDT is coin index3 and underlying
         ```
 
 
+---
 
-## **Handler and Registry**
+
+## **Handler and Registry Specific Informations**
+
+*The following methods are used to fetch handler and registry specific informations and function to add or update handlers:*
+
 
 ### `get_registry_handerls_from_pool`
 !!! description "`MetaRegistry.get_registry_handlers_from_pool(_pool: address) -> address[MAX_REGISTRIES]:`"
 
-    Getter for the registries that a pool has been registered in. Usually, each pool is registered in a single registry.
+    Getter for the `RegistryHandler` that a pool has been registered in. Usually, each pool is registered in a single registry.
 
-    Returns: registries (`address[MAX_REGISTRIES]`).
+    Returns: `RegistryHandler` (`address[MAX_REGISTRIES]`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | pool address |
+    | Input         | Type      | Description |
+    | ------------- | --------- | ------------------- |
+    | `_pool`       | `address` | Address of the pool |
 
     ??? quote "Source code"
 
@@ -1094,9 +1145,9 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     Returns: base registry (`address`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `registry_handler` |  `address` | registry handler |
+    | Input              | Type      | Description                |
+    | ------------------ | --------- | -------------------------- |
+    | `registry_handler` | `address` | `RegistryHandler` contract |
 
     ??? quote "Source code"
 
@@ -1114,17 +1165,17 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     === "Example"
         ```shell
-        >>> MetaRegistry.get_base_registry("0x30a4249C42be05215b6063691949710592859697")
-        '0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963'
+        >>> MetaRegistry.get_base_registry("0x46a8a9CF4Fc8e99EC3A14558ACABC1D93A27de68")
+        '0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5'
         ```
 
 
 ### `get_registry`
 !!! description "`MetaRegistry.get_registry(arg0: uint256) -> address:`"
 
-    Getter for the registry handler at index `arg0`. New handlers can be added with [**`add_registry_handler`**](./admin-controls.md#add_registry_handler).
+    Getter for the `RegistryHandler` at index `arg0`. New handlers can be added via [`add_registry_handler`](#add_registry_handler).
 
-    Returns: registry (`address`).
+    Returns: Registry (`address`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -1150,7 +1201,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     Getter for the registry length.
 
-    Returns: number of registries (`uint256`).
+    Returns: number of registries added (`uint256`).
 
     ??? quote "Source code"
 
@@ -1163,16 +1214,16 @@ The factory has a similar API to that of the main Registry, which can be used to
     === "Example"
         ```shell
         >>> MetaRegistry.registry_length(0)
-        6
+        7
         ```
 
 
 ### `address_provider`
 !!! description "`MetaRegistry.address_provider() -> address:`"
 
-    Getter for the address provider contract.
+    Getter for the `AddressProvider` contract.
 
-    Returns: address provider (`address`).
+    Returns: `AddressProvider` (`address`).
 
     ??? quote "Source code"
 
@@ -1192,12 +1243,21 @@ The factory has a similar API to that of the main Registry, which can be used to
         ```
 
 
-## **Contract Ownership**
+---
+
+
+## **Adding and Updating Registries**
+
+New registries can be added by the `owner` of the contract using the [`add_registry_handler`](#add_registry_handler) function. Existing ones can be updated using the [`update_registry_handler`](#update_registry_handler) function.
+
+!!!colab "Google Colab Notebook"
+    A Google Colab notebook showcasing how to query registries or add/update them can be found [:logos-googlecolab: here](https://colab.research.google.com/drive/1wFvIeNKpKhy58xkGSfKw0XzEPnwn9Zym?usp=sharing).
+
 
 ### `owner`
 !!! description "`MetaRegistry.owner() -> address:`"
 
-    Getter for the owner of the contract. This address can perfom [owner-guarded](./admin-controls.md) functions.
+    Getter for the owner of the contract. This address can perfom owner-guarded functions (see below).
 
     Returns: owner (`address`).
 
@@ -1216,4 +1276,79 @@ The factory has a similar API to that of the main Registry, which can be used to
         ```shell
         >>> MetaRegistry.owner()
         '0xEdf2C58E16Cc606Da1977e79E1e69e79C54fe242'
+        ```
+
+
+### `add_registry_handler`
+!!! description "`MetaRegistry.add_registry_handler(_registry_handler: address):`"
+ 
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the contract.
+
+    Function to add a registry handler to the `MetaRegistry`.
+
+    | Input               | Type      | Description                      |
+    | ------------------- | --------- | -------------------------------- |
+    | `_registry_handler` | `address` | `RegistryHandler` address to add |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @external
+        def add_registry_handler(_registry_handler: address):
+            """
+            @notice Adds a registry from the address provider entry
+            @param _registry_handler Address of the handler contract
+            """
+            assert msg.sender == self.owner  # dev: only owner
+
+            self._update_single_registry(self.registry_length, _registry_handler)
+
+        @internal
+        def _update_single_registry(_index: uint256, _registry_handler: address):
+            assert _index <= self.registry_length
+
+            if _index == self.registry_length:
+                self.registry_length += 1
+
+            self.get_registry[_index] = _registry_handler
+        ```
+
+
+### `update_registry_handler`
+!!! description "`MetaRegistry.update_registry_handler(_index: uint256, _registry_handler: address):`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the contract.
+
+    Function to update the `RegistryHandler` for a already existing one.
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `_index` |  `uint256` | index of registry according to `get_registry` |
+    | `registry_handler` |  `address` | address of the new handler contract |
+
+    ??? quote "Source code"
+
+        ```vyper
+        @external
+        def update_registry_handler(_index: uint256, _registry_handler: address):
+            """
+            @notice Updates the contract used to handle a registry
+            @param _index The index of the registry in get_registry
+            @param _registry_handler Address of the new handler contract
+            """
+            assert msg.sender == self.owner  # dev: only owner
+            assert _index < self.registry_length
+
+            self._update_single_registry(_index, _registry_handler)
+
+        @internal
+        def _update_single_registry(_index: uint256, _registry_handler: address):
+            assert _index <= self.registry_length
+
+            if _index == self.registry_length:
+                self.registry_length += 1
+
+            self.get_registry[_index] = _registry_handler
         ```

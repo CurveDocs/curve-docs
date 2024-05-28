@@ -2,20 +2,35 @@ The AggregatorStablePrice contract is designed to **aggregate the prices of crvU
 
 
 !!!deploy "Contract Source & Deployment"
-    **AggregatorStablePrice** contract is deployed to the Ethereum mainnet at: [0x18672b1b0c623a30089A280Ed9256379fb0E4E62](https://etherscan.io/address/0x18672b1b0c623a30089A280Ed9256379fb0E4E62#code).
-    Source code available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/price_oracles/AggregateStablePrice2.vy). 
+    Source code is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/price_oracles/AggregateStablePrice2.vy). 
+    Relevant contract deployments can be found [here](../references/deployed-contracts.md#curve-stablecoin).
 
 
-## **Exponential Moving Average of TVL**
+---
 
-The internal `_ema_tvl()` calculates the Exponential Moving Average (EMA) of the Total Value Locked (TVL) for multiple Curve StableSwap pools. There is a maximum of 20 pairs to consider, and each price pair (pool) must have at least 100k TVL.
+# **Calculations**
 
-New pairs can be added via [`add_price_pair`](#add_price_pair).
+The `PriceAggregator` contract calculates the weighted average price of crvUSD across multiple liquidity pools, considering only those pools with sufficient liquidity (`MIN_LIQUIDITY` = 100,000 * 10**18). This calculation is based on the exponential moving-average (EMA) of the Total Value Locked (TVL) for each pool, determining the liquidity considered in the price aggregation.
 
-??? quote "Source code"
+## **EMA TVL Calculation**
 
-    ```vyper
-    last_tvl: public(uint256[MAX_PAIRS])
+The price calculation begins with determining the EMA of the TVL from different Curve Stableswap liquidity pools using the `_ema_tvl` function. This internal function computes the EMA TVLs based on the following formula, which adjusts for the time since the last update to smooth out short-term volatility in the TVL data, providing a more stable and representative average value over the specified time window (`TVL_MA_TIME` set to 50,000 seconds):
+
+$$\alpha = 
+    \begin{cases} 
+    1 & \text{if last_timestamp} = \text{current_timestamp}, \\
+    e^{-\frac{(\text{current_timestamp} - \text{last_timestamp}) * 10^{18}}{\text{TVL_MA_TIME}}} & \text{otherwise}.
+    \end{cases}
+$$
+
+$$\text{ema_tvl}_{i} = \frac{\text{new_tvl}_i * (10^{18} - \alpha) + \text{tvl}_i * \alpha}{10^{18}}$$
+
+*The code snippet provided illustrates the implementation of the above formula in the contract.*
+
+???quote "**`_ema_tvl`**"
+
+    ```py
+    TVL_MA_TIME: public(constant(uint256)) = 50000  # s
 
     @internal
     @view
@@ -41,131 +56,158 @@ New pairs can be added via [`add_price_pair`](#add_price_pair).
         return tvls
     ```
 
-$$\text{alpha} = e^{ -\left(\frac{{(\text{block.timestamp} - \text{last_timestamp}) \cdot 10^{18}}}{{\text{TVL_MA_TIME}}}\right)}$$
-
-$$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \text{alpha})}{10^{18}}$$
 
 
-#### `ema_tvl`
-!!! description "`PriceAggregator.ema_tvl() -> DynArray[uint256, MAX_PAIRS]`"
+## **Aggregated Price Calculation**
 
-    Getter for the exponential moving average of the TVL in `price_pairs`.
+The `_price` function then uses these EMA TVLs to calculate the aggregated prices by considering the liquidity of each pool. A pool's liquidity must meet or exceed `100,000 * 10**18` to be included in the calculation. The function adjusts the price from the pool's `price_oracle` based on the position of crvUSD in the liquidity pair, ensuring consistent price representation across pools.
 
-    Returns: array of ema tvls (`DynArray[uint256, MAX_PAIRS]`).
+???quote "**`_price`**"
 
-    ??? quote "Source code"
+    ```py
+    @internal
+    @view
+    def _price(tvls: DynArray[uint256, MAX_PAIRS]) -> uint256:
+        n: uint256 = self.n_price_pairs
+        prices: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
+        D: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
+        Dsum: uint256 = 0
+        DPsum: uint256 = 0
+        for i in range(MAX_PAIRS):
+            if i == n:
+                break
+            price_pair: PricePair = self.price_pairs[i]
+            pool_supply: uint256 = tvls[i]
+            if pool_supply >= MIN_LIQUIDITY:
+                p: uint256 = price_pair.pool.price_oracle()
+                if price_pair.is_inverse:
+                    p = 10**36 / p
+                prices[i] = p
+                D[i] = pool_supply
+                Dsum += pool_supply
+                DPsum += pool_supply * p
+        if Dsum == 0:
+            return 10**18  # Placeholder for no active pools
+        p_avg: uint256 = DPsum / Dsum
+        e: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
+        e_min: uint256 = max_value(uint256)
+        for i in range(MAX_PAIRS):
+            if i == n:
+                break
+            p: uint256 = prices[i]
+            e[i] = (max(p, p_avg) - min(p, p_avg))**2 / (SIGMA**2 / 10**18)
+            e_min = min(e[i], e_min)
+        wp_sum: uint256 = 0
+        w_sum: uint256 = 0
+        for i in range(MAX_PAIRS):
+            if i == n:
+                break
+            w: uint256 = D[i] * self.exp(-convert(e[i] - e_min, int256)) / 10**18
+            w_sum += w
+            wp_sum += w * prices[i]
+        return wp_sum / w_sum
+    ```
 
-        ```vyper
-        TVL_MA_TIME: public(constant(uint256)) = 50000  # s
 
-        last_tvl: public(uint256[MAX_PAIRS])
+*The process involves:*
 
-        @external
-        @view
-        def ema_tvl() -> DynArray[uint256, MAX_PAIRS]:
-            return self._ema_tvl()
+- Storing the price of `crvUSD` in a `prices[i]` array for each qualifying pool.
+- Recording each qualifying pool's supply (TVL) in `D[i]`, adding this supply to `Dsum`, and accumulating the product of the `crvUSD` price and pool supply in `DPsum`.
+- Iterating over all price pairs to perform the above steps.
 
-        @internal
-        @view
-        def _ema_tvl() -> DynArray[uint256, MAX_PAIRS]:
-            tvls: DynArray[uint256, MAX_PAIRS] = []
-            last_timestamp: uint256 = self.last_timestamp
-            alpha: uint256 = 10**18
-            if last_timestamp < block.timestamp:
-                alpha = self.exp(- convert((block.timestamp - last_timestamp) * 10**18 / TVL_MA_TIME, int256))
-            n_price_pairs: uint256 = self.n_price_pairs
+*Finally, the contract:*
 
-            for i in range(MAX_PAIRS):
-                if i == n_price_pairs:
-                    break
-                tvl: uint256 = self.last_tvl[i]
-                if alpha != 10**18:
-                    # alpha = 1.0 when dt = 0
-                    # alpha = 0.0 when dt = inf
-                    new_tvl: uint256 = self.price_pairs[i].pool.totalSupply()  # We don't do virtual price here to save on gas
-                    tvl = (new_tvl * (10**18 - alpha) + tvl * alpha) / 10**18
-                tvls.append(tvl)
+- Calculates an average price:
 
-            return tvls
-        ```
+    $$\text{average price} = \frac{\text{DPSum}}{\text{DSum}}$$
 
-    === "Example"
+- Computes a variance measure `e` for each pool's price relative to the average, adjusting by `SIGMA` to normalize:
 
-        ```shell
-        >>> PriceAggregator.ema_tvl()
-        59321570154325618129121893, 42600769394518064802429328, 8535901977675585449164114, 4775645754381802242168047
-        ```
+    $$\text{e}_i = \frac{(\max(p, p_{\text{avg}}) - \min(p, p_{\text{avg}}))^2}{\frac{\text{SIGMA}^2}{10^{18}}}$$
 
+    $$\text{e}_{min} = \min(\text{e}_i, \text{max_value(uint256)})$$
 
-#### `price`
+- Applies an exponential decay based on these variance measures to weigh each pool's contribution to the final average price, reducing the influence of prices far from the minimum variance.
+  
+    $$w = \frac{\text{D}_i * e^\left({\text{e}_i - e_{min}}\right)}{10^{18}}$$
+
+- Sums up all `w` to store it in `w_sum` and calculates the product of `w * prices[i]`, which is stored in `wp_sum`.
+- Finally calculates the weighted average price as `wp_sum / w_sum`, with weights adjusted for both liquidity and price variance.
+
+    $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
+
+---
+
+# **Prices**
+
+### `price`
 !!! description "`PriceAggregator.price() -> uint256:`"
 
     Function to calculate the weighted price of crvUSD.
     
     Returns: price (`uint256`). 
 
+
     ??? quote "Source code"
 
-        ```vyper
-        interface Stableswap:
-            def price_oracle() -> uint256: view
-            def coins(i: uint256) -> address: view
-            def get_virtual_price() -> uint256: view
-            def totalSupply() -> uint256: view
+        === "PriceAggregator.vy"
 
-        MAX_PAIRS: constant(uint256) = 20
-        MIN_LIQUIDITY: constant(uint256) = 100_000 * 10**18  # Only take into account pools with enough liquidity
+            ```vyper
+            MAX_PAIRS: constant(uint256) = 20
+            MIN_LIQUIDITY: constant(uint256) = 100_000 * 10**18  # Only take into account pools with enough liquidity
 
-        price_pairs: public(PricePair[MAX_PAIRS])
-        n_price_pairs: uint256
+            STABLECOIN: immutable(address)
+            SIGMA: immutable(uint256)
+            price_pairs: public(PricePair[MAX_PAIRS])
+            n_price_pairs: uint256
 
-        @external
-        @view
-        def price() -> uint256:
-            return self._price(self._ema_tvl())
+            @external
+            @view
+            def price() -> uint256:
+                return self._price(self._ema_tvl())
 
-        @internal
-        @view
-        def _price(tvls: DynArray[uint256, MAX_PAIRS]) -> uint256:
-            n: uint256 = self.n_price_pairs
-            prices: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
-            D: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
-            Dsum: uint256 = 0
-            DPsum: uint256 = 0
-            for i in range(MAX_PAIRS):
-                if i == n:
-                    break
-                price_pair: PricePair = self.price_pairs[i]
-                pool_supply: uint256 = tvls[i]
-                if pool_supply >= MIN_LIQUIDITY:
-                    p: uint256 = price_pair.pool.price_oracle()
-                    if price_pair.is_inverse:
-                        p = 10**36 / p
-                    prices[i] = p
-                    D[i] = pool_supply
-                    Dsum += pool_supply
-                    DPsum += pool_supply * p
-            if Dsum == 0:
-                return 10**18  # Placeholder for no active pools
-            p_avg: uint256 = DPsum / Dsum
-            e: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
-            e_min: uint256 = max_value(uint256)
-            for i in range(MAX_PAIRS):
-                if i == n:
-                    break
-                p: uint256 = prices[i]
-                e[i] = (max(p, p_avg) - min(p, p_avg))**2 / (SIGMA**2 / 10**18)
-                e_min = min(e[i], e_min)
-            wp_sum: uint256 = 0
-            w_sum: uint256 = 0
-            for i in range(MAX_PAIRS):
-                if i == n:
-                    break
-                w: uint256 = D[i] * self.exp(-convert(e[i] - e_min, int256)) / 10**18
-                w_sum += w
-                wp_sum += w * prices[i]
-            return wp_sum / w_sum
-        ```
+            @internal
+            @view
+            def _price(tvls: DynArray[uint256, MAX_PAIRS]) -> uint256:
+                n: uint256 = self.n_price_pairs
+                prices: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
+                D: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
+                Dsum: uint256 = 0
+                DPsum: uint256 = 0
+                for i in range(MAX_PAIRS):
+                    if i == n:
+                        break
+                    price_pair: PricePair = self.price_pairs[i]
+                    pool_supply: uint256 = tvls[i]
+                    if pool_supply >= MIN_LIQUIDITY:
+                        p: uint256 = price_pair.pool.price_oracle()
+                        if price_pair.is_inverse:
+                            p = 10**36 / p
+                        prices[i] = p
+                        D[i] = pool_supply
+                        Dsum += pool_supply
+                        DPsum += pool_supply * p
+                if Dsum == 0:
+                    return 10**18  # Placeholder for no active pools
+                p_avg: uint256 = DPsum / Dsum
+                e: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
+                e_min: uint256 = max_value(uint256)
+                for i in range(MAX_PAIRS):
+                    if i == n:
+                        break
+                    p: uint256 = prices[i]
+                    e[i] = (max(p, p_avg) - min(p, p_avg))**2 / (SIGMA**2 / 10**18)
+                    e_min = min(e[i], e_min)
+                wp_sum: uint256 = 0
+                w_sum: uint256 = 0
+                for i in range(MAX_PAIRS):
+                    if i == n:
+                        break
+                    w: uint256 = D[i] * self.exp(-convert(e[i] - e_min, int256)) / 10**18
+                    w_sum += w
+                    wp_sum += w * prices[i]
+                return wp_sum / w_sum
+            ```
 
     === "Example"
 
@@ -175,7 +217,217 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
         ```
 
 
-## **Adding and Removing Price Pairs**
+### `last_price`
+!!! description "`PriceAggregator.last_price() -> uint256: view`"
+
+    Getter for the last price. This variable was set to $10^{18}$ (1.00) when initializing the contract and is now updated every time [`price_w`](#price_w) is called.
+    
+    Returns: last price of crvUSD (`uint256`).
+
+    ??? quote "Source code"
+
+        === "PriceAggregator.vy"
+
+            ```vyper
+            last_price: public(uint256)
+
+            @external
+            def __init__(stablecoin: address, sigma: uint256, admin: address):
+                STABLECOIN = stablecoin
+                SIGMA = sigma  # The change is so rare that we can change the whole thing altogether
+                self.admin = admin
+                self.last_price = 10**18
+                self.last_timestamp = block.timestamp
+
+            @external
+            def price_w() -> uint256:
+                if self.last_timestamp == block.timestamp:
+                    return self.last_price
+                else:
+                    ema_tvl: DynArray[uint256, MAX_PAIRS] = self._ema_tvl()
+                    self.last_timestamp = block.timestamp
+                    for i in range(MAX_PAIRS):
+                        if i == len(ema_tvl):
+                            break
+                        self.last_tvl[i] = ema_tvl[i]
+                    p: uint256 = self._price(ema_tvl)
+                    self.last_price = p
+                    return p
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> PriceAggregator.last_price()
+        999385898759491513
+        ```
+
+
+### `ema_tvl`
+!!! description "`PriceAggregator.ema_tvl() -> DynArray[uint256, MAX_PAIRS]`"
+
+    Getter for the exponential moving-average of the TVL in `price_pairs`.
+
+    Returns: array of ema tvls (`DynArray[uint256, MAX_PAIRS]`).
+
+    ??? quote "Source code"
+
+        === "PriceAggregator.vy"
+
+            ```vyper
+            TVL_MA_TIME: public(constant(uint256)) = 50000  # s
+
+            last_tvl: public(uint256[MAX_PAIRS])
+
+            @external
+            @view
+            def ema_tvl() -> DynArray[uint256, MAX_PAIRS]:
+                return self._ema_tvl()
+
+            @internal
+            @view
+            def _ema_tvl() -> DynArray[uint256, MAX_PAIRS]:
+                tvls: DynArray[uint256, MAX_PAIRS] = []
+                last_timestamp: uint256 = self.last_timestamp
+                alpha: uint256 = 10**18
+                if last_timestamp < block.timestamp:
+                    alpha = self.exp(- convert((block.timestamp - last_timestamp) * 10**18 / TVL_MA_TIME, int256))
+                n_price_pairs: uint256 = self.n_price_pairs
+
+                for i in range(MAX_PAIRS):
+                    if i == n_price_pairs:
+                        break
+                    tvl: uint256 = self.last_tvl[i]
+                    if alpha != 10**18:
+                        # alpha = 1.0 when dt = 0
+                        # alpha = 0.0 when dt = inf
+                        new_tvl: uint256 = self.price_pairs[i].pool.totalSupply()  # We don't do virtual price here to save on gas
+                        tvl = (new_tvl * (10**18 - alpha) + tvl * alpha) / 10**18
+                    tvls.append(tvl)
+
+                return tvls
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> PriceAggregator.ema_tvl()
+        59321570154325618129121893, 42600769394518064802429328, 8535901977675585449164114, 4775645754381802242168047
+        ```
+
+
+### `last_tvl`
+!!! description "`PriceAggregator.last_tvl(arg0: uint256) -> uint256:`"
+
+    Getter for the total value locked of price pair (pool).
+    
+    Returns: total value locked (`uint256`).
+
+    | Input      | Type   | Description |
+    | ----------- | -------| ----|
+    | `arg0` |  `uint256` | Index of the price pair |
+
+    ??? quote "Source code"
+
+        === "PriceAggregator.vy"
+
+            ```vyper
+            last_tvl: public(uint256[MAX_PAIRS])
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> PriceAggregator.last_tvl()
+        1689448067
+        ```
+
+
+### `price_w`
+!!! description "`PriceAggregator.price_w() -> uint256:`"
+
+    Function to calculate and write the price. If called successfully, updates `last_tvl`, `last_price` and `last_timestamp`.
+    
+    Returns: price (`uint256`).
+
+    ??? quote "Source code"
+
+        === "PriceAggregator.vy"
+
+            ```vyper
+            @external
+            def price_w() -> uint256:
+                if self.last_timestamp == block.timestamp:
+                    return self.last_price
+                else:
+                    ema_tvl: DynArray[uint256, MAX_PAIRS] = self._ema_tvl()
+                    self.last_timestamp = block.timestamp
+                    for i in range(MAX_PAIRS):
+                        if i == len(ema_tvl):
+                            break
+                        self.last_tvl[i] = ema_tvl[i]
+                    p: uint256 = self._price(ema_tvl)
+                    self.last_price = p
+                    return p
+
+            @internal
+            @view
+            def _price(tvls: DynArray[uint256, MAX_PAIRS]) -> uint256:
+                n: uint256 = self.n_price_pairs
+                prices: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
+                D: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
+                Dsum: uint256 = 0
+                DPsum: uint256 = 0
+                for i in range(MAX_PAIRS):
+                    if i == n:
+                        break
+                    price_pair: PricePair = self.price_pairs[i]
+                    pool_supply: uint256 = tvls[i]
+                    if pool_supply >= MIN_LIQUIDITY:
+                        p: uint256 = price_pair.pool.price_oracle()
+                        if price_pair.is_inverse:
+                            p = 10**36 / p
+                        prices[i] = p
+                        D[i] = pool_supply
+                        Dsum += pool_supply
+                        DPsum += pool_supply * p
+                if Dsum == 0:
+                    return 10**18  # Placeholder for no active pools
+                p_avg: uint256 = DPsum / Dsum
+                e: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
+                e_min: uint256 = max_value(uint256)
+                for i in range(MAX_PAIRS):
+                    if i == n:
+                        break
+                    p: uint256 = prices[i]
+                    e[i] = (max(p, p_avg) - min(p, p_avg))**2 / (SIGMA**2 / 10**18)
+                    e_min = min(e[i], e_min)
+                wp_sum: uint256 = 0
+                w_sum: uint256 = 0
+                for i in range(MAX_PAIRS):
+                    if i == n:
+                        break
+                    w: uint256 = D[i] * self.exp(-convert(e[i] - e_min, int256)) / 10**18
+                    w_sum += w
+                    wp_sum += w * prices[i]
+                return wp_sum / w_sum
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> PriceAggregator.price_w()
+        999385898759491513
+        ```
+
+
+
+---
+
+
+# **Adding and Removing Price Pairs**
+
+All price pairs added to the contract are considered when calculating the `price` of crvUSD. Adding or removing price pairs can only be done by the `admin` of the contract, which is the Curve DAO.
 
 
 ### `price_pairs`
@@ -191,9 +443,11 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```vyper
-        price_pairs: public(PricePair[MAX_PAIRS])
-        ```
+        === "PriceAggregator.vy"
+
+            ```vyper
+            price_pairs: public(PricePair[MAX_PAIRS])
+            ```
 
     === "Example"
 
@@ -219,28 +473,30 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```vyper
-        event AddPricePair:
-            n: uint256
-            pool: Stableswap
-            is_inverse: bool
+        === "PriceAggregator.vy"
 
-        @external
-        def add_price_pair(_pool: Stableswap):
-            assert msg.sender == self.admin
-            price_pair: PricePair = empty(PricePair)
-            price_pair.pool = _pool
-            coins: address[2] = [_pool.coins(0), _pool.coins(1)]
-            if coins[0] == STABLECOIN:
-                price_pair.is_inverse = True
-            else:
-                assert coins[1] == STABLECOIN
-            n: uint256 = self.n_price_pairs
-            self.price_pairs[n] = price_pair  # Should revert if too many pairs
-            self.last_tvl[n] = _pool.totalSupply()
-            self.n_price_pairs = n + 1
-            log AddPricePair(n, _pool, price_pair.is_inverse)
-        ```
+            ```vyper
+            event AddPricePair:
+                n: uint256
+                pool: Stableswap
+                is_inverse: bool
+
+            @external
+            def add_price_pair(_pool: Stableswap):
+                assert msg.sender == self.admin
+                price_pair: PricePair = empty(PricePair)
+                price_pair.pool = _pool
+                coins: address[2] = [_pool.coins(0), _pool.coins(1)]
+                if coins[0] == STABLECOIN:
+                    price_pair.is_inverse = True
+                else:
+                    assert coins[1] == STABLECOIN
+                n: uint256 = self.n_price_pairs
+                self.price_pairs[n] = price_pair  # Should revert if too many pairs
+                self.last_tvl[n] = _pool.totalSupply()
+                self.n_price_pairs = n + 1
+                log AddPricePair(n, _pool, price_pair.is_inverse)
+            ```
 
     === "Example"
 
@@ -265,26 +521,28 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```vyper
-        event RemovePricePair:
-            n: uint256
+        === "PriceAggregator.vy"
 
-        event MovePricePair:
-            n_from: uint256
-            n_to: uint256
+            ```vyper
+            event RemovePricePair:
+                n: uint256
 
-        @external
-        def remove_price_pair(n: uint256):
-            assert msg.sender == self.admin
-            n_max: uint256 = self.n_price_pairs - 1
-            assert n <= n_max
+            event MovePricePair:
+                n_from: uint256
+                n_to: uint256
 
-            if n < n_max:
-                self.price_pairs[n] = self.price_pairs[n_max]
-                log MovePricePair(n_max, n)
-            self.n_price_pairs = n_max
-            log RemovePricePair(n)
-        ```
+            @external
+            def remove_price_pair(n: uint256):
+                assert msg.sender == self.admin
+                n_max: uint256 = self.n_price_pairs - 1
+                assert n <= n_max
+
+                if n < n_max:
+                    self.price_pairs[n] = self.price_pairs[n_max]
+                    log MovePricePair(n_max, n)
+                self.n_price_pairs = n_max
+                log RemovePricePair(n)
+            ```
 
     === "Example"
 
@@ -293,7 +551,12 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
         ```
 
 
-## **Admin Ownership**
+---
+
+
+# **Admin Ownership**
+
+
 ### `admin`
 !!! description "`PriceAggregator.admin() -> address: view`"
 
@@ -303,15 +566,17 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```vyper
-        admin: public(address)
+        === "PriceAggregator.vy"
 
-        @external
-        def __init__(stablecoin: address, sigma: uint256, admin: address):
-            STABLECOIN = stablecoin
-            SIGMA = sigma  # The change is so rare that we can change the whole thing altogether
-            self.admin = admin
-        ```
+            ```vyper
+            admin: public(address)
+
+            @external
+            def __init__(stablecoin: address, sigma: uint256, admin: address):
+                STABLECOIN = stablecoin
+                SIGMA = sigma  # The change is so rare that we can change the whole thing altogether
+                self.admin = admin
+            ```
 
     === "Example"
 
@@ -337,20 +602,22 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```vyper
-        event SetAdmin:
-            admin: address
+        === "PriceAggregator.vy"
 
-        admin: public(address)
+            ```vyper
+            event SetAdmin:
+                admin: address
 
-        @external
-        def set_admin(_admin: address):
-            # We are not doing commit / apply because the owner will be a voting DAO anyway
-            # which has vote delays
-            assert msg.sender == self.admin
-            self.admin = _admin
-            log SetAdmin(_admin)
-        ```
+            admin: public(address)
+
+            @external
+            def set_admin(_admin: address):
+                # We are not doing commit / apply because the owner will be a voting DAO anyway
+                # which has vote delays
+                assert msg.sender == self.admin
+                self.admin = _admin
+                log SetAdmin(_admin)
+            ```
 
     === "Example"
 
@@ -359,26 +626,30 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
         ```
 
 
+---
 
-## **Contract Info Methods**
+
+# **Contract Info Methods**
 
 ### `SIGMA`
 !!! description "`PriceAggregator.SIGMA() -> uint256: view`"
 
-    Getter for the sigma value.
+    Getter for the sigma value. SIGMA is a predefined constant that influences the adjustment of price deviations, affecting how variations in individual stablecoin prices contribute to the overall average stablecoin price.
     
     Returns: sigma (`uint256`).
 
     ??? quote "Source code"
 
-        ```vyper
-        SIGMA: immutable(uint256)
+        === "PriceAggregator.vy"
 
-        @external
-        @view
-        def sigma() -> uint256:
-            return SIGMA
-        ```
+            ```vyper
+            SIGMA: immutable(uint256)
+
+            @external
+            @view
+            def sigma() -> uint256:
+                return SIGMA
+            ```
 
     === "Example"
 
@@ -397,14 +668,16 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```vyper
-        STABLECOIN: immutable(address)
+        === "PriceAggregator.vy"
 
-        @external
-        @view
-        def stablecoin() -> address:
-            return STABLECOIN
-        ```
+            ```vyper
+            STABLECOIN: immutable(address)
+
+            @external
+            @view
+            def stablecoin() -> address:
+                return STABLECOIN
+            ```
 
     === "Example"
 
@@ -423,39 +696,16 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```vyper
-        last_timestamp: public(uint256)
-        ```
+        === "PriceAggregator.vy"
+
+            ```vyper
+            last_timestamp: public(uint256)
+            ```
 
     === "Example"
 
         ```shell
         >>> PriceAggregator.last_timestamp()
-        1689448067
-        ```
-
-
-### `last_tvl`
-!!! description "`PriceAggregator.last_tvl(arg0: uint256) -> uint256:`"
-
-    Getter for the total value locked of price pair (pool).
-    
-    Returns: total value locked (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `uint256` | Index of the price pair |
-
-    ??? quote "Source code"
-
-        ```vyper
-        last_tvl: public(uint256[MAX_PAIRS])
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PriceAggregator.last_tvl()
         1689448067
         ```
 
@@ -469,133 +719,15 @@ $$\text{tvl} = \frac{(\text{new_tvl} * (10^{18} - \text{alpha}) + \text{tvl} * \
 
     ??? quote "Source code"
 
-        ```vyper
-        TVL_MA_TIME: public(constant(uint256)) = 50000  # s
-        ```
+        === "PriceAggregator.vy"
+
+            ```vyper
+            TVL_MA_TIME: public(constant(uint256)) = 50000  # s
+            ```
 
     === "Example"
 
         ```shell
         >>> PriceAggregator.TVL_MA_TIME()
         50000
-        ```
-
-
-### `last_price`
-!!! description "`PriceAggregator.last_price() -> uint256: view`"
-
-    Getter for the last price. This variable was set to $10^{18}$ (1.00) when initializing the contract and is now updated every time calling [`price_w`](#price_w).
-    
-    Returns: last price (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        last_price: public(uint256)
-
-        @external
-        def __init__(stablecoin: address, sigma: uint256, admin: address):
-            STABLECOIN = stablecoin
-            SIGMA = sigma  # The change is so rare that we can change the whole thing altogether
-            self.admin = admin
-            self.last_price = 10**18
-            self.last_timestamp = block.timestamp
-
-        @external
-        def price_w() -> uint256:
-            if self.last_timestamp == block.timestamp:
-                return self.last_price
-            else:
-                ema_tvl: DynArray[uint256, MAX_PAIRS] = self._ema_tvl()
-                self.last_timestamp = block.timestamp
-                for i in range(MAX_PAIRS):
-                    if i == len(ema_tvl):
-                        break
-                    self.last_tvl[i] = ema_tvl[i]
-                p: uint256 = self._price(ema_tvl)
-                self.last_price = p
-                return p
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PriceAggregator.last_price()
-        999385898759491513
-        ```
-
-
-### `price_w`
-!!! description "`PriceAggregator.price_w() -> uint256:`"
-
-    Function to calculate and write the price. If called successfully, updates `last_tvl`, `last_price` and `last_timestamp`.
-    
-    Returns: price (`uint256`).
-
-    ??? quote "Source code"
-
-        ```vyper
-        @external
-        def price_w() -> uint256:
-            if self.last_timestamp == block.timestamp:
-                return self.last_price
-            else:
-                ema_tvl: DynArray[uint256, MAX_PAIRS] = self._ema_tvl()
-                self.last_timestamp = block.timestamp
-                for i in range(MAX_PAIRS):
-                    if i == len(ema_tvl):
-                        break
-                    self.last_tvl[i] = ema_tvl[i]
-                p: uint256 = self._price(ema_tvl)
-                self.last_price = p
-                return p
-
-        @internal
-        @view
-        def _price(tvls: DynArray[uint256, MAX_PAIRS]) -> uint256:
-            n: uint256 = self.n_price_pairs
-            prices: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
-            D: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
-            Dsum: uint256 = 0
-            DPsum: uint256 = 0
-            for i in range(MAX_PAIRS):
-                if i == n:
-                    break
-                price_pair: PricePair = self.price_pairs[i]
-                pool_supply: uint256 = tvls[i]
-                if pool_supply >= MIN_LIQUIDITY:
-                    p: uint256 = price_pair.pool.price_oracle()
-                    if price_pair.is_inverse:
-                        p = 10**36 / p
-                    prices[i] = p
-                    D[i] = pool_supply
-                    Dsum += pool_supply
-                    DPsum += pool_supply * p
-            if Dsum == 0:
-                return 10**18  # Placeholder for no active pools
-            p_avg: uint256 = DPsum / Dsum
-            e: uint256[MAX_PAIRS] = empty(uint256[MAX_PAIRS])
-            e_min: uint256 = max_value(uint256)
-            for i in range(MAX_PAIRS):
-                if i == n:
-                    break
-                p: uint256 = prices[i]
-                e[i] = (max(p, p_avg) - min(p, p_avg))**2 / (SIGMA**2 / 10**18)
-                e_min = min(e[i], e_min)
-            wp_sum: uint256 = 0
-            w_sum: uint256 = 0
-            for i in range(MAX_PAIRS):
-                if i == n:
-                    break
-                w: uint256 = D[i] * self.exp(-convert(e[i] - e_min, int256)) / 10**18
-                w_sum += w
-                wp_sum += w * prices[i]
-            return wp_sum / w_sum
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> PriceAggregator.price_w()
-        999385898759491513
         ```

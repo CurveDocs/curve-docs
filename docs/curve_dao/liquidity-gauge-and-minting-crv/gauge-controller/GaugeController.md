@@ -1,13 +1,14 @@
+<h1>GaugeController.vy</h1>
+
 The **GaugeController** is responsible for managing and coordinating the distribution of rewards to liquidity providers in various liquidity pools. It **determines the allocation of CRV rewards based on the liquidity provided** by users. By analyzing the gauges, which are parameters that define how rewards are distributed across different pools, the GaugeController ensures a fair and balanced distribution of incentives, encouraging liquidity provision and participation in Curve's ecosystem.
 
 [Function to add a gauge to the GaugeController](./admin-controls.md#add_gauge)
 
 !!!deploy "Contract Source & Deployment"
-    **GaugeController** contract is deployed to the Ethereum mainnet at: [0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB](https://etherscan.io/address/0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB#code).  
-    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/GaugeController.vy).
+    The **GaugeController** contract is deployed on the Ethereum mainnet at: [0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB](https://etherscan.io/address/0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB#code).  
+    Source code is available on [GitHub](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/GaugeController.vy).
 
-
-The `GaugeController` does not have a public getter to check whether a gauge has been added or not. Alternatively, one can try to query the `gauge_types` of the gauge.
+The `GaugeController` does not have a public getter to check whether a gauge has been added. Alternatively, one can try to query the `gauge_types` of the gauge.
 
 ```shell
 >>> GaugeController.gauge_types("0xbfcf63294ad7105dea65aa58f8ae5be2d9d0952a")

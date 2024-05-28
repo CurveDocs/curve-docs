@@ -2,9 +2,12 @@
 
 The vault is an **implementation of a [ERC-4626](https://ethereum.org/developers/docs/standards/tokens/erc-4626)** vault which **deposits the underlying asset into the controller** and **tracks the progress of the fees earned**. 
 
+!!!github "GitHub"
+    The source code of the `Vault.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/lending/Vault.vy).
+
 ERC-4626 vaults are **yield-bearing**, meaning the shares received when depositing assets increase in value due to the interest earned from lending out assets. The share balance does not increase, only its value. **Shares are transferable**.
 
-It is a standard (non-blueprint) contract which also creates AMM and Controller using `initialize()`.
+It is a proxy contract (EIP1167-compliant) duplicating the logic of the factory's vault implementation contract. Upon initialization it also creates the market's AMM and Controller using blueprint contracts.
 
 ??? quote "`initialize()`"
 
@@ -103,16 +106,20 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 
 ## **Depositing Assets and Minting Shares**
 
-*Two methods for acquiring shares in an ERC4626 Vault:*
+!!!colab "Google Colab Notebook"
+    A google colab notebook on how to use the `deposit` and `mint` functions can be found here: [https://colab.research.google.com/drive/1Qj9nOk5TYXp6j6go3VIh6--r5VILnoo9?usp=sharing](https://colab.research.google.com/drive/1Qj9nOk5TYXp6j6go3VIh6--r5VILnoo9?usp=sharing).
+
+*Two methods for obtaining shares directly from an ERC4626 Vault:*
 
 - **Deposit**: A lender deposits a specified amount of the underlying (borrowable) token into the vault. In exchange, the user receives an equivalent number of shares.
 - **Mint**: A lender specifies the desired number of shares to receive and deposits the required amount of the underlying (borrowable) asset to mint these shares. This method allows a user to obtain a precise number of shares.
 
+Because shares are transferable, a user can also acquire shares by means other than depositing assets and minting shares.
 
 ### `deposit`
 !!! description "`Vault.deposit(assets: uint256, receiver: address = msg.sender) -> uint256:`"
 
-    Function to deposit a specified number of assets of the underlying token (`borrowed_token`) into the vault and mint the corresponding amount of shares to `receiver`.
+    Function to deposit a specified number of assets of the underlying token (`borrowed_token`) into the vault and mint the corresponding amount of shares to `receiver`. There is no cap when depositing assets into the vault - as many token as desired can be deposited into it.
 
     Returns: minted shares (`uint256`).
 
@@ -120,7 +127,7 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 
     | Input       | Type      | Description                                                           |
     |-------------|-----------|-----------------------------------------------------------------------|
-    | `assets`    | `uint256` | Number of assets to deposit.                                          |
+    | `assets`    | `uint256` | Amount of assets to deposit.                                          |
     | `receiver`  | `address` | Receiver of the minted shares. Defaults to `msg.sender`.              |
 
     ??? quote "Source code"
@@ -369,9 +376,9 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 ### `mint`
 !!! description "`Vault.mint(shares: uint256, receiver: address = msg.sender) -> uint256:`"
 
-    Function to mint a specific amount of shares (`shares`) to `receiver` by depositing the necessary number of assets into the vault.
+    Function to mint a specific amount of shares (`shares`) to `receiver` by depositing the necessary number of assets into the vault. 
 
-    Returns: number of assets deposited (`uint256`).
+    Returns: amount of assets deposited (`uint256`).
 
     Emits: `Deposit`, `Transfer` and `SetRate`
 
@@ -534,7 +541,7 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
         In  [1]:  Vault.balanceOf(trader)
         Out [1]:  997552662404145514069
 
-        In  [2]:  Vault.deposit(100000000000000000000)
+        In  [2]:  Vault.mint(100000000000000000000)
 
         In  [3]:  Vault.balanceOf(trader)
         Out [3]:  1097552662404145514069
@@ -691,10 +698,20 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 
 ## **Withdrawing Assets and Redeeming Shares**
 
-*Two ways to retrieve the underlying asset from an ERC4626 Vault:*
+!!!colab "Google Colab Notebook"
+    A Google Colab notebook on how to use the `withdraw` and `mint` functions, as well as how shares are priced, can be found here: [https://colab.research.google.com/drive/1Ta69fsIc7zmtjFlQ94a8MDYYLeo4GJJI?usp=sharing](https://colab.research.google.com/drive/1Ta69fsIc7zmtjFlQ94a8MDYYLeo4GJJI?usp=sharing).
+
+
+*Two ways to retrieve the underlying asset directly from the according ERC4626 Vault:*
 
 - **Withdraw**: A user withdraws a predefined number of the underlying asset and burns the corresponding amount of shares. This action reduces the user's shares in exchange for the underlying asset.
 - **Redeem**: A user redeems (and burns) a predefined number of shares to receive the corresponding amount of the underlying assets. This process decreases the shares owned by the user while increasing their holding of the underlying asset.
+
+
+!!!warning "Withdrawing and Redeeming Assets When Utilization is High"
+    Withdrawing assets (or redeeming shares) from the vault is generally always possible. However, there might be cases where a lending market has very high utilization, which could hinder the withdrawal of assets. For example, if a market has a utilization rate of 100%, meaning every supplied asset in the vault is borrowed, then a user cannot redeem their vault shares for assets. They would need to wait for the utilization rate to go down.
+
+    To prevent this scenario, the borrow rate is based on the utilization rate of the lending market. If the utilization reaches 100%, this would cause the interest rate to skyrocket to the maximum value, incentivizing either the borrowers to repay debt or lenders to supply more assets to the vault.
 
 
 ### `withdraw`
@@ -996,7 +1013,7 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 
     | Input     | Type      | Description                                        |
     |-----------|-----------|----------------------------------------------------|
-    | `assets`  | `uint256` | Amount of shares to redeem.                        |
+    | `shares`  | `uint256` | Amount of shares to redeem.                        |
     | `receiver`| `address` | Receiver of the shares. Defaults to `msg.sender`. |
     | `owner`   | `address` | Address of whose shares to burn. Defaults to `msg.sender`. |
 
@@ -1338,90 +1355,44 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 
 ## **Interest Rates**
 
-Interest rates for lending markets are dependent on the utilization of the markets. The higher the utilization, the higher the interest rates.
+Interest rates within lending markets are intricately linked to the market's utilization rate. Essentially, as market utilization increases, so too do the interest rates. This dynamic relationship underscores the market's demand-supply equilibrium, directly influencing the cost of borrowing and the returns on lending.
 
-`borrow_apr` and `lend_apr` are public getter methods for the annualized rates with a base of 1e18, calculated based on the `rate` within the corresponding AMM. In turn, this `rate` is calculated within the MonetaryPolicy contract of the specific lending market and is constantly updated through the internal `_save_rate` method in the Controller whenever a new loan is created (`_create_loan`), collateral is added (`add_collateral`) or removed (`remove_collateral`), more debt is taken on (`borrow_more` and `borrow_more_extended`), repaid (`repay`, `repay_extended`), or a loan is liquidated (`_liquidate`).
+The vault contract has two public methods, named `borrow_apr` and `lend_apr`. These methods are designed to compute and return the **annualized rates for borrowing and lending**, respectively, standardized to a base of 1e18.
+
+- **Borrow Rate:** This is the interest rate charged on the amount borrowed by a user.
+- **Lend Rate:** Conversely, this rate represents the yield a user earns by lending their assets to the vault.
 
 
-??? quote "Source Code"
+```py
+In  [1]: Vault.borrow_apr()
+Out [1]: 352629439534800000                 # -> 0.352 -> 35.2%
 
-    === "Controller.vy"
+In  [2]: Vault.lend_apr()
+Out [2]: 248442280773618417                 # -> 0.248 -> 24.8%
+```
 
-        ```vyper
-        @internal
-        def _save_rate():
-            """
-            @notice Save current rate
-            """
-            rate: uint256 = min(self.monetary_policy.rate_write(), MAX_RATE)
-            AMM.set_rate(rate)
-        ```
 
-    === "MonetaryPolicy.vy"
+More on rates and when they are updated here: [SemiLog Monetary Policy](./semilog-mp.md)
 
-        ```vyper
-        log_min_rate: public(int256)
-        log_max_rate: public(int256)
+---
 
-        @internal
-        @external
-        def rate_write(_for: address = msg.sender) -> uint256:
-            return self.calculate_rate(_for, 0, 0)
-
-        @internal
-        @view
-        def calculate_rate(_for: address, d_reserves: int256, d_debt: int256) -> uint256:
-            total_debt: int256 = convert(Controller(_for).total_debt(), int256)
-            total_reserves: int256 = convert(BORROWED_TOKEN.balanceOf(_for), int256) + total_debt + d_reserves
-            total_debt += d_debt
-            assert total_debt >= 0, "Negative debt"
-            assert total_reserves >= total_debt, "Reserves too small"
-            if total_debt == 0:
-                return self.min_rate
-            else:
-                log_min_rate: int256 = self.log_min_rate
-                log_max_rate: int256 = self.log_max_rate
-                return self.exp(total_debt * (log_max_rate - log_min_rate) / total_reserves + log_min_rate)
-        ```
-
-    === "AMM.vy"
-
-        ```vyper
-        @external
-        @nonreentrant('lock')
-        def set_rate(rate: uint256) -> uint256:
-            """
-            @notice Set interest rate. That affects the dependence of AMM base price over time
-            @param rate New rate in units of int(fraction * 1e18) per second
-            @return rate_mul multiplier (e.g. 1.0 + integral(rate, dt))
-            """
-            assert msg.sender == self.admin
-            rate_mul: uint256 = self._rate_mul()
-            self.rate_mul = rate_mul
-            self.rate_time = block.timestamp
-            self.rate = rate
-            log SetRate(rate, rate_mul, block.timestamp)
-            return rate_mul
-        ```
-
-*Formula to calculate the Borrow APR:*
-
-$$\text{rate} = \text{rate}_{\text{min}} * \left(\frac{\text{rate}_{\text{max}}}{\text{rate}_{\text{min}}}\right)^{\text{utilization}}$$
+*The formula to calculate the annual percentage rate (APR) for borrowing is outlined as follows:*
 
 $$\text{borrowAPR} = \frac{\text{rate} * 365 * 86400}{10^{18}}$$
 
 
-*Formula to calculate the Lend APR:*
+*The APR for lending is directly linked to the APR for borrowing, defined by:*
 
 $$\text{lendAPR} = \text{borrowAPR} * \text{utilization}$$
 
 
-*The utilization is the ratio between the borrowed assets (debt) and total assets provided:[^1]*
+*Additionally, the utilization ratio is determined by the following:*[^1]
 
 $$\text{utilization} = \frac{\text{debt}}{\text{totalAssets}}$$
 
-[^1]: Borrowed assets essentially represent the debt, which is fetched from the `total_debt` method from the Controller. The total assets provided value is taken from the `totalAssets` method within the Vault.
+[^1]: This ratio represents the proportion of borrowed assets (debt) to the total assets supplied in the vault. It's a key metric that reflects the level of asset utilization within the vault. Borrowed assets, or debt, are obtained through the `total_debt` method from the Controller, while the `totalAssets` method within the Vault provides the value of total assets supplied.
 
+---
 
 ### `borrow_apr`
 !!! description "`Vault.borrow_apr() -> uint256`"

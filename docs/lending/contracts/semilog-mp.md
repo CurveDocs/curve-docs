@@ -1,35 +1,13 @@
 <h1>Semi-Log Monetary Policy</h1>
 
-The **borrow rate** is based on the **utilization of the lending markets**. If utilization is 0 (no assets borrowed), `rate` will be equal to `min_rate`. If utilization is 1 (all available assets borrowed), the `rate` will be equal to `max_rate`.
+The **borrow rate** in the semi-logarithmic MonetaryPolicy contract is **intricately linked to the utilization ratio of the lending markets**. This ratio plays a crucial role in determining the cost of borrowing, with its value ranging between 0 and 1. At a **utilization rate of 0**, indicating no borrowed assets, the borrowing **rate aligns with the minimum threshold, `min_rate`**. Conversely, a **utilization rate of 1**, where all available assets are borrowed, escalates the **borrowing rate to its maximum limit, `max_rate`**.
 
 
-*The borrow rate is calculated via the following function:*
+!!!github "GitHub"
+    The source code of the `SemilogMonetaryPolicy.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/mpolicies/SemilogMonetaryPolicy.vy).
 
-??? quote "Source code"
 
-    ```vyper
-    @view
-    @external
-    def rate(_for: address = msg.sender) -> uint256:
-        return self.calculate_rate(_for, 0, 0)
-
-    @internal
-    @view
-    def calculate_rate(_for: address, d_reserves: int256, d_debt: int256) -> uint256:
-        total_debt: int256 = convert(Controller(_for).total_debt(), int256)
-        total_reserves: int256 = convert(BORROWED_TOKEN.balanceOf(_for), int256) + total_debt + d_reserves
-        total_debt += d_debt
-        assert total_debt >= 0, "Negative debt"
-        assert total_reserves >= total_debt, "Reserves too small"
-        if total_debt == 0:
-            return self.min_rate
-        else:
-            log_min_rate: int256 = self.log_min_rate
-            log_max_rate: int256 = self.log_max_rate
-            return self.exp(total_debt * (log_max_rate - log_min_rate) / total_reserves + log_min_rate)
-    ```
-
-*The function is as simple as:*
+*The function for the rate is as simple as:*
 
 $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{max}}}{\text{rate}_{\text{min}}}\right)^{\text{utilization}}$$
 
@@ -41,34 +19,302 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
 
 ---
 
-The embedded graph has limited features. However, by clicking the *"edit graph on Desmos"* button at the bottom right (or [here](https://www.desmos.com/calculator/cnhulwzyfx)), one is redirected to the main Desmos site. There, setting other values for `min_rate` and `max_rate` is possible.
+*A graph to display the interplay between `min_rate`, `max_rate`, and market utilization:[^1]*
 
-*The example below uses a minimum rate of 0.5% and a maximum rate of 50%.*
+[^1]: For simplicity, the minimum input value is set at 1% and the maximum at 100%. In reality, these values can range from 0.01% to 1000%. 
 
-<div style="text-align: center;">
-    <iframe src="https://www.desmos.com/calculator/cnhulwzyfx?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
+<style>
+    #graphContainer {
+        height: 400px;
+        width: 600px;
+    }
+    .rate-input {
+        padding: 8px 12px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        font-style: italic;
+    }
+    .rate-input:focus {
+        border-color: #4A90E2;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 8px rgba(74,144,226,0.6);
+        outline: none;
+    }
+    .input-group {
+    margin-bottom: 0px; /* Adjust the space between each input group */
+}
+</style>
+
+<div class="input-group">
+    <label for="min_rate">Minimum Rate (%):</label>
+    <input class="rate-input" type="number" id="min_rate" value="5" min="1" max="100">
 </div>
+<div class="input-group">
+    <label for="max_rate">Maximum Rate (%):</label>
+    <input class="rate-input" type="number" id="max_rate" value="50" min="2" max="100">
+</div>
+
+<canvas id="graphContainer"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    let hoverX = null;
+    let hoverY = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const minRateInput = document.getElementById('min_rate');
+        const maxRateInput = document.getElementById('max_rate');
+
+        // Function to ensure min_rate is always less than max_rate
+        function validateRates() {
+            const minRate = parseFloat(minRateInput.value);
+            const maxRate = parseFloat(maxRateInput.value);
+
+            if (minRate >= maxRate) {
+                // If min_rate >= max_rate, adjust min_rate to be slightly less than max_rate
+                minRateInput.value = maxRate - 1;
+                if (minRateInput.value < 0.01) { // Ensure min_rate does not go below the minimum allowed value
+                    minRateInput.value = 0.01;
+                    maxRateInput.value = Math.max(minRateInput.value + 1, parseFloat(maxRateInput.value));
+                }
+            }
+        }
+
+        // Listen for changes in the rate inputs and validate
+        minRateInput.addEventListener('change', validateRates);
+        maxRateInput.addEventListener('change', validateRates);
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        updateGraph(); // Initial graph display
+
+        // Attach event listeners to input fields to update the graph automatically on value change
+        document.getElementById('min_rate').addEventListener('input', updateGraph);
+        document.getElementById('max_rate').addEventListener('input', updateGraph);
+    });
+
+    let myChart = null;
+
+    function updateGraph() {
+        const minRateInput = document.getElementById('min_rate').value;
+        const maxRateInput = document.getElementById('max_rate').value;
+
+        // Convert input values to percentages (divided by 100)
+        const rateMin = parseFloat(minRateInput) / 100;
+        const rateMax = parseFloat(maxRateInput) / 100;
+
+        let dataPoints = [];
+        for (let u = 0; u <= 1; u += 0.01) {
+            let rate = rateMin * Math.pow((rateMax / rateMin), u);
+            dataPoints.push({x: u * 100, y: rate * 100});
+        }
+
+        const ctx = document.getElementById('graphContainer').getContext('2d');
+
+        const data = {
+            datasets: [{
+                label: 'Rate vs. Utilization',
+                data: dataPoints,
+                borderColor: 'rgba(75, 192, 192, 0.9)',
+                fill: false,
+                pointRadius: 0,
+                showLine: true,
+                borderWidth: 2,
+            }]
+        };
+
+        const config = {
+            type: 'scatter',
+            data: data,
+            options: {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Utilization (%)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Rate (%)'
+                        },
+                        beginAtZero: true
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    intersect: false,
+                    axis: 'x'
+                },
+                plugins: {
+                    tooltip: {
+                        enabled: true, // Enable tooltips
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)', // Tooltip background color
+                        bodyColor: '#ffffff', // Tooltip text color
+                        bodyFont: {
+                            size: 12, // Smaller font size
+                        },
+                        borderColor: 'rgba(0, 0, 0, 0.7)', // Border color
+                        borderWidth: 1, // Border width
+                        usePointStyle: false, // Disable point style for the items to remove the dot
+                        padding: 4, // Reduce padding for a smaller tooltip
+                        displayColors: false, // Do not display the color box next to the text
+                        callbacks: {
+                            // Remove the label
+                            title: function() {
+                                return '';
+                            },
+                            // Customizing the body of the tooltip to display on two lines
+                            label: function(context) {
+                                const rate = context.parsed.y.toFixed(2);
+                                const utilization = context.parsed.x.toFixed(2);
+                                return [`Rate: ${rate}%`, `Utilization: ${utilization}%`];
+                            },
+                            labelPointStyle: function() {
+                                return {    
+                                    pointStyle: 'circle',
+                                    rotation: 0,
+                                    boxWidth: 0, // Set boxWidth to 0 to remove the square
+                                };
+                            },
+                        }
+                    },
+                },
+                onHover: (event, chartElements, chart) => {
+                    if (!chartElements.length) {
+                        hoverX = null;
+                        hoverY = null;
+                    } else {
+                        const element = chartElements[0];
+                        hoverX = element.element.x;
+                        hoverY = element.element.y;
+                    }
+                    drawHoverLines(hoverX, hoverY, myChart);
+                },
+            }
+        };
+
+        if (myChart) {
+            myChart.destroy();
+        }
+        myChart = new Chart(ctx, config);
+    }
+
+    function drawHoverLines(mouseX, mouseY, chart) {
+        if (!chart) return;
+
+        const ctx = chart.ctx;
+        const chartArea = chart.chartArea;
+
+        // Check if the mouse is within the chart area horizontally
+        if (mouseX < chartArea.left || mouseX > chartArea.right) {
+            return; // Exit if the mouse is outside the horizontal bounds of the chart area
+        }
+
+        // Check if the mouse is within the chart area vertically
+        if (mouseY < chartArea.top || mouseY > chartArea.bottom) {
+            return; // Exit if the mouse is outside the vertical bounds of the chart area
+        }
+
+        // Redraw the chart to ensure it's updated without clearing existing content
+        chart.update('none'); // 'none' prevents animation for a smoother update
+
+        // Draw horizontal dotted line
+        ctx.save();
+        ctx.beginPath();
+        ctx.setLineDash([5, 5]);
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.moveTo(chartArea.left, mouseY);
+        ctx.lineTo(chartArea.right, mouseY);
+        ctx.stroke();
+        ctx.restore();
+    }
+</script>
 
 
 ---
 
 
-## **Rates**    
+## **Rates**
 
-**The borrow rate is based on 1e18 and calculated per second.**
+**The rate values are based on 1e18 and NOT annualized.** 
 
-
-$$\text{rate} = \text{rate}_{\text{min}} * \left(\frac{\text{rate}_{\text{max}}}{\text{rate}_{\text{min}}}\right)^{\text{utilization}}$$
-
-*Formula to calculate the Borrow APR:*
+*To calculate the Borrow APR:*
 
 $$\text{borrowAPR} = \frac{\text{rate} * 365 * 86400}{10^{18}}$$
 
-Additionally, there is a `future_rate` method that allows calculation based on changes in reserves and debt.
+Rate calculations occur within the MonetaryPolicy contract. The rate is regularly updated by the internal `_save_rate` method in the Controller. This happens whenever a new loan is initiated (`_create_loan`), collateral is either added (`add_collateral`) or removed (`remove_collateral`), additional debt is incurred (`borrow_more` and `borrow_more_extended`), debt is repaid (`repay`, `repay_extended`), or a loan undergoes liquidation (`_liquidate`).
+
+
+??? quote "Source Code"
+
+    === "Controller.vy"
+
+        ```vyper
+        @internal
+        def _save_rate():
+            """
+            @notice Save current rate
+            """
+            rate: uint256 = min(self.monetary_policy.rate_write(), MAX_RATE)
+            AMM.set_rate(rate)
+        ```
+
+    === "MonetaryPolicy.vy"
+
+        ```vyper
+        log_min_rate: public(int256)
+        log_max_rate: public(int256)
+
+        @internal
+        @external
+        def rate_write(_for: address = msg.sender) -> uint256:
+            return self.calculate_rate(_for, 0, 0)
+
+        @internal
+        @view
+        def calculate_rate(_for: address, d_reserves: int256, d_debt: int256) -> uint256:
+            total_debt: int256 = convert(Controller(_for).total_debt(), int256)
+            total_reserves: int256 = convert(BORROWED_TOKEN.balanceOf(_for), int256) + total_debt + d_reserves
+            total_debt += d_debt
+            assert total_debt >= 0, "Negative debt"
+            assert total_reserves >= total_debt, "Reserves too small"
+            if total_debt == 0:
+                return self.min_rate
+            else:
+                log_min_rate: int256 = self.log_min_rate
+                log_max_rate: int256 = self.log_max_rate
+                return self.exp(total_debt * (log_max_rate - log_min_rate) / total_reserves + log_min_rate)
+        ```
+
+    === "AMM.vy"
+
+        ```vyper
+        @external
+        @nonreentrant('lock')
+        def set_rate(rate: uint256) -> uint256:
+            """
+            @notice Set interest rate. That affects the dependence of AMM base price over time
+            @param rate New rate in units of int(fraction * 1e18) per second
+            @return rate_mul multiplier (e.g. 1.0 + integral(rate, dt))
+            """
+            assert msg.sender == self.admin
+            rate_mul: uint256 = self._rate_mul()
+            self.rate_mul = rate_mul
+            self.rate_time = block.timestamp
+            self.rate = rate
+            log SetRate(rate, rate_mul, block.timestamp)
+            return rate_mul
+        ```
 
 
 ### `rate`
-!!! description "`SemiLogMonetaryPolicy.rate(_for: address = msg.sender) -> uint256:`"
+!!! description "`SemiLogMonetaryPolicy.rate(_for: address = msg.sender) -> uint256`"
 
     Getter for the borrow rate for a specific lending market.
 
@@ -112,7 +358,7 @@ Additionally, there is a `future_rate` method that allows calculation based on c
 
 
 ### `future_rate`
-!!! description "`SemiLogMonetaryPolicy.future_rate(_for: address, d_reserves: int256, d_debt: int256) -> uint256:`"
+!!! description "`SemiLogMonetaryPolicy.future_rate(_for: address, d_reserves: int256, d_debt: int256) -> uint256`"
 
     Function to calculate the future borrow rate for a lending market given a specific change of reserves and debt.
 
@@ -160,7 +406,7 @@ Additionally, there is a `future_rate` method that allows calculation based on c
 ### `rate_write`
 !!! description "`SemiLogMonetaryPolicy.rate_write(_for: address = msg.sender) -> uint256:`"
 
-    Function to manually update the rate of a lending market.
+    Function to update the rate of a lending market.
 
     Returns: rate (`uint256`)
 
@@ -216,7 +462,7 @@ Rates within the MonetaryPolicy contract can only be **changed by the `admin` of
 
 
 ### `set_rates`
-!!! description "`SemiLogMonetaryPolicy.set_rates(min_rate: uint256, max_rate: uint256):`"
+!!! description "`SemiLogMonetaryPolicy.set_rates(min_rate: uint256, max_rate: uint256)`"
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of `FACTORY`.

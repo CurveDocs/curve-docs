@@ -88,15 +88,16 @@ theme:
     # - media: "(prefers-color-scheme: dark)"
     - scheme: default
       accent: deep purple
-      toggle:
-        icon: material/weather-sunny
-        name: Switch to light mode
+    #  toggle:
+    #    icon: material/weather-sunny
+    #    name: Switch to light mode
     # - media: "(prefers-color-scheme: light)"
-    - scheme: slate
-      accent: amber
-      toggle:
-        icon: material/weather-night
-        name: Switch to dark mode
+    # - scheme: slate
+    #   accent: amber
+    #   toggle:
+    #     icon: material/weather-night
+    #     name: Switch to dark mode
+
 
 extra_css:
   - assets/stylesheets/extra.css
@@ -114,11 +115,9 @@ repo_url: https://github.com/CurveDocs/curve-docs
 
 
 nav:
-  - Protocol Overview: protocol-overview.md
+  - Documentation Overview: documentation-overview.md
   - Curve DAO:
-    - Curve DAO Token:
-      - CRV Token: curve_dao/curve-dao-token/crv-token.md
-      - Admin Controls: curve_dao/curve-dao-token/admin-controls.md
+    - Curve DAO Token: curve_dao/crv-token.md
     - Vote-Escrowed CRV:
       - VotingEscrow:
         - Contract Methods: curve_dao/voting-escrow/voting-escrow.md
@@ -131,18 +130,13 @@ nav:
       - Fee Distribution: curve_dao/fee-collection-distribution/distributor.md
       - Sidechains: curve_dao/fee-collection-distribution/sidechains.md
     - Liquidity Gauges and Minting CRV:
-      - Overview: curve_dao/liquidity-gauge-and-minting-crv/overview.md
+      - Overview & Implementation: curve_dao/liquidity-gauge-and-minting-crv/overview.md
       - GaugeController:
-        - Gauge Controller: curve_dao/liquidity-gauge-and-minting-crv/gauge-controller/GaugeController.md
+        - GaugeController.vy: curve_dao/liquidity-gauge-and-minting-crv/gauge-controller/GaugeController.md
         - Admin Controls: curve_dao/liquidity-gauge-and-minting-crv/gauge-controller/admin-controls.md
       - Gauges:
         - Overview: curve_dao/liquidity-gauge-and-minting-crv/gauges/overview.md
-        - LiquidityGaugeV1: curve_dao/liquidity-gauge-and-minting-crv/gauges/LiquidityGaugeV1.md
-        - LiquidityGaugeV2: curve_dao/liquidity-gauge-and-minting-crv/gauges/LiquidityGaugeV2.md
-        - LiquidityGaugeV3: curve_dao/liquidity-gauge-and-minting-crv/gauges/LiquidityGaugeV3.md
-        - LiquidityGaugeV4: curve_dao/liquidity-gauge-and-minting-crv/gauges/LiquidityGaugeV4.md
-        - LiquidityGaugeV5: curve_dao/liquidity-gauge-and-minting-crv/gauges/LiquidityGaugeV5.md  
-        - Permissionless Rewards: curve_dao/liquidity-gauge-and-minting-crv/gauges/PermissionlessRewards.md
+        - LiquidityGaugeV6: curve_dao/liquidity-gauge-and-minting-crv/gauges/LiquidityGaugeV6.md
       - Gauges for EVM Sidechains: 
         - Overview: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/overview.md
         - RootChainGauge: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGauge.md
@@ -156,20 +150,30 @@ nav:
       - PoolProxy: curve_dao/ownership-proxy/PoolProxy.md
       - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
       - RootChainGaugeProxy: curve_dao/ownership-proxy/RootChainGaugeFactoryProxy.md
+
     - Governance and Voting:  
       - Overview: curve_dao/governance/overview.md
-      - Crosschain Governance: curve_dao/xgov/xgov.md
-    - Exchange Router: curve_dao/router/router.md
+      - Crosschain Governance:
+        - Overview: curve_dao/governance/curve-xgov/overview.md
+        - Broadcaster.vy: curve_dao/governance/curve-xgov/broadcaster.md
+        - Relayer.vy: curve_dao/governance/curve-xgov/relayer.md
+        - Agent.vy: curve_dao/governance/curve-xgov/agents.md
+        - Vault.vy: curve_dao/governance/curve-xgov/vault.md
 
 
   - Registry:
     - Overview: registry/overview.md
     - MetaRegistry API: registry/MetaRegistryAPI.md
-    - Admin Controls: registry/admin-controls.md
+
 
   - Curve API:
     - curve-api: curve-api/curve-api.md
     - curve-prices: curve-api/curve-prices.md
+
+
+  - Routers:
+    - CurveRouterNG: router/CurveRouterNG.md
+    - CurveRegistryExchange: router/CurveRegistryExchange.md
 
 
   - Curve Stablecoin:
@@ -185,6 +189,10 @@ nav:
       - PegKeeperV1: crvUSD/pegkeepers/PegKeeperV1.md
       - PegKeeperV2: crvUSD/pegkeepers/PegKeeperV2.md
       - PegKeeperRegulator: crvUSD/pegkeepers/PegKeeperRegulator.md
+    - Leverage:
+      - Overview: crvUSD/leverage/overview.md
+      - Curve Pools: crvUSD/leverage/LeverageZap.md
+      - 1inch Router: crvUSD/leverage/LeverageZap1inch.md
     - Factory: 
       - Overview: crvUSD/factory/overview.md
       - Deployer API: crvUSD/factory/deployer-api.md
@@ -196,11 +204,19 @@ nav:
     - Vault: lending/contracts/vault.md
     - LLAMMA and Controller: lending/contracts/controller-llamma.md
     - OneWay Lending Factory: lending/contracts/oneway-factory.md
-    - SemiLog Monetary Policy: lending/contracts/semilog-mp.md
+    - Monetary Policies:
+      - Overview: lending/contracts/mp-overview.md
+      - SemiLog Monetary Policy: lending/contracts/semilog-mp.md
+      - Secondary Monetary Policy: lending/contracts/secondary-mp.md
+    - Oracles Contracts:
+      - Overview & Examples: lending/contracts/oracle-overview.md
+      - CryptoFromPool.vy: lending/contracts/cryptofrompool.md
+      - CryptoFromPoolsRate.vy: lending/contracts/cryptofrompoolsrate.md
 
 
   - StableSwap Exchange:
     - Overview: stableswap-exchange/overview.md
+
     - Stableswap:    
       - Pools:
         - Overview: stableswap-exchange/stableswap/pools/overview.md
@@ -227,7 +243,7 @@ nav:
         - Overview: stableswap-exchange/stableswap-ng/pools/overview.md
         - Plain Pools: stableswap-exchange/stableswap-ng/pools/plainpool.md
         - Metapools: stableswap-exchange/stableswap-ng/pools/metapool.md
-        - LP Token Methods: stableswap-exchange/stableswap-ng/pools/lp_token.md
+        - Oracles: stableswap-exchange/stableswap-ng/pools/oracles.md
         - Admin Controls: stableswap-exchange/stableswap-ng/pools/admin_controls.md
       - Utility Contracts: 
           - Math: stableswap-exchange/stableswap-ng/utility_contracts/math.md
@@ -259,6 +275,7 @@ nav:
       - Overview: cryptoswap-exchange/tricrypto-ng/overview.md
       - Pools:
         - TriCrypto Pool: cryptoswap-exchange/tricrypto-ng/pools/tricrypto.md
+        - Oracles: cryptoswap-exchange/tricrypto-ng/pools/oracles.md
         - Admin Controls: cryptoswap-exchange/tricrypto-ng/pools/admin-controls.md
       - Utility Contracts: 
         - Math: cryptoswap-exchange/tricrypto-ng/utility-contracts/math.md
@@ -287,6 +304,12 @@ nav:
       - Deployer API: factory/tricryptoNG/deployer-api.md
     
 
+  - Integration & Guides: 
+    - Overview: integration/overview.md
+    - Address Provider: integration/address-provider.md
+    - Meta Registry: integration/metaregistry.md
+
+
   - References:
     - Audits: references/audits.md
     - Whitepapers: 
@@ -296,4 +319,5 @@ nav:
       - CryptoSwap: references/whitepapers/cryptoswap.md
       - Curve Stablecoin: references/whitepapers/curve-stablecoin.md
     - Useful Resources: references/useful.md
+    - Notebooks: references/notebooks.md
     - Deployment Addresses: references/deployed-contracts.md

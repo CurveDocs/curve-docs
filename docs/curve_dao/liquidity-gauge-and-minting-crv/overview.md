@@ -4,11 +4,44 @@
 
 Curve incentivizes liquidity providers with the CRV, the protocol governance token. Allocation, distribution and minting of CRV are managed via several related DAO contracts:
 
-- **`GaugeController:`** Central controller that maintains a list of gauges, weights and type weights, and coordinates the rate of CRV production for each liquidity gauge
+<div class="grid cards" markdown>
 
-- **`LiquidityGauge:`** Measures liquidity provided by users over time, in order to distribute CRV and other rewards
+-   **GaugeController**
 
-- **`Minter:`** CRV minting contract, generates new CRV according to liquidity gauges
+    ---
+
+    Central controller that maintains a list of gauges, weights and type weights, and coordinates the rate of CRV production for each liquidity gauge
+
+    [:octicons-arrow-right-24: `GaugeController.vy`](./gauge-controller/GaugeController.md)
+
+-   **Minter**
+
+    ---
+
+    CRV minting contract, generates new CRV according to liquidity gauges
+
+    [:octicons-arrow-right-24: `Minter.vy`](./minter.md)
+
+-   **Liquidity Gauges**
+
+    ---
+
+    Measures liquidity provided by users over time, in order to distribute CRV and other rewards
+
+    [:octicons-arrow-right-24: `LiquidityGauge.vy`](./gauges/overview.md)
+
+-   **Liquidity Gauges on EVM Sidechains**
+
+    ---
+
+    Liquidity gauges on EVM sidechains use a system of Root and Child Liquidity Gauges which allows gauge on sidechains to receive CRV emissions.
+
+    [:octicons-arrow-right-24: `Getting started`](./evm-sidechains/overview.md)
+
+</div>
+
+
+---
 
 
 # **Implementation Details**

@@ -1,6 +1,6 @@
 LLAMMA is the **market-making contract that rebalances the collateral**. This contract is **responsible for liquidating and de-liquidating collateral** through arbitragurs. Every market has its own AMM (created from a blueprint) **containing the collateral and borrowable asset**.
 
-When creating a new loan, the Controller evenly **deposits the provided collateral by the user across a specified number of bands within the AMM**, each representing a range of collateral prices, and mints stablecoins if it is a minting market or transfers the borrowed assets if it is a lending maket to the user. Withdrawing collateral is also done through the Controller.
+When creating a new loan, the `Controller` evenly **deposits the provided collateral by the user across a specified number of bands within the AMM**, each representing a range of collateral prices, and mints stablecoins if it is a minting market or transfers the borrowed assets if it is a lending maket to the user. Withdrawing collateral is also done through the `Controller`.
 
 !!!info "In-Depth Overview"
     For a more technical and detailed overview of the entire system, see here: https://github.com/chanhosuh/curvefi-math/blob/master/LLAMMA.ipynb
@@ -79,7 +79,7 @@ To obtain the acutal the starting price value in dollars, one must multiply the 
 
 ## **Depositing and Withdrawing Collateral**
 
-Depositing and withdrawing collateral can only be done by the `admin` of the AMM, the Controller.
+Depositing and withdrawing collateral can only be done by the `admin` of the AMM, the `Controller`.
 
 - Collateral is put into bands by calling `deposit_range()` whenever someone creates a new loan or adds collateral to the existing position. 
 - Collateral is removed by calling `withdraw()`.
@@ -89,7 +89,7 @@ Depositing and withdrawing collateral can only be done by the `admin` of the AMM
 !!! description "`AMM.deposit_range(user: address, amount: uint256, n1: int256, n2: int256):`"
 
     !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract, which is the Controller.
+        This function is only callable by the `admin` of the contract, which is the `Controller`.
 
     Function to deposit collateral `amount` for `user` in the range of bands between `n1` and `n2`. 
 
@@ -197,9 +197,11 @@ Depositing and withdrawing collateral can only be done by the `admin` of the AMM
 !!! description "`AMM.withdraw(user: address, frac: uint256) -> uint256[2]:`"
 
     !!!guard "Guarded Method" 
-        This function is only callable by the `admin` of the contract, which is the Controller.
+        This function is only callable by the `admin` of the contract, which is the `Controller`.
 
     Function to withdraw liquidity for `user`.
+
+    Returns: total_x (stablecoins) and total_y (collateral) (`uint256[2]`).
 
     Emits: `Withdraw`
 
