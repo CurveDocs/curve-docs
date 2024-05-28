@@ -10,7 +10,7 @@ The `PegKeeperV2` retains the overarching stabilization approach of its predeces
 
 A significant evolution from `PegKeeperV1` is the integration with the `PegKeeperRegulator` contract. This new contract plays a crucial role in granting allowance to the PegKeepers to deposit into or withdraw from the liquidity pool. Depositing increases the debt of a PegKeeper, while withdrawing reduces it.
 
-For a detailed overview on the additional checks implemented, please see: [Providing](./regulator.md#providing)[^1] and [Withdrawing](./regulator.md#withdrawing).
+For a detailed overview on the additional checks implemented, please see: [Providing](./PegKeeperRegulator.md#providing)[^1] and [Withdrawing](./PegKeeperRegulator.md#withdrawing).
 
 [^1]: In this context, "providing" is the terminology adopted by the new PegKeeper to describe the act of depositing crvUSD into a liquidity pool, marking a shift from the conventional term "depositing."
 
@@ -89,9 +89,14 @@ For a detailed overview on the additional checks implemented, please see: [Provi
 
                 amount: uint256 = min(_amount, PEGGED.balanceOf(self))
 
-                amounts: uint256[2] = empty(uint256[2])
-                amounts[I] = amount
-                POOL.add_liquidity(amounts, 0)
+                if IS_NG:
+                    amounts: DynArray[uint256, 2] = [0, 0]
+                    amounts[I] = amount
+                    CurvePoolNG(POOL.address).add_liquidity(amounts, 0)
+                else:
+                    amounts: uint256[2] = empty(uint256[2])
+                    amounts[I] = amount
+                    CurvePoolOld(POOL.address).add_liquidity(amounts, 0)
 
                 self.last_change = block.timestamp
                 self.debt += amount
@@ -221,9 +226,14 @@ For a detailed overview on the additional checks implemented, please see: [Provi
                 debt: uint256 = self.debt
                 amount: uint256 = min(_amount, debt)
 
-                amounts: uint256[2] = empty(uint256[2])
-                amounts[I] = amount
-                POOL.remove_liquidity_imbalance(amounts, max_value(uint256))
+                if IS_NG:
+                    amounts: DynArray[uint256, 2] = [0, 0]
+                    amounts[I] = amount
+                    CurvePoolNG(POOL.address).remove_liquidity_imbalance(amounts, max_value(uint256))
+                else:
+                    amounts: uint256[2] = empty(uint256[2])
+                    amounts[I] = amount
+                    CurvePoolOld(POOL.address).remove_liquidity_imbalance(amounts, max_value(uint256))
 
                 self.last_change = block.timestamp
                 self.debt = debt - amount
@@ -282,8 +292,7 @@ For a detailed overview on the additional checks implemented, please see: [Provi
 
     === "Example"
         ```shell
-        >>> PegKeeper.
-        todo
+        >>> soon
         ```
 
 
@@ -304,8 +313,7 @@ For a detailed overview on the additional checks implemented, please see: [Provi
 
     === "Example"
         ```shell
-        >>> PegKeeperV2.last_change()
-        todo
+        >>> 
         ```
 
 
@@ -314,8 +322,7 @@ For a detailed overview on the additional checks implemented, please see: [Provi
 
 ## **Calculating and Withdrawing Profits**
 
-There is no universal receiver for the generated profits. For each PegKeeper contract, their own profit receiver address can be set. `set_new_receiver` is a guarded function and therefore can only be called by the admin.
-
+The universal fee receiver of the PegKeepers profits is specified within the [`PegKeeperRegulator`](./PegKeeperRegulator.md#fee-receiver). 
 
 ### `calc_profit`
 !!! description "`PegKeeperV2.calc_profit() -> uint256:`"
@@ -363,7 +370,7 @@ There is no universal receiver for the generated profits. For each PegKeeper con
     === "Example"
         ```shell
         >>> PegKeeperV2.calc_profit()
-        todo
+        0
         ```
 
 
@@ -444,14 +451,14 @@ There is no universal receiver for the generated profits. For each PegKeeper con
     === "Example"
         ```shell
         >>> PegKeeperV2.estimate_caller_profit()
-        todo
+        0
         ```
 
 
 ### `caller_share`
 !!! description "`PegKeeper.caller_share() -> uint256: view`"
 
-    Getter for the caller share which is the share of the profit generated when calling the `update()` function. The share is intended to incentivize the call of the function.
+    Getter for the caller share which is the share of the profit generated when calling the `update()` function. The share is intended to incentivize the call of the function. `SHARE_PRECISION` is 10^5.
 
     Returns: caller share (`uint256`)
 
@@ -466,7 +473,7 @@ There is no universal receiver for the generated profits. For each PegKeeper con
     === "Example"
         ```shell
         >>> PegKeeper.caller_share()
-        todo
+        20000
         ```
 
 
@@ -513,91 +520,7 @@ There is no universal receiver for the generated profits. For each PegKeeper con
 
     === "Example"
         ```shell
-        >>> PegKeeperV2.set_new_caller_share()
-        todo
-        ```
-
-### `reciever`
-!!! description "`PegKeeperV2.receiver() -> address: view`"
-
-    Getter for the receiver address of the PegKeeper's profits. The receiver can only be changed by the admin via the `set_new_receiver` function.
-
-    Returns: profit receiver (`address`).
-
-    ??? quote "Source code"
-
-        === "PegKeeperV2.vy"
-
-            ```vyper
-            receiver: public(address)
-
-            @external
-            def __init__( 
-                _pool: CurvePool, _receiver: address, _caller_share: uint256,
-                _factory: address, _regulator: Regulator, _admin: address,
-            ):
-                """
-                @notice Contract constructor
-                @param _pool Contract pool address
-                @param _receiver Receiver of the profit
-                @param _caller_share Caller's share of profit
-                @param _factory Factory which should be able to take coins away
-                @param _regulator Peg Keeper Regulator
-                @param _admin Admin account
-                """
-                ...
-                assert _receiver != empty(address)
-                self.receiver = _receiver
-                ...
-            ```
-
-    === "Example"
-        ```shell
-        >>> PegKeeperV2.receiver()
-        todo
-        ```
-
-
-### `set_new_receiver`
-!!! description "`PegKeeperV2.set_new_receiver(_new_receiver: address):`"
-
-    !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the contract. 
-
-    Function to set a new receiver address for the profits.
-
-    Emits: `NewReceiver`.
-
-    | Input           | Type      | Description          |
-    |-----------------|-----------|----------------------|
-    | `_new_receiver` | `address` | New receiver address. |
-
-    ??? quote "Source code"
-
-        === "PegKeeperV2.vy"
-
-            ```vyper
-            event NewReceiver:
-                receiver: address
-
-            receiver: public(address)
-
-            @external
-            @nonpayable
-            def set_new_receiver(_new_receiver: address):
-                """
-                @notice Commit new receiver of profit
-                @param _new_receiver Address of the new receiver
-                """
-                assert msg.sender == self.admin  # dev: only admin
-                self.receiver = _new_receiver
-                log NewReceiver(_new_receiver)
-            ```
-
-    === "Example"
-        ```shell
-        >>> PegKeeperV2.set_new_receiver()
-        todo
+        >>> soon
         ```
 
 
@@ -613,6 +536,12 @@ There is no universal receiver for the generated profits. For each PegKeeper con
         === "PegKeeperV2.vy"
 
             ```vyper
+            interface Regulator:
+                def stablecoin() -> address: view
+                def provide_allowed(_pk: address=msg.sender) -> uint256: view
+                def withdraw_allowed(_pk: address=msg.sender) -> uint256: view
+                def fee_receiver() -> address: view
+
             @external
             @nonpayable
             def withdraw_profit() -> uint256:
@@ -621,7 +550,7 @@ There is no universal receiver for the generated profits. For each PegKeeper con
                 @return Amount of LP Token received
                 """
                 lp_amount: uint256 = self._calc_profit()
-                POOL.transfer(self.receiver, lp_amount)
+                POOL.transfer(self.regulator.fee_receiver(), lp_amount)
 
                 log Profit(lp_amount)
 
@@ -651,8 +580,7 @@ There is no universal receiver for the generated profits. For each PegKeeper con
 
     === "Example"
         ```shell
-        >>> PegKeeperV2.withdraw_profit()
-        todo
+        >>> soon
         ```
 
 
@@ -661,7 +589,7 @@ There is no universal receiver for the generated profits. For each PegKeeper con
 
 ## **Regulator Contract**
 
-More on the Regulator contract [here](./regulator.md).
+More on the Regulator contract [here](./PegKeeperRegulator.md).
 
 ### `regulator`
 !!! description "`PegKeeper.regulator() -> address: view`"
@@ -701,7 +629,7 @@ More on the Regulator contract [here](./regulator.md).
     === "Example"
         ```shell
         >>> PegKeeper.regulator()
-        todo
+        '0x36a04CAffc681fa179558B2Aaba30395CDdd855f'
         ```
 
 
@@ -744,8 +672,7 @@ More on the Regulator contract [here](./regulator.md).
 
     === "Example"
         ```shell
-        >>> PegKeeper.set_new_regulator()
-        todo
+        >>> soon
         ```
 
 
@@ -760,7 +687,7 @@ Ownership of the PegKeepers adheres to the standard procedure. The transition of
 ### `admin`
 !!! description "`PegKeeperV2.admin() -> address: view`"
 
-    Getter for the current admin of the PegKeeper. The admin can only be changed by the admin by via the `commit_new_admin` function.
+    Getter for the current admin of the PegKeeper. The admin can only be changed by the admin by via the [`commit_new_admin`](#commit_new_admin) function.
 
     Returns: current admin (`address`).
 
@@ -775,7 +702,7 @@ Ownership of the PegKeepers adheres to the standard procedure. The transition of
     === "Example"
         ```shell
         >>> PegKeeperV2.admin()
-        todo
+        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
         ```
 
 
@@ -797,7 +724,7 @@ Ownership of the PegKeepers adheres to the standard procedure. The transition of
     === "Example"
         ```shell
         >>> PegKeeperV2.future_admin()
-        todo
+        '0x0000000000000000000000000000000000000000'
         ```
 
 
@@ -845,8 +772,7 @@ Ownership of the PegKeepers adheres to the standard procedure. The transition of
 
     === "Example"
         ```shell
-        >>> PegKeeperV2.commit_new_admin()
-        todo
+        >>> soon
         ```
 
 
@@ -894,8 +820,7 @@ Ownership of the PegKeepers adheres to the standard procedure. The transition of
 
     === "Example"
         ```shell
-        >>> PegKeeperV2.
-        todo
+        >>> soon
         ```
 
 
@@ -917,7 +842,7 @@ Ownership of the PegKeepers adheres to the standard procedure. The transition of
     === "Example"
         ```shell
         >>> PegKeeperV2.new_admin_deadline()
-        todo
+        0
         ```
 
 
@@ -944,7 +869,7 @@ Ownership of the PegKeepers adheres to the standard procedure. The transition of
     === "Example"
         ```shell
         >>> PegKeeperV2.debt()
-        todo
+        0
         ```
 
 
@@ -991,7 +916,7 @@ Ownership of the PegKeepers adheres to the standard procedure. The transition of
     === "Example"
         ```shell
         >>> PegKeeperV2.pool()
-        todo
+        '0x4DEcE678ceceb27446b35C672dC7d61F30bAD69E'
         ```
 
 
@@ -1032,7 +957,7 @@ Ownership of the PegKeepers adheres to the standard procedure. The transition of
     === "Example"
         ```shell
         >>> PegKeeperV2.FACTORY()
-        todo
+        '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
         ```
 
 
@@ -1075,7 +1000,7 @@ Ownership of the PegKeepers adheres to the standard procedure. The transition of
     === "Example"
         ```shell
         >>> PegKeeperV2.pegged()
-        todo
+        '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
         ```
 
 
@@ -1119,7 +1044,49 @@ Ownership of the PegKeepers adheres to the standard procedure. The transition of
     === "Example"
         ```shell
         >>> PegKeeperV2.IS_INVERSE()
-        todo
+        'False'
         ```
 
 
+### `IS_NG`
+!!! description "`PegKeeperV2.IS_NG() -> bool: view`"
+
+    Getter to check if the pool associated with the PegKeeper is a new generation (NG) pool. This is important when adding and removing liquidity, as the interface of NG pools is slightly different from the prior ones.
+
+    Returns: true or false (`bool`).
+
+    ??? quote "Source code"
+
+        === "PegKeeperV2.vy"
+
+            ```vyper
+            IS_NG: public(immutable(bool))  # Interface for CurveStableSwapNG
+
+            @external
+            def __init__(
+                _pool: CurvePool, _caller_share: uint256,
+                _factory: address, _regulator: Regulator, _admin: address,
+            ):
+                """
+                @notice Contract constructor
+                @param _pool Contract pool address
+                @param _caller_share Caller's share of profit
+                @param _factory Factory which should be able to take coins away
+                @param _regulator Peg Keeper Regulator
+                @param _admin Admin account
+                """
+                ...
+
+                IS_NG = raw_call(
+                    _pool.address, _abi_encode(convert(0, uint256), method_id=method_id("price_oracle(uint256)")),
+                    revert_on_failure=False
+                )
+
+                ...
+            ```
+
+    === "Example"
+        ```shell
+        >>> PegKeeperV2.IS_NG()
+        'False'
+        ```
