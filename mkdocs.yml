@@ -182,9 +182,9 @@ nav:
     - Oracle: crvUSD/oracle.md
     - PegKeepers:
       - Overview: crvUSD/pegkeepers/overview.md
-      - PegKeeperV1: crvUSD/pegkeepers/pegkeeper.md
-      - PegKeeperV2: crvUSD/pegkeepers/pegkeeperv2.md
-      - PegKeeperRegulator: crvUSD/pegkeepers/regulator.md
+      - PegKeeperV1: crvUSD/pegkeepers/PegKeeperV1.md
+      - PegKeeperV2: crvUSD/pegkeepers/PegKeeperV2.md
+      - PegKeeperRegulator: crvUSD/pegkeepers/PegKeeperRegulator.md
     - Factory: 
       - Overview: crvUSD/factory/overview.md
       - Deployer API: crvUSD/factory/deployer-api.md
