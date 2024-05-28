@@ -587,9 +587,9 @@ The universal fee receiver of the PegKeepers profits is specified within the [`P
 ---
 
 
-## **Regulator Contract**
+## **PegKeeperRegulator Contract**
 
-More on the Regulator contract [here](./PegKeeperRegulator.md).
+More on the `PegKeeperRegulator` contract [here](./PegKeeperRegulator.md).
 
 ### `regulator`
 !!! description "`PegKeeper.regulator() -> address: view`"
@@ -598,11 +598,16 @@ More on the Regulator contract [here](./PegKeeperRegulator.md).
 
     Returns: regulator contract (`address`).
 
+    Emits: `SetNewRegulator` at initialization
+
     ??? quote "Source code"
 
         === "PegKeeper.vy"
 
             ```vyper
+            event SetNewRegulator:
+                regulator: address
+
             regulator: public(Regulator)
 
             @external
@@ -620,9 +625,7 @@ More on the Regulator contract [here](./PegKeeperRegulator.md).
                 @param _admin Admin account
                 """
                 ...
-
                 self.regulator = _regulator
-
                 ...
             ```
 
@@ -691,12 +694,35 @@ Ownership of the PegKeepers adheres to the standard procedure. The transition of
 
     Returns: current admin (`address`).
 
+    Emits: `ApplyNewAdmin` at initialization
+
     ??? quote "Source code"
 
         === "PegKeeperV2.vy"
 
             ```vyper
+            event ApplyNewAdmin:
+                admin: address
+
             admin: public(address)
+
+            @external
+            def __init__(
+                _pool: CurvePool, _caller_share: uint256,
+                _factory: address, _regulator: Regulator, _admin: address,
+            ):
+                """
+                @notice Contract constructor
+                @param _pool Contract pool address
+                @param _caller_share Caller's share of profit
+                @param _factory Factory which should be able to take coins away
+                @param _regulator Peg Keeper Regulator
+                @param _admin Admin account
+                """
+                ...
+                self.admin = _admin
+                log ApplyNewAdmin(msg.sender)
+                ...
             ```
 
     === "Example"
