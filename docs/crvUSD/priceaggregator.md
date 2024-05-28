@@ -1,6 +1,4 @@
-The `PriceAggregator` contract serves as a sophisticated tool designed to compute the aggregated weighted average price of the `crvUSD` currency across a variety of liquidity pools, employing an advanced methodology that incorporates the exponential moving-average (EMA) of Total Value Locked (TVL) to ensure accurate and reliable pricing data.
-
-The calculated price is primarily used as an oracle for calculating the interest rate, but also for [PegKeepers](../crvUSD/pegkeeper.md) to determine whether to mint and deposit or withdraw and burn.
+The AggregatorStablePrice contract is designed to **aggregate the prices of crvUSD based on multiple Curve Stableswap pools**. This price is primarily used as an oracle for calculating the interest rate, but also for [PegKeepers](../crvUSD/pegkeepers/overview.md) to determine whether to mint and deposit or withdraw and burn.
 
 
 !!!deploy "Contract Source & Deployment"
