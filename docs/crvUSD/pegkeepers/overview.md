@@ -55,10 +55,10 @@ A more critical issue arose when a PegKeeper engaged in a deposit, essentially t
 ---
 
 
-# **PegKeeperV2 and PegKeeperRegulator**
+# **PegKeeperV2 and Regulator**
 
 !!!github "GitHub"
-    Research regarding PegKeeperV2 can be found [here](https://github.com/curvefi/curve-stablecoin-researches/tree/main/peg_keeper). Source code of `PegKeeperV2` and `PegKeeperRegulator` [here](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/stabilizer).
+    Research regarding PegKeeperV2 can be found here: [`curve-stablecoin-researches`](https://github.com/curvefi/curve-stablecoin-researches/tree/main/peg_keeper).
 
 The transition to PegKeeperV2 marks a significant refinement in the system's architecture, introducing a **clear division of duties between two specialized contracts**. The **`PegKeeperV2`** contract is now **exclusively focused on carrying out the operational tasks** essential for maintaining the peg's stability, while the **`PegKeeperRegulator`** contract assumes a **pivotal role in oversight and regulation**.
 
@@ -127,3 +127,5 @@ The critical operation is the **comparison between `largest_price` and the resul
 If `largest_price` is found to be lower than the difference, it **indicates a potential depegging scenario**. In response, the Regulator contract **proactively blocks any further deposits** of crvUSD to preemptively address the depeg risk.
 
 This safeguard acts as a bulwark against significant price divergences between the highest observed price (`largest_price`) and the target price, with the `worst_price_threshold` serving as a key variable in this evaluation. Failure to align with this safeguard (i.e., when `largest_price` significantly undercuts the threshold) triggers a halt in operations, as indicated by a return value of 0. Such a mechanism is vital for mitigating risks tied to price volatility, thereby ensuring the system's stability and preserving the integrity of pegged relationships.
+
+Additionally, to **prevent a single PegKeeper from taking on all the debt, ratio limits were implemented**. More on these limits [here](./PegKeeperRegulator.md#providing).
