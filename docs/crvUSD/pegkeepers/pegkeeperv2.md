@@ -313,7 +313,7 @@ For a detailed overview on the additional checks implemented, please see: [Provi
 
     === "Example"
         ```shell
-        >>> 
+        >>> soon
         ```
 
 
