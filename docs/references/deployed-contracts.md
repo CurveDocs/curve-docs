@@ -71,6 +71,9 @@ The following token addresses are used for determining voter weights within Curv
 | `Emergency` | [0x4c0947B16FB1f755A2D32EC21A0c4181f711C500](https://etherscan.io/address/0x4c0947B16FB1f755A2D32EC21A0c4181f711C500) | 
 
 
+---
+
+
 ## **Pool Registry**
 The pool registry acts as a central hub of information on the current status of Curve pools This means that on-chain integrators can easily retrieve the current address of a particular Curve pool and gather relevant details about it through queries.
 
@@ -94,6 +97,8 @@ Here is a list of all components of the pool registry currently in use:
 | `CurveTricryptoFactory`           |  [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963#code) |
 | `CurveTricryptoFactoryHandler`    |  [0x9335bf643c455478f8be40fa20b5164b90215b80](https://etherscan.io/address/0x9335bf643c455478f8be40fa20b5164b90215b80#code) |
 
+
+---
 
 
 ## **Fee Burner**
@@ -185,6 +190,8 @@ Burners are a crucial element of the fee payout system in Curve. They convert th
 | `BridgeContract`    | [0x993ff6dd3851ab11af751277e419c2aa2697a288](https://ftmscan.com/address/0x993ff6dd3851ab11af751277e419c2aa2697a288#code) |
 
 
+---
+
 
 ## **Curve Router**
 
@@ -206,6 +213,9 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-fantom: `Fantom` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://ftmscan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-bsc: `Binance Smart Chain` | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://bscscan.com/address/0x69522fb5337663d3B4dFB0030b881c1A750Adb4f#code) |
 | :logos-kava: `Kava` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://kavascan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D/contracts#address-tabs) |
+
+
+---
 
 
 ## **EVM Sidechain Gauges**
@@ -241,6 +251,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | `veBoost - Boost Delegation V2` | Moonbeam | :material-close: |
 
 
+---
+
 
 ## **Pool Factory**
 
@@ -258,6 +270,8 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 | CryptoSwap Factory    | [0xF18056Bbd320E96A48e3Fbf8bC061322531aac99](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99) | 
 | Tricrypto Factory     | [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963) |
 
+
+---
 
 
 ## **Curve X-GOV**
@@ -316,6 +330,8 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 | L2 Vault | [0x77A214bd4ee3650e5608339BBbE04b09f5546ECF](https://explorer.mantle.xyz/address/0x77A214bd4ee3650e5608339BBbE04b09f5546ECF) |
 | Agent Blueprint | [0x5EF72230578b3e399E6C6F4F6360edF95e83BBfd](https://explorer.mantle.xyz/address/0x5EF72230578b3e399E6C6F4F6360edF95e83BBfd) |
 
+
+---
 
 
 ## **Stableswap-NG**
@@ -560,6 +576,8 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 | `Meta AMM`  | *soon*             |
 
 
+---
+
 
 ## **TwoCrypto-NG**
 
@@ -780,6 +798,8 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 | `Factory`   | *soon*             |
 | `AMM`       | *soon*             |
 
+
+---
 
 
 ## **Tricrypto-NG**
@@ -1027,6 +1047,8 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 | `AMM native enabled` | *soon*    |
 
 
+---
+
 
 ## **Zaps**
 
@@ -1034,7 +1056,7 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
     **StableCalcZaps** and **CryptoCalcZaps** source code is available [here](https://github.com/curvefi/curve-zaps), and the **DepositAndStake Zaps** source code can be found [here](https://github.com/curvefi/deposit-and-stake-zap). 
 
 
-**StableCalcZap**
+### **StableCalcZap**
 
 *Zap for stable pools to `calc_token_amount` taking fees into account and to `get_dx`.*
 
@@ -1057,7 +1079,7 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 
 
 
-**CryptoCalcZap**
+### **CryptoCalcZap**
 
 *Zap for crypto pools to `get_dx`.*
 
@@ -1079,7 +1101,7 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 
 
 
-**DepositAndStake Zap**
+### **DepositAndStake Zap**
 
 *Zap to add liquidity to pool and deposit into gauge in one transaction.*
 
@@ -1098,35 +1120,48 @@ Pool factory addresses are referenced within the according sections, e.g., stabl
 | :logos-kava: `Kava` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://kavascan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#contracts) |
 
 
+---
 
 
 ## **Curve Stablecoin**
 For testing in production purposes, several contract deployments have taken place. Please ensure that you are using the correct and latest version. The latest deployment logs can be found [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
 
-!!!deploy "Source Code"
-    Source code is available on [GitHub](https://github.com/curvefi/curve-stablecoin).
+!!!github "GitHub"
+    Source code is available on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin).
 
 !!!warning "Implementations"
     **Implementation contracts are upgradable.** They can be either replaced or additional implementation contracts can be set. Therefore, please **always make sure to check the most recent ones**.
 
 
+### **Core Contracts**
+
 | Contract Type           | Contract Address                                                         |
 | :---------------------: | :----------------------------------------------------------------------: |
 | `Stablecoin`            | [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/address/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E#code) |
-| `Factory`               | [0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC#code) |
+| `Controller Factory`               | [0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC#code) |
 | `Controller Implementation` | [0x6340678b2bab22a37d781Cd8da958a3cD1d97cdD](https://etherscan.io/address/0x6340678b2bab22a37d781Cd8da958a3cD1d97cdD#code) |
 | `AMM Implementation`    | [0x3da7fF6C15C0c97D9C2dF4AF82a9910384b372FD](https://etherscan.io/address/0x3da7fF6C15C0c97D9C2dF4AF82a9910384b372FD#code) |
-| `Swap factory`          | [0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d](https://etherscan.io/address/0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d#code) |
-| `Owner proxy`           | [0x855cC906dA8271Dd53879929bd226711247D5f17](https://etherscan.io/address/0x855cC906dA8271Dd53879929bd226711247D5f17#code) |
 | `PriceAggregator`       | [0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7](https://etherscan.io/address/0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7#code) |
 | `PriceAggregatorV2`     | [0x18672b1b0c623a30089A280Ed9256379fb0E4E62](https://etherscan.io/address/0x18672b1b0c623a30089A280Ed9256379fb0E4E62#code) |
-| `PegKeeper (USDC)`      | [0xaA346781dDD7009caa644A4980f044C50cD2ae22](https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22#code) |
-| `PegKeeper (USDT)`      | [0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8](https://etherscan.io/address/0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8#code) |
-| `PegKeeper (USDP)`      | [0x6B765d07cf966c745B340AdCa67749fE75B5c345](https://etherscan.io/address/0x6B765d07cf966c745B340AdCa67749fE75B5c345#code) |
-| `PegKeeper (TUSD)`      | [0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae](https://etherscan.io/address/0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae#code) |
+
+
+### **PegKeepers**
+
+| Contract Type           | Contract Address                                                         |
+| :---------------------: | :----------------------------------------------------------------------: |
+| `PegKeeperV1 (USDC)`      | [0xaA346781dDD7009caa644A4980f044C50cD2ae22](https://etherscan.io/address/0xaA346781dDD7009caa644A4980f044C50cD2ae22#code) |
+| `PegKeeperV1 (USDT)`      | [0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8](https://etherscan.io/address/0xE7cd2b4EB1d98CD6a4A48B6071D46401Ac7DC5C8#code) |
+| `PegKeeperV1 (USDP)`      | [0x6B765d07cf966c745B340AdCa67749fE75B5c345](https://etherscan.io/address/0x6B765d07cf966c745B340AdCa67749fE75B5c345#code) |
+| `PegKeeperV1 (TUSD)`      | [0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae](https://etherscan.io/address/0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae#code) |
+| `PegKeeperRegulator`      | [0x36a04CAffc681fa179558B2Aaba30395CDdd855f](https://etherscan.io/address/0x36a04CAffc681fa179558B2Aaba30395CDdd855f#code) |
+| `PegKeeperV2 (USDC)`      | [0x5B49b9adD1ecfe53E19cc2cFc8a33127cD6bA4C6](https://etherscan.io/address/0x5B49b9adD1ecfe53E19cc2cFc8a33127cD6bA4C6#code) |
+| `PegKeeperV2 (USDT)`      | [0xFF78468340EE322ed63C432BF74D817742b392Bf](https://etherscan.io/address/0xFF78468340EE322ed63C432BF74D817742b392Bf#code) |
+| `PegKeeperV2 (pyUSD)`      | [0x68e31e1eDD641B13cAEAb1Ac1BE661B19CC021ca](https://etherscan.io/address/0x68e31e1eDD641B13cAEAb1Ac1BE661B19CC021ca#code) |
+| `PegKeeperV2 (TUSD)`      | [0x0B502e48E950095d93E8b739aD146C72b4f6C820](https://etherscan.io/address/0x0B502e48E950095d93E8b739aD146C72b4f6C820#code) |
 
 
 
+### **crvUSD CrossChain**
 
 *Despite being launched on Ethereum, crvUSD can be bridged to various chains:*
 
@@ -1141,7 +1176,6 @@ For testing in production purposes, several contract deployments have taken plac
 
 
 ### **Markets**
-
 
 **:logos-sfrxeth: sfrxETH**
 
@@ -1219,6 +1253,7 @@ For testing in production purposes, several contract deployments have taken plac
 |`Leverage Zap`|[0xD79964C70Cb06224FdA4c48387B53E9819bcB71c](https://etherscan.io/address/0xD79964C70Cb06224FdA4c48387B53E9819bcB71c#code)|
 
 
+---
 
 
 ## **Curve Lending**
