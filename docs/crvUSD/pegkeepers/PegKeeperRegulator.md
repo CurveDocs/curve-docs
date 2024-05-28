@@ -824,7 +824,7 @@ Only `admin` and `emergency_admin` are allowed to kill. The former is the Curve 
 
 The Regulator contract has two types of ownerships, the `admin` and the `emergency_admin`.
 
-While the admin is able to call any guarded function from the contract, like setting new parameters and pausing/unpausing PegKeepers, etc., the `emergency_admin` is only allowed to pause and unpause pools.
+While the `admin` is able to call any guarded function from the contract, like setting new parameters and pausing/unpausing PegKeepers, etc., the `emergency_admin` is only allowed to pause and unpause pools. More on pausing pools [here](#pausing-and-unpausing-pegkeepers).
 
 Both their ownerships can be transferred using the corresponding `set_admin` or `set_emergency_admin` functions.
 
