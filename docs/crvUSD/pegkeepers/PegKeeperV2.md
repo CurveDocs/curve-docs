@@ -467,7 +467,29 @@ The universal fee receiver of the PegKeepers profits is specified within the [`P
         === "PegKeeper.vy"
 
             ```vyper
+            event SetNewCallerShare:
+                caller_share: uint256
+
             caller_share: public(uint256)
+
+            @external
+            def __init__(
+                _pool: CurvePool, _caller_share: uint256,
+                _factory: address, _regulator: Regulator, _admin: address,
+            ):
+                """
+                @notice Contract constructor
+                @param _pool Contract pool address
+                @param _caller_share Caller's share of profit
+                @param _factory Factory which should be able to take coins away
+                @param _regulator Peg Keeper Regulator
+                @param _admin Admin account
+                """
+                ...
+                assert _caller_share <= SHARE_PRECISION  # dev: bad part value
+                self.caller_share = _caller_share
+                log SetNewCallerShare(_caller_share)
+                ...
             ```
 
     === "Example"
@@ -483,7 +505,7 @@ The universal fee receiver of the PegKeepers profits is specified within the [`P
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.    
 
-    Function to set a new caller share.
+    Function to set a new caller share. New caller share need to be smaller or equal than `SHARE_PRECISION`, which is $10^5$.
 
     Emits: `SetNewCallerShare`
 
@@ -499,6 +521,7 @@ The universal fee receiver of the PegKeepers profits is specified within the [`P
             event SetNewCallerShare:
                 caller_share: uint256
 
+            SHARE_PRECISION: constant(uint256) = 10 ** 5
             caller_share: public(uint256)
 
             admin: public(address)
@@ -598,7 +621,7 @@ More on the `PegKeeperRegulator` contract [here](./PegKeeperRegulator.md).
 
     Returns: regulator contract (`address`).
 
-    Emits: `SetNewRegulator` at initialization
+    Emits: `SetNewRegulator` at contract initialization
 
     ??? quote "Source code"
 
@@ -611,14 +634,13 @@ More on the `PegKeeperRegulator` contract [here](./PegKeeperRegulator.md).
             regulator: public(Regulator)
 
             @external
-            def __init__( 
-                _pool: CurvePool, _receiver: address, _caller_share: uint256,
+            def __init__(
+                _pool: CurvePool, _caller_share: uint256,
                 _factory: address, _regulator: Regulator, _admin: address,
             ):
                 """
                 @notice Contract constructor
                 @param _pool Contract pool address
-                @param _receiver Receiver of the profit
                 @param _caller_share Caller's share of profit
                 @param _factory Factory which should be able to take coins away
                 @param _regulator Peg Keeper Regulator
@@ -626,6 +648,7 @@ More on the `PegKeeperRegulator` contract [here](./PegKeeperRegulator.md).
                 """
                 ...
                 self.regulator = _regulator
+                log SetNewRegulator(_regulator.address)
                 ...
             ```
 
@@ -694,7 +717,7 @@ Ownership of the PegKeepers adheres to the standard procedure. The transition of
 
     Returns: current admin (`address`).
 
-    Emits: `ApplyNewAdmin` at initialization
+    Emits: `ApplyNewAdmin` at contract initialization
 
     ??? quote "Source code"
 
