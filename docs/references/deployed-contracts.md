@@ -106,6 +106,29 @@ Here is a list of all components of the pool registry currently in use:
 
 ---
 
+## **Fee Receiver**
+
+| Chain | Contract Address |
+| ----------- | :-----: |
+| :logos-ethereum: `Ethereum` | [0xeCb456EA5365865EbAb8a2661B0c503410e9B347](https://etherscan.io/address/0xeCb456EA5365865EbAb8a2661B0c503410e9B347) |
+| :logos-arbitrum: `Arbitrum` | [0xd4F94D0aaa640BBb72b5EEc2D85F6D114D81a88E](https://arbiscan.io/address/0xd4F94D0aaa640BBb72b5EEc2D85F6D114D81a88E) |
+| :logos-optimism: `Optimism` | [0xbF7E49483881C76487b0989CD7d9A8239B20CA41](https://optimistic.etherscan.io/address/0xbF7E49483881C76487b0989CD7d9A8239B20CA41) |
+| :logos-base: `Base` | [0xe8269B33E47761f552E1a3070119560d5fa8bBD6](https://basescan.org/address/0xe8269B33E47761f552E1a3070119560d5fa8bBD6) |
+| :logos-fraxtal: `Fraxtal` | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://fraxscan.com/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6) |
+| :logos-polygon: `Polygon` | [0x774D1Dba98cfBD1F2Bc3A1F59c494125e07C48F9](https://polygonscan.com/address/0x774D1Dba98cfBD1F2Bc3A1F59c494125e07C48F9) |
+| :logos-polygon: `Polygon zk-EVM`   | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://zkevm.polygonscan.com/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6) |
+| :logos-gnosis: `Gnosis (xDAI)` | [0xB055EbbAcc8Eefc166c169e9Ce2886D0406aB49b](https://gnosisscan.io/address/0xB055EbbAcc8Eefc166c169e9Ce2886D0406aB49b) |
+| :logos-avalanche: `Avalanche` | [0x06534b0BF7Ff378F162d4F348390BDA53b15fA35](https://snowscan.xyz/address/0x06534b0BF7Ff378F162d4F348390BDA53b15fA35) |
+| :logos-fantom: `Fantom` | [0x2B039565B2b7a1A9192D4847fbd33B25b836B950](https://ftmscan.com/address/0x2B039565B2b7a1A9192D4847fbd33B25b836B950) |
+| :logos-bsc: `Binance Smart Chain` | [0x98B4029CaBEf7Fd525A36B0BF8555EC1d42ec0B6](https://bscscan.com/address/0x98B4029CaBEf7Fd525A36B0BF8555EC1d42ec0B6) |
+| :logos-linea: `Linea` | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://lineascan.build/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef) |
+| :logos-scroll: `Scroll` | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://scrollscan.com/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef) |
+| :logos-mantle: `Mantle` | - |
+| :logos-celo: `Celo` | [0x56bc95Ded2BEF162131905dfd600F2b9F1B380a4](https://celoscan.io/address/0x56bc95Ded2BEF162131905dfd600F2b9F1B380a4) |
+| :logos-aurora: `Aurora` | [0xf3a431008396df8a8b2df492c913706bdb0874ef](https://explorer.aurora.dev/address/0xf3a431008396df8a8b2df492c913706bdb0874ef) |
+| :logos-kava: `Kava` | - |
+| :logos-xlayer: `X-Layer` | [0xf3a431008396df8a8b2df492c913706bdb0874ef](https://www.oklink.com/xlayer/address/0xf3a431008396df8a8b2df492c913706bdb0874ef) |
+
 
 ## **Fee Burner**
 Burners are a crucial element of the fee payout system in Curve. They convert the collected pool fees into an asset that is later exchanged for USDC. Eventually, the USDC is deposited into the 3Pool, and the fees are distributed to veCRV holders in 3CRV. The type of burner used depends on the tokens present in the pool.
@@ -578,7 +601,6 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 | `Factory`   | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://fraxscan.com/address/0xd2002373543Ce3527023C75e7518C274A51ce712#code) |
 | `Plain AMM` | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://fraxscan.com/address/0x1764ee18e8B3ccA4787249Ceb249356192594585#code) |
 | `Meta AMM`  | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://fraxscan.com/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
-| `Zaps`      | [0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b](https://fraxscan.com/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b#code) |
 
 
 **:logos-polygon: Polygon**
@@ -662,11 +684,11 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://scroll.l2scan.co/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8) |
-| `Views`     | [0x20D1c021525C85D9617Ccc64D8f547d5f730118A](https://scroll.l2scan.co/address/0x20D1c021525C85D9617Ccc64D8f547d5f730118A#code) |
-| `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://scroll.l2scan.co/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
-| `Plain AMM`   | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://scroll.l2scan.co/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
-| `Meta AMM`   | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://scroll.l2scan.co/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a#code) |
+| `Math`      | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://scrollscan.com/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8) |
+| `Views`     | [0x20D1c021525C85D9617Ccc64D8f547d5f730118A](https://scrollscan.com/address/0x20D1c021525C85D9617Ccc64D8f547d5f730118A#code) |
+| `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://scrollscan.com/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E#code) |
+| `Plain AMM`   | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://scrollscan.com/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26#code) |
+| `Meta AMM`   | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://scrollscan.com/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a#code) |
 
 
 **:logos-mantle: Mantle**
@@ -903,10 +925,10 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://scroll.l2scan.co/address/0x2005995a71243be9FB995DaB4742327dc76564Df) |
-| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://scroll.l2scan.co/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
-| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://scroll.l2scan.co/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://scroll.l2scan.co/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://scrollscan.com/address/0x2005995a71243be9FB995DaB4742327dc76564Df) |
+| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://scrollscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
+| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://scrollscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
+| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://scrollscan.com/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
 
 
 **:logos-mantle: Mantle**
@@ -1154,11 +1176,11 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://scroll.l2scan.co/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC) |
-| `Views`     | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://scroll.l2scan.co/address/0xFAbC421e3368D158d802684A217a83c083c94CeB    #code) |
-| `Factory`   | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://scroll.l2scan.co/address/0xC1b393EfEF38140662b91441C6710Aa704973228#code) |
-| `AMM native disable` | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://scroll.l2scan.co/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a#code) |
-| `AMM native enabled` | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://scroll.l2scan.co/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf#code) |
+| `Math`      | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://scrollscan.com/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC#code) |
+| `Views`     | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://scrollscan.com/address/0xFAbC421e3368D158d802684A217a83c083c94CeB#code) |
+| `Factory`   | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://scrollscan.com/address/0xC1b393EfEF38140662b91441C6710Aa704973228#code) |
+| `AMM native disable` | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://scrollscan.com/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a#code) |
+| `AMM native enabled` | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://scrollscan.com/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf#code) |
 
 
 **:logos-mantle: Mantle**
