@@ -16,7 +16,7 @@ Technically speaking, allowance is always granted but if certain checks do not p
 *The Regulator will only grant allowance to the PegKeeper to provide crvUSD to the pool if the following requirements are met. If any of these conditions are not satisfied, the function will return 0, causing the transaction to ultimately revert:*
 
 - **Providing is not paused**: This is checked using the `is_killed` method. If providing is paused, no crvUSD can be added to the pool.
-- **Aggregated crvUSD price is higher than 1.0**: The crvUSD price, obtained from the `aggregator`, must be above 1.0 (`10**18`). If the price is equal to or below 1.0, providing crvUSD is not allowed.
+- **Aggregated crvUSD price is higher than 1.0**: The crvUSD price, obtained from the `aggregator` contract, must be above 1.0 (`10**18`). If the price is equal to or below 1.0, providing crvUSD is not allowed.
 - **Price consistency check**: The `get_p` (current AMM state price) and `price_oracle` (AMM EMA Price Oracle) must be within a specified deviation range (`price_deviation`). This is to prevent spam attacks by ensuring that the current price is not significantly deviating from the oracle price.
 - **Depeg threshold check**: To ensure that the price of an asset has not depegged significantly, the current price is compared against a `worst_price_threshold`. This check ensures that prices across the pools with PegKeepers are within an acceptable range of deviation. If the price deviation is within the threshold, the PegKeeper is allowed to provide crvUSD.
 
@@ -197,13 +197,11 @@ Where:
 
 ## **Withdrawing**
 
-*The Regulator will grant allowance to the PegKeeper to withdraw crvUSD from the pool when:*
+*The Regulator will grant allowance to the PegKeeper to withdraw crvUSD from the pool if the following requirements are met. If any of these conditions are not met, the function will return 0, causing the transaction to ultimately revert:*
 
-- Withdrawing is not paused (can be checked with the `is_killed` method).
-- The aggregated crvUSD price is less than 1.0 (`10**18`).
-- `get_p` (AMM state price) and `price_oracle` (AMM EMA Price Oracle) are within a certain deviation range (`price_deviation`). This check is done to prevent spam attacks.
-
-*If the above requirements are not met or a invalid input address for `_pk` was given, the function will return 0, and the transaction will ultimately revert.*
+- **Withdrawing is not paused**: This is checked using the `is_killed` method. If withdrawing is paused, no crvUSD can be removed from the pool.
+- **Aggregated crvUSD price is less than 1.0**: The crvUSD price, obtained from the `aggregator` contract, must be above 1.0 (`10**18`). If the price is equal to or below 1.0, withdrawing crvUSD is not allowed.
+- **Price consistency check**: The `get_p` (current AMM state price) and `price_oracle` (AMM EMA Price Oracle) must be within a specified deviation range (`price_deviation`). This is to prevent spam attacks by ensuring that the current price is not significantly deviating from the oracle price.
 
 
 ### `withdraw_allowed`
