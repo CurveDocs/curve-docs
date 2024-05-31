@@ -123,7 +123,7 @@ Here is a list of all components of the pool registry currently in use:
 | :logos-bsc: `Binance Smart Chain` | [0x98B4029CaBEf7Fd525A36B0BF8555EC1d42ec0B6](https://bscscan.com/address/0x98B4029CaBEf7Fd525A36B0BF8555EC1d42ec0B6) |
 | :logos-linea: `Linea` | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://lineascan.build/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef) |
 | :logos-scroll: `Scroll` | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://scrollscan.com/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef) |
-| :logos-mantle: `Mantle` | - |
+| :logos-mantle: `Mantle` | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://mantlescan.xyz/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef) |
 | :logos-celo: `Celo` | [0x56bc95Ded2BEF162131905dfd600F2b9F1B380a4](https://celoscan.io/address/0x56bc95Ded2BEF162131905dfd600F2b9F1B380a4) |
 | :logos-aurora: `Aurora` | [0xf3a431008396df8a8b2df492c913706bdb0874ef](https://explorer.aurora.dev/address/0xf3a431008396df8a8b2df492c913706bdb0874ef) |
 | :logos-kava: `Kava` | - |
@@ -461,27 +461,30 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 
 | Chain                         | Contract Address |
 | ----------------------------- | ---------------- |
-| :logos-ethereum: Ethereum     | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://etherscan.io/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-arbitrum: Arbitrum     | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://arbiscan.io/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-optimism: Optimism     | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://optimistic.etherscan.io/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-base: Base             | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://basescan.org/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-bsc: BinanceSmartChain | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://bscscan.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-polygon: Polygon       | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://polygonscan.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-fantom: Fantom         | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://ftmscan.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-gnosis: Gnosis         | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://gnosisscan.io/address/0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98) |
-| :logos-aurora: Aurora         | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://explorer.aurora.dev/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-celo: Celo             | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://celoscan.io/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-mantle: Mantle         | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://explorer.mantle.xyz/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-linea: Linea           | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://lineascan.build/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-polygon: Polygon zkEVM | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://zkevm.polygonscan.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-scroll: Scroll         | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://scrollscan.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-fraxtal: Fraxtal       | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://fraxscan.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-avalanche: Avalanche   | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://snowscan.xyz/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-kava: Kava             | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://kavascan.io/search?q=0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-xlayer: X-Layer        | [0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98](https://www.okx.com/web3/explorer/xlayer/address/0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98/contract) |
-| :logos-zksync: zk-Sync        | [0x54A5a69e17Aa6eB89d77aa3828E38C9Eb4fF263D](https://explorer.zksync.io/address/0x54A5a69e17Aa6eB89d77aa3828E38C9Eb4fF263D#contract) |
+| :logos-ethereum: `Ethereum`     | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://etherscan.io/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-arbitrum: `Arbitrum`     | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://arbiscan.io/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-optimism: `Optimism`     | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://optimistic.etherscan.io/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-base: `Base`             | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://basescan.org/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-bsc: `BinanceSmartChain` | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://bscscan.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-polygon: `Polygon`       | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://polygonscan.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-fantom: `Fantom`         | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://ftmscan.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-gnosis: `Gnosis`         | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://gnosisscan.io/address/0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98) |
+| :logos-aurora: `Aurora`         | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://explorer.aurora.dev/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-celo: `Celo`             | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://celoscan.io/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-mantle: `Mantle`         | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://explorer.mantle.xyz/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-linea: `Linea`           | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://lineascan.build/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-polygon: `Polygon zkEVM` | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://zkevm.polygonscan.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-scroll: `Scroll`         | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://scrollscan.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-fraxtal: `Fraxtal`       | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://fraxscan.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-avalanche: `Avalanche`   | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://snowscan.xyz/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-mantle: `Mantle`   | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://mantlescan.xyz/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-kava: `Kava`             | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://kavascan.io/search?q=0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-xlayer: `X-Layer`        | [0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98](https://www.okx.com/web3/explorer/xlayer/address/0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98/contract) |
+| :logos-zksync: `zk-Sync`        | [0x54A5a69e17Aa6eB89d77aa3828E38C9Eb4fF263D](https://explorer.zksync.io/address/0x54A5a69e17Aa6eB89d77aa3828E38C9Eb4fF263D#contract) |
+
 
 ---
+
 
 ## **Meta Registry**
 
@@ -697,11 +700,11 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://mantlescan.info/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6#code-5000) |
-| `Views`     | [0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5](https://mantlescan.info/address/0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5#code-5000) |
-| `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://mantlescan.info/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E) |
-| `Plain AMM` | [0x87FE17697D0f14A222e8bEf386a0860eCffDD617](https://mantlescan.info/address/0x87FE17697D0f14A222e8bEf386a0860eCffDD617) |
-| `Meta AMM`  | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://mantlescan.info/address/0x1764ee18e8B3ccA4787249Ceb249356192594585) |
+| `Math`      | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://mantlescan.xyz/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6) |
+| `Views`     | [0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5](https://mantlescan.xyz/address/0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5) |
+| `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://mantlescan.xyz/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E) |
+| `Plain AMM` | [0x87FE17697D0f14A222e8bEf386a0860eCffDD617](https://mantlescan.xyz/address/0x87FE17697D0f14A222e8bEf386a0860eCffDD617) |
+| `Meta AMM`  | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://mantlescan.xyz/address/0x1764ee18e8B3ccA4787249Ceb249356192594585) |
 
 
 **:logos-celo: Celo**
@@ -937,10 +940,10 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://mantlescan.info/address/0x2005995a71243be9FB995DaB4742327dc76564Df) |
-| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://mantlescan.info/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
-| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://mantlescan.info/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://mantlescan.info/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223) |
+| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://mantlescan.xyz/address/0x2005995a71243be9FB995DaB4742327dc76564Df) |
+| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://mantlescan.xyz/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
+| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://mantlescan.xyz/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
+| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://mantlescan.xyz/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223) |
 
 
 **:logos-celo: Celo**
@@ -1189,11 +1192,11 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | [0x635742dCC8313DCf8c904206037d962c042EAfBd](https://mantlescan.info/address/0x635742dCC8313DCf8c904206037d962c042EAfBd) |
-| `Views`     | [0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499](https://mantlescan.info/address/0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499) |
-| `Factory`   | [0x0C9D8c7e486e822C29488Ff51BFf0167B4650953](https://mantlescan.info/address/0x0C9D8c7e486e822C29488Ff51BFf0167B4650953) |
-| `AMM native disable` | [0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a](https://mantlescan.info/address/0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a) |
-| `AMM native enable`  | [0x046207cB759F527b6c10C2D61DBaca45513685CC](https://mantlescan.info/address/0x046207cB759F527b6c10C2D61DBaca45513685CC) |
+| `Math`      | [0x635742dCC8313DCf8c904206037d962c042EAfBd](https://mantlescan.xyz/address/0x635742dCC8313DCf8c904206037d962c042EAfBd) |
+| `Views`     | [0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499](https://mantlescan.xyz/address/0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499) |
+| `Factory`   | [0x0C9D8c7e486e822C29488Ff51BFf0167B4650953](https://mantlescan.xyz/address/0x0C9D8c7e486e822C29488Ff51BFf0167B4650953) |
+| `AMM native disable` | [0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a](https://mantlescan.xyz/address/0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a) |
+| `AMM native enable`  | [0x046207cB759F527b6c10C2D61DBaca45513685CC](https://mantlescan.xyz/address/0x046207cB759F527b6c10C2D61DBaca45513685CC) |
 
 
 **:logos-celo: Celo**
