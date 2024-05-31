@@ -299,6 +299,10 @@ The `RootLiquidityGaugeFactory` contract on Ethereum is utilized across a majori
 | `veBoost - Boost Delegation V2` | :logos-avalanche: Avalanche | [0xc55837710bc500f1e3c7bb9dd1d51f7c5647e657](https://snowscan.xyz/address/0xc55837710bc500f1e3c7bb9dd1d51f7c5647e657) |
 | `ChildLiquidityGaugeFactory` | :logos-fantom: Fantom | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://ftmscan.com/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5) |
 | `veBoost - Boost Delegation V2` | :logos-fantom: Fantom | [0xb75dca485E21A77E1B433eCAcb74475FC67e259c](https://ftmscan.com/address/0xb75dca485E21A77E1B433eCAcb74475FC67e259c) |
+| :logos-mantle: `RootLiquidityGaugeFactory` | :logos-ethereum: Ethereum | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c](https://etherscan.io/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c) |
+| `ChildLiquidityGaugeFactory` | :logos-mantle: Mantle | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c]((https://mantlescan.xyz/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c)) |
+| `veBoost - Boost Delegation V2` | :logos-mantle: Mantle | :material-close: |
+| :logos-xlayer: `RootLiquidityGaugeFactory` | :logos-ethereum: Ethereum | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c](https://etherscan.io/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c) |
 | `ChildLiquidityGaugeFactory` | :logos-xlayer: X-Layer | [0xef672bd94913cb6f1d2812a6e18c1ffded8eff5c](https://www.oklink.com/xlayer/address/0xef672bd94913cb6f1d2812a6e18c1ffded8eff5c/contract) |
 | `veBoost - Boost Delegation V2` | :logos-xlayer: X-Layer | :material-close: |
 
@@ -758,8 +762,8 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
 | `Math`      | [0x8b3efbefa6ed222077455d6f0dcda3bf4f3f57a6](https://www.oklink.com/xlayer/address/0x8b3efbefa6ed222077455d6f0dcda3bf4f3f57a6/contract) |
-| `Views`     | [0x506f594ceb4e33f5161139bae3ee911014df9f7f](https://www.oklink.com/xlayer/address/0x506f594ceb4e33f5161139bae3ee911014df9f7f/contract) |
-| `Factory`   | [0x5eee3091f747e60a045a2e715a4c71e600e31f6e](https://www.oklink.com/xlayer/address/0x5eee3091f747e60a045a2e715a4c71e600e31f6e/contract) |
+| `Views`     | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://www.oklink.com/xlayer/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B/contract) |
+| `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://www.oklink.com/xlayer/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E/contract) |
 | `Plain AMM` | [0x87fe17697d0f14a222e8bef386a0860ecffdd617](https://www.oklink.com/xlayer/address/0x87fe17697d0f14a222e8bef386a0860ecffdd617/contract) |
 | `Meta AMM`  | [0x1764ee18e8b3cca4787249ceb249356192594585](https://www.oklink.com/xlayer/address/0x1764ee18e8b3cca4787249ceb249356192594585/contract) |
 
@@ -1352,7 +1356,7 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 | :logos-bsc: `Binance Smart Chain` | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://bscscan.com/address/0x4f37A9d177470499A2dD084621020b023fcffc1F#code) |
 | :logos-mantle: `Mantle` | [0x5552b631e2ad801faa129aacf4b701071cc9d1f7](https://mantlescan.xyz/address/0x5552b631e2ad801faa129aacf4b701071cc9d1f7#code) |
 | :logos-kava: `Kava` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://kavascan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#contracts) |
-
+| :logos-zksync: `zk-Sync` | [0x253548e98C769aD2850da8DB3E4c2b2cE46E3839](https://explorer.zksync.io/address/0x253548e98C769aD2850da8DB3E4c2b2cE46E3839#contract) |
 
 ---
 
