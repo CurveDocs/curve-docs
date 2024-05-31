@@ -18,7 +18,20 @@ Curve DAO consists of multiple smart contracts connected by [Aragon](https://git
 | `Gauge Controller`        | [0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB](https://etherscan.io/address/0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB) |
 | `Minter`                  | [0xd061D61a4d941c39E5453435B6345Dc261C2fcE0](https://etherscan.io/address/0xd061D61a4d941c39E5453435B6345Dc261C2fcE0) |
 | `Voting Escrow`           | [0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2](https://etherscan.io/address/0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2) |
-| `Vesting Escrow`          | [0x575ccd8e2d300e2377b43478339e364000318e2c](https://etherscan.io/address/0x575ccd8e2d300e2377b43478339e364000318e2c) |
+
+
+*Vesting contracts for the Curve DAO token:*
+
+| Vesting Type | Contract Address |
+| :----------: | :--------------: |
+| `pre-CRV Liquidity Providers` | [0x575ccd8e2d300e2377b43478339e364000318e2c](https://etherscan.io/address/0x575ccd8e2d300e2377b43478339e364000318e2c) |
+| `Core Team` | [0xd2d43555134dc575bf7279f4ba18809645db0f1d](https://etherscan.io/address/0xd2d43555134dc575bf7279f4ba18809645db0f1d#readContract) |
+| `Investors` | [0xf22995a3ea2c83f6764c711115b23a88411cafdd](https://etherscan.io/address/0xf22995a3ea2c83f6764c711115b23a88411cafdd) |
+| `Investors` | [0x2a7d59e327759acd5d11a8fb652bf4072d28ac04](https://etherscan.io/address/0x2a7d59e327759acd5d11a8fb652bf4072d28ac04) |
+| `Investors` | [0xf7dbc322d72c1788a1e37eee738e2ea9c7fa875e](https://etherscan.io/address/0xf7dbc322d72c1788a1e37eee738e2ea9c7fa875e) |
+| `Employees` | [0x679fcb9b33fc4ae10ff4f96caef49c1ae3f8fa67](https://etherscan.io/address/0x679fcb9b33fc4ae10ff4f96caef49c1ae3f8fa67) |
+| `Employees` | [0x41df5d28c7e801c4df0ab33421e2ed6ce52d2567](https://etherscan.io/address/0x41df5d28c7e801c4df0ab33421e2ed6ce52d2567) |
+| `Community Funds` | [0xe3997288987e6297ad550a69b31439504f513267](https://etherscan.io/address/0xe3997288987e6297ad550a69b31439504f513267) |
 
 
 *Despite being launched on Ethereum, the Curve DAO Token can be bridged to various chains:*
