@@ -4,7 +4,7 @@
 The regulator contract supervises prices and other parameters telling whether the PegKeeper are allowed to provide or withdraw crvUSD.
 
 !!!github "GitHub"
-    Source code for `PegKeeperRegulator.vy` available on [GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/stabilizer/PegKeeperRegulator.vy).
+    Source code for `PegKeeperRegulator.vy` available on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/stabilizer/PegKeeperRegulator.vy).
 
 Technically speaking, allowance is always granted but if certain checks do not pass, the Regulator will allow an amount of 0, which in return can be seen as not allowing anything to deposit or withdraw.
 
@@ -611,11 +611,11 @@ PegKeepers can be removed from the Regulator contract by the `admin` using the [
 
 
 ### `peg_keepers`
-!!! description "`PegKeeperRegulator.peg_keepers(arg0: uint256) -> address: view`"
+!!! description "`PegKeeperRegulator.peg_keepers(arg0: uint256) -> PegKeeperInfo: view`"
 
     Getter for the PegKeeper contract at index `arg0`.
 
-    Returns: PegKeeper contract (`address`).
+    Returns: `PegKeeperInfo` (`struct`) consisting of .
 
     | Input  | Type      | Description |
     | ------ | --------- | ----------- |
@@ -638,10 +638,10 @@ PegKeepers can be removed from the Regulator contract by the `admin` using the [
     === "Example"
         ```shell
         >>> PegKeeperRegulator.peg_keepers(0)
-        '0x5b49b9add1ecfe53e19cc2cfc8a33127cd6ba4c6'
+        '0x5B49b9adD1ecfe53E19cc2cFc8a33127cD6bA4C6, 0x4DEcE678ceceb27446b35C672dC7d61F30bAD69E, false, false'
 
         >>> PegKeeperRegulator.peg_keepers(1)
-        '0xff78468340ee322ed63c432bf74d817742b392bf'
+        '0xFF78468340EE322ed63C432BF74D817742b392Bf, 0x390f3595bCa2Df7d23783dFd126427CCeb997BF4, false, false'
         ```
 
 
