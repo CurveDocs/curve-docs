@@ -1,7 +1,9 @@
 <h1>PegKeepers: Stabilizing the crvUSD Peg</h1>
 
 !!!github "GitHub"
-    Source code of all PegKeepers can be found on [GitHub](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/stabilizer).
+    Source code of all PegKeepers can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/stabilizer).
+
+    A list of all contract deployments can be found [here](../../references/deployed-contracts.md).
 
 
 # **General Concepts**
