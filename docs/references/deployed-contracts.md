@@ -293,11 +293,11 @@ The `RootLiquidityGaugeFactory` contract on Ethereum is utilized across a majori
 | `veBoost - Boost Delegation V2` | :logos-bsc: BinanceSmartChain | :material-close: |
 | `ChildLiquidityGaugeFactory` | :logos-gnosis: Gnosis | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://gnosisscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
 | `veBoost - Boost Delegation V2` | :logos-gnosis: Gnosis | [0xefde221f306152971d8e9f181bfe998447975810](https://gnosisscan.io/address/0xefde221f306152971d8e9f181bfe998447975810) |
-| `ChildLiquidityGaugeFactory` | :logos-celo: Celo | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://celoscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
+| `ChildLiquidityGaugeFactory` | :logos-celo: Celo | :material-close: |
 | `veBoost - Boost Delegation V2` | :logos-celo: Celo | :material-close: |
-| `ChildLiquidityGaugeFactory` | :logos-avalanche: Avalanche | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://snowscan.xyz/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
+| `ChildLiquidityGaugeFactory` | :logos-avalanche: Avalanche | :material-close: |
 | `veBoost - Boost Delegation V2` | :logos-avalanche: Avalanche | [0xc55837710bc500f1e3c7bb9dd1d51f7c5647e657](https://snowscan.xyz/address/0xc55837710bc500f1e3c7bb9dd1d51f7c5647e657) |
-| `ChildLiquidityGaugeFactory` | :logos-fantom: Fantom | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://ftmscan.com/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5) |
+| `ChildLiquidityGaugeFactory` | :logos-fantom: Fantom | :material-close: |
 | `veBoost - Boost Delegation V2` | :logos-fantom: Fantom | [0xb75dca485E21A77E1B433eCAcb74475FC67e259c](https://ftmscan.com/address/0xb75dca485E21A77E1B433eCAcb74475FC67e259c) |
 | :logos-mantle: `RootLiquidityGaugeFactory` | :logos-ethereum: Ethereum | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c](https://etherscan.io/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c) |
 | `ChildLiquidityGaugeFactory` | :logos-mantle: Mantle | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c](https://mantlescan.xyz/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c) |
