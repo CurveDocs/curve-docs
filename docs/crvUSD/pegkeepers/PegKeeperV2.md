@@ -2,7 +2,7 @@
 
 
 !!!github "GitHub"
-    Source code for `PegKeeperV2.vy` available on [GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/stabilizer/PegKeeperV2.vy).
+    Source code for `PegKeeperV2.vy` available on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/stabilizer/PegKeeperV2.vy).
 
 ## **Stabilization Method Enhancement in PegKeeperV2**
 
@@ -1087,7 +1087,7 @@ Ownership of the PegKeepers adheres to the standard procedure. The transition of
 ### `IS_INVERSE`
 !!! description "`PegKeeperV2.IS_INVERSE() -> bool: view`"
 
-    Getter to check if crvUSD is inverse. This variable is set when initializing the contract. If crvUSD is coin[0] in the liquidity pool, `IS_INVERSE` will be set to `true`. This variable is not directly relevant in the PegKeeper contract, but it is of great importance in the `PegKeeperRegulator` regarding calculations with oracles. 
+    Getter to check if crvUSD token index in the pool is inverse. This variable is set when initializing the contract. If crvUSD is coin[0] in the liquidity pool, `IS_INVERSE` will be set to `true`. This variable is not directly relevant in the PegKeeper contract, but it is of great importance in the `PegKeeperRegulator` regarding calculations with oracles. 
 
     Returns: true or false (`bool`).
 
