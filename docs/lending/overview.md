@@ -207,9 +207,8 @@ The factory allows the **permissionless creation of borrowing/lending markets wi
     ```
 
 
-## **Semilog Monetary Policy**
+## **Monetary Policies**
 
-Lending markets uses a semi-log monetary policy for lending markets where the **borrow rate does not depend on the price of crvUSD** but just on the **utilization of
-the market**.
+Lending markets uses a semi-log monetary policy for lending markets where the **borrow rate does not depend on the price of crvUSD** but just on the **utilization of the market**.
 
-[:octicons-arrow-right-24: More here](./contracts/semilog-mp.md)
+[:octicons-arrow-right-24: More here](./contracts/mp-overview.md)
