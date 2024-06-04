@@ -56,6 +56,14 @@ Where:
 
     [^1]: Assuming the PegKeeper has a total balance of 25m crvUSD.
 
+    ---
+
+    **To have full Desmos functionality and a cleaner overview, please view the graph directly on Desmos: [https://www.desmos.com/calculator/szhqv2edsd](https://www.desmos.com/calculator/szhqv2edsd).**
+
+    <div style="text-align: center;">
+        <iframe src="https://www.desmos.com/calculator/szhqv2edsd?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
+    </div>
+
 
 
 ### `provide_allowed`
