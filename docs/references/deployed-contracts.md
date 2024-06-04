@@ -102,7 +102,7 @@ Here is a list of all components of the pool registry currently in use:
 | :-------------------------------: | :---------------: | 
 | `MetaRegistry`                    |  [0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC](https://etherscan.io/address/0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC#code) |
 | `BasePoolRegistry`                |  [0xDE3eAD9B2145bBA2EB74007e58ED07308716B725](https://etherscan.io/address/0xDE3eAD9B2145bBA2EB74007e58ED07308716B725#code) | 
-| `AddressProvider`                 |  [0x0000000022D53366457F9d5E68Ec105046FC4383](https://etherscan.io/address/0x0000000022D53366457F9d5E68Ec105046FC4383#code) | 
+| `AddressProvider`                 |  [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://etherscan.io/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98#code) | 
 | `StableRegistry`                  |  [0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5](https://etherscan.io/address/0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5#code) | 
 | `StableRegistryHandler`           |  [0x46a8a9CF4Fc8e99EC3A14558ACABC1D93A27de68](https://etherscan.io/address/0x46a8a9CF4Fc8e99EC3A14558ACABC1D93A27de68#code) | 
 | `MetaPoolFactory`                 |  [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4#code) |
