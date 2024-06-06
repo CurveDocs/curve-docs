@@ -835,100 +835,100 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://arbiscan.io/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://arbiscan.io/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://arbiscan.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://arbiscan.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://arbiscan.io/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://arbiscan.io/address/0x934791f7F391727db92BFF94cd789c4623d14c52#code) |
 
 
 **:logos-optimism: Optimism**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://optimistic.etherscan.io/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://optimistic.etherscan.io/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://optimistic.etherscan.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://optimistic.etherscan.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://optimistic.etherscan.io/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://optimistic.etherscan.io/address/0x934791f7F391727db92BFF94cd789c4623d14c52#code) |
 
 
 **:logos-base: Base**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x64379C265Fc6595065D7d835AAaa731c0584dB80](https://basescan.org/address/0x64379C265Fc6595065D7d835AAaa731c0584dB80#code) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://basescan.org/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1#code) |
 | `Views`     | [0xd3B17f862956464ae4403cCF829CE69199856e1e](https://basescan.org/address/0xd3B17f862956464ae4403cCF829CE69199856e1e#code) |
 | `Factory`   | [0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F](https://basescan.org/address/0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F#code) |
-| `AMM`       | [0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495](https://basescan.org/address/0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495#code) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://basescan.org/address/0x934791f7F391727db92BFF94cd789c4623d14c52#code) |
 
 
 **:logos-fraxtal: Fraxtal**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://fraxscan.com/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://fraxscan.com/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://fraxscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://fraxscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://fraxscan.com/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://fraxscan.com/address/0x934791f7F391727db92BFF94cd789c4623d14c52#code) |
 
 
 **:logos-polygon: Polygon**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://polygonscan.com//address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://polygonscan.com//address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://polygonscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://polygonscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://polygonscan.com/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://polygonscan.com/address/0x934791f7F391727db92BFF94cd789c4623d14c52#code) |
 
 
 **:logos-polygon: Polygon zk-EVM**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://zkevm.polygonscan.com/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://zkevm.polygonscan.com/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://zkevm.polygonscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://zkevm.polygonscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://zkevm.polygonscan.com/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://zkevm.polygonscan.com/address/0x934791f7F391727db92BFF94cd789c4623d14c52#code) |
 
 
 **:logos-gnosis: Gnosis**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://gnosisscan.io/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://gnosisscan.io/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://gnosisscan.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://gnosisscan.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://gnosisscan.io/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://gnosisscan.io/address/0x934791f7F391727db92BFF94cd789c4623d14c52#code) |
 
 
 **:logos-avalanche: Avalanche**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://snowscan.xyz/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://snowscan.xyz/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://snowscan.xyz/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://snowscan.xyz/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://snowscan.xyz/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://snowscan.xyz/address/0x934791f7F391727db92BFF94cd789c4623d14c52#code) |
 
 
 **:logos-fantom: Fantom**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://ftmscan.com/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://ftmscan.com/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://ftmscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://ftmscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://ftmscan.com/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://ftmscan.com/address/0x934791f7F391727db92BFF94cd789c4623d14c52#code) |
 
 
 **:logos-bsc: Binance Smart Chain**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://bscscan.com/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://bscscan.com/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://bscscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://bscscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://bscscan.com/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://bscscan.com/address/0x934791f7F391727db92BFF94cd789c4623d14c52#code) |
 
 
 
@@ -936,70 +936,70 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://lineascan.build/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://lineascan.build/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://lineascan.build/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://lineascan.build/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://lineascan.build/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://lineascan.build/address/0x934791f7F391727db92BFF94cd789c4623d14c52#code) |
 
 
 **:logos-scroll: Scroll**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://scrollscan.com/address/0x2005995a71243be9FB995DaB4742327dc76564Df) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://scrollscan.com/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://scrollscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://scrollscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://scrollscan.com/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://scrollscan.com/address/0x934791f7F391727db92BFF94cd789c4623d14c52#code) |
 
 
 **:logos-mantle: Mantle**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://mantlescan.xyz/address/0x2005995a71243be9FB995DaB4742327dc76564Df) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://mantlescan.xyz/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://mantlescan.xyz/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://mantlescan.xyz/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://mantlescan.xyz/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://mantlescan.xyz/address/0x934791f7F391727db92BFF94cd789c4623d14c52) |
 
 
 **:logos-celo: Celo**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://celoscan.io/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://celoscan.io/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://celoscan.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://celoscan.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://celoscan.io/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://celoscan.io/address/0x934791f7F391727db92BFF94cd789c4623d14c52#code) |
 
 
 **:logos-kava: Kava**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a](https://kavascan.com/address/0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a#contracts) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://kavascan.com/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1#contracts) |
 | `Views`     | [0x0C9D8c7e486e822C29488Ff51BFf0167B4650953](https://kavascan.com/address/0x0C9D8c7e486e822C29488Ff51BFf0167B4650953#contracts) |
 | `Factory`   | [0xd3B17f862956464ae4403cCF829CE69199856e1e](https://kavascan.com/address/0xd3B17f862956464ae4403cCF829CE69199856e1e#contracts) |
-| `AMM`       | [0x64379C265Fc6595065D7d835AAaa731c0584dB80](https://kavascan.com/address/0x64379C265Fc6595065D7d835AAaa731c0584dB80#contracts) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://kavascan.com/address/0x934791f7F391727db92BFF94cd789c4623d14c52#contracts) |
 
 
 **:logos-aurora: Aurora**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://explorer.aurora.dev/address/0x2005995a71243be9FB995DaB4742327dc76564Df/contracts) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://explorer.aurora.dev/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1/contracts) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://explorer.aurora.dev/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80/contracts) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://explorer.aurora.dev/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F/contracts) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://explorer.aurora.dev/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223/contracts) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://explorer.aurora.dev/address/0x934791f7F391727db92BFF94cd789c4623d14c52/contracts) |
 
 
 **:logos-xlayer: X-Layer**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | [0x505d666e4dd174dcdd7fa090ed95554486d2be44](https://www.oklink.com/xlayer/address/0x505d666e4dd174dcdd7fa090ed95554486d2be44/contract) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://www.oklink.com/xlayer/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1/contract) |
 | `Views`     | [0x5a8c93ee12a8df4455ba111647ada41f29d5cfcc](https://www.oklink.com/xlayer/address/0x5a8c93ee12a8df4455ba111647ada41f29d5cfcc/contract) |
 | `Factory`   | [0x0c59d36b23f809f8b6c7cb4c8c590a0ac103baef](https://www.oklink.com/xlayer/address/0x0c59d36b23f809f8b6c7cb4c8c590a0ac103baef/contract) |
-| `AMM` | [0xfabc421e3368d158d802684a217a83c083c94ceb](https://www.oklink.com/xlayer/address/0xfabc421e3368d158d802684a217a83c083c94ceb/contract) |
+| `AMM` | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://www.oklink.com/xlayer/address/0x934791f7F391727db92BFF94cd789c4623d14c52/contract) |
 
 
 **:logos-zksync: zk-Sync**
