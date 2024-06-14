@@ -814,11 +814,11 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://etherscan.io/address/0x2005995a71243be9FB995DaB4742327dc76564Df#code) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://etherscan.io/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://etherscan.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://etherscan.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
 | `Gauge`     | [0x38D9BdA812da2C68dFC6aDE85A7F7a54E77F8325](https://etherscan.io/address/0x38D9BdA812da2C68dFC6aDE85A7F7a54E77F8325#code) |
-| `AMM`       | [0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223](https://etherscan.io/address/0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223#code) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://etherscan.io/address/0x934791f7F391727db92BFF94cd789c4623d14c52#code) |
 
 
 **:logos-ethereum: Ethereum Sepolia**
