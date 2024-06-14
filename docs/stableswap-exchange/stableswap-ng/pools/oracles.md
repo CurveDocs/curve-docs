@@ -1,6 +1,48 @@
 <h1>StableSwap-NG Oracles</h1> 
 
 
+!!!danger "WARNING: Oracle Vulnerability"
+    A specific AMM implementation of [stableswap-ng](https://github.com/curvefi/stableswap-ng) has a bug that can cause the price oracle to change sharply if the tokens within the AMM **do not all have the same token decimal precision of 18 or if the tokens use external rates**. For example, the [`USDe <> USDC`](https://etherscan.io/address/0x02950460e2b9529d0e00284a5fa2d7bdf3fa4d72) pool has this issue, as USDe has a precision of 18 and USDC of 6.
+
+    A list of identified affected pools can be found in this [:material-google-spreadsheet: Google Spreadsheet](https://docs.google.com/spreadsheets/d/130LPSQbAnMWTC1yVO23cqRSblrkYFfdHdRwYNpaaoYY/edit?usp=sharing).
+
+    **This bug only affects the use of the oracle and does not impact token exchanges or any liquidity actions at all. The AMM still functions as intended.** Pools deployed after **`Dec-12-2023 09:39:35 AM +UTC`** do not include the bug, as the fixed AMM implementation of the `StableSwapNG Factory` was [set to the updated version](https://etherscan.io/tx/0x5fc02a3f46e40a48ae4cecc07534bb3e0228b7a7a59b652801521f2af3a00b72).
+
+    === "Code Changes"
+
+        *The source of the bug is in the AMM implementations [`code line 777`](https://github.com/curvefi/stableswap-ng/commit/4bb402ecb386979c113bee770ffbea9aebd5ae66#diff-5fb59b0d4563b84cdb3bb3740486847e798a1eca825b537ecbab95cb74d03847L777-L779) and was fixed in commit [`4bb402ecb386979c113bee770ffbea9aebd5ae66`](https://github.com/curvefi/stableswap-ng/commit/4bb402ecb386979c113bee770ffbea9aebd5ae66). The function did not take token precisions into account when updating the oracle in the `remove_liquidity_imbalance` function. The only change to fix the bug was made in a single line to ensure the `upkeep_oracle` calls the internal `_xp_mem` function before upkeeping the oracle:*
+
+        ```py hl_lines="2 6"
+        ### ----- old code (bugged) ----- ###
+        self.upkeep_oracles(new_balances, amp, D1)
+        
+
+        ### ----- new code (bug fixed) ----- ###
+        self.upkeep_oracles(self._xp_mem(rates, new_balances), amp, D1)
+
+        @pure
+        @internal
+        def _xp_mem(
+            _rates: DynArray[uint256, MAX_COINS],
+            _balances: DynArray[uint256, MAX_COINS]
+        ) -> DynArray[uint256, MAX_COINS]:
+
+            result: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+            for i in range(N_COINS_128, bound=MAX_COINS_128):
+                result.append(unsafe_div(_rates[i] * _balances[i], PRECISION))
+            return result
+        ```
+
+    To manually verify if a pool is using a correct (bug-free) implementation, you can call the `get_implementation_address(pool)` method on the [`StableSwapNG Factory`](https://etherscan.io/address/0x6a8cbed756804b16e05e741edabd5cb544ae21bf). If [`0xDCc91f930b42619377C200BA05b7513f2958b202`](https://etherscan.io/address/0xDCc91f930b42619377C200BA05b7513f2958b202) is returned, the pool uses the updated implementation without this bug.[^1] 
+    
+    A simple :simple-googlecolab: Google Colab Notebook to check pool implementations can be found [here](https://colab.research.google.com/drive/1RLqpXOksJCRnJn8l1JeO_LB8D81b1aO9?usp=sharing).
+
+    [^1]: Don't panic if the method returns an address other than `0xDCc91f930b42619377C200BA05b7513f2958b202`. It's possible that the AMM implementation was updated again for whatever reason, and the documentation hasn't been updated yet. Generally speaking, if the pool is using an implementation from **after December 12, 2023**, it should not have the oracle bug.
+
+
+---
+
+
 ## **Price and D Oracles**
 
 
