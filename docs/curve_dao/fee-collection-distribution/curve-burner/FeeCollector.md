@@ -13,15 +13,6 @@ The contract uses different [epochs](#epochs) (phases) in which certain actions 
 
 *The process of burning coins into the target coin contrains the following flow:*
 
-
-``` mermaid
-graph LR
-  p1[Pool] --> C{FeeCollector}
-  p2[Pool] --> C
-  p3[Pool] --> C
-  C --> B(Burner)
-```
-
 1. Withdrawing admin fees from liquidity pools or crvUSD markets using `withdraw_many`
 2. Collecting fees and calling the burn function of the burner via `collect`
 3. Forwarding the taraget token using `forward` method to the hooker contract and executes the contracts duty
@@ -102,7 +93,7 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
                 for epoch in [Epoch.SLEEP, Epoch.COLLECT, Epoch.EXCHANGE, Epoch.FORWARD]:
                     if ts < EPOCH_TIMESTAMPS[2 * convert(epoch, uint256)]:
                         return epoch
-                raise "Bad Epoch"
+                raise UNREACHABLE
             ```
 
     === "Example"
@@ -196,7 +187,7 @@ The `fee` in the `FeeCollector` contract is a keeper's (or caller's) fee, which 
             @view
             def fee(_epoch: Epoch=empty(Epoch), _ts: uint256=block.timestamp) -> uint256:
                 """
-                @notice Calculate keeper's fee for calling `collect`
+                @notice Calculate keeper's fee
                 @param _epoch Epoch to count fee for
                 @param _ts Timestamp of collection
                 @return Fee with base 10^18
@@ -213,7 +204,7 @@ The `fee` in the `FeeCollector` contract is a keeper's (or caller's) fee, which 
                 start, end = self._epoch_time_frame(epoch, ts)
                 if ts >= end:
                     return 0
-                return self.max_fee[convert(epoch, uint256)] * (ts - start) / (end - start)
+                return self.max_fee[convert(epoch, uint256)] * (ts + 1 - start) / (end - start)
 
             @internal
             @pure
@@ -222,13 +213,13 @@ The `fee` in the `FeeCollector` contract is a keeper's (or caller's) fee, which 
                 for epoch in [Epoch.SLEEP, Epoch.COLLECT, Epoch.EXCHANGE, Epoch.FORWARD]:
                     if ts < EPOCH_TIMESTAMPS[2 * convert(epoch, uint256)]:
                         return epoch
-                raise "Bad Epoch"
+                raise UNREACHABLE
             ```
 
     === "Example"
         ```shell
         >>> FeeCollector.fee()
-        3220601851851851
+        8375000000000000
 
         >>> FeeCollector.fee(4, 1716854401)
         0
@@ -241,9 +232,11 @@ The `fee` in the `FeeCollector` contract is a keeper's (or caller's) fee, which 
 ### `max_fee`
 !!! description "`FeeCollector.max_fee(arg0: uint256) -> uint256: view`"
 
-    Getter for the maximum fee of an epoch.
+    Getter for the maximum fee of an epoch. Maximum fee is set to 1% for the `COLLECT` and `FORWARD` epochs. This value can later on be changed by the `owner` of the contract using the `set_max_fee` function.
 
     Returns: maximum fee (`uint256`).
+
+    Emits: `SetMaxFee` at contract initialization
 
     | Input    | Type      | Description                                              |
     |----------|-----------|----------------------------------------------------------|
@@ -254,6 +247,10 @@ The `fee` in the `FeeCollector` contract is a keeper's (or caller's) fee, which 
         === "FeeCollector.vy"
 
             ```python
+            event SetMaxFee:
+                epoch: indexed(Epoch)
+                max_fee: uint256
+
             enum Epoch:
                 SLEEP  # 1
                 COLLECT  # 2
@@ -261,6 +258,23 @@ The `fee` in the `FeeCollector` contract is a keeper's (or caller's) fee, which 
                 FORWARD  # 8
 
             max_fee: public(uint256[9])  # max_fee[Epoch]
+
+            @external
+            def __init__(_target_coin: ERC20, _weth: wETH, _owner: address, _emergency_owner: address):
+                """
+                @notice Contract constructor
+                @param _target_coin Coin to swap to
+                @param _weth Wrapped ETH(native coin) address
+                @param _owner Owner address
+                @param _emergency_owner Emergency owner address. Can kill the contract
+                """
+                ...
+                self.max_fee[convert(Epoch.COLLECT, uint256)] = ONE / 100  # 1%
+                self.max_fee[convert(Epoch.FORWARD, uint256)] = ONE / 100  # 1%
+                ...
+                log SetMaxFee(Epoch.COLLECT, ONE / 100)
+                log SetMaxFee(Epoch.FORWARD, ONE / 100)
+                ...
             ```
 
     === "Example"
@@ -274,12 +288,14 @@ The `fee` in the `FeeCollector` contract is a keeper's (or caller's) fee, which 
 
 
 ### `set_max_fee`
-!!! description "`FeeCollector.`"
+!!! description "`FeeCollector.set_max_fee(_epoch: uin256, _max_fee: uint256)`"
 
     !!!guard "Guarded Method"
         This function is only callable by the `owner` of the contract.
 
     Function to set `max_fee` for a specific Epoch. The maximum fee cannot be greater than 1 (100%).
+
+    Emits: `SetMaxFee`
 
     | Input    | Type      | Description                                              |
     |----------|-----------|----------------------------------------------------------|
@@ -291,17 +307,25 @@ The `fee` in the `FeeCollector` contract is a keeper's (or caller's) fee, which 
         === "FeeCollector.vy"
 
             ```python
+            event SetMaxFee:
+                epoch: indexed(Epoch)
+                max_fee: uint256
+
             @external
             def set_max_fee(_epoch: Epoch, _max_fee: uint256):
                 """
                 @notice Set keeper's max fee
                 @dev Callable only by owner
+                @param _epoch Epoch to set fee for
+                @param _max_fee Maximum fee to set
                 """
                 assert msg.sender == self.owner, "Only owner"
                 subset: uint256 = convert(_epoch, uint256)
                 assert subset & (subset - 1) == 0, "Bad Epoch"
                 assert _max_fee <= ONE, "Bad max_fee"
                 self.max_fee[convert(_epoch, uint256)] = _max_fee
+
+                log SetMaxFee(_epoch, _max_fee)
             ```
 
     === "Example"
@@ -336,11 +360,16 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
 
     Returns: target coin (`address`).
 
+    Emits: `SetTarget` at contract initialization
+
     ??? quote "Source code"
 
         === "FeeCollector.vy"
 
             ```python
+            event SetTarget:
+                target: indexed(ERC20)
+
             target: public(ERC20)  # coin swapped into
 
             @external
@@ -348,26 +377,20 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
                 """
                 @notice Contract constructor
                 @param _target_coin Coin to swap to
-                @param _owner Owner address.
-                @param _emergency_owner Emergency owner address. Can kill the contract.
+                @param _weth Wrapped ETH(native coin) address
+                @param _owner Owner address
+                @param _emergency_owner Emergency owner address. Can kill the contract
                 """
                 self.target = _target_coin
-                WETH = _weth
-                self.owner = _owner
-                self.emergency_owner = _emergency_owner
-
-                self.max_fee[convert(Epoch.COLLECT, uint256)] = ONE / 100  # 1%
-                self.max_fee[convert(Epoch.FORWARD, uint256)] = ONE / 100  # 1%
-
-                ALL_COINS = ERC20(empty(address))
-
-                self.is_killed[empty(ERC20)] = Epoch.COLLECT | Epoch.FORWARD  # Set burner first
-                self.is_killed[_target_coin] = Epoch.COLLECT | Epoch.EXCHANGE  # Keep target coin in contract
+                ...
+                log SetTarget(_target_coin)
+                ...
             ```
 
     === "Example"
         ```shell
-        >>> soon
+        >>> FeeCollector.target()
+        '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
         ```
 
 
@@ -379,6 +402,8 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
 
     Function to change the target coin of the contract.
 
+    Emits: `SetTarget`
+
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
     | `_new_target` | `address` | Token address of the new target coin. |
@@ -388,6 +413,9 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
         === "FeeCollector.vy"
 
             ```python
+            event SetTarget:
+                target: indexed(ERC20)
+
             target: public(ERC20)  # coin swapped into
 
             @external
@@ -395,10 +423,18 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
                 """
                 @notice Set new coin for fees accumulation
                 @dev Callable only by owner
+                @param _new_target Address of the new target coin
                 """
                 assert msg.sender == self.owner, "Only owner"
+
+                target: ERC20 = self.target
+                self.is_killed[target] = empty(Epoch)  # allow to collect and exchange
+                log SetKilled(target, empty(Epoch))
+
                 self.target = _new_target
                 self.is_killed[_new_target] = Epoch.COLLECT | Epoch.EXCHANGE  # Keep target coin in contract
+                log SetTarget(_new_target)
+                log SetKilled(_new_target, Epoch.COLLECT | Epoch.EXCHANGE)
             ```
 
     === "Example"
@@ -414,7 +450,7 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
-    | `_pools` | `DynArray[address, MAX_LEN]` | Curve pools to withdraw admin fees from.     |
+    | `_pools` | `DynArray[address, MAX_LEN]` | Dynamic array containing the pool addresses to claim the admin fees from.     |
 
     ??? quote "Source code"
 
@@ -445,11 +481,11 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
 ### `collect` 
 !!! description "`FeeCollector.collect(_coins: DynArray[ERC20, MAX_LEN], _receiver: address=msg.sender)`"
 
-    Function to collect the earned fees. This is the main function to burn the coins and can only be called during the `COLLECT` epoch. This function calls the `burn` function of the [`burner`](#burner) contract which burns the coins into the target coin. The caller is awarded a [keeper fee](#keepers-fee). 
+    Function that is the primary mechanism for burning coins and can only be called during the `COLLECT` epoch. It calls the `burn` function of the burner contract, which creates a [conditional order](https://github.com/cowprotocol/composable-cow) on CowSwap if one has not already been created. This process effectively "burns" the collected coins by swapping them into the target coin. Additionally, the caller is awarded a [keeper fee](#keepers-fee) for their role in the process.
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
-    | `_coins` | `DynArray[ERC20, MAX_LEN]` | Dynamic array including the coins to collect in ascending order.     |
+    | `_coins` | `DynArray[ERC20, MAX_LEN]` | Dynamic array of coin addresses sorted in ascending order.     |
     | `_receiver` | `address` | Receiver of keeper fee. |
 
     ??? quote "Source code"
@@ -543,6 +579,47 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
         >>> soon
         ```
 
+
+### `burn`
+!!! description "`FeeCollector.burn(_coin: address)`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the contract.
+
+    Function to transfer a coins from the contract with approval. This function is needed for back compatability along with dealing with raw ETH.
+
+    | Input   | Type      | Description                    |
+    | ------- | --------- | ------------------------------ |
+    | `_coin` | `address` | Token address of the new target coin. |
+
+    ??? quote "Source code"
+
+        === "FeeCollector.vy"
+
+            ```python
+            @external
+            @payable
+            def burn(_coin: address) -> bool:
+                """
+                @notice Transfer coin from contract with approval
+                @dev Needed for back compatability along with dealing raw ETH
+                @param _coin Coin to transfer
+                @return True if did not fail, back compatability
+                """
+                if _coin == ETH_ADDRESS:  # Deposit
+                    WETH.deposit(value=self.balance)
+                else:
+                    amount: uint256 = ERC20(_coin).balanceOf(msg.sender)
+                    ERC20(_coin).transferFrom(msg.sender, self, amount)
+                return True
+            ```
+
+    === "Example"
+        ```shell
+        >>> soon
+        ```
+
+
 ### `can_exchange`
 !!! description "`FeeCollector.can_exchange(_coins: DynArray[ERC20, MAX_LEN]) -> bool`"
 
@@ -552,7 +629,7 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
-    | `can_exchange` | `DynArray[ERC20, MAX_LEN]` | Array of ERC20 token addresses to check for exchange eligibility. |
+    | `can_exchange` | `DynArray[ERC20, MAX_LEN]` | Dynamic array of ERC20 token addresses to check for exchange eligibility. |
 
     ??? quote "Source code"
 
@@ -580,7 +657,8 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
 
     === "Example"
         ```shell
-        >>> soon
+        >>> FeeCollector.can_exchange(['0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'])
+        'false'
         ```
 
 
@@ -594,7 +672,13 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
-    | `_transfers` | `DynArray[Transfer, MAX_LEN]` | Dynamic array of [coin, to, amount] with a maximum length of 64 elements. |
+    | `_transfers` | `DynArray[Transfer, MAX_LEN]` | Dynamic array of `Transfer` structs. |
+
+    *Each `Transfer` struct contains:*
+
+    - `coin`: The ERC20 token address that is being transferred.
+    - `to`: The address to which the tokens will be transferred.
+    - `amount`: The amount of tokens to transfer. If set to 2^256-1, it transfers the entire balance.
 
     ??? quote "Source code"
 
@@ -613,6 +697,7 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
             def transfer(_transfers: DynArray[Transfer, MAX_LEN]):
                 """
                 @dev No approvals so can change burner easily
+                @param _transfers Transfers to apply
                 """
                 assert msg.sender == self.burner.address, "Only Burner"
                 epoch: Epoch = self._epoch_ts(block.timestamp)
@@ -679,14 +764,20 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
 ### `forward`
 !!! description "`FeeCollector.forward(_hook_inputs: DynArray[HookInput, MAX_HOOK_LEN], _receiver: address=msg.sender) -> uint256`"
 
-    Function designed to transfer the target coin to the hooker address. This function can only be called during the `FORWARD` epoch. It charges a keeper fee on the entire balance of the forwarded coins and awards it to the caller. The function also calls the `push_target` function in the burner contract to transfer any remaining target coins back into the FeeCollector contract before forwarding the total balance to the hooker. Additionally, the function calls the `duty_act` method of the hooker contract, applying any specified hooks and adjusting the fee accordingly.
+    Function to transfer the target coin to the hooker address. This function can only be called during the `FORWARD` epoch. It charges a keeper fee on the entire balance of the forwarded coins and awards it to the caller. The function also calls the `push_target` function in the burner contract to transfer any remaining target coins back into the FeeCollector contract before forwarding the total balance to the hooker. Additionally, the function calls the `duty_act` method of the hooker contract, applying any specified hooks and adjusting the fee accordingly.
 
     Returns: received keeper fee (`uint256`)
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
-    | `_hook_inputs` | `DynArray[HookInput, MAX_HOOK_LEN]` | Input parameters for the hook.     |
+    | `_hook_inputs` | `DynArray[HookInput, MAX_HOOK_LEN]` | Dynamic array of `HookInput` structs.     |
     | `_receiver` | `address` | Receiver of keeper fee. |
+
+    *Each `HookInput` struct contains:*
+
+    - `hook_id`: ID of the hook to execute.
+    - `value`: todo
+    - `data`: todo
 
     ??? quote "Source code"
 
@@ -732,7 +823,7 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
                 return fee
             ```
 
-        === "FeeCollector.vy"
+        === "CowSwapBurner.vy"
 
             ```python
             @external
@@ -751,6 +842,13 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
         === "Hooker.vy"
 
             ```python
+            event DutyAct:
+                pass
+
+            event Act:
+                receiver: indexed(address)
+                compensation: uint256
+
             @external
             @payable
             def duty_act(_hook_inputs: DynArray[HookInput, MAX_HOOKS_LEN], _receiver: address=msg.sender) -> uint256:
@@ -768,6 +866,8 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
                     hook_mask |= 1 << solicitation.hook_id
                 duties_checklist: uint256 = self.duties_checklist
                 assert hook_mask & duties_checklist == duties_checklist, "Not all duties"
+
+                log DutyAct()
 
                 return self._act(_hook_inputs, _receiver)
 
@@ -794,6 +894,9 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
                     if prev_idx > solicitation.hook_id:
                         raise "Hooks not sorted"
                     prev_idx = solicitation.hook_id
+                    log HookShot(prev_idx, hook_compensation)
+
+                log Act(_receiver, compensation)
 
                 # happy ending
                 if compensation > 0:
@@ -818,7 +921,7 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
-    | `_recovers` | `DynArray[RecoverInput, MAX_LEN]` | Array of `RecoverInput` structs.    |
+    | `_recovers` | `DynArray[RecoverInput, MAX_LEN]` | Dynamic array of `RecoverInput` structs.    |
     | `_receiver` | `address` | Receiver of the recovered coins.     |
 
     *Each `RecoverInput` struct contains:*
@@ -906,7 +1009,7 @@ When setting up a burner or hooker, they need to support a specific interface st
     === "Example"
         ```shell
         >>> FeeCollector.burner()
-        'todo'
+        '0xC0fC3dDfec95ca45A0D2393F518D3EA1ccF44f8b'
         ```
 
 
@@ -930,24 +1033,12 @@ When setting up a burner or hooker, they need to support a specific interface st
             HOOKER_INTERFACE_ID: constant(bytes4) = 0xe569b44d
 
             hooker: public(Hooker)
-
-            @external
-            def set_hooker(_new_hooker: Hooker):
-                """
-                @notice Set contract for hooks
-                @dev Callable only by owner
-                """
-                assert msg.sender == self.owner, "Only owner"
-                assert _new_hooker.supportsInterface(HOOKER_INTERFACE_ID)
-
-                self.target.approve(self.hooker.address, 0)
-                self.hooker = _new_hooker
             ```
 
     === "Example"
         ```shell
         >>> FeeCollector.hooker()
-        ''
+        '0x9A9DF35cd8E88565694CA6AD5093c236C7f6f69D'
         ```
 
 
@@ -958,6 +1049,8 @@ When setting up a burner or hooker, they need to support a specific interface st
         This function is only callable by the `owner` of the contract.
 
     Function to set a new burner contract. When setting, the contract checks if the new burner supports a certain `BURNER_INTERFACE_ID`.
+
+    Emits: `SetBurner`
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
@@ -973,6 +1066,9 @@ When setting up a burner or hooker, they need to support a specific interface st
                 def push_target() -> uint256: nonpayable
                 def supportsInterface(_interface_id: bytes4) -> bool: view
 
+            event SetBurner:
+                burner: indexed(Burner)
+
             BURNER_INTERFACE_ID: constant(bytes4) = 0xa3b5e311
 
             burner: public(Burner)
@@ -980,12 +1076,15 @@ When setting up a burner or hooker, they need to support a specific interface st
             @external
             def set_burner(_new_burner: Burner):
                 """
-                @notice Set burner for exchanging coins
+                @notice Set burner for exchanging coins, must implement BURNER_INTERFACE
                 @dev Callable only by owner
+                @param _new_burner Address of the new contract
                 """
                 assert msg.sender == self.owner, "Only owner"
                 assert _new_burner.supportsInterface(BURNER_INTERFACE_ID)
                 self.burner = _new_burner
+
+                log SetBurner(_new_burner)
             ```
 
     === "Example"
@@ -1002,6 +1101,8 @@ When setting up a burner or hooker, they need to support a specific interface st
 
     Function to set a new hooker contract. When setting, the contract checks if the new hooker supports a certain `HOOKER_INTERFACE_ID: constant(bytes4) = 0xe569b44d`.
 
+    Emits: `SetHooker`
+
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
     | `_new_hooker` | `address` | Address of hooker contract to set.     |
@@ -1016,6 +1117,9 @@ When setting up a burner or hooker, they need to support a specific interface st
                 def buffer_amount() -> uint256: view
                 def supportsInterface(_interface_id: bytes4) -> bool: view
 
+            event SetHooker:
+                hooker: indexed(Hooker)
+
             HOOKER_INTERFACE_ID: constant(bytes4) = 0xe569b44d
 
             hooker: public(Hooker)
@@ -1023,14 +1127,18 @@ When setting up a burner or hooker, they need to support a specific interface st
             @external
             def set_hooker(_new_hooker: Hooker):
                 """
-                @notice Set contract for hooks
+                @notice Set contract for hooks, must implement HOOKER_INTERFACE
                 @dev Callable only by owner
+                @param _new_hooker Address of the new contract
                 """
                 assert msg.sender == self.owner, "Only owner"
                 assert _new_hooker.supportsInterface(HOOKER_INTERFACE_ID)
 
-                self.target.approve(self.hooker.address, 0)
+                if self.hooker != empty(Hooker):
+                    self.target.approve(self.hooker.address, 0)
                 self.hooker = _new_hooker
+
+                log SetHooker(_new_hooker)
             ```
 
     === "Example"
@@ -1110,6 +1218,8 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
     Function to kill a coin for a specific epoch.
 
+    Emits: `SetKilled`
+
     | Input   | Type                                 | Description                                      |
     |---------|--------------------------------------|--------------------------------------------------|
     | `_input`| `DynArray[KilledInput, MAX_LEN]`     | Array of `KilledInput` structs.                  |
@@ -1124,6 +1234,10 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
         === "FeeCollector.vy"
 
             ```python
+            event SetKilled:
+                coin: indexed(ERC20)
+                epoch_mask: Epoch
+
             struct KilledInput:
                 coin: ERC20
                 killed: Epoch  # True where killed
@@ -1135,11 +1249,13 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
                 """
                 @notice Stop a contract or specific coin to be burnt
                 @dev Callable only by owner or emergency owner
+                @param _input Array of (coin address, killed phases enum)
                 """
                 assert msg.sender in [self.owner, self.emergency_owner], "Only owner"
 
                 for input in _input:
                     self.is_killed[input.coin] = input.killed
+                    log SetKilled(input.coin, input.killed)
             ```
 
     === "Example"
@@ -1160,11 +1276,16 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
     Returns: owner (`address`).
 
+    Emits: `SetOwner` at contract initialization
+
     ??? quote "Source code"
 
         === "FeeCollector.vy"
 
             ```python
+            event SetOwner:
+                owner: indexed(address)
+
             owner: public(address)
 
             @external
@@ -1172,26 +1293,21 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
                 """
                 @notice Contract constructor
                 @param _target_coin Coin to swap to
-                @param _owner Owner address.
-                @param _emergency_owner Emergency owner address. Can kill the contract.
+                @param _weth Wrapped ETH(native coin) address
+                @param _owner Owner address
+                @param _emergency_owner Emergency owner address. Can kill the contract
                 """
-                self.target = _target_coin
-                WETH = _weth
+                ...
                 self.owner = _owner
-                self.emergency_owner = _emergency_owner
-
-                self.max_fee[convert(Epoch.COLLECT, uint256)] = ONE / 100  # 1%
-                self.max_fee[convert(Epoch.FORWARD, uint256)] = ONE / 100  # 1%
-
-                ALL_COINS = ERC20(empty(address))
-
-                self.is_killed[empty(ERC20)] = Epoch.COLLECT | Epoch.FORWARD  # Set burner first
-                self.is_killed[_target_coin] = Epoch.COLLECT | Epoch.EXCHANGE  # Keep target coin in contract
+                ...
+                log SetOwner(_owner)
+                ...
             ```
 
     === "Example"
         ```shell
-        >>> soon
+        >>> FeeCollector.owner()
+        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
         ```
 
 
@@ -1202,11 +1318,16 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
     Returns: emergency owner (`address`).
 
+    Emits: `SetEmergencyOwner` at contract initialization
+
     ??? quote "Source code"
 
         === "FeeCollector.vy"
 
             ```python
+            event SetEmergencyOwner:
+                emergency_owner: indexed(address)
+
             emergency_owner: public(address)
 
             @external
@@ -1214,26 +1335,21 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
                 """
                 @notice Contract constructor
                 @param _target_coin Coin to swap to
-                @param _owner Owner address.
-                @param _emergency_owner Emergency owner address. Can kill the contract.
+                @param _weth Wrapped ETH(native coin) address
+                @param _owner Owner address
+                @param _emergency_owner Emergency owner address. Can kill the contract
                 """
-                self.target = _target_coin
-                WETH = _weth
-                self.owner = _owner
+                ...
                 self.emergency_owner = _emergency_owner
-
-                self.max_fee[convert(Epoch.COLLECT, uint256)] = ONE / 100  # 1%
-                self.max_fee[convert(Epoch.FORWARD, uint256)] = ONE / 100  # 1%
-
-                ALL_COINS = ERC20(empty(address))
-
-                self.is_killed[empty(ERC20)] = Epoch.COLLECT | Epoch.FORWARD  # Set burner first
-                self.is_killed[_target_coin] = Epoch.COLLECT | Epoch.EXCHANGE  # Keep target coin in contract
+                ...
+                log SetEmergencyOwner(_emergency_owner)
+                ...
             ```
 
     === "Example"
         ```shell
-        >>> soon
+        >>> FeeCollector.emergency_owner()
+        '0x467947EE34aF926cF1DCac093870f613C96B1E0c'
         ```
 
 
@@ -1245,6 +1361,8 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
     Function to set a new owner.
 
+    Emits: `SetOwner`
+
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
     | `_new_owner` | `address` | Address of the new owner. |
@@ -1254,6 +1372,9 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
         === "FeeCollector.vy"
 
             ```python
+            event SetOwner:
+                owner: indexed(address)
+
             owner: public(address)
 
             @external
@@ -1261,10 +1382,12 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
                 """
                 @notice Set owner of the contract
                 @dev Callable only by current owner
+                @param _new_owner Address of the new owner
                 """
                 assert msg.sender == self.owner, "Only owner"
                 assert _new_owner != empty(address)
                 self.owner = _new_owner
+                log SetOwner(_new_owner)
             ```
 
     === "Example"
@@ -1278,6 +1401,8 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
     Function to a new emergency owner.
 
+    Emits: `SetEmergencyOwner`
+
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
     | `_new_owner` | `address` | Address of the new emergency owner.     |
@@ -1287,6 +1412,9 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
         === "FeeCollector.vy"
 
             ```python
+            event SetEmergencyOwner:
+                emergency_owner: indexed(address)
+
             emergency_owner: public(address)
 
             @external
@@ -1294,10 +1422,12 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
                 """
                 @notice Set emergency owner of the contract
                 @dev Callable only by current owner
+                @param _new_owner Address of the new emergency owner
                 """
                 assert msg.sender == self.owner, "Only owner"
                 assert _new_owner != empty(address)
                 self.emergency_owner = _new_owner
+                log SetEmergencyOwner(_new_owner)
             ```
 
     === "Example"

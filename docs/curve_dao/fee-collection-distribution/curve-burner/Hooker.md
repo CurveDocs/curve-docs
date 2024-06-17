@@ -59,7 +59,7 @@ Before hooks can be executed, they need to be added via `set_hooks`. These hooks
 
     Getter for the hooks recorded in the contract.
 
-    Returns: `Hook` struct consisting of the target address (`address`), a byte array containing the method identifier and additional data (`Bytes[1024]`), compensation strategy (`CompensationStrategy`) and if the hook is a duty hook or not (`bool`).
+    Returns: `Hook` struct consisting of the target address (`address`), a byte array containing the method identifier and additional data (`Bytes[1024]`), compensation strategy (`CompensationStrategy`) consisting of "todo" and if the hook is a duty hook or not (`bool`).
 
     | Input   | Type      | Description        |
     | ------- | --------- | ------------------ |
@@ -81,7 +81,8 @@ Before hooks can be executed, they need to be added via `set_hooks`. These hooks
 
     === "Example"
         ```shell
-        >>> soon
+        >>> Hooker.hooks(0)
+        '0xD16d5eC345Dd86Fb63C6a9C43c517210F1027914, 0x89afcb44000000000000000000000000f939e0a03fb07f59a73314e73794be0e57ac1b4e, 0, 0, 0, 0, 0, 0, false, true'
         ```
 
 
@@ -210,6 +211,8 @@ struct CompensationCooldown:
 
     Returns: received compensation (`uint256`).
 
+    Emits: `DutyAct`, `HookShot` and `Act`
+
     | Input          | Type                                      | Description                                            |
     | -------------- | ----------------------------------------- | ------------------------------------------------------ |
     | `_hook_inputs` | `DynArray[HookInput, MAX_HOOKS_LEN]`      | Array of `HookInput` structs representing the hooks to be executed. |
@@ -228,6 +231,14 @@ struct CompensationCooldown:
             ```python
             event DutyAct:
                 pass
+
+            event Act:
+                receiver: indexed(address)
+                compensation: uint256
+
+            event HookShot:
+                hook_id: indexed(uint8)
+                compensation: uint256
 
             # Property: no future changes in FeeCollector
             struct HookInput:
@@ -286,12 +297,9 @@ struct CompensationCooldown:
                     if prev_idx > solicitation.hook_id:
                         raise "Hooks not sorted"
                     prev_idx = solicitation.hook_id
+                    log HookShot(prev_idx, hook_compensation)
 
-                # happy ending
-                if compensation > 0:
-                    coin: ERC20 = fee_collector.target()
-                    coin.transferFrom(fee_collector.address, _receiver, compensation)
-                return compensation
+                log Act(_receiver, compensation)
 
             @internal
             def _shot(hook: Hook, hook_input: HookInput):
@@ -330,9 +338,9 @@ struct CompensationCooldown:
 
     === "Example"
         ```shell
-        >>> soon
+        >>> Hooker.duty_counter()
+        0
         ```
-
 
 
 ### `act`
@@ -341,6 +349,8 @@ struct CompensationCooldown:
     Function to execute hooks. Unlike, `duty_act` (which is specifically for the fee distribution process), this function allows the execuction of more general hooks.
 
     Returns: received compensation (`uint256`).
+
+    Emits: `HookShot` and `Act`
 
     | Input          | Type                                      | Description                                            |
     | -------------- | ----------------------------------------- | ------------------------------------------------------ |
@@ -358,6 +368,14 @@ struct CompensationCooldown:
         === "Hooker.vy"
 
             ```python
+            event Act:
+                receiver: indexed(address)
+                compensation: uint256
+
+            event HookShot:
+                hook_id: indexed(uint8)
+                compensation: uint256
+
             struct CompensationCooldown:
                 duty_counter: uint64  # last compensation epoch
                 used: uint64
@@ -404,12 +422,9 @@ struct CompensationCooldown:
                     if prev_idx > solicitation.hook_id:
                         raise "Hooks not sorted"
                     prev_idx = solicitation.hook_id
+                    log HookShot(prev_idx, hook_compensation)
 
-                # happy ending
-                if compensation > 0:
-                    coin: ERC20 = fee_collector.target()
-                    coin.transferFrom(fee_collector.address, _receiver, compensation)
-                return compensation
+                log Act(_receiver, compensation)
 
             @internal
             def _shot(hook: Hook, hook_input: HookInput):
@@ -599,7 +614,8 @@ struct CompensationCooldown:
 
     === "Example"
         ```shell
-        >>> soon
+        >>> Hooker.buffer_amount()
+        0
         ```
 
 
@@ -668,7 +684,7 @@ SUPPORTED_INTERFACES: constant(bytes4[2]) = [
 
 
 
-## **Recovering ERC-20 and ETH**
+## **Recovering ERC-20 Tokens and ETH**
 
 ### `recover`
 !!! description "`Hooker.recover(_coins: DynArray[ERC20, MAX_LEN])`"
@@ -742,5 +758,6 @@ SUPPORTED_INTERFACES: constant(bytes4[2]) = [
 
     === "Example"
         ```shell
-        >>> soon
+        >>> Hooker.fee_collector()
+        '0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00'
         ```

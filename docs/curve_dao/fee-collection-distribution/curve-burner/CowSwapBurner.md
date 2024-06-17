@@ -1,15 +1,63 @@
 <h1>CowSwapBurner.vy</h1>
 
 commit height: https://github.com/curvefi/curve-burners/commit/0bbfeefe7ebf50e76eaf6772b939973bcf16bb6f
+one contract can create multiple orders!
 
-one contract only? can one contract create multiple orders? 
+The CowSwapBurner is an esstial component for the fee burning architecture, designed to facilitate the efficient and automated exchange of admin fees using the CoW Swap protocol. Its primary purpose is to manage the burning of admin fee tokens that are collected in the `FeeCollector` contract.
+
+
+1. **Token Registration and Approval:**
+   When the FeeCollector collects tokens as fees, these tokens are transferred to the CoWSwapBurner. The burner contract registers these tokens and grants the necessary approvals to the CoW Swap Vault Relayer, allowing it to handle these tokens on behalf of the contract. This setup ensures that the tokens can be efficiently managed and exchanged.
+
+2. **Order Creation:**
+   The CoWSwapBurner generates conditional orders for the CoW Swap protocol. These orders detail the tokens to be sold and the target tokens to be acquired. The orders are designed to be flexible, allowing partial fills. This flexibility ensures that the exchange process is efficient, minimizing slippage and maximizing the value obtained from the token swaps.
+
+3. **Order Verification:**
+   Before any order is executed, the CoWSwapBurner verifies its validity. This verification process checks the availability of the tokens, the current epoch, and ensures compliance with the parameters set by the FeeCollector. This step is crucial for maintaining the integrity and security of the token exchange process.
+
+4. **Signature Validation:**
+   To ensure the security and authenticity of transactions, the CoWSwapBurner can validate signatures using the CoW Swap protocol's signature verification logic. This validation helps prevent unauthorized transactions and ensures that all orders are legitimate.
+
+5. **Token Transfer:**
+   After successfully exchanging tokens, the CoWSwapBurner can push the acquired target tokens back to the FeeCollector. This transfer ensures that no tokens are left idle in the contract and that all assets are utilized efficiently. The FeeCollector can then manage the distribution or further processing of these target tokens.
+
+**Integration with the Overall System:**
+
+The CoWSwapBurner contract is a vital part of the Curve Finance fee management and optimization system. It works seamlessly with the FeeCollector contract, which handles the initial collection and basic management of fees. Here's a closer look at how the CoWSwapBurner fits into the overall system:
+
+1. **Fee Collection:**
+   The FeeCollector accumulates fees from various sources. Depending on the current epoch, it determines the appropriate time to process these fees.
+
+2. **Delegation to CoWSwapBurner:**
+   During the COLLECT epoch, the FeeCollector delegates the responsibility of burning or swapping the collected tokens to the CoWSwapBurner. This delegation involves transferring the tokens to the CoWSwapBurner and initiating the process of burning or swapping them.
+
+3. **Order Execution:**
+   The CoWSwapBurner takes over by creating and verifying orders for the CoW Swap protocol. It manages all interactions with the CoW Swap protocol, including granting approvals, creating orders, and validating signatures. This process ensures that tokens are exchanged in the most efficient and secure manner possible.
+
+4. **Result Handling:**
+   Once the token exchanges are complete, the CoWSwapBurner pushes the acquired target tokens back to the FeeCollector. This step ensures that the FeeCollector can then manage the distribution or further processing of these tokens, maintaining a continuous and efficient flow of assets within the system.
+
+**Benefits:**
+
+The CoWSwapBurner contract offers several significant benefits:
+- **Efficiency:** By automating the token exchange process, it ensures that fees are handled with minimal manual intervention.
+- **Security:** Robust verification and validation mechanisms are in place to maintain the integrity and security of transactions.
+- **Flexibility:** The ability to create partial fill orders and dynamically adjust to market conditions ensures optimal trading outcomes.
+- **Seamless Integration:** It works in harmony with the FeeCollector contract, providing a cohesive system for managing and optimizing fee handling within the Curve Finance ecosystem.
+
+
+
+
+uses conditional CoW orders! see more here: link to cow documenatation!!!
+
+how long are orders valid?
 
 
 do the coins just sit in the burner contract until the coins are actually burned?
 
 ComposableCoW: https://etherscan.io/address/0xfdaFc9d1902f4e0b84f65F49f244b32b31013b74#code
 
-
+## need header
 
 ### `fee_collector`
 !!! description "`CowSwapBurner.fee_collector() -> address: view`"
@@ -36,26 +84,22 @@ ComposableCoW: https://etherscan.io/address/0xfdaFc9d1902f4e0b84f65F49f244b32b31
 
             @external
             def __init__(_fee_collector: FeeCollector,
-                _composable_cow: ComposableCow, _vault_relayer: address):
+                _composable_cow: ComposableCow, _vault_relayer: address, _target_threshold: uint256):
                 """
                 @notice Contract constructor
                 @param _fee_collector FeeCollector to anchor to
                 @param _composable_cow Address of ComposableCow contract
                 @param _vault_relayer CowSwap's VaultRelayer contract address, all approves go there
+                @param _target_threshold Minimum amount of target to buy per order
                 """
                 fee_collector = _fee_collector
-                vault_relayer = _vault_relayer
-                composable_cow = _composable_cow
-
-                app_data = 0x058315b749613051abcbf50cf2d605b4fa4a41554ec35d73fd058fc530da559f
-                sell_kind = keccak256("sell")
-                token_balance = keccak256("erc20")
+                ...
             ```
 
     === "Example"
         ```shell
         >>> CowSwapBurner.fee_collector()
-        'todo'
+        '0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00'
         ```
 
 
@@ -84,25 +128,23 @@ ComposableCoW: https://etherscan.io/address/0xfdaFc9d1902f4e0b84f65F49f244b32b31
 
             @external
             def __init__(_fee_collector: FeeCollector,
-                _composable_cow: ComposableCow, _vault_relayer: address):
+                _composable_cow: ComposableCow, _vault_relayer: address, _target_threshold: uint256):
                 """
                 @notice Contract constructor
                 @param _fee_collector FeeCollector to anchor to
                 @param _composable_cow Address of ComposableCow contract
                 @param _vault_relayer CowSwap's VaultRelayer contract address, all approves go there
+                @param _target_threshold Minimum amount of target to buy per order
                 """
-                fee_collector = _fee_collector
-                vault_relayer = _vault_relayer
+                ...
                 composable_cow = _composable_cow
-
-                app_data = 0x058315b749613051abcbf50cf2d605b4fa4a41554ec35d73fd058fc530da559f
-                sell_kind = keccak256("sell")
-                token_balance = keccak256("erc20")
+                ...
             ```
 
     === "Example"
         ```shell
-        >>> soon
+        >>> CowSwapBurner.composable_cow()
+        '0xfdaFc9d1902f4e0b84f65F49f244b32b31013b74'
         ```
 
 
@@ -122,95 +164,32 @@ ComposableCoW: https://etherscan.io/address/0xfdaFc9d1902f4e0b84f65F49f244b32b31
 
             @external
             def __init__(_fee_collector: FeeCollector,
-                _composable_cow: ComposableCow, _vault_relayer: address):
+                _composable_cow: ComposableCow, _vault_relayer: address, _target_threshold: uint256):
                 """
                 @notice Contract constructor
                 @param _fee_collector FeeCollector to anchor to
                 @param _composable_cow Address of ComposableCow contract
                 @param _vault_relayer CowSwap's VaultRelayer contract address, all approves go there
+                @param _target_threshold Minimum amount of target to buy per order
                 """
-                fee_collector = _fee_collector
+                ...
                 vault_relayer = _vault_relayer
-                composable_cow = _composable_cow
-
-                app_data = 0x058315b749613051abcbf50cf2d605b4fa4a41554ec35d73fd058fc530da559f
-                sell_kind = keccak256("sell")
-                token_balance = keccak256("erc20")
+                ...
             ```
 
     === "Example"
         ```shell
         >>> CowSwapBurner.vault_relayer()
-        ''
-        ```
-
-
-### `app_data`
-!!! description "`CowSwapBurner.app_data() -> bytes32: view`"
-
-    Getter for the app data of a order. 
-
-    Returns: app data (`bytes32`)
-
-    ??? quote "Source code"
-
-        === "CowSwapBurner.vy"
-
-            ```python
-            app_data: public(immutable(bytes32))
-
-            @external
-            def __init__(_fee_collector: FeeCollector,
-                _composable_cow: ComposableCow, _vault_relayer: address):
-                """
-                @notice Contract constructor
-                @param _fee_collector FeeCollector to anchor to
-                @param _composable_cow Address of ComposableCow contract
-                @param _vault_relayer CowSwap's VaultRelayer contract address, all approves go there
-                """
-                fee_collector = _fee_collector
-                vault_relayer = _vault_relayer
-                composable_cow = _composable_cow
-
-                app_data = 0x058315b749613051abcbf50cf2d605b4fa4a41554ec35d73fd058fc530da559f
-                sell_kind = keccak256("sell")
-                token_balance = keccak256("erc20")
-            ```
-
-    === "Example"
-        ```shell
-        >>> CowSwapBurner.app_data()
-        '0x058315b749613051abcbf50cf2d605b4fa4a41554ec35d73fd058fc530da559f'
-        ```
-
-
-### `VERSION`
-!!! description "`CowSwapBurner.VERSION() -> String[20]: view`"
-
-    Getter for the version of the burner. In this case its the CoWSwap Burner.
-
-    Returns: version (`String[32]`).
-
-    ??? quote "Source code"
-
-        === "CowSwapBurner.vy"
-
-            ```python
-            VERSION: public(constant(String[20])) = "CowSwap"
-            ```
-
-    === "Example"
-        ```shell
-        >>> CowSwapBurner.VERSION()
-        'CowSwap'
+        '0xC92E8bdf79f0507f65a392b0ab4667716BFE0110'
         ```
 
 
 ---
 
+
 ## **Orders**
 
-Orders are created using the `burn` function. This function is not directly callable by external users through this contract, instead users need to call the `collect` functions within the `FeeCollector` contract. There is also a caller fee to incentivise this contract call.
+Orders are created using the `burn` function. The function is not directly externally callable by users through this contract, instead it is called when the `collect` function within the `FeeCollector` contract is called. Additionally, there is a caller fee to incentivise the contract call.
 
 ```shell
 struct ConditionalOrderParams:
@@ -279,7 +258,8 @@ composable_cow.create(ConditionalOrderParams({
 
     === "Example"
         ```shell
-        >>> soon
+        >>> CowSwapBurner.created('0xD533a949740bb3306d119CC777fa900bA034cd52')
+        'false'
         ```
 
 
@@ -363,15 +343,12 @@ composable_cow.create(ConditionalOrderParams({
         ```
 
 
----
-
-
 ### `getTradableOrder`
 !!! description "`CowSwapBurner.getTradeableOrder(_owner: address, _sender: address, _ctx: bytes32, _static_input: Bytes[STATIC_DATA_LEN], _offchain_input: Bytes[OFFCHAIN_DATA_LEN]) -> GPv2Order_Data`"
 
     Function to generate a order for the WatchTower.
 
-    Returns: order (`GPv2Order_Data`).
+    Returns: order parameters (`GPv2Order_Data`).
 
     | Input             | Type                       | Description                    |
     | ----------------- | -------------------------- | ------------------------------ |
@@ -414,6 +391,7 @@ composable_cow.create(ConditionalOrderParams({
                 @param _ctx Execution context
                 @param _static_input sellToken encoded as bytes(Bytes[20])
                 @param _offchain_input Not used, zero-length bytes
+                @return Order parameters
                 """
                 sell_token: ERC20 = ERC20(convert(convert(_static_input, bytes20), address))
                 order: GPv2Order_Data = self._get_order(sell_token)
@@ -441,14 +419,15 @@ composable_cow.create(ConditionalOrderParams({
                     buyToken: buy_token,  # token to buy
                     receiver: fee_collector.address,  # receiver of the token to buy
                     sellAmount: 0,  # Set later
-                    buyAmount: 1,
+                    buyAmount: self.target_threshold,
                     validTo: convert(fee_collector.epoch_time_frame(Epoch.EXCHANGE)[1], uint32),  # timestamp until order is valid
-                    appData: app_data,  # extra info about the order
+                    appData: ADD_DATA,  # extra info about the order
                     feeAmount: 0,  # amount of fees in sellToken
-                    kind: sell_kind,  # buy or sell
+                    kind: SELL_KIND,  # buy or sell
                     partiallyFillable: True,  # partially fillable (True) or fill-or-kill (False)
-                    sellTokenBalance: token_balance,  # From where the sellToken balance is withdrawn
-                    buyTokenBalance: token_balance,  # Where the buyToken is deposited
+                    sellTokenBalance: TOKEN_BALANCE,  # From where the sellToken balance is withdrawn
+                    buyTokenBalance: TOKEN_BALANCE,  # Where the buyToken is deposited
+                })
             ```
 
     === "Example"
@@ -459,24 +438,24 @@ composable_cow.create(ConditionalOrderParams({
 
 
 ### `get_current_order`
-!!! description "`CowSwapBurner.`"
+!!! description "`CowSwapBurner.get_current_order(sell_token: address=empty(address)) -> GPv2Order_Data`"
 
     Getter for the current order parameters of a token.
 
     Returns: GPv2Order_Data consisting of:
     
-    - sellToken: ERC20  # token to sell
-    - buyToken: ERC20  # token to buy
-    - receiver: address  # receiver of the token to buy
-    - sellAmount: uint256
-    - buyAmount: uint256
-    - validTo: uint32  # timestamp until order is valid
-    - appData: bytes32  # extra info about the order
-    - feeAmount: uint256  # amount of fees in sellToken
-    - kind: bytes32  # buy or sell
-    - partiallyFillable: bool  # partially fillable (True) or fill-or-kill (False)
-    - sellTokenBalance: bytes32  # From where the sellToken balance is withdrawn
-    - buyTokenBalance: bytes32  # Where the buyToken is deposited
+    - sellToken: `ERC20` 
+    - buyToken: `ERC20`
+    - receiver: `address`
+    - sellAmount: `uint256`
+    - buyAmount: `uint256`
+    - validTo: `uint32`
+    - appData: `bytes32`
+    - feeAmount: `uint256`
+    - kind: `bytes32`
+    - partiallyFillable: `bool`
+    - sellTokenBalance: `bytes32`
+    - buyTokenBalance: `bytes32`
 
     | Input        | Type      | Description                            |
     | ------------ | --------- | -------------------------------------- |
@@ -493,6 +472,7 @@ composable_cow.create(ConditionalOrderParams({
                 """
                 @notice Get current order parameters
                 @param sell_token Address of possible sell token
+                @return Order parameters
                 """
                 return self._get_order(ERC20(sell_token))
 
@@ -505,36 +485,28 @@ composable_cow.create(ConditionalOrderParams({
                     buyToken: buy_token,  # token to buy
                     receiver: fee_collector.address,  # receiver of the token to buy
                     sellAmount: 0,  # Set later
-                    buyAmount: 1,
+                    buyAmount: self.target_threshold,
                     validTo: convert(fee_collector.epoch_time_frame(Epoch.EXCHANGE)[1], uint32),  # timestamp until order is valid
-                    appData: app_data,  # extra info about the order
+                    appData: ADD_DATA,  # extra info about the order
                     feeAmount: 0,  # amount of fees in sellToken
-                    kind: sell_kind,  # buy or sell
+                    kind: SELL_KIND,  # buy or sell
                     partiallyFillable: True,  # partially fillable (True) or fill-or-kill (False)
-                    sellTokenBalance: token_balance,  # From where the sellToken balance is withdrawn
-                    buyTokenBalance: token_balance,  # Where the buyToken is deposited
+                    sellTokenBalance: TOKEN_BALANCE,  # From where the sellToken balance is withdrawn
+                    buyTokenBalance: TOKEN_BALANCE,  # Where the buyToken is deposited
+                })
             ```
 
     === "Example"
         ```shell
-        >>> soon
+        >>> CowSwapBurner.get_current_order()
+        0x0000000000000000000000000000000000000000, 0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E, 0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00, 0, 50000000000000000000, 1718150400, 0x058315b749613051abcbf50cf2d605b4fa4a41554ec35d73fd058fc530da559f, 0, 0xf3b277728b3fee749481eb3e0b3b48980dbbab78658fc419025cb16eee346775, true, 0x5a28e9363bb942b639270062aa6bb295f434bcdfc42c97267bf003f272060dc9, 0x5a28e9363bb942b639270062aa6bb295f434bcdfc42c97267bf003f272060dc9
         ```
 
 
-
----
-
-
-## verifiying 
-
 ### `verify`
-!!! description "`CowSwapBurner.`"
+!!! description "`CowSwapBurner.verify(_owner: address, _sender: address, _hash: bytes32, _domain_separator: bytes32, _ctx: bytes32, _static_input: Bytes[STATIC_DATA_LEN], _offchain_input: Bytes[OFFCHAIN_DATA_LEN], _order: GPv2Order_Data)`"
 
-    Function to
-
-    Returns:
-
-    Emits: 
+    Function to verify CowSwap orders. @roman: what does this do?
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
@@ -597,7 +569,7 @@ composable_cow.create(ConditionalOrderParams({
                     raw_revert(_abi_encode("NonZeroOffchainInput", method_id=method_id("OrderNotValid(string)")))
                 order: GPv2Order_Data = self._get_order(sell_token)
                 order.sellAmount = _order.sellAmount  # Any amount allowed
-                order.buyAmount = _order.buyAmount  # Price is discovered within CowSwap competition
+                order.buyAmount = max(_order.buyAmount, order.buyAmount)  # Price is discovered within CowSwap competition
                 if _abi_encode(order) != _abi_encode(_order):
                     raw_revert(_abi_encode("BadOrder", method_id=method_id("OrderNotValid(string)")))
             ```
@@ -613,7 +585,7 @@ composable_cow.create(ConditionalOrderParams({
 
     Method to verify a ERC-1271 signature.
 
-    Returns: `ERC1271_MAGIC_VALUE` if signature is ok (`bytes4`).
+    Returns: `ERC1271_MAGIC_VALUE` if signature is OK (`bytes4`).
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
@@ -731,8 +703,8 @@ SUPPORTED_INTERFACES: constant(bytes4[4]) = [
         ```
 
 
-
 ---
+
 
 ## **Pushing and Recovering Coins**
 
@@ -773,7 +745,7 @@ Additionally, there is a recover function which lets the `owner` or `emergency_o
 
 
 ### `recover`
-!!! description "`CowSwapBurner.recover(_coins: DynArray[ERC20, MAX_COINS_LEN]):`"
+!!! description "`CowSwapBurner.recover(_coins: DynArray[ERC20, MAX_COINS_LEN])`"
 
     !!!guard "Guarded Method"
         This function is only callable by the `owner` or `emergency_owner` of the `FeeCollector.vy` contract.
@@ -782,7 +754,7 @@ Additionally, there is a recover function which lets the `owner` or `emergency_o
 
     | Input    | Type                             | Description                           |
     | -------- | -------------------------------- | ------------------------------------- |
-    | `_coins` | `DynArray[ERC20, MAX_COINS_LEN]` | Array including the coins to recover. |
+    | `_coins` | `DynArray[ERC20, MAX_COINS_LEN]` | Dynamic array of the token addresses to recover. |
 
     ??? quote "Source code"
 
@@ -813,31 +785,128 @@ Additionally, there is a recover function which lets the `owner` or `emergency_o
 
 ---
 
+## target threshold
+
+this value represents the minimum amount of target tokens to be exchanged to. This prevent spamming very small orders.
 
 
+### `target_threshold`
+!!! description "`CowSwapBurner.target_threshold() -> uint256: view`"
 
-!!! description "`CowSwapBurner.`"
+    Getter for the minimum amount of tokens to exchange. This value can be changed by the owner using the `set_target_threshold` function.
 
-    Function to
-
-    Returns:
-
-    Emits: 
-
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_from` | `address` | Address of coin to be sent     |
-    | `_to`   | `address` | Address of coin to be received |
+    Returns: target threshold (`uint256`).
 
     ??? quote "Source code"
 
         === "CowSwapBurner.vy"
 
             ```python
+            target_threshold: public(uint256)  # min amount to exchange
+
+            @external
+            def __init__(_fee_collector: FeeCollector,
+                _composable_cow: ComposableCow, _vault_relayer: address, _target_threshold: uint256):
+                """
+                @notice Contract constructor
+                @param _fee_collector FeeCollector to anchor to
+                @param _composable_cow Address of ComposableCow contract
+                @param _vault_relayer CowSwap's VaultRelayer contract address, all approves go there
+                @param _target_threshold Minimum amount of target to buy per order
+                """
+                ...
+                assert _target_threshold > 0, "Bad target threshold"
+                self.target_threshold = _target_threshold
             ```
 
     === "Example"
         ```shell
-        >>> CowSwapBurner.
-        ''
+        >>> CowSwapBurner.target_threshold()
+        50000000000000000000
+        ```
+
+### `set_target_threshold`
+!!! description "`CowSwapBurner.set_target_threshold(_target_threshold: uint256)`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the `FeeCollector` contract.
+
+    Function to set the a new `target_threshold` value.
+
+    | Input    | Type                             | Description                           |
+    | -------- | -------------------------------- | ------------------------------------- |
+    | `_target_threshold` | `uint256` | New target threshold value. |
+
+    ??? quote "Source code"
+
+        === "CowSwapBurner.vy"
+
+            ```python
+            target_threshold: public(uint256)  # min amount to exchange
+
+            @external
+            def set_target_threshold(_target_threshold: uint256):
+                """
+                @dev Callable only by owner
+                @param _target_threshold Minimum amount of target to receive, with base=10**18
+                """
+                assert msg.sender == fee_collector.owner(), "Only owner"
+                assert _target_threshold > 0, "Bad target threshold"
+
+                self.target_threshold = _target_threshold
+            ```
+
+    === "Example"
+        ```shell
+        >>> soon
+        ```
+
+
+
+---
+
+
+## todo
+
+### `ADD_DATA`
+!!! description "`CowSwapBurner.ADD_DATA() -> bytes32: view`"
+
+    Getter for the additional data applied in the internal `_get_order` function. @roman: what is this additional data? what does it do?
+
+    Returns: additional data (`bytes32`).
+
+    ??? quote "Source code"
+
+        === "CowSwapBurner.vy"
+
+            ```python
+            ADD_DATA: public(constant(bytes32)) = 0x058315b749613051abcbf50cf2d605b4fa4a41554ec35d73fd058fc530da559f
+            ```
+
+    === "Example"
+        ```shell
+        >>> CowSwapBurner.ADD_DATA()
+        '0x058315b749613051abcbf50cf2d605b4fa4a41554ec35d73fd058fc530da559f'
+        ```
+
+
+### `VERSION`
+!!! description "`CowSwapBurner.VERSION() -> String[20]: view`"
+
+    Getter for the burner version. 
+
+    Returns: version (`String[20]`)
+
+    ??? quote "Source code"
+
+        === "CowSwapBurner.vy"
+
+            ```python
+            VERSION: public(constant(String[20])) = "CowSwap"
+            ```
+
+    === "Example"
+        ```shell
+        >>> CowSwapBurner.VERSION()
+        'CowSwap'
         ```
