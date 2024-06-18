@@ -3,19 +3,16 @@
 
 The `FeeCollector.vy` contract is the core contract when handling admin fees. This contract collects all the fees, while burner contracts handle the burning of the coins. The contract has a [`target`](#target) variable, which represents the coin for which all the various fee tokens are burnt into.
 
-The contract uses different [epochs](#epochs) (phases) in which certain actions are possible.
+The contract operates in different [epochs](#epochs) (phases) in which certain actions are possible.
+
+
+
+explain: conditional orders!
 
 
 !!!github "GitHub"
     The source code of the `FeeCollector.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/FeeCollector.vy).
 
-
-
-*The process of burning coins into the target coin contrains the following flow:*
-
-1. Withdrawing admin fees from liquidity pools or crvUSD markets using `withdraw_many`
-2. Collecting fees and calling the burn function of the burner via `collect`
-3. Forwarding the taraget token using `forward` method to the hooker contract and executes the contracts duty
 
 ---
 
@@ -32,14 +29,14 @@ enum Epoch:
     FORWARD  # 8
 ```
 
-Each epoch represents a different state of the contract:
+*Each epoch represents a different state of the contract:*
 
 - `SLEEP`: The contract is idle.
 - `COLLECT`: The contract is in a state where it collects fees.
-- `EXCHANGE`: The contract exchanges collected fees for a target coin.
-- `FORWARD`: The contract forwards the target coin to a specified destination.
+- `EXCHANGE`: The contract "burns" (exchanges) collected fees into the target coin.
+- `FORWARD`: The contract forwards the accumulated target coin to the `FeeDistributor`.
 
-The `EPOCH_TIMESTAMPS` constant defines the start times for each epoch within a week:
+*The `EPOCH_TIMESTAMPS` constant defines the start times for each epoch within a week:*
 
 ```py
 START_TIME: constant(uint256) = 1600300800  # ts of distribution start
@@ -55,7 +52,7 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
 
 !!!info "Start of a new epoch"
 
-    In short, day 0 - 4 is `SLEEP`, day 5 is `COLLECT`, day 6 is `EXCHANGE` and day 7 is `FROWARD`.
+    sleep 4, collect 1, exchange 1, forward 1
 
     Day 0 does not start on Monday. The first fee distribution started at Thu Sep 17 2020 00:00:00 GMT+0000 (`1600300800`), therefore day 0 of each new epoch starts at that time. 
 
@@ -76,6 +73,12 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
         === "FeeCollector.vy"
 
             ```python
+            enum Epoch:
+                SLEEP  # 1
+                COLLECT  # 2
+                EXCHANGE  # 4
+                FORWARD  # 8
+
             @external
             @view
             def epoch(ts: uint256=block.timestamp) -> Epoch:
@@ -144,32 +147,31 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
     === "Example"
         ```shell
         >>> FeeCollector.epoch_time_frame(1)        # SLEEP
-        (1716422400, 1716768000)
+        (1718236800, 1718582400)
 
         >>> FeeCollector.epoch_time_frame(2)        # COLLECT
-        (1716768000, 1716854400)
+        (1718582400, 1718668800)
 
         >>> FeeCollector.epoch_time_frame(4)        # EXCHANGE
-        (1716854400, 1716940800)
+        (1718668800, 1718755200)
 
         >>> FeeCollector.epoch_time_frame(8)        # FORWARD
-        (1716940800, 1717027200)
+        (1718755200, 1718841600)
         ```
 
 
 ---
 
 
-
 ## **Keeper's Fee**
 
-The `fee` in the `FeeCollector` contract is a keeper's (or caller's) fee, which incentivizes external users or bots (also known as keepers) to perform specific actions at the appropriate times within different epochs. The fee mechanism ensures that these operations are carried out reliably and efficiently by rewarding the entities that execute them.
+The `FeeCollector` contract has a keeper's fee, which incentivizes external users or bots to perform specific actions at the appropriate times within the different epochs. The fee mechanism ensures that these operations are carried out reliably and efficiently by rewarding the entities that execute them.
 
 
 ### `fee`
 !!! description "`FeeCollector.fee(_epoch: Epoch=empty(Epoch), _ts: uint256=block.timestamp) -> uint256`"
 
-    Getter for the caller fee based on an epoch and timestamp. If no input is given, it returns the caller fee of the current epoch.
+    Getter for the caller fee based on an epoch and timestamp. If no input is given, it returns the caller fee of the current epoch. The fee is depending on the current epoch.
 
     Returns: fee of the epoch (`uint256`).
 
@@ -220,19 +222,13 @@ The `fee` in the `FeeCollector` contract is a keeper's (or caller's) fee, which 
         ```shell
         >>> FeeCollector.fee()
         8375000000000000
-
-        >>> FeeCollector.fee(4, 1716854401)
-        0
-
-        >>> FeeCollector.fee(8, 1716940801)
-        115740740740
         ```
 
 
 ### `max_fee`
 !!! description "`FeeCollector.max_fee(arg0: uint256) -> uint256: view`"
 
-    Getter for the maximum fee of an epoch. Maximum fee is set to 1% for the `COLLECT` and `FORWARD` epochs. This value can later on be changed by the `owner` of the contract using the `set_max_fee` function.
+    Getter for the maximum fee of an epoch. Maximum fee is set to 1% for the `COLLECT` and `FORWARD` epochs. This value can later on be changed by the `owner` of the contract using the [`set_max_fee`](#set_max_fee) function.
 
     Returns: maximum fee (`uint256`).
 
@@ -293,7 +289,7 @@ The `fee` in the `FeeCollector` contract is a keeper's (or caller's) fee, which 
     !!!guard "Guarded Method"
         This function is only callable by the `owner` of the contract.
 
-    Function to set `max_fee` for a specific Epoch. The maximum fee cannot be greater than 1 (100%).
+    Function to set `max_fee` for a specific epoch. The maximum fee cannot be greater than 1 (100%).
 
     Emits: `SetMaxFee`
 
@@ -333,24 +329,21 @@ The `fee` in the `FeeCollector` contract is a keeper's (or caller's) fee, which 
         >>> soon
         ```
 
+
 ---
 
 
 ## **Burn Process**
 
-The contract has `target` method which represents the coin into the collected fees are burnt into. This coin can be changed by the `owner` of the contract using the `set_target` function.
+The `FeeCollector` contract has a [`target`](#target) variable, which represents the coin into which all the collected fees are "burnt" into. This variable can be changed by the [`owner`](#owner) of the contract using the [`set_target`](#set_target) function. As the owner of the contract is the Curve DAO, a on-chain proposal needs to be successfully passed to make any changes.
 
-transfer -> COLLECT or EXCHANGE. also can only be called by the burner contract. i guess this is used to transfer the tokens from the burner back to the collector contract?
+Additionally, the burning process can be "killed" for certain coins. See more [here](#ownership-and-killing-coins).
 
+*The general flow of the fee burning process is the following:*
 
-sleep: 
-collect: transfer, collect, 
-exchange: transfer
-forward: forward
-
-
-coins are claimed into the `FeeCollector` using `withdraw_many`.
-
+1. Admin fees are collected from pools or other revenue sources using the `withdraw_many` function. While fees of older pools need to claimed manually, the accrrued fees from newer pools (mostly NG pools) are periodically claimed when removing liquidity from the pool.
+2. The accrrued tokens can be burned calling the `collect` function. This creates, if there isn't already one, a conditional order on CowSwap which automatically exchanges the fee tokens into the `target` coin.
+3. After burning the tokens, they can be forwarded to the 
 
 
 ### `target`
@@ -580,46 +573,6 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
         ```
 
 
-### `burn`
-!!! description "`FeeCollector.burn(_coin: address)`"
-
-    !!!guard "Guarded Method"
-        This function is only callable by the `owner` of the contract.
-
-    Function to transfer a coins from the contract with approval. This function is needed for back compatability along with dealing with raw ETH.
-
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_coin` | `address` | Token address of the new target coin. |
-
-    ??? quote "Source code"
-
-        === "FeeCollector.vy"
-
-            ```python
-            @external
-            @payable
-            def burn(_coin: address) -> bool:
-                """
-                @notice Transfer coin from contract with approval
-                @dev Needed for back compatability along with dealing raw ETH
-                @param _coin Coin to transfer
-                @return True if did not fail, back compatability
-                """
-                if _coin == ETH_ADDRESS:  # Deposit
-                    WETH.deposit(value=self.balance)
-                else:
-                    amount: uint256 = ERC20(_coin).balanceOf(msg.sender)
-                    ERC20(_coin).transferFrom(msg.sender, self, amount)
-                return True
-            ```
-
-    === "Example"
-        ```shell
-        >>> soon
-        ```
-
-
 ### `can_exchange`
 !!! description "`FeeCollector.can_exchange(_coins: DynArray[ERC20, MAX_LEN]) -> bool`"
 
@@ -668,7 +621,7 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
     !!!guard "Guarded Method"
         This function is only callable by the `burner` contract.
 
-    Function to transfer coins. This function can only be called during the COLLECT or EXCHANGE epochs. It is called within the burn function of the CowSwapBurner contract.
+    Function to transfer coins. This function can only be called during the `COLLECT` or `EXCHANGE` epochs and is used to transfer the different admin fee tokens to the burner contract when calling the `collect` function.
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
@@ -676,9 +629,9 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
 
     *Each `Transfer` struct contains:*
 
-    - `coin`: The ERC20 token address that is being transferred.
-    - `to`: The address to which the tokens will be transferred.
-    - `amount`: The amount of tokens to transfer. If set to 2^256-1, it transfers the entire balance.
+    - `coin:` `address` - The ERC20 token address that is being transferred.
+    - `to:` `address` - The address to which the tokens will be transferred.
+    - `amount`: `uint256` - The amount of tokens to transfer. If set to 2^256-1, it transfers the entire balance.
 
     ??? quote "Source code"
 
@@ -764,7 +717,7 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
 ### `forward`
 !!! description "`FeeCollector.forward(_hook_inputs: DynArray[HookInput, MAX_HOOK_LEN], _receiver: address=msg.sender) -> uint256`"
 
-    Function to transfer the target coin to the hooker address. This function can only be called during the `FORWARD` epoch. It charges a keeper fee on the entire balance of the forwarded coins and awards it to the caller. The function also calls the `push_target` function in the burner contract to transfer any remaining target coins back into the FeeCollector contract before forwarding the total balance to the hooker. Additionally, the function calls the `duty_act` method of the hooker contract, applying any specified hooks and adjusting the fee accordingly.
+    Function to transfer the target coin to the hooker address. This function can only be called during the `FORWARD` epoch. It charges a keeper fee on the entire balance of the forwarded coins and awards it to the caller. The function also calls the `push_target` function of the burner contract to transfer any remaining target coins back into the `FeeCollector` contract before forwarding the total balance to the hooker. Additionally, the function calls the `duty_act` method of the hooker contract, applying any specified hooks and adjusting the fee accordingly.
 
     Returns: received keeper fee (`uint256`)
 
@@ -775,9 +728,9 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
 
     *Each `HookInput` struct contains:*
 
-    - `hook_id`: ID of the hook to execute.
-    - `value`: todo
-    - `data`: todo
+    - `hook_id`: `uint8` - ID of the hook to execute. This ID determines which specific hook logic to apply during the `duty_act` call.
+    - `value`: `uint256` - Value associated with the hook, which can represent the amount or specific parameter needed by the hook logic.
+    - `data`: `Bytes[8192]` - Additional data required by the hook, encoded as bytes. This can include various parameters or instructions specific to the hook's functionality.
 
     ??? quote "Source code"
 
@@ -911,6 +864,46 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
         ```
 
 
+### `burn`
+!!! description "`FeeCollector.burn(_coin: address)`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the contract.
+
+    Function to transfer a coins from the contract with approval. This function is needed for back compatability along with dealing with raw ETH.
+
+    | Input   | Type      | Description                    |
+    | ------- | --------- | ------------------------------ |
+    | `_coin` | `address` | Token address of the new target coin. |
+
+    ??? quote "Source code"
+
+        === "FeeCollector.vy"
+
+            ```python
+            @external
+            @payable
+            def burn(_coin: address) -> bool:
+                """
+                @notice Transfer coin from contract with approval
+                @dev Needed for back compatability along with dealing raw ETH
+                @param _coin Coin to transfer
+                @return True if did not fail, back compatability
+                """
+                if _coin == ETH_ADDRESS:  # Deposit
+                    WETH.deposit(value=self.balance)
+                else:
+                    amount: uint256 = ERC20(_coin).balanceOf(msg.sender)
+                    ERC20(_coin).transferFrom(msg.sender, self, amount)
+                return True
+            ```
+
+    === "Example"
+        ```shell
+        >>> soon
+        ```
+
+
 ### `recover`
 !!! description "`FeeCollector.recover(_recovers: DynArray[RecoverInput, MAX_LEN], _receiver: address):`"
 
@@ -926,8 +919,8 @@ coins are claimed into the `FeeCollector` using `withdraw_many`.
 
     *Each `RecoverInput` struct contains:*
 
-    - `coin`: The address of the ERC20 token to recover.
-    - `amount`: The amount of the token to recover. Use `2^256-1` to recover the entire balance.
+    - `coin`: `address` - The address of the ERC20 token to recover.
+    - `amount`: `uint256` - The amount of the token to recover. Use `2^256-1` to recover the entire balance.
 
     ??? quote "Source code"
 
@@ -1157,7 +1150,9 @@ The `FeeCollector` contract features a dual ownership structure, consisting of a
 The contract includes a mechanism to "kill" certain coins across specific epochs. When a coin is killed, certain functions related to that coin will no longer be callable. This capability is crucial for managing and mitigating risks associated with specific tokens.
 
 
-*The `owner` is able to call the following functions:*
+*The `owner`[^1] is able to call the following functions:*
+
+[^1]: Owner of the contract is the Curve DAO. To make any changes, a successful on-chain vote needs to pass.
 
 - `recover`: Recover ERC20 tokens or ETH from the contract.
 - `set_max_fee`: Set the maximum fee for a specified epoch.
@@ -1169,7 +1164,9 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 - `set_emergency_owner`: Assign a new emergency owner to the contract.
 
 
-*The `emergency_owner` has limited power, intended for emergency situations. He can call:*
+*The `emergency_owner`[^2] has limited power, intended for emergency situations. He can call:*
+
+[^2]: The `emergency_owner` is a [5 of 9 multisig](https://resources.curve.fi/governance/understanding-governance/?h=multis#emergency-dao).
 
 - `recover`: Recover ERC20 tokens or ETH from the contract.
 - `set_killed`: Mark certain coins as killed to prevent them from being burnt.
@@ -1216,6 +1213,9 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 ### `set_killed`
 !!! description "`FeeCollector.set_killed(_input: DynArray[KilledInput, MAX_LEN])`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` or `emergency_owner` of the contract.
+
     Function to kill a coin for a specific epoch.
 
     Emits: `SetKilled`
@@ -1226,8 +1226,8 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
     *Each `KilledInput` struct contains:*
 
-    - `coin`: The address of the ERC20 token to be killed.
-    - `killed`: The sum of the epoch indices during which the coin is killed.
+    - `coin`: `ERC20` - The address of the ERC20 token to be killed.
+    - `killed`: `Epoch` - The sum of the epoch indices during which the coin is killed.
 
     ??? quote "Source code"
 
@@ -1398,6 +1398,9 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
 ### `set_emergency_owner`
 !!! description "`FeeCollector.set_emergency_owner(_new_owner: address)`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the contract.
 
     Function to a new emergency owner.
 
