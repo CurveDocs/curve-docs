@@ -1357,6 +1357,18 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 | :logos-kava: `Kava` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://kavascan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#contracts) |
 | :logos-zksync: `zk-Sync` | [0x253548e98C769aD2850da8DB3E4c2b2cE46E3839](https://explorer.zksync.io/address/0x253548e98C769aD2850da8DB3E4c2b2cE46E3839#contract) |
 
+
+
+### **MetaZap-NG**
+
+*Zap to add liquidity and remove liquidity into ng-metapools.*
+
+| Chain | Contract Address |
+| ----- | :--------------: |
+| :logos-ethereum: `Ethereum` | [0xE07a16358aA878CBDa2D49A88E5106871E0db307](https://etherscan.io/address/0xE07a16358aA878CBDa2D49A88E5106871E0db307#code) |
+
+
+
 ---
 
 
