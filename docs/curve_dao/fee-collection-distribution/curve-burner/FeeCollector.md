@@ -50,11 +50,11 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
 ]
 ```
 
-!!!info "Start of a new epoch"
 
-    sleep 4, collect 1, exchange 1, forward 1
+!!!info "Start and Duration of Epochs"
+    The `SLEEP` epoch lasts for a total of four days, followed by one day of `COLLECT`, one day of `EXCHANGE`, and one day of `FORWARD`.
 
-    Day 0 does not start on Monday. The first fee distribution started at Thu Sep 17 2020 00:00:00 GMT+0000 (`1600300800`), therefore day 0 of each new epoch starts at that time. 
+    Epoch start is not on Monday. The first fee distribution started on `Thu Sep 17 2020 00:00:00 GMT+0000` (1600300800)`. Therefore, day 0 of each new epoch starts on Thursday at 00:00:00 GMT.
 
 
 ### `epoch`
@@ -337,13 +337,11 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
 
 The `FeeCollector` contract has a [`target`](#target) variable, which represents the coin into which all the collected fees are "burnt" into. This variable can be changed by the [`owner`](#owner) of the contract using the [`set_target`](#set_target) function. As the owner of the contract is the Curve DAO, a on-chain proposal needs to be successfully passed to make any changes.
 
-Additionally, the burning process can be "killed" for certain coins. See more [here](#ownership-and-killing-coins).
-
 *The general flow of the fee burning process is the following:*
 
 1. Admin fees are collected from pools or other revenue sources using the `withdraw_many` function. While fees of older pools need to claimed manually, the accrrued fees from newer pools (mostly NG pools) are periodically claimed when removing liquidity from the pool.
 2. The accrrued tokens can be burned calling the `collect` function. This creates, if there isn't already one, a conditional order on CowSwap which automatically exchanges the fee tokens into the `target` coin.
-3. After burning the tokens, they can be forwarded to the 
+3. After burning the tokens, they can be forwarded to the `FeeDistributor` using the `forward` function.
 
 
 ### `target`
