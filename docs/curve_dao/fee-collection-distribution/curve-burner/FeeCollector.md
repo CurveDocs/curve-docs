@@ -1,13 +1,8 @@
 <h1>FeeCollector.vy</h1>
 
-
 The `FeeCollector.vy` contract is the core contract when handling admin fees. This contract collects all the fees, while burner contracts handle the burning of the coins. The contract has a [`target`](#target) variable, which represents the coin for which all the various fee tokens are burnt into.
 
 The contract operates in different [epochs](#epochs) (phases) in which certain actions are possible.
-
-
-
-explain: conditional orders!
 
 
 !!!github "GitHub"
