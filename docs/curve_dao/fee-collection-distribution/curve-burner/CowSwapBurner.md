@@ -20,7 +20,7 @@ The old system used various kinds of burners with hardcoded routes, which often 
 Conditional CowSwap orders are automatically created for each token to be burned using the `burn` function. This function is not directly externally callable by users through this contract; instead, it is called when the `collect` function within the `FeeCollector` contract is invoked. Additionally, there is a caller fee to incentivize this contract call.
 
 
-```shell
+```vyper
 struct ConditionalOrderParams:
     # The contract implementing the conditional order logic
     handler: address  # self
@@ -54,7 +54,7 @@ composable_cow.create(ConditionalOrderParams({
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             created: public(HashMap[ERC20, bool])
 
             @external
@@ -122,7 +122,7 @@ composable_cow.create(ConditionalOrderParams({
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             @view
             @external
             def get_current_order(sell_token: address=empty(address)) -> GPv2Order_Data:
@@ -177,7 +177,7 @@ composable_cow.create(ConditionalOrderParams({
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             interface FeeCollector:
                 def fee(_epoch: Epoch=empty(Epoch), _ts: uint256=block.timestamp) -> uint256: view
                 def target() -> ERC20: view
@@ -263,7 +263,7 @@ composable_cow.create(ConditionalOrderParams({
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             struct GPv2Order_Data:
                 sellToken: ERC20  # token to sell
                 buyToken: ERC20  # token to buy
@@ -358,7 +358,7 @@ composable_cow.create(ConditionalOrderParams({
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             struct GPv2Order_Data:
                 sellToken: ERC20  # token to sell
                 buyToken: ERC20  # token to buy
@@ -431,7 +431,7 @@ composable_cow.create(ConditionalOrderParams({
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             ERC1271_MAGIC_VALUE: constant(bytes4) = 0x1626ba7e
 
             @view
@@ -473,7 +473,7 @@ composable_cow.create(ConditionalOrderParams({
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             target_threshold: public(uint256)  # min amount to exchange
 
             @external
@@ -514,7 +514,7 @@ composable_cow.create(ConditionalOrderParams({
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             target_threshold: public(uint256)  # min amount to exchange
 
             @external
@@ -556,7 +556,7 @@ Additionally, there is a recover function which lets the `owner` or `emergency_o
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             @external
             def push_target() -> uint256:
                 """
@@ -592,7 +592,7 @@ Additionally, there is a recover function which lets the `owner` or `emergency_o
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             @external
             def recover(_coins: DynArray[ERC20, MAX_COINS_LEN]):
                 """
@@ -622,7 +622,7 @@ Additionally, there is a recover function which lets the `owner` or `emergency_o
 
 In order for the burner contract to be fully compatible with the `FeeCollector`, a specific interface needs to hold up as per [ERC-165](https://eips.ethereum.org/EIPS/eip-165):
 
-```py
+```vyper
 SUPPORTED_INTERFACES: constant(bytes4[4]) = [
     # ERC165: method_id("supportsInterface(bytes4)") == 0x01ffc9a7
     0x01ffc9a7,
@@ -656,7 +656,7 @@ SUPPORTED_INTERFACES: constant(bytes4[4]) = [
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             SIGNATURE_VERIFIER_MUXER_INTERFACE: constant(bytes4) = 0x62af8dc2
             ERC1271_MAGIC_VALUE: constant(bytes4) = 0x1626ba7e
             SUPPORTED_INTERFACES: constant(bytes4[4]) = [
@@ -709,7 +709,7 @@ SUPPORTED_INTERFACES: constant(bytes4[4]) = [
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             interface FeeCollector:
                 def fee(_epoch: Epoch=empty(Epoch), _ts: uint256=block.timestamp) -> uint256: view
                 def target() -> ERC20: view
@@ -753,7 +753,7 @@ SUPPORTED_INTERFACES: constant(bytes4[4]) = [
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             interface ComposableCow:
                 def create(params: ConditionalOrderParams, dispatch: bool): nonpayable
                 def domainSeparator() -> bytes32: view
@@ -798,7 +798,7 @@ SUPPORTED_INTERFACES: constant(bytes4[4]) = [
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             vault_relayer: public(immutable(address))
 
             @external
@@ -834,7 +834,7 @@ SUPPORTED_INTERFACES: constant(bytes4[4]) = [
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             ADD_DATA: public(constant(bytes32)) = 0x058315b749613051abcbf50cf2d605b4fa4a41554ec35d73fd058fc530da559f
             ```
 
@@ -856,7 +856,7 @@ SUPPORTED_INTERFACES: constant(bytes4[4]) = [
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             VERSION: public(constant(String[20])) = "CowSwap"
             ```
 

@@ -16,7 +16,7 @@ The contract operates in different [epochs](#epochs) (phases) in which certain a
 
 The `epoch` function and its related internal functions are used to determine the current operational phase of the contract based on the timestamp. The contract operates in different phases (epochs) that dictate what actions can be performed at any given time. This helps in organizing the contract's workflow and ensuring that certain operations only occur during specific periods.
 
-```py
+```vyper
 enum Epoch:
     SLEEP  # 1
     COLLECT  # 2
@@ -33,7 +33,7 @@ enum Epoch:
 
 *The `EPOCH_TIMESTAMPS` constant defines the start times for each epoch within a week:*
 
-```py
+```vyper
 START_TIME: constant(uint256) = 1600300800  # ts of distribution start
 WEEK: constant(uint256) = 7 * 24 * 3600
 EPOCH_TIMESTAMPS: constant(uint256[17]) = [
@@ -67,7 +67,7 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             enum Epoch:
                 SLEEP  # 1
                 COLLECT  # 2
@@ -117,7 +117,7 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             @external
             @view
             def epoch_time_frame(_epoch: Epoch, _ts: uint256=block.timestamp) -> (uint256, uint256):
@@ -179,7 +179,7 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             @external
             @view
             def fee(_epoch: Epoch=empty(Epoch), _ts: uint256=block.timestamp) -> uint256:
@@ -237,7 +237,7 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             event SetMaxFee:
                 epoch: indexed(Epoch)
                 max_fee: uint256
@@ -297,7 +297,7 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             event SetMaxFee:
                 epoch: indexed(Epoch)
                 max_fee: uint256
@@ -352,7 +352,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             event SetTarget:
                 target: indexed(ERC20)
 
@@ -398,7 +398,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             event SetTarget:
                 target: indexed(ERC20)
 
@@ -442,7 +442,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             MAX_LEN: constant(uint256) = 64
 
             interface Curve:
@@ -478,7 +478,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             MAX_LEN: constant(uint256) = 64
 
             @external
@@ -503,7 +503,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             interface FeeCollector:
                 def fee(_epoch: Epoch=empty(Epoch), _ts: uint256=block.timestamp) -> uint256: view
                 def target() -> ERC20: view
@@ -581,7 +581,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             MAX_LEN: constant(uint256) = 64
 
             @external
@@ -630,7 +630,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             struct Transfer:
                 coin: ERC20
                 to: address
@@ -660,7 +660,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             interface FeeCollector:
                 def fee(_epoch: Epoch=empty(Epoch), _ts: uint256=block.timestamp) -> uint256: view
                 def target() -> ERC20: view
@@ -729,7 +729,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             struct HookInput:
                 hook_id: uint8
                 value: uint256
@@ -771,7 +771,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
         === "CowSwapBurner.vy"
 
-            ```python
+            ```vyper
             @external
             def push_target() -> uint256:
                 """
@@ -787,7 +787,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
         === "Hooker.vy"
 
-            ```python
+            ```vyper
             event DutyAct:
                 pass
 
@@ -873,7 +873,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             @external
             @payable
             def burn(_coin: address) -> bool:
@@ -919,7 +919,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             struct RecoverInput:
                 coin: ERC20
                 amount: uint256
@@ -973,7 +973,7 @@ When setting up a burner or hooker, they need to support a specific interface st
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             interface Burner:
                 def burn(_coins: DynArray[ERC20, MAX_LEN], _receiver: address): nonpayable
                 def push_target() -> uint256: nonpayable
@@ -1010,7 +1010,7 @@ When setting up a burner or hooker, they need to support a specific interface st
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             interface Hooker:
                 def duty_act(_hook_inputs: DynArray[HookInput, MAX_HOOK_LEN], _receiver: address=msg.sender) -> uint256: payable
                 def buffer_amount() -> uint256: view
@@ -1046,7 +1046,7 @@ When setting up a burner or hooker, they need to support a specific interface st
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             interface Burner:
                 def burn(_coins: DynArray[ERC20, MAX_LEN], _receiver: address): nonpayable
                 def push_target() -> uint256: nonpayable
@@ -1097,7 +1097,7 @@ When setting up a burner or hooker, they need to support a specific interface st
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             interface Hooker:
                 def duty_act(_hook_inputs: DynArray[HookInput, MAX_HOOK_LEN], _receiver: address=msg.sender) -> uint256: payable
                 def buffer_amount() -> uint256: view
@@ -1181,7 +1181,7 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             struct KilledInput:
                 coin: ERC20
                 killed: Epoch  # True where killed
@@ -1226,7 +1226,7 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             event SetKilled:
                 coin: indexed(ERC20)
                 epoch_mask: Epoch
@@ -1275,7 +1275,7 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             event SetOwner:
                 owner: indexed(address)
 
@@ -1317,7 +1317,7 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             event SetEmergencyOwner:
                 emergency_owner: indexed(address)
 
@@ -1364,7 +1364,7 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             event SetOwner:
                 owner: indexed(address)
 
@@ -1407,7 +1407,7 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
         === "FeeCollector.vy"
 
-            ```python
+            ```vyper
             event SetEmergencyOwner:
                 emergency_owner: indexed(address)
 

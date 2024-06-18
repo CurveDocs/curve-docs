@@ -26,7 +26,7 @@ Each `hook` includes a `compensation_strategy` that defines how and when the exe
 
 The `CompensationStrategy` consists of the following values:
 
-```py
+```vyper
 struct CompensationStrategy:
     amount: uint256  # In case of Dutch auction max amount
     cooldown: CompensationCooldown
@@ -73,7 +73,7 @@ Before hooks can be executed, they need to be added via `set_hooks`. These hooks
 
         === "Hooker.vy"
 
-            ```python
+            ```vyper
             struct Hook:
                 to: address
                 foreplay: Bytes[1024]  # including method_id
@@ -113,7 +113,7 @@ Before hooks can be executed, they need to be added via `set_hooks`. These hooks
 
         === "Hooker.vy"
 
-            ```python
+            ```vyper
             struct Hook:
                 to: address
                 foreplay: Bytes[1024]  # including method_id
@@ -174,7 +174,7 @@ The compensation strategy in the Hooker contract determines how and when callers
 
 *The compensation strategy is defined within the `CompensationStrategy` struct, which includes several fields:*
 
-```py
+```vyper
 struct CompensationStrategy:
     amount: uint256  # In case of Dutch auction max amount
     cooldown: CompensationCooldown
@@ -192,7 +192,7 @@ struct CompensationStrategy:
 
 *The `CompensationCooldown` struct includes fields to manage the number of compensations within a duty cycle and track the duty counter:*
 
-```py
+```vyper
 struct CompensationCooldown:
     duty_counter: uint64  # last compensation epoch
     used: uint64
@@ -232,7 +232,7 @@ struct CompensationCooldown:
 
         === "Hooker.vy"
 
-            ```python
+            ```vyper
             event DutyAct:
                 pass
 
@@ -334,7 +334,7 @@ struct CompensationCooldown:
 
         === "Hooker.vy"
 
-            ```python
+            ```vyper
             duty_counter: public(uint64)
 
 
@@ -371,7 +371,7 @@ struct CompensationCooldown:
 
         === "Hooker.vy"
 
-            ```python
+            ```vyper
             event Act:
                 receiver: indexed(address)
                 compensation: uint256
@@ -471,7 +471,7 @@ struct CompensationCooldown:
 
         === "Hooker.vy"
 
-            ```python
+            ```vyper
             @view
             @external
             def calc_compensation(_hook_inputs: DynArray[HookInput, MAX_HOOKS_LEN],
@@ -551,7 +551,7 @@ struct CompensationCooldown:
 
         === "Hooker.vy"
 
-            ```python
+            ```vyper
             struct Hook:
                 to: address
                 foreplay: Bytes[1024]  # including method_id
@@ -612,7 +612,7 @@ struct CompensationCooldown:
 
         === "Hooker.vy"
 
-            ```python
+            ```vyper
             buffer_amount: public(uint256)
             ```
 
@@ -630,7 +630,7 @@ struct CompensationCooldown:
 
 In order for the Burner contract to be fully compatible with the `FeeCollector`, a specific interface needs to hold up as per [ERC-165](https://eips.ethereum.org/EIPS/eip-165):
 
-```py
+```vyper
 SUPPORTED_INTERFACES: constant(bytes4[2]) = [
     # ERC165: method_id("supportsInterface(bytes4)") == 0x01ffc9a7
     0x01ffc9a7,
@@ -657,7 +657,7 @@ SUPPORTED_INTERFACES: constant(bytes4[2]) = [
 
         === "Hooker.vy"
 
-            ```python
+            ```vyper
             SUPPORTED_INTERFACES: constant(bytes4[2]) = [
                 # ERC165: method_id("supportsInterface(bytes4)") == 0x01ffc9a7
                 0x01ffc9a7,
@@ -706,7 +706,7 @@ SUPPORTED_INTERFACES: constant(bytes4[2]) = [
 
         === "Hooker.vy"
 
-            ```python
+            ```vyper
             @external
             def recover(_coins: DynArray[ERC20, MAX_LEN]):
                 """
@@ -740,7 +740,7 @@ SUPPORTED_INTERFACES: constant(bytes4[2]) = [
 
         === "Hooker.vy"
 
-            ```python
+            ```vyper
             fee_collector: public(immutable(FeeCollector))
 
             @external
