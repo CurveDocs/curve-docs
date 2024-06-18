@@ -33,11 +33,7 @@
             return result
         ```
 
-    To manually verify if a pool is using a correct (bug-free) implementation, you can call the `get_implementation_address(pool)` method on the [`StableSwapNG Factory`](https://etherscan.io/address/0x6a8cbed756804b16e05e741edabd5cb544ae21bf). If [`0xDCc91f930b42619377C200BA05b7513f2958b202`](https://etherscan.io/address/0xDCc91f930b42619377C200BA05b7513f2958b202) is returned, the pool uses the updated implementation without this bug.[^1] 
-    
-    A simple :simple-googlecolab: Google Colab Notebook to check pool implementations can be found [here](https://colab.research.google.com/drive/1RLqpXOksJCRnJn8l1JeO_LB8D81b1aO9?usp=sharing).
-
-    [^1]: Don't panic if the method returns an address other than `0xDCc91f930b42619377C200BA05b7513f2958b202`. It's possible that the AMM implementation was updated again for whatever reason, and the documentation hasn't been updated yet. Generally speaking, if the pool is using an implementation from **after December 12, 2023**, it should not have the oracle bug.
+    To **manually verify if a pool is using a correct (bug-free) implementation**, one can simply view the source code of the contract and check if `self.xp_mem(...)` is being called within `self.upkeep_oracles(...)` in the `remove_liquidity_imbalance` function.
 
 
 ---
