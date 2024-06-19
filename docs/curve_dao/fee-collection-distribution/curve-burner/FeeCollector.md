@@ -61,7 +61,7 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
 
     | Input   | Type      | Description                    |
     | ---- | --------- | ------------------------------ |
-    | `ts` | `uint256` | Timestamp. Deafaults to `msg.sesnder` |
+    | `ts` | `uint256` | Timestamp. Defaults to `msg.sesnder` |
 
     ??? quote "Source code"
 
@@ -104,14 +104,14 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
 ### `epoch_time_frame`
 !!! description "`FeeCollector.epoch_time_frame(_epoch: Epoch, _ts: uint256=block.timestamp) -> (uint256, uint256)`"
 
-    Getter for the time frame for a specific epoch and timstamp.
+    Getter for the time frame for a specific epoch and timestamp.
 
     Returns: start and end of the epoch (`uint256`).
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
     | `_epoch` | `uint256` | Index of the Epoch enum for which to check start and end for.     |
-    | `_ts` | `uint256` | Timestamp to anoch to. Defaults to the current one (`block.timestamp`).     |
+    | `_ts` | `uint256` | Timestamp to anochr to. Defaults to the current one (`block.timestamp`).     |
 
     ??? quote "Source code"
 
@@ -166,7 +166,7 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
 ### `fee`
 !!! description "`FeeCollector.fee(_epoch: Epoch=empty(Epoch), _ts: uint256=block.timestamp) -> uint256`"
 
-    Getter for the caller fee based on an epoch and timestamp. If no input is given, it returns the caller fee of the current epoch. The fee is depending on the current epoch.
+    Getter for the caller fee based on an epoch and timestamp. If no input is given, it returns the caller fee of the current epoch. The fee is dependent on the current epoch.
 
     Returns: fee of the epoch (`uint256`).
 
@@ -223,7 +223,7 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
 ### `max_fee`
 !!! description "`FeeCollector.max_fee(arg0: uint256) -> uint256: view`"
 
-    Getter for the maximum fee of an epoch. Maximum fee is set to 1% for the `COLLECT` and `FORWARD` epochs. This value can later on be changed by the `owner` of the contract using the [`set_max_fee`](#set_max_fee) function.
+    Getter for the maximum fee of an epoch. Maximum fee is set to 1% for the `COLLECT` and `FORWARD` epochs. This value can be changed by the `owner` of the contract using the [`set_max_fee`](#set_max_fee) function.
 
     Returns: maximum fee (`uint256`).
 
@@ -330,12 +330,12 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
 
 ## **Burn Process**
 
-The `FeeCollector` contract has a [`target`](#target) variable, which represents the coin into which all the collected fees are "burnt" into. This variable can be changed by the [`owner`](#owner) of the contract using the [`set_target`](#set_target) function. As the owner of the contract is the Curve DAO, a on-chain proposal needs to be successfully passed to make any changes.
+The `FeeCollector` contract has a [`target`](#target) variable, which represents the coin into which all the collected fees are "burned" into. This variable can be changed by the [`owner`](#owner) of the contract using the [`set_target`](#set_target) function. As the owner of the contract is the Curve DAO, a on-chain proposal needs to be successfully passed to make any changes.
 
 *The general flow of the fee burning process is the following:*
 
-1. Admin fees are collected from pools or other revenue sources using the `withdraw_many` function. While fees of older pools need to claimed manually, the accrrued fees from newer pools (mostly NG pools) are periodically claimed when removing liquidity from the pool.
-2. The accrrued tokens can be burned calling the `collect` function. This creates, if there isn't already one, a conditional order on CowSwap which automatically exchanges the fee tokens into the `target` coin.
+1. Admin fees are collected from pools or other revenue sources using the `withdraw_many` function. While fees of older pools need to claimed manually, the accrued fees from newer pools (mostly NG pools) are periodically claimed when removing liquidity from the pool.
+2. The accrued tokens can be burned calling the `collect` function. This creates, if there isn't already one, a conditional order on CowSwap which automatically exchanges the fee tokens into the `target` coin.
 3. After burning the tokens, they can be forwarded to the `FeeDistributor` using the `forward` function.
 
 
@@ -432,7 +432,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 ### `withdraw_many`
 !!! description "`FeeCollector.withdraw_many(_pools: DynArray[address, MAX_LEN])`"
 
-    Function to withdraw admin fees from multiple Curve pools. Maximum amount of pools to withdraw from within a single function call is 64. This function can be called by anyone and at any time. While the fee claiming of new-generation (NG) pools is partly automated, the fees of older pools or crvUSD market need to claimed manually. This function only works on contracts with a `withdraw_admin_fees` function. E.g. accurred fees from crvUSD markets are collected via a `collect_fees` function, therefore this function can not be used to claim those fees into this contract.
+    Function to withdraw admin fees from multiple Curve pools. Maximum amount of pools to withdraw from within a single function call is 64. This function can be called by anyone and at any time. While the fee claiming of new-generation (NG) pools is partly automated, the fees of older pools or crvUSD market need to claimed manually. This function only works on contracts with a `withdraw_admin_fees` function. E.g. accrued fees from crvUSD markets are collected via a `collect_fees` function, therefore this function can not be used to claim those fees into this contract.
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
@@ -863,7 +863,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
     !!!guard "Guarded Method"
         This function is only callable by the `owner` of the contract.
 
-    Function to transfer a coins from the contract with approval. This function is needed for back compatability along with dealing with raw ETH.
+    Function to transfer coins from the contract with approval. This function is needed for back compatability along with dealing with raw ETH.
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
@@ -903,7 +903,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
     !!!guard "Guarded Method"
         This function is only callable by the `owner` or `emergency_owner` of the contract.
 
-    Function to recover ERC20 tokens or ETH from the contract by transfering them to `_receiver`.
+    Function to recover ERC20 tokens or ETH from the contract by transferring them to `_receiver`.
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
@@ -1157,7 +1157,7 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 - `set_emergency_owner`: Assign a new emergency owner to the contract.
 
 
-*The `emergency_owner`[^2] has limited power, intended for emergency situations. He can call:*
+*The `emergency_owner`[^2] has limited power, intended for emergency situations. They can call:*
 
 [^2]: The `emergency_owner` is a [5 of 9 multisig](https://resources.curve.fi/governance/understanding-governance/?h=multis#emergency-dao).
 

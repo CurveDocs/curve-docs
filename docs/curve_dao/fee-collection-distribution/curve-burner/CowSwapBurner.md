@@ -351,7 +351,7 @@ composable_cow.create(ConditionalOrderParams({
     | `_domain_seperator` | `bytes32` |  `EIP-712` domain separator.  |
     | `_ctx` | `bytes32` |  Execution context.  |
     | `_static_input` | `Bytes[STATIC_DATA_LEN]` | ConditionalOrder's staticData (coin address).   |
-    | `_offchain_input` | `Bytes[OFFCHAIN_DATA_LEN]` |  Conditional order type-specific data NOT known at time of creation for a specifi discrete order (or zero-length bytes if not applicable).  |
+    | `_offchain_input` | `Bytes[OFFCHAIN_DATA_LEN]` |  Conditional order type-specific data NOT known at time of creation for a specific discrete order (or zero-length bytes if not applicable).  |
     | `_order` | `GPv2Order_Data` |  The proposed discrete order's `GPv2Order.Data` struct.  |
 
     ??? quote "Source code"
@@ -540,7 +540,7 @@ composable_cow.create(ConditionalOrderParams({
 
 ## **Pushing and Recovering Coins**
 
-The `push_target` function is used to transfer an leftover target coins from the burner to the `FeeCollector`.
+The `push_target` function is used to transfer any leftover target coins from the burner to the `FeeCollector`.
 
 Additionally, there is a recover function which lets the `owner` or `emergency_owner` of the `FeeCollector` to recover ERC20 or ETH.
 
@@ -548,7 +548,7 @@ Additionally, there is a recover function which lets the `owner` or `emergency_o
 ### `push_target`
 !!! description "`CowSwapBurner.push_target() -> uint256`"
 
-    Function to push the entire balance of the target coin to the `FeeCollector`. This function can be called externally, but is also called directly called by the `FeeCollector` before the target coins are forwarded to the hook contract using the `forward` function.
+    Function to push the entire balance of the target coin to the `FeeCollector`. This function can be called externally, but is also called directly by the `FeeCollector` before the target coins are forwarded to the hooker contract using the `forward` function.
 
     Returns: amout of target coins pushed (`uint256`).
 
@@ -701,7 +701,7 @@ SUPPORTED_INTERFACES: constant(bytes4[4]) = [
 ### `fee_collector`
 !!! description "`CowSwapBurner.fee_collector() -> address: view`"
 
-    Getter for the Fee Collector address to anochor to.
+    Getter for the Fee Collector address to anchor to.
 
     Returns: fee collector (`address`).
 

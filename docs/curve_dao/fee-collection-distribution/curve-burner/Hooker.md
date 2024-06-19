@@ -167,7 +167,7 @@ The `duty_act` method is designed to be called by the `FeeCollector` contract du
 The `act` function is a more general function to execute hooks and compensate the caller, callable by anyone.
 
 
-Compensation for executing the hooks:
+**Compensation for executing hooks**
 
 The compensation strategy in the Hooker contract determines how and when callers (keepers) are compensated for executing hooks. This strategy includes parameters for managing compensation amounts, cooldowns, and execution limits, ensuring fair and controlled distribution of rewards.
 
@@ -453,7 +453,7 @@ struct CompensationCooldown:
 
     Function to calculate the compensation for executing specific hooks.
 
-    Returns: amount of target coins to receive as compensation (`uin256`).
+    Returns: amount of target coins to receive as compensation (`uint256`).
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
