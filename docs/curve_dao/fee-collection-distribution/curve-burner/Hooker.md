@@ -63,7 +63,7 @@ Before hooks can be executed, they need to be added via `set_hooks`. These hooks
 
     Getter for the hooks recorded in the contract.
 
-    Returns: `Hook` struct consisting of the target address (`address`), a byte array containing the method identifier and additional data (`Bytes[1024]`), compensation strategy (`CompensationStrategy`) consisting of "todo" and if the hook is a duty hook or not (`bool`).
+    Returns: `Hook` struct consisting of the target address (`address`), a byte array containing the method identifier and additional data (`Bytes[1024]`), compensation strategy (`CompensationStrategy`) and if the hook is a duty hook or not (`bool`).
 
     | Input   | Type      | Description        |
     | ------- | --------- | ------------------ |
@@ -224,9 +224,9 @@ struct CompensationCooldown:
 
     *Each `HookInput` struct contains:*
 
-    - `hook_id`: The identifier for the hook to be executed.
-    - `value`: The amount of value (ETH or tokens) to be sent with the hook execution.
-    - `data`: The data payload for the hook, including the method identifier and parameters.
+    - `hook_id:` `uint8` - The identifier for the hook to be executed.
+    - `value:` `uint256` - The amount of raw ETH to be sent with the hook execution.
+    - `data:` `Bytes[8192]` - The data payload for the hook, including the method identifier and parameters.
 
     ??? quote "Source code"
 
@@ -363,9 +363,9 @@ struct CompensationCooldown:
 
     *Each `HookInput` struct contains:*
 
-    - `hook_id`: The identifier for the hook to be executed.
-    - `value`: The amount of value (ETH or tokens) to be sent with the hook execution.
-    - `data`: The data payload for the hook, including the method identifier and parameters.
+    - `hook_id:` `uint8` - The identifier for the hook to be executed.
+    - `value:` `uint256` - The amount of raw ETH to be sent with the hook execution.
+    - `data:` `Bytes[8192]` - The data payload for the hook, including the method identifier and parameters.
 
     ??? quote "Source code"
 
@@ -463,15 +463,20 @@ struct CompensationCooldown:
 
     *Each `HookInput` struct contains:*
 
-    - `hook_id`: The identifier for the hook to be executed.
-    - `value`: The amount of value (ETH or tokens) to be sent with the hook execution.
-    - `data`: The data payload for the hook, including the method identifier and parameters.
+    - `hook_id:` `uint8` - The identifier for the hook to be executed.
+    - `value:` `uint256` - The amount of raw ETH to be sent with the hook execution.
+    - `data:` `Bytes[8192]` - The data payload for the hook, including the method identifier and parameters.
 
     ??? quote "Source code"
 
         === "Hooker.vy"
 
             ```vyper
+            struct HookInput:
+                hook_id: uint8
+                value: uint256
+                data: Bytes[8192]
+
             @view
             @external
             def calc_compensation(_hook_inputs: DynArray[HookInput, MAX_HOOKS_LEN],
@@ -543,9 +548,9 @@ struct CompensationCooldown:
 
     *Each `HookInput` struct contains:*
 
-    - `hook_id`: The identifier for the hook to be executed.
-    - `value`: The amount of value (ETH or tokens) to be sent with the hook execution.
-    - `data`: The data payload for the hook, including the method identifier and parameters.
+    - `hook_id:` `uint8` - The identifier for the hook to be executed.
+    - `value:` `uint256` - The amount of raw ETH to be sent with the hook execution.
+    - `data:` `Bytes[8192]` - The data payload for the hook, including the method identifier and parameters.
 
     ??? quote "Source code"
 

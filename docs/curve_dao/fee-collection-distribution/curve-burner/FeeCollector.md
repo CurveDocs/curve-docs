@@ -1,18 +1,21 @@
 <h1>FeeCollector.vy</h1>
 
-The `FeeCollector.vy` contract is the core contract when handling admin fees. This contract collects all the fees, while burner contracts handle the burning of the coins. The contract has a [`target`](#target) variable, which represents the coin for which all the various fee tokens are burnt into.
-
-The contract operates in different [epochs](#epochs) (phases) in which certain actions are possible.
-
-
 !!!github "GitHub"
     The source code of the `FeeCollector.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/FeeCollector.vy).
+
+The `FeeCollector` is the entry point for the fee burning and distribution mechanism and acts as a universal contract where all admin fees[^1] from various revenue sources within the Curve ecosystem are collected. The two main revenue streams for the DAO are fees collected from liquidity pools and the interest earned through crvUSD markets.
+
+Most admin fees are collected in "regular" tokens, though sometimes they are LP tokens. For the system, this distinction does not make any difference.
+
+The contract has a flexible architecture by introducing a [`target`](#target) variable, which represents the coin into which all the various fee tokens are burned. This variable can be changed to any token, although it requires a successfully passed on-chain vote, as this contract is under the control of the Curve DAO.
 
 
 ---
 
 
 ## **Epochs**
+
+The contract operates in different [epochs](#epochs) (phases) in which certain actions are possible.
 
 The `epoch` function and its related internal functions are used to determine the current operational phase of the contract based on the timestamp. The contract operates in different phases (epochs) that dictate what actions can be performed at any given time. This helps in organizing the contract's workflow and ensuring that certain operations only occur during specific periods.
 
@@ -166,7 +169,7 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
 ### `fee`
 !!! description "`FeeCollector.fee(_epoch: Epoch=empty(Epoch), _ts: uint256=block.timestamp) -> uint256`"
 
-    Getter for the caller fee based on an epoch and timestamp. If no input is given, it returns the caller fee of the current epoch. The fee is dependent on the current epoch.
+    Getter for the caller fee based on an epoch and timestamp. If no input is given, it returns the caller fee of the current epoch. The fee is dependent on the current epoch. The `fee` (except the one for the `forward` function) is optional and up to the burner implementation. The value starts at `0` and continuously increases to `max_fee` (`1%`), but burner contracts *can* have their own fee values. The reason for this is that it makes sense to pay the fee in the `target` token instead of many different coins, but the current CoWSwap architecture makes this very complicated to do.
 
     Returns: fee of the epoch (`uint256`).
 
@@ -231,7 +234,7 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
 
     | Input    | Type      | Description                                              |
     |----------|-----------|----------------------------------------------------------|
-    | `_epoch` | `uint256` | Index of the Epoch enum for which to check the maximum fee. |
+    | `_epoch` | `uint256` | Epoch enum for which to check the maximum fee. |
 
     ??? quote "Source code"
 
@@ -432,7 +435,10 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 ### `withdraw_many`
 !!! description "`FeeCollector.withdraw_many(_pools: DynArray[address, MAX_LEN])`"
 
-    Function to withdraw admin fees from multiple Curve pools. Maximum amount of pools to withdraw from within a single function call is 64. This function can be called by anyone and at any time. While the fee claiming of new-generation (NG) pools is partly automated, the fees of older pools or crvUSD market need to claimed manually. This function only works on contracts with a `withdraw_admin_fees` function. E.g. accrued fees from crvUSD markets are collected via a `collect_fees` function, therefore this function can not be used to claim those fees into this contract.
+    !!!guard "Guarded"
+        This function does not work with all pools, as some of them have a `msg.sender == owner` guard with a pool proxy as the owner.
+
+    Function to withdraw admin fees from multiple Curve pools. Maximum amount of pools to withdraw from within a single function call is `64`. This function can be called by anyone and at any time. While the fee claiming of new-generation (NG) pools is partly automated, the fees of older pools or crvUSD market need to claimed manually. This function only works on contracts with a `withdraw_admin_fees` function. E.g. accrued fees from crvUSD markets are collected via a `collect_fees` function, therefore this function can not be used to claim those fees into this contract.
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
@@ -614,7 +620,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
     !!!guard "Guarded Method"
         This function is only callable by the `burner` contract.
 
-    Function to transfer coins. This function can only be called during the `COLLECT` or `EXCHANGE` epochs and is used to transfer the different admin fee tokens to the burner contract when calling the `collect` function.
+    Function to transfer coins. This function can only be called during the `COLLECT` or `EXCHANGE` epochs and is used to transfer the different admin fee tokens to the burner contract when calling the `collect` function. This function is effectively needed to remove all approvals from previous burners in case of any malfunctioning or the misuse of any collected coins.
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
@@ -1145,14 +1151,14 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
 *The `owner`[^1] is able to call the following functions:*
 
-[^1]: Owner of the contract is the Curve DAO. To make any changes, a successful on-chain vote needs to pass.
+[^1]: The owner of the contract is the Curve DAO. To make any changes, a successful on-chain vote needs to pass.
 
 - `recover`: Recover ERC20 tokens or ETH from the contract.
 - `set_max_fee`: Set the maximum fee for a specified epoch.
 - `set_burner`: Set the burner contract for exchanging coins.
 - `set_hooker`: Set the hooker contract.
-- `set_target`: Set a new target coin for fee accumulation. 
-- `set_killed`: Mark certain coins as killed to prevent them from being burnt.
+- `set_target`: Set a new target coin for fee accumulation.
+- `set_killed`: Mark certain coins as killed to prevent them from being burned, or mark entire epochs to prevent all coins from being burned in a specific epoch.
 - `set_owner`: Assign a new owner to the contract.
 - `set_emergency_owner`: Assign a new emergency owner to the contract.
 

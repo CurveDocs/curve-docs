@@ -826,7 +826,7 @@ SUPPORTED_INTERFACES: constant(bytes4[4]) = [
 ### `ADD_DATA`
 !!! description "`CowSwapBurner.ADD_DATA() -> bytes32: view`"
 
-    Getter for the additional data applied in the internal `_get_order` function. @roman: what is this additional data? what does it do?
+    Getter for the additional data applied in the internal `_get_order` function. The data is shown as metadata on the [CowSwap explorer](https://explorer.cow.fi/) and allows distinguishing Curve orders (e.g., see this [transaction](https://explorer.cow.fi/gc/orders/0x2bd5604e60cda24f80da9a0a5b2e69598620e383c1a074b234a86489fe1856b1566b9f24200a9b51b76792d4e81b569af27eda8366721f80?tab=overview)).
 
     Returns: additional data (`bytes32`).
 
