@@ -1,16 +1,29 @@
-Fees are distributed to veCRV holders through the FeeDistributor contract in the form of 3CRV tokens.
+<h1>Fee Distributor</h1>
 
 !!!deploy "Contract Source & Deployment"
-    **FeeDistributor** contract is deployed to the Ethereum mainnet at: [0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc](https://etherscan.io/address/0xa464e6dcda8ac41e03616f95f4bc98a13b8922dc).  
-    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/FeeDistributor.vy).  
+    There are two `FeeDistributor` contracts deployed on Ethereum, depending on the reward token:
 
-**Fees are distributed on a  weekly basis.** The porportional amount of fees that each user is to receive is calculated based on their veCRV balance relative to the total veCRV supply.This amount is calculated at the start of the week.  
-The actual distribution occurs at the end of the week based on the fees that were collected. As such, a user that creates a new vote-lock should expect to receive their first fee payout at the end of the following epoch week.
- 
-!!!info "Changing the Reward Token"
-    Changing the reward token from 3CRV to, for example, crvUSD, would require the creation of a new FeeDistributor, as the reward token cannot be configured within the existing contract.
+    - `3CRV`: [0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc](https://etherscan.io/address/0xa464e6dcda8ac41e03616f95f4bc98a13b8922dc)
+    - `crvUSD`: [0xD16d5eC345Dd86Fb63C6a9C43c517210F1027914](https://etherscan.io/address/0xD16d5eC345Dd86Fb63C6a9C43c517210F1027914)
 
-The available 3CRV balance to distribute is tracked via the “**token checkpoint**”. This is updated at minimum every 24 hours. Fees that are received between the last checkpoint of the previous week and first checkpoint of the new week will be split evenly between the weeks.
+    The source code of the contract is available on [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/FeeDistributor.vy). Note: The source code of both contracts is almost identical. The difference with respect to the first `FeeDistributor` is that the `token` variable was initialized with the crvUSD token address instead of `3CRV`, and the `rounded_timestamp` calculation was modified as follows:
+
+    ```py
+    # 3CRV Distributor
+    rounded_timestamp: uint256 = block.timestamp / WEEK * WEEK
+
+    # crvUSD Distributor
+    rounded_timestamp: uint256 = (block.timestamp - 1) / WEEK * WEEK
+    ```
+
+Fees used to be distributed to veCRV in the form of [`3CRV`](https://etherscan.io/address/0x6c3f90f043a72fa612cbac8115ee7e52bde6e490) tokens, the LP token of the [`threepool`](https://etherscan.io/address/0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7), which consists of `USDT`, `USDC`, and `DAI`. After the release of Curve's own stablecoin [`crvUSD`](https://etherscan.io/token/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E) and following a successful DAO vote to change the reward token to it, a new `FeeDistributor` contract was deployed to distribute fees in the form of crvUSD tokens.
+
+!!!warning "Unclaimed 3CRV Tokens"
+    Old unclaimed 3CRV tokens are not lost with the introduction of crvUSD as the reward token. They can still be claimed from the old `FeeDistributor` contract and will remain there until they are claimed.
+
+Fees are distributed on a weekly basis. The proportional amount of fees that each user is to receive is calculated based on their veCRV balance relative to the total veCRV supply. This amount is calculated at the start of the week. The actual distribution occurs at the end of the week based on the fees that were collected. As such, a user that creates a new vote-lock should expect to receive their first fee payout at the end of the following epoch week.
+
+The available reward token balance to distribute is tracked via the “**token checkpoint**”. This is updated at least every 24 hours. Fees received between the last checkpoint of the previous week and the first checkpoint of the new week will be split evenly between the weeks.
 
 
 ---
