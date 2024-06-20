@@ -13,152 +13,71 @@ The actual distribution occurs at the end of the week based on the fees that wer
 The available 3CRV balance to distribute is tracked via the “**token checkpoint**”. This is updated at minimum every 24 hours. Fees that are received between the last checkpoint of the previous week and first checkpoint of the new week will be split evenly between the weeks.
 
 
+---
+
+
 ## **Claiming Fees**
 
-### `checkpoint_token`
-!!! description "`FeeDistributor.checkpoint_token()`"
+### `token`
+!!! description "`FeeDistributor.token() -> address: view`"
 
-    Function to update the token checkpoint.
+    Getter for the token address in which the fees are distributed.
 
-    The token checkpoint tracks the balance of 3CRV within the distributor to determine the amount of fees to distribute in the given week. The checkpoint can be updated at most once every 24 hours. Fees that are received between the last checkpoint of the previous week and first checkpoint of the new week will be split evenly between the weeks.
-
-    To ensure full distribution of fees in the current week, the burn process must be completed prior to the last checkpoint within the week.
-
-    A token checkpoint is automatically taken during any `claim` action, if the last checkpoint is more than 24 hours old. 
+    Returns: reward token (`address`).
 
     ??? quote "Source code"
 
         ```vyper 
-        event CheckpointToken:
-            time: uint256
-            tokens: uint256
-
-        can_checkpoint_token: public(bool)
-
-        @internal
-        def _checkpoint_token():
-            token_balance: uint256 = ERC20(self.token).balanceOf(self)
-            to_distribute: uint256 = token_balance - self.token_last_balance
-            self.token_last_balance = token_balance
-
-            t: uint256 = self.last_token_time
-            since_last: uint256 = block.timestamp - t
-            self.last_token_time = block.timestamp
-            this_week: uint256 = t / WEEK * WEEK
-            next_week: uint256 = 0
-
-            for i in range(20):
-                next_week = this_week + WEEK
-                if block.timestamp < next_week:
-                    if since_last == 0 and block.timestamp == t:
-                        self.tokens_per_week[this_week] += to_distribute
-                    else:
-                        self.tokens_per_week[this_week] += to_distribute * (block.timestamp - t) / since_last
-                    break
-                else:
-                    if since_last == 0 and next_week == t:
-                        self.tokens_per_week[this_week] += to_distribute
-                    else:
-                        self.tokens_per_week[this_week] += to_distribute * (next_week - t) / since_last
-                t = next_week
-                this_week = next_week
-
-            log CheckpointToken(block.timestamp, to_distribute)
+        token: public(address)
 
         @external
-        def checkpoint_token():
+        def __init__(
+            _voting_escrow: address,
+            _start_time: uint256,
+            _token: address,
+            _admin: address,
+            _emergency_return: address
+        ):
             """
-            @notice Update the token checkpoint
-            @dev Calculates the total number of tokens to be distributed in a given week.
-                During setup for the initial distribution this function is only callable
-                by the contract owner. Beyond initial distro, it can be enabled for anyone
-                to call.
+            @notice Contract constructor
+            @param _voting_escrow VotingEscrow contract address
+            @param _start_time Epoch time for fee distribution to start
+            @param _token Fee token address (crvUSD)
+            @param _admin Admin address
+            @param _emergency_return Address to transfer `_token` balance to
+                                    if this contract is killed
             """
-            assert (msg.sender == self.admin) or\
-                (self.can_checkpoint_token and (block.timestamp > self.last_token_time + TOKEN_CHECKPOINT_DEADLINE))
-            self._checkpoint_token()
-        ```
-
-    === "Example"
-        ```shell
-        >>> FeeDistributor.checkpoint_token()
-        todo
-        ```
-
-
-### `checkpoint_total_supply`
-!!! description "`FeeDistributor.checkpoint_total_supply():`"
-
-    Function to perform multiple claims in a single call.
-
-    This is useful to claim for multiple accounts at once, or for making many claims against the same account if that account has performed more than 50 veCRV related actions.
-
-    Returns: true (`boolean`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_recievers` |  `address` | receiver address |
-
-    ??? quote "Source code"
-
-        ```vyper 
-        @internal
-        def _checkpoint_total_supply():
-            ve: address = self.voting_escrow
-            t: uint256 = self.time_cursor
-            rounded_timestamp: uint256 = block.timestamp / WEEK * WEEK
-            VotingEscrow(ve).checkpoint()
-
-            for i in range(20):
-                if t > rounded_timestamp:
-                    break
-                else:
-                    epoch: uint256 = self._find_timestamp_epoch(ve, t)
-                    pt: Point = VotingEscrow(ve).point_history(epoch)
-                    dt: int128 = 0
-                    if t > pt.ts:
-                        # If the point is at 0 epoch, it can actually be earlier than the first deposit
-                        # Then make dt 0
-                        dt = convert(t - pt.ts, int128)
-                    self.ve_supply[t] = convert(max(pt.bias - pt.slope * dt, 0), uint256)
-                t += WEEK
-
+            t: uint256 = _start_time / WEEK * WEEK
+            self.start_time = t
+            self.last_token_time = t
             self.time_cursor = t
-
-        @external
-        def checkpoint_total_supply():
-            """
-            @notice Update the veCRV total supply checkpoint
-            @dev The checkpoint is also updated by the first claimant each
-                new epoch week. This function may be called independently
-                of a claim, to reduce claiming gas costs.
-            """
-            self._checkpoint_total_supply()
+            self.token = _token
+            self.voting_escrow = _voting_escrow
+            self.admin = _admin
+            self.emergency_return = _emergency_return
         ```
 
     === "Example"
         ```shell
-        >>> FeeDistributor.checkpoint_total_supply():
-        'todo'
+        >>> FeeDistributor.token()
+        '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
         ```
-
 
 ### `claim`
 !!! description "`FeeDistributor.claim(_addr: address = msg.sender) -> uint256:`"
 
     Functions to claim fees for an account.  
 
-    Returns: amount of 3CRV (`uint256`) received in the claim. 
+    Returns: amount of rewards claimed (`uint256`). 
     
     !!!note
         For off-chain integrators, this function can be called as though it were a view method in order to check the claimable amount.
 
         Every veCRV related action (locking, extending a lock, increasing the locktime) increments a user’s veCRV epoch. A call to claim will consider at most 50 user epochs. For accounts that performed many veCRV actions, it may be required to call claim more than once to receive the fees. In such cases it can be more efficient to use `claim_many`.
 
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_addr` |  `address` | receiver address |
+    | Input   | Type   | Description |
+    | ------- | ------- | ----|
+    | `_addr` |  `address` | Addresses to claim for. Defaults to `msg.sender`. |
 
     ??? quote "Source code"
 
@@ -168,74 +87,6 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
             amount: uint256
             claim_epoch: uint256
             max_epoch: uint256
-
-        @internal
-        def _claim(addr: address, ve: address, _last_token_time: uint256) -> uint256:
-            # Minimal user_epoch is 0 (if user had no point)
-            user_epoch: uint256 = 0
-            to_distribute: uint256 = 0
-
-            max_user_epoch: uint256 = VotingEscrow(ve).user_point_epoch(addr)
-            _start_time: uint256 = self.start_time
-
-            if max_user_epoch == 0:
-                # No lock = no fees
-                return 0
-
-            week_cursor: uint256 = self.time_cursor_of[addr]
-            if week_cursor == 0:
-                # Need to do the initial binary search
-                user_epoch = self._find_timestamp_user_epoch(ve, addr, _start_time, max_user_epoch)
-            else:
-                user_epoch = self.user_epoch_of[addr]
-
-            if user_epoch == 0:
-                user_epoch = 1
-
-            user_point: Point = VotingEscrow(ve).user_point_history(addr, user_epoch)
-
-            if week_cursor == 0:
-                week_cursor = (user_point.ts + WEEK - 1) / WEEK * WEEK
-
-            if week_cursor >= _last_token_time:
-                return 0
-
-            if week_cursor < _start_time:
-                week_cursor = _start_time
-            old_user_point: Point = empty(Point)
-
-            # Iterate over weeks
-            for i in range(50):
-                if week_cursor >= _last_token_time:
-                    break
-
-                if week_cursor >= user_point.ts and user_epoch <= max_user_epoch:
-                    user_epoch += 1
-                    old_user_point = user_point
-                    if user_epoch > max_user_epoch:
-                        user_point = empty(Point)
-                    else:
-                        user_point = VotingEscrow(ve).user_point_history(addr, user_epoch)
-
-                else:
-                    # Calc
-                    # + i * 2 is for rounding errors
-                    dt: int128 = convert(week_cursor - old_user_point.ts, int128)
-                    balance_of: uint256 = convert(max(old_user_point.bias - dt * old_user_point.slope, 0), uint256)
-                    if balance_of == 0 and user_epoch > max_user_epoch:
-                        break
-                    if balance_of > 0:
-                        to_distribute += balance_of * self.tokens_per_week[week_cursor] / self.ve_supply[week_cursor]
-
-                    week_cursor += WEEK
-
-            user_epoch = min(max_user_epoch, user_epoch - 1)
-            self.user_epoch_of[addr] = user_epoch
-            self.time_cursor_of[addr] = week_cursor
-
-            log Claimed(addr, to_distribute, user_epoch, max_user_epoch)
-
-            return to_distribute
 
         @external
         @nonreentrant('lock')
@@ -270,36 +121,6 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
                 self.token_last_balance -= amount
 
             return amount
-        ```
-
-    === "Example"
-        ```shell
-        >>> FeeDistributor.claim()
-        todo
-        ```
-
-
-### `claim_many`
-!!! description "`FeeDistributor.claim_many(_receivers: address[20]) -> bool:`"
-
-    Function to perform multiple claims in a single call.
-
-    This is useful to claim for multiple accounts at once, or for making many claims against the same account if that account has performed more than 50 veCRV related actions.
-
-    Returns: true (`boolean`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_recievers` |  `address` | receiver address |
-
-    ??? quote "Source code"
-
-        ```vyper 
-        event Claimed:
-            recipient: indexed(address)
-            amount: uint256
-            claim_epoch: uint256
-            max_epoch: uint256
 
         @internal
         def _claim(addr: address, ve: address, _last_token_time: uint256) -> uint256:
@@ -368,6 +189,33 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
             log Claimed(addr, to_distribute, user_epoch, max_user_epoch)
 
             return to_distribute
+        ```
+
+    === "Example"
+        ```shell
+        >>> soon
+        ```
+
+
+### `claim_many`
+!!! description "`FeeDistributor.claim_many(_receivers: address[20]) -> bool:`"
+
+    Function to perform multiple claims in a single call. This is useful to claim for multiple accounts at once, or for making many claims against the same account if that account has performed more than 50 veCRV related actions.
+
+    Returns: true (`boolean`).
+
+    | Input   | Type   | Description |
+    | ------- | ------- | ----|
+    | `_addr` |  `address[20]` | List of addresses to claim for. |
+
+    ??? quote "Source code"
+
+        ```vyper 
+        event Claimed:
+            recipient: indexed(address)
+            amount: uint256
+            claim_epoch: uint256
+            max_epoch: uint256
 
         @external
         @nonreentrant('lock')
@@ -410,6 +258,74 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
                 self.token_last_balance -= total
 
             return True
+
+        @internal
+        def _claim(addr: address, ve: address, _last_token_time: uint256) -> uint256:
+            # Minimal user_epoch is 0 (if user had no point)
+            user_epoch: uint256 = 0
+            to_distribute: uint256 = 0
+
+            max_user_epoch: uint256 = VotingEscrow(ve).user_point_epoch(addr)
+            _start_time: uint256 = self.start_time
+
+            if max_user_epoch == 0:
+                # No lock = no fees
+                return 0
+
+            week_cursor: uint256 = self.time_cursor_of[addr]
+            if week_cursor == 0:
+                # Need to do the initial binary search
+                user_epoch = self._find_timestamp_user_epoch(ve, addr, _start_time, max_user_epoch)
+            else:
+                user_epoch = self.user_epoch_of[addr]
+
+            if user_epoch == 0:
+                user_epoch = 1
+
+            user_point: Point = VotingEscrow(ve).user_point_history(addr, user_epoch)
+
+            if week_cursor == 0:
+                week_cursor = (user_point.ts + WEEK - 1) / WEEK * WEEK
+
+            if week_cursor >= _last_token_time:
+                return 0
+
+            if week_cursor < _start_time:
+                week_cursor = _start_time
+            old_user_point: Point = empty(Point)
+
+            # Iterate over weeks
+            for i in range(50):
+                if week_cursor >= _last_token_time:
+                    break
+
+                if week_cursor >= user_point.ts and user_epoch <= max_user_epoch:
+                    user_epoch += 1
+                    old_user_point = user_point
+                    if user_epoch > max_user_epoch:
+                        user_point = empty(Point)
+                    else:
+                        user_point = VotingEscrow(ve).user_point_history(addr, user_epoch)
+
+                else:
+                    # Calc
+                    # + i * 2 is for rounding errors
+                    dt: int128 = convert(week_cursor - old_user_point.ts, int128)
+                    balance_of: uint256 = convert(max(old_user_point.bias - dt * old_user_point.slope, 0), uint256)
+                    if balance_of == 0 and user_epoch > max_user_epoch:
+                        break
+                    if balance_of > 0:
+                        to_distribute += balance_of * self.tokens_per_week[week_cursor] / self.ve_supply[week_cursor]
+
+                    week_cursor += WEEK
+
+            user_epoch = min(max_user_epoch, user_epoch - 1)
+            self.user_epoch_of[addr] = user_epoch
+            self.time_cursor_of[addr] = week_cursor
+
+            log Claimed(addr, to_distribute, user_epoch, max_user_epoch)
+
+            return to_distribute
         ```
 
     === "Example"
@@ -419,14 +335,179 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
         ```
 
 
+### `can_checkpoint_token`
+!!! description "`FeeDistributor.can_checkpoint_token() -> bool: view`"
+
+    Getter to check if tokens can be checkpointed.
+
+    Returns: true or flase (`bool`).
+
+    ??? quote "Source code"
+
+        ```vyper 
+        can_checkpoint_token: public(bool)
+        ```
+
+    === "Example"
+        ```shell
+        >>> FeeDistributor.can_checkpoint_token()
+        'true'
+        ```
+
+
+### `checkpoint_token`
+!!! description "`FeeDistributor.checkpoint_token()`"
+
+    Function to update the token checkpoint. The token checkpoint tracks the balance of 3CRV within the distributor to determine the amount of fees to distribute in the given week. The checkpoint can be updated at most once every 24 hours. Fees that are received between the last checkpoint of the previous week and first checkpoint of the new week will be split evenly between the weeks. To ensure full distribution of fees in the current week, the burn process must be completed prior to the last checkpoint within the week. A token checkpoint is automatically taken during any `claim` action, if the last checkpoint is more than 24 hours old. 
+
+    ??? quote "Source code"
+
+        ```vyper 
+        event CheckpointToken:
+            time: uint256
+            tokens: uint256
+
+        can_checkpoint_token: public(bool)
+
+        @external
+        def checkpoint_token():
+            """
+            @notice Update the token checkpoint
+            @dev Calculates the total number of tokens to be distributed in a given week.
+                During setup for the initial distribution this function is only callable
+                by the contract owner. Beyond initial distro, it can be enabled for anyone
+                to call.
+            """
+            assert (msg.sender == self.admin) or\
+                (self.can_checkpoint_token and (block.timestamp > self.last_token_time + TOKEN_CHECKPOINT_DEADLINE))
+            self._checkpoint_token()
+
+        @internal
+        def _checkpoint_token():
+            token_balance: uint256 = ERC20(self.token).balanceOf(self)
+            to_distribute: uint256 = token_balance - self.token_last_balance
+            self.token_last_balance = token_balance
+
+            t: uint256 = self.last_token_time
+            since_last: uint256 = block.timestamp - t
+            self.last_token_time = block.timestamp
+            this_week: uint256 = t / WEEK * WEEK
+            next_week: uint256 = 0
+
+            for i in range(20):
+                next_week = this_week + WEEK
+                if block.timestamp < next_week:
+                    if since_last == 0 and block.timestamp == t:
+                        self.tokens_per_week[this_week] += to_distribute
+                    else:
+                        self.tokens_per_week[this_week] += to_distribute * (block.timestamp - t) / since_last
+                    break
+                else:
+                    if since_last == 0 and next_week == t:
+                        self.tokens_per_week[this_week] += to_distribute
+                    else:
+                        self.tokens_per_week[this_week] += to_distribute * (next_week - t) / since_last
+                t = next_week
+                this_week = next_week
+
+            log CheckpointToken(block.timestamp, to_distribute)
+        ```
+
+    === "Example"
+        ```shell
+        >>> soon
+        ```
+
+### `toggle_allow_checkpoint_token`
+!!! description "`FeeDistributor.toggle_allow_checkpoint_token():`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the contract.
+
+    Funtion to toggle permission for checkpointing by an account.
+
+    ??? quote "Source code"
+
+        ```vyper 
+        event ToggleAllowCheckpointToken:
+            toggle_flag: bool
+
+        @external
+        def toggle_allow_checkpoint_token():
+            """
+            @notice Toggle permission for checkpointing by any account
+            """
+            assert msg.sender == self.admin
+            flag: bool = not self.can_checkpoint_token
+            self.can_checkpoint_token = flag
+            log ToggleAllowCheckpointToken(flag)
+        ```
+
+    === "Example"
+        ```shell
+        >>> FeeDistributor.toggle_allow_checkpoint_token()
+        'true'
+        ```
+
+
+### `checkpoint_total_supply`
+!!! description "`FeeDistributor.checkpoint_total_supply()`"
+
+    Function to perform multiple claims in a single call. This is useful to claim for multiple accounts at once, or for making many claims against the same account if that account has performed more than 50 veCRV related actions.
+
+    Returns: true (`boolean`).
+
+    ??? quote "Source code"
+
+        ```vyper 
+        @external
+        def checkpoint_total_supply():
+            """
+            @notice Update the veCRV total supply checkpoint
+            @dev The checkpoint is also updated by the first claimant each
+                new epoch week. This function may be called independently
+                of a claim, to reduce claiming gas costs.
+            """
+            self._checkpoint_total_supply()
+
+        @internal
+        def _checkpoint_total_supply():
+            ve: address = self.voting_escrow
+            t: uint256 = self.time_cursor
+            rounded_timestamp: uint256 = block.timestamp / WEEK * WEEK
+            VotingEscrow(ve).checkpoint()
+
+            for i in range(20):
+                if t > rounded_timestamp:
+                    break
+                else:
+                    epoch: uint256 = self._find_timestamp_epoch(ve, t)
+                    pt: Point = VotingEscrow(ve).point_history(epoch)
+                    dt: int128 = 0
+                    if t > pt.ts:
+                        # If the point is at 0 epoch, it can actually be earlier than the first deposit
+                        # Then make dt 0
+                        dt = convert(t - pt.ts, int128)
+                    self.ve_supply[t] = convert(max(pt.bias - pt.slope * dt, 0), uint256)
+                t += WEEK
+
+            self.time_cursor = t
+        ```
+
+    === "Example"
+        ```shell
+        >>> soon
+        ```
+
+
 ### `burn`
 !!! description "`FeeDistributor.burn(_coin: address) -> bool:`"
 
-    Function to receive 3CRV into the contract and trigger a token checkpoint.
+    Function to receive 3CRV or crvUSD into the contract and trigger a token checkpoint.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_recievers` |  `address` | receiver address |
+    | Input   | Type   | Description |
+    | ------- | -------| ----|
+    | `_coin` |  `address` | Address of the coin being received. |
 
     ??? quote "Source code"
 
@@ -452,20 +533,22 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     === "Example"
         ```shell
-        >>> FeeDistributor.burn('todo')
-        'todo'
+        >>> soon
         ```
+
+
+---
 
 
 ## **Killing The FeeDistributor**
 
-!!!danger "Consequences"
-    The `FeeDistributor` contract can be killed. Doing so transfers the entire 3CRV balance to the `emergency_return` address and blocks the ability to claim or burn. The contract cannot be unkilled.
+The `FeeDistributor` can be killed by the `admin` of the contract, which is the Curve DAO. Doing so, transfers the entire token balance to the `emergency_return` address and block the ability to claim or burn. The contract can not be unkilled. 
+
 
 ### `is_killed`
 !!! description "`FeeDistributor.is_killed() -> bool: view`"
 
-    Getter method to check if the fee distributor contract is killed. Consequences for killing the contract: [here](#kill_me).
+    Getter method to check if the `FeeDistributor` contract is killed. When killed, the contract blocks `claim` and `burn` and the entire token balance is transfered to the `emergency_return` address.
 
     Returns: true or flase (`bool`).
 
@@ -486,13 +569,12 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 !!! description "`FeeDistributor.kill_me()`"
 
     !!!danger
-        Killing transfers the entire 3CRV balance to the [`emergency_return` address](#emergency_return) and blocks the ability to claim or burn. The contract cannot be unkilled.
+        Killing transfers the entire token balance to the [`emergency_return`](#emergency_return) address and blocks the ability to `claim` or `burn`.
 
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-
-    Function to kill the fee distributor contract.
+    Function to kill the `FeeDistributor` contract.
 
     ??? quote "Source code"
 
@@ -520,11 +602,10 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
         ```
 
 
-
 ### `emergency_return`
 !!! description "`FeeDistributor.emergency_return() -> address: view`"
 
-    Getter for the emergency return address.
+    Getter for the emergency return address. This address can not be changed.
 
     Returns: emergency return (`address`).
 
@@ -535,16 +616,24 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
         ```
 
     === "Example"
+
+        Due to the fact that the emergency return address can not be changed and Curve used a ownership agent back then when the distributor contract for 3CRV was deployed, this one was set as the emergency return address.
+
+        The second fee distributor contract (crvUSD) uses a 5 of 9 multisig, which replaced the ownership agent.
+
         ```shell
-        >>> FeeDistributor.emergency_return()
+        >>> FeeDistributor.emergency_return()               # 3CRV distributor
         '0x00669DF67E4827FCc0E48A1838a8d5AB79281909'
+
+        >>> FeeDistributor.emergency_return()               # crvUSD distributor
+        '0x467947EE34aF926cF1DCac093870f613C96B1E0c'
         ```
 
 
 ### `recover_balance`
 !!! description "`FeeDistributor.recover_balance(_coin: address) -> bool:`"
 
-    Function to recover ERC20 tokens from the contract. Tokens are sent to the emergency return address.
+    Function to recover ERC20 tokens from the contract. Tokens are sent to the emergency return address. This function only works for tokens other than the address set for `token`. E.g. this function on the 3CRV distributor contract can not be called to transfer 3CRV. The same applied to crvUSD distributor.
 
     Returns: true (`bool`).
 
@@ -584,8 +673,11 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     === "Example"
         ```shell
-        >>> FeeDistributor.recover_balance("0xd533a949740bb3306d119cc777fa900ba034cd52")
+        >>> soon
         ```
+
+
+---
 
 
 ## **Admin Ownership**
@@ -639,8 +731,8 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
     Function to commit transfer of the ownership.
 
     | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_addr` |  `address` | Address to transfer ownership to |
+    | ----------- | -------| ---- |
+    | `_addr` |  `address` | Address to commit the ownership transfer to. |
 
     ??? quote "Source code"
 
@@ -664,8 +756,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     === "Example"
         ```shell
-        >>> FeeDistributor.commit_admin("todo")
-        'todo'
+        >>> soon
         ```
 
 
@@ -675,7 +766,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to apply transfer of the ownership.
+    Function to apply the transfer of the ownership.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -704,10 +795,11 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     === "Example"
         ```shell
-        >>> FeeDistributor.apply_admin()
-        'todo'
+        >>> soon
         ```
 
+
+---
 
 
 ## **Query Contract Informations**
@@ -721,8 +813,8 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_user` |  `address` | address to query balance for|
-    | `_timestamp` |  `uint256` | epoch time |
+    | `_user` |  `address` | Address to query the veCRV balance for. |
+    | `_timestamp` |  `uint256` | Timestamp. |
 
     ??? quote "Source code"
 
@@ -756,11 +848,6 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
     Getter for the epoch time for fee distribution to start.
 
     Returns: epoch time (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_user` |  `address` | address to query balance for|
-    | `_timestamp` |  `uint256` | epoch time |
 
     ??? quote "Source code"
 
@@ -804,11 +891,11 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 ### `user_epoch_of`
 !!! description "`FeeDistributor.user_epoch_of(arg0: address) -> uint256: view`"
 
-    todo
+    Getter for the user epoch of `arg0`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `address` | address |
+    | `arg0` |  `address` | Address to get the user epoch for. |
 
     ??? quote "Source code"
 
@@ -826,7 +913,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 ### `voting_escrow`
 !!! description "`FeeDistributor.voting_escrow() -> address: view`"
 
-    Getter for fee token address.
+    Getter for the voting escrow contract.
 
     Returns: voting-escrow (`address`).
 
@@ -866,104 +953,6 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
         ```shell
         >>> FeeDistributor.voting_escrow()
         '0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2'
-        ```
-
-
-### `token`
-!!! description "`FeeDistributor.token() -> address: view`"
-
-    Getter for fee token address.
-
-    Returns: fee token (`address`).
-
-    ??? quote "Source code"
-
-        ```vyper 
-        token: public(address)
-
-        @external
-        def __init__(
-            _voting_escrow: address,
-            _start_time: uint256,
-            _token: address,
-            _admin: address,
-            _emergency_return: address
-        ):
-            """
-            @notice Contract constructor
-            @param _voting_escrow VotingEscrow contract address
-            @param _start_time Epoch time for fee distribution to start
-            @param _token Fee token address (3CRV)
-            @param _admin Admin address
-            @param _emergency_return Address to transfer `_token` balance to
-                                    if this contract is killed
-            """
-            t: uint256 = _start_time / WEEK * WEEK
-            self.start_time = t
-            self.last_token_time = t
-            self.time_cursor = t
-            self.token = _token
-            self.voting_escrow = _voting_escrow
-            self.admin = _admin
-            self.emergency_return = _emergency_return
-        ```
-
-    === "Example"
-        ```shell
-        >>> FeeDistributor.token()
-        '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490'
-        ```
-        
-        
-### `can_checkpoint_token`
-!!! description "`FeeDistributor.can_checkpoint_token() -> bool: view`"
-
-    Getter to check if tokens can be checkpointed.
-
-    Returns: true or flase (`bool`).
-
-    ??? quote "Source code"
-
-        ```vyper 
-        can_checkpoint_token: public(bool)
-        ```
-
-    === "Example"
-        ```shell
-        >>> FeeDistributor.can_checkpoint_token()
-        'true'
-        ```
-
-
-### `toggle_allow_checkpoint_token`
-!!! description "`FeeDistributor.toggle_allow_checkpoint_token():`"
-
-    !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the contract.
-
-    Funtion to toggle permission for checkpointing by an account.
-
-    ??? quote "Source code"
-
-        ```vyper 
-        event ToggleAllowCheckpointToken:
-            toggle_flag: bool
-
-        @external
-        def toggle_allow_checkpoint_token():
-            """
-            @notice Toggle permission for checkpointing by any account
-            """
-            assert msg.sender == self.admin
-            flag: bool = not self.can_checkpoint_token
-            self.can_checkpoint_token = flag
-            log ToggleAllowCheckpointToken(flag)
-        ```
-
-    === "Example"
-        ```shell
-        >>> FeeDistributor.toggle_allow_checkpoint_token()
-        'true'
         ```
 
 
