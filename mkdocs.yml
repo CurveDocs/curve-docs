@@ -167,6 +167,7 @@ nav:
       - Fee Collector: curve_dao/fee-collection-distribution/curve-burner/FeeCollector.md
       - CowSwap Burner: curve_dao/fee-collection-distribution/curve-burner/CowSwapBurner.md
       - Hooker: curve_dao/fee-collection-distribution/curve-burner/Hooker.md
+      - Fee Distributor: curve_dao/fee-collection-distribution/curve-burner/FeeDistributor.md
 
 
   - Registry:
