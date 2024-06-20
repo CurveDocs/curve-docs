@@ -14,7 +14,7 @@ The Curve ecosystem has various sources of revenue. In order to distribute these
 
 The new system utilizes **[CowSwap's conditional orders](https://blog.cow.fi/introducing-the-programmatic-order-framework-from-cow-protocol-088a14cb0375)** to burn the tokens. Sell orders, which burn the admin fees, can simply be created by calling a function on the `FeeCollector`. This ensures all coins can be burned **without the need to manually add coins to burners or hardcode exchange routes.**
 
-This system can and is deployed on other chains besides Ethereum but is **partly dependent on, e.g., CoWSwap deployments** if the `CowSwapBurner` is used. **If the CowSwap protocol is deployed on a sidechain, fees can be burned there. For chains where this is not the case, the admin fees are still being burned with the original architecture.**
+This system can and is deployed on other chains besides Ethereum but is **partly dependent on, e.g., CoWSwap deployments** if the `CowSwapBurner` is used. **If the CowSwap protocol is deployed on a sidechain, fees can be burned there. For chains where this is not the case, the admin fees are still being burned with the [original architecture](../overview.md).**
 
 
 ---
@@ -38,14 +38,14 @@ This system can and is deployed on other chains besides Ethereum but is **partly
 
     [:octicons-arrow-right-24: `CowSwapBurner.vy`](CowSwapBurner.md)
 
-- **Hooker**
+- **:material-hook: Hooker**
 
     ---
     Contract that allows users to execute certain hooks like forwarding crvUSD to the `FeeDistributor`.
 
     [:octicons-arrow-right-24: `Hooker.vy`](Hooker.md)
 
-- **Fee Distributor**
+- ** Fee Distributor**
 
     ---
     The `FeeDistributor` is the contract which distributes the fee token to veCRV holders. This contract is only deployed on Ethereum mainnet. There are actually two `FeeDistributors` deployed, as rewards were distributed in `3CRV` tokens, before a DAO vote changed the reward token to `crvUSD`.
