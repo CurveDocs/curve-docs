@@ -521,7 +521,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | :logos-mantle: `Mantle`   | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://mantlescan.xyz/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
 | :logos-kava: `Kava`             | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://kavascan.io/search?q=0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
 | :logos-xlayer: `X-Layer`        | [0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98](https://www.okx.com/web3/explorer/xlayer/address/0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98/contract) |
-| :logos-zksync: `zk-Sync`        | [0x54A5a69e17Aa6eB89d77aa3828E38C9Eb4fF263D](https://explorer.zksync.io/address/0x54A5a69e17Aa6eB89d77aa3828E38C9Eb4fF263D#contract) |
+| :logos-zksync: `zk-Sync`        | [0x54A5a69e17Aa6eB89d77aa3828E38C9Eb4fF263D](https://era.zksync.network/address/0x54A5a69e17Aa6eB89d77aa3828E38C9Eb4fF263D#contract) |
 
 
 ---
@@ -796,11 +796,11 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | [0xcf19236e85000901dE2Fad3199aA4A1F74a78B6C](https://explorer.zksync.io/address/0xcf19236e85000901dE2Fad3199aA4A1F74a78B6C) |
-| `Views`     | [0xeF62cD5CBa8B040827B648dBc6a755ddeeb84E65](https://explorer.zksync.io/address/0xeF62cD5CBa8B040827B648dBc6a755ddeeb84E65) |
-| `Factory`   | [0x375444aeDEb6C3db897f293E1DBa85D7422A6859](https://explorer.zksync.io/address/0x375444aeDEb6C3db897f293E1DBa85D7422A6859) |
-| `Plain AMM` | [0x3ce3009F8ad07161BA9d02d7A0173180d0281cA4](https://explorer.zksync.io/address/0x3ce3009F8ad07161BA9d02d7A0173180d0281cA4) |
-| `Meta AMM`  | [0x1E9A82C2a3DF2E0793a2B828aA652Db192f3C8F3](https://explorer.zksync.io/address/0x1E9A82C2a3DF2E0793a2B828aA652Db192f3C8F3) |
+| `Math`      | [0xcf19236e85000901dE2Fad3199aA4A1F74a78B6C](https://era.zksync.network/address/0xcf19236e85000901dE2Fad3199aA4A1F74a78B6C) |
+| `Views`     | [0xeF62cD5CBa8B040827B648dBc6a755ddeeb84E65](https://era.zksync.network/address/0xeF62cD5CBa8B040827B648dBc6a755ddeeb84E65) |
+| `Factory`   | [0x375444aeDEb6C3db897f293E1DBa85D7422A6859](https://era.zksync.network/address/0x375444aeDEb6C3db897f293E1DBa85D7422A6859) |
+| `Plain AMM` | [0x3ce3009F8ad07161BA9d02d7A0173180d0281cA4](https://era.zksync.network/address/0x3ce3009F8ad07161BA9d02d7A0173180d0281cA4) |
+| `Meta AMM`  | [0x1E9A82C2a3DF2E0793a2B828aA652Db192f3C8F3](https://era.zksync.network/address/0x1E9A82C2a3DF2E0793a2B828aA652Db192f3C8F3) |
 
 
 **:logos-tron: Tron**
@@ -1031,10 +1031,10 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x5AF4Fa25F76491F949C648AC439b1953df78f594](https://explorer.zksync.io/address/0x5AF4Fa25F76491F949C648AC439b1953df78f594) |
-| `Views`     | [0xfe30c516c23504B6CF740de513390DC6943888d8](https://explorer.zksync.io/address/0xfe30c516c23504B6CF740de513390DC6943888d8) |
-| `Factory`   | [0x24992A09E2257AF325102Cefa1F09E80E9062d49](https://explorer.zksync.io/address/0x24992A09E2257AF325102Cefa1F09E80E9062d49) |
-| `AMM`       | [0x69949489645190D5C4e57a5B9e57705C57033EBb](https://explorer.zksync.io/address/0x69949489645190D5C4e57a5B9e57705C57033EBb) |
+| `Math`      | [0x5AF4Fa25F76491F949C648AC439b1953df78f594](https://era.zksync.network/address/0x5AF4Fa25F76491F949C648AC439b1953df78f594) |
+| `Views`     | [0xfe30c516c23504B6CF740de513390DC6943888d8](https://era.zksync.network/address/0xfe30c516c23504B6CF740de513390DC6943888d8) |
+| `Factory`   | [0x24992A09E2257AF325102Cefa1F09E80E9062d49](https://era.zksync.network/address/0x24992A09E2257AF325102Cefa1F09E80E9062d49) |
+| `AMM`       | [0x69949489645190D5C4e57a5B9e57705C57033EBb](https://era.zksync.network/address/0x69949489645190D5C4e57a5B9e57705C57033EBb) |
 
 
 **:logos-tron: Tron**
@@ -1388,7 +1388,7 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 | :logos-bsc: `Binance Smart Chain` | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://bscscan.com/address/0x4f37A9d177470499A2dD084621020b023fcffc1F#code) |
 | :logos-mantle: `Mantle` | [0x5552b631e2ad801faa129aacf4b701071cc9d1f7](https://mantlescan.xyz/address/0x5552b631e2ad801faa129aacf4b701071cc9d1f7#code) |
 | :logos-kava: `Kava` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://kavascan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#contracts) |
-| :logos-zksync: `zk-Sync` | [0x253548e98C769aD2850da8DB3E4c2b2cE46E3839](https://explorer.zksync.io/address/0x253548e98C769aD2850da8DB3E4c2b2cE46E3839#contract) |
+| :logos-zksync: `zk-Sync` | [0x253548e98C769aD2850da8DB3E4c2b2cE46E3839](https://era.zksync.network/address/0x253548e98C769aD2850da8DB3E4c2b2cE46E3839#contract) |
 
 
 ---
@@ -1422,7 +1422,7 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 | :logos-kava: `Kava` | [0xf2eff2Cd0d9C82b7b2f17FbBed703fA7931dB1da](https://kavascan.com/address/0xf2eff2Cd0d9C82b7b2f17FbBed703fA7931dB1da) |
 | :logos-aurora: `Aurora`| [0x9293f068912bae932843a1bA01806c54f416019D](https://explorer.aurora.dev/address/0x9293f068912bae932843a1bA01806c54f416019D) |
 | :logos-xlayer: `X-Layer`| [0x604388bb1159afd21eb5191ce22b4decdee2ae22](https://www.okx.com/web3/explorer/xlayer/address/0x604388bb1159afd21eb5191ce22b4decdee2ae22) |
-| :logos-zksync: `zk-Sync` | [0x4232Dcc6D31543A2431079BdE2082C69eA3A771E](https://explorer.zksync.io/address/0x4232Dcc6D31543A2431079BdE2082C69eA3A771E) |
+| :logos-zksync: `zk-Sync` | [0x4232Dcc6D31543A2431079BdE2082C69eA3A771E](https://era.zksync.network/address/0x4232Dcc6D31543A2431079BdE2082C69eA3A771E) |
 
 
 ---
