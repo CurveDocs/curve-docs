@@ -1287,12 +1287,12 @@ The contract address of the Meta Registry is also embedded into the [`AddressPro
 **:logos-zksync: zk-Sync**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
-| `Math`      | *soon*             |
-| `Views`     | *soon*             |
-| `Factory`   | *soon*             |
-| `AMM native disable` | *soon*    |
-| `AMM native enabled` | *soon*    |
+| :---------: | :----------------: |  
+| `Math`      | [0x07a1684378324825F67D92d944a713E2b8666DEb](https://era.zksync.network/address/0x07a1684378324825F67D92d944a713E2b8666DEb) |
+| `Views`     | [0x30E9b9b8449056d17B33D5F42e1fdd5600A2397F](https://era.zksync.network/address/0x30E9b9b8449056d17B33D5F42e1fdd5600A2397F) |
+| `Factory`   | [0x5044112fDf6c8DCc788a669c17345cfDB06549fa](https://era.zksync.network/address/0x5044112fDf6c8DCc788a669c17345cfDB06549fa) |
+| `AMM native disable` | [0x46e1530c07D5BF2A5654C8cAAA60525D1a3f807A](https://era.zksync.network/address/0x46e1530c07D5BF2A5654C8cAAA60525D1a3f807A) |
+| `AMM native enabled` | [0xe1D19a2036BB6F78605cc6B0ac858C83196cAd22](https://era.zksync.network/address/0xe1D19a2036BB6F78605cc6B0ac858C83196cAd22) |
 
 
 **:logos-tron: Tron**
