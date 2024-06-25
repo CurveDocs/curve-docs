@@ -1,57 +1,96 @@
-<h1> Pool Factory Overview </h1>
+<h1>Pool Factory Overview</h1>
 
-Curve Pool Factories allow the **permissionless deployment of liquidity pools, gauges, and LP tokens**.
-
-Every Factory contract from Curve comes with **built-in functions designed to feed the [MetaRegistry](../registry/MetaRegistryAPI.md)** with information about the created pools. These functions will not be documented in this section. For more information, please read [here](../registry/overview.md).
+A Pool Facotry enables the permissionless deployment of liquidity pools, gauge and, and LP tokens.
 
 !!!deploy "Contract Source & Deployment"
-    Factories are deployed on the Ethereum Mainnet as well as on Sidechains/L2. Although it might be the case that some pool types (e.g., cryptoswap pools) are not supported there yet.  
-    A list of all deployed contracts can be found [here](../references/deployed-contracts.md#pool-factory).
-
-!!!warning
-    The methods below might slightly vary depending on the Factory contract being examined. If there are any abnormalities or important standouts, they will be detailed as accurately as possible within the appropriate section!
-
-## **Supported Pools**
-The various Curve Factories allow the deployment of pools with virtually any kind of asset combination, whether they are stable or volatile, rebasing or not, etc... Some pool variations (e.g., cryptoswap pool) might not be supported on sidechains/L2s yet.
+    Factories are deployed on the Ethereum Mainnet, as well as on sidechains and Layer-2 networks. Note that some pool types may not yet be supported on these networks. A comprehensive list of all deployed contracts is available [here](../references/deployed-contracts.md).
+    The source code for each specific Factory contract can be found on GitHub in the respective section.
 
 
-| Factory | Description | Supported Pools |
-| ------- | ----------- | --------------- |
-| `StableSwap` | Regular StableSwap | Plain and metapools |
-| `StableSwap-NG` | Improved StableSwap version | Plain pools with up to eight coins and metapools ([more here](../stableswap-exchange/stableswap-ng/pools/overview.md#supported-assets)) |
-| `CryptoSwap` | Regular CryptoSwap | Two-coin volatile assets (e.g., CRV<>ETH) |
-| `CryptoSwap-NG` | CryptoSwap New-Generation | Two-coin volatile assets (e.g., CRV<>ETH) |
-| `Tricrypto-NG` | Improved Tricrypto version ([here](../cryptoswap-exchange/tricrypto-ng/overview.md)) | Three-coin volatile assets (e.g., ETH<>BTC<>crvUSD) |
-
-For an easy, non-technical explanation of the pool variations, visit: https://resources.curve.fi/lp/pools/
+Each Factory contract includes **built-in functions designed to populate the [MetaRegistry](../registry/MetaRegistryAPI.md)** with details about the created pools. These functions are not documented in this section. For more information, please refer to the [MetaRegistry documenataion](../registry/overview.md).
 
 
-## **How are contracts deployed?**
-
-Pool, gauge, or LP token contracts are **created according to their implementation contracts set within the Factory**. Contracts deployed by newer factories combine both liquidity pool and LP token, whereas for older ones, they are separate contracts.
-
-*There are two ways the contracts are deployed:*
-
-### **`create_forwarder_to`**
-Earlier factories like the regular [stableswap](./stableswap/deployer-api.md) or [cryptoswap](./cryptoswap/deployer-api.md) one use Vyper's built-in [**`create_forwarder_to()`**](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=create_forwarder_to#chain-interaction) function (renamed to **`create_minimal_proxy_to`** starting from Vyper version 0.3.4) to deploy liquidity pools, LP tokens, or gauge contracts.
-
-The contracts then need to be initialized, which is done automatically.
+*Note: The methods described below may vary slightly depending on the specific Factory contract. Any anomalies or noteworthy features will be detailed as accurately as possible in the relevant section.*
 
 
-### **`Blueprint Contracts`**
-Newer factories make use of blueprints ([EIP-5202](https://eips.ethereum.org/EIPS/eip-5202)). The contracts are directly created from their corresponding blueprint implementations. This is the most desired and used method for all newly deployed factories.
+---
 
 
+## **Avaliable Factories**
+
+Curve Factories facilitate the deployment of pools containing almost any combination of assets, whether they are stable or volatile, rebasing or not. Note that some variations (e.g., cryptoswap pool) might not yet be supported on sidechains or Layer 2 networks.
+
+*For a straightforward, non-technical explanation of pool variations, visit: https://resources.curve.fi/lp/pools/*
+
+<div class="grid cards" markdown>
+
+-   **StableSwap-NG**
+
+    ---
+
+    Factory for deploying new-generation plain- and metapools for pegged assets (e.g., `crvUSD <> USDC`).
+
+    [:octicons-arrow-right-24: `CurveStableswapFactoryNG.vy`](./stableswap-ng/overview.md)
+
+-   **TwoCrypto-NG**
+
+    ---
+
+    Factory for deploying two-coin volatile asset pools (e.g., `CRV <> ETH`).
+
+    [:octicons-arrow-right-24: `CurveTwocryptoFactory.vy`](./twocrypto-ng/overview.md)
+
+-   **TriCrypto-NG**
+    ---
+
+    Factory for deploying three-coin volatile asset pools (e.g., `crvUSD <> ETH <> BTC`).
+
+    [:octicons-arrow-right-24: `CurveTricryptoFactory.vy`](./tricrypto-ng/overview.md)
+
+-   **Other Pool Factories**
+
+    ---
+
+    Factories for older stableswap, twocrypto, or tricrypto pools.
+
+    [:octicons-arrow-right-24: `soon`](#)
+
+</div>
+
+
+---
+
+
+## **Implementations**
+
+Liquidity pools, gauges, and LP token contracts are created based on their respective implementation contracts within the Factory. Newer implementations (NG pools) integrate both the liquidity pool and LP token, while older implementations require separate contracts.
+
+!!!warning "Upgradable Implementations"
+    **Implementation contracts are upgradable.** They can be replaced or supplemented with additional implementation contracts. Due to this, always ensure to check the most recent versions when working with these contracts.
+
+*There are two main methods for deploying contracts:*
+
+- **`create_forwarder_to`**
+
+    Traditional Factories such as the regular [stableswap](./stableswap/deployer-api.md) or [cryptoswap](./cryptoswap/deployer-api.md) utilize Vyper's [`create_forwarder_to`](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=create_forwarder_to#chain-interaction) function (renamed to `create_minimal_proxy_to` in Vyper version 0.3.4) to deploy liquidity pools, LP tokens, and gauges.
+
+- **`Blueprint Contracts`**
+    
+    Newer factories utilize blueprint contracts as outlined in [EIP-5202](https://eips.ethereum.org/EIPS/eip-5202). The corresponding contracts are directly created from their blueprint implementations, which has become the preferred method for all newly deployed factories.
+
+
+---
 
 
 ## **Fee Receiver**
-The fee receiver is set within the Factory and is a **uniform address** for all the deployed pools through a factory. The address can be changed by the **`admin`** of the contract by calling the [**`set_fee_receiver`**](#set_fee_receiver) method and setting a new address.
+
+Users interacting with liquidity pools, such as for exchanging tokens, are required to pay fees. Each factory contains a universal `fee_receiver` variable, where all fees from pools deployed through that factory are collected. This address can usually be changed by the `owner` of the factory via a `set_fee_receiver` function, which is typically the Curve DAO. Therefore, to change the fee receiver address, an approved on-chain vote must pass.
 
 
 ### `fee_receiver`
-!!! description "`Factory.fee_receiver() -> address: view`"
+!!! description "`PoolFactory.fee_receiver() -> address: view`"
 
-    Getter for the fee receiver of the pools admin fees.
+    Getter for the address where the accrued admin fees are collected.
 
     Returns: fee receiver (`address`).
 
@@ -65,60 +104,58 @@ The fee receiver is set within the Factory and is a **uniform address** for all 
     === "Example"
 
         ```shell
-        >>> Factory.fee_receiver()
-        '0xeCb456EA5365865EbAb8a2661B0c503410e9B347'
+        >>> PoolFactory.fee_receiver()
+        '0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00'
         ```
 
 
 ### `set_fee_receiver`
-!!! description "`Factory.set_fee_receiver(_pool: address, _fee_receiver: address)`"
+!!! description "`PoolFactory.set_fee_receiver(_fee_receiver: address)`"
 
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to set a new fee receiver.
+    Function to set a new fee receiver address.
 
     | Input           | Type      | Description |
     | --------------- | --------- | ----------- |
-    | `_pool`         | `address` | This variable has no real use; insert a random address, otherwise the transaction will fail. |
-    | `_fee_receiver` | `address` | Address of the new fee receiver |
-
-
+    | `_fee_receiver` | `address` | Address set as the new fee receiver. |
 
     ??? quote "Source code"
 
         ```vyper
-        # fee receiver for all pools
+        # fee receiver for all pools:
         fee_receiver: public(address)
 
         @external
-        def set_fee_receiver(_pool: address, _fee_receiver: address):
+        def set_fee_receiver(_fee_receiver: address):
             """
-            @notice Set fee receiver for all pools
-            @param _pool Address of  pool to set fee receiver for.
+            @notice Set fee receiver
             @param _fee_receiver Address that fees are sent to
             """
-            assert msg.sender == self.admin  # dev: admin only
+            assert msg.sender == self.admin, "dev: admin only"
+
+            log UpdateFeeReceiver(self.fee_receiver, _fee_receiver)
             self.fee_receiver = _fee_receiver
         ```
 
-    === "Example"
 
-        ```shell
-        >>> Factory.set_fee_receiver('0x0000000000000000000000000000000000000000')    
-        ```
+---
 
 
-## **Factory Contract Ownership**
-The **`admin`** is the owner of the Factory contract and has the ability to call admin-only functions. Ownership can be transferred by first committing to the transfer of ownership (**`commit_transfer_ownership`**), which then needs to be accepted by the **`future_admin`** (**`accept_transfer_ownership`**). 
+## **Contract Ownership**
 
-Most contracts are **'owned' by a proxy**, which in turn is owned by the DAO. For some factories, the DAO is directly the owner.
+Each Factory is controlled by an `admin`, which is typically set to the DAO; thus, any changes to the contract require approval by the Curve DAO.
+
+The contracts utilize the classic two-step ownership model found within Curve contracts. Ownership can be transferred by first committing to the transfer of ownership via `commit_transfer_ownership`. This transfer must then be accepted by the `future_admin` through the `accept_transfer_ownership` function.
+
+Some Factory contracts are indirectly owned by the DAO through a proxy contract.
 
 
 ### `admin`
-!!! description "`Factory.admin() -> address: view`"
+!!! description "`PoolFactory.admin() -> address: view`"
 
-    Getter for the admin of the Factory.
+    Getter for the current admin of the Factory.
 
     Returns: admin (`address`).
 
@@ -132,12 +169,14 @@ Most contracts are **'owned' by a proxy**, which in turn is owned by the DAO. Fo
 
         ```shell
         >>> Factory.admin()
+        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
         ```
 
-### `future_admin`
-!!! description "`Factory.future_admin() -> address: view`"
 
-    Getter for the future admin.
+### `future_admin`
+!!! description "`PoolFactory.future_admin() -> address: view`"
+
+    Getter for the future admin of the Factory.
 
     Returns: future admin (`address`).
 
@@ -150,21 +189,22 @@ Most contracts are **'owned' by a proxy**, which in turn is owned by the DAO. Fo
     === "Example"
 
         ```shell
-        >>> Factory.future_admin()
+        >>> PoolFactory.future_admin()
+        '0x0000000000000000000000000000000000000000'
         ```
 
 
 ### `commit_transfer_ownership`
-!!! description "`Factory.commit_transfer_ownership(_addr: address):`"
+!!! description "`PoolFactory.commit_transfer_ownership(_addr: address)`"
 
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to commit a transfer of ownership. This function sets `_addr` as the future admin of the contract. These changes need to be applied via `accept_transfer_ownership` by the future admin itself.
+    This function commits a transfer of ownership by setting `_addr` as the `future_admin` of the contract. These changes must then be applied by the `future_admin` itself through the `accept_transfer_ownership` function.
 
     | Input    | Type      | Description                         |
     | -------- | --------- | ----------------------------------- |
-    | `_addr`  | `address` | Address of the future admin         |
+    | `_addr`  | `address` | Address to transfer ownership to.   |
 
     ??? quote "Source code"
 
@@ -178,28 +218,29 @@ Most contracts are **'owned' by a proxy**, which in turn is owned by the DAO. Fo
             @notice Transfer ownership of this contract to `addr`
             @param _addr Address of the new owner
             """
-            assert msg.sender == self.admin  # dev: admin only
+            assert msg.sender == self.admin, "dev: admin only"
+
             self.future_admin = _addr
-        ```
-
-    === "Example"
-
-        ```shell
-        >>> Factory.commit_transfer_ownership("whatever")
         ```
 
 
 ### `accept_transfer_ownership`
-!!! description "`Factory.accept_transfer_ownership():`"
+!!! description "`PoolFactory.accept_transfer_ownership():`"
 
     !!!guard "Guarded Method"
         This function is only callable by the `future_admin` of the contract.
 
     Function to accept the ownership transfer.
 
+    Emits: `TransferOwnership`
+
     ??? quote "Source code"
 
         ```vyper
+        event TransferOwnership:
+            _old_owner: address
+            _new_owner: address
+
         admin: public(address)
         future_admin: public(address)
 
@@ -209,24 +250,8 @@ Most contracts are **'owned' by a proxy**, which in turn is owned by the DAO. Fo
             @notice Accept a pending ownership transfer
             @dev Only callable by the new owner
             """
-            _admin: address = self.future_admin
-            assert msg.sender == _admin  # dev: future admin only
+            assert msg.sender == self.future_admin, "dev: future admin only"
 
-            self.admin = _admin
-            self.future_admin = empty(address)
+            log TransferOwnership(self.admin, msg.sender)
+            self.admin = msg.sender
         ```
-
-    === "Example"
-
-        ```shell
-        >>> Factory.accept_transfer_ownership()
-        ```
-
-
-## **Implementations**
-Pool, gauge, or LP token contracts are **created according to their implementation contracts set within the Factory**.
-
-Technical documentation was done separately for each factory, as they partially vary from each other. Please refer to the corresponding section.
-
-!!!warning
-    **Implementation contracts are upgradable.** They can either be replaced, or additional implementation contracts can be added. Therefore, please always make sure to check the most recent ones.
