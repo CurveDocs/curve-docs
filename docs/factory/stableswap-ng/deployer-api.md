@@ -194,7 +194,7 @@ _oracles = ["0x0000000000000000000000000000000000000000", "0xae78736cd615f374d30
     | `_oracles`           | `DynArray[address, MAX_COINS]` | Array of rate oracle addresses |
 
     !!!info "Implementation ID"
-        There might be multiple pool implementations. To query all available ones, see [here](./implementations.md#pool_implementations). As of the current date (31.10.2023), there is only one pool implementation available. Since the `_implementation_idx` starts at 0, users need to input "0" when deploying a pool.
+        There might be multiple pool implementations. To query all available ones, see [here](./overview.md#query-implementations). As of the current date (31.10.2023), there is only one pool implementation available. Since the `_implementation_idx` starts at 0, users need to input "0" when deploying a pool.
 
     ??? quote "Source code"
 
@@ -383,7 +383,7 @@ _oracles = ["0x0000000000000000000000000000000000000000", "0xae78736cd615f374d30
     | `_oracle`            | `address`     | Rate oracle address |
 
     !!!info "Implementation ID"
-        There might be multiple metapool implementations. To query all available ones, see [here](./implementations.md#metapool_implementations). As of the current date (31.10.2023), there is only one metapool implementation available. Since the **`_implementation_idx`** starts at 0, users need to input "0" when deploying a pool.
+        There might be multiple metapool implementations. To query all available ones, see [here](./overview.md#query-implementations). As of the current date (31.10.2023), there is only one metapool implementation available. Since the **`_implementation_idx`** starts at 0, users need to input "0" when deploying a pool.
 
 
     ??? quote "Source code"
