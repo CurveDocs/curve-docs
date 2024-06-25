@@ -53,7 +53,7 @@ Curve Factories facilitate the deployment of pools containing almost any combina
 
     Factories for older stableswap, twocrypto, or tricrypto pools.
 
-    [:octicons-arrow-right-24: Getting started](#)
+    [:octicons-arrow-right-24: `soon`](#)
 
 </div>
 
