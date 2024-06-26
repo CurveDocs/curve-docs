@@ -11,7 +11,7 @@ Curve Factory contracts, which allow the permissionless deployment of pools and 
 
 
 !!!deploy "Contract Source & Deployment"
-    The MetaRegistry is deployed across multiple networks. A full list of deployments can be found [here](../references/deployed-contracts.md#meta-registry).
+    The MetaRegistry is deployed across multiple networks. A full list of deployments can be found [here](../references/deployed-contracts.md#metaregistry).
     
     The source code is available on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/mainnet/MetaRegistry.vy).
 
