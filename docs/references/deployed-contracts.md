@@ -89,34 +89,8 @@ The Emergency DAO is deployed at:
 | `eDAO` | [0x467947EE34aF926cF1DCac093870f613C96B1E0c](https://etherscan.io/address/0x467947EE34aF926cF1DCac093870f613C96B1E0c) |
 
 
-
 ---
 
-
-## **Pool Registry**
-The pool registry acts as a central hub of information on the current status of Curve pools This means that on-chain integrators can easily retrieve the current address of a particular Curve pool and gather relevant details about it through queries.
-
-Here is a list of all components of the pool registry currently in use:
-
-| Contract Type                     | Contract Address  | 
-| :-------------------------------: | :---------------: | 
-| `MetaRegistry`                    |  [0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC](https://etherscan.io/address/0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC#code) |
-| `BasePoolRegistry`                |  [0xDE3eAD9B2145bBA2EB74007e58ED07308716B725](https://etherscan.io/address/0xDE3eAD9B2145bBA2EB74007e58ED07308716B725#code) |
-| `StableRegistry`                  |  [0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5](https://etherscan.io/address/0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5#code) | 
-| `StableRegistryHandler`           |  [0x46a8a9CF4Fc8e99EC3A14558ACABC1D93A27de68](https://etherscan.io/address/0x46a8a9CF4Fc8e99EC3A14558ACABC1D93A27de68#code) | 
-| `MetaPoolFactory`                 |  [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4#code) |
-| `MetaPoolFactoryHandler`          |  [0x127db66E7F0b16470Bec194d0f496F9Fa065d0A9](https://etherscan.io/address/0x127db66E7F0b16470Bec194d0f496F9Fa065d0A9#code) |
-| `CryptoSwapRegistry`              |  [0x9a32aF1A11D9c937aEa61A3790C2983257eA8Bc0](https://etherscan.io/address/0x9a32aF1A11D9c937aEa61A3790C2983257eA8Bc0#code) |
-| `CryptoSwapRegistryHandler`       |  [0x22ceb131d3170f9f2FeA6b4b1dE1B45fcfC86E56](https://etherscan.io/address/0x22ceb131d3170f9f2FeA6b4b1dE1B45fcfC86E56#code) |
-| `CryptoFactory`                   |  [0xF18056Bbd320E96A48e3Fbf8bC061322531aac99](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99#code) |
-| `CryptoFactoryHandler`            |  [0xC4F389020002396143B863F6325aA6ae481D19CE](https://etherscan.io/address/0xC4F389020002396143B863F6325aA6ae481D19CE#code) |
-| `crvUSDFactory`                   |  [0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d](https://etherscan.io/address/0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d#code) |
-| `crvUSDFactoryHandler`            |  [0x538E984C2d5f821d51932dd9C570Dff192D3DF2D](https://etherscan.io/address/0x538e984c2d5f821d51932dd9c570dff192d3df2d#code) |
-| `CurveTricryptoFactory`           |  [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963#code) |
-| `CurveTricryptoFactoryHandler`    |  [0x9335bf643c455478f8be40fa20b5164b90215b80](https://etherscan.io/address/0x9335bf643c455478f8be40fa20b5164b90215b80#code) |
-
-
----
 
 ## **Fee Receiver**
 
@@ -140,6 +114,9 @@ Here is a list of all components of the pool registry currently in use:
 | :logos-aurora: `Aurora` | [0xf3a431008396df8a8b2df492c913706bdb0874ef](https://explorer.aurora.dev/address/0xf3a431008396df8a8b2df492c913706bdb0874ef) |
 | :logos-kava: `Kava` | - |
 | :logos-xlayer: `X-Layer` | [0xf3a431008396df8a8b2df492c913706bdb0874ef](https://www.oklink.com/xlayer/address/0xf3a431008396df8a8b2df492c913706bdb0874ef) |
+
+
+---
 
 
 ## **Fee Burner**
@@ -527,39 +504,40 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 ---
 
 
-## **Meta Registry**
+## **MetaRegistry**
 
-Contract functionality is documented [here :material-arrow-up-right:](../integration/metaregistry.md).
+Contract functionality is documented [here :material-arrow-up-right:](../registry/overview.md).
 
 !!!github
     The source code for `MetaRegistry.vy` and `MetaRegistryL2.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/tree/main/contracts).
 
 
-The contract address of the Meta Registry is also embedded into the [`AddressProvider`](#address-provider) and can be fetched by calling `get_address(7)`.
-
 | Chain                         | Contract Address |
 | ----------------------------- | ---------------- |
-| :logos-ethereum: Ethereum     | [0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC](https://etherscan.io/address/0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC) |
-| :logos-arbitrum: Arbitrum     | [0xE12374F193f91f71CE40D53E0db102eBaA9098D5](https://arbiscan.io/address/0xE12374F193f91f71CE40D53E0db102eBaA9098D5) |
-| :logos-optimism: Optimism     | [0xB6845b562F01eB02ef20CBB63553d2a768e5a1Cb](https://optimistic.etherscan.io/address/0xB6845b562F01eB02ef20CBB63553d2a768e5a1Cb) |
-| :logos-base: Base             | [0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD](https://basescan.org/address/0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD) |
-| :logos-bsc: BinanceSmartChain | [0x4C7A5A5D57F98D362f1c00D7135F0dA5B6f82227](https://bscscan.com/address/0x4C7A5A5D57F98D362f1c00D7135F0dA5B6f82227) |
-| :logos-polygon: Polygon       | [0x1FE2a06c8bd81AE65FD1C5036451890b37976369](https://polygonscan.com/address/0x1FE2a06c8bd81AE65FD1C5036451890b37976369) |
-| :logos-fantom: Fantom         | [0xF5617D4f7514bE35fce829a1C19AE7f6c9106979](https://ftmscan.com/address/0xF5617D4f7514bE35fce829a1C19AE7f6c9106979) |
-| :logos-gnosis: Gnosis         | [0xeEcCd039d7228530D5F0c3ce7291Dd9677CCFFb1](https://gnosisscan.io/address/0xeEcCd039d7228530D5F0c3ce7291Dd9677CCFFb1) |
-| :logos-aurora: Aurora         | *not deployed yet* |
-| :logos-celo: Celo             | [0x19bd1AB34d6ABB584b9C1D5519093bfAA7f6c7d2](https://celoscan.io/address/0x19bd1AB34d6ABB584b9C1D5519093bfAA7f6c7d2) |
-| :logos-mantle: Mantle         | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://explorer.mantle.xyz/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf) |
-| :logos-linea: Linea           | [0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c](https://lineascan.build/address/0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c) |
-| :logos-polygon: Polygon zkEVM | [0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c](https://zkevm.polygonscan.com/address/0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c) |
-| :logos-scroll: Scroll         | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://scrollscan.com/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf) |
-| :logos-fraxtal: Fraxtal       | [0xd125E7a0cEddF89c6473412d85835450897be6Dc](https://fraxscan.com/address/0xd125E7a0cEddF89c6473412d85835450897be6Dc) |
-| :logos-avalanche: Avalanche   | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://snowscan.xyz/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf) |
-| :logos-kava: Kava             | *needs verification* |
-
+| :logos-ethereum: `Ethereum`     | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://etherscan.io/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-arbitrum: `Arbitrum`     | [0x13526206545e2DC7CcfBaF28dC88F440ce7AD3e0](https://arbiscan.io/address/0x13526206545e2DC7CcfBaF28dC88F440ce7AD3e0) |
+| :logos-optimism: `Optimism`     | [0xc65CB3156225380BEda366610BaB18D5835A1647](https://optimistic.etherscan.io/address/0xc65CB3156225380BEda366610BaB18D5835A1647) |
+| :logos-base: `Base`             | [0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD](https://basescan.org/address/0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD) |
+| :logos-bsc: `BinanceSmartChain` | [0x4C7A5A5D57F98D362f1c00D7135F0dA5B6f82227](https://bscscan.com/address/0x4C7A5A5D57F98D362f1c00D7135F0dA5B6f82227) |
+| :logos-polygon: `Polygon`       | [0x296d2B5C23833A70D07c8fCBB97d846c1ff90DDD](https://polygonscan.com/address/0x296d2B5C23833A70D07c8fCBB97d846c1ff90DDD) |
+| :logos-fantom: `Fantom`         | [0x803de445F0C272Bb6a036495F531a828D538Ab9A](https://ftmscan.com/address/0x803de445F0C272Bb6a036495F531a828D538Ab9A) |
+| :logos-gnosis: `Gnosis`         | [0xb6265659d7e9FEccB59e076e949Da556FC5E1429](https://gnosisscan.io/address/0xb6265659d7e9FEccB59e076e949Da556FC5E1429) |
+| :logos-aurora: `Aurora`         | [0xff02cbd91f57a778bab7218da562594a680b8b61](https://explorer.aurora.dev/address/0xff02cbd91f57a778bab7218da562594a680b8b61) |
+| :logos-celo: `Celo`             | [0x19bd1AB34d6ABB584b9C1D5519093bfAA7f6c7d2](https://celoscan.io/address/0x19bd1AB34d6ABB584b9C1D5519093bfAA7f6c7d2) |
+| :logos-mantle: `Mantle`         | [0x0c59d36b23f809f8b6c7cb4c8c590a0ac103baef](https://explorer.mantle.xyz/address/0x0c59d36b23f809f8b6c7cb4c8c590a0ac103baef) |
+| :logos-linea: `Linea`           | [0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c](https://lineascan.build/address/0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c) |
+| :logos-polygon: `Polygon zkEVM` | [0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c](https://zkevm.polygonscan.com/address/0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c) |
+| :logos-scroll: `Scroll`         | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://scrollscan.com/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf) |
+| :logos-fraxtal: `Fraxtal`       | [0xd125E7a0cEddF89c6473412d85835450897be6Dc](https://fraxscan.com/address/0xd125E7a0cEddF89c6473412d85835450897be6Dc) |
+| :logos-avalanche: `Avalanche`   | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://snowscan.xyz/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf) |
+| :logos-mantle: `Mantle`   | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://mantlescan.xyz/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf) |
+| :logos-kava: `Kava`             | []() |
+| :logos-xlayer: `X-Layer`        | [0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD](https://www.okx.com/web3/explorer/xlayer/address/0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD/contract) |
+| :logos-zksync: `zk-Sync`        | []() |
 
 
 ---
+
 
 
 ## **Stableswap-NG**
