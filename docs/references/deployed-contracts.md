@@ -97,13 +97,15 @@ The Emergency DAO is deployed at:
 | Chain | Contract Address |
 | ----------- | :-----: |
 | :logos-ethereum: `Ethereum` | [0xeCb456EA5365865EbAb8a2661B0c503410e9B347](https://etherscan.io/address/0xeCb456EA5365865EbAb8a2661B0c503410e9B347) |
+| :logos-ethereum: `Ethereum` | [0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00](https://etherscan.io/address/0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00) |
 | :logos-arbitrum: `Arbitrum` | [0xd4F94D0aaa640BBb72b5EEc2D85F6D114D81a88E](https://arbiscan.io/address/0xd4F94D0aaa640BBb72b5EEc2D85F6D114D81a88E) |
 | :logos-optimism: `Optimism` | [0xbF7E49483881C76487b0989CD7d9A8239B20CA41](https://optimistic.etherscan.io/address/0xbF7E49483881C76487b0989CD7d9A8239B20CA41) |
 | :logos-base: `Base` | [0xe8269B33E47761f552E1a3070119560d5fa8bBD6](https://basescan.org/address/0xe8269B33E47761f552E1a3070119560d5fa8bBD6) |
 | :logos-fraxtal: `Fraxtal` | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://fraxscan.com/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6) |
 | :logos-polygon: `Polygon` | [0x774D1Dba98cfBD1F2Bc3A1F59c494125e07C48F9](https://polygonscan.com/address/0x774D1Dba98cfBD1F2Bc3A1F59c494125e07C48F9) |
 | :logos-polygon: `Polygon zk-EVM`   | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://zkevm.polygonscan.com/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6) |
-| :logos-gnosis: `Gnosis (xDAI)` | [0xB055EbbAcc8Eefc166c169e9Ce2886D0406aB49b](https://gnosisscan.io/address/0xB055EbbAcc8Eefc166c169e9Ce2886D0406aB49b) |
+| :logos-gnosis: `Gnosis` | [0xB055EbbAcc8Eefc166c169e9Ce2886D0406aB49b](https://gnosisscan.io/address/0xB055EbbAcc8Eefc166c169e9Ce2886D0406aB49b) |
+| :logos-gnosis: `Gnosis` | [0xBb7404F9965487a9DdE721B3A5F0F3CcfA9aa4C5](https://gnosisscan.io/address/0xBb7404F9965487a9DdE721B3A5F0F3CcfA9aa4C5) |
 | :logos-avalanche: `Avalanche` | [0x06534b0BF7Ff378F162d4F348390BDA53b15fA35](https://snowscan.xyz/address/0x06534b0BF7Ff378F162d4F348390BDA53b15fA35) |
 | :logos-fantom: `Fantom` | [0x2B039565B2b7a1A9192D4847fbd33B25b836B950](https://ftmscan.com/address/0x2B039565B2b7a1A9192D4847fbd33B25b836B950) |
 | :logos-bsc: `Binance Smart Chain` | [0x98B4029CaBEf7Fd525A36B0BF8555EC1d42ec0B6](https://bscscan.com/address/0x98B4029CaBEf7Fd525A36B0BF8555EC1d42ec0B6) |
@@ -120,6 +122,11 @@ The Emergency DAO is deployed at:
 
 
 ## **Fee Burner**
+
+!!!info "New Fee-Burning Architecture"
+    Curve has developed and deployed a new fee-burning architecture. For detailed documentation, please see here: [Curve Burner Documentation](../curve_dao/fee-collection-distribution/curve-burner/overview.md).
+
+
 Burners are a crucial element of the fee payout system in Curve. They convert the collected pool fees into an asset that is later exchanged for USDC. Eventually, the USDC is deposited into the 3Pool, and the fees are distributed to veCRV holders in 3CRV. The type of burner used depends on the tokens present in the pool.
 
 *Here is a list of burner contracts currently in use:*
@@ -212,6 +219,9 @@ Burners are a crucial element of the fee payout system in Curve. They convert th
 
 
 ## **New Curve Burner System**
+
+!!!info "New Fee-Burning Architecture"
+    Curve has developed and deployed a new fee-burning architecture. For detailed documentation, please see here: [Curve Burner Documentation](../curve_dao/fee-collection-distribution/curve-burner/overview.md).
 
 **:logos-ethereum: Ethereum**
 
