@@ -2,7 +2,7 @@
 
 The MetaRegistry offers an **on-chain API** for various properties of Curve pools.  
 
-A full list of all deployment addresses can be found [here](../references/deployed-contracts.md#meta-registry).
+A full list of all deployment addresses can be found [here](../references/deployed-contracts.md#metaregistry).
 
 
 ---
