@@ -1,3 +1,10 @@
+---
+search:
+  exclude: true
+---
+
+
+
 This section discusses the different methods in the Curve 
 [SynthSwap](https://etherscan.io/address/0x58A3c68e2D3aAf316239c003779F71aCb870Ee47) contract.
 
