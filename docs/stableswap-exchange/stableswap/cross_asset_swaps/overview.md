@@ -1,3 +1,9 @@
+---
+search:
+  exclude: true
+---
+
+
 Curve integrates with Synthetix to allow large scale swaps between different asset classes with minimal 
 slippage. Utilizing Synthetix’ zero-slippage synth conversions and Curve’s deep liquidity and low fees, 
 we can perform fully on-chain cross asset swaps at scale with a 0.38% fee and minimal slippage.

@@ -242,9 +242,9 @@ nav:
         - Overview: stableswap-exchange/stableswap/deposit_contracts/overview.md
         - Lending Pool Deposits: stableswap-exchange/stableswap/deposit_contracts/lending_pool_deposits.md
         - Metapool Deposits: stableswap-exchange/stableswap/deposit_contracts/metapool_deposits.md
-      - Cross Asset Swaps:
-        - Overview: stableswap-exchange/stableswap/cross_asset_swaps/overview.md
-        - SynthSwap: stableswap-exchange/stableswap/cross_asset_swaps/synthswap_exchange.md
+      # - Cross Asset Swaps:
+      #   - Overview: stableswap-exchange/stableswap/cross_asset_swaps/overview.md
+      #   - SynthSwap: stableswap-exchange/stableswap/cross_asset_swaps/synthswap_exchange.md
 
     - Stableswap-NG:
       - Overview: stableswap-exchange/stableswap-ng/overview.md
