@@ -14,7 +14,18 @@ The Curve ecosystem has various sources of revenue. In order to distribute these
 
 The new system utilizes **[CowSwap's conditional orders](https://blog.cow.fi/introducing-the-programmatic-order-framework-from-cow-protocol-088a14cb0375)** to burn the tokens. Sell orders, which burn the admin fees, can simply be created by calling a function on the `FeeCollector`. This ensures all coins can be burned **without the need to manually add coins to burners or hardcode exchange routes.**
 
-This system can and is deployed on other chains besides Ethereum but is **partly dependent on, e.g., CoWSwap deployments** if the `CowSwapBurner` is used. **If the CowSwap protocol is deployed on a sidechain, fees can be burned there. For chains where this is not the case, the admin fees are still being burned with the [original architecture](../overview.md).**
+This system can and is deployed on other chains besides Ethereum but is **partly dependent on, e.g., CoWSwap deployments** if the `CowSwapBurner` is used. **If the CowSwap protocol is deployed on a sidechain, fees can be burned there. For chains where this is not the case, the admin fees are still being burned using the [original architecture](../overview.md) and then transfered via a bridging contract to Ethereum.**
+
+
+*The flow of the system can be roughly summarized as follows:*
+
+<figure markdown="span">
+  ![](../../../assets/images/fee-burning/fee_overview.svg){ width="700" }
+  <figcaption></figcaption>
+</figure>
+
+*The collected admin fees can accrue in any type of tokens, whether they are LP or "regular" tokens. For simplicity, the `Hooker.vy` contract, which is essentially responsible for transferring the reward tokens from the `FeeCollector` to the `FeeDistributor`, was omitted from the graph. This infrastructure functions exactly the same on chains where the CowSwap Protocol is deployed (Gnosis and soon Arbitrum). The only difference is that instead of transferring the reward tokens to a `FeeDistributor` contract, they are bridged to the `FeeCollector` on the Ethereum mainnet.*
+
 
 
 ---
@@ -31,7 +42,7 @@ This system can and is deployed on other chains besides Ethereum but is **partly
     
     [:octicons-arrow-right-24: `FeeCollector.vy`](FeeCollector.md)
 
-- **:logos-cow: Burner**
+- **:logos-cowswap: CowSwap Burner**
 
     ---
     Contract which burns the collected admin fees into a unified token. The current system utilizes CowSwap's conditional orders to burn the accumulated fees into a specific target token. In theory, the burner can be any kind of contract that exchanges tokens.
@@ -41,7 +52,7 @@ This system can and is deployed on other chains besides Ethereum but is **partly
 - **:material-hook: Hooker**
 
     ---
-    Contract that allows users to execute certain hooks like forwarding crvUSD to the `FeeDistributor`.
+    Contract that allows users to execute certain hooks like forwarding crvUSD from the `FeeCollector` to the `FeeDistributor`.
 
     [:octicons-arrow-right-24: `Hooker.vy`](Hooker.md)
 
