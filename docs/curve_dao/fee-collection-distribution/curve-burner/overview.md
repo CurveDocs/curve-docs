@@ -69,14 +69,10 @@ This system can and is deployed on other chains besides Ethereum but is **partly
 ---
 
 
-## **Fee Burning Flow**
-
-Admin fees are collected in various tokens, necessitating an efficient fee-burning mechanism.
-
-The pools, including stableswap-ng, twocrypto-ng, and tricrypto-ng, primarily charge admin fees in the underlying token. Nonetheless, if the LP token is collected as an admin fee, this token can also be burned using the `CoWSwapBurner`. Additionally, admin fees from these newer pools are periodically claimed when users remove liquidity.
+## **Technical Flow of Fee Burning**
 
 *The process of burning coins into the target coin involves the following flow:*
 
-1. Withdrawing admin fees from liquidity pools or crvUSD markets using `withdraw_many`.
-2. Collecting fees and calling the burn function of the burner via `collect`. This will create a conditional order for the token to burn (if one has not been created yet). The order specifies the `FeeCollector` as the fee receiver, ensuring all target coins are automatically transferred to the `FeeCollector`.
-3. The collected target coins can then be forwarded to the `FeeDistributor` using the `forward` function, from where they can ultimately be claimed.
+1. **Collecting Fees in the `FeeCollector`:** Admin fees can be collected in any type of tokens, whether they are LP tokens or "regular" tokens. Newer pools like `stableswap-ng`, `tworcrypto-ng`, or `tricrypto-ng` periodically claim admin fees when users remove liquidity. For older pools where this is not the case, admin fees can be collected via the [`withdraw_many`](./FeeCollector.md#withdraw_many) function.
+2. **Burning Admin Fees:** After collecting all the fees that need to be burned, one can initiate the burn process via the [`collect`](./FeeCollector.md#collect) function. This will create a conditional order for the token to burn (if one has not been created yet). The order specifies the `FeeCollector` as the fee receiver, ensuring all target coins are automatically transferred to the `FeeCollector`.
+3. **Forwarding Fees:** The collected target coins can then be forwarded by executing hooks of the `Hooker.vy` contract to the `FeeDistributor` using the [`forward`](./FeeCollector.md#forward) function, from where they can ultimately be claimed.
