@@ -1,4 +1,7 @@
-<h1> </h1>
+---
+search:
+  exclude: true
+---
 
 # **Collecting and Burning Fees on Sidechains**
 

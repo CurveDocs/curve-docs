@@ -1,3 +1,8 @@
+---
+search:
+  exclude: true
+---
+
 # **Withdrawing Admin Fees**
 
 In order to be able to burn admin fees into the fee token, those fees have to be claimed prior. **Admin fees can be claimed by anyone.** Somethimes, the function to claim the fees is guarded and therefore only called by the proxy contract (admin or owner of the pool). If thats the case, users can just call the claim function via the proxy contract (as the function is not guarded there).
