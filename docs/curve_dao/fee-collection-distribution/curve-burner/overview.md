@@ -35,7 +35,7 @@ This system can and is deployed on other chains besides Ethereum but is **partly
 
 <div class="grid cards" markdown>
 
-- **:moneybag: Fee Collector**
+- **:fontawesome-solid-piggy-bank: Fee Collector**
 
     ---
     Contract which acts as the entry point for the fee burning system. All admin fees in various kinds of tokens are collected here.
@@ -56,7 +56,7 @@ This system can and is deployed on other chains besides Ethereum but is **partly
 
     [:octicons-arrow-right-24: `Hooker.vy`](Hooker.md)
 
-- **Fee Distributor**
+- **:fontawesome-solid-money-bill-transfer: Fee Distributor**
 
     ---
     The `FeeDistributor` is the contract which distributes the fee token to veCRV holders. This contract is only deployed on Ethereum mainnet. There are actually two `FeeDistributors` deployed, as rewards were distributed in `3CRV` tokens, before a DAO vote changed the reward token to `crvUSD`.
