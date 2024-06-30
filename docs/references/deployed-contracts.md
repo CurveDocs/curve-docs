@@ -253,21 +253,22 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 !!!deploy "Source Code"
     Source code is available on [GitHub](https://github.com/curvefi/curve-router-ng/tree/master/contracts).
 
-| Chain | Contract Address |
-| ----------- | :-----: |
-| :logos-ethereum: `Ethereum` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://etherscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
-| :logos-arbitrum: `Arbitrum` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://arbiscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
-| :logos-optimism: `Optimism` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://optimistic.etherscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
-| :logos-base: `Base` | [0xd6681e74eEA20d196c15038C580f721EF2aB6320](https://basescan.org/address/0xd6681e74eEA20d196c15038C580f721EF2aB6320#code) |
-| :logos-fraxtal: `Fraxtal` | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://fraxscan.com/address/0x4f37A9d177470499A2dD084621020b023fcffc1F#code) |
-| :logos-polygon: `Polygon` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://polygonscan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
-| :logos-gnosis: `Gnosis (xDAI)` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://gnosisscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
-| :logos-avalanche: `Avalanche` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://snowscan.xyz/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
-| :logos-fantom: `Fantom` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://ftmscan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
-| :logos-bsc: `Binance Smart Chain` | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://bscscan.com/address/0x69522fb5337663d3B4dFB0030b881c1A750Adb4f#code) |
-| :logos-mantle: `Mantle` | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://mantlescan.xyz/address/0x69522fb5337663d3b4dfb0030b881c1a750adb4f#code) |
-| :logos-kava: `Kava` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://kavascan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D/contracts#address-tabs) |
-| :logos-xlayer: `X-Layer` | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://www.oklink.com/xlayer/address/0x4f37A9d177470499A2dD084621020b023fcffc1F/contract) |
+| Chain                             | Contract Address |
+| --------------------------------- | :--------------: |
+| :logos-ethereum: `Ethereum`       | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://etherscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
+| :logos-arbitrum: `Arbitrum`       | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://arbiscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
+| :logos-optimism: `Optimism`       | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://optimistic.etherscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
+| :logos-base: `Base`               | [0xd6681e74eEA20d196c15038C580f721EF2aB6320](https://basescan.org/address/0xd6681e74eEA20d196c15038C580f721EF2aB6320#code) |
+| :logos-fraxtal: `Fraxtal`         | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://fraxscan.com/address/0x4f37A9d177470499A2dD084621020b023fcffc1F) |
+| :logos-polygon: `Polygon`         | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://polygonscan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
+| :logos-gnosis: `Gnosis (xDAI)`    | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://gnosisscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
+| :logos-avalanche: `Avalanche`     | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://snowscan.xyz/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
+| :logos-fantom: `Fantom`           | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://ftmscan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
+| :logos-bsc: `Binance Smart Chain` | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://bscscan.com/address/0x69522fb5337663d3B4dFB0030b881c1A750Adb4f) |
+| :logos-mantle: `Mantle`           | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://mantlescan.xyz/address/0x69522fb5337663d3b4dfb0030b881c1a750adb4f) |
+| :logos-kava: `Kava`               | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://kavascan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
+| :logos-xlayer: `X-Layer`          | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://www.oklink.com/xlayer/address/0x4f37A9d177470499A2dD084621020b023fcffc1F) |
+| :logos-zksync: `zk-Sync`          | [0x7C915390e109CA66934f1eB285854375D1B127FA](https://era.zksync.network/address/0x7C915390e109CA66934f1eB285854375D1B127FA) |
 
 
 ---
@@ -316,26 +317,6 @@ The `RootLiquidityGaugeFactory` contract on Ethereum is utilized across a majori
 | :logos-xlayer: `RootLiquidityGaugeFactory` | :logos-ethereum: Ethereum | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c](https://etherscan.io/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c) |
 | `ChildLiquidityGaugeFactory` | :logos-xlayer: X-Layer | [0xef672bd94913cb6f1d2812a6e18c1ffded8eff5c](https://www.oklink.com/xlayer/address/0xef672bd94913cb6f1d2812a6e18c1ffded8eff5c/contract) |
 | `veBoost - Boost Delegation V2` | :logos-xlayer: X-Layer | :material-close: |
-
-
----
-
-
-## **Pool Factory**
-
-Pool factory addresses are referenced within the according sections, e.g., stableswap-ng factories can be found in the [stableswap-ng section](#stableswap-ng).
-
-**Ethereum Mainnet**
-
-*The following are "old" factories on Ethereum Mainnet:*
-
-|  Factory              | Contract Address |
-| :-------------------: | :--------------: |
-| MetaPool Factory      | [0xB9fC157394Af804a3578134A6585C0dc9cc990d4](https://etherscan.io/address/0xB9fC157394Af804a3578134A6585C0dc9cc990d4) | 
-| StableSwap-NG Factory | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://etherscan.io/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf) | 
-| crvUSD Pool Factory   | [0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d](https://etherscan.io/address/0x4F8846Ae9380B90d2E71D5e3D042dff3E7ebb40d) | 
-| CryptoSwap Factory    | [0xF18056Bbd320E96A48e3Fbf8bC061322531aac99](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99) | 
-| Tricrypto Factory     | [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963) |
 
 
 ---
@@ -547,7 +528,6 @@ Contract functionality is documented [here :material-arrow-up-right:](../registr
 
 
 ---
-
 
 
 ## **Stableswap-NG**
