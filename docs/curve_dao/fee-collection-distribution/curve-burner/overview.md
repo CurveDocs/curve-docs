@@ -73,6 +73,7 @@ This system can and is deployed on other chains besides Ethereum but is **partly
 
 *The process of burning coins into the target coin involves the following flow:*
 
-1. **Collecting Fees in the `FeeCollector`:** Admin fees can be collected in any type of tokens, whether they are LP tokens or "regular" tokens. Newer pools like `stableswap-ng`, `tworcrypto-ng`, or `tricrypto-ng` periodically claim admin fees when users remove liquidity. For older pools where this is not the case, admin fees can be collected via the [`withdraw_many`](./FeeCollector.md#withdraw_many) function.
+1. **Collecting Fees:** Admin fees can be collected in any type of tokens in the `FeeCollector`, whether they are LP tokens or "regular" tokens. Newer pools like `stableswap-ng`, `tworcrypto-ng`, or `tricrypto-ng` periodically claim admin fees when users remove liquidity. For older pools where this is not the case, admin fees can be collected via the [`withdraw_many`](./FeeCollector.md#withdraw_many) function.
 2. **Burning Admin Fees:** After collecting all the fees that need to be burned, one can initiate the burn process via the [`collect`](./FeeCollector.md#collect) function. This will create a conditional order for the token to burn (if one has not been created yet). The order specifies the `FeeCollector` as the fee receiver, ensuring all target coins are automatically transferred to the `FeeCollector`.
 3. **Forwarding Fees:** The collected target coins can then be forwarded by executing hooks of the `Hooker.vy` contract to the `FeeDistributor` using the [`forward`](./FeeCollector.md#forward) function, from where they can ultimately be claimed.
+4. **Claiming Fees**: The accrrued fees can ultimately be claimed form the `FeeDistributor` using the `claim` function.
