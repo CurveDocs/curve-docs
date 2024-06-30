@@ -1,3 +1,8 @@
+---
+search:
+  exclude: true
+---
+
 Fees are distributed to veCRV holders through the FeeDistributor contract in the form of 3CRV tokens.
 
 !!!deploy "Contract Source & Deployment"

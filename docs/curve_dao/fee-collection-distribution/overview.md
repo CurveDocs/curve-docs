@@ -1,3 +1,8 @@
+---
+search:
+  exclude: true
+---
+
 <h1>Curve DAO: Fee Collection and Distribution</h1>
 
 !!!danger "PARTLY OUTDATED: New Fee Collection, Burn, and Distribution System"

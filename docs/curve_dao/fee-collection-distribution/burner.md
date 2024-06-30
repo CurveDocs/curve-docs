@@ -1,3 +1,8 @@
+---
+search:
+  exclude: true
+---
+
 ## **Overview**
 
 Burning is handled on a per-coin basis. The process is initiated by calling the `PoolProxy.burn` or `PoolProxy.burn_many` functions. Calling to burn a coin transfers that coin into the burner and then calls the `burn` function on the burner.
