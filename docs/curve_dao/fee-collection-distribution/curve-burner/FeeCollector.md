@@ -60,11 +60,11 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
 
     Getter for the current epoch based on a given timestamp.
 
-    Returns: current epoch (`uint256`). The returned value corresponds to the `Epoch` enum.
+    Returns: current epoch value which corresponds to the `Epoch enum `(`uint256`). 
 
-    | Input   | Type      | Description                    |
-    | ---- | --------- | ------------------------------ |
-    | `ts` | `uint256` | Timestamp. Defaults to `msg.sesnder` |
+    | Input | Type      | Description                         |
+    | ----- | --------- | ----------------------------------- |
+    | `ts`  | `uint256` | Timestamp. Defaults to `msg.sender` |
 
     ??? quote "Source code"
 
@@ -337,8 +337,8 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
 *The general flow of the fee burning process is the following:*
 
-1. Admin fees are collected from pools or other revenue sources using the `withdraw_many` function. While fees of older pools need to claimed manually, the accrued fees from newer pools (mostly NG pools) are periodically claimed when removing liquidity from the pool.
-2. The accrued tokens can be burned calling the `collect` function. This creates, if there isn't already one, a conditional order on CowSwap which automatically exchanges the fee tokens into the `target` coin.
+1. Admin fees are collected from pools or other revenue sources using the `withdraw_many` function. While fees from older pools need to be claimed manually, the accrued fees from newer pools (mostly NG pools) are periodically claimed when removing liquidity from the pool.
+2. The accrued tokens can be burned by calling the `collect` function. This creates, if there isn't already one, a conditional order on CowSwap which automatically exchanges the fee tokens into the `target` coin. Admin fees can only be burned during the `EXCHANGE` epoch. If `collect` is called during the `COLLECT` epoch, the coins are transferred to the CowSwapBurner, and a conditional order is created, but the order is not yet valid and is waiting for the WatchTower to place the order with the CowSwap API.
 3. After burning the tokens, they can be forwarded to the `FeeDistributor` using the `forward` function.
 
 
