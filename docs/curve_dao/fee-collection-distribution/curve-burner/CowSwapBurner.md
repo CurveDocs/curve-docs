@@ -240,10 +240,6 @@ composable_cow.create(ConditionalOrderParams({
         ```
 
 
-
-
-
-
 ### `getTradableOrder`
 !!! description "`CowSwapBurner.getTradeableOrder(_owner: address, _sender: address, _ctx: bytes32, _static_input: Bytes[STATIC_DATA_LEN], _offchain_input: Bytes[OFFCHAIN_DATA_LEN]) -> GPv2Order_Data`"
 

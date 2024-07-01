@@ -31,14 +31,18 @@ Fees are **distributed on a weekly basis**. The proportional amount of fees that
 
 # **Claiming Fees**
 
-The `claim` and `claim_many` functions in the Curve Fee Distribution contract allow users to claim their share of distributed fees based on their veCRV balance. These functions calculate the amount of fees a user is entitled to by considering their veCRV balance and the total veCRV supply at various checkpoints.
+The `claim` and `claim_many` functions allow users to claim their share of distributed fees based on their veCRV balance. These functions calculate the amount of fees a user is entitled to by considering their veCRV balance and the total veCRV supply at various checkpoints. Fees do not need to be claimed weekly; they are accumulated and can be claimed at any point in time.
 
 - **`claim`**: This function allows a single user to claim their rewards. It calculates the user's share of the distributed fees based on their veCRV balance and the total veCRV supply.
 - **`claim_many`**: This function enables the claiming of rewards for up to 20 addresses in a single transaction. It is optimized for gas efficiency by processing multiple claims at once.
 
 
+!!!colab "Google Colab Notebook"
+    Unfortunately, there is **no external method to directly check the claimable rewards for an address**. The claimable rewards can **either be checked in the [Curve UI](https://curve.fi/#/ethereum/dashboard) or by simulating a claim transaction** and comparing the reward token balances before and after the claim. A Google Colab notebook that simulates such a transaction can be found here: [:simple-googlecolab: Google Colab Notebook](https://colab.research.google.com/drive/198uCIg10fT56q5nhMwlgVV13bmHOwNMm?usp=sharing).
+
+
 ### `claim`
-!!! description "`FeeDistributor.claim(_addr: address = msg.sender) -> uint256:`"
+!!! description "`FeeDistributor.claim(_addr: address = msg.sender) -> uint256`"
 
     Function to claim the accrued fees for an address.
 
@@ -176,17 +180,17 @@ The `claim` and `claim_many` functions in the Curve Fee Distribution contract al
 
 
 ### `claim_many`
-!!! description "`FeeDistributor.claim_many(_receivers: address[20]) -> bool:`"
+!!! description "`FeeDistributor.claim_many(_receivers: address[20]) -> bool`"
 
-    Function to perform multiple claims in a single call. This is useful to claim for multiple accounts at once, or for making many claims against the same account if that account has performed more than 50 veCRV related actions.
+    Function to perform multiple claims in a single call. This is useful to claim for multiple accounts at once, or for making many claims against the same account if that account has performed more than 50 veCRV related actions. 
 
     Returns: true (`boolean`).
 
     Emits: `Claimed`
 
-    | Input   | Type   | Description |
-    | ------- | ------- | ----|
-    | `_addr` |  `address[20]` | List of addresses to claim for. |
+    | Input   | Type | Description |
+    | ------- | ---- | ----------- |
+    | `_addr` |  `address[20]` | List of 20 addresses to claim for. When claiming for less than 20 wallets, the remainig addresses need to be set to 'ZERO_ADDRESS'. |
 
     ??? quote "Source code"
 
@@ -317,7 +321,7 @@ The `claim` and `claim_many` functions in the Curve Fee Distribution contract al
 
 
 ### `burn`
-!!! description "`FeeDistributor.burn(_coin: address) -> bool:`"
+!!! description "`FeeDistributor.burn(_coin: address) -> bool`"
 
     Function to receive `3CRV` or `crvUSD` into the contract and trigger a token checkpoint. This ensures that the tokens are accounted for in the fee distribution. Simply sending tokens to the contract is not sufficient; a checkpoint is needed to register the tokens properly.
 
@@ -541,7 +545,7 @@ Checkpointing is a critical process in the contract that ensures accurate tracki
 
 
 ### `toggle_allow_checkpoint_token`
-!!! description "`FeeDistributor.toggle_allow_checkpoint_token():`"
+!!! description "`FeeDistributor.toggle_allow_checkpoint_token()`"
 
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
@@ -681,7 +685,7 @@ Checkpointing the ve-Supply is an essential process to ensure fair reward distri
 
 
 ### `ve_for_at`
-!!! description "`FeeDistributor.ve_for_at(_user: address, _timestamp: uint256) -> uint256:`"
+!!! description "`FeeDistributor.ve_for_at(_user: address, _timestamp: uint256) -> uint256`"
 
     Getter for the veCRV balance of a user at a certain timestamp.
 
@@ -752,6 +756,9 @@ Checkpointing the ve-Supply is an essential process to ensure fair reward distri
 # **Killing The FeeDistributor**
 
 The `FeeDistributor` can be killed by the `admin` of the contract, which is the Curve DAO. Doing so, transfers the entire token balance to the `emergency_return` address and block the ability to claim or burn. The contract can not be unkilled. 
+
+!!!colab "Google Colab Notebook"
+    A Google Colab notebook that simulates killing the `FeeDistributor` and its respective consequences can be found here: [:simple-googlecolab: Google Colab Notebook](https://colab.research.google.com/drive/1YgjNqZ4TdDEVoa-xTbZIDSPdtOwxuiH9?usp=sharing).
 
 
 ### `is_killed`
@@ -845,7 +852,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
 
 ### `recover_balance`
-!!! description "`FeeDistributor.recover_balance(_coin: address) -> bool:`"
+!!! description "`FeeDistributor.recover_balance(_coin: address) -> bool`"
 
     Function to recover ERC20 tokens from the contract. Tokens are sent to the emergency return address. This function only works for tokens other than the address set for `token`. E.g. this function on the 3CRV distributor contract can not be called to transfer 3CRV. The same applied to crvUSD distributor.
 
@@ -943,7 +950,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
 
 ### `commit_admin`
-!!! description "`FeeDistributor.commit_admin(_addr: address):`"
+!!! description "`FeeDistributor.commit_admin(_addr: address)`"
 
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
@@ -985,7 +992,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
 
 ### `apply_admin`
-!!! description "`FeeDistributor.apply_admin():`"
+!!! description "`FeeDistributor.apply_admin()`"
 
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
@@ -1178,7 +1185,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 ### `user_epoch_of`
 !!! description "`FeeDistributor.user_epoch_of(arg0: address) -> uint256: view`"
 
-    Getter for the user epoch of an address.
+    Getter for the user epoch of an address. This value increments by one each time rewards are claimed.$$
 
     | Input  | Type      | Description                        |
     | ------ | --------- | ---------------------------------- |
