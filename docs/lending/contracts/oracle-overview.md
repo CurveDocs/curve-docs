@@ -13,7 +13,7 @@ hide:
 
     ---
 
-    Oracle for collateral tokens using a single Curve pool to fetch the price oracle from. The lending factory can even automatically deploy this kind of oracle when deploying a new market.
+    EMA oracle for collateral tokens **using a single Curve pool to fetch the price oracle from**. The `OneWayLendingFactory` can even automatically deploy this kind of oracle when deploying a new market.
 
     [:octicons-arrow-right-24: `CryptoFromPool.vy`](./cryptofrompool.md)
 
@@ -21,7 +21,7 @@ hide:
 
     ---
 
-    Oracle for collateral tokens using multiple different Curve pool oracles chained together. This oracle contract can also make use of rates.
+    EMA oracle for collateral tokens using **multiple different Curve pool oracles chained together**. This oracle contract can also make use of rates.
 
     [:octicons-arrow-right-24: `CryptoFromPoolsRate.vy`](./cryptofrompoolsrate.md)
 
