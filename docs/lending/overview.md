@@ -35,7 +35,6 @@ Because Curve Lending operates very similarly to the system for minting crvUSD, 
 [:octicons-arrow-right-24: More here](./contracts/controller-llamma.md)
 
 
-
 ## **Vault**
 
 The Vault is an **implementation of the ERC4626 vault which deposits assets into the Controller contract** and tracks the **progress of fees earned**. It is a standard factory (non-blueprint) contract that also creates the AMM and Controller using `initialize()`.
@@ -124,87 +123,22 @@ The Vault is an **implementation of the ERC4626 vault which deposits assets into
 [:octicons-arrow-right-24: More here](./contracts/vault.md)
 
 
-
 ## **OneWay Lending Factory**
 
 The factory allows the **permissionless creation of borrowing/lending markets without rehypothecation**, meaning the collateral asset cannot be lent out. A distinctive feature is its ability to generate markets from Curve pools with a `price_oracle()` method, eliminating the need for a separate price oracle. Nonetheless, these pools must adhere to one of the following standards: 
 
-- [stableswap-ng](../stableswap-exchange/stableswap-ng/overview.md)
-- [tricrypto-ng](../cryptoswap-exchange/tricrypto-ng/overview.md)
-- [twocrypto-ng](../cryptoswap-exchange/twocrypto-ng/overview.md)
+- [`stableswap-ng`](../stableswap-exchange/stableswap-ng/overview.md)
+- [`tricrypto-ng`](../cryptoswap-exchange/tricrypto-ng/overview.md)
+- [`twocrypto-ng`](../cryptoswap-exchange/twocrypto-ng/overview.md)
 
 [:octicons-arrow-right-24: More here](./contracts/oneway-factory.md)
 
 
+## **Oracles**
 
-## **CryptoFromPool**
+Curve lending markets use **EMA oracles** as price sources to value the underlying collaterals. There are **multiple different oracles in use**. For example, one version uses the `price_oracle` of a single Curve pool, while another version uses an oracle contract that chains together multiple price oracles from different liquidity pools.
 
-`CryptoFromPool.vy` is a price oracle contract which uses the `price_oracle()` method of a Curve *tricrypto-ng*, *twocrypto-ng* or *stableswap-ng* pool. This contract is created from a blueprint when using the [`create_from_pool()` function](./contracts/oneway-factory.md#create_from_pool).
-
-??? quote "`create_from_pool(borrowed_token: address, collateral_token: address, A: uint256, fee: uint256, loan_discount: uint256, liquidation_discount: uint256, pool: address, name: String[64], min_borrow_rate: uint256 = 0, max_borrow_rate: uint256 = 0) -> Vault:`"
-
-    Function to create a vault using a existing oraclized Curve pool as price oracle.
-
-    ```vyper
-    @external
-    @nonreentrant('lock')
-    def create_from_pool(
-            borrowed_token: address,
-            collateral_token: address,
-            A: uint256,
-            fee: uint256,
-            loan_discount: uint256,
-            liquidation_discount: uint256,
-            pool: address,
-            name: String[64],
-            min_borrow_rate: uint256 = 0,
-            max_borrow_rate: uint256 = 0
-        ) -> Vault:
-        """
-        @notice Creation of the vault using existing oraclized Curve pool as a price oracle
-        @param borrowed_token Token which is being borrowed
-        @param collateral_token Token used for collateral
-        @param A Amplification coefficient: band size is ~1/A
-        @param fee Fee for swaps in AMM (for ETH markets found to be 0.6%)
-        @param loan_discount Maximum discount. LTV = sqrt(((A - 1) / A) ** 4) - loan_discount
-        @param liquidation_discount Liquidation discount. LT = sqrt(((A - 1) / A) ** 4) - liquidation_discount
-        @param pool Curve tricrypto-ng, twocrypto-ng or stableswap-ng pool which has non-manipulatable price_oracle().
-                    Must contain both collateral_token and borrowed_token.
-        @param name Human-readable market name
-        @param min_borrow_rate Custom minimum borrow rate (otherwise min_default_borrow_rate)
-        @param max_borrow_rate Custom maximum borrow rate (otherwise max_default_borrow_rate)
-        """
-        # Find coins in the pool
-        borrowed_ix: uint256 = 100
-        collateral_ix: uint256 = 100
-        N: uint256 = 0
-        for i in range(10):
-            success: bool = False
-            res: Bytes[32] = empty(Bytes[32])
-            success, res = raw_call(
-                pool,
-                _abi_encode(i, method_id=method_id("coins(uint256)")),
-                max_outsize=32, is_static_call=True, revert_on_failure=False)
-            coin: address = convert(res, address)
-            if not success or coin == empty(address):
-                break
-            N += 1
-            if coin == borrowed_token:
-                borrowed_ix = i
-            elif coin == collateral_token:
-                collateral_ix = i
-        if collateral_ix == 100 or borrowed_ix == 100:
-            raise "Tokens not in pool"
-        if N == 2:
-            assert Pool(pool).price_oracle() > 0, "Pool has no oracle"
-        else:
-            assert Pool(pool).price_oracle(0) > 0, "Pool has no oracle"
-        price_oracle: address = create_from_blueprint(
-            self.pool_price_oracle_impl, pool, N, borrowed_ix, collateral_ix, code_offset=3)
-
-        return self._create(borrowed_token, collateral_token, A, fee, loan_discount, liquidation_discount,
-                            price_oracle, name, min_borrow_rate, max_borrow_rate)
-    ```
+[:octicons-arrow-right-24: More here](./contracts/oracle-overview.md)
 
 
 ## **Monetary Policies**
