@@ -38,3 +38,7 @@
 
 !!!github "GitHub"
     The source code of the `CryptoFromPool.vy` and all other oracle contracts can be found on [GitHub :material-github:](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/price_oracles/).
+
+
+!!!colab "Google Colab Notebook"
+    Unfortunately, there is **no external method to directly check the claimable rewards for an address**. The claimable rewards can **either be checked in the [Curve UI](https://curve.fi/#/ethereum/dashboard) or by simulating a claim transaction** and comparing the reward token balances before and after the claim. A Google Colab notebook that simulates such a transaction can be found here: [:simple-googlecolab: Google Colab Notebook](https://colab.research.google.com/drive/198uCIg10fT56q5nhMwlgVV13bmHOwNMm?usp=sharing).
