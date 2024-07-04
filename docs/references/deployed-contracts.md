@@ -521,8 +521,8 @@ Contract functionality is documented [here :material-arrow-up-right:](../registr
 | :logos-scroll: `Scroll`         | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://scrollscan.com/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf) |
 | :logos-fraxtal: `Fraxtal`       | [0xd125E7a0cEddF89c6473412d85835450897be6Dc](https://fraxscan.com/address/0xd125E7a0cEddF89c6473412d85835450897be6Dc) |
 | :logos-avalanche: `Avalanche`   | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://snowscan.xyz/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf) |
-| :logos-mantle: `Mantle`   | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://mantlescan.xyz/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf) |
-| :logos-kava: `Kava`             | []() |
+| :logos-mantle: `Mantle`         | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://mantlescan.xyz/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf) |
+| :logos-kava: `Kava`             | [0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c](https://kavascan.com/address/0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c) |
 | :logos-xlayer: `X-Layer`        | [0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD](https://www.okx.com/web3/explorer/xlayer/address/0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD/contract) |
 | :logos-zksync: `zk-Sync`        | []() |
 
