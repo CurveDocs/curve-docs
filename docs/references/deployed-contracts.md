@@ -524,7 +524,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../registr
 | :logos-mantle: `Mantle`         | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://mantlescan.xyz/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf) |
 | :logos-kava: `Kava`             | [0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c](https://kavascan.com/address/0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c) |
 | :logos-xlayer: `X-Layer`        | [0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD](https://www.okx.com/web3/explorer/xlayer/address/0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD/contract) |
-| :logos-zksync: `zk-Sync`        | []() |
+| :logos-zksync: `zk-Sync`        | [0x48e4b27553e7643E10229ea3cba91c188dc524B1](https://era.zksync.network/address/0x48e4b27553e7643E10229ea3cba91c188dc524B1) |
 
 
 ---
