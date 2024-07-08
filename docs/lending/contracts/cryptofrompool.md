@@ -1,6 +1,6 @@
 <h1>CryptoFromPool</h1>
 
-Oracle contract for a collateral token that **fetches its price from a single Curve pool**. The first oracle contracts were deployed without considering the aggregated price of crvUSD, but experience showed that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
+Oracle contract for a collateral token that **fetches its price from a single Curve pool**. The first oracle contracts were deployed without considering the [aggregated price of crvUSD](https://etherscan.io/address/0x18672b1b0c623a30089A280Ed9256379fb0E4E62), but experience showed that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
 
 
 !!!github "GitHub"
@@ -110,7 +110,7 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
 
     ??? quote "Source code"
 
-        The `CryptoFromPool.vy` oracle contract does not take the aggregated price of crvUSD from the `PriceAggregator.vy` contract into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolWAgg.vy` oracle contract. 
+        The `CryptoFromPool.vy` oracle contract does not take the aggregated price of crvUSD from the [`PriceAggregator.vy` contract](../../crvUSD/priceaggregator.md) into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolWAgg.vy` oracle contract.
 
         === "CryptoFromPool.vy"
 
@@ -195,7 +195,7 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
 
     ??? quote "Source code"
 
-        The `CryptoFromPool.vy` oracle contract does not take the aggregated price of crvUSD from the `PriceAggregator.vy` contract into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolWAgg.vy` oracle contract.
+        The `CryptoFromPool.vy` oracle contract does not take the aggregated price of crvUSD from the [`PriceAggregator.vy` contract](../../crvUSD/priceaggregator.md) into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolWAgg.vy` oracle contract.
 
         === "CryptoFromPool.vy"
 

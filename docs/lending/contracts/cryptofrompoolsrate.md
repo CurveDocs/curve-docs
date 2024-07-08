@@ -1,6 +1,6 @@
 <h1>CryptoFromPoolsRate</h1>
 
-This oracle contract **chains together two oracles from two different Curve liquidity pools and optionally applies `stored_rates` to tokens with an existing rate oracle**. By chaining oracles together, it facilitates the creation of lending oracle contracts without requiring the collateral asset to be paired directly against crvUSD. The first oracle contracts were deployed without considering the aggregated price of crvUSD, but experience has shown that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
+This oracle contract **chains together two oracles from two different Curve liquidity pools and optionally applies `stored_rates` to tokens with an existing rate oracle**. By chaining oracles together, it facilitates the creation of lending oracle contracts without requiring the collateral asset to be paired directly against crvUSD. The first oracle contracts were deployed without considering the [aggregated price of crvUSD](https://etherscan.io/address/0x18672b1b0c623a30089A280Ed9256379fb0E4E62), but experience has shown that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
 
 These kinds of oracle contracts **need to be deployed manually**, as there is currently no Factory to do so.
 
@@ -190,7 +190,7 @@ The price is determined by combining two different oracle prices. When necessary
 
     ??? quote "Source code"
 
-        The `CryptoFromPoolsRate.vy` oracle contract does not take the aggregated price of crvUSD from the `PriceAggregator.vy` contract into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolsRateWAgg.vy` oracle contract.
+        The `CryptoFromPoolsRate.vy` oracle contract does not take the aggregated price of crvUSD from the [`PriceAggregator.vy` contract](../../crvUSD/priceaggregator.md) into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolsRateWAgg.vy` oracle contract.
 
         === "CryptoFromPoolsRate.vy"
 
@@ -355,7 +355,7 @@ The price is determined by combining two different oracle prices. When necessary
 
     ??? quote "Source code"
 
-        The `CryptoFromPoolsRate.vy` oracle contract does not take the aggregated price of crvUSD from the `PriceAggregator.vy` contract into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolsRateWAgg.vy` oracle contract.
+        The `CryptoFromPoolsRate.vy` oracle contract does not take the aggregated price of crvUSD from the [`PriceAggregator.vy` contract](../../crvUSD/priceaggregator.md) into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolsRateWAgg.vy` oracle contract.
 
         === "CryptoFromPoolsRate.vy"
 
