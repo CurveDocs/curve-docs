@@ -9,29 +9,27 @@ hide:
 
 <div class="grid cards" markdown>
 
--   **Oracle using a single Curve pool**
+-   **Oracle from a single Curve pool**
 
     ---
 
-    EMA oracle for collateral tokens **using a single Curve pool to fetch the price oracle from**. The `OneWayLendingFactory` can even automatically deploy this kind of oracle when deploying a new market.
+    EMA oracle for collateral tokens **using a single Curve pool to fetch the price oracle from**. The `OneWayLendingFactory` can automatically deploy this kind of oracle when deploying a new market.
 
-    [:octicons-arrow-right-24: `CryptoFromPool.vy`](./cryptofrompool.md)
+    [:octicons-arrow-right-24: `CryptoFromPool`](./cryptofrompool.md)
 
--   **Oracle using multiple chained Curve pools**
+-   **Oracle from multiple chained Curve pools**
 
     ---
 
     EMA oracle for collateral tokens using **multiple different Curve pool oracles chained together**. This oracle contract can also make use of rates.
 
-    [:octicons-arrow-right-24: `CryptoFromPoolsRate.vy`](./cryptofrompoolsrate.md)
+    [:octicons-arrow-right-24: `CryptoFromPoolsRate`](./cryptofrompoolsrate.md)
 
 </div>
 
-!!!warning "Contract Immutability"
-    The oracle contracts are fully immutable. Once deployed, there are no function to stop it, change the sources form where if fetched the price or other things.
-
 
 ---
+
 
 # **Oracle Examples**
 
