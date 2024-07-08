@@ -1,52 +1,90 @@
 <h1>CryptoFromPool</h1>
 
-Oracle contract for a collateral token that **fetches its price from a single Curve pool**.
+Oracle contract for a collateral token that **fetches its price from a single Curve pool**. The first oracle contracts were deployed without considering the aggregated price of crvUSD, but experience showed that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
+
 
 !!!github "GitHub"
-    The source code of the `CryptoFromPool.vy` and all other oracle contracts can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/price_oracles/).
+    The source code of the following price oracle contracts can be found on :material-github: GitHub:
+
+    - [`CryptoFromPool.vy`](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/price_oracles/CryptoFromPool.vy)
+    - [`CryptoFromPoolWAgg.vy`](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/price_oracles/CryptoFromPoolWAgg.vy)
 
 The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](./oneway-factory.md#create_from_pool) method which deploys the full lending market infrastucture along with a price oracle using a [`stableswap-ng`](../../stableswap-exchange/stableswap-ng/pools/oracles.md), [`twocrypto-ng`](../../cryptoswap-exchange/twocrypto-ng/overview.md) or [`tricrypto-ng`](../../cryptoswap-exchange/tricrypto-ng/pools/oracles.md) pool. These pools all have a suitable exponential moving-average (EMA) oracle, which can be used in lending markets.
 
-Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitrum) take the status of the [sequencer](https://docs.arbitrum.io/sequencer) into consideration.
+!!!warning "Oracle Immutability"
+    The oracle contracts are fully immutable. Once deployed, they cannot change any parameters, stop the price updates, or alter the pools used to calculate the prices. All relevant data required for the oracle to function is passed into the `__init__` function during the deployment of the contract.
 
+    ???quote "`__init__`"
+        
+        === "CrpyotFromPool.vy"
+
+            ```python
+            @external
+            def __init__(
+                    pool: Pool,
+                    N: uint256,
+                    borrowed_ix: uint256,
+                    collateral_ix: uint256
+                ):
+                assert borrowed_ix != collateral_ix
+                assert borrowed_ix < N
+                assert collateral_ix < N
+                POOL = pool
+                N_COINS = N
+                BORROWED_IX = borrowed_ix
+                COLLATERAL_IX = collateral_ix
+
+                no_argument: bool = False
+                if N == 2:
+                    success: bool = False
+                    res: Bytes[32] = empty(Bytes[32])
+                    success, res = raw_call(
+                        pool.address,
+                        _abi_encode(empty(uint256), method_id=method_id("price_oracle(uint256)")),
+                        max_outsize=32, is_static_call=True, revert_on_failure=False)
+                    if not success:
+                        no_argument = True
+                NO_ARGUMENT = no_argument
+            ```
+
+        === "CrpyotFromPoolWAgg.vy"
+
+            ```python
+            @external
+            def __init__(
+                    pool: Pool,
+                    N: uint256,
+                    borrowed_ix: uint256,
+                    collateral_ix: uint256,
+                    agg: StableAggregator
+                ):
+                assert borrowed_ix != collateral_ix
+                assert borrowed_ix < N
+                assert collateral_ix < N
+                POOL = pool
+                N_COINS = N
+                BORROWED_IX = borrowed_ix
+                COLLATERAL_IX = collateral_ix
+                AGG = agg
+
+                no_argument: bool = False
+                if N == 2:
+                    success: bool = False
+                    res: Bytes[32] = empty(Bytes[32])
+                    success, res = raw_call(
+                        pool.address,
+                        _abi_encode(empty(uint256), method_id=method_id("price_oracle(uint256)")),
+                        max_outsize=32, is_static_call=True, revert_on_failure=False)
+                    if not success:
+                        no_argument = True
+                NO_ARGUMENT = no_argument
+            ```
 
 !!!example "Example: CRV long market"
 
     In the CRV short market, `CRV` serves as the collateral token, while `crvUSD` is the borrowable token. This lending market utilizes the price oracle sourced from the [TriCRV liquidity pool](https://etherscan.io/address/0x4ebdf703948ddcea3b11f675b4d1fba9d2414a14).
 
     When calling the `create_from_pool` function, the code automatically checks the index of the tokens within the liquidity pool. Subsequently, it passes these values as constructor arguments during the creation of the oracle contract from the blueprint implementation.
-
-    ???quote "`__init__`"
-
-        ```py
-        @external
-        def __init__(
-                pool: Pool,
-                N: uint256,
-                borrowed_ix: uint256,
-                collateral_ix: uint256
-            ):
-            assert borrowed_ix != collateral_ix
-            assert borrowed_ix < N
-            assert collateral_ix < N
-            POOL = pool
-            N_COINS = N
-            BORROWED_IX = borrowed_ix
-            COLLATERAL_IX = collateral_ix
-
-            no_argument: bool = False
-            if N == 2:
-                success: bool = False
-                res: Bytes[32] = empty(Bytes[32])
-                success, res = raw_call(
-                    pool.address,
-                    _abi_encode(empty(uint256), method_id=method_id("price_oracle(uint256)")),
-                    max_outsize=32, is_static_call=True, revert_on_failure=False)
-                if not success
-                    no_argument = True
-            NO_ARGUMENT = no_argument
-        ```
-
 
     ```py
     # the following arguments will be passed into the `__init__` function:
@@ -66,11 +104,13 @@ Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitru
 ### `price`
 !!! description "`CryptoFromPool.price() -> uint256`"
 
-    Getter function for the price. For example, in a lending market using `CRV` as collateral and `crvUSD` as the borrowable token, it returns the price of `CRV` relative to `crvUSD`. Conversely, in the inverse market scenario, it returns the price of `crvUSD` relative to `CRV`. This function is view-only and does not modify the state.
+    Getter function for the price. For example, in a lending market using `CRV` as collateral and `crvUSD` as the borrowable token, it returns the price of `CRV` relative to `crvUSD`. Conversely, in the inverse market scenario, it returns the price of `crvUSD` relative to `CRV`. This function is view-only and does not modify the state. For contracts applying the aggregated crvUSD price, it essentially multiplies the collateral price with the aggregated crvUSD price.
 
     Returns: price (`uint256`).
 
     ??? quote "Source code"
+
+        The `CryptoFromPool.vy` oracle contract does not take the aggregated price of crvUSD from the `PriceAggregator.vy` contract into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolWAgg.vy` oracle contract. 
 
         === "CryptoFromPool.vy"
 
@@ -79,6 +119,43 @@ Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitru
             @view
             def price() -> uint256:
                 return self._raw_price()
+
+            @internal
+            @view
+            def _raw_price() -> uint256:
+                p_borrowed: uint256 = 10**18
+                p_collateral: uint256 = 10**18
+
+                if NO_ARGUMENT:
+                    p: uint256 = POOL.price_oracle()
+                    if COLLATERAL_IX > 0:
+                        p_collateral = p
+                    else:
+                        p_borrowed = p
+
+                else:
+                    if BORROWED_IX > 0:
+                        p_borrowed = POOL.price_oracle(BORROWED_IX - 1)
+                    if COLLATERAL_IX > 0:
+                        p_collateral = POOL.price_oracle(COLLATERAL_IX - 1)
+
+                return p_collateral * 10**18 / p_borrowed
+            ```
+
+        === "CryptoFromPoolWAgg.vy"
+
+            ```py
+            interface StableAggregator:
+                def price() -> uint256: view
+                def price_w() -> uint256: nonpayable
+                def stablecoin() -> address: view
+
+            AGG: public(immutable(StableAggregator))
+
+            @external
+            @view
+            def price() -> uint256:
+                return self._raw_price() * AGG.price() / 10**18
 
             @internal
             @view
@@ -112,11 +189,13 @@ Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitru
 ### `price_w`
 !!! description "`CryptoFromPool.price_w() -> uint256:`"
 
-    Function to return the price and update the state of the blockchain. This function is called whenever the `_exchange` function from the LLAMMA is called.
+    Function to return the price and update the state of the blockchain. This function is called whenever the `_exchange` function from the LLAMMA is called. For contracts applying the aggregated crvUSD price, it essentially multiplies the collateral price with the aggregated crvUSD price.
 
     Returns: price (`uint256`).
 
     ??? quote "Source code"
+
+        The `CryptoFromPool.vy` oracle contract does not take the aggregated price of crvUSD from the `PriceAggregator.vy` contract into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolWAgg.vy` oracle contract.
 
         === "CryptoFromPool.vy"
 
@@ -124,6 +203,42 @@ Additionally, the price [oracle contracts on :logos-arbitrum: Arbitrum](#arbitru
             @external
             def price_w() -> uint256:
                 return self._raw_price()
+
+            @internal
+            @view
+            def _raw_price() -> uint256:
+                p_borrowed: uint256 = 10**18
+                p_collateral: uint256 = 10**18
+
+                if NO_ARGUMENT:
+                    p: uint256 = POOL.price_oracle()
+                    if COLLATERAL_IX > 0:
+                        p_collateral = p
+                    else:
+                        p_borrowed = p
+
+                else:
+                    if BORROWED_IX > 0:
+                        p_borrowed = POOL.price_oracle(BORROWED_IX - 1)
+                    if COLLATERAL_IX > 0:
+                        p_collateral = POOL.price_oracle(COLLATERAL_IX - 1)
+
+                return p_collateral * 10**18 / p_borrowed
+            ```
+
+        === "CryptoFromPoolWAgg.vy"
+
+            ```py
+            interface StableAggregator:
+                def price() -> uint256: view
+                def price_w() -> uint256: nonpayable
+                def stablecoin() -> address: view
+
+            AGG: public(immutable(StableAggregator))
+
+            @external
+            def price_w() -> uint256:
+                return self._raw_price() * AGG.price_w() / 10**18
 
             @internal
             @view
