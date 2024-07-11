@@ -6,11 +6,6 @@ For complete and detailed documentation on the MetaRegistry contract, please see
 
 For a list of all deployments, see [here](../references/deployed-contracts.md#meta-registry).
 
-!!!warning "Requirements & Implementations"
-    The MetaRegistry requires that all Factory contracts, which deploy pools and gauges, are added to the MetaRegistry. Without this, the MetaRegistry cannot retrieve specific information. To see which handlers and registries are added, see [Handlers and Registries](#handlers-and-registries).
-
-    The newly deployed MetaRegistries on sidechains currently only pick up new-generation (NG) pools. Although earlier pools will be added as soon as possible, this requires some time as it involves quite a bit of manual work.
-
 
 ---
 
