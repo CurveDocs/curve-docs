@@ -1,6 +1,6 @@
 <h1>CurveRateProvider.vy</h1>
 
-The `CurveRateProvider` contract is designed to provide real-time quotes for token swaps. It fetches and returns exchange rates for specified token pairs. These quotes are sourced from Curve AMM pools, specifically those recognized by the Metaregistry. If, for some reason, a pool is not recognized by the `Metaregistry` contract, the `CurveRateProvider` won't include it.
+The `CurveRateProvider` contract is designed to provide real-time quotes for token swaps. It fetches and returns exchange rates for specified token pairs. These quotes are only sourced from Curve AMM pools recognized by the `Metaregistry`. If, for some reason, a pool is not recognized by the `Metaregistry` contract, the `CurveRateProvider` won't include it.
 
 !!!github "GitHub"
     The source code of the `CurveRateProvider.vy` can be found on [GitHub :material-github:](todo). The contract is currently deployed on Arbitrum at [`0xa46c7E424c749B4489f6Ac442323DC8E0583acB1`](https://arbiscan.io/address/0xa46c7E424c749B4489f6Ac442323DC8E0583acB1).
@@ -16,25 +16,25 @@ The `CurveRateProvider` contract is designed to provide real-time quotes for tok
 
     Returns: A dynamic array of `Quote` structs containing the following data:
 
-    - source_token_index (`uint256`): Index of the input token in the pool.
-    - dest_token_index (`uint256`): Index of the output token in the pool.
-    - is_underlying (`bool`): Indicates if a metapool is involved.
-    - amount_out (`uint256`): Amount of the destination token to be received.
-    - pool (`address`): Liquidity pool address from which the rate is provided.
-    - pool_balances (`DynArray[uint256, MAX_COINS]`): Token balances in the pool. This might include other tokens besides the source and destination tokens if the pool contains more than two coins.
-    - pool_type (`uint8`): Type of pool: `0 = Stableswap`, `1 = Cryptoswap`, `2 = LLAMMA`
+    - `source_token_index (uint256)`: Index of the input token in the pool.
+    - `dest_token_index (uint256)`: Index of the output token in the pool.
+    - `is_underlying (bool)`: Indicates if a metapool is involved.
+    - `amount_out (uint256)`: Amount of the destination token to be received.
+    - `pool (address)`: Liquidity pool address from which the rate is provided.
+    - `pool_balances (DynArray[uint256, MAX_COINS])`: Token balances in the pool. This might include other tokens besides the source and destination tokens if the pool contains more than two coins.
+    - `pool_type (uint8)`: Type of pool: `0 = Stableswap`, `1 = Cryptoswap`, `2 = LLAMMA`
 
     | Input               | Type      | Description                  |
     | ------------------- | --------- | ---------------------------- |
-    | `source_token`      | `address` | Source token. |
-    | `destination_token` | `address` | Destination token. |
+    | `source_token`      | `address` | Token to swap in.            |
+    | `destination_token` | `address` | Token to swap out.           |
     | `amount_in`         | `uint256` | Amount of tokens the provided rate is based on. |
 
     ??? quote "Source code"
 
         === "CurveRateProvider.vy"
 
-            ```vyper
+            ```py
             struct Quote:
 
                 source_token_index: uint256
@@ -198,12 +198,12 @@ The `CurveRateProvider` contract is designed to provide real-time quotes for tok
 
     === "Example"
 
-        This example shows the quotes when swapping 1 `CRV` for `asdCRV`. The `get_quotes` method returns two `Quote` structs because there are two pools that can facilitate the trade.
+        This example shows the quotes when swapping 1000 `CRV` for `asdCRV`. The `get_quotes` method returns two `Quote` structs because there are two pools that can facilitate the trade:
 
         ```shell
         >>> CurveRateProvider.get_quotes('0x11cdb42b0eb46d95f990bedd4695a6e3fa034978', '0x75289388d50364c3013583d97bd70ced0e183e32', 10**18)
-        [0, 1, false, 718761673703818329, 0xB85246768Cfea42b0c935265Db798C9Ae457646f, 250899952594182335701838, 79868164306389315090776, 160584370939726598722073, 1]
-        [0, 2, false, 720291730739035116, 0x5C959D2c1a49B637Fb988c40d663265F8Bf6d289, 1165324072757325064764831, 1256778254452947500152665, 447414672764810996826698, 1]
+        [0, 1, false, 715266210565545458509, 0xB85246768Cfea42b0c935265Db798C9Ae457646f, 251981912908903038052460, 79868164306389315090776, 160502376869015231297140, 1]
+        [0, 2, false, 720363244410635934003, 0x5C959D2c1a49B637Fb988c40d663265F8Bf6d289, 1160094807974595696565465, 1256830478323146416151673, 447584250494794848814622, 1]
         ```
 
 
