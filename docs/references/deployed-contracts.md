@@ -255,12 +255,12 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Chain                             | Contract Address |
 | --------------------------------- | :--------------: |
-| :logos-ethereum: `Ethereum`       | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://etherscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
+| :logos-ethereum: `Ethereum`       | [0x16C6521Dff6baB339122a0FE25a9116693265353](https://etherscan.io/address/0x16C6521Dff6baB339122a0FE25a9116693265353) |
 | :logos-arbitrum: `Arbitrum`       | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://arbiscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
 | :logos-optimism: `Optimism`       | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://optimistic.etherscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
 | :logos-base: `Base`               | [0xd6681e74eEA20d196c15038C580f721EF2aB6320](https://basescan.org/address/0xd6681e74eEA20d196c15038C580f721EF2aB6320#code) |
 | :logos-fraxtal: `Fraxtal`         | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://fraxscan.com/address/0x4f37A9d177470499A2dD084621020b023fcffc1F) |
-| :logos-polygon: `Polygon`         | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://polygonscan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
+| :logos-polygon: `Polygon`         | [0x0dcded3545d565ba3b19e683431381007245d983](https://polygonscan.com/address/0x0dcded3545d565ba3b19e683431381007245d983) |
 | :logos-gnosis: `Gnosis (xDAI)`    | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://gnosisscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
 | :logos-avalanche: `Avalanche`     | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://snowscan.xyz/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
 | :logos-fantom: `Fantom`           | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://ftmscan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
