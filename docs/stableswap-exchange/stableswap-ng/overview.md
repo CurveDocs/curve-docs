@@ -41,7 +41,7 @@ For an in-depth understanding of the StableSwap invariant design, please refer t
 
     The Pool Factory is used to **permissionlessly deploy new plain and metapools**, as well as **liquidity gauges**. It also acts as a registry for finding the deployed pools and querying information about them.
 
-    [:octicons-arrow-right-24: `CurveStableSwapFactoryNG.vy`](../../factory/stableswapNG/overview.md)
+    [:octicons-arrow-right-24: `CurveStableSwapFactoryNG.vy`](../../factory/stableswap-ng/overview.md)
 
 -   :octicons-code-16: **Math Contract**
 

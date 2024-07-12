@@ -14,7 +14,18 @@ The Curve ecosystem has various sources of revenue. In order to distribute these
 
 The new system utilizes **[CowSwap's conditional orders](https://blog.cow.fi/introducing-the-programmatic-order-framework-from-cow-protocol-088a14cb0375)** to burn the tokens. Sell orders, which burn the admin fees, can simply be created by calling a function on the `FeeCollector`. This ensures all coins can be burned **without the need to manually add coins to burners or hardcode exchange routes.**
 
-This system can and is deployed on other chains besides Ethereum but is **partly dependent on, e.g., CoWSwap deployments** if the `CowSwapBurner` is used. **If the CowSwap protocol is deployed on a sidechain, fees can be burned there. For chains where this is not the case, the admin fees are still being burned with the [original architecture](../overview.md).**
+This system can and is deployed on other chains besides Ethereum but is **partly dependent on, e.g., CoWSwap deployments** if the `CowSwapBurner` is used. **If the CowSwap protocol is deployed on a sidechain, fees can be burned there. For chains where this is not the case, the admin fees are still being burned using the [original architecture](../overview.md) and then transfered via a bridging contract to Ethereum.**
+
+
+*The flow of the system can be roughly summarized as follows:*
+
+<figure markdown="span">
+  ![](../../../assets/images/fee-burning/fee_overview.svg){ width="700" }
+  <figcaption></figcaption>
+</figure>
+
+*The collected admin fees can accrue in any type of tokens, whether they are LP or "regular" tokens. For simplicity, the `Hooker.vy` contract, which is essentially responsible for transferring the reward tokens from the `FeeCollector` to the `FeeDistributor`, was omitted from the graph. This infrastructure functions exactly the same on chains where the CowSwap Protocol is deployed (Gnosis and soon Arbitrum). The only difference is that instead of transferring the reward tokens to a `FeeDistributor` contract, they are bridged to the `FeeCollector` on the Ethereum mainnet.*
+
 
 
 ---
@@ -24,14 +35,14 @@ This system can and is deployed on other chains besides Ethereum but is **partly
 
 <div class="grid cards" markdown>
 
-- **:moneybag: Fee Collector**
+- **:fontawesome-solid-piggy-bank: Fee Collector**
 
     ---
     Contract which acts as the entry point for the fee burning system. All admin fees in various kinds of tokens are collected here.
     
     [:octicons-arrow-right-24: `FeeCollector.vy`](FeeCollector.md)
 
-- **:logos-cow: Burner**
+- **:logos-cowswap: CowSwap Burner**
 
     ---
     Contract which burns the collected admin fees into a unified token. The current system utilizes CowSwap's conditional orders to burn the accumulated fees into a specific target token. In theory, the burner can be any kind of contract that exchanges tokens.
@@ -41,11 +52,11 @@ This system can and is deployed on other chains besides Ethereum but is **partly
 - **:material-hook: Hooker**
 
     ---
-    Contract that allows users to execute certain hooks like forwarding crvUSD to the `FeeDistributor`.
+    Contract that allows users to execute certain hooks like forwarding crvUSD from the `FeeCollector` to the `FeeDistributor`.
 
     [:octicons-arrow-right-24: `Hooker.vy`](Hooker.md)
 
-- **Fee Distributor**
+- **:fontawesome-solid-money-bill-transfer: Fee Distributor**
 
     ---
     The `FeeDistributor` is the contract which distributes the fee token to veCRV holders. This contract is only deployed on Ethereum mainnet. There are actually two `FeeDistributors` deployed, as rewards were distributed in `3CRV` tokens, before a DAO vote changed the reward token to `crvUSD`.
@@ -58,14 +69,11 @@ This system can and is deployed on other chains besides Ethereum but is **partly
 ---
 
 
-## **Fee Burning Flow**
-
-Admin fees are collected in various tokens, necessitating an efficient fee-burning mechanism.
-
-The pools, including stableswap-ng, twocrypto-ng, and tricrypto-ng, primarily charge admin fees in the underlying token. Nonetheless, if the LP token is collected as an admin fee, this token can also be burned using the `CoWSwapBurner`. Additionally, admin fees from these newer pools are periodically claimed when users remove liquidity.
+## **Technical Flow of Fee Burning**
 
 *The process of burning coins into the target coin involves the following flow:*
 
-1. Withdrawing admin fees from liquidity pools or crvUSD markets using `withdraw_many`.
-2. Collecting fees and calling the burn function of the burner via `collect`. This will create a conditional order for the token to burn (if one has not been created yet). The order specifies the `FeeCollector` as the fee receiver, ensuring all target coins are automatically transferred to the `FeeCollector`.
-3. The collected target coins can then be forwarded to the `FeeDistributor` using the `forward` function, from where they can ultimately be claimed.
+1. **Collecting Fees:** Admin fees can be collected in any type of tokens in the `FeeCollector`, whether they are LP tokens or "regular" tokens. Newer pools like `stableswap-ng`, `tworcrypto-ng`, or `tricrypto-ng` periodically claim admin fees when users remove liquidity. For older pools where this is not the case, admin fees can be collected via the [`withdraw_many`](./FeeCollector.md#withdraw_many) function.
+2. **Burning Admin Fees:** After collecting all the fees that need to be burned, one can initiate the burn process via the [`collect`](./FeeCollector.md#collect) function. This will create a conditional order for the token to burn (if one has not been created yet). The order specifies the `FeeCollector` as the fee receiver, ensuring all target coins are automatically transferred to the `FeeCollector`.
+3. **Forwarding Fees:** The collected target coins can then be forwarded by executing hooks of the `Hooker.vy` contract to the `FeeDistributor` using the [`forward`](./FeeCollector.md#forward) function, from where they can ultimately be claimed.
+4. **Claiming Fees**: The accrrued fees can ultimately be claimed form the `FeeDistributor` using the `claim` function.

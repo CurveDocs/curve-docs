@@ -242,9 +242,9 @@ nav:
         - Overview: stableswap-exchange/stableswap/deposit_contracts/overview.md
         - Lending Pool Deposits: stableswap-exchange/stableswap/deposit_contracts/lending_pool_deposits.md
         - Metapool Deposits: stableswap-exchange/stableswap/deposit_contracts/metapool_deposits.md
-      - Cross Asset Swaps:
-        - Overview: stableswap-exchange/stableswap/cross_asset_swaps/overview.md
-        - SynthSwap: stableswap-exchange/stableswap/cross_asset_swaps/synthswap_exchange.md
+      # - Cross Asset Swaps:
+      #   - Overview: stableswap-exchange/stableswap/cross_asset_swaps/overview.md
+      #   - SynthSwap: stableswap-exchange/stableswap/cross_asset_swaps/synthswap_exchange.md
 
     - Stableswap-NG:
       - Overview: stableswap-exchange/stableswap-ng/overview.md
@@ -293,24 +293,23 @@ nav:
 
   - Pool Factory:
     - Overview: factory/overview.md
-    - StableSwap: 
-      - Overview: factory/stableswap/overview.md
-      - Deployer API: factory/stableswap/deployer-api.md
-      - Implementations: factory/stableswap/implementations.md
     - StableSwap-NG:
-      - Overview: factory/stableswapNG/overview.md
-      - Deployer API: factory/stableswapNG/deployer-api.md
-      - Implementations: factory/stableswapNG/implementations.md
-    - CryptoSwap:
-      - Overview: factory/cryptoswap/overview.md
-      - Deployer API: factory/cryptoswap/deployer-api.md
-      - Implementations: factory/cryptoswap/implementations.md
+      - Overview: factory/stableswap-ng/overview.md
+      - Deployer API: factory/stableswap-ng/deployer-api.md
     - TwoCrypto-NG:
       - Overview: factory/twocrypto-ng/overview.md
       - Deployer API: factory/twocrypto-ng/deployer-api.md
     - TriCrypto-NG:
       - Overview: factory/tricryptoNG/overview.md
       - Deployer API: factory/tricryptoNG/deployer-api.md
+    - StableSwap: 
+      - Overview: factory/stableswap/overview.md
+      - Deployer API: factory/stableswap/deployer-api.md
+      - Implementations: factory/stableswap/implementations.md
+    - CryptoSwap:
+      - Overview: factory/cryptoswap/overview.md
+      - Deployer API: factory/cryptoswap/deployer-api.md
+      - Implementations: factory/cryptoswap/implementations.md
     
 
   - Integration & Guides: 
