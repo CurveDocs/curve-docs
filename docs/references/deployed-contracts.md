@@ -495,7 +495,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 ---
 
 
-## **MetaRegistry**
+## **Meta Registry**
 
 Contract functionality is documented [here :material-arrow-up-right:](../registry/overview.md).
 
@@ -505,7 +505,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../registr
 
 | Chain                         | Contract Address |
 | ----------------------------- | ---------------- |
-| :logos-ethereum: `Ethereum`     | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://etherscan.io/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-ethereum: `Ethereum`     | [0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC](https://etherscan.io/address/0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC) |
 | :logos-arbitrum: `Arbitrum`     | [0x13526206545e2DC7CcfBaF28dC88F440ce7AD3e0](https://arbiscan.io/address/0x13526206545e2DC7CcfBaF28dC88F440ce7AD3e0) |
 | :logos-optimism: `Optimism`     | [0xc65CB3156225380BEda366610BaB18D5835A1647](https://optimistic.etherscan.io/address/0xc65CB3156225380BEda366610BaB18D5835A1647) |
 | :logos-base: `Base`             | [0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD](https://basescan.org/address/0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD) |
