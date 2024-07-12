@@ -255,19 +255,19 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 | Chain                             | Contract Address |
 | --------------------------------- | :--------------: |
-| :logos-ethereum: `Ethereum`       | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://etherscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
-| :logos-arbitrum: `Arbitrum`       | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://arbiscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
-| :logos-optimism: `Optimism`       | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://optimistic.etherscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
-| :logos-base: `Base`               | [0xd6681e74eEA20d196c15038C580f721EF2aB6320](https://basescan.org/address/0xd6681e74eEA20d196c15038C580f721EF2aB6320#code) |
-| :logos-fraxtal: `Fraxtal`         | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://fraxscan.com/address/0x4f37A9d177470499A2dD084621020b023fcffc1F) |
-| :logos-polygon: `Polygon`         | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://polygonscan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
-| :logos-gnosis: `Gnosis (xDAI)`    | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://gnosisscan.io/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
-| :logos-avalanche: `Avalanche`     | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://snowscan.xyz/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
-| :logos-fantom: `Fantom`           | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://ftmscan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
-| :logos-bsc: `Binance Smart Chain` | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://bscscan.com/address/0x69522fb5337663d3B4dFB0030b881c1A750Adb4f) |
-| :logos-mantle: `Mantle`           | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://mantlescan.xyz/address/0x69522fb5337663d3b4dfb0030b881c1a750adb4f) |
-| :logos-kava: `Kava`               | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://kavascan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
-| :logos-xlayer: `X-Layer`          | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://www.oklink.com/xlayer/address/0x4f37A9d177470499A2dD084621020b023fcffc1F) |
+| :logos-ethereum: `Ethereum`       | [0x16C6521Dff6baB339122a0FE25a9116693265353](https://etherscan.io/address/0x16C6521Dff6baB339122a0FE25a9116693265353) |
+| :logos-arbitrum: `Arbitrum`       | [0x2191718CD32d02B8E60BAdFFeA33E4B5DD9A0A0D](https://arbiscan.io/address/0x2191718CD32d02B8E60BAdFFeA33E4B5DD9A0A0D) |
+| :logos-optimism: `Optimism`       | [0x0DCDED3545D565bA3B19E683431381007245d983](https://optimistic.etherscan.io/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
+| :logos-base: `Base`               | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://basescan.org/address/0x4f37A9d177470499A2dD084621020b023fcffc1F) |
+| :logos-fraxtal: `Fraxtal`         | [0x9f2Fa7709B30c75047980a0d70A106728f0Ef2db](https://fraxscan.com/address/0x9f2Fa7709B30c75047980a0d70A106728f0Ef2db) |
+| :logos-polygon: `Polygon`         | [0x0DCDED3545D565bA3B19E683431381007245d983](https://polygonscan.com/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
+| :logos-gnosis: `Gnosis (xDAI)`    | [0x0DCDED3545D565bA3B19E683431381007245d983](https://gnosisscan.io/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
+| :logos-avalanche: `Avalanche`     | [0x0DCDED3545D565bA3B19E683431381007245d983](https://snowscan.xyz/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
+| :logos-fantom: `Fantom`           | [0x0DCDED3545D565bA3B19E683431381007245d983](https://ftmscan.com/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
+| :logos-bsc: `Binance Smart Chain` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://bscscan.com/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC) |
+| :logos-mantle: `Mantle`           | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://mantlescan.xyz/address/0x4f37A9d177470499A2dD084621020b023fcffc1F) |
+| :logos-kava: `Kava`               | [0x0DCDED3545D565bA3B19E683431381007245d983](https://kavascan.com/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
+| :logos-xlayer: `X-Layer`          | [0xBFab8ebc836E1c4D81837798FC076D219C9a1855](https://www.oklink.com/xlayer/address/0xBFab8ebc836E1c4D81837798FC076D219C9a1855) |
 | :logos-zksync: `zk-Sync`          | [0x7C915390e109CA66934f1eB285854375D1B127FA](https://era.zksync.network/address/0x7C915390e109CA66934f1eB285854375D1B127FA) |
 
 
