@@ -316,6 +316,7 @@ nav:
     - Overview: integration/overview.md
     - Address Provider: integration/address-provider.md
     - Meta Registry: integration/metaregistry.md
+    - Rate Provider: integration/rate-provider.md
 
 
   - References:
