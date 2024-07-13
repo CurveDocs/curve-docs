@@ -24,22 +24,9 @@
 
     ---
 
-    A contract that provides real-time exchange rates for token swaps using different Curve AMMs that are recognized within the `MetaRegistry`.
+    A contract that provides exchange rates for token swaps using different Curve AMMs that are recognized within the `MetaRegistry`.
 
     [:octicons-arrow-right-24: `CurveRateProvider.vy`](./rate-provider.md)
-
-
--   :material-swap-horizontal: **AMMs**
-
-    ---
-
-    *soon*
-
--   :simple-oracle: **Oracles**
-
-    ---
-
-    *soon*
 
 </div>
 
