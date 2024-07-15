@@ -1,14 +1,18 @@
 <h1>Curve Address Provider</h1>
 
 
-The `CurveAddressProvider` serves as the **entry point contract for Curve's various registries** and is deployed on all chains where Curve is operational.
-
+The `CurveAddressProvider` serves as the **entry point contract for Curve's various registries** and is deployed on all chains where Curve is operational. The contract holds the most important contract addresses.
 
 !!!deploy "Contract Source & Deployment"
     Source code is avaliable on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/AddressProviderNG.vy).
 
     A list of all deployed `AddressProvider` can be found [here :material-arrow-up-right:](../references/deployed-contracts.md#address-provider).
 
+
+!!!warning "Contract Upgradability"
+    The `AddressProvider` contract is managed by an `admin` who is currently an individual at Curve, rather than the Curve DAO[^1]. This **admin has the ability to update or add new IDs** within the contract. When integrating this contract into systems or relying on it for critical components, it is essential to consider that these **IDs and their associated addresses can be modified at any time**.
+
+    [^1]: Reasoning: Due to the nature of the contract (it does not hold any user funds or has any monetary influence), it is not considered a crucial contract. It should only be used as a pure informational source. Additionally, the Curve ecosystem changes very rapidly and therefore requires fast updates for such a contract. Always putting up a DAO vote to change IDs would not be feasible.
 
 ---
 
