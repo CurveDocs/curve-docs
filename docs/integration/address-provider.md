@@ -698,3 +698,192 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
         ```shell
         >>> soon
         ```
+
+
+---
+
+
+## Contract Ownership
+
+### `admin`
+!!! description "`AddressProvider.admin() -> address: view`"
+
+    Getter for the admin of the contract. This address can add, remove or update ID's.
+
+    Returns: admin (`address`).
+
+    ??? quote "Source code"
+
+        === "CurveAddressProvider.vy"
+
+            ```vyper
+            admin: public(address)
+
+            @external
+            def __init__():
+                self.admin  = tx.origin
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> AddressProvider.admin()
+        '0x2d12D0907A388811e3AA855A550F959501d303EE'
+        ```
+
+
+### `future_admin`
+!!! description "`AddressProvider.future_admin() -> address: view`"
+
+    Getter for the future admin of the contract.
+
+    Returns: future admin (`address`).
+
+    ??? quote "Source code"
+
+        === "CurveAddressProvider.vy"
+
+            ```vyper
+            future_admin: public(address)
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> AddressProvider.future_admin()
+        '0x0000000000000000000000000000000000000000'
+        ```
+
+
+### `commit_transfer_ownership`
+!!! description "`AddressProvider.commit_transfer_ownership(_new_admin: address) -> bool`"
+
+    !!!guard "Guarded Methods"
+        This function can only be called by the `admin` of the contract.
+
+    Function to initiate a transfer of contract ownership.
+
+    Returns: true (`bool`).
+
+    Events: `CommitNewAdmin`
+
+    | Input        | Type      | Description                           |    
+    | ------------ | --------- | ------------------------------------- |
+    | `_new_admin` | `address` | Address to transfer the ownership to. |
+
+    ??? quote "Source code"
+
+        === "CurveAddressProvider.vy"
+
+            ```vyper
+            event CommitNewAdmin:
+                admin: indexed(address)
+                        
+            future_admin: public(address)
+
+            @external
+            def commit_transfer_ownership(_new_admin: address) -> bool:
+                """
+                @notice Initiate a transfer of contract ownership
+                @dev Once initiated, the actual transfer may be performed three days later
+                @param _new_admin Address of the new owner account
+                @return bool success
+                """
+                assert msg.sender == self.admin  # dev: admin-only function
+                self.future_admin = _new_admin
+
+                log CommitNewAdmin(_new_admin)
+
+                return True
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> soon
+        ```
+
+
+### `apply_transfer_ownership`
+!!! description "`AddressProvider.apply_transfer_ownership() -> bool`"
+
+    !!!guard "Guarded Methods"
+        This function can only be called by the `future_admin` of the contract.
+
+    Function to update the description of an ID.
+
+    Returns: true (`bool`).
+
+    Emits: `NewAdmin`
+
+    ??? quote "Source code"
+
+        === "CurveAddressProvider.vy"
+
+            ```vyper
+            event NewAdmin:
+                admin: indexed(address)
+
+            admin: public(address)
+            future_admin: public(address)
+
+            @external
+            def apply_transfer_ownership() -> bool:
+                """
+                @notice Finalize a transfer of contract ownership
+                @dev May only be called by the next owner
+                @return bool success
+                """
+                assert msg.sender == self.future_admin  # dev: admin-only function
+
+                new_admin: address = self.future_admin
+                self.admin = new_admin
+
+                log NewAdmin(new_admin)
+
+                return True
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> soon
+        ```
+
+
+### `revert_transfer_ownership`
+!!! description "`AddressProvider.revert_transfer_ownership() -> bool`"
+
+    !!!guard "Guarded Methods"
+        This function can only be called by the `admin` of the contract.
+
+    Function to revert the transfer of contract ownership.
+
+    Returns: true (`bool`).
+
+    ??? quote "Source code"
+
+        === "CurveAddressProvider.vy"
+
+            ```vyper
+            admin: public(address)
+            future_admin: public(address)
+
+            @external
+            def revert_transfer_ownership() -> bool:
+                """
+                @notice Revert a transfer of contract ownership
+                @dev May only be called by the current owner
+                @return bool success
+                """
+                assert msg.sender == self.admin  # dev: admin-only function
+                self.future_admin = empty(address)
+
+                return True
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> soon
+        ```
