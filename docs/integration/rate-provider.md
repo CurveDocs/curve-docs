@@ -3,7 +3,7 @@
 The `CurveRateProvider` contract is designed to provide rates for token swaps.
 
 !!!github "GitHub"
-    The source code of the `CurveRateProvider.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).  
+    The source code for the `CurveRateProvider.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).  
     
     Additionally, each `CurveRateProvider` is **integrated into the chain-specific [`AddressProvider`](./address-provider.md) at `ID = 18`**.  
     *For example, to query the `CurveRateProvider` contract on Ethereum:*
