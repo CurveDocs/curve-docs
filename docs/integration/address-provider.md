@@ -33,7 +33,7 @@ struct AddressInfo:
 
 
 ### `ids`
-!!! description "`AddressProvider.ids() -> DynArray[uint256, 1000]:`"
+!!! description "`AddressProvider.ids() -> DynArray[uint256, 1000]`"
 
     Getter function for all the IDs of active registry items in the AddressProvider.
 
@@ -103,9 +103,9 @@ struct AddressInfo:
         24: CurveDAO Vault
         25: crvUSD Token
 
-    | Input      | Type      | Description                  |
-    | ---------- | --------- | ---------------------------- |
-    | `arg0`     | `uint256` | ID to get the informations for |
+    | Input  | Type      | Description                    |
+    | ------ | --------- | ------------------------------ |
+    | `arg0` | `uint256` | ID to get the informations for |
 
     ??? quote "Source code"
 
@@ -138,9 +138,9 @@ struct AddressInfo:
 
     Returns: contract (`address`).
 
-    | Input      | Type      | Description                           |
-    | ---------- | --------- | ------------------------------------- |
-    | `arg0`     | `uint256` | ID to get the contract address for    |
+    | Input  | Type      | Description                        |
+    | ------ | --------- | ---------------------------------- |
+    | `arg0` | `uint256` | ID to get the contract address for |
 
     ??? quote "Source code"
 
@@ -181,9 +181,9 @@ struct AddressInfo:
 
     Returns: true or false (`bool`).
 
-    | Input      | Type      | Description                  |
-    | ---------- | --------- | ---------------------------- |
-    | `arg0`     | `uint256` | ID to check                  |
+    | Input  | Type      | Description |
+    | ------ | --------- | ----------- |
+    | `arg0` | `uint256` | ID to check |
 
     ??? quote "Source code"
 
@@ -234,7 +234,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
 
 ### `update_id`
-!!! description "`AddressProvider.update_id(_id: uint256, _new_address: address, _new_description: String[64]):`"
+!!! description "`AddressProvider.update_id(_id: uint256, _new_address: address, _new_description: String[64])`"
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
@@ -243,11 +243,11 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
     Emits: `EntryModified`
 
-    | Input              | Type         | Description                  |
-    | ------------------ | ------------ | ---------------------------- |
-    | `_id`              | `uint256`    | ID to update                 |
-    | `_new_address`     | `address`    | New address                  |
-    | `_new_description` | `String[64]` | New description              |
+    | Input              | Type         | Description     |
+    | ------------------ | ------------ | --------------- |
+    | `_id`              | `uint256`    | ID to update    |
+    | `_new_address`     | `address`    | New address     |
+    | `_new_description` | `String[64]` | New description |
 
     ??? quote "Source code"
 
@@ -297,7 +297,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
 
 ### `update_address`
-!!! description "`AddressProvider.update_address(_id: uint256, _address: address):`"
+!!! description "`AddressProvider.update_address(_id: uint256, _address: address)`"
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
@@ -356,7 +356,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
 
 ### `update_description`
-!!! description "`AddressProvider.update_description(_id: uint256, _description: String[256]):`"
+!!! description "`AddressProvider.update_description(_id: uint256, _description: String[256])`"
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
@@ -415,7 +415,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
 
 ### `add_new_id`
-!!! description "`AddressProvider.add_new_id(_id: uint256, _address: address, _description: String[64]):`"
+!!! description "`AddressProvider.add_new_id(_id: uint256, _address: address, _description: String[64])`"
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
@@ -424,11 +424,11 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
     Emits: `NewEntry`
 
-    | Input              | Type         | Description                  |
-    | ------------------ | ------------ | ---------------------------- |
-    | `_id`              | `uint256`    | ID to add. Reverts if ID number is already used.       |
-    | `_address`         | `address`    | New address                  |
-    | `_description`     | `String[64]` | New description              |
+    | Input          | Type         | Description                                     |
+    | -------------- | ------------ | ----------------------------------------------- |
+    | `_id`          | `uint256`    | ID to add; Reverts if ID number is already used |
+    | `_address`     | `address`    | New address                                     |
+    | `_description` | `String[64]` | New description                                 |
 
     ??? quote "Source code"
 
@@ -489,7 +489,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
 
 ### `add_new_ids`
-!!! description "`AddressProvider.add_new_ids(_ids: DynArray[uint256, 25], _addresses: DynArray[address, 25], _descriptions: DynArray[String[64], 25]):`"
+!!! description "`AddressProvider.add_new_ids(_ids: DynArray[uint256, 25], _addresses: DynArray[address, 25], _descriptions: DynArray[String[64], 25])`"
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
@@ -498,11 +498,11 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
     Emits: `NewEntry`
 
-    | Input           | Type                       | Description                  |
-    | --------------- | -------------------------- | ---------------------------- |
-    | `_ids`          | `DynArray[uint256, 25]`    | IDs to add. Reverts if ID number is already used. |
-    | `_addresss`     | `DynArray[address, 25]`    | ID addresses                 |
-    | `_descriptions` | `DynArray[String[64], 25]` | ID descriptions              |
+    | Input           | Type                       | Description                                      |
+    | --------------- | -------------------------- | ------------------------------------------------ |
+    | `_ids`          | `DynArray[uint256, 25]`    | IDs to add; Reverts if ID number is already used |
+    | `_addresss`     | `DynArray[address, 25]`    | ID addresses                                     |
+    | `_descriptions` | `DynArray[String[64], 25]` | ID descriptions                                  |
 
     ??? quote "Source code"
 
@@ -572,7 +572,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
 
 ### `remove_id`
-!!! description "`AddressProvider.remove_id(_id: uint256) -> bool:`"
+!!! description "`AddressProvider.remove_id(_id: uint256) -> bool`"
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
@@ -583,9 +583,9 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
     Emits: `EntryRemoved`
 
-    | Input | Type      | Description   |
-    | ----- | --------- | ------------- |
-    | `_id` | `uint256` | ID to remove. |
+    | Input | Type      | Description  |
+    | ----- | --------- | ------------ |
+    | `_id` | `uint256` | ID to remove |
 
     ??? quote "Source code"
 
@@ -635,7 +635,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
 
 ### `remove_ids`
-!!! description "`AddressProvider.remove_ids(_ids: DynArray[uint256, 20]) -> bool:`"
+!!! description "`AddressProvider.remove_ids(_ids: DynArray[uint256, 20]) -> bool`"
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
@@ -646,9 +646,9 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
     Emits: `EntryRemoved`
 
-    | Input  | Type                    | Description    |
-    | ------ | ----------------------- | -------------- |
-    | `_ids` | `DynArray[uint256, 20]` | IDs to remove. |
+    | Input  | Type                    | Description   |
+    | ------ | ----------------------- | ------------- |
+    | `_ids` | `DynArray[uint256, 20]` | IDs to remove |
 
     ??? quote "Source code"
 
@@ -767,9 +767,9 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
     Events: `CommitNewAdmin`
 
-    | Input        | Type      | Description                           |    
-    | ------------ | --------- | ------------------------------------- |
-    | `_new_admin` | `address` | Address to transfer the ownership to. |
+    | Input        | Type      | Description                          |    
+    | ------------ | --------- | ------------------------------------ |
+    | `_new_admin` | `address` | Address to transfer the ownership to |
 
     ??? quote "Source code"
 
