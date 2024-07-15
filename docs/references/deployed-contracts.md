@@ -486,10 +486,9 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | :logos-scroll: `Scroll`         | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://scrollscan.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
 | :logos-fraxtal: `Fraxtal`       | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://fraxscan.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
 | :logos-avalanche: `Avalanche`   | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://snowscan.xyz/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-mantle: `Mantle`   | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://mantlescan.xyz/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
 | :logos-kava: `Kava`             | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://kavascan.io/search?q=0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-xlayer: `X-Layer`        | [0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98](https://www.okx.com/web3/explorer/xlayer/address/0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98/contract) |
-| :logos-zksync: `zk-Sync`        | [0x54A5a69e17Aa6eB89d77aa3828E38C9Eb4fF263D](https://era.zksync.network/address/0x54A5a69e17Aa6eB89d77aa3828E38C9Eb4fF263D#contract) |
+| :logos-xlayer: `X-Layer`        | [0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98](https://www.okx.com/web3/explorer/xlayer/address/0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98/) |
+| :logos-zksync: `zk-Sync`        | [0x54A5a69e17Aa6eB89d77aa3828E38C9Eb4fF263D](https://era.zksync.network/address/0x54A5a69e17Aa6eB89d77aa3828E38C9Eb4fF263D) |
 
 
 ---
@@ -521,10 +520,43 @@ Contract functionality is documented [here :material-arrow-up-right:](../registr
 | :logos-scroll: `Scroll`         | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://scrollscan.com/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf) |
 | :logos-fraxtal: `Fraxtal`       | [0xd125E7a0cEddF89c6473412d85835450897be6Dc](https://fraxscan.com/address/0xd125E7a0cEddF89c6473412d85835450897be6Dc) |
 | :logos-avalanche: `Avalanche`   | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://snowscan.xyz/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf) |
-| :logos-mantle: `Mantle`         | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://mantlescan.xyz/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf) |
 | :logos-kava: `Kava`             | [0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c](https://kavascan.com/address/0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c) |
-| :logos-xlayer: `X-Layer`        | [0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD](https://www.okx.com/web3/explorer/xlayer/address/0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD/contract) |
+| :logos-xlayer: `X-Layer`        | [0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD](https://www.okx.com/web3/explorer/xlayer/address/0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD) |
 | :logos-zksync: `zk-Sync`        | [0x48e4b27553e7643E10229ea3cba91c188dc524B1](https://era.zksync.network/address/0x48e4b27553e7643E10229ea3cba91c188dc524B1) |
+
+
+---
+
+
+## **Rate Provider**
+
+Contract functionality is documented [here :material-arrow-up-right:](../integration/rate-provider.md).
+
+!!!github
+    The source code of the `CurveRateProvider.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).
+
+
+| Chain                           | Contract Address |
+| ------------------------------- | ---------------- |
+| :logos-ethereum: `Ethereum`     | [0xA834f3d23749233c9B61ba723588570A1cCA0Ed7](https://etherscan.io/address/0xA834f3d23749233c9B61ba723588570A1cCA0Ed7) |
+| :logos-arbitrum: `Arbitrum`     | [0xcbc1BE39ba277525E774976c61660f29fA75C5a4](https://arbiscan.io/address/0xcbc1BE39ba277525E774976c61660f29fA75C5a4) |
+| :logos-optimism: `Optimism`     | [0x3f4a2BffA78D50CD61401a440526378E2155A8aE](https://optimistic.etherscan.io/address/0x3f4a2BffA78D50CD61401a440526378E2155A8aE) |
+| :logos-base: `Base`             | [0x33e72383472f77B0C6d8F791D1613C75aE2C5915](https://basescan.org/address/0x33e72383472f77B0C6d8F791D1613C75aE2C5915) |
+| :logos-bsc: `BinanceSmartChain` | [0xfb37b8D939FFa77114005e61CFc2e543d6F49A81](https://bscscan.com/address/0xfb37b8D939FFa77114005e61CFc2e543d6F49A81) |
+| :logos-polygon: `Polygon`       | [0xe0B15824862f3222fdFeD99FeBD0f7e0EC26E1FA](https://polygonscan.com/address/0xe0B15824862f3222fdFeD99FeBD0f7e0EC26E1FA) |
+| :logos-fantom: `Fantom`         | [0x440231D99c4e07F7C40317220e37038839C00eA1](https://ftmscan.com/address/0x440231D99c4e07F7C40317220e37038839C00eA1) |
+| :logos-gnosis: `Gnosis`         | [0x149ff1DECfe441cD685306965DB5Ac73f6808851](https://gnosisscan.io/address/0x149ff1DECfe441cD685306965DB5Ac73f6808851) |
+| :logos-aurora: `Aurora`         | [0x21688e843a99b0a47e750e7ddd2b5dafd9269d30](https://explorer.aurora.dev/address/0x21688e843a99b0a47e750e7ddd2b5dafd9269d30) |
+| :logos-celo: `Celo`             | [0x64AFA95e0C3D8410240a4262df9Fd82B12b64eDd](https://celoscan.io/address/0x64AFA95e0C3D8410240a4262df9Fd82B12b64eDd) |
+| :logos-mantle: `Mantle`         | [0x3f445d38e820c010a7a6e33c5f80cbebe6930f61](https://explorer.mantle.xyz/address/0x3f445d38e820c010a7a6e33c5f80cbebe6930f61) |
+| :logos-linea: `Linea`           | [0x64AFA95e0C3D8410240a4262df9Fd82B12b64eDd](https://lineascan.build/address/0x64AFA95e0C3D8410240a4262df9Fd82B12b64eDd) |
+| :logos-polygon: `Polygon zkEVM` | [0x64AFA95e0C3D8410240a4262df9Fd82B12b64eDd](https://zkevm.polygonscan.com/address/0x64AFA95e0C3D8410240a4262df9Fd82B12b64eDd) |
+| :logos-scroll: `Scroll`         | [0xf2eff2Cd0d9C82b7b2f17FbBed703fA7931dB1da](https://scrollscan.com/address/0xf2eff2Cd0d9C82b7b2f17FbBed703fA7931dB1da) |
+| :logos-fraxtal: `Fraxtal`       | [0x07920E98a66e462C2Aa4c8fa6200bc68CA161ea0](https://fraxscan.com/address/0x07920E98a66e462C2Aa4c8fa6200bc68CA161ea0) |
+| :logos-avalanche: `Avalanche`   | [0x3261cA38b2129140c4199C63f7E09830B123CaFc](https://snowscan.xyz/address/0x3261cA38b2129140c4199C63f7E09830B123CaFc) |
+| :logos-kava: `Kava`             | []() |
+| :logos-xlayer: `X-Layer`        | [0xb6845b562f01eb02ef20cbb63553d2a768e5a1cb](https://www.okx.com/web3/explorer/xlayer/address/0xb6845b562f01eb02ef20cbb63553d2a768e5a1cb) |
+| :logos-zksync: `zk-Sync`        | []() |
 
 
 ---

@@ -4,7 +4,17 @@ The `CurveRateProvider` contract is designed to provide rates for token swaps.
 
 !!!github "GitHub"
     The source code of the `CurveRateProvider.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).  
-    The contract is currently only deployed on Arbitrum at [`0xcbc1BE39ba277525E774976c61660f29fA75C5a4`](https://arbiscan.io/address/0xcbc1BE39ba277525E774976c61660f29fA75C5a4).
+    
+    Additionally, each `CurveRateProvider` is **integrated into the chain-specific [`AddressProvider`](./address-provider.md) at `ID = 18`**.  
+    *For example, to query the `CurveRateProvider` contract on Ethereum:*
+
+    ```py
+    >>> CurveAddressProvider.get_address(18)
+    '0xA834f3d23749233c9B61ba723588570A1cCA0Ed7'
+    ```
+
+    A full list of deployments across various chains can be found [here](../references/deployed-contracts.md). However, please be aware that these **contracts are upgradable** and may have changed in the meantime. To get the **most recent one, users are advised to fetch it directly from the `AddressProvider` contract**.
+
 
 The contract has a [`get_quotes`](#get_quotes) method which fetches and returns exchange rates for specified token pairs. These quotes are only sourced from Curve AMM pools. The contract strictly relies on the `Metaregistry` contract as it fetches rates only from pools picked up by it[^1]. Additionally, there is a [`get_aggregated_rate`](#get_aggregated_rate) method which returns a weighted aggregated rate.
 
