@@ -496,17 +496,17 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 
 ## **Meta Registry**
 
-Contract functionality is documented here: [`CurveMetaRegistry`](../registry/overview.md)
+Contract functionality is documented here: [`MetaRegistry`](../registry/overview.md)
 
 !!!github
     The source code for `MetaRegistry.vy` and `MetaRegistryL2.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/tree/main/contracts).
 
-Each `MetaRegistry` is integrated into the chain-specific [`AddressProvider`](./address-provider.md) at `ID = 7`.  
+Each `MetaRegistry` is integrated into the chain-specific [`AddressProvider`](./address-provider.md) at `ID = 7`. To get the **most recent contract, users are advised to fetch it directly from the `AddressProvider` contract**. 
 
 *For example, to query the `MetaRegistry` contract on Ethereum, one can call `get_address(7)` on the `AddressProvider`:*
 
 ```py
->>> CurveAddressProvider.get_address(7)
+>>> AddressProvider.get_address(7)
 '0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC'
 ```
 
@@ -516,17 +516,17 @@ Each `MetaRegistry` is integrated into the chain-specific [`AddressProvider`](./
 
 ## **Rate Provider**
 
-Contract functionality is documented here: [`CurveRateProvider`](../integration/rate-provider.md)
+Contract functionality is documented here: [`RateProvider`](../integration/rate-provider.md)
 
 !!!github
-    The source code for the `CurveRateProvider.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).  
+    The source code for the `RateProvider.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).  
 
 Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](./address-provider.md) at `ID = 18`.  
 
 *For example, to query the `RateProvider` contract on Ethereum, one can call `get_address(18)` on the `AddressProvider`:*
 
 ```py
->>> CurveAddressProvider.get_address(18)
+>>> AddressProvider.get_address(18)
 '0xA834f3d23749233c9B61ba723588570A1cCA0Ed7'
 ```
 

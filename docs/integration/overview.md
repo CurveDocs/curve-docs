@@ -12,7 +12,7 @@ This section is targeted at external third parties interested in integrating Cur
 
     The `AddressProvider` contract acts as an **entry point for Curve's various registries**, deployed across all chains where Curve infrastructure is present. It maps all relevant Curve contracts across different chains.
 
-    [:octicons-arrow-right-24: `CurveAddressProvider.vy`](./address-provider.md)
+    [:octicons-arrow-right-24: `AddressProviderNG.vy`](./address-provider.md)
 
 -   :material-page-next: **Meta Registry**
 
@@ -20,7 +20,7 @@ This section is targeted at external third parties interested in integrating Cur
 
     The `MetaRegistry` contract serves as a Curve Finance Pool Registry Aggregator, providing an on-chain API that consolidates various properties of Curve pools by **integrating multiple registries into a single contract**.
 
-    [:octicons-arrow-right-24: `CurveMetaRegistry.vy`](./metaregistry.md)
+    [:octicons-arrow-right-24: `MetaRegistry.vy`](./metaregistry.md)
 
 -   :fontawesome-solid-retweet: **Rate Provider**
     
@@ -28,7 +28,7 @@ This section is targeted at external third parties interested in integrating Cur
 
     The `RateProvider` contract **provides exchange rates for token swaps** using different Curve AMMs that are recognized within the `MetaRegistry`.
 
-    [:octicons-arrow-right-24: `CurveRateProvider.vy`](./rate-provider.md)
+    [:octicons-arrow-right-24: `RateProvider.vy`](./rate-provider.md)
 
 </div>
 
