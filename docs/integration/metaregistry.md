@@ -1,4 +1,4 @@
-<h1>Curve Meta Registry</h1>
+<h1>Meta Registry</h1>
 
 The MetaRegistry functions as a Curve Finance Pool Registry Aggregator and offers an on-chain API for various properties of Curve pools by **consolidating different registries into a single contract**.
 

@@ -1,4 +1,4 @@
-<h1>Curve Address Provider</h1>
+<h1>Address Provider</h1>
 
 
 The `CurveAddressProvider` serves as the **entry point contract for Curve's various registries** and is deployed on all chains where Curve is operational. The contract holds the most important contract addresses.

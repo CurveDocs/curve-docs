@@ -1,4 +1,4 @@
-<h1>CurveRateProvider.vy</h1>
+<h1>Rate Provider</h1>
 
 The `CurveRateProvider` contract is designed to provide rates for token swaps.
 
