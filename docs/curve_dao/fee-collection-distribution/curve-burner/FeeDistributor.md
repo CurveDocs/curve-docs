@@ -50,9 +50,9 @@ The `claim` and `claim_many` functions allow users to claim their share of distr
     
     Emits: `Claimed`
 
-    | Input   | Type      | Description                                       |
-    | ------- | --------- | ------------------------------------------------- |
-    | `_addr` | `address` | Addresses to claim for. Defaults to `msg.sender`. |
+    | Input   | Type      | Description                                      |
+    | ------- | --------- | ------------------------------------------------ |
+    | `_addr` | `address` | Addresses to claim for; defaults to `msg.sender` |
 
     !!!info
         For off-chain integrators, this function can be called as though it were a view method in order to check the claimable amount.
@@ -188,9 +188,9 @@ The `claim` and `claim_many` functions allow users to claim their share of distr
 
     Emits: `Claimed`
 
-    | Input   | Type | Description |
-    | ------- | ---- | ----------- |
-    | `_addr` |  `address[20]` | List of 20 addresses to claim for. When claiming for less than 20 wallets, the remainig addresses need to be set to 'ZERO_ADDRESS'. |
+    | Input   | Type           | Description |
+    | ------- | -------------- | ----------- |
+    | `_addr` |  `address[20]` | List of 20 addresses to claim for. When claiming for less than 20 wallets, the remainig addresses need to be set to 'ZERO_ADDRESS' |
 
     ??? quote "Source code"
 
@@ -327,9 +327,9 @@ The `claim` and `claim_many` functions allow users to claim their share of distr
 
     Return: true (`bool`).
 
-    | Input   | Type      | Description                         |
-    | ------- | --------- | ----------------------------------- |
-    | `_coin` | `address` | Address of the coin being received. |
+    | Input   | Type      | Description                        |
+    | ------- | --------- | ---------------------------------- |
+    | `_coin` | `address` | Address of the coin being received |
 
     ??? quote "Source code"
 
@@ -449,9 +449,9 @@ Checkpointing is a critical process in the contract that ensures accurate tracki
 
     Returns: reward tokens added for claiming (`uint256`).
 
-    | Input  | Type      | Description                   |
-    | ------ | --------- | ----------------------------- |
-    | `arg0` | `address` | Timestamp of the epoch start. |
+    | Input  | Type      | Description                  |
+    | ------ | --------- | ---------------------------- |
+    | `arg0` | `address` | Timestamp of the epoch start |
 
     ??? quote "Source code"
 
@@ -665,9 +665,9 @@ Checkpointing the ve-Supply is an essential process to ensure fair reward distri
 
     Returns: timestamp (`uin256`).
 
-    | Input  | Type      | Description           |
-    | ------ | --------- | --------------------- |
-    | `arg0` | `address` | Address to check for. |
+    | Input  | Type      | Description          |
+    | ------ | --------- | -------------------- |
+    | `arg0` | `address` | Address to check for |
 
     ??? quote "Source code"
 
@@ -691,10 +691,10 @@ Checkpointing the ve-Supply is an essential process to ensure fair reward distri
 
     Returns: veCRV balance (`uint256`).
 
-    | Input        | Type      | Description                             |
-    | ------------ | --------- | --------------------------------------- |
-    | `_user`      | `address` | Address to query the veCRV balance for. |
-    | `_timestamp` | `uint256` | Timestamp.                              |
+    | Input        | Type      | Description                            |
+    | ------------ | --------- | -------------------------------------- |
+    | `_user`      | `address` | Address to query the veCRV balance for |
+    | `_timestamp` | `uint256` | Timestamp                              |
 
     ??? quote "Source code"
 
@@ -731,9 +731,9 @@ Checkpointing the ve-Supply is an essential process to ensure fair reward distri
 
     Returns: vecrv supply (`uint256`).
 
-    | Input  | Type      | Description                   |
-    | ------ | --------- | ----------------------------- |
-    | `arg0` | `uint256` | Timestamp of the epoch start. |
+    | Input  | Type      | Description                  |
+    | ------ | --------- | ---------------------------- |
+    | `arg0` | `uint256` | Timestamp of the epoch start |
 
     ??? quote "Source code"
 
@@ -858,9 +858,9 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
     Returns: true (`bool`).
 
-    | Input   | Type      | Description        |
-    | ------- | --------- | ------------------ |
-    | `_coin` | `address` | Tokens to recover. |
+    | Input   | Type      | Description       |
+    | ------- | --------- | ----------------- |
+    | `_coin` | `address` | Tokens to recover |
 
     ??? quote "Source code"
 
@@ -1134,6 +1134,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
         '0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2'
         ```
 
+
 ### `token`
 !!! description "`FeeDistributor.token() -> address: view`"
 
@@ -1187,9 +1188,9 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
     Getter for the user epoch of an address. This value increments by one each time rewards are claimed.$$
 
-    | Input  | Type      | Description                        |
-    | ------ | --------- | ---------------------------------- |
-    | `arg0` | `address` | Address to get the user epoch for. |
+    | Input  | Type      | Description                       |
+    | ------ | --------- | --------------------------------- |
+    | `arg0` | `address` | Address to get the user epoch for |
 
     ??? quote "Source code"
 

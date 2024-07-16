@@ -65,9 +65,9 @@ Before hooks can be executed, they need to be added via `set_hooks`. These hooks
 
     Returns: `Hook` struct consisting of the target address (`address`), a byte array containing the method identifier and additional data (`Bytes[1024]`), compensation strategy (`CompensationStrategy`) and if the hook is a duty hook or not (`bool`).
 
-    | Input   | Type      | Description        |
-    | ------- | --------- | ------------------ |
-    | `arg0`  | `uint256` | Index of the hook. |
+    | Input   | Type      | Description       |
+    | ------- | --------- | ----------------- |
+    | `arg0`  | `uint256` | Index of the hook |
 
     ??? quote "Source code"
 
@@ -98,9 +98,9 @@ Before hooks can be executed, they need to be added via `set_hooks`. These hooks
 
     Function to set new hooks.
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_new_hooks` | `DynArray[Hook, MAX_HOOKS_LEN]` | Array of `Hook` structs.     |
+    | Input        | Type                            | Description             |
+    | ------------ | ------------------------------- | ----------------------- |
+    | `_new_hooks` | `DynArray[Hook, MAX_HOOKS_LEN]` | Array of `Hook` structs |
 
     *Each `Hook` struct contains:*
 
@@ -217,10 +217,10 @@ struct CompensationCooldown:
 
     Emits: `DutyAct`, `HookShot` and `Act`
 
-    | Input          | Type                                      | Description                                            |
-    | -------------- | ----------------------------------------- | ------------------------------------------------------ |
-    | `_hook_inputs` | `DynArray[HookInput, MAX_HOOKS_LEN]`      | Array of `HookInput` structs representing the hooks to be executed. |
-    | `_receiver`    | `address`                                  | Receiver of the compensation. Defaults to `msg.sender`. |
+    | Input          | Type                                 | Description                                                        |
+    | -------------- | ------------------------------------ | ------------------------------------------------------------------ |
+    | `_hook_inputs` | `DynArray[HookInput, MAX_HOOKS_LEN]` | Array of `HookInput` structs representing the hooks to be executed |
+    | `_receiver`    | `address`                            | Receiver of the compensation. Defaults to `msg.sender`             |
 
     *Each `HookInput` struct contains:*
 
@@ -356,10 +356,10 @@ struct CompensationCooldown:
 
     Emits: `HookShot` and `Act`
 
-    | Input          | Type                                      | Description                                            |
-    | -------------- | ----------------------------------------- | ------------------------------------------------------ |
-    | `_hook_inputs` | `DynArray[HookInput, MAX_HOOKS_LEN]`      | Array of `HookInput` structs representing the hooks to be executed. |
-    | `_receiver`    | `address`                                  | Receiver of the compensation. Defaults to `msg.sender`. |
+    | Input          | Type                                 | Description                                                        |
+    | -------------- | ------------------------------------ | ------------------------------------------------------------------ |
+    | `_hook_inputs` | `DynArray[HookInput, MAX_HOOKS_LEN]` | Array of `HookInput` structs representing the hooks to be executed |
+    | `_receiver`    | `address`                            | Receiver of the compensation. Defaults to `msg.sender`             |
 
     *Each `HookInput` struct contains:*
 
@@ -455,11 +455,11 @@ struct CompensationCooldown:
 
     Returns: amount of target coins to receive as compensation (`uint256`).
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_hook_inputs` | `DynArray[HookInput, MAX_HOOKS_LEN]` | Array of `HookInput` structs representing the hooks to be executed. |
-    | `_duty`   | `bool` | Wether the act is performed by the FeeCollector. Defaults to `False`. |
-    | `_ts`   | `address` | timestamp at which to calculate the compensation for. Defaults to `block.timestamp` |
+    | Input          | Type                                 | Description                                                                         |
+    | -------------- | ------------------------------------ | ----------------------------------------------------------------------------------- |
+    | `_hook_inputs` | `DynArray[HookInput, MAX_HOOKS_LEN]` | Array of `HookInput` structs representing the hooks to be executed                  |
+    | `_duty`        | `bool`                               | Wether the act is performed by the FeeCollector; defaults to `False`                |
+    | `_ts`          | `address`                            | Timestamp at which to calculate the compensation for; defaults to `block.timestamp` |
 
     *Each `HookInput` struct contains:*
 
@@ -534,10 +534,10 @@ struct CompensationCooldown:
 
     Function to execute one-time-hooks. These are hooks that only need to be executed once, like coin approvals.
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_hooks` | `DynArray[Hook, MAX_HOOKS_LEN]` | Array of `Hook` structs.     |
-    | `_inputs`   | `DynArray[HookInput, MAX_HOOKS_LEN]` | Array of `HookInput` structs representing the hooks to be executed. |
+    | Input     | Type                                 | Description                                                        |
+    | --------- | ------------------------------------ | ------------------------------------------------------------------ |
+    | `_hooks`  | `DynArray[Hook, MAX_HOOKS_LEN]`      | Array of `Hook` structs                                            |
+    | `_inputs` | `DynArray[HookInput, MAX_HOOKS_LEN]` | Array of `HookInput` structs representing the hooks to be executed |
 
     *Each `Hook` struct contains:*
 
@@ -703,9 +703,9 @@ SUPPORTED_INTERFACES: constant(bytes4[2]) = [
 
     Function to recover ERC20 tokens or ETH from the contract by transferring them to the `FeeCollector`.
 
-    | Input       | Type                                   | Description                              |
-    |-------------|----------------------------------------|------------------------------------------|
-    | `_coins` | `DynArray[ERC20, MAX_LEN]`      | Array of coin addresses to recover.      |
+    | Input    | Type                       | Description                        |
+    | -------- | -------------------------- | ---------------------------------- |
+    | `_coins` | `DynArray[ERC20, MAX_LEN]` | Array of coin addresses to recover |
 
     ??? quote "Source code"
 

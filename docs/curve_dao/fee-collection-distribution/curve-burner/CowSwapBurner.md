@@ -46,9 +46,9 @@ composable_cow.create(ConditionalOrderParams({
 
     Returns: true or false (`bool`).
 
-    | Input  | Type      | Description               |
-    | ------ | --------- | ------------------------- |
-    | `arg0` | `address` | Address of coin to check. |
+    | Input  | Type      | Description              |
+    | ------ | --------- | ------------------------ |
+    | `arg0` | `address` | Address of coin to check |
 
     ??? quote "Source code"
 
@@ -114,9 +114,9 @@ composable_cow.create(ConditionalOrderParams({
     - sellTokenBalance: `bytes32`
     - buyTokenBalance: `bytes32`
 
-    | Input        | Type      | Description                            |
-    | ------------ | --------- | -------------------------------------- |
-    | `sell_token` | `address` | Token address to check parameters for. |
+    | Input        | Type      | Description                           |
+    | ------------ | --------- | ------------------------------------- |
+    | `sell_token` | `address` | Token address to check parameters for |
 
     ??? quote "Source code"
 
@@ -168,10 +168,10 @@ composable_cow.create(ConditionalOrderParams({
 
     Function to create a conditional CowSwap order for coins.
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_coins` | `DynArray[ERC20, MAX_COINS_LEN]` | Coins to burn. |
-    | `_receiver`   | `address` | Receiver of the keeper fee specified in when calling `collect` within the FeeCollector. |
+    | Input       | Type                             | Description                                                                            |
+    | ----------- | -------------------------------- | -------------------------------------------------------------------------------------- |
+    | `_coins`    | `DynArray[ERC20, MAX_COINS_LEN]` | Coins to burn                                                                          |
+    | `_receiver` | `address`                        | Receiver of the keeper fee specified in when calling `collect` within the FeeCollector |
 
     ??? quote "Source code"
 
@@ -247,13 +247,13 @@ composable_cow.create(ConditionalOrderParams({
 
     Returns: order parameters (`GPv2Order_Data`).
 
-    | Input             | Type                       | Description                    |
-    | ----------------- | -------------------------- | ------------------------------ |
-    | `_owner`          | `address`                  | Owner of the order.            |
+    | Input             | Type                       | Description                                     |
+    | ----------------- | -------------------------- | ----------------------------------------------- |
+    | `_owner`          | `address`                  | Owner of the order                              |
     | `_sender`         | `address`                  | `msg.sender` context calling `isValidSignature` |
-    | `_ctx`            | `bytes32`                  | Execution context.             |
-    | `_static_input`   | `Bytes[STATIC_DATA_LEN]`   | `sellToken` encoded as bytes(Bytes[20]). |
-    | `_offchain_input` | `Bxtes[OFFCHAIN_DATA_LEN]` | Not used, zero-length bytes.   |
+    | `_ctx`            | `bytes32`                  | Execution context                               |
+    | `_static_input`   | `Bytes[STATIC_DATA_LEN]`   | `sellToken` encoded as `bytes(Bytes[20])`       |
+    | `_offchain_input` | `Bxtes[OFFCHAIN_DATA_LEN]` | Not used, zero-length bytes                     |
 
     ??? quote "Source code"
 
@@ -339,16 +339,16 @@ composable_cow.create(ConditionalOrderParams({
 
     Function to verify CowSwap orders to ensure that the order adheres to the conditions set by the contract and can be executed properly.
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_owner` | `address` | Owner of conditional order (self). |
-    | `_sender` | `address` |  `msg.sender` context calling `isValidSignature`.  |
-    | `_hash` | `bytes32` |  `EIP-712` order digest.  |
-    | `_domain_seperator` | `bytes32` |  `EIP-712` domain separator.  |
-    | `_ctx` | `bytes32` |  Execution context.  |
-    | `_static_input` | `Bytes[STATIC_DATA_LEN]` | ConditionalOrder's staticData (coin address).   |
-    | `_offchain_input` | `Bytes[OFFCHAIN_DATA_LEN]` |  Conditional order type-specific data NOT known at time of creation for a specific discrete order (or zero-length bytes if not applicable).  |
-    | `_order` | `GPv2Order_Data` |  The proposed discrete order's `GPv2Order.Data` struct.  |
+    | Input               | Type                       | Description                                            |
+    | ------------------- | -------------------------- | ------------------------------------------------------ |
+    | `_owner`            | `address`                  | Owner of conditional order (self)                      |
+    | `_sender`           | `address`                  | `msg.sender` context calling `isValidSignature`        |
+    | `_hash`             | `bytes32`                  | `EIP-712` order digest                                 |
+    | `_domain_seperator` | `bytes32`                  | `EIP-712` domain separator                             |
+    | `_ctx`              | `bytes32`                  | Execution context                                      |
+    | `_static_input`     | `Bytes[STATIC_DATA_LEN]`   | ConditionalOrder's staticData (coin address)           |
+    | `_offchain_input`   | `Bytes[OFFCHAIN_DATA_LEN]` | Conditional order type-specific data NOT known at time of creation for a specific discrete order (or zero-length bytes if not applicable).  |
+    | `_order`            | `GPv2Order_Data`           | The proposed discrete order's `GPv2Order.Data` struct  |
 
     ??? quote "Source code"
 
@@ -418,10 +418,10 @@ composable_cow.create(ConditionalOrderParams({
 
     Returns: `ERC1271_MAGIC_VALUE` if signature is OK (`bytes4`).
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_hash` | `bytes32` | Hash of a signed data.     |
-    | `signature`   | `Bytes[1792]` | Signature for the object. (GPv2Order.Data, PayloadStruct) in this case. |
+    | Input       | Type          | Description                                                            |
+    | ----------- | ------------- | ---------------------------------------------------------------------- |
+    | `_hash`     | `bytes32`     | Hash of a signed data                                                  |
+    | `signature` | `Bytes[1792]` | Signature for the object. (GPv2Order.Data, PayloadStruct) in this case |
 
     ??? quote "Source code"
 
@@ -502,9 +502,9 @@ composable_cow.create(ConditionalOrderParams({
 
     Function to set the a new `target_threshold` value.
 
-    | Input    | Type                             | Description                           |
-    | -------- | -------------------------------- | ------------------------------------- |
-    | `_target_threshold` | `uint256` | New target threshold value. |
+    | Input               | Type      | Description                |
+    | ------------------- | --------- | -------------------------- |
+    | `_target_threshold` | `uint256` | New target threshold value |
 
     ??? quote "Source code"
 
@@ -580,9 +580,9 @@ Additionally, there is a recover function which lets the `owner` or `emergency_o
 
     Function to recover ERC20 tokens or ETH from this contract. Calling this function will transfer `_coins` to the `FeeCollector`.
 
-    | Input    | Type                             | Description                           |
-    | -------- | -------------------------------- | ------------------------------------- |
-    | `_coins` | `DynArray[ERC20, MAX_COINS_LEN]` | Dynamic array of the token addresses to recover. |
+    | Input    | Type                             | Description                                     |
+    | -------- | -------------------------------- | ----------------------------------------------- |
+    | `_coins` | `DynArray[ERC20, MAX_COINS_LEN]` | Dynamic array of the token addresses to recover |
 
     ??? quote "Source code"
 
@@ -644,9 +644,9 @@ SUPPORTED_INTERFACES: constant(bytes4[4]) = [
 
     Returns: true or false (`bool`)
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_interface_id` | `bytes4` | ID of the interface.     |
+    | Input           | Type     | Description         |
+    | --------------- | -------- | ------------------- |
+    | `_interface_id` | `bytes4` | ID of the interface |
 
     ??? quote "Source code"
 
