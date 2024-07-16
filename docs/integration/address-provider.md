@@ -702,7 +702,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 ---
 
 
-## Contract Ownership
+## **Contract Ownership**
 
 ### `admin`
 !!! description "`AddressProvider.admin() -> address: view`"
@@ -809,7 +809,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
     !!!guard "Guarded Methods"
         This function can only be called by the `future_admin` of the contract.
 
-    Function to update the description of an ID.
+    Function to finalize a transfer of contract ownership.
 
     Returns: true (`bool`).
 

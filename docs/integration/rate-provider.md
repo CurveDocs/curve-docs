@@ -9,7 +9,7 @@ The `RateProvider` contract is designed to provide rates for token swaps.
 
     *For example, to query the `RateProvider` contract on Ethereum:*
 
-    ```py
+    ```vyper
     >>> AddressProvider.get_address(18)
     '0xA834f3d23749233c9B61ba723588570A1cCA0Ed7'
     ```
@@ -23,7 +23,7 @@ The logic of the contract is to identify the pool type used to facilitate the de
 
 === "ABI"
 
-    ```py
+    ```vyper
     STABLESWAP_META_ABI: constant(String[64]) = "get_dy_underlying(int128,int128,uint256)"
     STABLESWAP_ABI: constant(String[64]) = "get_dy(int128,int128,uint256)"
     CRYPTOSWAP_ABI: constant(String[64]) = "get_dy(uint256,uint256,uint256)"
@@ -59,7 +59,7 @@ The logic of the contract is to identify the pool type used to facilitate the de
 
         === "CurveRateProvider.vy"
 
-            ```py
+            ```vyper
             struct Quote:
                 source_token_index: uint256
                 dest_token_index: uint256
@@ -251,7 +251,7 @@ The logic of the contract is to identify the pool type used to facilitate the de
 
         === "CurveRateProvider.vy"
 
-            ```py
+            ```vyper
             @external
             @view
             def get_aggregated_rate(source_token: address, destination_token: address) -> uint256:
