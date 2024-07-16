@@ -1,19 +1,18 @@
-<h1>CurveRateProvider.vy</h1>
+<h1>Rate Provider</h1>
 
-The `CurveRateProvider` contract is designed to provide rates for token swaps.
+The `RateProvider` contract is designed to provide rates for token swaps.
 
 !!!github "GitHub"
-    The source code of the `CurveRateProvider.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).  
+    The source code of the `RateProvider.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).  
     
-    Additionally, each `CurveRateProvider` is **integrated into the chain-specific [`AddressProvider`](./address-provider.md) at `ID = 18`**.  
-    *For example, to query the `CurveRateProvider` contract on Ethereum:*
+    Additionally, each `RateProvider` contract is **integrated into the chain-specific [`AddressProvider`](./address-provider.md) at `ID = 18`**. To get the **most recent contract, users are advised to fetch it directly from the `AddressProvider`**. 
 
-    ```py
-    >>> CurveAddressProvider.get_address(18)
+    *For example, to query the `RateProvider` contract on Ethereum:*
+
+    ```vyper
+    >>> AddressProvider.get_address(18)
     '0xA834f3d23749233c9B61ba723588570A1cCA0Ed7'
     ```
-
-    A full list of deployments across various chains can be found [here](../references/deployed-contracts.md). However, please be aware that these **contracts are upgradable** and may have changed in the meantime. To get the **most recent one, users are advised to fetch it directly from the `AddressProvider` contract**.
 
 
 The contract has a [`get_quotes`](#get_quotes) method which fetches and returns exchange rates for specified token pairs. These quotes are only sourced from Curve AMM pools. The contract strictly relies on the `Metaregistry` contract as it fetches rates only from pools picked up by it[^1]. Additionally, there is a [`get_aggregated_rate`](#get_aggregated_rate) method which returns a weighted aggregated rate.
@@ -24,7 +23,7 @@ The logic of the contract is to identify the pool type used to facilitate the de
 
 === "ABI"
 
-    ```py
+    ```vyper
     STABLESWAP_META_ABI: constant(String[64]) = "get_dy_underlying(int128,int128,uint256)"
     STABLESWAP_ABI: constant(String[64]) = "get_dy(int128,int128,uint256)"
     CRYPTOSWAP_ABI: constant(String[64]) = "get_dy(uint256,uint256,uint256)"
@@ -60,7 +59,7 @@ The logic of the contract is to identify the pool type used to facilitate the de
 
         === "CurveRateProvider.vy"
 
-            ```py
+            ```vyper
             struct Quote:
                 source_token_index: uint256
                 dest_token_index: uint256
@@ -252,7 +251,7 @@ The logic of the contract is to identify the pool type used to facilitate the de
 
         === "CurveRateProvider.vy"
 
-            ```py
+            ```vyper
             @external
             @view
             def get_aggregated_rate(source_token: address, destination_token: address) -> uint256:

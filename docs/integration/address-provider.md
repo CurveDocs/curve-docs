@@ -1,14 +1,17 @@
-<h1>Curve Address Provider</h1>
+<h1>Address Provider</h1>
 
 
-The `CurveAddressProvider` serves as the **entry point contract for Curve's various registries** and is deployed on all chains where Curve is operational.
+The `AddressProvider` serves as the **entry point contract for Curve's various registries** and is deployed on all chains where Curve is operational. The contract holds the most important contract addresses.
+
+!!!github "GitHub"
+    Source code of the `AddressProvider.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/AddressProviderNG.vy).  
+    A list of all deployed `AddressProvider` can be found [here](../references/deployed-contracts.md#address-provider).
 
 
-!!!deploy "Contract Source & Deployment"
-    Source code is avaliable on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/AddressProviderNG.vy).
+!!!warning "Contract Upgradability"
+    The `AddressProvider` contract is managed by an `admin` who is currently an individual at Curve, rather than the Curve DAO[^1]. This **admin has the ability to update, add or remove new IDs** within the contract. When integrating this contract into systems or relying on it for critical components, it is essential to consider that these **IDs and their associated addresses can be modified at any time**.
 
-    A list of all deployed `AddressProvider` can be found [here :material-arrow-up-right:](../references/deployed-contracts.md#address-provider).
-
+    [^1]: Reasoning: Due to the nature of the contract (it does not hold any user funds or has any monetary influence), it is not considered a crucial contract. It should only be used as a pure informational source. Additionally, the Curve ecosystem changes very rapidly and therefore requires fast updates for such a contract. Always putting up a DAO vote to change IDs would not be feasible.
 
 ---
 
@@ -29,7 +32,7 @@ struct AddressInfo:
 
 
 ### `ids`
-!!! description "`AddressProvider.ids() -> DynArray[uint256, 1000]:`"
+!!! description "`AddressProvider.ids() -> DynArray[uint256, 1000]`"
 
     Getter function for all the IDs of active registry items in the AddressProvider.
 
@@ -99,9 +102,9 @@ struct AddressInfo:
         24: CurveDAO Vault
         25: crvUSD Token
 
-    | Input      | Type      | Description                  |
-    | ---------- | --------- | ---------------------------- |
-    | `arg0`     | `uint256` | ID to get the informations for |
+    | Input  | Type      | Description                    |
+    | ------ | --------- | ------------------------------ |
+    | `arg0` | `uint256` | ID to get the informations for |
 
     ??? quote "Source code"
 
@@ -134,9 +137,9 @@ struct AddressInfo:
 
     Returns: contract (`address`).
 
-    | Input      | Type      | Description                           |
-    | ---------- | --------- | ------------------------------------- |
-    | `arg0`     | `uint256` | ID to get the contract address for    |
+    | Input  | Type      | Description                        |
+    | ------ | --------- | ---------------------------------- |
+    | `arg0` | `uint256` | ID to get the contract address for |
 
     ??? quote "Source code"
 
@@ -177,9 +180,9 @@ struct AddressInfo:
 
     Returns: true or false (`bool`).
 
-    | Input      | Type      | Description                  |
-    | ---------- | --------- | ---------------------------- |
-    | `arg0`     | `uint256` | ID to check                  |
+    | Input  | Type      | Description |
+    | ------ | --------- | ----------- |
+    | `arg0` | `uint256` | ID to check |
 
     ??? quote "Source code"
 
@@ -230,7 +233,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
 
 ### `update_id`
-!!! description "`AddressProvider.update_id(_id: uint256, _new_address: address, _new_description: String[64]):`"
+!!! description "`AddressProvider.update_id(_id: uint256, _new_address: address, _new_description: String[64])`"
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
@@ -239,11 +242,11 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
     Emits: `EntryModified`
 
-    | Input              | Type         | Description                  |
-    | ------------------ | ------------ | ---------------------------- |
-    | `_id`              | `uint256`    | ID to update                 |
-    | `_new_address`     | `address`    | New address                  |
-    | `_new_description` | `String[64]` | New description              |
+    | Input              | Type         | Description     |
+    | ------------------ | ------------ | --------------- |
+    | `_id`              | `uint256`    | ID to update    |
+    | `_new_address`     | `address`    | New address     |
+    | `_new_description` | `String[64]` | New description |
 
     ??? quote "Source code"
 
@@ -293,7 +296,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
 
 ### `update_address`
-!!! description "`AddressProvider.update_address(_id: uint256, _address: address):`"
+!!! description "`AddressProvider.update_address(_id: uint256, _address: address)`"
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
@@ -352,7 +355,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
 
 ### `update_description`
-!!! description "`AddressProvider.update_description(_id: uint256, _description: String[256]):`"
+!!! description "`AddressProvider.update_description(_id: uint256, _description: String[256])`"
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
@@ -411,7 +414,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
 
 ### `add_new_id`
-!!! description "`AddressProvider.add_new_id(_id: uint256, _address: address, _description: String[64]):`"
+!!! description "`AddressProvider.add_new_id(_id: uint256, _address: address, _description: String[64])`"
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
@@ -420,11 +423,11 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
     Emits: `NewEntry`
 
-    | Input              | Type         | Description                  |
-    | ------------------ | ------------ | ---------------------------- |
-    | `_id`              | `uint256`    | ID to add. Reverts if ID number is already used.       |
-    | `_address`         | `address`    | New address                  |
-    | `_description`     | `String[64]` | New description              |
+    | Input          | Type         | Description                                     |
+    | -------------- | ------------ | ----------------------------------------------- |
+    | `_id`          | `uint256`    | ID to add; Reverts if ID number is already used |
+    | `_address`     | `address`    | New address                                     |
+    | `_description` | `String[64]` | New description                                 |
 
     ??? quote "Source code"
 
@@ -485,7 +488,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
 
 ### `add_new_ids`
-!!! description "`AddressProvider.add_new_ids(_ids: DynArray[uint256, 25], _addresses: DynArray[address, 25], _descriptions: DynArray[String[64], 25]):`"
+!!! description "`AddressProvider.add_new_ids(_ids: DynArray[uint256, 25], _addresses: DynArray[address, 25], _descriptions: DynArray[String[64], 25])`"
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
@@ -494,11 +497,11 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
     Emits: `NewEntry`
 
-    | Input           | Type                       | Description                  |
-    | --------------- | -------------------------- | ---------------------------- |
-    | `_ids`          | `DynArray[uint256, 25]`    | IDs to add. Reverts if ID number is already used. |
-    | `_addresss`     | `DynArray[address, 25]`    | ID addresses                 |
-    | `_descriptions` | `DynArray[String[64], 25]` | ID descriptions              |
+    | Input           | Type                       | Description                                      |
+    | --------------- | -------------------------- | ------------------------------------------------ |
+    | `_ids`          | `DynArray[uint256, 25]`    | IDs to add; Reverts if ID number is already used |
+    | `_addresss`     | `DynArray[address, 25]`    | ID addresses                                     |
+    | `_descriptions` | `DynArray[String[64], 25]` | ID descriptions                                  |
 
     ??? quote "Source code"
 
@@ -568,7 +571,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
 
 ### `remove_id`
-!!! description "`AddressProvider.remove_id(_id: uint256) -> bool:`"
+!!! description "`AddressProvider.remove_id(_id: uint256) -> bool`"
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
@@ -579,9 +582,9 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
     Emits: `EntryRemoved`
 
-    | Input | Type      | Description   |
-    | ----- | --------- | ------------- |
-    | `_id` | `uint256` | ID to remove. |
+    | Input | Type      | Description  |
+    | ----- | --------- | ------------ |
+    | `_id` | `uint256` | ID to remove |
 
     ??? quote "Source code"
 
@@ -631,7 +634,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
 
 ### `remove_ids`
-!!! description "`AddressProvider.remove_ids(_ids: DynArray[uint256, 20]) -> bool:`"
+!!! description "`AddressProvider.remove_ids(_ids: DynArray[uint256, 20]) -> bool`"
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
@@ -642,9 +645,9 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
     Emits: `EntryRemoved`
 
-    | Input  | Type                    | Description    |
-    | ------ | ----------------------- | -------------- |
-    | `_ids` | `DynArray[uint256, 20]` | IDs to remove. |
+    | Input  | Type                    | Description   |
+    | ------ | ----------------------- | ------------- |
+    | `_ids` | `DynArray[uint256, 20]` | IDs to remove |
 
     ??? quote "Source code"
 
@@ -691,6 +694,195 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
             ```
 
     === "Example"
+        ```shell
+        >>> soon
+        ```
+
+
+---
+
+
+## **Contract Ownership**
+
+### `admin`
+!!! description "`AddressProvider.admin() -> address: view`"
+
+    Getter for the admin of the contract. This address can add, remove or update ID's.
+
+    Returns: admin (`address`).
+
+    ??? quote "Source code"
+
+        === "CurveAddressProvider.vy"
+
+            ```vyper
+            admin: public(address)
+
+            @external
+            def __init__():
+                self.admin  = tx.origin
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> AddressProvider.admin()
+        '0x2d12D0907A388811e3AA855A550F959501d303EE'
+        ```
+
+
+### `future_admin`
+!!! description "`AddressProvider.future_admin() -> address: view`"
+
+    Getter for the future admin of the contract.
+
+    Returns: future admin (`address`).
+
+    ??? quote "Source code"
+
+        === "CurveAddressProvider.vy"
+
+            ```vyper
+            future_admin: public(address)
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> AddressProvider.future_admin()
+        '0x0000000000000000000000000000000000000000'
+        ```
+
+
+### `commit_transfer_ownership`
+!!! description "`AddressProvider.commit_transfer_ownership(_new_admin: address) -> bool`"
+
+    !!!guard "Guarded Methods"
+        This function can only be called by the `admin` of the contract.
+
+    Function to initiate a transfer of contract ownership.
+
+    Returns: true (`bool`).
+
+    Events: `CommitNewAdmin`
+
+    | Input        | Type      | Description                          |    
+    | ------------ | --------- | ------------------------------------ |
+    | `_new_admin` | `address` | Address to transfer the ownership to |
+
+    ??? quote "Source code"
+
+        === "CurveAddressProvider.vy"
+
+            ```vyper
+            event CommitNewAdmin:
+                admin: indexed(address)
+                        
+            future_admin: public(address)
+
+            @external
+            def commit_transfer_ownership(_new_admin: address) -> bool:
+                """
+                @notice Initiate a transfer of contract ownership
+                @dev Once initiated, the actual transfer may be performed three days later
+                @param _new_admin Address of the new owner account
+                @return bool success
+                """
+                assert msg.sender == self.admin  # dev: admin-only function
+                self.future_admin = _new_admin
+
+                log CommitNewAdmin(_new_admin)
+
+                return True
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> soon
+        ```
+
+
+### `apply_transfer_ownership`
+!!! description "`AddressProvider.apply_transfer_ownership() -> bool`"
+
+    !!!guard "Guarded Methods"
+        This function can only be called by the `future_admin` of the contract.
+
+    Function to finalize a transfer of contract ownership.
+
+    Returns: true (`bool`).
+
+    Emits: `NewAdmin`
+
+    ??? quote "Source code"
+
+        === "CurveAddressProvider.vy"
+
+            ```vyper
+            event NewAdmin:
+                admin: indexed(address)
+
+            admin: public(address)
+            future_admin: public(address)
+
+            @external
+            def apply_transfer_ownership() -> bool:
+                """
+                @notice Finalize a transfer of contract ownership
+                @dev May only be called by the next owner
+                @return bool success
+                """
+                assert msg.sender == self.future_admin  # dev: admin-only function
+
+                new_admin: address = self.future_admin
+                self.admin = new_admin
+
+                log NewAdmin(new_admin)
+
+                return True
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> soon
+        ```
+
+
+### `revert_transfer_ownership`
+!!! description "`AddressProvider.revert_transfer_ownership() -> bool`"
+
+    !!!guard "Guarded Methods"
+        This function can only be called by the `admin` of the contract.
+
+    Function to revert the transfer of contract ownership.
+
+    Returns: true (`bool`).
+
+    ??? quote "Source code"
+
+        === "CurveAddressProvider.vy"
+
+            ```vyper
+            admin: public(address)
+            future_admin: public(address)
+
+            @external
+            def revert_transfer_ownership() -> bool:
+                """
+                @notice Revert a transfer of contract ownership
+                @dev May only be called by the current owner
+                @return bool success
+                """
+                assert msg.sender == self.admin  # dev: admin-only function
+                self.future_admin = empty(address)
+
+                return True
+            ```
+
+    === "Example"
+
         ```shell
         >>> soon
         ```

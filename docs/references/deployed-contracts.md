@@ -496,33 +496,19 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 
 ## **Meta Registry**
 
-Contract functionality is documented [here :material-arrow-up-right:](../registry/overview.md).
+Contract functionality is documented here: [`MetaRegistry`](../registry/overview.md)
 
 !!!github
     The source code for `MetaRegistry.vy` and `MetaRegistryL2.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/tree/main/contracts).
 
+Each `MetaRegistry` is integrated into the chain-specific [`AddressProvider`](#address-provider) at `ID = 7`. To get the **most recent contract, users are advised to fetch it directly from the `AddressProvider` contract**. 
 
-| Chain                         | Contract Address |
-| ----------------------------- | ---------------- |
-| :logos-ethereum: `Ethereum`     | [0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC](https://etherscan.io/address/0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC) |
-| :logos-arbitrum: `Arbitrum`     | [0x13526206545e2DC7CcfBaF28dC88F440ce7AD3e0](https://arbiscan.io/address/0x13526206545e2DC7CcfBaF28dC88F440ce7AD3e0) |
-| :logos-optimism: `Optimism`     | [0xc65CB3156225380BEda366610BaB18D5835A1647](https://optimistic.etherscan.io/address/0xc65CB3156225380BEda366610BaB18D5835A1647) |
-| :logos-base: `Base`             | [0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD](https://basescan.org/address/0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD) |
-| :logos-bsc: `BinanceSmartChain` | [0x4C7A5A5D57F98D362f1c00D7135F0dA5B6f82227](https://bscscan.com/address/0x4C7A5A5D57F98D362f1c00D7135F0dA5B6f82227) |
-| :logos-polygon: `Polygon`       | [0x296d2B5C23833A70D07c8fCBB97d846c1ff90DDD](https://polygonscan.com/address/0x296d2B5C23833A70D07c8fCBB97d846c1ff90DDD) |
-| :logos-fantom: `Fantom`         | [0x803de445F0C272Bb6a036495F531a828D538Ab9A](https://ftmscan.com/address/0x803de445F0C272Bb6a036495F531a828D538Ab9A) |
-| :logos-gnosis: `Gnosis`         | [0xb6265659d7e9FEccB59e076e949Da556FC5E1429](https://gnosisscan.io/address/0xb6265659d7e9FEccB59e076e949Da556FC5E1429) |
-| :logos-aurora: `Aurora`         | [0xff02cbd91f57a778bab7218da562594a680b8b61](https://explorer.aurora.dev/address/0xff02cbd91f57a778bab7218da562594a680b8b61) |
-| :logos-celo: `Celo`             | [0x19bd1AB34d6ABB584b9C1D5519093bfAA7f6c7d2](https://celoscan.io/address/0x19bd1AB34d6ABB584b9C1D5519093bfAA7f6c7d2) |
-| :logos-mantle: `Mantle`         | [0x0c59d36b23f809f8b6c7cb4c8c590a0ac103baef](https://explorer.mantle.xyz/address/0x0c59d36b23f809f8b6c7cb4c8c590a0ac103baef) |
-| :logos-linea: `Linea`           | [0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c](https://lineascan.build/address/0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c) |
-| :logos-polygon: `Polygon zkEVM` | [0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c](https://zkevm.polygonscan.com/address/0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c) |
-| :logos-scroll: `Scroll`         | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://scrollscan.com/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf) |
-| :logos-fraxtal: `Fraxtal`       | [0xd125E7a0cEddF89c6473412d85835450897be6Dc](https://fraxscan.com/address/0xd125E7a0cEddF89c6473412d85835450897be6Dc) |
-| :logos-avalanche: `Avalanche`   | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://snowscan.xyz/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf) |
-| :logos-kava: `Kava`             | [0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c](https://kavascan.com/address/0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c) |
-| :logos-xlayer: `X-Layer`        | [0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD](https://www.okx.com/web3/explorer/xlayer/address/0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD) |
-| :logos-zksync: `zk-Sync`        | [0x48e4b27553e7643E10229ea3cba91c188dc524B1](https://era.zksync.network/address/0x48e4b27553e7643E10229ea3cba91c188dc524B1) |
+*For example, to query the `MetaRegistry` contract on Ethereum, one can call `get_address(7)` on the `AddressProvider`:*
+
+```py
+>>> AddressProvider.get_address(7)
+'0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC'
+```
 
 
 ---
@@ -530,33 +516,19 @@ Contract functionality is documented [here :material-arrow-up-right:](../registr
 
 ## **Rate Provider**
 
-Contract functionality is documented [here :material-arrow-up-right:](../integration/rate-provider.md).
+Contract functionality is documented here: [`RateProvider`](../integration/rate-provider.md)
 
 !!!github
-    The source code of the `CurveRateProvider.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).
+    The source code for the `RateProvider.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).  
 
+Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#address-provider) at `ID = 18`.  
 
-| Chain                           | Contract Address |
-| ------------------------------- | ---------------- |
-| :logos-ethereum: `Ethereum`     | [0xA834f3d23749233c9B61ba723588570A1cCA0Ed7](https://etherscan.io/address/0xA834f3d23749233c9B61ba723588570A1cCA0Ed7) |
-| :logos-arbitrum: `Arbitrum`     | [0xcbc1BE39ba277525E774976c61660f29fA75C5a4](https://arbiscan.io/address/0xcbc1BE39ba277525E774976c61660f29fA75C5a4) |
-| :logos-optimism: `Optimism`     | [0x3f4a2BffA78D50CD61401a440526378E2155A8aE](https://optimistic.etherscan.io/address/0x3f4a2BffA78D50CD61401a440526378E2155A8aE) |
-| :logos-base: `Base`             | [0x33e72383472f77B0C6d8F791D1613C75aE2C5915](https://basescan.org/address/0x33e72383472f77B0C6d8F791D1613C75aE2C5915) |
-| :logos-bsc: `BinanceSmartChain` | [0xfb37b8D939FFa77114005e61CFc2e543d6F49A81](https://bscscan.com/address/0xfb37b8D939FFa77114005e61CFc2e543d6F49A81) |
-| :logos-polygon: `Polygon`       | [0xe0B15824862f3222fdFeD99FeBD0f7e0EC26E1FA](https://polygonscan.com/address/0xe0B15824862f3222fdFeD99FeBD0f7e0EC26E1FA) |
-| :logos-fantom: `Fantom`         | [0x440231D99c4e07F7C40317220e37038839C00eA1](https://ftmscan.com/address/0x440231D99c4e07F7C40317220e37038839C00eA1) |
-| :logos-gnosis: `Gnosis`         | [0x149ff1DECfe441cD685306965DB5Ac73f6808851](https://gnosisscan.io/address/0x149ff1DECfe441cD685306965DB5Ac73f6808851) |
-| :logos-aurora: `Aurora`         | [0x21688e843a99b0a47e750e7ddd2b5dafd9269d30](https://explorer.aurora.dev/address/0x21688e843a99b0a47e750e7ddd2b5dafd9269d30) |
-| :logos-celo: `Celo`             | [0x64AFA95e0C3D8410240a4262df9Fd82B12b64eDd](https://celoscan.io/address/0x64AFA95e0C3D8410240a4262df9Fd82B12b64eDd) |
-| :logos-mantle: `Mantle`         | [0x3f445d38e820c010a7a6e33c5f80cbebe6930f61](https://explorer.mantle.xyz/address/0x3f445d38e820c010a7a6e33c5f80cbebe6930f61) |
-| :logos-linea: `Linea`           | [0x64AFA95e0C3D8410240a4262df9Fd82B12b64eDd](https://lineascan.build/address/0x64AFA95e0C3D8410240a4262df9Fd82B12b64eDd) |
-| :logos-polygon: `Polygon zkEVM` | [0x64AFA95e0C3D8410240a4262df9Fd82B12b64eDd](https://zkevm.polygonscan.com/address/0x64AFA95e0C3D8410240a4262df9Fd82B12b64eDd) |
-| :logos-scroll: `Scroll`         | [0xf2eff2Cd0d9C82b7b2f17FbBed703fA7931dB1da](https://scrollscan.com/address/0xf2eff2Cd0d9C82b7b2f17FbBed703fA7931dB1da) |
-| :logos-fraxtal: `Fraxtal`       | [0x07920E98a66e462C2Aa4c8fa6200bc68CA161ea0](https://fraxscan.com/address/0x07920E98a66e462C2Aa4c8fa6200bc68CA161ea0) |
-| :logos-avalanche: `Avalanche`   | [0x3261cA38b2129140c4199C63f7E09830B123CaFc](https://snowscan.xyz/address/0x3261cA38b2129140c4199C63f7E09830B123CaFc) |
-| :logos-kava: `Kava`             | []() |
-| :logos-xlayer: `X-Layer`        | [0xb6845b562f01eb02ef20cbb63553d2a768e5a1cb](https://www.okx.com/web3/explorer/xlayer/address/0xb6845b562f01eb02ef20cbb63553d2a768e5a1cb) |
-| :logos-zksync: `zk-Sync`        | []() |
+*For example, to query the `RateProvider` contract on Ethereum, one can call `get_address(18)` on the `AddressProvider`:*
+
+```py
+>>> AddressProvider.get_address(18)
+'0xA834f3d23749233c9B61ba723588570A1cCA0Ed7'
+```
 
 
 ---
