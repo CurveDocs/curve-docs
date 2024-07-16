@@ -475,6 +475,11 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
     Function that is the primary mechanism for burning coins and can only be called during the `COLLECT` epoch. It calls the `burn` function of the burner contract, which creates a [conditional order](https://github.com/cowprotocol/composable-cow) on CowSwap if one has not already been created. This process effectively "burns" the collected coins by swapping them into the target coin. Additionally, the caller is awarded a [keeper fee](#keepers-fee) for their role in the process.
 
+    !!!colab "Google Colab Notebook"
+        Coin addresses to collect are converted into `uint160` and sorted from small to big.
+
+        A Google Colab notebook that converts addresses into `uint160` and orders them by ascending order can be found here: [:simple-googlecolab: Google Colab Notebook](https://colab.research.google.com/drive/1XBP4YDXEhy2AO3U-qtlbhat4HHhZfUVp?usp=sharing).
+
     | Input       | Type                       | Description                                                |
     | ----------- | -------------------------- | ---------------------------------------------------------- |
     | `_coins`    | `DynArray[ERC20, MAX_LEN]` | Dynamic array of coin addresses sorted in ascending order  |
