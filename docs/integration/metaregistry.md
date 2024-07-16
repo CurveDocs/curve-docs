@@ -10,10 +10,77 @@ The `MetaRegistry` functions as a Curve Pool Registry Aggregator and offers an *
     
     *For example, to query the `MetaRegistry` contract on Ethereum:*
 
-    ```py
+    ```vyper
     >>> AddressProvider.get_address(7)
     '0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC'
     ```
+
+
+*The contract utilizes `RegistryHandlers` interfaces to return data for most of the methods documented in this section:*
+
+??? quote "`_get_registry_handlers_from_pool(_pool: address) -> address[MAX_REGISTRIES]:`"
+
+    ```py
+    # registry and registry handlers are considered to be the same here.
+    # registry handlers are just wrapper contracts that simplify/fix underlying registries
+    # for integrating it into the Metaregistry.
+    interface RegistryHandler:
+        def find_pool_for_coins(_from: address, _to: address, i: uint256 = 0) -> address: view
+        def get_admin_balances(_pool: address) -> uint256[MAX_COINS]: view
+        def get_balances(_pool: address) -> uint256[MAX_COINS]: view
+        def get_base_pool(_pool: address) -> address: view
+        def get_coins(_pool: address) -> address[MAX_COINS]: view
+        def get_coin_indices(_pool: address, _from: address, _to: address) -> (int128, int128, bool): view
+        def get_decimals(_pool: address) -> uint256[MAX_COINS]: view
+        def get_fees(_pool: address) -> uint256[10]: view
+        def get_gauges(_pool: address) -> (address[10], int128[10]): view
+        def get_lp_token(_pool: address) -> address: view
+        def get_n_coins(_pool: address) -> uint256: view
+        def get_n_underlying_coins(_pool: address) -> uint256: view
+        def get_pool_asset_type(_pool: address) -> uint256: view
+        def get_pool_from_lp_token(_lp_token: address) -> address: view
+        def get_pool_name(_pool: address) -> String[64]: view
+        def get_pool_params(_pool: address) -> uint256[20]: view
+        def get_underlying_balances(_pool: address) -> uint256[MAX_COINS]: view
+        def get_underlying_coins(_pool: address) -> address[MAX_COINS]: view
+        def get_underlying_decimals(_pool: address) -> uint256[MAX_COINS]: view
+        def is_meta(_pool: address) -> bool: view
+        def is_registered(_pool: address) -> bool: view
+        def pool_count() -> uint256: view
+        def pool_list(_index: uint256) -> address: view
+        def get_virtual_price_from_lp_token(_addr: address) -> uint256: view
+        def base_registry() -> address: view
+
+    @internal
+    @view
+    def _get_registry_handlers_from_pool(_pool: address) -> address[MAX_REGISTRIES]:
+        """
+        @notice Get registry handler that handles the registry api for a pool
+        @dev sometimes a factory pool can be registered in a manual registry
+            because of this, we always take the last registry a pool is
+            registered in and not the first, as manual registries are first
+            and factories come later
+        @param _pool address of the pool
+        @return registry_handlers: address[MAX_REGISTRIES]
+        """
+
+        pool_registry_handler: address[MAX_REGISTRIES] = empty(address[MAX_REGISTRIES])
+        c: uint256 = 0
+        for i in range(MAX_REGISTRIES):
+
+            if i == self.registry_length:
+                break
+            handler: address = self.get_registry[i]
+
+            if RegistryHandler(handler).is_registered(_pool):
+                pool_registry_handler[c] = handler
+                c += 1
+
+        if pool_registry_handler[0] == empty(address):
+            raise "no registry"
+        return pool_registry_handler
+    ```
+
 
 
 ---
@@ -57,7 +124,7 @@ Because the deployment of liquidity pools is permissionless, a significant numbe
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             @view
             @external
             def find_pools_for_coins(_from: address, _to: address) -> DynArray[address, 1000]:
@@ -152,7 +219,7 @@ Because the deployment of liquidity pools is permissionless, a significant numbe
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             @view
             @external
             def find_pool_for_coins(_from: address, _to: address, i: uint256 = 0) -> address:
@@ -217,7 +284,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # get registry/registry_handler by index, index starts at 0:
             get_registry: public(HashMap[uint256, address])
             registry_length: public(uint256)
@@ -261,7 +328,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # get registry/registry_handler by index, index starts at 0:
             get_registry: public(HashMap[uint256, address])
             registry_length: public(uint256)
@@ -315,7 +382,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             @external
             @view
             def get_pool_name(_pool: address, _handler_id: uint256 = 0) -> String[64]:
@@ -380,7 +447,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -454,7 +521,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -534,7 +601,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -621,7 +688,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -701,7 +768,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -773,7 +840,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -851,7 +918,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             @external
             @view
             def get_pool_from_lp_token(_token: address, _handler_id: uint256 = 0) -> address:
@@ -899,7 +966,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -985,7 +1052,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             @external
             @view
             def is_registered(_pool: address, _handler_id: uint256 = 0) -> bool:
@@ -1052,7 +1119,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -1128,7 +1195,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -1206,7 +1273,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -1286,7 +1353,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -1358,7 +1425,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -1434,7 +1501,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -1510,7 +1577,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -1590,7 +1657,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -1662,7 +1729,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -1735,7 +1802,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -1808,7 +1875,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -1886,7 +1953,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -1986,7 +2053,7 @@ New handlers can be added or existing ones can be updated by the [`owner`](#owne
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             @external
             @view
             def get_registry_handlers_from_pool(_pool: address) -> address[MAX_REGISTRIES]:
@@ -2050,7 +2117,7 @@ New handlers can be added or existing ones can be updated by the [`owner`](#owne
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # registry and registry handlers are considered to be the same here.
             # registry handlers are just wrapper contracts that simplify/fix underlying registries
             # for integrating it into the Metaregistry.
@@ -2091,7 +2158,7 @@ New handlers can be added or existing ones can be updated by the [`owner`](#owne
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # get registry/registry_handler by index, index starts at 0:
             get_registry: public(HashMap[uint256, address])
             registry_length: public(uint256)
@@ -2116,7 +2183,7 @@ New handlers can be added or existing ones can be updated by the [`owner`](#owne
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             # get registry/registry_handler by index, index starts at 0:
             get_registry: public(HashMap[uint256, address])
             registry_length: public(uint256)
@@ -2141,7 +2208,7 @@ New handlers can be added or existing ones can be updated by the [`owner`](#owne
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             address_provider: public(AddressProvider)
 
             @external
@@ -2180,7 +2247,7 @@ New registries can be added by the `owner` of the contract using the [`add_regis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             owner: public(address)
 
             @external
@@ -2213,7 +2280,7 @@ New registries can be added by the `owner` of the contract using the [`add_regis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             @external
             def add_registry_handler(_registry_handler: address):
                 """
@@ -2258,7 +2325,7 @@ New registries can be added by the `owner` of the contract using the [`add_regis
 
         === "MetaRegistry.vy"
 
-            ```py
+            ```vyper
             @external
             def update_registry_handler(_index: uint256, _registry_handler: address):
                 """
