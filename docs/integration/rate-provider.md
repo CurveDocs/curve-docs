@@ -3,7 +3,7 @@
 The `RateProvider` contract is designed to provide rates for token swaps.
 
 !!!github "GitHub"
-    The source code for the `RateProvider.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).  
+    The source code of the `RateProvider.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).  
     
     Additionally, each `RateProvider` contract is **integrated into the chain-specific [`AddressProvider`](./address-provider.md) at `ID = 18`**. To get the **most recent contract, users are advised to fetch it directly from the `AddressProvider`**. 
 
