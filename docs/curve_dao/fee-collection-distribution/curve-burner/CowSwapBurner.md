@@ -1,7 +1,7 @@
 <h1>CowSwapBurner.vy</h1>
 
 !!!github "GitHub"
-    The source code of the `CoWSwapBurner.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/burners/CowSwapBurner.vy).
+    The source code for the `CoWSwapBurner.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/burners/CowSwapBurner.vy).
 
 The `CowSwapBurner` is an essential component of the fee burning architecture, designed to facilitate the efficient and automated exchange of admin fees using [conditional orders](https://docs.cow.fi/cow-protocol/concepts/order-types/programmatic-orders) of the CoWSwap protocol.
 

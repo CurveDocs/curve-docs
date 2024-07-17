@@ -6,7 +6,7 @@ hide:
 <h1>Overview</h1>
 
 !!!github "GitHub"
-    The source code of the new fee collection, burning, and distribution system can be found on [GitHub :material-github:](https://github.com/curvefi/curve-burners).
+    The source code for the contracts of the new fee collection, burning, and distribution system can be found on [GitHub :material-github:](https://github.com/curvefi/curve-burners).
 
 The Curve ecosystem has various sources of revenue. In order to distribute these fees, they need to be burned into a unified token.
 

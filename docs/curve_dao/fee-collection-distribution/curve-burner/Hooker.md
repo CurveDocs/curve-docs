@@ -1,7 +1,7 @@
 <h1>Hooker.vy</h1>
 
 !!!github "GitHub"
-    The source code of the `CoWSwapBurner.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/hooks/Hooker.vy).
+    The source code for the `Hooker.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/hooks/Hooker.vy).
 
 
 The `Hooker` contract is a versatile and essential component within the Curve Finance ecosystem, designed to support and manage hooks that interact with the `FeeCollector` contract. This contract enables the execution of predefined actions (hooks) that can be triggered under specific conditions, such as during the fee collection process. It handles the calculation and distribution of compensations, ensuring that hooks are executed correctly and at the appropriate times.

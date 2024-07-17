@@ -1,7 +1,7 @@
 <h1>FeeCollector.vy</h1>
 
 !!!github "GitHub"
-    The source code of the `FeeCollector.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/FeeCollector.vy).
+    The source code for the `FeeCollector.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/FeeCollector.vy).
 
 The `FeeCollector` is the entry point for the fee burning and distribution mechanism and acts as a universal contract where all admin fees[^1] from various revenue sources within the Curve ecosystem are collected. The two main revenue streams for the DAO are fees collected from liquidity pools and the interest earned through crvUSD markets.
 
