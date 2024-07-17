@@ -1,7 +1,7 @@
 <h1>FeeCollector.vy</h1>
 
 !!!github "GitHub"
-    The source code of the `FeeCollector.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/FeeCollector.vy).
+    The source code for the `FeeCollector.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/FeeCollector.vy).
 
 The `FeeCollector` is the entry point for the fee burning and distribution mechanism and acts as a universal contract where all admin fees[^1] from various revenue sources within the Curve ecosystem are collected. The two main revenue streams for the DAO are fees collected from liquidity pools and the interest earned through crvUSD markets.
 
@@ -64,7 +64,7 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
 
     | Input | Type      | Description                         |
     | ----- | --------- | ----------------------------------- |
-    | `ts`  | `uint256` | Timestamp. Defaults to `msg.sender` |
+    | `ts`  | `uint256` | Timestamp; defaults to `msg.sender` |
 
     ??? quote "Source code"
 
@@ -111,10 +111,10 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
 
     Returns: start and end of the epoch (`uint256`).
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_epoch` | `uint256` | Index of the Epoch enum for which to check start and end for.     |
-    | `_ts` | `uint256` | Timestamp to anochr to. Defaults to the current one (`block.timestamp`).     |
+    | Input    | Type      | Description                                                             |
+    | -------- | --------- | ----------------------------------------------------------------------- |
+    | `_epoch` | `uint256` | Index of the Epoch enum for which to check start and end for            |
+    | `_ts`    | `uint256` | Timestamp to anochr to. Defaults to the current one (`block.timestamp`) |
 
     ??? quote "Source code"
 
@@ -173,10 +173,10 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
 
     Returns: fee of the epoch (`uint256`).
 
-    | Input    | Type      | Description                                  |
-    |----------|-----------|----------------------------------------------|
-    | `_epoch` | `uint256` | Index of the epoch. Defaults to the current epoch. |
-    | `_ts`    | `uint256` | Timestamp. Defaults to `block.timestamp`     |
+    | Input    | Type      | Description                                       |
+    | -------- | --------- | ------------------------------------------------- |
+    | `_epoch` | `uint256` | Index of the epoch; defaults to the current epoch |
+    | `_ts`    | `uint256` | Timestamp; defaults to `block.timestamp`          |
 
     ??? quote "Source code"
 
@@ -232,8 +232,8 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
 
     Emits: `SetMaxFee` at contract initialization
 
-    | Input    | Type      | Description                                              |
-    |----------|-----------|----------------------------------------------------------|
+    | Input    | Type      | Description                                    |
+    | -------- | --------- | ---------------------------------------------- |
     | `_epoch` | `uint256` | Epoch enum for which to check the maximum fee. |
 
     ??? quote "Source code"
@@ -291,10 +291,10 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
 
     Emits: `SetMaxFee`
 
-    | Input    | Type      | Description                                              |
-    |----------|-----------|----------------------------------------------------------|
-    | `_epoch` | `uint256` | Index of the Epoch enum for which to set the maximum fee. |
-    | `_max_fee` | `uint256` | Maximum fee.                                            |
+    | Input      | Type      | Description                                              |
+    | ---------- | --------- | -------------------------------------------------------- |
+    | `_epoch`   | `uint256` | Index of the Epoch enum for which to set the maximum fee |
+    | `_max_fee` | `uint256` | Maximum fee                                              |
 
     ??? quote "Source code"
 
@@ -393,9 +393,9 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
     Emits: `SetTarget`
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_new_target` | `address` | Token address of the new target coin. |
+    | Input         | Type      | Description                          |
+    | ------------- | --------- | ------------------------------------ |
+    | `_new_target` | `address` | Token address of the new target coin |
 
     ??? quote "Source code"
 
@@ -440,9 +440,9 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
     Function to withdraw admin fees from multiple Curve pools. Maximum amount of pools to withdraw from within a single function call is `64`. This function can be called by anyone and at any time. While the fee claiming of new-generation (NG) pools is partly automated, the fees of older pools or crvUSD market need to claimed manually. This function only works on contracts with a `withdraw_admin_fees` function. E.g. accrued fees from crvUSD markets are collected via a `collect_fees` function, therefore this function can not be used to claim those fees into this contract.
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_pools` | `DynArray[address, MAX_LEN]` | Dynamic array containing the pool addresses to claim the admin fees from.     |
+    | Input    | Type                         | Description                                                              |
+    | -------- | ---------------------------- | ------------------------------------------------------------------------ |
+    | `_pools` | `DynArray[address, MAX_LEN]` | Dynamic array containing the pool addresses to claim the admin fees from |
 
     ??? quote "Source code"
 
@@ -475,10 +475,15 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
     Function that is the primary mechanism for burning coins and can only be called during the `COLLECT` epoch. It calls the `burn` function of the burner contract, which creates a [conditional order](https://github.com/cowprotocol/composable-cow) on CowSwap if one has not already been created. This process effectively "burns" the collected coins by swapping them into the target coin. Additionally, the caller is awarded a [keeper fee](#keepers-fee) for their role in the process.
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_coins` | `DynArray[ERC20, MAX_LEN]` | Dynamic array of coin addresses sorted in ascending order.     |
-    | `_receiver` | `address` | Receiver of keeper fee. |
+    !!!colab "Google Colab Notebook"
+        Coin addresses to collect are converted into `uint160` and sorted from small to big.
+
+        A Google Colab notebook that converts addresses into `uint160` and orders them by ascending order can be found here: [:simple-googlecolab: Google Colab Notebook](https://colab.research.google.com/drive/1XBP4YDXEhy2AO3U-qtlbhat4HHhZfUVp?usp=sharing).
+
+    | Input       | Type                       | Description                                                |
+    | ----------- | -------------------------- | ---------------------------------------------------------- |
+    | `_coins`    | `DynArray[ERC20, MAX_LEN]` | Dynamic array of coin addresses sorted in ascending order  |
+    | `_receiver` | `address`                  | Receiver of keeper fee                                     |
 
     ??? quote "Source code"
 
@@ -579,9 +584,9 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
     Returns: true or false (`bool`).
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `can_exchange` | `DynArray[ERC20, MAX_LEN]` | Dynamic array of ERC20 token addresses to check for exchange eligibility. |
+    | Input          | Type                       | Description                                                              |
+    | -------------- | -------------------------- | ------------------------------------------------------------------------ |
+    | `can_exchange` | `DynArray[ERC20, MAX_LEN]` | Dynamic array of ERC20 token addresses to check for exchange eligibility |
 
     ??? quote "Source code"
 
@@ -622,9 +627,9 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
     Function to transfer coins. This function can only be called during the `COLLECT` or `EXCHANGE` epochs and is used to transfer the different admin fee tokens to the burner contract when calling the `collect` function. This function is effectively needed to remove all approvals from previous burners in case of any malfunctioning or the misuse of any collected coins.
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_transfers` | `DynArray[Transfer, MAX_LEN]` | Dynamic array of `Transfer` structs. |
+    | Input        | Type                          | Description                         |
+    | ------------ | ----------------------------- | ----------------------------------- |
+    | `_transfers` | `DynArray[Transfer, MAX_LEN]` | Dynamic array of `Transfer` structs |
 
     *Each `Transfer` struct contains:*
 
@@ -720,10 +725,10 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
     Returns: received keeper fee (`uint256`)
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_hook_inputs` | `DynArray[HookInput, MAX_HOOK_LEN]` | Dynamic array of `HookInput` structs.     |
-    | `_receiver` | `address` | Receiver of keeper fee. |
+    | Input          | Type                                | Description                           |
+    | -------------- | ----------------------------------- | ------------------------------------- |
+    | `_hook_inputs` | `DynArray[HookInput, MAX_HOOK_LEN]` | Dynamic array of `HookInput` structs  |
+    | `_receiver`    | `address`                           | Receiver of keeper fee                |
 
     *Each `HookInput` struct contains:*
 
@@ -871,9 +876,9 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
     Function to transfer coins from the contract with approval. This function is needed for back compatability along with dealing with raw ETH.
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_coin` | `address` | Token address of the new target coin. |
+    | Input   | Type      | Description                          |
+    | ------- | --------- | ------------------------------------ |
+    | `_coin` | `address` | Token address of the new target coin |
 
     ??? quote "Source code"
 
@@ -911,10 +916,10 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
     Function to recover ERC20 tokens or ETH from the contract by transferring them to `_receiver`.
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_recovers` | `DynArray[RecoverInput, MAX_LEN]` | Dynamic array of `RecoverInput` structs.    |
-    | `_receiver` | `address` | Receiver of the recovered coins.     |
+    | Input       | Type                              | Description                             |
+    | ----------- | --------------------------------- | --------------------------------------- |
+    | `_recovers` | `DynArray[RecoverInput, MAX_LEN]` | Dynamic array of `RecoverInput` structs |
+    | `_receiver` | `address`                         | Receiver of the recovered coins         |
 
     *Each `RecoverInput` struct contains:*
 
@@ -1044,9 +1049,9 @@ When setting up a burner or hooker, they need to support a specific interface st
 
     Emits: `SetBurner`
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_new_burner` | `address` | Contract address of the new burner.     |
+    | Input         | Type      | Description                        |
+    | ------------- | --------- | ---------------------------------- |
+    | `_new_burner` | `address` | Contract address of the new burner |
 
     ??? quote "Source code"
 
@@ -1095,9 +1100,9 @@ When setting up a burner or hooker, they need to support a specific interface st
 
     Emits: `SetHooker`
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_new_hooker` | `address` | Address of hooker contract to set.     |
+    | Input         | Type      | Description                       |
+    | ------------- | --------- | --------------------------------- |
+    | `_new_hooker` | `address` | Address of hooker contract to set |
 
     ??? quote "Source code"
 
@@ -1181,7 +1186,7 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
     | Input   | Type      | Description                    |
     | ------- | --------- | ------------------------------ |
-    | `arg0`  | `address` | Address of the coin to check.  |
+    | `arg0`  | `address` | Address of the coin to check   |
 
     ??? quote "Source code"
 
@@ -1220,8 +1225,8 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
     Emits: `SetKilled`
 
     | Input   | Type                                 | Description                                      |
-    |---------|--------------------------------------|--------------------------------------------------|
-    | `_input`| `DynArray[KilledInput, MAX_LEN]`     | Array of `KilledInput` structs.                  |
+    | ------- | ------------------------------------ | ------------------------------------------------ |
+    | `_input | `DynArray[KilledInput, MAX_LEN]`     | Array of `KilledInput` structs                   |
 
     *Each `KilledInput` struct contains:*
 
@@ -1362,9 +1367,9 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
     Emits: `SetOwner`
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_new_owner` | `address` | Address of the new owner. |
+    | Input        | Type      | Description              |
+    | ------------ | --------- | ------------------------ |
+    | `_new_owner` | `address` | Address of the new owner |
 
     ??? quote "Source code"
 
@@ -1405,9 +1410,9 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
     Emits: `SetEmergencyOwner`
 
-    | Input   | Type      | Description                    |
-    | ------- | --------- | ------------------------------ |
-    | `_new_owner` | `address` | Address of the new emergency owner.     |
+    | Input        | Type      | Description                        |
+    | ------------ | --------- | ---------------------------------- |
+    | `_new_owner` | `address` | Address of the new emergency owner |
 
     ??? quote "Source code"
 

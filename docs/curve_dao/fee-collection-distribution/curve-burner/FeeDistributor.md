@@ -2,7 +2,7 @@
 
 Fees used to be distributed to [`veCRV`](https://etherscan.io/address/0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2) in the form of [`3CRV`](https://etherscan.io/address/0x6c3f90f043a72fa612cbac8115ee7e52bde6e490) tokens, the LP token of the [`threepool`](https://etherscan.io/address/0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7), which consists of `USDT`, `USDC`, and `DAI`. After the release of Curve's own stablecoin [`crvUSD`](https://etherscan.io/token/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E) and following a successful DAO vote to change the reward token to it, a new `FeeDistributor` contract was deployed to distribute fees in the form of `crvUSD` tokens.
 
-!!!deploy "Contract Source & Deployment"
+!!!github "GitHub & Deployment"
     There are two `FeeDistributor` contracts deployed on Ethereum, depending on the reward token:
 
     - `3CRV`: [0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc](https://etherscan.io/address/0xa464e6dcda8ac41e03616f95f4bc98a13b8922dc)
@@ -11,7 +11,7 @@ Fees used to be distributed to [`veCRV`](https://etherscan.io/address/0x5f3b5DfE
     !!!warning "Unclaimed 3CRV Tokens"
         Old unclaimed `3CRV` tokens are not lost with the introduction of `crvUSD` as the reward token. They can still be claimed from the old `FeeDistributor` contract and will remain there until they are claimed.
 
-    The source code of the contract is available on [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/FeeDistributor.vy). Note: The source code of both contracts is almost identical. The difference with respect to the first `FeeDistributor` is that the `token` variable was initialized with the crvUSD token address instead of `3CRV`, and the `rounded_timestamp` calculation was modified as follows:
+    The source code for the `FeeDistributor.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/FeeDistributor.vy). Note: The source code of both contracts is almost identical. The difference with respect to the first `FeeDistributor` is that the `token` variable was initialized with the crvUSD token address instead of `3CRV`, and the `rounded_timestamp` calculation was modified as follows:
 
     === "Code Modifications"
 
@@ -50,9 +50,9 @@ The `claim` and `claim_many` functions allow users to claim their share of distr
     
     Emits: `Claimed`
 
-    | Input   | Type      | Description                                       |
-    | ------- | --------- | ------------------------------------------------- |
-    | `_addr` | `address` | Addresses to claim for. Defaults to `msg.sender`. |
+    | Input   | Type      | Description                                      |
+    | ------- | --------- | ------------------------------------------------ |
+    | `_addr` | `address` | Addresses to claim for; defaults to `msg.sender` |
 
     !!!info
         For off-chain integrators, this function can be called as though it were a view method in order to check the claimable amount.
@@ -188,9 +188,9 @@ The `claim` and `claim_many` functions allow users to claim their share of distr
 
     Emits: `Claimed`
 
-    | Input   | Type | Description |
-    | ------- | ---- | ----------- |
-    | `_addr` |  `address[20]` | List of 20 addresses to claim for. When claiming for less than 20 wallets, the remainig addresses need to be set to 'ZERO_ADDRESS'. |
+    | Input   | Type           | Description |
+    | ------- | -------------- | ----------- |
+    | `_addr` |  `address[20]` | List of 20 addresses to claim for. When claiming for less than 20 wallets, the remainig addresses need to be set to 'ZERO_ADDRESS' |
 
     ??? quote "Source code"
 
@@ -327,9 +327,9 @@ The `claim` and `claim_many` functions allow users to claim their share of distr
 
     Return: true (`bool`).
 
-    | Input   | Type      | Description                         |
-    | ------- | --------- | ----------------------------------- |
-    | `_coin` | `address` | Address of the coin being received. |
+    | Input   | Type      | Description                        |
+    | ------- | --------- | ---------------------------------- |
+    | `_coin` | `address` | Address of the coin being received |
 
     ??? quote "Source code"
 
@@ -449,9 +449,9 @@ Checkpointing is a critical process in the contract that ensures accurate tracki
 
     Returns: reward tokens added for claiming (`uint256`).
 
-    | Input  | Type      | Description                   |
-    | ------ | --------- | ----------------------------- |
-    | `arg0` | `address` | Timestamp of the epoch start. |
+    | Input  | Type      | Description                  |
+    | ------ | --------- | ---------------------------- |
+    | `arg0` | `address` | Timestamp of the epoch start |
 
     ??? quote "Source code"
 
@@ -665,9 +665,9 @@ Checkpointing the ve-Supply is an essential process to ensure fair reward distri
 
     Returns: timestamp (`uin256`).
 
-    | Input  | Type      | Description           |
-    | ------ | --------- | --------------------- |
-    | `arg0` | `address` | Address to check for. |
+    | Input  | Type      | Description          |
+    | ------ | --------- | -------------------- |
+    | `arg0` | `address` | Address to check for |
 
     ??? quote "Source code"
 
@@ -691,10 +691,10 @@ Checkpointing the ve-Supply is an essential process to ensure fair reward distri
 
     Returns: veCRV balance (`uint256`).
 
-    | Input        | Type      | Description                             |
-    | ------------ | --------- | --------------------------------------- |
-    | `_user`      | `address` | Address to query the veCRV balance for. |
-    | `_timestamp` | `uint256` | Timestamp.                              |
+    | Input        | Type      | Description                            |
+    | ------------ | --------- | -------------------------------------- |
+    | `_user`      | `address` | Address to query the veCRV balance for |
+    | `_timestamp` | `uint256` | Timestamp                              |
 
     ??? quote "Source code"
 
@@ -731,9 +731,9 @@ Checkpointing the ve-Supply is an essential process to ensure fair reward distri
 
     Returns: vecrv supply (`uint256`).
 
-    | Input  | Type      | Description                   |
-    | ------ | --------- | ----------------------------- |
-    | `arg0` | `uint256` | Timestamp of the epoch start. |
+    | Input  | Type      | Description                  |
+    | ------ | --------- | ---------------------------- |
+    | `arg0` | `uint256` | Timestamp of the epoch start |
 
     ??? quote "Source code"
 
@@ -858,9 +858,9 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
     Returns: true (`bool`).
 
-    | Input   | Type      | Description        |
-    | ------- | --------- | ------------------ |
-    | `_coin` | `address` | Tokens to recover. |
+    | Input   | Type      | Description       |
+    | ------- | --------- | ----------------- |
+    | `_coin` | `address` | Tokens to recover |
 
     ??? quote "Source code"
 
@@ -1134,6 +1134,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
         '0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2'
         ```
 
+
 ### `token`
 !!! description "`FeeDistributor.token() -> address: view`"
 
@@ -1187,9 +1188,9 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
     Getter for the user epoch of an address. This value increments by one each time rewards are claimed.$$
 
-    | Input  | Type      | Description                        |
-    | ------ | --------- | ---------------------------------- |
-    | `arg0` | `address` | Address to get the user epoch for. |
+    | Input  | Type      | Description                       |
+    | ------ | --------- | --------------------------------- |
+    | `arg0` | `address` | Address to get the user epoch for |
 
     ??? quote "Source code"
 
