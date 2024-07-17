@@ -30,6 +30,16 @@ struct AddressInfo:
     last_modified: uint256
 ```
 
+!!!colab "Google Colab Notebook"
+    A Google Colab notebook that provides a full mapping of IDs by iterating over all `ids` via calling the `get_id_info` can be found here: [:simple-googlecolab: Google Colab Notebook](https://colab.research.google.com/drive/1PnvfX5E_F7_VCsmkzHrN0_OiJNsUmx9w?usp=sharing)
+    
+    *The notebook is compatible with querying IDs for different chains and returns a table as shown below:*
+
+    <figure markdown="span">
+        ![](../assets/images/integration/id_mapping_short.png){ width="800" }
+        <figcaption></figcaption>
+    </figure>
+
 
 ### `ids`
 !!! description "`AddressProvider.ids() -> DynArray[uint256, 1000]`"
