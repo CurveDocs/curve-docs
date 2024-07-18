@@ -329,4 +329,13 @@ nav:
       - Curve Stablecoin: references/whitepapers/curve-stablecoin.md
     - Useful Resources: references/useful.md
     - Notebooks: references/notebooks.md
-    - Deployment Addresses: references/deployed-contracts.md
+
+
+  - Deployment Addresses:
+    - Curve DAO: deployments/dao.md
+    - Cross-Chain Gauges & Governance: deployments/xgov-xgauges.md
+    - AMM: deployments/amm.md
+    - Router & Zaps: deployments/router-zaps.md
+    - Curve Stablecoin: deployments/crvusd.md
+    - Curve Lending: deployments/lending.md
+    - Integration: deployments/integration.md
