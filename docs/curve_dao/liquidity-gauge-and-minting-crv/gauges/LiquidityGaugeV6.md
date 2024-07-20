@@ -853,7 +853,7 @@ $$\text{lim} = \text{lim} + L \times \frac{\text{voting_balance}}{\text{voting_t
 
 $$\text{lim} = \min(l, \text{lim})$$
 
-$$\text{boost factor} = \frac{lim}{l}$$
+$$\text{boost factor} = \frac{lim}{l \times 0.4}$$
 
 *with:*
 
