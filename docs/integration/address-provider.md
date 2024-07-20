@@ -4,8 +4,7 @@
 The `AddressProvider` serves as the **entry point contract for Curve's various registries** and is deployed on all chains where Curve is operational. The contract holds the most important contract addresses.
 
 !!!github "GitHub"
-    Source code of the `AddressProvider.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/AddressProviderNG.vy).  
-    A list of all deployed `AddressProvider` can be found [here](../references/deployed-contracts.md#address-provider).
+    Source code of the `AddressProvider.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/AddressProviderNG.vy). A list of all deployed contracts can be found [here](../references/deployed-contracts.md#address-provider).
 
 
 !!!warning "Contract Upgradability"
