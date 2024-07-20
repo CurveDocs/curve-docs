@@ -4,8 +4,7 @@
 The `AddressProvider` serves as the **entry point contract for Curve's various registries** and is deployed on all chains where Curve is operational. The contract holds the most important contract addresses.
 
 !!!github "GitHub"
-    Source code of the `AddressProvider.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/AddressProviderNG.vy).  
-    A list of all deployed `AddressProvider` can be found [here](../references/deployed-contracts.md#address-provider).
+    Source code of the `AddressProvider.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/AddressProviderNG.vy). A list of all deployed contracts can be found [here](../references/deployed-contracts.md#address-provider).
 
 
 !!!warning "Contract Upgradability"
@@ -29,6 +28,16 @@ struct AddressInfo:
     version: uint256
     last_modified: uint256
 ```
+
+!!!colab "Google Colab Notebook"
+    A Google Colab notebook that provides a full mapping of IDs by iterating over all `ids` via calling the `get_id_info` can be found here: [:simple-googlecolab: Google Colab Notebook](https://colab.research.google.com/drive/1PnvfX5E_F7_VCsmkzHrN0_OiJNsUmx9w?usp=sharing)
+    
+    *The notebook is compatible with querying IDs for different chains and returns a table as shown below:*
+
+    <figure markdown="span">
+        ![](../assets/images/integration/id_mapping.png){ width="800" }
+        <figcaption></figcaption>
+    </figure>
 
 
 ### `ids`
@@ -61,9 +70,12 @@ struct AddressInfo:
             ```
 
     === "Example"
+
+        This method returns all populated IDs.
+
         ```shell
         >>> AddressProvider.ids()
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13, 14, 15, 16, 17, 19, 21, 22, 23
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13, 14, 15, 16, 17, 19, 21, 22, 23, 25, 18
         ```
 
 
@@ -72,35 +84,7 @@ struct AddressInfo:
 
     Getter function to retrieve informations about a specific ID.
 
-    Returns: struct containing of the addr (`address`), description (`String[256]`), version (`uint256`) and last_modified (`uint256`). 
-
-        Descriptions:
-        0: Stableswap Custom Pool Registry
-        1: PoolInfo Getters
-        2: Exchange Router
-        3: Stableswap Metapool Factory
-        4: Fee Distributor
-        5: Cryptoswap Custom Pool Registry
-        6: Twocrypto Factory
-        7: Metaregistry
-        8: Stableswap crvUSD Factory
-        9: 
-        10: 
-        11: TricryptoNG Factory
-        12: StableswapNG Factory
-        13: TwocryptoNG Factory
-        14: Stableswap Calculations Contract
-        15: Cryptoswap calculations Contract
-        16: LLAMMA Factory crvUSD
-        17: LLAMMA Factory OneWayLending
-        18: Rate Provider
-        19: CRV Token
-        20: Gauge Factory
-        21: Ownership Admin
-        22: Parameter Admin
-        23: Emergency Admin
-        24: CurveDAO Vault
-        25: crvUSD Token
+    Returns: `AddressInfo` struct containing the addr (`address`), description (`String[256]`), version (`uint256`) and last_modified (`uint256`). 
 
     | Input  | Type      | Description                    |
     | ------ | --------- | ------------------------------ |
@@ -121,12 +105,15 @@ struct AddressInfo:
             ```
 
     === "Example"
+
+        This method returns the address of the contract, the description, the ID version (which is incremented by 1 each time the ID is updated), and the timestamp of the last modification. When calling the function for an unpopulated ID, it returns an empty `AddressInfo` struct.
+
         ```shell
         >>> AddressProvider.get_id_info(0)
-        '0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5,Stableswap Custom Pool Registry,1,1712655599'
+        '0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5, Stableswap Custom Pool Registry, 1, 1712655599'
 
         >>> AddressProvider.get_id_info(9)
-        '0x0000000000000000000000000000000000000000,,0,0'
+        '0x0000000000000000000000000000000000000000, '', 0, 0'
         ```
 
 
@@ -167,6 +154,9 @@ struct AddressInfo:
             ```
 
     === "Example"
+
+        This method returns the address of an ID.
+
         ```shell
         >>> AddressProvider.get_address(0)
         '0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5'
@@ -193,6 +183,9 @@ struct AddressInfo:
             ```
 
     === "Example"
+
+        This method checks if a certain ID exists.
+
         ```shell
         >>> AddressProvider.check_id_exists(0)
         'true'
@@ -217,6 +210,9 @@ struct AddressInfo:
             ```
 
     === "Example"
+
+        This method returns the total number of IDs added to the `AddressProvider`.
+
         ```shell
         >>> AddressProvider.num_entries()
         20
@@ -228,8 +224,12 @@ struct AddressInfo:
 
 ## **Adding, Removing and Updating IDs**
 
-IDs can be added, removed, or adjusted by the `admin` of the contract.
+IDs can be added, removed, or adjusted by the `admin` of the contract. 
 
+!!!warning "Contract Upgradability"
+    The `AddressProvider` contract is managed by an `admin` who is currently an individual at Curve, rather than the Curve DAO[^1]. This **admin has the ability to update, add or remove new IDs** within the contract. When integrating this contract into systems or relying on it for critical components, it is essential to consider that these **IDs and their associated addresses can be modified at any time**.
+
+    [^1]: Reasoning: Due to the nature of the contract (it does not hold any user funds or has any monetary influence), it is not considered a crucial contract. It should only be used as a pure informational source. Additionally, the Curve ecosystem changes very rapidly and therefore requires fast updates for such a contract. Always putting up a DAO vote to change IDs would not be feasible.
 
 
 ### `update_id`
@@ -703,6 +703,9 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
 
 ## **Contract Ownership**
+
+The ownership of the contract follows the classic two-step ownership model used across most Curve contracts.
+
 
 ### `admin`
 !!! description "`AddressProvider.admin() -> address: view`"
