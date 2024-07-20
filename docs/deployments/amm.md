@@ -9,7 +9,7 @@ search:
 # **Stableswap-NG**
 
 !!!deploy "Source Code"
-    Source code is available on [GitHub](https://github.com/curvefi/stableswap-ng).
+    Source code for the `stableswap-ng` contracts is available on [GitHub](https://github.com/curvefi/stableswap-ng).
 
 !!!warning "Implementations"
     Every Factory contract has plain- and metapool implementations. The Factory on Ethereum has an additional gauge implementation. **Implementation contracts are upgradable.** They can be either replaced or additional implementation contracts can be set. Therefore, please **always make sure to check the most recent ones**.
@@ -263,8 +263,9 @@ search:
 
 # **TwoCrypto-NG**
 
-!!!deploy "Source Code"
-    Source code available on [GitHub](https://github.com/curvefi/twocrypto-ng).
+!!!github "GitHub"
+    Source code for the `twocrypto-ng` contracts is available on [GitHub](https://github.com/curvefi/twocrypto-ng).
+
 
 !!!warning "Implementations"
     Every Factory contract has pool implementations. The Factory on Ethereum has an additional gauge implementation. **Implementation contracts are upgradable.** They can be either replaced or additional implementation contracts can be set. Therefore, please **always make sure to check the most recent ones**.
@@ -496,8 +497,8 @@ search:
 
 # **Tricrypto-NG**
 
-!!!deploy "Source Code"
-    Source code is available on [GitHub](https://github.com/curvefi/tricrypto-ng).
+!!!github "GitHub"
+    Source code for the `tricrypto-ng` contracts is available on [GitHub](https://github.com/curvefi/tricrypto-ng).
 
 !!!warning "Implementations"
     Every Factory contract has pool, math and views implementations. The Factory on Ethereum has an additional gauge implementation. **Implementation contracts are upgradable.** They can be either replaced or additional implementation contracts can be set. Therefore, please **always make sure to check the most recent ones**.

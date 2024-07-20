@@ -10,8 +10,8 @@ search:
 
 Routers that performs up to 5 swaps in a single transaction and can do estimations with `get_dy` and `get_dx`.
 
-!!!deploy "Source Code"
-    Source code is available on [GitHub](https://github.com/curvefi/curve-router-ng/tree/master/contracts).
+!!!github
+    The source code for the router contracts can be found on [:material-github: GitHub](https://github.com/curvefi/curve-router-ng/tree/master/contracts).
 
 | Chain                             | Contract Address |
 | --------------------------------- | :--------------: |
@@ -39,7 +39,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 *Zap for stable pools to `calc_token_amount` taking fees into account and to `get_dx`.*
 
 !!!github
-    `StableCalcZaps` source code is available on [:material-github: GitHub](https://github.com/curvefi/curve-zaps).
+    The source code for `StableCalcZaps.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/curve-zaps/tree/master/contracts).
 
 
 | Chain | Contract Address |
@@ -68,7 +68,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 *Zap for crypto pools to `get_dx`.*
 
 !!!github
-    `DepositAndStakeZaps` source code is available on [:material-github: GitHub](https://github.com/curvefi/deposit-and-stake-zap).
+    The source code for `CryptoCalcZap.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/curve-zaps/tree/master/contracts).
+
 
 | Chain | Contract Address |
 | ----- | :--------------: |
@@ -96,7 +97,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 *Zap to add liquidity to pool and deposit into gauge in one transaction.*
 
 !!!github
-    `StableCalcZaps` source code is available on [:material-github: GitHub](https://github.com/curvefi/curve-zaps).
+    The source code for `DepositAndStakeZap.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/deposit-and-stake-zap/tree/master/contracts).
 
 
 | Chain | Contract Address |
@@ -124,7 +125,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 *Zap to add liquidity and remove liquidity into ng-metapools.*
 
 !!!github
-    `MetaZapNG` source code is available on [:material-github: GitHub](https://github.com/curvefi/stableswap-ng/blob/main/contracts/main/MetaZapNG.vy).
+    The source code for `MetaZapNG.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/stableswap-ng/blob/main/contracts/main/MetaZapNG.vy).
 
 
 | Chain | Contract Address |

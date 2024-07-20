@@ -8,8 +8,8 @@ search:
 
 # **Core Contracts**
 
-!!!deploy "Source Code"
-    Source code of the core contracts is available on [GitHub](https://github.com/curvefi/curve-dao-contracts).
+!!!github
+    The source code for the core dao-contracts can be found on [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts).
 
 *Here is a list of contract deployments that are used in the Curve DAO:*
 
@@ -266,8 +266,8 @@ Burners are a crucial element of the fee payout system in Curve. They convert th
 
 # **Curve X-GOV**
 
-!!!deploy "Source Code"
-    Source code is available on [GitHub](https://github.com/curvefi/curve-xgov).
+!!!github
+    The source code for the `curve-xgov` contracts can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xgov).
 
 
 **:logos-arbitrum: Arbitrum**

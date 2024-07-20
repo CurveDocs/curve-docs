@@ -8,8 +8,8 @@ search:
 
 ## **Curve Lending**
 
-!!!deploy "Source Code"
-    Source code for all lending-relevant contracts is available on [GitHub](https://github.com/curvefi/curve-stablecoin/tree/lending).
+!!!github
+    The source code for all lending-relevant contracts can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/tree/lending).
 
 !!!warning "Implementations"
     **Implementation contracts are upgradable.** They can be either replaced or additional implementation contracts can be set. Therefore, please **always make sure to check the most recent ones**.

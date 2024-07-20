@@ -11,7 +11,7 @@ search:
 For testing in production purposes, several contract deployments have taken place. Please ensure that you are using the correct and latest version. The latest deployment logs can be found [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
 
 !!!github "GitHub"
-    Source code is available on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin).
+    Source code for all `curve-stablecoin` contracts is available on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin).
 
 !!!warning "Implementations"
     **Implementation contracts are upgradable.** They can be either replaced or additional implementation contracts can be set. Therefore, please **always make sure to check the most recent ones**.
