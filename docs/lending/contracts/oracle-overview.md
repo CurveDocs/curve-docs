@@ -29,7 +29,7 @@ hide:
 
     ---
 
-    EMA oracle for collateral tokens using **a single Curve pool to fetch the price oracle, which is then adjusted by the rate of a vault**.
+    EMA oracle for collateral tokens using **a single Curve pool to fetch the price oracle, which is then adjusted by the redemption rate of a vault**.
 
     [:octicons-arrow-right-24: `CryptoFromPoolVault`](./cryptofrompoolvault.md)
 
