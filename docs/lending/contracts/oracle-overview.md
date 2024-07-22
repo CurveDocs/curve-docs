@@ -13,7 +13,7 @@ hide:
 
     ---
 
-    EMA oracle for collateral tokens **using a single Curve pool to fetch the price oracle from**. The `OneWayLendingFactory` can automatically deploy this kind of oracle when deploying a new market.
+    EMA oracle for collateral tokens using **a single Curve pool to fetch the price oracle from**. The `OneWayLendingFactory` can automatically deploy this kind of oracle when deploying a new market.
 
     [:octicons-arrow-right-24: `CryptoFromPool`](./cryptofrompool.md)
 
@@ -21,9 +21,17 @@ hide:
 
     ---
 
-    EMA oracle for collateral tokens using **multiple different Curve pool oracles chained together**. This oracle contract can also make use of rates.
+    EMA oracle for collateral tokens using **multiple different Curve pool oracles chained together**. This oracle contract can also make use of `stored_rates` from `stableswap-ng` pools.
 
     [:octicons-arrow-right-24: `CryptoFromPoolsRate`](./cryptofrompoolsrate.md)
+
+-   **Oracle from a Curve Pool + Vault**
+
+    ---
+
+    EMA oracle for collateral tokens using **a single Curve pool to fetch the price oracle, which is then adjusted by the rate of a vault**.
+
+    [:octicons-arrow-right-24: `CryptoFromPoolVault`](./cryptofrompoolvault.md)
 
 </div>
 
