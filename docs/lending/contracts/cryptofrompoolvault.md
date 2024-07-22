@@ -10,8 +10,10 @@ These kinds of oracle contracts **need to be deployed manually**, as there is cu
     - [`CryptoFromPoolVault.vy`](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/price_oracles/CryptoFromPoolVault.vy)
     - [`CryptoFromPoolVaultWAgg.vy`](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/price_oracles/CryptoFromPoolVaultWAgg.vy)
 
+    !!! warning "Oracle Suitability"
+        `CryptoFromPoolVaultWAgg.vy` is only suitable for vaults which cannot be affected by [donation attacks](https://mixbytes.io/blog/overview-of-the-inflation-attack).
 
-!!!warning "Oracle Immutability"
+!!!danger "Oracle Immutability"
     The oracle contracts are fully immutable. Once deployed, they cannot change any parameters, stop the price updates, or alter the pools used to calculate the prices. However, because the contract relies on other pools, it's important to keep in mind that changing parameters in the pool, such as the periodicity of the oracle, can influence these oracle contracts. All relevant data required for the oracle to function is passed into the `__init__` function during the deployment of the contract.
 
     ???quote "`__init__`"
