@@ -1,7 +1,6 @@
 <h1>CryptoFromPool</h1>
 
-Oracle contract for a collateral token that **fetches its price from a single Curve pool**. The first oracle contracts were deployed without considering the [aggregated price of crvUSD](https://etherscan.io/address/0x18672b1b0c623a30089A280Ed9256379fb0E4E62), but experience showed that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
-
+Oracle contract for a collateral token that **fetches its price from a single Curve pool**. The first oracle contracts were deployed without considering the [aggregated price of crvUSD](../../crvUSD/priceaggregator.md), but experience showed that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
 
 !!!github "GitHub"
     The source code of the following price oracle contracts can be found on :material-github: GitHub:
@@ -11,11 +10,13 @@ Oracle contract for a collateral token that **fetches its price from a single Cu
 
 The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](./oneway-factory.md#create_from_pool) method which deploys the full lending market infrastucture along with a price oracle using a [`stableswap-ng`](../../stableswap-exchange/stableswap-ng/pools/oracles.md), [`twocrypto-ng`](../../cryptoswap-exchange/twocrypto-ng/overview.md) or [`tricrypto-ng`](../../cryptoswap-exchange/tricrypto-ng/pools/oracles.md) pool. These pools all have a suitable exponential moving-average (EMA) oracle, which can be used in lending markets.
 
-!!!warning "Oracle Immutability"
+!!!danger "Oracle Immutability"
     The oracle contracts are fully immutable. Once deployed, they cannot change any parameters, stop the price updates, or alter the pools used to calculate the prices. All relevant data required for the oracle to function is passed into the `__init__` function during the deployment of the contract.
 
     ???quote "`__init__`"
-        
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CrpyotFromPool.vy"
 
             ```python
@@ -98,7 +99,7 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
 ---
 
 
-## **Ethereum**
+## **Oracle Price**
 
 
 ### `price`
@@ -111,6 +112,8 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
     ??? quote "Source code"
 
         The `CryptoFromPool.vy` oracle contract does not take the aggregated price of crvUSD from the [`PriceAggregator.vy` contract](../../crvUSD/priceaggregator.md) into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolWAgg.vy` oracle contract.
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPool.vy"
 
@@ -196,6 +199,8 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
     ??? quote "Source code"
 
         The `CryptoFromPool.vy` oracle contract does not take the aggregated price of crvUSD from the [`PriceAggregator.vy` contract](../../crvUSD/priceaggregator.md) into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolWAgg.vy` oracle contract.
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPool.vy"
 
@@ -299,6 +304,11 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
         ```
 
 
+---
+
+
+## **Contract Info Methods**
+
 ### `POOL`
 !!! description "`CryptoFromPool.POOL() -> address: view`"
 
@@ -307,6 +317,8 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
     Returns: liquidity pool (`address`).
 
     ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPool.vy"
 
@@ -348,6 +360,57 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
         ```
 
 
+### `N_COINS`
+!!! description "`CryptoFromPool.N_COINS() -> uint256: view`"
+
+    Getter for the total number of coins in the liquidity pool.
+
+    Returns: coins count (`uint256`).
+
+    ??? quote "Source code"
+
+        === "CryptoFromPool.vy"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
+            ```vyper
+            N_COINS: public(immutable(uint256))
+
+            @external
+            def __init__(
+                    pool: Pool,
+                    N: uint256,
+                    borrowed_ix: uint256,
+                    collateral_ix: uint256
+                ):
+                assert borrowed_ix != collateral_ix
+                assert borrowed_ix < N
+                assert collateral_ix < N
+                POOL = pool
+                N_COINS = N
+                BORROWED_IX = borrowed_ix
+                COLLATERAL_IX = collateral_ix
+
+                no_argument: bool = False
+                if N == 2:
+                    success: bool = False
+                    res: Bytes[32] = empty(Bytes[32])
+                    success, res = raw_call(
+                        pool.address,
+                        _abi_encode(empty(uint256), method_id=method_id("price_oracle(uint256)")),
+                        max_outsize=32, is_static_call=True, revert_on_failure=False)
+                    if not success:
+                        no_argument = True
+                NO_ARGUMENT = no_argument
+            ```
+
+    === "Example"
+        ```shell
+        >>> CryptoFromPool.N_COINS()
+        3
+        ```
+
+
 ### `BORROWED_IX`
 !!! description "`CryptoFromPool.BORROWED_IX() -> uint256: view`"
 
@@ -356,6 +419,8 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
     Returns: coin index (`uint256`).
 
     ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPool.vy"
 
@@ -406,6 +471,8 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPool.vy"
 
             ```vyper
@@ -446,55 +513,6 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
         ```
 
 
-### `N_COINS`
-!!! description "`CryptoFromPool.N_COINS() -> uint256: view`"
-
-    Getter for the total number of coins in the liquidity pool.
-
-    Returns: coins count (`uint256`).
-
-    ??? quote "Source code"
-
-        === "CryptoFromPool.vy"
-
-            ```vyper
-            N_COINS: public(immutable(uint256))
-
-            @external
-            def __init__(
-                    pool: Pool,
-                    N: uint256,
-                    borrowed_ix: uint256,
-                    collateral_ix: uint256
-                ):
-                assert borrowed_ix != collateral_ix
-                assert borrowed_ix < N
-                assert collateral_ix < N
-                POOL = pool
-                N_COINS = N
-                BORROWED_IX = borrowed_ix
-                COLLATERAL_IX = collateral_ix
-
-                no_argument: bool = False
-                if N == 2:
-                    success: bool = False
-                    res: Bytes[32] = empty(Bytes[32])
-                    success, res = raw_call(
-                        pool.address,
-                        _abi_encode(empty(uint256), method_id=method_id("price_oracle(uint256)")),
-                        max_outsize=32, is_static_call=True, revert_on_failure=False)
-                    if not success:
-                        no_argument = True
-                NO_ARGUMENT = no_argument
-            ```
-
-    === "Example"
-        ```shell
-        >>> CryptoFromPool.N_COINS()
-        3
-        ```
-
-
 ### `NO_ARGUMENT`
 !!! description "`CryptoFromPool.NO_ARGUMENT() -> bool: view`"
 
@@ -504,6 +522,8 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
     Returns: true or false (`bool`)
 
     ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPool.vy"
 
@@ -542,6 +562,39 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
         ```shell
         >>> CryptoFromPool.NO_ARGUMENT()
         'False'
+        ```
+
+
+### `AGG`
+!!! description "`CryptoFromPoolWAgg.AGG() -> address: view`"
+
+    !!!info
+        This `AGG` storage variable is only used within the `CryptoFromPoolWAgg` contracts.
+
+    Getter for the crvUSD `PriceAggregator` contract. This value is immutable and set at contract initialization.
+
+    Returns: `PriceAggregator` (`address`).
+
+    ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+        
+        === "CryptoFromPoolWAgg.vy"
+
+            ```python
+            interface StableAggregator:
+                def price() -> uint256: view
+                def price_w() -> uint256: nonpayable
+                def stablecoin() -> address: view
+
+            AGG: public(immutable(StableAggregator))
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> CryptoFromPoolWAgg.AGG()
+        '0x18672b1b0c623a30089A280Ed9256379fb0E4E62'
         ```
 
 
@@ -588,6 +641,8 @@ def _raw_price() -> uint256:
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPool.vy"
 
             ```vyper
@@ -609,6 +664,8 @@ def _raw_price() -> uint256:
     Returns: time to wait (`uint256`).
 
     ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPool.vy"
 

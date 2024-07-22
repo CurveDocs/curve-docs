@@ -1,8 +1,8 @@
 <h1>CryptoFromPoolsRate</h1>
 
-This oracle contract **chains together two oracles from two different Curve liquidity pools and optionally applies `stored_rates` to tokens with an existing rate oracle**. By chaining oracles together, it facilitates the creation of lending oracle contracts without requiring the collateral asset to be paired directly against crvUSD. The first oracle contracts were deployed without considering the [aggregated price of crvUSD](https://etherscan.io/address/0x18672b1b0c623a30089A280Ed9256379fb0E4E62), but experience has shown that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
+This oracle contract **chains together two oracles from two different Curve liquidity pools and optionally applies `stored_rates` to tokens with an existing rate oracle**. By chaining oracles together, it facilitates the creation of lending oracle contracts without requiring the collateral asset to be paired directly against crvUSD. The first oracle contracts were deployed without considering the [aggregated price of crvUSD](../../crvUSD/priceaggregator.md), but experience has shown that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
 
-These kinds of oracle contracts **need to be deployed manually**, as there is currently no Factory to do so.
+These kinds of oracle contracts **need to be deployed manually**, as there is currently no `Factory` to do so.
 
 
 !!!github "GitHub"
@@ -12,7 +12,7 @@ These kinds of oracle contracts **need to be deployed manually**, as there is cu
     - [`CryptoFromPoolsRateWAgg.vy`](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/price_oracles/CryptoFromPoolsRateWAgg.vy)
 
 
-!!!warning "Oracle Immutability"
+!!!danger "Oracle Immutability"
     The oracle contracts are fully immutable. Once deployed, they cannot change any parameters, stop the price updates, or alter the pools used to calculate the prices. All relevant data required for the oracle to function is passed into the `__init__` function during the deployment of the contract.
 
     ???quote "`__init__`"
@@ -192,6 +192,8 @@ The price is determined by combining two different oracle prices. When necessary
 
         The `CryptoFromPoolsRate.vy` oracle contract does not take the aggregated price of crvUSD from the [`PriceAggregator.vy` contract](../../crvUSD/priceaggregator.md) into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolsRateWAgg.vy` oracle contract.
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolsRate.vy"
 
             ```python
@@ -356,6 +358,8 @@ The price is determined by combining two different oracle prices. When necessary
     ??? quote "Source code"
 
         The `CryptoFromPoolsRate.vy` oracle contract does not take the aggregated price of crvUSD from the [`PriceAggregator.vy` contract](../../crvUSD/priceaggregator.md) into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolsRateWAgg.vy` oracle contract.
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPoolsRate.vy"
 
@@ -557,6 +561,8 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolsRate.vy"
 
             ```python
@@ -621,6 +627,8 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolsRate.vy"
 
             ```python
@@ -656,6 +664,8 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
     Returns: cached timestamp (`uint256`)
 
     ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPoolsRate.vy"
 
@@ -697,6 +707,8 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolsRate.vy"
 
             ```python
@@ -718,6 +730,61 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
 ## **Contract Info Methods**
 
+### `POOLS`
+!!! description "`CryptoFromPoolsRate.POOLS(arg0: uint256) -> address: view`"
+
+    Getter for the liquidity pools used in the oracle contract.
+
+    Returns: pool contract (`address`).
+
+    | Input  | Type      | Description |
+    | ------ | --------- | ----------- |
+    | `arg0` | `uint256` | Pool index. |
+
+    ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
+        === "CryptoFromPoolsRate.vy"
+
+            ```python
+            POOLS: public(immutable(DynArray[Pool, MAX_POOLS]))
+            ```
+
+    === "Example"
+        ```shell
+        >>> CryptoFromPoolsRate.POOLS(0)
+        '0xEEda34A377dD0ca676b9511EE1324974fA8d980D'
+
+        >>> CryptoFromPoolsRate.POOLS(1)
+        '0x2889302a794dA87fBF1D6Db415C1492194663D13'
+        ```
+
+
+### `POOL_COUNT`
+!!! description "`CryptoFromPoolsRate.POOL_COUNT() -> uint256: view`"
+
+    Getter for the total amount of pools used in the oracle contract.
+
+    Returns: amount of pools (`uint256`).
+
+    ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+        
+        === "CryptoFromPoolsRate.vy"
+
+            ```python
+            POOL_COUNT: public(immutable(uint256))
+            ```
+
+    === "Example"
+        ```shell
+        >>> CryptoFromPoolsRate.POOL_COUNT()
+        2
+        ```
+
+
 ### `BORROWED_IX`
 !!! description "`CryptoFromPoolsRate.BORROWED_IX(arg0: uint256) -> uint256: view`"
 
@@ -730,6 +797,8 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
     | `arg0` | `uint256` | Pool index to check `BORROWED_IX` for. |
 
     ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPoolsRate.vy"
 
@@ -760,6 +829,8 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolsRate.vy"
 
             ```python
@@ -776,57 +847,6 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
         ```
 
 
-### `POOLS`
-!!! description "`CryptoFromPoolsRate.POOLS(arg0: uint256) -> address: view`"
-
-    Getter for the liquidity pools used in the oracle contract.
-
-    Returns: pool contract (`address`).
-
-    | Input  | Type      | Description |
-    | ------ | --------- | ----------- |
-    | `arg0` | `uint256` | Pool index. |
-
-    ??? quote "Source code"
-
-        === "CryptoFromPoolsRate.vy"
-
-            ```python
-            POOLS: public(immutable(DynArray[Pool, MAX_POOLS]))
-            ```
-
-    === "Example"
-        ```shell
-        >>> CryptoFromPoolsRate.POOLS(0)
-        '0xEEda34A377dD0ca676b9511EE1324974fA8d980D'
-
-        >>> CryptoFromPoolsRate.POOLS(1)
-        '0x2889302a794dA87fBF1D6Db415C1492194663D13'
-        ```
-
-
-### `POOL_COUNT`
-!!! description "`CryptoFromPoolsRate.POOL_COUNT() -> uint256: view`"
-
-    Getter for the total amount of pools used in the oracle contract.
-
-    Returns: amount of pools (`uint256`).
-
-    ??? quote "Source code"
-
-        === "CryptoFromPoolsRate.vy"
-
-            ```python
-            POOL_COUNT: public(immutable(uint256))
-            ```
-
-    === "Example"
-        ```shell
-        >>> CryptoFromPoolsRate.POOL_COUNT()
-        2
-        ```
-
-
 ### `NO_ARGUMENT`
 !!! description "`CryptoFromPoolsRate.NO_ARGUMENT(arg0: uin256) -> bool: view`"
 
@@ -839,6 +859,8 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
     | `arg0` | `uint256` | Pool index. |
 
     ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPoolsRate.vy"
 
@@ -853,4 +875,37 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
         >>> CryptoFromPoolsRate.NO_ARGUMENT(1)
         'false'
+        ```
+
+
+### `AGG`
+!!! description "`CryptoFromPoolsRate.AGG() -> address: view`"
+
+    !!!info
+        This `AGG` storage variable is only used within the `CryptoFromPoolsRateWAgg` contracts.
+
+    Getter for the crvUSD `PriceAggregator` contract. This value is immutable and set at contract initialization.
+
+    Returns: `PriceAggregator` (`address`).
+
+    ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+        
+        === "CryptoFromPoolsRate.vy"
+
+            ```python
+            interface StableAggregator:
+                def price() -> uint256: view
+                def price_w() -> uint256: nonpayable
+                def stablecoin() -> address: view
+
+            AGG: public(immutable(StableAggregator))
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> CryptoFromPoolsRate.AGG()
+        '0x18672b1b0c623a30089A280Ed9256379fb0E4E62'
         ```
