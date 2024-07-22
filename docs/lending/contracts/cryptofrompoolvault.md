@@ -1,9 +1,8 @@
 <h1>CryptoFromPoolVault</h1>
 
-Thius oracle contract take the price oracle from a Curve liquidity pool and applies the price per share to it. This is often used when having ERC-4626 Vault tokens with `pricePerShare`, `convertToAsset` or other similar functions which essentially return the price of one vault token compared to the underyling assets. The first oracle contracts were deployed without considering the [aggregated price of crvUSD](../../crvUSD/priceaggregator.md), but experience has shown that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
+This oracle contract takes the price oracle from a Curve liquidity pool and applies the price per share to it. This is often used when having ERC-4626 Vault tokens with `pricePerShare`, `convertToAsset`, or other similar functions which essentially return the price of one vault token compared to the underlying assets. The first oracle contracts were deployed without considering the [aggregated price of crvUSD](../../crvUSD/priceaggregator.md), but experience has shown that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
 
 These kinds of oracle contracts **need to be deployed manually**, as there is currently no `Factory` to do so.
-
 
 !!!github "GitHub"
     The source code for the following price oracle contracts can be found on :material-github: GitHub:
@@ -561,10 +560,15 @@ The oracle price is calculated by taking the `price_oracle` of a Curve pool and 
     ??? quote "Source code"
 
         The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
-        
+
         === "CryptoFromPoolVaultWAgg.vy"
 
             ```python
+            interface StableAggregator:
+                def price() -> uint256: view
+                def price_w() -> uint256: nonpayable
+                def stablecoin() -> address: view
+
             AGG: public(immutable(StableAggregator))
             ```
 
