@@ -99,7 +99,7 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
 ---
 
 
-## **Ethereum**
+## **Oracle Price**
 
 
 ### `price`
@@ -304,6 +304,11 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
         ```
 
 
+---
+
+
+## **Contract Info Methods**
+
 ### `POOL`
 !!! description "`CryptoFromPool.POOL() -> address: view`"
 
@@ -352,6 +357,57 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
         ```shell
         >>> CryptoFromPool.POOL()
         '0x4eBdF703948ddCEA3B11f675B4D1Fba9d2414A14'
+        ```
+
+
+### `N_COINS`
+!!! description "`CryptoFromPool.N_COINS() -> uint256: view`"
+
+    Getter for the total number of coins in the liquidity pool.
+
+    Returns: coins count (`uint256`).
+
+    ??? quote "Source code"
+
+        === "CryptoFromPool.vy"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
+            ```vyper
+            N_COINS: public(immutable(uint256))
+
+            @external
+            def __init__(
+                    pool: Pool,
+                    N: uint256,
+                    borrowed_ix: uint256,
+                    collateral_ix: uint256
+                ):
+                assert borrowed_ix != collateral_ix
+                assert borrowed_ix < N
+                assert collateral_ix < N
+                POOL = pool
+                N_COINS = N
+                BORROWED_IX = borrowed_ix
+                COLLATERAL_IX = collateral_ix
+
+                no_argument: bool = False
+                if N == 2:
+                    success: bool = False
+                    res: Bytes[32] = empty(Bytes[32])
+                    success, res = raw_call(
+                        pool.address,
+                        _abi_encode(empty(uint256), method_id=method_id("price_oracle(uint256)")),
+                        max_outsize=32, is_static_call=True, revert_on_failure=False)
+                    if not success:
+                        no_argument = True
+                NO_ARGUMENT = no_argument
+            ```
+
+    === "Example"
+        ```shell
+        >>> CryptoFromPool.N_COINS()
+        3
         ```
 
 
@@ -457,57 +513,6 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
         ```
 
 
-### `N_COINS`
-!!! description "`CryptoFromPool.N_COINS() -> uint256: view`"
-
-    Getter for the total number of coins in the liquidity pool.
-
-    Returns: coins count (`uint256`).
-
-    ??? quote "Source code"
-
-        === "CryptoFromPool.vy"
-
-        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
-
-            ```vyper
-            N_COINS: public(immutable(uint256))
-
-            @external
-            def __init__(
-                    pool: Pool,
-                    N: uint256,
-                    borrowed_ix: uint256,
-                    collateral_ix: uint256
-                ):
-                assert borrowed_ix != collateral_ix
-                assert borrowed_ix < N
-                assert collateral_ix < N
-                POOL = pool
-                N_COINS = N
-                BORROWED_IX = borrowed_ix
-                COLLATERAL_IX = collateral_ix
-
-                no_argument: bool = False
-                if N == 2:
-                    success: bool = False
-                    res: Bytes[32] = empty(Bytes[32])
-                    success, res = raw_call(
-                        pool.address,
-                        _abi_encode(empty(uint256), method_id=method_id("price_oracle(uint256)")),
-                        max_outsize=32, is_static_call=True, revert_on_failure=False)
-                    if not success:
-                        no_argument = True
-                NO_ARGUMENT = no_argument
-            ```
-
-    === "Example"
-        ```shell
-        >>> CryptoFromPool.N_COINS()
-        3
-        ```
-
-
 ### `NO_ARGUMENT`
 !!! description "`CryptoFromPool.NO_ARGUMENT() -> bool: view`"
 
@@ -557,6 +562,39 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
         ```shell
         >>> CryptoFromPool.NO_ARGUMENT()
         'False'
+        ```
+
+
+### `AGG`
+!!! description "`CryptoFromPoolWAgg.AGG() -> address: view`"
+
+    !!!info
+        This `AGG` storage variable is only used within the `CryptoFromPoolWAgg` contracts.
+
+    Getter for the crvUSD `PriceAggregator` contract. This value is immutable and set at contract initialization.
+
+    Returns: `PriceAggregator` (`address`).
+
+    ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+        
+        === "CryptoFromPoolWAgg.vy"
+
+            ```python
+            interface StableAggregator:
+                def price() -> uint256: view
+                def price_w() -> uint256: nonpayable
+                def stablecoin() -> address: view
+
+            AGG: public(immutable(StableAggregator))
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> CryptoFromPoolWAgg.AGG()
+        '0x18672b1b0c623a30089A280Ed9256379fb0E4E62'
         ```
 
 

@@ -730,6 +730,61 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
 ## **Contract Info Methods**
 
+### `POOLS`
+!!! description "`CryptoFromPoolsRate.POOLS(arg0: uint256) -> address: view`"
+
+    Getter for the liquidity pools used in the oracle contract.
+
+    Returns: pool contract (`address`).
+
+    | Input  | Type      | Description |
+    | ------ | --------- | ----------- |
+    | `arg0` | `uint256` | Pool index. |
+
+    ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
+        === "CryptoFromPoolsRate.vy"
+
+            ```python
+            POOLS: public(immutable(DynArray[Pool, MAX_POOLS]))
+            ```
+
+    === "Example"
+        ```shell
+        >>> CryptoFromPoolsRate.POOLS(0)
+        '0xEEda34A377dD0ca676b9511EE1324974fA8d980D'
+
+        >>> CryptoFromPoolsRate.POOLS(1)
+        '0x2889302a794dA87fBF1D6Db415C1492194663D13'
+        ```
+
+
+### `POOL_COUNT`
+!!! description "`CryptoFromPoolsRate.POOL_COUNT() -> uint256: view`"
+
+    Getter for the total amount of pools used in the oracle contract.
+
+    Returns: amount of pools (`uint256`).
+
+    ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+        
+        === "CryptoFromPoolsRate.vy"
+
+            ```python
+            POOL_COUNT: public(immutable(uint256))
+            ```
+
+    === "Example"
+        ```shell
+        >>> CryptoFromPoolsRate.POOL_COUNT()
+        2
+        ```
+
+
 ### `BORROWED_IX`
 !!! description "`CryptoFromPoolsRate.BORROWED_IX(arg0: uint256) -> uint256: view`"
 
@@ -789,61 +844,6 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
         >>> CryptoFromPoolsRate.COLLATERAL_IX(1)
         2                   # wstETH
-        ```
-
-
-### `POOLS`
-!!! description "`CryptoFromPoolsRate.POOLS(arg0: uint256) -> address: view`"
-
-    Getter for the liquidity pools used in the oracle contract.
-
-    Returns: pool contract (`address`).
-
-    | Input  | Type      | Description |
-    | ------ | --------- | ----------- |
-    | `arg0` | `uint256` | Pool index. |
-
-    ??? quote "Source code"
-
-        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
-
-        === "CryptoFromPoolsRate.vy"
-
-            ```python
-            POOLS: public(immutable(DynArray[Pool, MAX_POOLS]))
-            ```
-
-    === "Example"
-        ```shell
-        >>> CryptoFromPoolsRate.POOLS(0)
-        '0xEEda34A377dD0ca676b9511EE1324974fA8d980D'
-
-        >>> CryptoFromPoolsRate.POOLS(1)
-        '0x2889302a794dA87fBF1D6Db415C1492194663D13'
-        ```
-
-
-### `POOL_COUNT`
-!!! description "`CryptoFromPoolsRate.POOL_COUNT() -> uint256: view`"
-
-    Getter for the total amount of pools used in the oracle contract.
-
-    Returns: amount of pools (`uint256`).
-
-    ??? quote "Source code"
-
-        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
-        
-        === "CryptoFromPoolsRate.vy"
-
-            ```python
-            POOL_COUNT: public(immutable(uint256))
-            ```
-
-    === "Example"
-        ```shell
-        >>> CryptoFromPoolsRate.POOL_COUNT()
-        2
         ```
 
 
