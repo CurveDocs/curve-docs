@@ -15,7 +15,9 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
     The oracle contracts are fully immutable. Once deployed, they cannot change any parameters, stop the price updates, or alter the pools used to calculate the prices. All relevant data required for the oracle to function is passed into the `__init__` function during the deployment of the contract.
 
     ???quote "`__init__`"
-        
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CrpyotFromPool.vy"
 
             ```python
@@ -112,6 +114,8 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
 
         The `CryptoFromPool.vy` oracle contract does not take the aggregated price of crvUSD from the [`PriceAggregator.vy` contract](../../crvUSD/priceaggregator.md) into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolWAgg.vy` oracle contract.
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPool.vy"
 
             ```py
@@ -196,6 +200,8 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
     ??? quote "Source code"
 
         The `CryptoFromPool.vy` oracle contract does not take the aggregated price of crvUSD from the [`PriceAggregator.vy` contract](../../crvUSD/priceaggregator.md) into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolWAgg.vy` oracle contract.
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPool.vy"
 
@@ -308,6 +314,8 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPool.vy"
 
             ```vyper
@@ -357,6 +365,8 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPool.vy"
 
             ```vyper
@@ -405,6 +415,8 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
     Returns: coin index (`uint256`).
 
     ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPool.vy"
 
@@ -457,6 +469,8 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
 
         === "CryptoFromPool.vy"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
             ```vyper
             N_COINS: public(immutable(uint256))
 
@@ -504,6 +518,8 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
     Returns: true or false (`bool`)
 
     ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPool.vy"
 
@@ -588,6 +604,8 @@ def _raw_price() -> uint256:
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPool.vy"
 
             ```vyper
@@ -609,6 +627,8 @@ def _raw_price() -> uint256:
     Returns: time to wait (`uint256`).
 
     ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPool.vy"
 

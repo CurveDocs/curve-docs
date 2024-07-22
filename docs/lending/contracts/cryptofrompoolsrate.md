@@ -2,7 +2,7 @@
 
 This oracle contract **chains together two oracles from two different Curve liquidity pools and optionally applies `stored_rates` to tokens with an existing rate oracle**. By chaining oracles together, it facilitates the creation of lending oracle contracts without requiring the collateral asset to be paired directly against crvUSD. The first oracle contracts were deployed without considering the [aggregated price of crvUSD](https://etherscan.io/address/0x18672b1b0c623a30089A280Ed9256379fb0E4E62), but experience has shown that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
 
-These kinds of oracle contracts **need to be deployed manually**, as there is currently no Factory to do so.
+These kinds of oracle contracts **need to be deployed manually**, as there is currently no `Factory` to do so.
 
 
 !!!github "GitHub"
@@ -192,6 +192,8 @@ The price is determined by combining two different oracle prices. When necessary
 
         The `CryptoFromPoolsRate.vy` oracle contract does not take the aggregated price of crvUSD from the [`PriceAggregator.vy` contract](../../crvUSD/priceaggregator.md) into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolsRateWAgg.vy` oracle contract.
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolsRate.vy"
 
             ```python
@@ -356,6 +358,8 @@ The price is determined by combining two different oracle prices. When necessary
     ??? quote "Source code"
 
         The `CryptoFromPoolsRate.vy` oracle contract does not take the aggregated price of crvUSD from the [`PriceAggregator.vy` contract](../../crvUSD/priceaggregator.md) into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolsRateWAgg.vy` oracle contract.
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPoolsRate.vy"
 
@@ -557,6 +561,8 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolsRate.vy"
 
             ```python
@@ -621,6 +627,8 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolsRate.vy"
 
             ```python
@@ -656,6 +664,8 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
     Returns: cached timestamp (`uint256`)
 
     ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPoolsRate.vy"
 
@@ -697,6 +707,8 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolsRate.vy"
 
             ```python
@@ -731,6 +743,8 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolsRate.vy"
 
             ```python
@@ -759,6 +773,8 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
     | `arg0` | `uint256` | Pool index to check `COLLATERAL_IX` for. |
 
     ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPoolsRate.vy"
 
@@ -789,6 +805,8 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolsRate.vy"
 
             ```python
@@ -814,6 +832,8 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+        
         === "CryptoFromPoolsRate.vy"
 
             ```python
@@ -840,6 +860,8 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolsRate.vy"
 
             ```python
@@ -853,4 +875,37 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 
         >>> CryptoFromPoolsRate.NO_ARGUMENT(1)
         'false'
+        ```
+
+
+### `AGG`
+!!! description "`CryptoFromPoolsRate.AGG() -> address: view`"
+
+    !!!info
+        This `AGG` storage variable is only used within the `CryptoFromPoolsRateWAgg` contracts.
+
+    Getter for the crvUSD `PriceAggregator` contract. This value is immutable and set at contract initialization.
+
+    Returns: `PriceAggregator` (`address`).
+
+    ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+        
+        === "CryptoFromPoolsRate.vy"
+
+            ```python
+            interface StableAggregator:
+                def price() -> uint256: view
+                def price_w() -> uint256: nonpayable
+                def stablecoin() -> address: view
+
+            AGG: public(immutable(StableAggregator))
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> CryptoFromPoolsRate.AGG()
+        '0x18672b1b0c623a30089A280Ed9256379fb0E4E62'
         ```
