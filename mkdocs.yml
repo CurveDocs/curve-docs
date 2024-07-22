@@ -221,6 +221,7 @@ nav:
       - Overview & Examples: lending/contracts/oracle-overview.md
       - CryptoFromPool.vy: lending/contracts/cryptofrompool.md
       - CryptoFromPoolsRate.vy: lending/contracts/cryptofrompoolsrate.md
+      - CryptoFromPoolVault.vy: lending/contracts/cryptofrompoolvault.md
 
 
   - StableSwap Exchange:
