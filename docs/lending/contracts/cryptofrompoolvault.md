@@ -112,6 +112,8 @@ The oracle price is calculated by taking the `price_oracle` of a Curve pool and 
 
         The `CryptoFromPoolVault.vy` oracle contract does not take the aggregated price of crvUSD from the [`PriceAggregator.vy` contract](../../crvUSD/priceaggregator.md) into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolVaultWAgg.vy` oracle contract.
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolVault.vy"
 
             ```python
@@ -237,6 +239,8 @@ The oracle price is calculated by taking the `price_oracle` of a Curve pool and 
     ??? quote "Source code"
 
         The `CryptoFromPoolVault.vy` oracle contract does not take the aggregated price of crvUSD from the [`PriceAggregator.vy` contract](../../crvUSD/priceaggregator.md) into account. Experience has shown that it makes sense to include this value in the oracle calculations. This is implemented in the `CryptoFromPoolVaultWAgg.vy` oracle contract.
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPoolVault.vy"
 
@@ -369,6 +373,8 @@ The oracle price is calculated by taking the `price_oracle` of a Curve pool and 
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolVault.vy"
 
             ```python
@@ -398,6 +404,8 @@ The oracle price is calculated by taking the `price_oracle` of a Curve pool and 
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolVault.vy"
 
             ```python
@@ -426,6 +434,8 @@ The oracle price is calculated by taking the `price_oracle` of a Curve pool and 
     Returns: coin index (`uint256`).
 
     ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
         === "CryptoFromPoolVault.vy"
 
@@ -458,6 +468,8 @@ The oracle price is calculated by taking the `price_oracle` of a Curve pool and 
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolVault.vy"
 
             ```python
@@ -489,6 +501,8 @@ The oracle price is calculated by taking the `price_oracle` of a Curve pool and 
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolVault.vy"
 
             ```python
@@ -518,6 +532,8 @@ The oracle price is calculated by taking the `price_oracle` of a Curve pool and 
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
         === "CryptoFromPoolVault.vy"
 
             ```python
@@ -544,6 +560,8 @@ The oracle price is calculated by taking the `price_oracle` of a Curve pool and 
 
     ??? quote "Source code"
 
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+        
         === "CryptoFromPoolVaultWAgg.vy"
 
             ```python
