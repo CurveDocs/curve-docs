@@ -1,6 +1,6 @@
 <h1>CryptoFromPoolVault</h1>
 
-This oracle contract takes the price oracle from a Curve liquidity pool and applies the price per share to it. This is often used when having ERC-4626 Vault tokens with `pricePerShare`, `convertToAsset`, or other similar functions which essentially return the price of one vault token compared to the underlying assets. The first oracle contracts were deployed without considering the [aggregated price of crvUSD](../../crvUSD/priceaggregator.md), but experience has shown that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
+This oracle contract takes the **price oracle from a Curve liquidity pool and applies the price per share of a vault to it**. This is often used when having ERC-4626 Vault tokens with `pricePerShare`, `convertToAsset`, or other similar functions which essentially return the price of one vault token compared to the underlying assets. The first oracle contracts were deployed without considering the [aggregated price of crvUSD](../../crvUSD/priceaggregator.md), but experience has shown that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
 
 These kinds of oracle contracts **need to be deployed manually**, as there is currently no `Factory` to do so.
 
@@ -94,10 +94,46 @@ These kinds of oracle contracts **need to be deployed manually**, as there is cu
 
 ## **Oracle Price**
 
-The oracle price is calculated by taking the `price_oracle` of a Curve pool and then adjusting it by the rate of a vault, using methods such as `convertToAssets` or `pricePerShare`.
+The oracle price is calculated by taking the `price_oracle` of a Curve pool and then adjusting it by the rate of a vault, using methods such as `convertToAssets`, `pricePerShare` or really any other equvalent function which returns the "exchange rate" of the vault token and the underlying asset.
 
 !!!example "Example"
-    todo
+    Let's take a look at the [sDOLA/crvUSD lending market](https://lend.curve.fi/#/ethereum/markets/one-way-market-17/create), which uses the `CryptoFromPoolVaultWAgg.vy` code. 
+
+    The [oracle contract](https://etherscan.io/address/0x002688C4296A2C4d800F271fe6F01741111B09Be) fetches the `price_oracle` of the [DOLA <> crvUSD stableswap-ng pool](https://etherscan.io/address/0x8272E1A3dBef607C04AA6e5BD3a1A134c8ac063B#readContract#F9) and then adjusts this value by the rate obtained from the [`convertToAssets`](https://etherscan.io/address/0xb45ad160634c528Cc3D2926d9807104FA3157305#readContract#F7) method of the [sDOLA vault](https://etherscan.io/address/0xb45ad160634c528Cc3D2926d9807104FA3157305).
+
+Additionally, the `CryptoFromPoolVault.vy` contract has a **built-in mechanism that considers a certain maximum speed of price change within the vault** when calculating the oracle price. This feature is not included in the `CryptoFromPoolVaultWAgg.vy` oracle contract.
+
+??? quote "Source Code"
+
+    *The formula to calculate the applied rate is the following:*
+
+    $$\min \left( \text{pricePerShare}, \frac{\text{cached_price_per_share} \times (10^{18} + \text{PPS_MAX_SPEED} \times (\text{block.timestamp} - \text{cached_timestamp}))}{10^{18}} \right)$$
+
+    In this example, `pricePerShare` is used, but it can really be any equivalent method that returns the rate of the vault token with respect to its underlying token.
+
+    `cached_price_per_share` and `cached_timestamp` are internal variables that are updated whenever the `price_w` function is called. The first value is set to the current rate within the vault at the block when the function is called, and the second value to the current timestamp (`block.timestamp`).
+
+    === "CryptoFromPoolVaul.vy"
+
+        ```py
+        PPS_MAX_SPEED: constant(uint256) = 10**16 / 60  # Max speed of pricePerShare change
+
+        cached_price_per_share: public(uint256)
+        cached_timestamp: public(uint256)
+
+        @internal
+        @view
+        def _pps() -> uint256:
+            return min(VAULT.pricePerShare(), self.cached_price_per_share * (10**18 + PPS_MAX_SPEED * (block.timestamp - self.cached_timestamp)) / 10**18)
+
+
+        @internal
+        def _pps_w() -> uint256:
+            pps: uint256 = min(VAULT.pricePerShare(), self.cached_price_per_share * (10**18 + PPS_MAX_SPEED * (block.timestamp - self.cached_timestamp)) / 10**18)
+            self.cached_price_per_share = pps
+            self.cached_timestamp = block.timestamp
+            return pps
+        ```
 
 
 ### `price`
