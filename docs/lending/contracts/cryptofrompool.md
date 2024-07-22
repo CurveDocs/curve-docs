@@ -1,7 +1,6 @@
 <h1>CryptoFromPool</h1>
 
-Oracle contract for a collateral token that **fetches its price from a single Curve pool**. The first oracle contracts were deployed without considering the [aggregated price of crvUSD](https://etherscan.io/address/0x18672b1b0c623a30089A280Ed9256379fb0E4E62), but experience showed that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
-
+Oracle contract for a collateral token that **fetches its price from a single Curve pool**. The first oracle contracts were deployed without considering the [aggregated price of crvUSD](../../crvUSD/priceaggregator.md), but experience showed that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
 
 !!!github "GitHub"
     The source code of the following price oracle contracts can be found on :material-github: GitHub:
@@ -11,7 +10,7 @@ Oracle contract for a collateral token that **fetches its price from a single Cu
 
 The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](./oneway-factory.md#create_from_pool) method which deploys the full lending market infrastucture along with a price oracle using a [`stableswap-ng`](../../stableswap-exchange/stableswap-ng/pools/oracles.md), [`twocrypto-ng`](../../cryptoswap-exchange/twocrypto-ng/overview.md) or [`tricrypto-ng`](../../cryptoswap-exchange/tricrypto-ng/pools/oracles.md) pool. These pools all have a suitable exponential moving-average (EMA) oracle, which can be used in lending markets.
 
-!!!warning "Oracle Immutability"
+!!!danger "Oracle Immutability"
     The oracle contracts are fully immutable. Once deployed, they cannot change any parameters, stop the price updates, or alter the pools used to calculate the prices. All relevant data required for the oracle to function is passed into the `__init__` function during the deployment of the contract.
 
     ???quote "`__init__`"

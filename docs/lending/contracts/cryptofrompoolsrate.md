@@ -1,6 +1,6 @@
 <h1>CryptoFromPoolsRate</h1>
 
-This oracle contract **chains together two oracles from two different Curve liquidity pools and optionally applies `stored_rates` to tokens with an existing rate oracle**. By chaining oracles together, it facilitates the creation of lending oracle contracts without requiring the collateral asset to be paired directly against crvUSD. The first oracle contracts were deployed without considering the [aggregated price of crvUSD](https://etherscan.io/address/0x18672b1b0c623a30089A280Ed9256379fb0E4E62), but experience has shown that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
+This oracle contract **chains together two oracles from two different Curve liquidity pools and optionally applies `stored_rates` to tokens with an existing rate oracle**. By chaining oracles together, it facilitates the creation of lending oracle contracts without requiring the collateral asset to be paired directly against crvUSD. The first oracle contracts were deployed without considering the [aggregated price of crvUSD](../../crvUSD/priceaggregator.md), but experience has shown that it makes sense to include this value in the calculation. The respective differences are documented in the relevant sections.
 
 These kinds of oracle contracts **need to be deployed manually**, as there is currently no `Factory` to do so.
 
@@ -12,7 +12,7 @@ These kinds of oracle contracts **need to be deployed manually**, as there is cu
     - [`CryptoFromPoolsRateWAgg.vy`](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/price_oracles/CryptoFromPoolsRateWAgg.vy)
 
 
-!!!warning "Oracle Immutability"
+!!!danger "Oracle Immutability"
     The oracle contracts are fully immutable. Once deployed, they cannot change any parameters, stop the price updates, or alter the pools used to calculate the prices. All relevant data required for the oracle to function is passed into the `__init__` function during the deployment of the contract.
 
     ???quote "`__init__`"
