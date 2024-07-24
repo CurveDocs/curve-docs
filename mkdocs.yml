@@ -192,7 +192,9 @@ nav:
     - LLAMMA: crvUSD/amm.md
     - Monetary Policy: crvUSD/monetarypolicy.md
     - Price Aggregator: crvUSD/priceaggregator.md
+    - PriceAggregator3: crvUSD/priceaggregator3.md
     - Oracle: crvUSD/oracle.md
+    - FlashLender: crvUSD/flashlender.md
     - PegKeepers:
       - Overview: crvUSD/pegkeepers/overview.md
       - PegKeeperV1: crvUSD/pegkeepers/PegKeeperV1.md
