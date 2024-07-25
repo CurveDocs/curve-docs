@@ -1,20 +1,20 @@
 <h1>FlashLender</h1>
 
-The `FlashLender.vy` contract is an [ERC-3156](https://eips.ethereum.org/EIPS/eip-3156) contract that allows users to take out a flash loan for `crvUSD`. The flash loan must be repaid within the same transaction; otherwise, the transaction will revert.
+The `FlashLender.vy` contract is an [`ERC-3156`](https://eips.ethereum.org/EIPS/eip-3156) contract that allows users to take out a flash loan for `crvUSD`. The flash loan must be repaid within the same transaction; otherwise, the transaction will revert.
 
 !!!github "GitHub"
     The source code for the `FlashLender.vy` contract can be found on [GitHub :material-github:](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/flashloan/FlashLender.vy). Additionally, a `DummyFlashBorrower.vy` contract showcasing a potential usage of a flash loan can also be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/testing/DummyFlashBorrower.vy).
 
 The contract does not charge any fees on flash loans. The `fee` and `flashFee` methods are implemented to comply with the `ERC-3156` standard.
 
-
----
+!!! warning "CONTRACT IS NOT YET OPERATIONAL: PENDING DAO VOTE"
+    This contract is not yet operational. Currently, there is an [ongoing DAO vote](https://curvemonitor.com/#/dao/proposal/ownership/812) to mint 1 million `crvUSD` to the `FlashLender` using the `set_debt_ceiling` method on the `Factory` contract. If the vote passes, flash loans up to 1 million `crvUSD` will be possible.
 
 
 ### `flashLoan`
 !!! description "`FlashLender.flashLoan(receiver: ERC3156FlashBorrower, token: address, amount: uint256, data: Bytes[10**5]) -> bool`"
 
-    Function to take out a flash loan of `amount` of `token` and send them to the `receiver`. The `receiver` address must be a contract that implements the `onFlashLoan(initiator: address, token: address, amount: uint256, fee: uint256, data: Bytes[10**5])` interface. A flash loan must be repaid within the same transaction; otherwise, the function call will revert. This method also allows passing custom data to the `receiver` contract.
+    Function to take out a flash loan of `amount` of `token` and send them to the `receiver`. The `receiver` address must be a contract that implements the `onFlashLoan(initiator: address, token: address, amount: uint256, fee: uint256, data: Bytes[10**5])` interface. A flash loan must be repaid within the same transaction; otherwise, the transaction will revert. Additionally, the method allows passing custom `data` to the `receiver` contract.
 
     Returns: `True` (`bool`)
 
