@@ -5,13 +5,15 @@ hide:
 
 <h1>Curve Stablecoin: Overview</h1>
 
-Curve Stablecoin (crvUSD) infrastructure enables users to **mint crvUSD using a selection of crypto collaterals** (adding new ones is subject to DAO approval). 
+Curve Stablecoin infrastructure enables users to **mint crvUSD using a selection of crypto collaterals**. Adding new collaterals is subject to DAO approval. 
 
-crvUSD is designed to provide a more **capital-efficient** stablecoin mechanism and **smoother liquidations**, while maintaining a decentralized design which the Curve DAO governs.
+`crvUSD` is designed to provide a more **capital-efficient** stablecoin mechanism and **smoother liquidations**, while maintaining a decentralized design which the Curve DAO governs.
 
-!!!deploy "Contract Source & Deployment"
-    crvUSD related deployments can be found [here](../references/deployed-contracts.md#curve-stablecoin). Source code available on [Github](https://github.com/curvefi/curve-stablecoin). This documentation covers the contracts on GitHub up to the **`479d833`** commit hash.
+!!!github "GitHub"
+    The source code for all releveant stablecoin contract can be found on [GitHub :material-github:](https://github.com/curvefi/curve-stablecoin). Related deployments can be found [here](../references/deployed-contracts.md#curve-stablecoin).
 
+
+---
 
 
 # **Curve Stablecoin Infrastructure Components**
@@ -24,7 +26,7 @@ crvUSD is designed to provide a more **capital-efficient** stablecoin mechanism 
 
     The Controller is the contract the **user interacts with** to **create a loan and further manage the position**. It holds all user debt information. External liquidations are also done through it.
 
-    [:octicons-arrow-right-24: Learn more](./controller.md)
+    [:octicons-arrow-right-24: `Controller.vy`](./controller.md)
 
 -   **LLAMMA**
 
@@ -32,7 +34,7 @@ crvUSD is designed to provide a more **capital-efficient** stablecoin mechanism 
 
     LLAMMA is the **market-making contract that rebalances the collateral**. As the name suggests, this contract is responsible for liquidating collateral. Every market has its own AMM (created from a blueprint contract) containing the collateral asset and crvUSD.
 
-    [:octicons-arrow-right-24: Learn more](./amm.md)
+    [:octicons-arrow-right-24: `LLAMMA.vy`](./amm.md)
 
 -   **Factory**
 
@@ -62,7 +64,7 @@ crvUSD is designed to provide a more **capital-efficient** stablecoin mechanism 
 
     ---
 
-    The AggregatorStablePrice contract is designed to **aggregate the price of crvUSD based on multiple Curve Stableswap pools**. This price is mainly used as an oracle for calculating the interest rate, providing an aggregated and exponential moving average price.
+    The AggregatorStablePrice contract is designed to **aggregate the price of crvUSD based on multiple Curve pools**. This price is mainly used as an oracle for calculating the interest rate, providing an aggregated and exponential moving average price.
 
     [:octicons-arrow-right-24: Learn more](./priceaggregator.md)
 
@@ -70,16 +72,24 @@ crvUSD is designed to provide a more **capital-efficient** stablecoin mechanism 
 
     ---
 
-    Internal crvUSD market oracles.
+    Oracle contract used for collaterals in the markets.
 
     [:octicons-arrow-right-24: Learn more](./oracle.md)
+
+-   **Flash Loan**
+
+    ---
+
+    The `FlashLender.vy` contract allows users to take out a flash loan for `crvUSD`.
+
+    [:octicons-arrow-right-24: `FlashLender.vy`](./flashlender.md)
 
 -   **crvUSD Token**
 
     ---
 
-    crvUSD token.
+    `crvUSD` token which is based on the [ERC-20 Token Standard](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/).
 
-    [:octicons-arrow-right-24: Learn more](./crvUSD.md)
+    [:octicons-arrow-right-24: `crvUSD.vy`](./crvUSD.md)
 
 </div>
