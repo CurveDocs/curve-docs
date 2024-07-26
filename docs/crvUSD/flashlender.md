@@ -11,6 +11,9 @@ The contract does not charge any fees on flash loans. The `fee` and `flashFee` m
     This contract is not yet operational. Currently, there is an [ongoing DAO vote](https://curvemonitor.com/#/dao/proposal/ownership/812) to mint 1 million `crvUSD` to the `FlashLender` using the `set_debt_ceiling` method on the `Factory` contract. If the vote passes, flash loans up to 1 million `crvUSD` will be possible.
 
 
+---
+
+
 ### `flashLoan`
 !!! description "`FlashLender.flashLoan(receiver: ERC3156FlashBorrower, token: address, amount: uint256, data: Bytes[10**5]) -> bool`"
 
