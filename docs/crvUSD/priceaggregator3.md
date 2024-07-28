@@ -21,12 +21,12 @@ The price calculation starts with determining the EMA of the TVL from different 
 
 $$\alpha = 
     \begin{cases} 
-    1 & \text{if last\_timestamp} = \text{current\_timestamp}, \\
-    e^{-\frac{(\text{current\_timestamp} - \text{last\_timestamp}) * 10^{18}}{\text{TVL\_MA\_TIME}}} & \text{otherwise}.
+    1 & \text{if last_timestamp} = \text{current_timestamp}, \\
+    e^{-\frac{(\text{current_timestamp} - \text{last_timestamp}) * 10^{18}}{\text{TVL_MA_TIME}}} & \text{otherwise}.
     \end{cases}
 $$
 
-$$\text{ema\_tvl}_{i} = \frac{\text{new\_tvl}_i * (10^{18} - \alpha) + \text{tvl}_i * \alpha}{10^{18}}$$
+$$\text{ema_tvl}_{i} = \frac{\text{new_tvl}_i * (10^{18} - \alpha) + \text{tvl}_i * \alpha}{10^{18}}$$
 
 *The code snippet provided illustrates the implementation of the above formula in the contract.*
 
@@ -124,7 +124,7 @@ $$\text{average price} = \frac{\text{DPsum}}{\text{Dsum}}$$
 
 $$\text{e}_i = \frac{(\max(p, p_{\text{avg}}) - \min(p, p_{\text{avg}}))^2}{\frac{\text{SIGMA}^2}{10^{18}}}$$
 
-$$\text{e}_{min} = \min(\text{e}_i, \text{max\_value(uint256)})$$
+$$\text{e}_{min} = \min(\text{e}_i, \text{max_value(uint256)})$$
 
 Applying an exponential decay based on these variance measures to weigh each pool's contribution to the final average price, reducing the influence of prices far from the minimum variance. 
 
@@ -134,7 +134,7 @@ Next, sum up all `w` to store it in `w_sum` and calculate the product of `w * pr
 
 *Finally, the weighted average price of `crvUSD` is calculated:*
 
-$$\text{final price} = \frac{\text{wp\_sum}}{\text{w\_sum}}$$
+$$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
 
 
 ---
