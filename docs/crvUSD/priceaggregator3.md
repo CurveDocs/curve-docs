@@ -405,6 +405,31 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
         ```
 
 
+### `last_timestamp`
+!!! description "`PriceAggregator3.last_timestamp() -> uint256: view`"
+
+    Getter for the last timestamp when the aggregated price of crvUSD was updated. This variable was populated with `block.timestamp` when initializing the contract and is updated to the current timestamp every time [`price_w`](#price_w) is called. When adding a new price pair, its value is set to the `totalSupply` of the pair.
+    
+    Returns: timestamp of the last price write (`uint256`).
+
+    ??? quote "Source code"
+
+        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
+
+        === "PriceAggregator3.vy"
+
+            ```python
+            last_timestamp: public(uint256)
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> PriceAggregator3.last_timestamp()
+        1721751359
+        ```
+
+
 ### `ema_tvl`
 !!! description "`PriceAggregator3.ema_tvl() -> DynArray[uint256, MAX_PAIRS]`"
 
@@ -489,44 +514,12 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
 
     === "Example"
 
-        in this example todo
-
         ```shell
         >>> PriceAggregator3.last_tvl(0)
         10085527382061879315424954
 
         >>> PriceAggregator3.last_tvl(1)
         11342418534974695610766448
-        ```
-
-
----
-
-
-# **Contract Info Methods**
-
-### `last_timestamp`
-!!! description "`PriceAggregator3.last_timestamp() -> uint256: view`"
-
-    Getter for the last timestamp when the aggregated price of crvUSD was updated. This variable was populated with `block.timestamp` when initializing the contract and is updated to the current timestamp every time [`price_w`](#price_w) is called. When adding a new price pair, its value is set to the `totalSupply` of the pair.
-    
-    Returns: timestamp of the last price write (`uint256`).
-
-    ??? quote "Source code"
-
-        The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
-
-        === "PriceAggregator3.vy"
-
-            ```python
-            last_timestamp: public(uint256)
-            ```
-
-    === "Example"
-
-        ```shell
-        >>> PriceAggregator3.last_timestamp()
-        1721751359
         ```
 
 
@@ -554,6 +547,11 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
         50000
         ```
 
+
+---
+
+
+# **Contract Info Methods**
 
 ### `sigma`
 !!! description "`PriceAggregator3.SIGMA() -> uint256: view`"
@@ -626,22 +624,20 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
 
 # **Price Pairs**
 
-
+All liquidity pools used to calculate the aggregated price are stored in `price_pairs`. New price pairs can be added or removed by the DAO using `add_price_pair` and `remove_price_pair`.
 
 ### `price_pairs`
 !!! description "`PriceAggregator3.price_pairs(arg0: uint256) -> PricePair`"
 
     Getter for the price pairs added to the `PriceAggregator` contract. New pairs can be added using the [`add_price_pair`](#add_price_pair) function.
     
-    Returns: `PricePair` struct consisting of todo.
+    Returns: `PricePair` struct consisting of the pool (`address`) amd of it is inverse (`bool`).
 
     | Input  | Type      | Description             |
     | ------ | --------- | ----------------------- |
     | `arg0` | `uint256` | Index of the price pair |
 
     ??? quote "Source code"
-
-        todo
 
         The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
@@ -788,7 +784,7 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
 
 # **Contract Ownership**
 
-todo: only changable by dao; etc...
+The contract follows the classical two-step ownership model used in various other Curve contracts:
 
 ### `admin`
 !!! description "`PriceAggregator3.admin() -> address: view`"
