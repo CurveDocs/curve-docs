@@ -2,7 +2,7 @@
 
 
 !!!github "GitHub"
-    Source code for `PegKeeperV2.vy` available on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/stabilizer/PegKeeperV2.vy).
+    Source code for the `PegKeeperV2.vy` contract is available on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/stabilizer/PegKeeperV2.vy).
 
 ## **Stabilization Method Enhancement in PegKeeperV2**
 
