@@ -5,10 +5,9 @@ The `FlashLender.vy` contract is an [`ERC-3156`](https://eips.ethereum.org/EIPS/
 !!!github "GitHub"
     The source code for the `FlashLender.vy` contract can be found on [GitHub :material-github:](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/flashloan/FlashLender.vy). Additionally, a `DummyFlashBorrower.vy` contract showcasing a potential usage of a flash loan can also be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/testing/DummyFlashBorrower.vy).
 
-The contract does not charge any fees on flash loans. The `fee` and `flashFee` methods are implemented to comply with the `ERC-3156` standard.
+    The `FlashLender.vy` is deployed at [`0xa7a4bb50af91f90b6feb3388e7f8286af45b299b`](https://etherscan.io/address/0xa7a4bb50af91f90b6feb3388e7f8286af45b299b) on Ethereum.
 
-!!! warning "CONTRACT IS NOT YET OPERATIONAL: PENDING DAO VOTE"
-    This contract is not yet operational. Currently, there is an [ongoing DAO vote](https://curvemonitor.com/#/dao/proposal/ownership/812) to mint 1 million `crvUSD` to the `FlashLender` using the `set_debt_ceiling` method on the `Factory` contract. If the vote passes, flash loans up to 1 million `crvUSD` will be possible.
+The contract does not charge any fees on flash loans. The `fee` and `flashFee` methods are implemented to comply with the `ERC-3156` standard.
 
 
 ---
@@ -115,11 +114,11 @@ The contract does not charge any fees on flash loans. The `fee` and `flashFee` m
 
     === "Example"
 
-        Calling the function with the `crvUSD` address as input will return the flash-loanable amount. Calling the function with any other token than `crvUSD` will return `0`. Currently, the function returns `0` as there is no `crvUSD` in the contract. As soon as the [ongoing governance vote](https://curvemonitor.com/dao/proposal/ownership/812) passes, the contract will be funded with 1,000,000 `crvUSD`.
+        Calling the function with the `crvUSD` address as input will return the flash-loanable amount. Calling the function with any other token than `crvUSD` will return `0`. 
 
         ```shell
         >>> FlashLender.maxFlashLoan('0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E')
-        0
+        1000000000000000000000000
         ```
 
 
