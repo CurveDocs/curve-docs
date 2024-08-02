@@ -3,7 +3,9 @@
 The `AggregateStablePrice.vy` contract is designed to **get an aggregated price of crvUSD based on multiple multiple stableswap pools weighted by their TVL**. 
 
 !!!github "GitHub"
-    There are three iterations of the `AggregateStablePrice` contract. Source code for the contracts can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/price_oracles). Relevant contract deployments can be found [here](../references/deployed-contracts.md#curve-stablecoin).
+    There are three iterations of the `AggregateStablePrice` contract. Source code for the contracts can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/price_oracles). 
+    
+    The `AggregateStablePrice.vy` contract has been deployed on [Ethereum](https://etherscan.io/address/0x18672b1b0c623a30089A280Ed9256379fb0E4E62) and [Arbitrum](https://arbiscan.io/address/0x44a4FdFb626Ce98e36396d491833606309520330).
 
 This aggregated price of crvUSD is used in multiple different components in the system such as in [monetary policy contracts](./monetarypolicy.md), [PegKeepers](../crvUSD/pegkeepers/overview.md) or [oracles for lending markets](../lending/contracts/oracle-overview.md).
 
@@ -14,6 +16,7 @@ This aggregated price of crvUSD is used in multiple different components in the 
 # **Calculations**
 
 The `AggregateStablePrice` contract calculates the **weighted average price of crvUSD across multiple liquidity pools**, considering only those pools with sufficient liquidity (`MIN_LIQUIDITY = 100,000 * 10**18`). The calculation is based on the **exponential moving average (EMA) of the Total-Value-Locked (TVL)** for each pool, determining the liquidity considered in the price aggregation.
+
 
 ## **EMA TVL Calculation**
 
@@ -641,12 +644,13 @@ All liquidity pools used to calculate the aggregated price are stored in `price_
 
         The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
-        === "PriceAggregator2.vy"
+        === PriceAggregator3.vy"
 
             ```python
             struct PricePair:
                 pool: Stableswap
                 is_inverse: bool
+                include_index: bool
 
             price_pairs: public(PricePair[MAX_PAIRS])
             ```
@@ -665,7 +669,7 @@ All liquidity pools used to calculate the aggregated price are stored in `price_
     === "Example"
 
         ```shell
-        >>> PriceAggregator2.price_pairs(0)     # PriceAggregator on Ethereum
+        >>> PriceAggregator3.price_pairs(0)     # PriceAggregator on Ethereum
         '0x4DEcE678ceceb27446b35C672dC7d61F30bAD69E, false'
 
         >>> PriceAggregator3.price_pairs(0)     # PriceAggregator on Arbitrum
@@ -858,9 +862,3 @@ The contract follows the classical two-step ownership model used in various othe
         ```shell
         >>> soon
         ```
-
-
-
-
-
-
