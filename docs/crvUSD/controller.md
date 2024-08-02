@@ -13,6 +13,7 @@ The Controller contract acts as a on-chain interface for **creating loans and fu
     Minting crvUSD is only possible with whitelised collateral by the DAO and requires users to provide collateral against which they can mint[^1] crvUSD. Provided collateral is deposited into LLAMMA according to the number of bands chosen. Subsequently, **crvUSD is backed by the assets provided as collateral**.
 
 
+
     <figure markdown="span">
     ![](../assets/images/mint_controller1.svg){ width="500" }
     <figcaption></figcaption>
@@ -3397,7 +3398,7 @@ The **loan discount** is the percentage used to discount the collateral for calc
 The **liquidation discount** is used to discount the collateral for calculating the recoverable value upon liquidation at the current market price.
 
 ### `loan_discount`
-!!! description "`Controller.liquidation_discount() -> uint256: view`"
+!!! description "`Controller.loan_discount() -> uint256: view`"
 
     Getter for the discount of the maximum loan size compared to `get_x_down()` value. This value defines the LTV.
 
