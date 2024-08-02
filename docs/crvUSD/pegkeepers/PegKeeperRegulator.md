@@ -4,7 +4,7 @@
 The regulator contract supervises prices and other parameters telling whether the PegKeeper are allowed to provide or withdraw crvUSD.
 
 !!!github "GitHub"
-    Source code for `PegKeeperRegulator.vy` available on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/stabilizer/PegKeeperRegulator.vy).
+    Source code for the `PegKeeperRegulator.vy` contract is available on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/stabilizer/PegKeeperRegulator.vy).
 
 Technically speaking, allowance is always granted but if certain checks do not pass, the Regulator will allow an amount of 0, which in return can be seen as not allowing anything to deposit or withdraw.
 
@@ -77,8 +77,8 @@ Where:
     Returns: amount of crvUSD allowed to provide (`uint256`).
 
     | Input | Type      | Description                                         |
-    |-------|-----------|-----------------------------------------------------|
-    | `_pk` | `address` | PegKeeper address. Defaults to `msg.sender` as the function is usually called by the PegKeeper itself. |
+    | ----- | --------- | --------------------------------------------------- |
+    | `_pk` | `address` | PegKeeper address; Defaults to `msg.sender` as the function is usually called by the PegKeeper itself |
 
     ??? quote "Source code"
 
@@ -223,8 +223,8 @@ Where:
     Returns: amount of crvUSD allowed to withdraw (`uint256`).
 
     | Input | Type      | Description                                          |
-    |-------|-----------|------------------------------------------------------|
-    | `_pk` | `address` | PegKeeper address. Defaults to `msg.sender` as it's usually called by the PegKeeper itself. |
+    | ----- | --------- | ---------------------------------------------------- |
+    | `_pk` | `address` | PegKeeper address; defaults to `msg.sender` as it's usually called by the PegKeeper itself |
 
 
     ??? quote "Source code"
@@ -486,7 +486,7 @@ For more details on the calculations and research behind these parameters, see [
 
     | Input        | Type      | Description  |
     | ------------ | --------- | ------------ |
-    | `_threshold` | `uint256` | New value for `worst_price_threshold`. |
+    | `_threshold` | `uint256` | New value for `worst_price_threshold` |
 
     ??? quote "Source code"
 
@@ -528,7 +528,7 @@ For more details on the calculations and research behind these parameters, see [
 
     | Input        | Type      | Description  |
     | ------------ | --------- | ------------ |
-    | `_deviation` | `uint256` | New value for `price_deviation`. |
+    | `_deviation` | `uint256` | New value for `price_deviation` |
 
     ??? quote "Source code"
 
@@ -568,10 +568,10 @@ For more details on the calculations and research behind these parameters, see [
 
     Emits: `DebtParameters`
 
-    | Input    | Type      | Description |
-    | -------- | --------- | ----------- |
-    | `_alpha` | `uint256` | New value for `alpha`. |
-    | `_beta`  | `uint256` | New value for `beta`. |
+    | Input    | Type      | Description           |
+    | -------- | --------- | --------------------- |
+    | `_alpha` | `uint256` | New value for `alpha` |
+    | `_beta`  | `uint256` | New value for `beta`  |
 
     ??? quote "Source code"
 
@@ -623,11 +623,11 @@ PegKeepers can be removed from the Regulator contract by the `admin` using the [
 
     Getter for the PegKeeper contract at index `arg0`.
 
-    Returns: `PegKeeperInfo` (`struct`) consisting of .
+    Returns: `PegKeeperInfo` (`struct`) consisting of the PegKeeper (`address`), its associated pool (`address`), if it is inverse (`bool`) and wether the pool has more than two coins (`bool`).
 
     | Input  | Type      | Description |
     | ------ | --------- | ----------- |
-    | `arg0` | `address` | Index of the PegKeeper. Starts at 0. |
+    | `arg0` | `address` | Index of the PegKeeper; starts at 0 |
 
     ??? quote "Source code"
 
@@ -646,10 +646,10 @@ PegKeepers can be removed from the Regulator contract by the `admin` using the [
     === "Example"
         ```shell
         >>> PegKeeperRegulator.peg_keepers(0)
-        '0x5B49b9adD1ecfe53E19cc2cFc8a33127cD6bA4C6, 0x4DEcE678ceceb27446b35C672dC7d61F30bAD69E, false, false'
+        '0x9201da0D97CaAAff53f01B2fB56767C7072dE340, 0x4DEcE678ceceb27446b35C672dC7d61F30bAD69E, false, false'
 
         >>> PegKeeperRegulator.peg_keepers(1)
-        '0xFF78468340EE322ed63C432BF74D817742b392Bf, 0x390f3595bCa2Df7d23783dFd126427CCeb997BF4, false, false'
+        '0xFb726F57d251aB5C731E5C64eD4F5F94351eF9F3, 0x390f3595bCa2Df7d23783dFd126427CCeb997BF4, false, false'
         ```
 
 
@@ -659,13 +659,13 @@ PegKeepers can be removed from the Regulator contract by the `admin` using the [
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
 
-    Function to add a PegKeeper contract to the Regulator. Simultaneously, the PegKeeper is added to the `peg_keepers` list and indexed in `peg_keeper_i`.
+    Function to add one or more `PegKeepers` to the `Regulator`. Simultaneously, the PegKeeper is added to the `peg_keepers` list and indexed in `peg_keeper_i`.
 
     Emits: `AddPegKeeper`
 
     | Input          | Type      | Description  |
     | -------------- | --------- | ------------ |
-    | `_peg_keepers` | `DynArray[PegKeeper, MAX_LEN]` | PegKeeper contracts to add. |
+    | `_peg_keepers` | `DynArray[PegKeeper, MAX_LEN]` | PegKeeper contracts to add |
 
     ??? quote "Source code"
 
@@ -720,13 +720,13 @@ PegKeepers can be removed from the Regulator contract by the `admin` using the [
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
 
-    Function to remove a PegKeeper contract from the Regulator contract.
+    Function to remove one or more `PegKeepers` from the `Regulator` contract.
 
     Emits: `RemovePegKeeper`
 
     | Input          | Type      | Description  |
     | -------------- | --------- | ------------ |
-    | `_peg_keepers` | `DynArray[PegKeeper, MAX_LEN]` | PegKeeper contract to remove. |
+    | `_peg_keepers` | `DynArray[PegKeeper, MAX_LEN]` | PegKeeper contracts to remove |
 
     ??? quote "Source code"
 
@@ -790,10 +790,6 @@ Only the `admin` and `emergency_admin` are able to kill. The former is the Curve
 
     Returns: index value of the `Killed` enum (`bool`).
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_pool` |  `address` | PegKeeper address. |
-
     ??? quote "Source code"
 
         === "PegKeeperRegulator.vy"
@@ -841,7 +837,7 @@ Only the `admin` and `emergency_admin` are able to kill. The former is the Curve
 
     | Input        | Type      | Description |
     | ------------ | --------- | ----------- |
-    | `_is_killed` | `uint256` | Value depending on the action wanted. |
+    | `_is_killed` | `uint256` | Value depending on the action wanted |
 
     ??? quote "Source code"
 
@@ -927,7 +923,7 @@ Both their ownerships can be transferred using the corresponding [`set_admin`](#
 
     | Input    | Type      | Description  |
     | -------- | --------- | ------------ |
-    | `_admin` | `address` | New admin address. |
+    | `_admin` | `address` | New admin address |
 
     ??? quote "Source code"
 
@@ -997,7 +993,7 @@ Both their ownerships can be transferred using the corresponding [`set_admin`](#
 
     | Input    | Type      | Description  |
     | -------- | --------- | ------------ |
-    | `_admin` | `address` | New emergency admin address. |
+    | `_admin` | `address` | New emergency admin address |
 
     ??? quote "Source code"
 
@@ -1097,9 +1093,9 @@ Both their ownerships can be transferred using the corresponding [`set_admin`](#
 
     Emits: `SetFeeReceiver`
 
-    | Input    | Type      | Description  |
-    | -------- | --------- | ------------ |
-    | `_fee_receiver` | `address` | New fee receiver address. |
+    | Input           | Type      | Description              |
+    | --------------- | --------- | ------------------------ |
+    | `_fee_receiver` | `address` | New fee receiver address |
 
     ??? quote "Source code"
 
@@ -1137,9 +1133,9 @@ Both their ownerships can be transferred using the corresponding [`set_admin`](#
 
     Emits: `SetAggregator`
 
-    | Input    | Type      | Description  |
-    | -------- | --------- | ------------ |
-    | `_fee_receiver` | `address` | New aggregator contract. |
+    | Input           | Type      | Description             |
+    | --------------- | --------- | ----------------------- |
+    | `_fee_receiver` | `address` | New aggregator contract |
 
     ??? quote "Source code"
 
@@ -1170,7 +1166,7 @@ Both their ownerships can be transferred using the corresponding [`set_admin`](#
 ---
 
 
-## **Contract Info Methods**
+## **Other Methods**
 
 ### `stablecoin`
 !!! description "`PegKeeperRegulator.stablecoin() -> address: view`"

@@ -105,7 +105,6 @@ extra_css:
 extra_javascript:
   - assets/javascripts/extra.js
   - assets/javascripts/mathjax.js
-  - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
 
@@ -115,6 +114,10 @@ repo_url: https://github.com/CurveDocs/curve-docs
 
 
 nav:
+
+  - autobribe:
+    - fee splitter: autobribe/fee-splitter.md
+    - incentives manager: autobribe/incentives-manager.md
 
   - Documentation Overview: documentation-overview.md
   - Curve DAO:
@@ -193,6 +196,7 @@ nav:
     - Monetary Policy: crvUSD/monetarypolicy.md
     - PriceAggregator: crvUSD/priceaggregator.md
     - Oracle: crvUSD/oracle.md
+    - FlashLender: crvUSD/flashlender.md
     - PegKeepers:
       - Overview: crvUSD/pegkeepers/overview.md
       - PegKeeperV1: crvUSD/pegkeepers/PegKeeperV1.md
