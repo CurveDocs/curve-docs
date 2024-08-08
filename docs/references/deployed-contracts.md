@@ -1,3 +1,8 @@
+---
+search:
+  exclude: true
+---
+
 This section of the documentation is dedicated to offering a comprehensive overview of all deployed contracts. We strive to maintain the accuracy and completeness of these addresses, but **please be aware that there may be instances where the information becomes outdated**.
 
 
