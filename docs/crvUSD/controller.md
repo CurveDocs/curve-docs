@@ -1,3 +1,7 @@
+todo: update code to this commit hash: https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957
+change amm.vy to llamma.vy
+
+
 The Controller contract acts as a on-chain interface for **creating loans and further managing existing positions**. It holds all user debt information. External liquidations are also done through it.
 
 **Each market has its own Controller**, automatically deployed from a blueprint contract, as soon as a new market is added via the `add_market` function or, for lending markets, via the `create` or `create_from_pool` function within the respective Factory.
@@ -75,6 +79,8 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             event UserState:
@@ -260,6 +266,8 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             event UserState:
@@ -456,6 +464,8 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             @external
             @view
@@ -545,6 +555,8 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             @external
             @view
@@ -621,6 +633,8 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             @external
@@ -712,6 +726,8 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             event UserState:
@@ -922,6 +938,8 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             event UserState:
@@ -1159,6 +1177,8 @@ An already existing loan can be managed in different ways:
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             event UserState:
                 user: indexed(address)
@@ -1349,6 +1369,8 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             event UserState:
@@ -1545,6 +1567,8 @@ An already existing loan can be managed in different ways:
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             event UserState:
                 user: indexed(address)
@@ -1740,6 +1764,8 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             event UserState:
@@ -1972,6 +1998,8 @@ An already existing loan can be managed in different ways:
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             @external
             @view
@@ -2056,6 +2084,8 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             event UserState:
@@ -2300,6 +2330,8 @@ An already existing loan can be managed in different ways:
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             event UserState:
                 user: indexed(address)
@@ -2541,6 +2573,8 @@ An already existing loan can be managed in different ways:
 
         === "Collateral.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             @view
             @external
@@ -2650,6 +2684,8 @@ An already existing loan can be managed in different ways:
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             struct Loan:
                 initial_debt: uint256
@@ -2709,6 +2745,8 @@ An already existing loan can be managed in different ways:
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             _total_debt: Loan
 
@@ -2745,6 +2783,8 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             struct Loan:
@@ -2784,6 +2824,8 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             @view
@@ -2894,6 +2936,8 @@ An already existing loan can be managed in different ways:
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             @view
             @external
@@ -2955,6 +2999,8 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             @view
@@ -3025,6 +3071,8 @@ An already existing loan can be managed in different ways:
 
         === "Controller.vy"        
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             loans: public(address[2**64 - 1])  # Enumerate existing loans
 
@@ -3065,6 +3113,8 @@ An already existing loan can be managed in different ways:
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             loan_ix: public(HashMap[address, uint256])  # Position of the loan in the list
             ```
@@ -3090,6 +3140,8 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             n_loans: public(uint256)  # Number of nonzero loans
@@ -3141,6 +3193,8 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             struct Loan:
@@ -3198,6 +3252,8 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             MIN_FEE: constant(uint256) = 10**6  # 1e-12, still needs to be above 0
@@ -3259,6 +3315,8 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             MAX_ADMIN_FEE: constant(uint256) = 5 * 10**17  # 50%
 
@@ -3310,6 +3368,8 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             event CollectFees:
@@ -3407,6 +3467,8 @@ The **liquidation discount** is used to discount the collateral for calculating 
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             loan_discount: public(uint256)
 
@@ -3451,6 +3513,8 @@ The **liquidation discount** is used to discount the collateral for calculating 
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+            
             ```vyper
             liquidation_discount: public(uint256)
 
@@ -3498,6 +3562,8 @@ The **liquidation discount** is used to discount the collateral for calculating 
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             liquidation_discounts: public(HashMap[address, uint256])
@@ -3576,6 +3642,8 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             monetary_policy: public(MonetaryPolicy)
             ```
@@ -3604,6 +3672,8 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             event SetMonetaryPolicy:
@@ -3656,6 +3726,8 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             interface Factory:
                 def stablecoin() -> address: view
@@ -3703,6 +3775,8 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             AMM: immutable(LLAMMA)
 
@@ -3746,7 +3820,11 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
     ??? quote "Source code"
 
-        ```vyper
+        === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
+            ```vyper
             COLLATERAL_TOKEN: immutable(ERC20)
 
             @external
@@ -3789,6 +3867,8 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             # AMM has a nonreentrant decorator
@@ -3867,6 +3947,8 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             minted: public(uint256)
             ```
@@ -3888,6 +3970,8 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
     ??? quote "Source code"
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             redeemed: public(uint256)
@@ -3919,18 +4003,22 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
     ??? quote "Source code"
 
-        ```vyper
-        @external
-        @nonreentrant('lock')
-        def set_callback(cb: address):
-            """
-            @notice Set liquidity mining callback
-            """
-            assert msg.sender == FACTORY.admin()
-            AMM.set_callback(cb)
-        ```
+        === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
+            ```vyper
+            @external
+            @nonreentrant('lock')
+            def set_callback(cb: address):
+                """
+                @notice Set liquidity mining callback
+                """
+                assert msg.sender == FACTORY.admin()
+                AMM.set_callback(cb)
+            ```
 
     === "Example"
         ```shell
-        >>> Controller.set_callback('todo')
+        >>> soon
         ```  

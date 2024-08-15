@@ -57,7 +57,9 @@ Whenever a user performs a collateral-specific action such as creating a new loa
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             event Deposit:
@@ -149,6 +151,8 @@ Whenever a user performs a collateral-specific action such as creating a new loa
 
         === "Controller.vy"
 
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
+
             ```vyper
             @internal
             @view
@@ -219,7 +223,9 @@ Whenever a user performs a collateral-specific action such as creating a new loa
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             event Withdraw:
@@ -353,7 +359,9 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             event TokenExchange:
@@ -791,7 +799,9 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"            
+        === "AMM.vy"            
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             event TokenExchange:
@@ -1225,7 +1235,9 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             struct DetailedTrade:
@@ -1308,7 +1320,9 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             struct DetailedTrade:
@@ -1400,7 +1414,9 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             struct DetailedTrade:
@@ -1486,7 +1502,9 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             struct DetailedTrade:
@@ -1570,7 +1588,9 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             @external
@@ -1762,7 +1782,9 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             A: public(immutable(uint256))
@@ -1820,7 +1842,9 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             active_band: public(int256)
@@ -1843,7 +1867,9 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             min_band: public(int256)
@@ -1866,7 +1892,9 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             max_band: public(int256)
@@ -1893,7 +1921,9 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             user_shares: HashMap[address, UserTicks]
@@ -1933,7 +1963,9 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             bands_x: public(HashMap[int256, uint256])
@@ -1968,7 +2000,9 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             bands_y: public(HashMap[int256, uint256])
@@ -2003,7 +2037,9 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             @external
@@ -2085,7 +2121,9 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             @external
@@ -2162,7 +2200,9 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             user_shares: HashMap[address, UserTicks]
@@ -2216,7 +2256,9 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             @external
@@ -2386,7 +2428,9 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             @external
@@ -2556,7 +2600,9 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             @external
@@ -2631,7 +2677,9 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             @external
@@ -2696,7 +2744,9 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             @external
@@ -2780,7 +2830,9 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             BASE_PRICE: immutable(uint256)
@@ -2837,7 +2889,9 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             @external
@@ -2935,7 +2989,9 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             @external
@@ -2986,7 +3042,9 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             @external
@@ -3069,7 +3127,9 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             @external
@@ -3147,7 +3207,9 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             price_oracle_contract: public(PriceOracle)
@@ -3222,7 +3284,9 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             fee: public(uint256)
@@ -3286,7 +3350,9 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             event SetFee:
@@ -3322,7 +3388,9 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             admin_fee: public(uint256)
@@ -3377,8 +3445,10 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
 
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
+            
             ```vyper
             admin_fees_x: public(uint256)
             ```
@@ -3400,7 +3470,9 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             admin_fees_y: public(uint256)
@@ -3430,7 +3502,9 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             event SetAdminFee:
@@ -3467,7 +3541,9 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             @external
@@ -3482,6 +3558,8 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
             ```
 
         === "Controller.vy"
+
+            The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
             @external
@@ -3551,7 +3629,9 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             rate: public(uint256)
@@ -3578,7 +3658,9 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             rate: public(uint256)
@@ -3630,7 +3712,9 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             event SetRate:
@@ -3678,7 +3762,6 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
 The `admin` of each AMM is usually set to the corresponding `Controller` contract of the according market. This variable can only be set once and not updated agian as the `set_admin` function checks the follwoing: `assert self.admin == empty(address)`.
 
-
 The admin can only be set once, which is done when deploying the AMM. Therefore, the `admin` cannot be changed.
 
 
@@ -3691,7 +3774,9 @@ The admin can only be set once, which is done when deploying the AMM. Therefore,
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             admin: public(address)
@@ -3719,7 +3804,9 @@ The admin can only be set once, which is done when deploying the AMM. Therefore,
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             @external
@@ -3767,7 +3854,9 @@ The admin can only be set once, which is done when deploying the AMM. Therefore,
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             BORROWED_TOKEN: immutable(ERC20)    # x
@@ -3799,7 +3888,9 @@ The admin can only be set once, which is done when deploying the AMM. Therefore,
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper 
             liquidity_mining_callback: public(LMGauge)
@@ -3827,7 +3918,9 @@ The admin can only be set once, which is done when deploying the AMM. Therefore,
 
     ??? quote "Source code"
 
-        === "LLAMMA.vy"
+        === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             interface LMGauge:
