@@ -1,5 +1,4 @@
-todo: update code to this commit hash: https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957
-change amm.vy to llamma.vy
+<h1>Controller.vy</h1>
 
 
 The Controller contract acts as a on-chain interface for **creating loans and further managing existing positions**. It holds all user debt information. External liquidations are also done through it.
@@ -64,7 +63,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
 
 ### `create_loan`
-!!! description "`Controller.create_loan(collateral: uint256, debt: uint256, N: uint256):`"
+!!! description "`Controller.create_loan(collateral: uint256, debt: uint256, N: uint256)`"
 
     Function to create a new loan, requiring specification of the amount of `collateral` to be deposited into `N` bands and the amount of `debt` to be borrowed. The lower bands choosen, the higher the loss when the position is in soft-liquiation. Should there already be an existing loan, the function will revert. 
 
@@ -72,8 +71,8 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
     | Input        | Type      | Description                           |
     | ------------ | --------- | ------------------------------------- |
-    | `collateral` | `uint256` | Amount of collateral token to put up as collateral (at its native precision). |
-    | `debt`       | `uint256` | Amount of debt to take on.            |
+    | `collateral` | `uint256` | Amount of collateral token to put up as collateral (at its native precision) |
+    | `debt`       | `uint256` | Amount of debt to take on             |
     | `N`          | `uint256` | Number of bands to deposit into; must range between `MIN_TICKS` and `MAX_TICKS` |
 
     ??? quote "Source code"
@@ -147,6 +146,8 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
             ```
         
         === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             event Deposit:
@@ -237,10 +238,13 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.create_loan(10**18, 10**21, 10)
+
         >>> Controller.debt(trader)
         1000000000000000000000
+
         >>> Controller.user_state(trader)
         [1000000000000000000, 0, 1000000000000000000000, 10]
         # [collateral, stablecoin, debt, bands]  
@@ -257,11 +261,11 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
     | Input           | Type                  | Description                                           |
     | --------------- | --------------------- | ----------------------------------------------------- |
     | `collateral`    | `uint256`             | Amount of collateral token to put up as collateral (at its native precision). |
-    | `debt`          | `uint256`             | Amount of debt to take.                               |
-    | `N`             | `uint256`             | Number of bands to deposit into.                      |
-    | `callbacker`    | `address`             | Address of the callback contract.                     |
-    | `callback_args` | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5), such as `min_amount`, etc. See [`LeverageZap1inch.vy`](./leverage/LeverageZap1inch.md) for more. |
-    | `callback_bytes` | `Bytes[10**4]`       | Callback bytes passed to the LeverageZap. Defaults to `b""`. |
+    | `debt`          | `uint256`             | Amount of debt to take                               |
+    | `N`             | `uint256`             | Number of bands to deposit into                      |
+    | `callbacker`    | `address`             | Address of the callback contract                     |
+    | `callback_args` | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5), such as `min_amount`, etc. See [`LeverageZap1inch.vy`](./leverage/LeverageZap1inch.md) for more information |
+    | `callback_bytes` | `Bytes[10**4]`       | Callback bytes passed to the LeverageZap. Defaults to `b""` |
 
     ??? quote "Source code"
 
@@ -354,6 +358,8 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
         
         === "AMM.vy"
 
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
+
             ```vyper
             event Deposit:
                 provider: indexed(address)
@@ -443,13 +449,14 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.create_loan_extended(collateral: uint256, debt: uint256, N: uint256, callbacker: address, callback_args: DynArray[uint256,5])
         ```
 
 
 ### `max_borrowable`
-!!! description "`Controller.max_borrowable(collateral: uint256, N: uint256) -> uint256:`"
+!!! description "`Controller.max_borrowable(collateral: uint256, N: uint256) -> uint256`"
 
     Function to calculate the maximum amount of crvUSD that can be borrowed against `collateral` using `N` bands. If the max borrowable amount exceeds the crvUSD balance of the controller, which essentially is what's left to be borrowed, it returns the amount that remains available for borrowing.
 
@@ -457,8 +464,8 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
     | Input       | Type      | Description          |
     | ----------- | --------- | -------------------- |
-    | `collateral`| `uint256` | Collateral amount (at its native precision).   |
-    | `N`         | `uint256` | Number of bands.     |
+    | `collateral`| `uint256` | Collateral amount (at its native precision) |
+    | `N`         | `uint256` | Number of bands      |
 
     ??? quote "Source code"
 
@@ -529,27 +536,29 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
             ```
 
     === "Example"
+
+        This example shows the maximum borrowable debt when using a defined amount of collateral and a specified number of bands. For instance, in the first case, using 1 BTC as collateral with 5 bands, a user can borrow up to approximately 37,965 crvUSD.
+
         ```shell
         >>> Controller.max_borrowable(10**18, 5)
         37965133715410776274198
-        >>> Controller.max_borrowable(10**18, 25)
-        34421752243813852608681
+
         >>> Controller.max_borrowable(10**18, 50)
         30597863183498027832984
         ```
 
 
 ### `min_collateral`
-!!! description "`Controller.min_collateral(debt: uint256, N: uint256) -> uint256:`"
+!!! description "`Controller.min_collateral(debt: uint256, N: uint256) -> uint256`"
 
     Function to calculate the minimum amount of collateral that is necessary to support `debt` using `N` bands.
 
     Returns: minimal collateral amount (`uint256`).
 
-    | Input  | Type      | Description               |
-    | ------ | --------- | ------------------------- |
-    | `debt` | `uint256` | Debt.                     |
-    | `N`    | `uint256` | Number of bands.          |
+    | Input  | Type      | Description          |
+    | ------ | --------- | -------------------- |
+    | `debt` | `uint256` | Debt to support      |
+    | `N`    | `uint256` | Number of bands used |
 
     ??? quote "Source code"
 
@@ -607,28 +616,30 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
             ```
 
     === "Example"
+
+        This example shows the amount of collateral needed to support debt using different numbers of bands. The collateral in this example is BTC. For instance, in the first case, to support 10,000 crvUSD as debt using 5 bands, approximately 0.26 BTC is needed as collateral.
+
         ```shell
         >>> Controller.min_collateral(10**22, 5)
         263399572749066565
-        >>> Controller.min_collateral(10**22, 25)
-        290513972942760489
+
         >>> Controller.min_collateral(10**22, 50)
         326820207673727834
         ```
 
 
 ### `calculate_debt_n1`
-!!! description "`Controller.calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256) -> int256:`"
+!!! description "`Controller.calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256) -> int256`"
 
     Getter method to calculate the upper band number for the deposited collateral to sit in to support the given debt. This call reverts if the requested debt is too high.
 
     Returns: upper band n1 (`int256`) to deposit the collateral into.
 
-    | Input        | Type      | Description                                   |
-    | ------------ | --------- | --------------------------------------------- |
-    | `collateral` | `uint256` | Amount of collateral (at its native precision). |
-    | `debt`       | `uint256` | Amount of requested debt.                     |
-    | `N`          | `uint256` | Number of bands to deposit into.              |
+    | Input        | Type      | Description                                    |
+    | ------------ | --------- | ---------------------------------------------- |
+    | `collateral` | `uint256` | Amount of collateral (at its native precision) |
+    | `debt`       | `uint256` | Amount of requested debt                       |
+    | `N`          | `uint256` | Number of bands to deposit into                |
 
     ??? quote "Source code"
 
@@ -701,16 +712,20 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
             ```
 
     === "Example"
+
+        This example shows the upper band into which the collateral is deposited.
+
         ```shell
         >>> Controller.calculate_debt_n1(10**18, 10**22, 5)
         85
+
         >>> Controller.calculate_debt_n1(10**18, 10**22, 25)
         76
         ```
 
 
 ### `repay`
-!!! description "`Controller.repay(_d_debt: uint256, _for: address = msg.sender, max_active_band: int256 = 2**255-1, use_eth: bool = True):`"
+!!! description "`Controller.repay(_d_debt: uint256, _for: address = msg.sender, max_active_band: int256 = 2**255-1, use_eth: bool = True)`"
 
     Function to partially or fully repay `_d_debt` amount of debt. If `_d_debt` exceeds the total debt amount of the user, a full repayment will be done.
 
@@ -718,10 +733,10 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
     | Input              | Type      | Description                                                     |
     | ------------------ | --------- | --------------------------------------------------------------- |
-    | `_d_debt`          | `uint256` | Amount of debt to repay.                                        |
-    | `_for`             | `address` | Address to repay the debt for; defaults to `msg.sender`.        |
-    | `max_active_band`  | `int256`  | Highest active band. Used to prevent front-running the repay; defaults to `2**255-1`. |
-    | `use_eth`          | `bool`    | Use wrapping/unwrapping if collateral is ETH.                   |
+    | `_d_debt`          | `uint256` | Amount of debt to repay                                         |
+    | `_for`             | `address` | Address to repay the debt for; defaults to `msg.sender`         |
+    | `max_active_band`  | `int256`  | Highest active band. Used to prevent front-running the repay; defaults to `2**255-1` |
+    | `use_eth`          | `bool`    | Use wrapping/unwrapping if collateral is ETH                    |
 
     ??? quote "Source code"
 
@@ -821,6 +836,8 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
         
         === "AMM.vy"
 
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
+
             ```vyper
             event Withdraw:
                 provider: indexed(address)
@@ -916,9 +933,9 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
             ```
 
     === "Example"
+
         ```shell
-        >>> Controller.repay(10**20, trader, 2**255-1, False)
-        >>> Controller.debt(trader)
+        >>> soon
         ```
 
 
@@ -931,9 +948,9 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
     | Input            | Type                  | Description                                          |
     | ---------------- | --------------------- | ---------------------------------------------------- |
-    | `callbacker`     | `address`             | Address of the callback contract.                    |
-    | `callback_args`  | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5), such as `min_amount`. |
-    | `callback_bytes` | `Bytes[10**4]`        | Callback bytes passed to the LeverageZap. Defaults to `b""`. |
+    | `callbacker`     | `address`             | Address of the callback contract                     |
+    | `callback_args`  | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5), such as `min_amount` |
+    | `callback_bytes` | `Bytes[10**4]`        | Callback bytes passed to the LeverageZap. Defaults to `b""` |
 
     ??? quote "Source code"
 
@@ -1047,6 +1064,8 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
         
         === "AMM.vy"
 
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
+
             ```vyper
             event Withdraw:
                 provider: indexed(address)
@@ -1142,8 +1161,9 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
             ```
 
     === "Example"
+
         ```shell
-        >>> Controller.repay_extended(callbacker: address, callback_args: DynArray[uint256,5])
+        >>> soon
         ```
 
 
@@ -1162,7 +1182,7 @@ An already existing loan can be managed in different ways:
 
 
 ### `add_collateral` 
-!!! description "`Controller.add_collateral(collateral: uint256, _for: address = msg.sender):`"
+!!! description "`Controller.add_collateral(collateral: uint256, _for: address = msg.sender)`"
 
     Function to add extra collateral to an existing loan.
 
@@ -1170,8 +1190,8 @@ An already existing loan can be managed in different ways:
 
     | Input        | Type      | Description                    |
     | ------------ | --------- | ------------------------------ |
-    | `collateral` | `uint256` | Amount of collateral to add.   |
-    | `_for`       | `address` | Address to add collateral for. Defaults to `msg.sender`. |
+    | `collateral` | `uint256` | Amount of collateral to add    |
+    | `_for`       | `address` | Address to add collateral for; defaults to `msg.sender` |
 
     ??? quote "Source code"
 
@@ -1256,6 +1276,8 @@ An already existing loan can be managed in different ways:
             ```
         
         === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             event Deposit:
@@ -1346,8 +1368,10 @@ An already existing loan can be managed in different ways:
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.add_collateral(10**18, trader)
+
         >>> Controller.user_state(trader)
         [2000000000000000000, 0, 1000000892890902175729, 10]   
         # [collateral, stablecoin, debt, bands]
@@ -1355,7 +1379,7 @@ An already existing loan can be managed in different ways:
 
 
 ### `remove_collateral`
-!!! description "`Controller.remove_collateral(collateral: uint256, use_eth: bool = True):`"
+!!! description "`Controller.remove_collateral(collateral: uint256, use_eth: bool = True)`"
 
     Function to remove collateral from an existing loan.
 
@@ -1363,8 +1387,8 @@ An already existing loan can be managed in different ways:
 
     | Input        | Type      | Description                                                |
     | ------------ | --------- | ---------------------------------------------------------- |
-    | `collateral` | `uint256` | Amount of collateral to remove.                            |
-    | `use_eth`    | `bool`    | Whether to use wrapping/unwrapping if collateral is ETH; defaults to `True`. |
+    | `collateral` | `uint256` | Amount of collateral to remove                             |
+    | `use_eth`    | `bool`    | Whether to use wrapping/unwrapping if collateral is ETH; defaults to `True` |
 
     ??? quote "Source code"
 
@@ -1448,6 +1472,8 @@ An already existing loan can be managed in different ways:
             ```
         
         === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             event Withdraw:
@@ -1544,15 +1570,18 @@ An already existing loan can be managed in different ways:
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.remove_collateral(10**18, False)
+        
         >>> Controller.user_state(trader)
         [1000000000000000000, 0, 1000001403805330760116, 10]
+        # [collateral, stablecoin, debt, bands]
         ```
 
 
 ### `borrow_more`
-!!! description "`Controller.borrow_more(collateral: uint256, debt: uint256):`"
+!!! description "`Controller.borrow_more(collateral: uint256, debt: uint256)`"
 
     Function to borrow more assets while adding more collateral (not necessary).
 
@@ -1560,8 +1589,8 @@ An already existing loan can be managed in different ways:
 
     | Input        | Type      | Description                      |
     | ------------ | --------- | -------------------------------- |
-    | `collateral` | `uint256` | Amount of collateral to add.     |
-    | `debt`       | `uint256` | Amount of debt to take.          |
+    | `collateral` | `uint256` | Amount of collateral to add      |
+    | `debt`       | `uint256` | Amount of debt to take           |
 
     ??? quote "Source code"
 
@@ -1649,6 +1678,8 @@ An already existing loan can be managed in different ways:
         
         === "AMM.vy"
 
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
+
             ```vyper
             event Deposit:
                 provider: indexed(address)
@@ -1738,10 +1769,13 @@ An already existing loan can be managed in different ways:
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.borrow_more(10**18, 10**22)
+
         >>> Controller.user_state(trader)
         [2000000000000000000, 0, 11000001592726154783594, 10]
+        # [collateral, stablecoin, debt, bands]
         ```
 
 
@@ -1754,12 +1788,12 @@ An already existing loan can be managed in different ways:
 
     | Input            | Type                  | Description                      |
     | ---------------- | --------------------- | -------------------------------- |
-    | `collateral`     | `uint256`             | Amount of collateral to add.     |
-    | `debt`           | `uint256`             | Amount of debt to take.          |
-    | `callabacker`    | `address`             | Address of the callaback contract. |
-    | `debt`           | `DynArray[uint256,5]` | Amount of debt to take on. |
-    | `callback_args` | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5), such as `min_amount`, etc. See [`LeverageZap1inch.vy`](./leverage/LeverageZap1inch.md) for more. |
-    | `callback_bytes` | `Bytes[10**4]`        | Callback bytes passed to the LeverageZap. Defaults to `b""`. |
+    | `collateral`     | `uint256`             | Amount of collateral to add      |
+    | `debt`           | `uint256`             | Amount of debt to take           |
+    | `callabacker`    | `address`             | Address of the callaback contract  |
+    | `debt`           | `DynArray[uint256,5]` | Amount of debt to take on  |
+    | `callback_args` | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5), such as `min_amount`, etc; see [`LeverageZap1inch.vy`](./leverage/LeverageZap1inch.md) for more informations |
+    | `callback_bytes` | `Bytes[10**4]`        | Callback bytes passed to the LeverageZap. Defaults to `b""` |
 
     ??? quote "Source code"
 
@@ -1890,6 +1924,8 @@ An already existing loan can be managed in different ways:
         
         === "AMM.vy"
 
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
+
             ```vyper
             event Deposit:
                 provider: indexed(address)
@@ -1980,7 +2016,7 @@ An already existing loan can be managed in different ways:
 
 
 ### `health_calculator`
-!!! description "`Controller.health_calculator(user: address, d_collateral: int256, d_debt: int256, full: bool, N: uint256 = 0) -> int256:`"
+!!! description "`Controller.health_calculator(user: address, d_collateral: int256, d_debt: int256, full: bool, N: uint256 = 0) -> int256`"
 
     Function to predict the health of `user` after changing collateral by `d_collateral` and/or debt by `d_debt`.
 
@@ -1988,11 +2024,11 @@ An already existing loan can be managed in different ways:
 
     | Input          | Type      | Description                                  |
     | -------------- | --------- | -------------------------------------------- |
-    | `user`         | `address` | Address of the user.                         |
-    | `d_collateral` | `int256`  | Change in collateral amount.                 |
-    | `d_debt`       | `int256`  | Change in debt amount.                       |
+    | `user`         | `address` | Address of the user                          |
+    | `d_collateral` | `int256`  | Change in collateral amount                  |
+    | `d_debt`       | `int256`  | Change in debt amount                        |
     | `full`         | `bool`    | Weather to take into account the price difference above the highest user's band |
-    | `N`            | `uint256` | Number of bands in case loan does not exist yet. |
+    | `N`            | `uint256` | Number of bands in case loan does not exist yet  |
 
     ??? quote "Source code"
 
@@ -2060,16 +2096,20 @@ An already existing loan can be managed in different ways:
             ```
 
     === "Example"
+
+        This example shows the calculated health based on changes in collateral and borrowed assets. For instance, in the first example, the predicted health is calculated by adding 1 WBTC as collateral and taking on an additional 10,000 crvUSD in debt.
+
         ```shell
         >>> Controller.health_calculator(trader, 10**18, 10**22, True, 0)
         5026488624797598934
+
         >>> Controller.health_calculator(trader, 10**18, 10**22, False, 0)
         40995665483999083
         ```
 
 
 ### `liquidate`
-!!! description "`Controller.liquidate(user: address, min_x: uint256, use_eth: bool = True):`"
+!!! description "`Controller.liquidate(user: address, min_x: uint256, use_eth: bool = True)`"
 
     Function to perform a bad liquidation (or self-liquidation) of `user` if `health` is not good.
 
@@ -2077,9 +2117,9 @@ An already existing loan can be managed in different ways:
 
     | Input    | Type      | Description                                                          |
     | -------- | --------- | -------------------------------------------------------------------- |
-    | `user`   | `address` | Address to be liquidated.                                           |
-    | `min_x`  | `uint256` | Minimal amount of asset to receive (to avoid liquidators being sandwiched). |
-    | `use_eth`| `bool`    | Use wrapping/unwrapping if collateral is ETH.                        |
+    | `user`   | `address` | Address to be liquidated                                             |
+    | `min_x`  | `uint256` | Minimal amount of asset to receive (to avoid liquidators being sandwiched) |
+    | `use_eth`| `bool`    | Use wrapping/unwrapping if collateral is ETH                        |
 
     ??? quote "Source code"
 
@@ -2208,6 +2248,8 @@ An already existing loan can be managed in different ways:
         
         === "AMM.vy"
 
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
+
             ```vyper
             event Withdraw:
                 provider: indexed(address)
@@ -2304,8 +2346,7 @@ An already existing loan can be managed in different ways:
 
     === "Example"
         ```shell
-        >>> Controller.(user: address, min_x: uint256, use_eth: bool = True)
-        return [total_x, total_y]
+        >>> soon
         ```
 
 
@@ -2318,13 +2359,13 @@ An already existing loan can be managed in different ways:
 
     | Input            | Type                  | Description                                                                |
     | ---------------- | --------------------- | -------------------------------------------------------------------------- |
-    | `user`           | `address`             | Address to be liquidated.                                                  |
-    | `min_x`          | `uint256`             | Minimal amount of assets to receive (to avoid liquidators being sandwiched). |
-    | `frac`           | `uint256`             | Fraction to liquidate; 100% = 10**18.                                      |
-    | `use_eth`        | `bool`                | Use wrapping/unwrapping if collateral is ETH.                              |
-    | `callbacker`     | `address`             | Address of the callback contract.                                          |
-    | `callback_args`  | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5), such as `min_amount`.          |
-    | `callback_bytes` | `Bytes[10**4]`        | Callback bytes passed to the LeverageZap. Defaults to `b""`. |
+    | `user`           | `address`             | Address to be liquidated                                                   |
+    | `min_x`          | `uint256`             | Minimal amount of assets to receive (to avoid liquidators being sandwiched)  |
+    | `frac`           | `uint256`             | Fraction to liquidate; 100% = 10**18                                       |
+    | `use_eth`        | `bool`                | Use wrapping/unwrapping if collateral is ETH                              |
+    | `callbacker`     | `address`             | Address of the callback contract                                          |
+    | `callback_args`  | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5), such as `min_amount`          |
+    | `callback_bytes` | `Bytes[10**4]`        | Callback bytes passed to the LeverageZap. Defaults to `b""` |
 
     ??? quote "Source code"
 
@@ -2456,6 +2497,8 @@ An already existing loan can be managed in different ways:
         
         === "AMM.vy"
 
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
+
             ```vyper
             event Withdraw:
                 provider: indexed(address)
@@ -2552,22 +2595,21 @@ An already existing loan can be managed in different ways:
 
     === "Example"
         ```shell
-        >>> Controller.liquidate_extended(user: address, min_x: uint256, frac: uint256, use_eth: bool, callbacker: address, callback_args: DynArray[uint256,5])
-        return [total_x, total_y]
+        >>> soon
         ```
 
 
 ### `tokens_to_liquidate`
-!!! description "`Controller.tokens_to_liquidate(user: address, frac: uint256 = 10 ** 18) -> uint256:`"
+!!! description "`Controller.tokens_to_liquidate(user: address, frac: uint256 = 10 ** 18) -> uint256`"
 
     Function to calculate the amount of assets to have in a liquidator's wallet in order to liquidate a user.
 
     Returns: amount of tokens needed (`uint256`).
 
-    | Input    | Type      | Description                                  |
-    | -------- | --------- | -------------------------------------------- |
-    | `user`   | `address` | Address of the user to liquidate.            |
-    | `frac`   | `uint256` | Fraction to liquidate; 100% = 10**18.        |
+    | Input    | Type      | Description                                 |
+    | -------- | --------- | ------------------------------------------- |
+    | `user`   | `address` | Address of the user to liquidate            |
+    | `frac`   | `uint256` | Fraction to liquidate; 100% = 10**18        |
 
     ??? quote "Source code"
 
@@ -2596,6 +2638,9 @@ An already existing loan can be managed in different ways:
             ```
 
     === "Example"
+
+        This example shows the amount of the borrowed asset required to liquidate the user.
+
         ```shell
         >>> Controller.tokens_to_liquidate(trader)
         10000067519253003373620
@@ -2603,7 +2648,7 @@ An already existing loan can be managed in different ways:
 
 
 ### `users_to_liquidate`
-!!! description "`Controller.users_to_liquidate(_from: uint256=0, _limit: uint256=0) -> DynArray[Position, 1000]:`"
+!!! description "`Controller.users_to_liquidate(_from: uint256=0, _limit: uint256=0) -> DynArray[Position, 1000]`"
 
     Getter for a dynamic array of users who can be hard-liquidated.
 
@@ -2611,8 +2656,8 @@ An already existing loan can be managed in different ways:
 
     | Input     | Type     | Description                                        |
     | --------- | -------- | -------------------------------------------------- |
-    | `_from`   | `uint256` | Loan index to start iteration from. Defaults to 0. |
-    | `_limit`  | `uint256` | Number of loans to look over. Defaults to 0.       |
+    | `_from`   | `uint256` | Loan index to start iteration from; defaults to 0 |
+    | `_limit`  | `uint256` | Number of loans to look over; defaults to 0       |
 
     ??? quote "Source code"
 
@@ -2656,6 +2701,9 @@ An already existing loan can be managed in different ways:
             ```
 
     === "Example"
+
+        This example returns a list of all users with negative health and therefore eligible for hard liquidation. In this case, no positions are eligible.
+
         ```shell
         >>> Controller.users_to_liquidate(0)
         []
@@ -2670,15 +2718,15 @@ An already existing loan can be managed in different ways:
 *All user information, such as `debt`, `health`, etc., is stored within the Controller contract.*
 
 ### `debt`
-!!! description "`Controller.debt(user: address) -> uint256:`"
+!!! description "`Controller.debt(user: address) -> uint256`"
 
     Getter for the amount of debt for `user`. Constantly increases due to the charged interest rate.
 
     Returns: debt (`uint256`).
 
-    | Input  | Type      | Description      |
-    | ------ | --------- | ---------------- |
-    | `user` | `address` | User Address.    |
+    | Input  | Type      | Description     |
+    | ------ | --------- | --------------- |
+    | `user` | `address` | User Address    |
 
     ??? quote "Source code"
 
@@ -2728,6 +2776,9 @@ An already existing loan can be managed in different ways:
             ```
 
     === "Example"
+
+        This example shows the debt of a specific user.
+
         ```shell
         >>> Controller.debt(trader)
         11000001592726154783594
@@ -2735,7 +2786,7 @@ An already existing loan can be managed in different ways:
 
 
 ### `total_debt`
-!!! description "`Controller.total_debt() -> uint256:`"
+!!! description "`Controller.total_debt() -> uint256`"
 
     Getter for the total debt of the Controller.
 
@@ -2763,6 +2814,9 @@ An already existing loan can be managed in different ways:
             ```
 
     === "Example"
+
+        This example shows the total debt of the market.
+
         ```shell
         >>> Controller.total_debt()
         4047221089417662821708552
@@ -2770,15 +2824,15 @@ An already existing loan can be managed in different ways:
 
 
 ### `loan_exists`
-!!! description "`Controller.loan_exists(user: address) -> bool:`"
+!!! description "`Controller.loan_exists(user: address) -> bool`"
 
     Function to check if a loan for `user` exists.
 
     Returns: true or false (`bool`).
 
-    | Input  | Type      | Description   |
-    | ------ | --------- | ------------- |
-    | `user` | `address` | User address. |
+    | Input  | Type      | Description  |
+    | ------ | --------- | ------------ |
+    | `user` | `address` | User address |
 
     ??? quote "Source code"
 
@@ -2802,24 +2856,28 @@ An already existing loan can be managed in different ways:
             ```
 
     === "Example"
+
+        This example shows if a loan exists for a specific user.
+
         ```shell
         >>> Controller.loan_exists(trader)
         'True'
+
         >>> Controller.loan_exists("0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B")
         'False'
         ```
 
 
 ### `user_prices`
-!!! description "`Controller.user_prices(user: address) -> uint256[2]:`"
+!!! description "`Controller.user_prices(user: address) -> uint256[2]`"
 
     Getter for the highest price of the upper band and the lowest price of the lower band the user has deposited in the AMM. This is essentially the liquidation price range of the loan.
 
     Returns: upper and lower band price (`uint256`).
 
-    | Input  | Type      | Description   |
-    | ------ | --------- | ------------- |
-    | `user` | `address` | User address. |
+    | Input  | Type      | Description  |
+    | ------ | --------- | ------------ |
+    | `user` | `address` | User address |
 
     ??? quote "Source code"
 
@@ -2844,7 +2902,65 @@ An already existing loan can be managed in different ways:
 
         === "AMM.vy"
 
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
+
             ```vyper
+            @external
+            @view
+            @nonreentrant('lock')
+            def has_liquidity(user: address) -> bool:
+                """
+                @notice Check if `user` has any liquidity in the AMM
+                """
+                return self.user_shares[user].ticks[0] != 0
+
+            @external
+            @view
+            @nonreentrant('lock')
+            def read_user_tick_numbers(user: address) -> int256[2]:
+                """
+                @notice Unpacks and reads user tick numbers
+                @param user User address
+                @return Lowest and highest band the user deposited into
+                """
+                return self._read_user_tick_numbers(user)
+
+            @internal
+            @view
+            def _read_user_tick_numbers(user: address) -> int256[2]:
+                """
+                @notice Unpacks and reads user tick numbers
+                @param user User address
+                @return Lowest and highest band the user deposited into
+                """
+                ns: int256 = self.user_shares[user].ns
+                n2: int256 = unsafe_div(ns, 2**128)
+                n1: int256 = ns % 2**128
+                if n1 >= 2**127:
+                    n1 = unsafe_sub(n1, 2**128)
+                    n2 = unsafe_add(n2, 1)
+                return [n1, n2]
+
+            @external
+            @view
+            def p_oracle_up(n: int256) -> uint256:
+                """
+                @notice Highest oracle price for the band to have liquidity when p = p_oracle
+                @param n Band number (can be negative)
+                @return Price at 1e18 base
+                """
+                return self._p_oracle_up(n)
+
+            @external
+            @view
+            def p_oracle_down(n: int256) -> uint256:
+                """
+                @notice Lowest oracle price for the band to have liquidity when p = p_oracle
+                @param n Band number (can be negative)
+                @return Price at 1e18 base
+                """
+                return self._p_oracle_up(n + 1)
+
             @internal
             @view
             def _p_oracle_up(n: int256) -> uint256:
@@ -2891,29 +3007,12 @@ An already existing loan can be managed in different ways:
                     unsafe_sub(k, 195))
                 ## End exp
                 return unsafe_div(self._base_price() * exp_result, 10**18)
-
-            @external
-            @view
-            def p_oracle_up(n: int256) -> uint256:
-                """
-                @notice Highest oracle price for the band to have liquidity when p = p_oracle
-                @param n Band number (can be negative)
-                @return Price at 1e18 base
-                """
-                return self._p_oracle_up(n)
-
-            @external
-            @view
-            def p_oracle_down(n: int256) -> uint256:
-                """
-                @notice Lowest oracle price for the band to have liquidity when p = p_oracle
-                @param n Band number (can be negative)
-                @return Price at 1e18 base
-                """
-                return self._p_oracle_up(n + 1)
             ```
 
     === "Example"
+
+        This example shows the liquidation range of a user's loan. In this case, the liquidation range would be between 64,018 and 57,897.
+
         ```shell
         >>> Controller.users_price(trader):
         [6401870706098817273644, 5789737113118292909562]
@@ -2921,16 +3020,16 @@ An already existing loan can be managed in different ways:
 
 
 ### `health`
-!!! description "`Controller.health(user: address, full: bool = False) -> int256:`"
+!!! description "`Controller.health(user: address, full: bool = False) -> int256`"
 
     Getter for the health of `user`'s loan normalized to 1e18. If health is lower than 0, the loan can be hard-liquidated.
 
     Returns: health (`int256`).
 
-    | Input  | Type      | Description                                                          |
-    | ------ | --------- | -------------------------------------------------------------------- |
-    | `user` | `address` | User address.                                                        |
-    | `full` | `bool`    | Whether to take into account the price difference above the highest user's band. |
+    | Input  | Type      | Description                                                         |
+    | ------ | --------- | ------------------------------------------------------------------- |
+    | `user` | `address` | User address                                                        |
+    | `full` | `bool`    | Whether to take into account the price difference above the highest user's band |
 
     ??? quote "Source code"
 
@@ -2977,24 +3076,28 @@ An already existing loan can be managed in different ways:
             ```
 
     === "Example"
+
+        These examples show the health of a loan, once by taking the price differences above the user's highest band into account, and once without.
+
         ```shell
         >>> Controller.health(trader, True)
         6703636365754288577
+
         >>> Controller.health(trader, False)
         40947705194891925
         ```
 
 
 ### `user_state`
-!!! description "`Controller.user_state(user: address) -> uint256[4]:`"
+!!! description "`Controller.user_state(user: address) -> uint256[4]`"
 
     Getter for `user`'s state.
 
     Returns: collateral, stablecoin, debt, and number of bands (`uint256`).
 
-    | Input  | Type      | Description                         |
-    | ------ | --------- | ----------------------------------- |
-    | `user` | `address` | User address to return state for.   |
+    | Input  | Type      | Description                        |
+    | ------ | --------- | ---------------------------------- |
+    | `user` | `address` | User address to return state for   |
 
     ??? quote "Source code"
 
@@ -3019,6 +3122,8 @@ An already existing loan can be managed in different ways:
 
         === "AMM.vy"
 
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
+
             ```vyper
             @external
             @view
@@ -3031,6 +3136,17 @@ An already existing loan can be managed in different ways:
                 """
                 xy: DynArray[uint256, MAX_TICKS_UINT][2] = self._get_xy(user, True)
                 return [xy[0][0], xy[1][0]]
+
+            @external
+            @view
+            @nonreentrant('lock')
+            def read_user_tick_numbers(user: address) -> int256[2]:
+                """
+                @notice Unpacks and reads user tick numbers
+                @param user User address
+                @return Lowest and highest band the user deposited into
+                """
+                return self._read_user_tick_numbers(user)
 
             @internal
             @view
@@ -3050,6 +3166,9 @@ An already existing loan can be managed in different ways:
             ```
 
     === "Example"
+
+        This example returns the state of a user's loan, including the collateral composition consisting of collateral and borrowable tokens, the debt, and the number of bands used.
+
         ```shell
         >>> Controller.user_state(trader)
         [2000000000000000000, 0, 11000001592726154783594, 10]
@@ -3063,9 +3182,9 @@ An already existing loan can be managed in different ways:
 
     Returns: user (`address`).
 
-    | Input  | Type      | Description  |
-    | ------ | --------- | ------------ |
-    | `arg0` | `uint256` | Loan index.  |
+    | Input  | Type      | Description |
+    | ------ | --------- | ----------- |
+    | `arg0` | `uint256` | Loan index  |
 
     ??? quote "Source code"
 
@@ -3090,9 +3209,11 @@ An already existing loan can be managed in different ways:
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.loans(0)
         '0x10E47fC06ede0CD8C43E2A7ea438BEfcF45BCAa8'
+
         >>> Controller.loans(21)
         '0x3ee18B2214AFF97000D974cf647E7C347E8fa585'
         ```
@@ -3120,6 +3241,7 @@ An already existing loan can be managed in different ways:
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.loans_ix(trader)
         21
@@ -3131,11 +3253,7 @@ An already existing loan can be managed in different ways:
 
     Getter for the total number of existing loans. This variable is increased by one when a loan is created and decreased by one when a loan is fully repaid.
 
-    Returns: total loans (`uint256`).
-
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `arg0` |  `address` |  User address |
+    Returns: number of active loans (`uint256`).
 
     ??? quote "Source code"
 
@@ -3160,6 +3278,7 @@ An already existing loan can be managed in different ways:
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.n_loans()
         22
@@ -3184,7 +3303,7 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 
 
 ### `admin_fees`
-!!! description "`Controller.admin_fees() -> uint256:`"
+!!! description "`Controller.admin_fees() -> uint256`"
 
     Getter for the claimable admin fees. Claimable by calling [`colletct_fees`](#collect_fees). 
 
@@ -3216,7 +3335,18 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 
         === "AMM.vy"
 
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
+
             ```vyper
+            @external
+            @view
+            def get_rate_mul() -> uint256:
+                """
+                @notice Rate multiplier which is 1.0 + integral(rate, dt)
+                @return Rate multiplier in units where 1.0 == 1e18
+                """
+                return self._rate_mul()
+
             @internal
             @view
             def _rate_mul() -> uint256:
@@ -3228,6 +3358,7 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.admin_fees()
         1431079351921267396706
@@ -3236,7 +3367,7 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 
 
 ### `set_amm_fee`
-!!! description "`Controller.set_amm_fee(fee: uint256):`"
+!!! description "`Controller.set_amm_fee(fee: uint256)`"
 
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the `Factory`.
@@ -3247,7 +3378,7 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 
     | Input | Type      | Description   |
     | ----- | --------- | ------------- |
-    | `fee` | `uint256` | New fee value. |
+    | `fee` | `uint256` | New fee value |
 
     ??? quote "Source code"
 
@@ -3273,6 +3404,8 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 
         === "AMM.vy"
 
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
+
             ```vyper
             event SetFee:
                 fee: uint256
@@ -3292,13 +3425,14 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
             ```
 
     === "Example"
+
         ```shell
-        >>> Controller.set_amm_fee(6000000000000000):
+        >>> soon
         ```
 
 
 ### `set_amm_admin_fee`
-!!! description "`Controller.set_amm_admin_fee(fee: uint256):`"
+!!! description "`Controller.set_amm_admin_fee(fee: uint256)`"
 
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the `Factory`.
@@ -3307,9 +3441,9 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 
     Emits: `SetAdminFee`
 
-    | Input | Type      | Description    |
-    | ----- | --------- | -------------- |
-    | `fee` | `uint256` | New admin fee. |
+    | Input | Type      | Description   |
+    | ----- | --------- | ------------- |
+    | `fee` | `uint256` | New admin fee |
 
     ??? quote "Source code"
 
@@ -3334,6 +3468,8 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 
         === "AMM.vy"
 
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
+
             ```vyper
             event SetAdminFee:
                 fee: uint256
@@ -3353,13 +3489,14 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.set_amm_admin_fee(1):
         ```
 
 
 ### `collect_fees`
-!!! description "`Controller.collect_fees():`"
+!!! description "`Controller.collect_fees()`"
 
     Function to collects all fees, including borrwing-based fees and AMM-based fees (if there are any). Collected fees are sent to the `fee_receiver` specified in the [Factory](./factory/overview.md#fee-receiver).
 
@@ -3420,6 +3557,8 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 
         === "AMM.vy"
 
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
+
             ```vyper
             admin_fees_x: public(uint256)
             admin_fees_y: public(uint256)
@@ -3436,10 +3575,15 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
             ```
 
     === "Example"
+
+        This example shows the effect of claiming fees. Before calling `collect_fees`, the total admin fees amounted to approximately 1,431 crvUSD. After claiming, the admin fees are reset to 0.
+
         ```shell
         >>> Controller.admin_fees()
         1431079351921267396706
+
         >>> Controller.collect_fees()
+
         >>> Controller.admin_fees()
         0
         ```
@@ -3489,13 +3633,12 @@ The **liquidation discount** is used to discount the collateral for calculating 
                 @param amm AMM address (Already deployed from blueprint)
                 """
                 ...
-
                 self.loan_discount = loan_discount
-
                 ...
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.loan_discount()
         90000000000000000
@@ -3535,13 +3678,12 @@ The **liquidation discount** is used to discount the collateral for calculating 
                 @param amm AMM address (Already deployed from blueprint)
                 """
                 ...
-
                 self.liquidation_discount = liquidation_discount
-
                 ...
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.liquidation_discount()
         60000000000000000
@@ -3555,9 +3697,9 @@ The **liquidation discount** is used to discount the collateral for calculating 
 
     Returns: liquidation discount (`uint256`).
 
-    | Input  | Type      | Description   |
-    | ------ | --------- | ------------- |
-    | `arg0` | `address` | User Address. |
+    | Input  | Type      | Description  |
+    | ------ | --------- | ------------ |
+    | `arg0` | `address` | User Address |
 
     ??? quote "Source code"
 
@@ -3570,6 +3712,7 @@ The **liquidation discount** is used to discount the collateral for calculating 
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.liquidation_discounts(trader)
         0
@@ -3586,10 +3729,10 @@ The **liquidation discount** is used to discount the collateral for calculating 
 
     Emits: `SetBorrowingDiscount`
 
-    | Input                  | Type      | Description                             |
-    | ---------------------- | --------- | --------------------------------------- |
-    | `loan_discount`        | `uint256` | New value for the loan discount.        |
-    | `liquidation_discount` | `uint256` | New value for the liquidation discount. |
+    | Input                  | Type      | Description                            |
+    | ---------------------- | --------- | -------------------------------------- |
+    | `loan_discount`        | `uint256` | New value for the loan discount        |
+    | `liquidation_discount` | `uint256` | New value for the liquidation discount |
 
     ??? quote "Source code"
 
@@ -3616,6 +3759,7 @@ The **liquidation discount** is used to discount the collateral for calculating 
         ```
 
     === "Example"
+
         ```shell
         >>> Controller.set_borrowing_discounts(90000000000000000, 60000000000000000)
         ``` 
@@ -3645,10 +3789,14 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
             The following source code includes all changes up to commit hash [58289a4](https://github.com/curvefi/curve-stablecoin/tree/58289a4283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             ```vyper
+            interface MonetaryPolicy:
+                def rate_write() -> uint256: nonpayable
+
             monetary_policy: public(MonetaryPolicy)
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.monetary_policy()
         '0x8c5A7F011f733fBb0A6c969c058716d5CE9bc933'
@@ -3656,7 +3804,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
 
 ### `set_monetary_policy`
-!!! description "`Controller.set_monetary_policy(monetary_policy: address):"
+!!! description "`Controller.set_monetary_policy(monetary_policy: address)`"
 
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract, which is the Factory.
@@ -3665,9 +3813,9 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
     Emits: `SetMonetaryPolicy`
 
-    | Input             | Type      | Description               |
-    | ----------------- | --------- | ------------------------- |
-    | `monetary_policy` | `address` | Monetary policy contract. |
+    | Input             | Type      | Description              |
+    | ----------------- | --------- | ------------------------ |
+    | `monetary_policy` | `address` | Monetary policy contract |
 
     ??? quote "Source code"
 
@@ -3705,6 +3853,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.set_monetary_policy("0xc684432FD6322c6D58b6bC5d28B18569aA0AD0A1")
         ```
@@ -3758,6 +3907,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.factory()
         '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC
@@ -3767,9 +3917,9 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 ### `amm`
 !!! description "`Controller.amm() -> address: view`"
 
-    Getter of the AMM contract of the Controller. This variable is immutable and can not be changed.
+    Getter of the `AMM` contract of the `Controller`. This variable is immutable and can not be changed.
 
-    Returns: AMM contract (`address`). 
+    Returns: `AMM` contract (`address`). 
 
     ??? quote "Source code"
 
@@ -3796,15 +3946,13 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
                     get_x_down() for "bad liquidation" purposes
                 @param amm AMM address (Already deployed from blueprint)
                 """
-
                 ...
-
                 AMM = LLAMMA(amm)
-
                 ...
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.amm()
         '0xf9bD9da2427a50908C4c6D1599D8e62837C2BCB0'
@@ -3844,13 +3992,12 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
                 @param amm AMM address (Already deployed from blueprint)
                 """
                 ...
-
                 COLLATERAL_TOKEN = _collateral_token
-
                 ...
-        ```
+            ```
 
     === "Example"
+
         ```shell
         >>> Controller.collateral_token()
         '0x18084fbA666a33d37592fA2633fD49a74DD93a88'
@@ -3882,6 +4029,8 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
             ```
 
         === "AMM.vy"
+
+            The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
             ```vyper
             @external
@@ -3930,6 +4079,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.amm_price():
         42852102383927213434085
@@ -3954,6 +4104,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.minted()
         20682637249975500380405996
@@ -3978,6 +4129,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
             ```
 
     === "Example"
+
         ```shell
         >>> Controller.redeemed()
         16646401312086830122157869
@@ -4019,6 +4171,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
             ```
 
     === "Example"
+
         ```shell
         >>> soon
         ```  
