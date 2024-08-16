@@ -1,9 +1,9 @@
-<h1>LLAMMA.vy</h1>
+<h1>AMMA.vy</h1>
 
 LLAMMA (Lending Liquidating Automated Market Maker Algorithm) is the **market-making contract that rebalances the collateral of a loan**. It is an algorithm implemented into a smart contract which is **responsible for liquidating and de-liquidating collateral based on market conditions** through arbitrage traders. Each individual market has its own AMM **containing the collateral and borrowable asset**. E.g. the AMM of the [ETH<>crvUSD](https://etherscan.io/address/0x1681195c176239ac5e72d9aebacf5b2492e0c4ee) contains of `ETH` and `crvUSD`.
 
 !!!info "Getting familiar with LLAMMA"
-    Before interacting with the `LLAMMA` contract, it is highly advised to read the following section go gain a broader understanding of the system: [LLAMMA Explainer](todo).
+    Before interacting with the `LLAMMA` contract, it is highly advised to read the following section go gain a broader understanding of the system: [LLAMMA Explainer](llamma-explainer.md).
 
 
 | Glossary             | Description |
@@ -39,7 +39,7 @@ Whenever a user performs a collateral-specific action such as creating a new loa
 
 
 ### `deposit_range`
-!!! description "`LLAMMA.deposit_range(user: address, amount: uint256, n1: int256, n2: int256)`"
+!!! description "`AMM.deposit_range(user: address, amount: uint256, n1: int256, n2: int256)`"
 
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract, which is the `Controller`.
@@ -205,7 +205,7 @@ Whenever a user performs a collateral-specific action such as creating a new loa
 
 
 ### `withdraw`
-!!! description "`LLAMMA.withdraw(user: address, frac: uint256) -> uint256[2]:`"
+!!! description "`AMM.withdraw(user: address, frac: uint256) -> uint256[2]:`"
 
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract, which is the `Controller`.
@@ -337,11 +337,11 @@ The LLAMMA can be used to exchange tokens, just like any other AMM. This is cruc
 Besides these two exchange functions, there are plenty of "helper functions" which are definitely of good use for searchers and arbitrageurs.
 
 !!! colab "Google Colab Notebook"
-    todo: A Google Colab notebook that showcases the use of `exchange` and `exchange_dy` can be found here: [:simple-googlecolab: Google Colab Notebook](https://colab.research.google.com/drive/1jT8eMgsFNdYIN2EPBeRtJ-SqaJdzYmIe?usp=sharing).
+    A Google Colab notebook that showcases the use of `exchange` and `exchange_dy` can be found here: [:simple-googlecolab: Google Colab Notebook](https://colab.research.google.com/drive/1jT8eMgsFNdYIN2EPBeRtJ-SqaJdzYmIe?usp=sharing).
 
 
 ### `exchange`
-!!! description "`LLAMMA.exchange(i: uint256, j: uint256, in_amount: uint256, min_amount: uint256, _for: address = msg.sender) -> uint256[2]:`"
+!!! description "`AMM.exchange(i: uint256, j: uint256, in_amount: uint256, min_amount: uint256, _for: address = msg.sender) -> uint256[2]:`"
 
     Function to exchange `in_amount` of token `i` for a minimum amount of `min_amount` of token `j`. If the exchange results in less than `min_amount` of tokens, the function call reverts.
 
@@ -781,7 +781,7 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
 
 
 ### `exchange_dy`
-!!! description "`LLAMMA.exchange_dy(i: uint256, j: uint256, out_amount: uint256, max_amount: uint256, _for: address = msg.sender) -> uint256[2]:`"
+!!! description "`AMM.exchange_dy(i: uint256, j: uint256, out_amount: uint256, max_amount: uint256, _for: address = msg.sender) -> uint256[2]:`"
     
     Function to exchange a maximum amount of `max_amount` of input token `i` for a total of `out_amount` of output token `j`. If `max_amount` is not enough to cover the purchase of `out_amount` of tokens, the function will revert.
 
@@ -1221,7 +1221,7 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
 
 
 ### `get_dy`
-!!! description "`LLAMMA.get_dy(i: uint256, j: uint256, in_amount: uint256) -> uint256:`"
+!!! description "`AMM.get_dy(i: uint256, j: uint256, in_amount: uint256) -> uint256:`"
 
     Function to calculate the amount of output tokens `j` to receive when exchanging for `in_amount` of input token `i`. 
 
@@ -1297,16 +1297,16 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
     === "Example"
 
         ```shell
-        >>> LLAMMA.get_dy(0, 1, 10**21)  -> swapping 1,000 crvUSD (`i`) for ETH (`j`).
+        >>> AMM.get_dy(0, 1, 10**21)  -> swapping 1,000 crvUSD (`i`) for ETH (`j`).
         0.305354737739302832
 
-        >>> LLAMMA.get_dy(1, 0, 10**18)  -> swapping 1 ETH (`j`) for crvUSD (`i`).
+        >>> AMM.get_dy(1, 0, 10**18)  -> swapping 1 ETH (`j`) for crvUSD (`i`).
         3150.900144377803783784
         ```
 
 
 ### `get_dx`
-!!! description "`LLAMMA.get_dx(i: uint256, j: uint256, out_amount: uint256) -> uint256:`"
+!!! description "`AMM.get_dx(i: uint256, j: uint256, out_amount: uint256) -> uint256:`"
 
     Function to calculate the `in_amount` of token `i` required to receive `out_amount` of token `j`.
 
@@ -1386,19 +1386,18 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
     === "Example"
 
         The function essentially returns how much input tokens (`crvUSD`) are needed to receive `10**18` output tokens (`tBTC`).
-        todo: how much crvUSD does a user need to swap in to receive 1 tbtc at the currents pool state?
 
         ```shell
-        >>> LLAMMA.get_dx(0, 1, 10**18)
+        >>> AMM.get_dx(0, 1, 10**18)
         3276112209984625364927
 
-        >>> LLAMMA.get_dx(1, 0, 10**21)
-        317266677056025978          todo: how much ETH (`j`) do i need to receive 10**21 crvZSD (`i`)
+        >>> AMM.get_dx(1, 0, 10**21)
+        317266677056025978
         ```
 
 
 ### `get_dydx`
-!!! description "`LLAMMA.get_dydx(i: uint256, j: uint256, out_amount: uint256) -> (uint256, uint256):`"
+!!! description "`AMM.get_dydx(i: uint256, j: uint256, out_amount: uint256) -> (uint256, uint256):`"
 
     Function to calculate both the input amount required and the output amount received when swapping tokens `i` for a specified `out_amount` of token `j`. This function performs similar calculations to `get_dx` but additionally returns the amount of output tokens received.
 
@@ -1479,16 +1478,16 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
     === "Example"
 
         ```shell
-        >>> LLAMMA.get_dydx(0, 1, 10**18)
-        (1000000000000000000, 3275951499856300880467)   todo
+        >>> AMM.get_dydx(0, 1, 10**18)
+        (1000000000000000000, 3275951499856300880467)
 
-        >>> LLAMMA.get_dydx(1, 0, 10**21)
-        (1000000000000000000000, 317280848541649185)   todo
+        >>> AMM.get_dydx(1, 0, 10**21)
+        (1000000000000000000000, 317280848541649185)
         ```
 
 
 ### `get_dxdy`
-!!! description "`LLAMMA.get_dxdy(i: uint256, j: uint256, in_amount: uint256) -> (uint256, uint256):`"
+!!! description "`AMM.get_dxdy(i: uint256, j: uint256, in_amount: uint256) -> (uint256, uint256):`"
 
     Function to calculate both the input and output amounts when swapping `in_amount` of token `i` for token `j`. This function performs similar calculations to `get_dy` but additionally returns the amount of input tokens used in the swap.
 
@@ -1564,19 +1563,17 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
 
     === "Example"
 
-        todo
-
         ```shell
-        >>> LLAMMA.get_dxdy(0, 1, 10**21)
+        >>> AMM.get_dxdy(0, 1, 10**21)
         (1000000000000000000000, 305269619091735494)
 
-        >>> LLAMMA.get_dxdy(1, 0, 10**18)
+        >>> AMM.get_dxdy(1, 0, 10**18)
         (1000000000000000000, 3151594754708902902339)
         ```
 
 
 ### `get_amount_for_price`
-!!! description "`LLAMMA.get_amount_for_price(p: uint256) -> (uint256, bool)`"
+!!! description "`AMM.get_amount_for_price(p: uint256) -> (uint256, bool)`"
 
     Function to calculate the necessary amount of tokens to be exchanged to achieve the final price `p` in the AMM.
 
@@ -1701,13 +1698,13 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
         >>> Controller.amm_price()
         3213458506041024105600
 
-        >>> LLAMMA.get_amount_for_price(3213458506041024105600)
+        >>> AMM.get_amount_for_price(3213458506041024105600)
         (0, True)                               # no need for any swaps as the price is already where we want it
 
-        >>> LLAMMA.get_amount_for_price(3250000000000000000000)
+        >>> AMM.get_amount_for_price(3250000000000000000000)
         (80060004111772800648528, true)         # need to swap around 80k crvUSD for ETH to raise the price of ETH up to 3250 within the AMM
 
-        >>> LLAMMA.get_amount_for_price(3150000000000000000000)
+        >>> AMM.get_amount_for_price(3150000000000000000000)
         (42058023845976978330, false)           # need to swap around 42 ETH for crvUSD to dump the price of ETH down to 3150 within the AMM
         ```
 
@@ -1762,7 +1759,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
 
 
-*A full set up bands can look the following:* todo: fix graph by adding more bands with gradient
+*A full set up bands can look the following:*
 
 <figure markdown="span">
   ![](../assets/images/llamma/three_bands_final.svg){ width="700" }
@@ -1774,7 +1771,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
 
 ### `A`
-!!! description "`LLAMMA.A() -> uint256: view`"
+!!! description "`AMM.A() -> uint256: view`"
 
     Getter for A (amplicitation coefficient). The amplication defines the density of the liquidty and band size. The higher `A`, the smaller are the upper and lower prices of the bands an therefor the more leveraged the AMM within each band. The relative band size is $\frac{1}{A}$.
 
@@ -1825,13 +1822,13 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
     === "Example"
 
         ```shell
-        >>> LLAMMA.A()
+        >>> AMM.A()
         100
         ```
 
 
 ### `active_band`
-!!! description "`LLAMMA.active_band() -> int256: view`"
+!!! description "`AMM.active_band() -> int256: view`"
 
     Getter for the currently active band, which is the band where `get_p` (collateral price in the AMM) currently is in. Other bands are either fully in the collateral or borrowable token, but not in both.
 
@@ -1853,13 +1850,13 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
     === "Example"
 
         ```shell
-        >>> LLAMMA.active_band()
+        >>> AMM.active_band()
         -40
         ```
 
 
 ### `min_band`
-!!! description "`LLAMMA.min_band() -> int256: view`"
+!!! description "`AMM.min_band() -> int256: view`"
 
     Getter for the minimum band. This is essentially the lowest band where liquidity was deposited into. All bands below are definitely empty.
 
@@ -1878,13 +1875,13 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
     === "Example"
 
         ```shell
-        >>> LLAMMA.min_band()
+        >>> AMM.min_band()
         -70
         ```
 
 
 ### `max_band`
-!!! description "`LLAMMA.max_band() -> int256: view`"
+!!! description "`AMM.max_band() -> int256: view`"
 
     Getter for the maximum band. thi is the highest band where liquidity was deposited into. All bands above are definitely empty. 
 
@@ -1903,13 +1900,13 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
     === "Example"
 
         ```shell
-        >>> LLAMMA.max_band()
+        >>> AMM.max_band()
         1043
         ```
 
 
 ### `has_liquidity`
-!!! description "`LLAMMA.has_liquidity(user_: address) -> bool`"
+!!! description "`AMM.has_liquidity(user_: address) -> bool`"
 
     Function to check if `user` has any liquidity in the AMM.
 
@@ -1945,13 +1942,13 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
     === "Example"
 
         ```shell
-        >>> LLAMMA.has_liquidity('0x5A684c08261380B91D8976eDB0cabf87744650a5')
+        >>> AMM.has_liquidity('0x5A684c08261380B91D8976eDB0cabf87744650a5')
         'True'
         ```
 
 
 ### `bands_x`
-!!! description "`LLAMMA.bands_x(arg0: int256) -> uint256: view`"
+!!! description "`AMM.bands_x(arg0: int256) -> uint256: view`"
 
     Getter for the amount of the borrowable token deposited in a specific band.
 
@@ -1976,19 +1973,19 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
         In this example, the `active_band` is `-40`, which consists both of the colltaral and borrowable token. All bands above do not hold any balances of the borrowable token as those bands fully consist of the collateral token. But all bands below are fully in the borrowable token.
 
         ```shell
-        >>> LLAMMA.bands_x(-39)
+        >>> AMM.bands_x(-39)
         0
 
-        >>> LLAMMA.bands_x(-40)
+        >>> AMM.bands_x(-40)
         45065024748584993052511
 
-        >>> LLAMMA.bands_x(-41)
+        >>> AMM.bands_x(-41)
         128175190583901226590255
         ```
 
 
 ### `bands_y`
-!!! description "`LLAMMA.bands_y(arg0: int256) -> uint256: view`"
+!!! description "`AMM.bands_y(arg0: int256) -> uint256: view`"
 
     Getter for the amount of collateral token deposited in band number `arg0`.
 
@@ -2013,19 +2010,19 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
         In this example, the `active_band` is `-40`, which consists both of the colltaral and borrowable token. All bands above do not hold any balances of the borrowable token as those bands fully consist of the collateral token. But all bands below are fully in the borrowable token.
 
         ```shell
-        >>> LLAMMA.bands_x(-39)
+        >>> AMM.bands_x(-39)
         53056498461522064143
 
-        >>> LLAMMA.bands_x(-40)
+        >>> AMM.bands_x(-40)
         29290524643091268376
 
-        >>> LLAMMA.bands_x(-41)
+        >>> AMM.bands_x(-41)
         0
         ```
 
 
 ### `get_xy`
-!!! description "`LLAMMA.get_xy(user: address) -> DynArray[uint256, MAX_TICKS_UINT][2]`"
+!!! description "`AMM.get_xy(user: address) -> DynArray[uint256, MAX_TICKS_UINT][2]`"
 
     Function to get the collateral and borrowable token balance of a user across all bands.
 
@@ -2099,7 +2096,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
         **Fictive example:** E.g. if the first band of the loan would have been liquidated and the second band is currently undergoing liquidation, the returned values could look like the second example below. The first band would be fully in the borrow token (because the band as already been soft-liquidated), the second band would be in both, the borrow and collateral token (because the band is currently being liquidated) and the remaining two bands are still fully composited of the collteral token (because these bands have not been liquidated).
 
         ```shell
-        >>> LLAMMA.get_xy('0x5A684c08261380B91D8976eDB0cabf87744650a5') 
+        >>> AMM.get_xy('0x5A684c08261380B91D8976eDB0cabf87744650a5') 
         [0, 0, 0, 0][524583942253332472, 525000000000000000, 525000000000000000, 525000000000000000]
 
         # see fivtive example above
@@ -2109,7 +2106,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
 
 ### `get_sum_xy`
-!!! description "`LLAMMA.get_sum_xy(user: address) -> uint256[2]:`"
+!!! description "`AMM.get_sum_xy(user: address) -> uint256[2]:`"
 
     Function to measure the amount of borrow and collateral token a user currently owns inside the AMM. This function does not include the borrowed tokens from the market in any way but rather reflects the current collateral composition summed up across the entire AMM.
 
@@ -2182,13 +2179,13 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
         This function returns the total balance of the borrow and collateral token across all bands. This essentially equals to the summed up returned values of the `get_xy` method (see above).
 
         ```shell
-        >>> LLAMMA.get_sum_xy('0x5A684c08261380B91D8976eDB0cabf87744650a5')
+        >>> AMM.get_sum_xy('0x5A684c08261380B91D8976eDB0cabf87744650a5')
         [0, 2099583942253332472]
         ```
 
 
 ### `read_user_tick_numbers`
-!!! description "`LLAMMA.read_user_tick_numbers(user: address) -> int256[2]:`"
+!!! description "`AMM.read_user_tick_numbers(user: address) -> int256[2]:`"
 
     Getter for the band (tick) numbers of a user's loan. 
 
@@ -2238,13 +2235,13 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
     === "Example"
 
         ```shell
-        >>> LLAMMA.read_user_tick_numbers('0x5A684c08261380B91D8976eDB0cabf87744650a5')
+        >>> AMM.read_user_tick_numbers('0x5A684c08261380B91D8976eDB0cabf87744650a5')
         [-32, -29]
         ```
 
 
 ### `get_y_up`
-!!! description "`LLAMMA.get_y_up(user: address) -> uint256`"
+!!! description "`AMM.get_y_up(user: address) -> uint256`"
 
     Function to measure the amount of `y` (collateral token) in band n for `user` if its adiabatically traded near `p_oracle` on the way up.
 
@@ -2410,13 +2407,13 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
     === "Example"
 
         ```shell
-        >>> LLAMMA.get_y_up('0x5A684c08261380B91D8976eDB0cabf87744650a5')
+        >>> AMM.get_y_up('0x5A684c08261380B91D8976eDB0cabf87744650a5')
         2099583942253332471
         ```
 
 
 ### `get_x_down`
-!!! description "`LLAMMA.get_x_down(user: address) -> uint256:`"
+!!! description "`AMM.get_x_down(user: address) -> uint256:`"
 
     Function to measure the amount of x (borrowable token) in band n for `user` if its adiabatically traded down.
 
@@ -2582,13 +2579,13 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
     === "Example"
 
         ```shell
-        >>> LLAMMA.get_x_down('0x5A684c08261380B91D8976eDB0cabf87744650a5')
+        >>> AMM.get_x_down('0x5A684c08261380B91D8976eDB0cabf87744650a5')
         5911655561808789389866
         ```
 
 
 ### `can_skip_bands`
-!!! description "`LLAMMA.can_skip_bands(n_end: int256) -> bool`"
+!!! description "`AMM.can_skip_bands(n_end: int256) -> bool`"
 
     Function to check if there is no liquidity between `active_band` and `n_end`.
 
@@ -2635,7 +2632,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
     === "Example"
 
         ```shell
-        >>> LLAMMA.can_skip_bands(-50)
+        >>> AMM.can_skip_bands(-50)
         'False'
         ```
  
@@ -2645,12 +2642,8 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
 # **AMM and Oracle Prices**
 
-
-todo:
 !!!info "A user's loan is only in soft-liquidation when the price oracle is within the bands of the deposited collateral"
-    A position enters soft-liquidation mode only when the price oracle falls within a band where the user has deposited collateral. 
-    For example, if a user has collateral deposited between bands 10 and 0, they will not enter soft-liquidation as long as the oracle price stays outside these bands. In this scenario, the only "loss" the user faces is the variable interest rate of the market.
-    Additionally, there is a rather rare possibility that a user's loan was fully soft-liquidated, resulting in all their collateral being converted to the borrowable asset. In such a case, the user would be out of soft-liquidation because the price oracle is below the lowest band.
+    A position enters soft-liquidation mode only when the price oracle falls within a band where the user has deposited collateral. For example, if a user has collateral deposited between bands 10 and 0, they will not enter soft-liquidation as long as the oracle price stays outside these bands. In this scenario, the only "loss" the user faces is the variable interest rate of the market. Additionally, there is a rather rare possibility that a user's loan was fully soft-liquidated, resulting in all their collateral being converted to the borrowable asset. In such a case, the user would be out of soft-liquidation because the price oracle is below the lowest band.
 
 
 *The AMM relies on two different prices:*
@@ -2660,7 +2653,7 @@ Soft- and de-liquidation of a loan only occurrs when the collateral price is wit
 - **`price_oracle`**: The collateral price fetched from a price oracle contract.
 - **`get_p`**: The price of colalteral in the AMM itself.
 
-When `price_oracle` equals `get_p`, the external oracle price and the AMM price are identical, indicating no need for arbitrage. When the external oracle price diverges, the AMM price `get_p` is adjusted to be more sensitive than the regular `price_oracle`, creating arbitrage opportunities. Essentially, arbitrage traders are incentivized to maintain `get_p = price_oracle` within the LLAMMA.
+When `price_oracle` equals `get_p`, the external oracle price and the AMM price are identical, indicating no need for arbitrage. When the external oracle price diverges, the AMM price `get_p` is adjusted to be more sensitive than the regular `price_oracle`, creating arbitrage opportunities. Essentially, arbitrage traders are incentivized to maintain `get_p = price_oracle` within the AMM.
 
 <figure markdown="span">
   ![](../assets/images/llamma/ramp-cubic.svg){ width="700" }
@@ -2669,7 +2662,7 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
 
 
 ### `get_p` 
-!!! description "`LLAMMA.get_p() -> uint256`"
+!!! description "`AMM.get_p() -> uint256`"
 
     Function to get the current collateral price within the AMM. `get_p` in always in the active band (`acitve_band`).
 
@@ -2730,13 +2723,13 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
     === "Example"
 
         ```shell
-        >>> LLAMMA.get_p()
+        >>> AMM.get_p()
         3215032751001233561432
         ```
 
 
 ### `price_oracle` 
-!!! description "`LLAMMA.price_oracle() -> uint256: view`"
+!!! description "`AMM.price_oracle() -> uint256: view`"
 
     Getter for the collateral price according to an external price oracle contract. The address of the price oracle contract is stored in the `price_oracle_contract` variable.
 
@@ -2816,13 +2809,13 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
     === "Example"
 
         ```shell
-        >>> LLAMMA.price_oracle()
+        >>> AMM.price_oracle()
         3140087429510122285500
         ```
 
 
 ### `get_base_price`
-!!! description "`LLAMMA.get_base_price() -> uint256`"
+!!! description "`AMM.get_base_price() -> uint256`"
 
     Function to get the base price of the AMM which corresponds to band 0. The base price grows over time to account for the interest rate: `BASE_PRICE` (= the 'real' base price when the contract was deployed) is multiplied by `_rate_mul` to do so.
 
@@ -2871,13 +2864,13 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
     === "Example"
 
         ```shell
-        >>> LLAMMA.get_base_price()
+        >>> AMM.get_base_price()
         2082598343438884801420
         ```
 
 
 ### `p_current_up`
-!!! description "`LLAMMA.p_current_up(n: int256) -> uint256`"
+!!! description "`AMM.p_current_up(n: int256) -> uint256`"
 
     Getter for the highest possible price of the band at the current oracle price.
 
@@ -2971,13 +2964,13 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
         === "Example"
 
             ```shell
-            >>> LLAMMA.p_current_up(-40)
+            >>> AMM.p_current_up(-40)
             3260783573764672399539
             ```
 
 
 ### `p_current_down`
-!!! description "`LLAMMA.p_current_down(n: int256) -> uint256`"
+!!! description "`AMM.p_current_down(n: int256) -> uint256`"
 
     Getter for the lowest possible price of the band at the current oracle price.
 
@@ -3024,13 +3017,13 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
         === "Example"
 
             ```shell
-            >>> LLAMMA.p_current_down(-40)
+            >>> AMM.p_current_down(-40)
             3260768088630089780416
             ```
 
 
 ### `p_oracle_up`
-!!! description "`LLAMMA.p_oracle_up(n: int256) -> uint256`"
+!!! description "`AMM.p_oracle_up(n: int256) -> uint256`"
 
     Getter for the upper price bound of an individual band when `get_p` = `price_oracle`.
 
@@ -3109,13 +3102,13 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
     === "Example"
 
         ```shell
-        >>> LLAMMA.p_oracle_down(-40)
+        >>> AMM.p_oracle_down(-40)
         3113143435284666584035
         ```
 
 
 ### `p_oracle_down`
-!!! description "`LLAMMA.p_oracle_down(n: int256) -> uint256`"
+!!! description "`AMM.p_oracle_down(n: int256) -> uint256`"
 
     Getter for the lower price bound of an individual band when `get_p` = `price_oracle`. This lower bound is calculated in the same way as `p_oracle_up` but for the next band, essentially taking the upper price of band `n + 1`. It calculates \( n + 1 \) because the lower bound of the current band is defined by the upper bound of the next band.
 
@@ -3199,7 +3192,7 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
 
 
 ### `price_oracle_contract`
-!!! description "`LLAMMA.price_oracle_contract() -> uint256: view`"
+!!! description "`AMM.price_oracle_contract() -> uint256: view`"
 
     Getter for the price oracle contract which provides the external `price_oracle`.
 
@@ -3250,7 +3243,7 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
     === "Example"
 
         ```shell
-        >>> LLAMMA.price_oracle_contract()
+        >>> AMM.price_oracle_contract()
         '0x966cBDeceFB60A289b0460F7638f4A75F432cA06'
         ```
 
@@ -3276,7 +3269,7 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
 
 ### `fee`
-!!! description "`LLAMMA.fee() -> uint256: view`"
+!!! description "`AMM.fee() -> uint256: view`"
 
     Getter for the fee for exchanging tokens in the AMM. This fee is static and can only be changed by the DAO using the [`set_fee`](#set_fee) function. The fee is denominated to a base of $10^{18}$.
 
@@ -3329,13 +3322,13 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
         The fee value is denominated to a base of $10^{18}$. Therefore, `19000000000000000` corresponds to a fee of `1.9%`.
 
         ```shell
-        >>> LLAMMA.fee()
+        >>> AMM.fee()
         19000000000000000
         ```
 
 
 ### `set_fee`
-!!! description "`LLAMMA.set_fee(fee: uint256):`"
+!!! description "`AMM.set_fee(fee: uint256):`"
 
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract, which is the `Controller` contract.
@@ -3375,12 +3368,12 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
     === "Example"
 
         ```shell
-        >>> LLAMMA.set_fee(todo)
+        >>> soon
         ```
 
 
 ### `admin_fee`
-!!! description "`LLAMMA.admin_fee() -> uint256: view`"
+!!! description "`AMM.admin_fee() -> uint256: view`"
 
     Getter for the admin fee of the AMM. This value represents the portion of the `fee` that is awarded to veCRV holders. Currently, the admin fees of the AMMs are set to 1 (1 / 1e18), making them virtually nonexistent. The reason for setting such a small value is to increase resistance to oracle manipulation. Essentially, taking no admin fee ensures that the accumulated fees are distributed among liquidity providers in the AMM (those who provide collateral), which helps offset the losses incurred through soft or de-liquidation and interest rates. Admin fees can be changed by the DAO via the `set_admin_fee` function.
 
@@ -3431,13 +3424,13 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
     === "Example"
 
         ```shell
-        >>> LLAMMA.admin_fee()
+        >>> AMM.admin_fee()
         1
         ```
 
 
 ### `admin_fees_x`
-!!! description "`LLAMMA.admin_fees_x() -> uint256: view`"
+!!! description "`AMM.admin_fees_x() -> uint256: view`"
 
     Getter for the accured admin fees in form of the borrowed token since the last fee collection.
 
@@ -3456,13 +3449,13 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
     === "Example"
 
         ```shell
-        >>> LLAMMA.admin_fees_x()
+        >>> AMM.admin_fees_x()
         632
         ```
 
 
 ### `admin_fees_y`
-!!! description "`LLAMMA.admin_fees_y() -> uint256: view`"
+!!! description "`AMM.admin_fees_y() -> uint256: view`"
 
     Getter for the accured admin fees in form of the collateral token since the last fee collection.
 
@@ -3481,13 +3474,13 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
     === "Example"
 
         ```shell
-        >>> LLAMMA.admin_fees_y()
+        >>> AMM.admin_fees_y()
         0
         ```
 
 
 ### `set_admin_fee`
-!!! description "`LLAMMA.set_admin_fee(fee: uint256):`"
+!!! description "`AMM.set_admin_fee(fee: uint256):`"
 
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract, which is the `Controller` contract.
@@ -3527,12 +3520,12 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
     === "Example"
 
         ```shell
-        >>> LLAMMA.set_admin_fee(todo)
+        >>> soon
         ```
 
 
 ### `reset_admin_fee`
-!!! description "`LLAMMA.reset_admin_fees()`"
+!!! description "`AMM.reset_admin_fees()`"
 
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract, which is the Controller.
@@ -3604,24 +3597,24 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
     === "Example"
 
         ```shell
-        >>> LLAMMA.admin_fees_x()
+        >>> AMM.admin_fees_x()
         327
 
-        >>> LLAMMA.admin_fees_y()
+        >>> AMM.admin_fees_y()
         0
 
         >>> Controller.collect_fees()   # this function calls `reset_admin_fees`
 
-        >>> LLAMMA.admin_fees_x()
+        >>> AMM.admin_fees_x()
         0
 
-        >>> LLAMMA.admin_fees_y()
+        >>> AMM.admin_fees_y()
         0
         ```
 
 
 ### `rate`
-!!! description "`LLAMMA.rate() -> uint256: view`"
+!!! description "`AMM.rate() -> uint256: view`"
 
     Getter for the current interest rate per second. This rate is determined by the monetary policy contract and can depend on various factors within the contract.
 
@@ -3644,13 +3637,13 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
         $rate_{\text{annualized}} = \left(1 + \frac{\text{rate}}{10^{18}}\right)^{86400 \times 365} - 1$
 
         ```shell
-        >>> LLAMMA.rate()
+        >>> AMM.rate()
         5358112633          # annualized: 0.18789942609 ≈ 18.79%
         ```
 
 
 ### `get_rate_mul`
-!!! description "`LLAMMA.get_rate_mul() -> uint256: view`"
+!!! description "`AMM.get_rate_mul() -> uint256: view`"
 
     Getter for the interest rate multiplier, which is $1.0 + \int \text{rate}(t) \, dt$.
 
@@ -3689,13 +3682,13 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
     === "Example"
 
         ```shell
-        >>> LLAMMA.get_rate_mul()
+        >>> AMM.get_rate_mul()
         1100902413540693190
         ```
 
 
 ### `set_rate`
-!!! description "`LLAMMA.set_rate(rate: uint256) -> uint256:`"
+!!! description "`AMM.set_rate(rate: uint256) -> uint256:`"
 
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract, which is the `Controller` contract.
@@ -3751,7 +3744,7 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
     === "Example"
 
         ```shell
-        >>> LLAMMA.set_rate(todo)
+        >>> soon
         ```
 
 
@@ -3766,7 +3759,7 @@ The admin can only be set once, which is done when deploying the AMM. Therefore,
 
 
 ### `admin`
-!!! description "`LLAMMA.admin() -> address: view`"
+!!! description "`AMM.admin() -> address: view`"
 
     Getter for the admin of the contract, which is the corresponding Controller.
 
@@ -3785,13 +3778,13 @@ The admin can only be set once, which is done when deploying the AMM. Therefore,
     === "Example"
 
         ```shell
-        >>> LLAMMA.admin()
+        >>> AMM.admin()
         '0xA920De414eA4Ab66b97dA1bFE9e6EcA7d4219635'
         ```
 
 
 ### `set_admin`
-!!! description "`LLAMMA.set_admin(_admin: address):`"
+!!! description "`AMM.set_admin(_admin: address):`"
 
     !!!guard "Guarded Method" 
         This function is only callable when `admin` is set to `ZERO_ADDRESS`. This condition was met at deployment, but after setting the admin for the first time, it cannot be changed. Admin for the AMM is always the corresponding Controller.
@@ -3832,7 +3825,7 @@ The admin can only be set once, which is done when deploying the AMM. Therefore,
     === "Example"
 
         ```shell
-        >>> LLAMMA.set_admin(todo)
+        >>> soon
         ```
 
 
@@ -3842,7 +3835,7 @@ The admin can only be set once, which is done when deploying the AMM. Therefore,
 # **Contract Info Methods**
 
 ### `coins`
-!!! description "`LLAMMA.coins(i: uint256) -> address`"
+!!! description "`AMM.coins(i: uint256) -> address`"
 
     Getter for the coins in the AMM, with `i = 0` as the borrowed token and `i = 1` as the collateral token.
 
@@ -3871,16 +3864,16 @@ The admin can only be set once, which is done when deploying the AMM. Therefore,
     === "Example"
 
         ```shell
-        >>> LLAMMA.coins(0)
+        >>> AMM.coins(0)
         '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
 
-        >>> LLAMMA.coins(1)
+        >>> AMM.coins(1)
         '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
         ```
 
 
 ### `liquidity_mining_callback`
-!!! description "`LLAMMA.liquidity_mining_callback() -> address: view`"
+!!! description "`AMM.liquidity_mining_callback() -> address: view`"
 
     Getter for the liquidity mining callback address.
 
@@ -3899,13 +3892,13 @@ The admin can only be set once, which is done when deploying the AMM. Therefore,
     === "Example"
 
         ```shell
-        >>> LLAMMA.liquidity_mining_callback()
+        >>> AMM.liquidity_mining_callback()
         0x0000000000000000000000000000000000000000
         ```
 
 
 ### `set_callback`
-!!! description "`LLAMMA.set_callback(liquidity_mining_callback: LMGauge):`"
+!!! description "`AMM.set_callback(liquidity_mining_callback: LMGauge):`"
 
     !!!guard "Guarded Method" 
         This function is only callable by the `admin` of the contract, which is the Controller.
