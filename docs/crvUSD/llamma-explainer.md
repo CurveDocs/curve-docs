@@ -1,19 +1,25 @@
 <h1>LLAMMA Explainer</h1>
 
-LLAMMA (Lending Liquidating Automated Market Maker Algorithm) is a market-making algorithm that rebalances the collateral of a loan via an AMM. The contract creates opportunities for liquidating and de-liquidating collateral via arbitrage by offering better prices within the AMM than on external markets. These collateral rebalances smoothly swap collateral for stablecoin to keep the position sufficiently collateralized while recovering the collateral when the collateral price goes back up.
+!!!info "Disclaimer: Examples"
+    Examples used in this section refer to an `ETH <> crvUSD` market, where `ETH` is the collateral and `crvUSD` is the borrowed token. Additionally, the examples in this section are simplified in terms of numbers and other details. In reality, it is more complex, but for the sake of explaining the system, simplified examples are sufficient.
 
-Unlike other liquidation mechanisms that have a single liquidation price at which the loan is liquidated once reached, LLAMMA has a liquidation range in which collateral is continuously liquidated. In short, when the price of the collateral asset goes down, the AMM starts converting ETH for crvUSD. If the price eventually recovers, the AMM converts the crvUSD back into ETH. More on the liquidation mechanism here: [Liquidation](#liquidation).
+LLAMMA (Lending Liquidating Automated Market Maker Algorithm) is a market-making algorithm that rebalances the collateral of a loan using an AMM. The AMM contract creates opportunities for liquidating and de-liquidating collateral via arbitrage by offering better prices within the AMM compared to external markets. These collateral rebalances smoothly swap - dependant on asset prices - the collateral asset and the borrowed asset accordingly to keep the position sufficiently collateralized while recovering the collateral when the collateral price goes back up.
+
+Unlike other liquidation mechanisms that have a single liquidation price at which the loan is liquidated once reached, **LLAMMA has a liquidation range in which collateral is continuously being rebalanced**. In short, when the price of the collateral asset goes down, the AMM starts converting `ETH` for `crvUSD`. If the price eventually recovers, the AMM converts the `crvUSD` back into `ETH`. More on the liquidation mechanism here: [Liquidation](#liquidation).
 
 Each individual market has its own AMM containing the collateral and borrowable asset, such as the `ETH <> crvUSD` AMM consisting of `ETH` and `crvUSD`.
 
-Before explaining the liquidation process in detail, it is crucial to understand how the LLAMMA works. The AMM is similar to a **Uniswap V3-style AMM** using bands. Liquidity can be deposited into these bands, which have upper and lower price ranges. When opening a loan and adding collateral, this collateral is deposited into these bands. Users can choose the number of bands at loan creation, ranging from a **minimum of `4`** to a **maximum of `50`**. The liquidity sits idle in these bands and is only accessible for trading when the collateral price falls within the price range of a band.
+Before explaining the hearth of the system, the liquidation process, in more detail, it is crucial to understand how the general structure of the AMM works. The AMM is similar to a **Uniswap V3-style AMM** using bands/ticks. Liquidity can be deposited into these bands, which have upper and lower price ranges. When opening a loan and adding collateral, this collateral is deposited into these bands. Users can choose the number of bands at loan creation, ranging from a **minimum of `4`** to a **maximum of `50`**. The liquidity sits idle in these bands and is only accessible for trading when the collateral price falls within the price range of a band.
 
 
 ---
 
+
 ## **Bands**
 
-Bands in LLAMMA function similarly to Uniswap V3, concentrating liquidity between two prices. A band is a range of prices into which liquidity is deposited. LLAMMA consists of multiple bands forming a fixed price grid, and when creating a loan, liquidity is equally distributed across the number of bands (`N`) chosen when opening the loan. The minimum number is `4`, and the maximum is `50`. These bands where liquidity is deposited define the total liquidation range of the loan.
+Bands in LLAMMA function similarly to Uniswap V3, concentrating liquidity between two prices. A band is a range of prices into which liquidity is deposited. LLAMMA consists of multiple bands forming a fixed price grid, and when creating a loan, liquidity is equally distributed across the number of bands (`N`) chosen when opening the loan. The minimum number is `4`, and the maximum is `50`. These bands where liquidity is deposited define the total liquidation range of the loan.[^1]
+
+[^1]: For now, do not worry about how liquidation works. This mechanism will be explained in a section further down below. For now, just think of liquidation as changing the token composition that is backing your loan.
 
 <figure markdown="span">
   ![](../assets/images/llamma/deposit_range.svg){ width="600" }
@@ -22,7 +28,6 @@ Bands in LLAMMA function similarly to Uniswap V3, concentrating liquidity betwee
 
 The graph shows how liquidity is distributed equally across the chosen number of bands (in this example, `N = 4`). While each single band has its own range, combining all bands with deposited liquidity forms the total liquidation range of the loan. In our example, the total liquidation range would be from `$1000` to `$600`. When the price of the collateral falls within this range, the collateral of the loan is being liquidated.
 
-For now, do not worry about how liquidation works. This mechanism will be explained in a section further down below. For now, just think of liquidation as changing the token composition that is backing your loan.
 
 
 ---
@@ -31,30 +36,31 @@ For now, do not worry about how liquidation works. This mechanism will be explai
 
 The liquidation aspect of LLAMMA is very different from other lending protocols. LLAMMA has a liquidation range, whereas most other lending protocols have a single liquidation price, and their loan can be liquidated when that price is crossed.
 
-!!!important
+!!!tip "Liquidation only happens when prices are within the users liquidation range"
     This liquidation mechanism only occurs if the price of the collateral is within the user's liquidation range. If not, there is no need to liquidate any assets backing the loan.
 
-In LLAMMA, your collateral is continuously being liquidated if there is a need for it. Liquidated in this case does not mean a "hard-liquidation" where your loan is closed, but rather a "partial liquidation" which changes the assets backing your loan. What does this mean? In short, if the price of the collateral goes down, the LLAMMA starts selling the collateral token for the borrowed token (in our example selling ETH for crvUSD). Now the loan is backed by ETH and crvUSD. This is called **Soft-Liquidation**. When the price of the collateral eventually goes up again, LLAMMA starts converting the previously bought crvUSD back into ETH. This is called **De-Liquidation**.
+In LLAMMA, your collateral is continuously being rebalanced if the price of the collateral asset is within the users liquidation range. Liquidated in this case does not refer to a "hard-liquidation" where your loan is immeadiatly closed, but rather a "partial liquidation" which rebalances the assets backing your loan. So, what does this exaclty mean? In short, if the price of the collateral goes down, the LLAMMA starts selling the collateral asset for the borrowed asset (in our example selling ETH for crvUSD). Now the loan is backed by ETH and crvUSD. This process is called [**soft-Liquidation**](#soft-liquidation). When the price of the collateral eventually goes up again, LLAMMA starts converting the previously bought crvUSD back into ETH. This is called [**de-Liquidation**](#de-liquidation).
 
-Liquidation is not done on a user basis but rather on a band basis, making the rebalancing mechanism scalable. Not single users are soft- or de-liquidated, but rather bands in which multiple users have deposited liquidity.
+Liquidation is not done on a user basis but rather on a band basis, making the liquidation mechanism scalable. Not individual users are soft- or de-liquidated, but rather bands in which multiple users have deposited liquidity.
 
-*For simplicity purposes, let's ignore hard-liquidation and how the AMM actually liquidates the collateral for now.*
+*For simplicity purposes, let's ignore [hard-liquidation](#hard-liquidation) and how the AMM actually liquidates the collateral for now.*
 
 
 ---
 
-*Let's look at the different states of liquidation, using a fictive example of a loan backed by 2 ETH (ETH price = $1000) and debt of 1750 crvUSD and 4 bands.*
+!!!info "`ETH <> crvUSD` market as Example"
+    *Let's look at the different states of liquidation, using a fictive example of a loan backed by 2 ETH (ETH price = $1000) and a total debt of 1750 crvUSD. The loan uses 4 bands. In the following examples, whenever stating that price goes down, its meant that the collateral asset price goes down. But e.g. if there is a market with a stable asset as collateral such as crvUSD, then soft-liquidation would happen when the borrowed asset goes up.*
 
 
 ### **Soft-Liquidation**
 
-Soft-liquidation is the process which sells the collateral asset (ETH) for the borrowable (crvUSD) asset because the price is going down. This reduces the overall exposure to the volatile asset (ETH). As long as the price is above the liquidation range, there is no need to liquidate anything; all the bands are 100% in ETH.
+Soft-liquidation is the process which sells the collateral asset (`ETH`) for the borrowable (`crvUSD`) asset because the asset price of the collateral is going down. This reduces the overall exposure to the volatile asset (ETH) of the loan. But keep in mind, as long as the price is above the liquidation range, there is no need to liquidate anything; all the bands are 100% in ETH.
 
-Now let's assume the price of the collateral falls into the liquidation range within the first band. Now, the LLAMMA starts selling off ETH into crvUSD. The further down the price of the collateral goes, the more ETH will be sold for crvUSD. For example, if 0.5 ETH is deposited in this first band (because 2 ETH is evenly spread across 4 bands) and the price of the collateral is approximately in the middle of this band, then 0.25 ETH will be converted into crvUSD. If the price goes further down, say exactly to the bottom range of the first band (which at the same time is also the top range of the band below), then a total of 0.5 (the entire band) will be soft-liquidated into crvUSD. At this point, LLAMMA sold 0.5 ETH for, let's say, 490 crvUSD[^1]. If the price goes further down, it enters the second band and does exactly the same.
+Now let's assume the price of the collateral falls into the liquidation range within the first band. Now, the LLAMMA starts selling off ETH into crvUSD. The further down the price of the collateral goes, the more ETH will be sold for crvUSD. For example, if 0.5 ETH is deposited in this first band (because 2 ETH is evenly spread across 4 bands) and the price of the collateral is approximately in the middle of this band, then 0.25 ETH will be converted into crvUSD. If the price goes further down, say exactly to the bottom range of the first band (which at the same time is also the top range of the band below), then a total of 0.5 (the entire band) will be soft-liquidated into crvUSD. At this point, LLAMMA sold 0.5 ETH for, let's say, 490 crvUSD[^2]. If the price goes further down, it enters the second band and does exactly the same.
 
 This can lead to the following: It is possible that the price of the collateral goes down through the entire liquidation range (essentially below the lower liquidation range of $800). At this point, the entire collateral will be soft-liquidated for crvUSD, and now the loan is fully backed by crvUSD. NOTE: This is only possible if the health of the loan is still above 0% (more on this in the hard-liquidation section).
 
-[^1]: You might wonder why the LLAMMA did not convert 0.5 ETH into 500 crvUSD as the price of ETH is $1000. The explanation is that losses occur during this soft-liquidation.
+[^2]: You might wonder why the LLAMMA did not convert 0.5 ETH into 500 crvUSD as the price of ETH is $1000. The explanation is that losses occur during this soft-liquidation.
 
 *Summary: If the price goes down, LLAMMA starts selling the collateral asset for the borrow asset.*
 
@@ -65,21 +71,23 @@ De-liquidation is essentially exactly the same as soft-liquidation, but the othe
 
 De-liquidation can happen until all the assets backing the loan are converted back into the original asset (ETH).
 
+Summary: If the price of the collateral 
 
 ### **Hard-Liquidation**
 
 Hard-liquidation is the process where other users can repay the debt of a user and in exchange receive their collateral. A loan is only eligible for hard-liquidation when the health of the loan is below 0%. It is very important to understand that the liquidation range does not reflect prices where a loan is hard-liquidated. It really only depends on the health of the loan.
 
-!!!important
+!!!tip
     Losses through soft- and de-liquidation only occur when the loan is in liquidation mode. If the price of the collateral is outside the liquidation range and there is no need to liquidate the position, no losses occur because the collaterals are not traded. On the other hand, losses accrued through interest rates happen regardless of whether the loan is being liquidated or not.
 
 *There are two factors that decrease the health of the loan:*
 
 - **Interest rate**: A user borrowing assets needs to pay an interest rate. This constantly (per block) increases the debt of the position and therefore reduces its health.
 - **More importantly: Losses when the position is soft- or de-liquidated**. When converting the collateral back and forth, losses occur. It is very hard to quantify the gravity of losses as it depends on various factors. Observations so far lead to the following conclusions:
-  - The more bands used for a loan, the fewer the losses through soft- and de-liquidation.
-  - The more liquidity, the fewer the losses.
-  - The more efficient the arbitrage, the fewer the losses.
+
+    - The more bands used for a loan, the fewer the losses through soft- and de-liquidation.
+    - The more liquidity, the fewer the losses.
+    - The more efficient the arbitrage, the fewer the losses.
 
 To counter the losses from liquidation and the interest rate, there is a swap fee in the AMM. Arbitrage traders pay this fee when exchanging tokens within the AMM. The earned swap fees are given to the liquidity providers, who are the users that took out a loan and deposited collateral into bands in the AMM.
 
@@ -118,7 +126,7 @@ A loan's health can be read directly from the `Controller.vy` contract of the co
     <figcaption></figcaption>
     </figure>
 
-A full set of bands can look like the following:
+*A full set of bands can look like the following:*
 
 <figure markdown="span">
   ![](../assets/images/llamma/three_bands_final.svg){ width="700" }
