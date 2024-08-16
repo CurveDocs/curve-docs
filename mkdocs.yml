@@ -17,6 +17,7 @@ plugins:
 markdown_extensions:
   - footnotes
   - def_list
+  - abbr
   - attr_list
   - md_in_html
   - admonition
@@ -73,6 +74,7 @@ theme:
   icon:
     repo: simple/github
   features:
+    - content.tooltips
     - content.code.annotate
     - content.footnote.tooltips
     - navigation.indexes
