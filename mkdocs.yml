@@ -116,6 +116,9 @@ repo_url: https://github.com/CurveDocs/curve-docs
 
 nav:
 
+  - fee split:
+    - fee splitter: autobribe/fee-splitter.md
+
   - Documentation Overview: documentation-overview.md
   - Curve DAO:
     - Curve DAO Token: curve_dao/crv-token.md
