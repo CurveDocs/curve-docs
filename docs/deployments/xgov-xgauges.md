@@ -163,30 +163,16 @@ The `RootLiquidityGaugeFactory` contract on Ethereum is utilized across a majori
 | ---- | ----- | ------- |
 | `RootLiquidityGaugeFactory` | :logos-ethereum: Ethereum | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://etherscan.io/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5) |
 | `ChildLiquidityGaugeFactory` | :logos-arbitrum: Arbitrum | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://arbiscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5#code) |
-| `veBoost - Boost Delegation V2` | :logos-arbitrum: Arbitrum | [0x98c80fa823759b642c3e02f40533c164f40727ae](https://arbiscan.io/address/0x98c80fa823759b642c3e02f40533c164f40727ae#code) |
 | `ChildLiquidityGaugeFactory` | :logos-optimism: Optimism | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://optimistic.etherscan.io/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5#code) |
-| `veBoost - Boost Delegation V2` | :logos-optimism: Optimism | [0x65a0b01756E837e6670634816E4F5B3a3fF21107](https://optimistic.etherscan.io/address/0x65a0b01756E837e6670634816E4F5B3a3fF21107#code) |
 | `ChildLiquidityGaugeFactory` | :logos-polygon: Polygon | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://polygonscan.com/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5) |
-| `veBoost - Boost Delegation V2` | :logos-polygon: Polygon | [0xb5ACC710AEDE048600E10eEDcefDf98d4aBf4B1E](https://polygonscan.com/address/0xb5ACC710AEDE048600E10eEDcefDf98d4aBf4B1E) |
 | `ChildLiquidityGaugeFactory` | :logos-base: Base | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://basescan.org/address/0xabC000d88f23Bb45525E447528DBF656A9D55bf5) |
-| `veBoost - Boost Delegation V2` | :logos-base: Base | :material-close: |
 | :logos-fraxtal: `RootLiquidityGaugeFactory` | :logos-ethereum: Ethereum | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c](https://etherscan.io/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c) |
 | `ChildLiquidityGaugeFactory` | :logos-fraxtal: Fraxtal | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c](https://fraxscan.com/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c) |
-| `veBoost - Boost Delegation V2` | :logos-fraxtal: Fraxtal | :material-close: |
-| :logos-bsc: `RootLiquidityGaugeFactory` | :logos-ethereum: Ethereum | [0xDb205f215f568ADf21b9573b62566f6d9a40bed6](https://etherscan.io/address/0xDb205f215f568ADf21b9573b62566f6d9a40bed6) |
-| `ChildLiquidityGaugeFactory` | :logos-bsc: BinanceSmartChain | [0xDb205f215f568ADf21b9573b62566f6d9a40bed6](https://bscscan.com/address/0xDb205f215f568ADf21b9573b62566f6d9a40bed6) |
-| `veBoost - Boost Delegation V2` | :logos-bsc: BinanceSmartChain | :material-close: |
 | `ChildLiquidityGaugeFactory` | :logos-gnosis: Gnosis | [0xabc000d88f23bb45525e447528dbf656a9d55bf5](https://gnosisscan.io/address/0xabc000d88f23bb45525e447528dbf656a9d55bf5) |
-| `veBoost - Boost Delegation V2` | :logos-gnosis: Gnosis | [0xefde221f306152971d8e9f181bfe998447975810](https://gnosisscan.io/address/0xefde221f306152971d8e9f181bfe998447975810) |
 | `ChildLiquidityGaugeFactory` | :logos-celo: Celo | :material-close: |
-| `veBoost - Boost Delegation V2` | :logos-celo: Celo | :material-close: |
 | `ChildLiquidityGaugeFactory` | :logos-avalanche: Avalanche | :material-close: |
-| `veBoost - Boost Delegation V2` | :logos-avalanche: Avalanche | [0xc55837710bc500f1e3c7bb9dd1d51f7c5647e657](https://snowscan.xyz/address/0xc55837710bc500f1e3c7bb9dd1d51f7c5647e657) |
 | `ChildLiquidityGaugeFactory` | :logos-fantom: Fantom | :material-close: |
-| `veBoost - Boost Delegation V2` | :logos-fantom: Fantom | [0xb75dca485E21A77E1B433eCAcb74475FC67e259c](https://ftmscan.com/address/0xb75dca485E21A77E1B433eCAcb74475FC67e259c) |
 | :logos-mantle: `RootLiquidityGaugeFactory` | :logos-ethereum: Ethereum | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c](https://etherscan.io/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c) |
 | `ChildLiquidityGaugeFactory` | :logos-mantle: Mantle | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c](https://mantlescan.xyz/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c) |
-| `veBoost - Boost Delegation V2` | :logos-mantle: Mantle | :material-close: |
 | :logos-xlayer: `RootLiquidityGaugeFactory` | :logos-ethereum: Ethereum | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c](https://etherscan.io/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c) |
 | `ChildLiquidityGaugeFactory` | :logos-xlayer: X-Layer | [0xef672bd94913cb6f1d2812a6e18c1ffded8eff5c](https://www.oklink.com/xlayer/address/0xef672bd94913cb6f1d2812a6e18c1ffded8eff5c/contract) |
-| `veBoost - Boost Delegation V2` | :logos-xlayer: X-Layer | :material-close: |

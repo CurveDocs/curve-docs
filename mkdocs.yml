@@ -17,6 +17,7 @@ plugins:
 markdown_extensions:
   - footnotes
   - def_list
+  - abbr
   - attr_list
   - md_in_html
   - admonition
@@ -73,6 +74,7 @@ theme:
   icon:
     repo: simple/github
   features:
+    - content.tooltips
     - content.code.annotate
     - content.footnote.tooltips
     - navigation.indexes
@@ -105,7 +107,6 @@ extra_css:
 extra_javascript:
   - assets/javascripts/extra.js
   - assets/javascripts/mathjax.js
-  - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
 
@@ -118,7 +119,7 @@ nav:
 
   - fee split:
     - fee splitter: autobribe/fee-splitter.md
-
+    
   - Documentation Overview: documentation-overview.md
   - Curve DAO:
     - Curve DAO Token: curve_dao/crv-token.md
@@ -194,7 +195,7 @@ nav:
     - Controller: crvUSD/controller.md
     - LLAMMA: crvUSD/amm.md
     - Monetary Policy: crvUSD/monetarypolicy.md
-    - Price Aggregator: crvUSD/priceaggregator.md
+    - PriceAggregator: crvUSD/priceaggregator.md
     - Oracle: crvUSD/oracle.md
     - FlashLender: crvUSD/flashlender.md
     - PegKeepers:
