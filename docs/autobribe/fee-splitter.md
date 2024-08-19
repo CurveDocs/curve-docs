@@ -1,156 +1,61 @@
 <h1>Fee Splitter</h1>
 
-A simple contract that **collects fees from multiple crvUSD Controller contracts in a single transaction and distributes them according to some determined weights**.
+The `FeeSplitter.vy` contract is a simple contract that **collects accumulated crvUSD fees from crvUSD controllers and distributes them to other contracts according to predetermined weights** in a single transaction.
+
+![](../assets/images/fee-splitter/feesplitter.svg)
 
 !!!github "GitHub"
-    The source code for the `FeeSplitter.vy`  contract can be found on [GitHub :material-github:](https://github.com/curvefi/curve-burners/pull/1).
-
-
-*The flow of claimed crvUSD looks as follows:*
-
-<figure markdown="span">
-  ![](../assets/images/fee-burning/fee-splitter.svg){ width="600" }
-  <figcaption></figcaption>
-</figure>
+    The source code for the `FeeSplitter.vy`  contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/pull/1).
 
 
 ---
 
 
-## **Claiming and Splitting Fees**
+## **Dispatching Fees**
 
-Fees from multiple `Controllers` are collected and split up via the `claim_controller_fees` function based on `collector_weight` and `incentives_weight`. The weights can be set by the `owner` of the contract, which is the DAO itself. 
+The `dispatch_fees` function is responsible for both collecting crvUSD fees from the `Controllers` and distributing them according to a predetermined set of weights. The contract utilizes a "helper contract" called `ControllerMulticlaim.vy`, which tracks all `Controllers` and provides an interface for claiming fees from them. By default, the `dispatch_fees` function claims fees from all `Controllers` added to `ControllerMulticlaim.vy`, but it also allows for specifying particular Controllers if one wants to claim fees from only those.
 
+!!!info "Documentation for the `ControllerMulticlaim.vy` contract"
 
-### `claim_controller_fees`
-!!! description "`FeeSplitter.claim_controller_fees(controllers: DynArray[Controller, MAX_CONTROLLERS]=empty(DynArray[Controller, MAX_CONTROLLERS])) -> (uint256, uint256)`"
+    The `ControllerMulticlaim.vy` contract uses a simple `update_controller` function, callable by anyone, to update the list of controllers from which the fees are claimed. This is necessary because newly deployed controllers are not directly picked up by the contract. This contract is not documented separately but rather is covered on this page in the relevant section. The full source code for the contract can be found below.
 
-    The `claim_controller_fees` function allows for the collection of fees from the specified array of `controllers`. It splits the total claimed fees according to the `collector_weight` and `incentives_weight`, then transfers the respective amounts to the `collector` and `incentives_manager` addresses. Generally, it is permissible to claim fees from all controllers; however, there may be instances where new controllers are not yet authorized. In such cases, one needs to call the `update_controllers` function. This function verifies all existing controllers from the `ControllerFactory`, adds them to the `controllers` variable, and sets `allowed_controllers(controller) = True`.
+    ??? quote "Source Code"
 
-    Returns: amout of crvusd transfered to the collector and the incentives manager (`uint256, uint256`).
+        todo: add commit hash
 
-    | Input         | Type                                    | Description                            |
-    | ------------- | --------------------------------------- | -------------------------------------- |
-    | `controllers` | `DynArray[Controller, MAX_CONTROLLERS]` | Controllers to claim crvUSD fees from  |
-
-    ??? quote "Source code"
-
-        === "FeeSplitter.vy"
+        === "`ControllerMulticlaim.vy`"
 
             ```python
-            interface Controller:
-                def collect_fees() -> uint256: nonpayable
+            # pragma version ~=0.4.0
 
-            controllers: public(DynArray[Controller, MAX_CONTROLLERS])
+            import ControllerFactory
+            import Controller
+
+            factory: immutable(ControllerFactory)
+
             allowed_controllers: public(HashMap[Controller, bool])
-            collector_weight: public(uint256)
-            collector: public(address)
+            controllers: public(DynArray[Controller, MAX_CONTROLLERS])
 
-            @nonreentrant("lock")
-            @external
-            def claim_controller_fees(controllers: DynArray[Controller, MAX_CONTROLLERS]=empty(DynArray[Controller, MAX_CONTROLLERS])) -> (uint256, uint256):
-                """
-                @notice Claim fees from all controllers and distribute them
-                @param controllers The list of controllers to claim fees from (default: all)
-                @dev Splits and transfers the balance according to the distribution weights
-                """
+            # maximum number of claims in a single transaction
+            MAX_CONTROLLERS: constant(uint256) = 100
+
+            @deploy
+            def __init__(_factory: ControllerFactory):
+                assert _factory.address != empty(address), "zeroaddr: factory"
+
+                factory = _factory
+
+            def claim_controller_fees(controllers: DynArray[Controller, MAX_CONTROLLERS]):
                 if len(controllers) == 0:
-                    for c in self.controllers:
-                        c.collect_fees()
+                    for c: Controller in self.controllers:
+                        extcall c.collect_fees()
                 else:
-                    for c in controllers:
+                    for c: Controller in controllers:
                         if not self.allowed_controllers[c]:
                             raise "controller: not in factory"
-                        c.collect_fees()
+                        extcall c.collect_fees()
 
-                balance: uint256 = crvusd.balanceOf(self)
-
-                collector_amount: uint256 = balance * self.collector_weight / MAX_BPS
-                incentives_amount: uint256 = balance - collector_amount
-
-                crvusd.transfer(self.collector, collector_amount)
-                crvusd.transfer(self.incentives_manager, incentives_amount)
-
-                return collector_amount, incentives_amount
-            ```
-
-    === "Example"
-
-        In this example, the crvUSD fees from the imaginary `controller1` and `controller2` are claimed. If the boolean value of `allowed_controller` for either of these controllers does not return `True`, the function will revert.
-
-        ```shell
-        >>> FeeSplitter.claim_controller_fees(['controller1', 'controller2'])
-        (collector_amount, incentives_amount)
-        ```
-
-
-### `controllers`
-!!! description "`FeeSplitter.controllers() -> DynArray[Controller, MAX_CONTROLLERS]: view`"
-
-    Getter for all controllers considered by the `FeeSplitter`. The `controllers` variable is updated and populated by calling the `update_controllers` function, which retrieves controllers from the `Factory`. It is important to note that this is not the list of controllers used when collecting fees; instead, fee collection is based on the `allowed_controllers` list.
-
-    Returns: todo
-
-    ??? quote "Source code"
-
-        === "FeeSplitter.vy"
-
-            ```python
-            controllers: public(DynArray[Controller, MAX_CONTROLLERS])
-            ```
-
-    === "Example"
-
-        ```shell
-        >>> FeeSplitter.controllers()
-        'todo'
-        ```
-
-
-### `allowed_controllers`
-!!! description "`FeeSplitter.allowed_controllers(arg0: address) -> bool: view`"
-
-    Getter to check if the `FeeSplitter` is allowed to claim fees from a specific `Controller`. Generally, the contract is permitted to claim fees from all Controllers without any restrictions. However, if new Controllers are deployed, they are not automatically included in the `FeeSplitter`. To update this list so that it corresponds to the list of Controllers in the factory, one needs to call the `update_controllers` function.
-
-    Returns: `true` or `false` (`bool`).
-
-    | Input   | Type      | Description                                              |
-    | ------- | --------- | -------------------------------------------------------- |
-    | `arg0`  | `address` | Controller address to check if allowed to claim its fees |
-
-    ??? quote "Source code"
-
-        === "FeeSplitter.vy"
-
-            ```python
-            allowed_controllers: public(HashMap[Controller, bool])
-            ```
-
-    === "Example"
-
-        ```shell
-        >>> FeeSplitter.allowed_controllers('controller1')
-        'true'
-        ```
-
-
-### `update_controllers`
-!!! description "`FeeSplitter.update_controllers()`"
-
-    Function to update the list of `Controllers` (`controllers` and `allowed_controllers`) to ensure they correspond to the list of `Controllers` in the factory.
-
-    ??? quote "Source code"
-
-        === "FeeSplitter.vy"
-
-            ```python
-            interface ControllerFactory:
-                def controllers(index: uint256) -> address: nonpayable
-                def n_collaterals() -> uint256: nonpayable
-
-            controllers: public(DynArray[Controller, MAX_CONTROLLERS])
-            allowed_controllers: public(HashMap[Controller, bool])
-
+            @nonreentrant
             @external
             def update_controllers():
                 """
@@ -158,266 +63,170 @@ Fees from multiple `Controllers` are collected and split up via the `claim_contr
                     list of controllers in the factory
                 """
                 old_len: uint256 = len(self.controllers)
-                new_len: uint256 = factory.n_collaterals()
-                for i in range(new_len - old_len, bound=MAX_CONTROLLERS):
+                new_len: uint256 = staticcall factory.n_collaterals()
+                for i: uint256 in range(new_len - old_len, bound=MAX_CONTROLLERS):
                     i_shifted: uint256 = i + old_len
-                    c: Controller = Controller(factory.controllers(i_shifted))
+                    c: Controller = Controller(staticcall factory.controllers(i_shifted))
                     self.allowed_controllers[c] = True
                     self.controllers.append(c)
             ```
 
-    === "Example"
+All receiving addresses are stored in a `Receiver` struct, which includes the address and its corresponding weight:
 
-        ```shell
-        >>> FeeSplitter.update_controllers()
-        ```
+```py
+struct Receiver:
+    addr: address
+    weight: uint256
+```
 
 
-### `collector_weight`
-!!! description "`FeeSplitter.collector_weight() -> uint256: view`"
+The weights assigned to different components receiving `crvUSD` are determined when a receiver address is added using the `set_receivers` function. Additionally, the contract supports dynamic weights based on different conditions. If a weight is dynamic, the `weight` value in the struct serves as a cap. If the dynamic weight is less than the defined weight in the struct, the unused portion is added to the weight of the last receiver. In effect, any unused weight is rolled over to the last receiver address in the `receivers` storage variable.
 
-    Getter for the collector weight. This variable determines the portion of the total claimed crvUSD fees that is allocated to the `FeeCollector`, which is then further distributed to veCRV holders. The weights are based on `MAX_BPS = 10,000`.
+!!!tip "Weight Example"
+    Let's assume the following weights are stored in the `Receiver` struct:
 
-    Returns: collector weight (`uint256`).
+    ```shell
+    weight_receiver1 = 10%
+    weight_receiver2 = 10%
+    weight_receiver3 = 80%
+    ```
+
+    Now, due to the nature of the dynamic weights for `receiver1` and `receiver2`, let's assume the actual weight for `receiver1` is 8%, and the weight for `receiver2` is 12%. Therefore, 2% of the weight from `receiver1` is rolled over to the last receiver (`receiver3`). Although the dynamic weight of `receiver2` is 12%, it is capped at its struct value of 10%. The final weights are:
+
+    ```shell
+    final_weight_receiver1 = 8%
+    final_weight_receiver2 = 10%
+    final_weight_receiver3 = 82%        # 2% rolled over from receiver1
+    ```
+
+
+---
+
+
+### `dispatch_fees`
+!!! description "`FeeSplitter.dispatch_fees(controllers: DynArray[multiclaim.Controller, multiclaim.MAX_CONTROLLERS]=[])`"
+
+    Function to claim crvUSD fees from all controllers and distribute them according to their weights. This function is callable by anyone.
+
+    | Input         | Type                                                          | Description |
+    | ------------- | ------------------------------------------------------------- | ----------- |
+    | `controllers` | `DynArray[multiclaim.Controller, multiclaim.MAX_CONTROLLERS]` | todo; defaults to claiming from all controllers  |
 
     ??? quote "Source code"
 
-        === "FeeSplitter.vy"
+        === "`FeeSplitter.vy`"
+
+            todo: add commit hash
 
             ```python
-            collector_weight: public(uint256)
+            struct Receiver:
+                addr: address
+                weight: uint256
 
+            # maximum number of splits
+            MAX_RECEIVERS: constant(uint256) = 100
+            # maximum basis points (100%)
+            MAX_BPS: constant(uint256) = 10_000
+
+            # receiver logic
+            receivers: public(DynArray[Receiver, MAX_RECEIVERS])
+
+            @nonreentrant
             @external
-            def __init__(_crvusd: address, _factory: address, collector_weight: uint256, collector: address, incentives_manager: address, owner: address):
+            def dispatch_fees(controllers: DynArray[multiclaim.Controller, multiclaim.MAX_CONTROLLERS]=[]):
                 """
-                @notice Contract constructor
-                @param _crvusd The address of the crvUSD token contract
-                @param collector_weight The initial weight for veCRV distribution (scaled by 1e18)
-                @param collector The address to receive the amount for veCRV holders
-                @param incentives_manager The address to receive the incentives amount
-                @param owner The address of the contract owner
+                @notice Claim fees from all controllers and distribute them
+                @param controllers The list of controllers to claim fees from (default: all)
+                @dev Splits and transfers the balance according to the receivers weights
                 """
-                ...
-                assert collector_weight <= MAX_BPS, "weights: collector_weight > MAX_BPS"
-                ...
-                self.collector_weight = collector_weight
-                ...
+
+                multiclaim.claim_controller_fees(controllers)
+
+                balance: uint256 = staticcall crvusd.balanceOf(self)
+
+                excess: uint256 = 0
+
+                # by iterating over the receivers, rather than the indices,
+                # we avoid an oob check at every iteration.
+                i: uint256 = 0
+                for r: Receiver in self.receivers:
+                    weight: uint256 = r.weight
+
+                    if self._is_dynamic(r.addr):
+                        dynamic_weight: uint256 = staticcall DynamicWeight(r.addr).weight()
+
+                        # weight acts as a cap to the dynamic weight
+                        if dynamic_weight < weight:
+                            excess += weight - dynamic_weight
+                            weight = dynamic_weight
+
+                    if i == len(self.receivers) - 1:
+                        weight += excess
+
+                    extcall crvusd.transfer(r.addr, balance * weight // MAX_BPS)
+                    i += 1
             ```
 
-    === "Example"
+        === "`ControllerMulticlaim.vy`"
 
-        ```shell
-        >>> FeeSplitter.collector_weight()
-        5000        # 50%
-        ```
+            todo: add commit hash
 
+            ```python
+            import ControllerFactory
+            import Controller
 
-### `incentives_weight`
-!!! description "`FeeSplitter.incentives_weight() -> uint256: view`"
+            factory: immutable(ControllerFactory)
 
-    Getter for the incentives weight, which is equal to `MAX_BPS - collector_weight`. This variable determines the portion of the total claimed crvUSD fees that is allocated to the `incentives_manager`, which is then used to post vote incentives (bribes). The weights are based on `MAX_BPS = 10,000`.
+            allowed_controllers: public(HashMap[Controller, bool])
+            controllers: public(DynArray[Controller, MAX_CONTROLLERS])
 
-    Returns: incentives weight (`uint256`).
+            # maximum number of claims in a single transaction
+            MAX_CONTROLLERS: constant(uint256) = 100
 
-    ??? quote "Source code"
+            @deploy
+            def __init__(_factory: ControllerFactory):
+                assert _factory.address != empty(address), "zeroaddr: factory"
 
-        === "FeeSplitter.vy"
+                factory = _factory
+
+            def claim_controller_fees(controllers: DynArray[Controller, MAX_CONTROLLERS]):
+                if len(controllers) == 0:
+                    for c: Controller in self.controllers:
+                        extcall c.collect_fees()
+                else:
+                    for c: Controller in controllers:
+                        if not self.allowed_controllers[c]:
+                            raise "controller: not in factory"
+                        extcall c.collect_fees()
+
+            @nonreentrant
+            @external
+            def update_controllers():
+                """
+                @notice Update the list of controllers so that it corresponds to the
+                    list of controllers in the factory
+                """
+                old_len: uint256 = len(self.controllers)
+                new_len: uint256 = staticcall factory.n_collaterals()
+                for i: uint256 in range(new_len - old_len, bound=MAX_CONTROLLERS):
+                    i_shifted: uint256 = i + old_len
+                    c: Controller = Controller(staticcall factory.controllers(i_shifted))
+                    self.allowed_controllers[c] = True
+                    self.controllers.append(c)
+            ```
+
+        === "`DynamicWeight.vyi`"
 
             ```python
             @view
             @external
-            def incentives_weight() -> uint256:
-                """
-                @notice Getter to compute the weight for incentives
-                @return The weight for voting incentives
-                """
-                return MAX_BPS - self.collector_weight
-            ```
+            def supportsInterface(interface_id: bytes4) -> bool:
+                ...
 
-    === "Example"
-
-        ```shell
-        >>> FeeSplitter.
-        5000        # 50%
-        ```
-
-
-### `set_weights`
-!!! description "`FeeSplitter.set_weights(collector_weight: uint256)`"
-
-    Function to set a new weight for `collector_weight`. By changing the `collector_weight` value, the `incentives_weight` value also changes accordingly as it is based on `MAX_BPS - collector_weight`.
-
-    Emits: `SetWeights`
-
-    | Input              | Type      | Description                  |
-    | ------------------ | --------- | ---------------------------- |
-    | `collector_weight` | `uint256` | New `collector_weight` value |
-
-    ??? quote "Source code"
-
-        === "FeeSplitter.vy"
-
-            ```python
-            event SetWeights:
-                distribution_weight: uint256
-
-            collector_weight: public(uint256)
-
+            @view
             @external
-            def set_weights(collector_weight: uint256):
-                """
-                @notice Set the collector weight (and implicitly the incentives weight)
-                @dev Up to 100% (MAX_BPS)
-                @param collector_weight The new collector weight
-                """
-                assert msg.sender == self.owner, "auth: only owner"
-                assert collector_weight <= MAX_BPS, "weights: collector weight > MAX_BPS"
-
-                self.collector_weight = collector_weight
-
-                log SetWeights(collector_weight)
-            ```
-
-    === "Example"
-
-        For example, when setting the `collector_weight` to `7500`, 75% of all collected fees from the controllers will be transferred to the `collector`. The `incentives_weight` will be `10,000 - 7500`, which equals 25%.
-
-        ```shell
-        >>> FeeSplitter.set_weights(7500)
-        
-        >>> FeeSplitter.collector_weight()
-        7500
-
-        >>> FeeSplitter.incentives_weight()
-        2500
-        ```
-
-
----
-
-
-## **Collector and Incentives Manager**
-
-The contract has two variables, the `collector` and `incentives_manager`, which represent the contract to which the split up fees are sent. These contract can only be changed by the `owner` (the DAO) using the `set_collector` or `set_incentives_manager`.
-
-
-### `collector`
-!!! description "`FeeSplitter.collector() -> address: view`"
-
-    Getter for the collector address. This contract forwards the proportionally collected crvUSD fees to the `FeeDistributor` from which they can be claimed by veCRV holders.
-
-    Returns: collector (`address`).
-
-    ??? quote "Source code"
-
-        === "FeeSplitter.vy"
-
-            ```python
-            collector: public(address)
-
-            @external
-            def __init__(_crvusd: address, _factory: address, collector_weight: uint256, collector: address, incentives_manager: address, owner: address):
-                """
-                @notice Contract constructor
-                @param _crvusd The address of the crvUSD token contract
-                @param collector_weight The initial weight for veCRV distribution (scaled by 1e18)
-                @param collector The address to receive the amount for veCRV holders
-                @param incentives_manager The address to receive the incentives amount
-                @param owner The address of the contract owner
-                """
+            def weight() -> uint256:
                 ...
-                assert collector != empty(address), "zeroaddr: collector"
-                ...
-                self.collector = collector
-                ...
-            ```
-
-    === "Example"
-
-        The `collector` address is set to the already existing `FeeCollector` contract.
-
-        ```shell
-        >>> FeeSplitter.collector()
-        'todo'
-        ```
-
-
-### `incentives_manager`
-!!! description "`FeeSplitter.incentives_manager() -> address: view`"
-
-    Getter for the incentives manager address. This contract is used to post bribes.
-
-    Returns: incentives manager (`address`).
-
-    ??? quote "Source code"
-
-        === "FeeSplitter.vy"
-
-            ```python
-            incentives_manager: public(address)
-
-            @external
-            def __init__(_crvusd: address, _factory: address, collector_weight: uint256, collector: address, incentives_manager: address, owner: address):
-                """
-                @notice Contract constructor
-                @param _crvusd The address of the crvUSD token contract
-                @param collector_weight The initial weight for veCRV distribution (scaled by 1e18)
-                @param collector The address to receive the amount for veCRV holders
-                @param incentives_manager The address to receive the incentives amount
-                @param owner The address of the contract owner
-                """
-                ...
-                assert incentives_manager != empty(address), "zeroaddr: incentives_manager"
-                ...
-                self.incentives_manager = incentives_manager
-                ...
-            ```
-
-    === "Example"
-
-        ```shell
-        >>> FeeSplitter.incentives_manager()
-        'todo'
-        ```
-
-
-### `set_collector`
-!!! description "`FeeSplitter.set_collector(collector: address)`"
-
-    !!!guard "Guarded Method"
-        This function is only callable by the `owner` of the contract.
-
-    Function to set a new address for `collector`.
-
-    Emits: `SetCollector`
-
-    | Input       | Type      | Description                    |
-    | ----------- | --------- | ------------------------------ |
-    | `collector` | `address` | New address set as `collector` |
-
-    ??? quote "Source code"
-
-        === "FeeSplitter.vy"
-
-            ```python
-            event SetCollector:
-                distribution_receiver: address
-                        
-            collector: public(address)
-
-            @external
-            def set_collector(collector: address):
-                """
-                @notice Set the address that will receive crvUSD for distribution
-                    to veCRV holders.
-                @param collector_receiver The address that will receive crvUSD
-                """
-                assert msg.sender == self.owner, "auth: only owner"
-                assert collector != empty(address), "zeroaddr: collector"
-
-                self.collector = collector
-
-                log SetCollector(collector)
             ```
 
     === "Example"
@@ -427,44 +236,62 @@ The contract has two variables, the `collector` and `incentives_manager`, which 
         ```
 
 
-### `set_incentives_manager`
-!!! description "`FeeSplitter.set_incentives_manager(incentives_manager: address)`"
+### `receivers`
+!!! description "`FeeSplitter.receivers(arg0: uint256) -> Receiver: view`"
 
-    !!!guard "Guarded Method"
-        This function is only callable by the `owner` of the contract.
+    Getter for the receiver at 
 
-    Function to set a new address for `incentives_manager`.
+    Returns: `Receiver` struct consisting of `address` and `weight`.
 
-    Emits: `SetIncentivesManager`
-
-    | Input                | Type      | Description                             |
-    | -------------------- | --------- | --------------------------------------- |
-    | `incentives_manager` | `address` | New address set as `incentives_manager` |
+    | Input  | Type      | Description                             |
+    | ------ | --------- | --------------------------------------- |
+    | `arg0` | `uint256` | index of the added receiver |
 
     ??? quote "Source code"
 
-        === "FeeSplitter.vy"
+        === "`FeeSplitter.vy`"
+
+            todo: add commit hash
 
             ```python
-            event SetIncentivesManager:
-                incentives_receiver: address
+            struct Receiver:
+                addr: address
+                weight: uint256
 
-            incentives_manager: public(address)
+            receivers: public(DynArray[Receiver, MAX_RECEIVERS])
+            ```
 
+    === "Example"
+
+        ```shell
+        >>> FeeSplitter.receivers(todo)
+        ```
+
+
+### `n_receivers`
+!!! description "`FeeSplitter.n_receivers() -> uint256`"
+
+    Getter for the total number of receivers.
+
+    Returns: number of receivers added (`uint256`)
+
+    ??? quote "Source code"
+
+        === "`FeeSplitter.vy`"
+
+            todo: add commit hash
+
+            ```python
+            receivers: public(DynArray[Receiver, MAX_RECEIVERS])
+
+            @view
             @external
-            def set_incentives_manager(incentives_manager: address):
+            def n_receivers() -> uint256:
                 """
-                @notice Set the address that will receive crvUSD that
-                    will be used for incentives
-                @param incentives_manager The address that will receive
-                    crvUSD to be used for incentives
+                @notice Get the number of receivers
+                @return The number of receivers
                 """
-                assert msg.sender == self.owner, "auth: only owner"
-                assert incentives_manager != empty(address), "zeroaddr: incentives_manager"
-
-                self.incentives_manager = incentives_manager
-
-                log SetIncentivesManager(incentives_manager)
+                return len(self.receivers)
             ```
 
     === "Example"
@@ -474,181 +301,123 @@ The contract has two variables, the `collector` and `incentives_manager`, which 
         ```
 
 
----
-
-## **Contract Ownership**
-
-### `owner`
-!!! description "`FeeSplitter.owner() -> address: view`"
-
-    Getter for the owner of the contract. The ownership of the contract can only be changed by the `owner` itself.
-
-    Returns: current owner (`address`).
-
-    ??? quote "Source code"
-
-        === "FeeSplitter.vy"
-
-            ```python
-            owner: public(address)
-
-            @external
-            def __init__(_crvusd: address, _factory: address, collector_weight: uint256, collector: address, incentives_manager: address, owner: address):
-                """
-                @notice Contract constructor
-                @param _crvusd The address of the crvUSD token contract
-                @param collector_weight The initial weight for veCRV distribution (scaled by 1e18)
-                @param collector The address to receive the amount for veCRV holders
-                @param incentives_manager The address to receive the incentives amount
-                @param owner The address of the contract owner
-                """
-                ...
-                assert owner != empty(address), "zeroaddr: owner"
-                ...
-                self.owner = owner
-            ```
-
-    === "Example"
-
-        ```shell
-        >>> FeeSplitter.owner()
-        'todo'
-        ```
-
-
-### `set_owner`
-!!! description "`FeeSplitter.set_owner(new_owner: address)`"
+### `set_receivers`
+!!! description "`FeeSplitter.set_receivers(receivers: DynArray[Receiver, MAX_RECEIVERS])`"
 
     !!!guard "Guarded Method"
-        This function is only callable by the `owner` of the contract.
+        This function is only callable by the `owner` of the contract. todo: add snekmate
 
-    Function to change the ownership of the contract.
+    Function to set receivers of the collected crvusd fees. when just adding a new receiver, need to include the olds ones in `receivers` aswell. can not just simply add one because of the weight logic. reverts if address is ZERO_ADDRESS, weight is 0 or greater or than `MAX_BPS`. sum of the weight of all receivers needs to be equal to `MAX_BPS`, which is 100%; otherwise the function call reverts. When adding receivers with dynamics weight, the require to support the `DYNAMIC_WEIGHT_EIP165_ID` a la EIP-165.
 
-    Emits: `SetOwner`
+    Emits: `SetReceivers`
 
-    | Input   | Type      | Description       |
-    | ------- | --------- | ----------------- |
-    | `new_owner` | `uint256` | New address to set as owner |
+    | Input       | Type      | Description           |
+    | ----------- | --------- | --------------------- |
+    | `receivers` | `DynArray[Receiver, MAX_RECEIVERS]` | |
 
     ??? quote "Source code"
 
-        === "FeeSplitter.vy"
+        === "`FeeSplitter.vy`"
+
+            todo: add commit hash
 
             ```python
-            event SetOwner:
-                owner: address
+            from snekmate.auth import ownable
 
-            owner: public(address)
+            initializes: ownable
+            exports: (ownable.__interface__, multiclaim.__interface__)
+
+            event SetReceivers: pass
+
+            # maximum number of splits
+            MAX_RECEIVERS: constant(uint256) = 100
+
+            DYNAMIC_WEIGHT_EIP165_ID: constant(bytes4) = 0x12431234
+
+            # receiver logic
+            receivers: public(DynArray[Receiver, MAX_RECEIVERS])
+
+            struct Receiver:
+                addr: address
+                weight: uint256
 
             @external
-            def set_owner(new_owner: address):
+            def set_receivers(receivers: DynArray[Receiver, MAX_RECEIVERS]):
                 """
-                @notice Set owner of the contract
-                @param new_owner Address of the new owner
+                @notice Set the receivers
+                @param receivers The new receivers
                 """
-                assert msg.sender == self.owner, "auth: only owner"
-                assert new_owner != empty(address), "zeroaddr: new_owner"
+                ownable._check_owner()
 
-                self.owner = new_owner
+                self._set_receivers(receivers)
 
-                log SetOwner(new_owner)
+            def _set_receivers(receivers: DynArray[Receiver, MAX_RECEIVERS]):
+                assert len(receivers) > 0, "receivers: empty"
+                total_weight: uint256 = 0
+                for r: Receiver in receivers:
+                    assert r.addr != empty(address), "zeroaddr: receivers"
+                    assert r.weight > 0 and r.weight <= MAX_BPS, "receivers: invalid weight"
+                    total_weight += r.weight
+                assert total_weight == MAX_BPS, "receivers: total weight != MAX_BPS"
+
+                self.receivers = receivers
+
+                log SetReceivers()
+
+            def _is_dynamic(addr: address) -> bool:
+                """
+                @notice Check if the address supports the dynamic weight interface
+                @param addr The address to check
+                @return True if the address supports the dynamic weight interface
+                """
+                success: bool = False
+                response: Bytes[32] = b""
+                success, response = raw_call(
+                    addr,
+                    abi_encode(DYNAMIC_WEIGHT_EIP165_ID, method_id=method_id("supportsInterface(bytes4)")),
+                    max_outsize=32,
+                    is_static_call=True,
+                    revert_on_failure=False
+                )
+                return success and convert(response, bool) or len(response) > 32
             ```
+
+        === "Snekmate"
+
+            todo: add snekmate module
+
+            ```py
+            
+            ```
+
 
     === "Example"
 
         ```shell
-        >>> FeeSplitter.owner()
-        '0x0000000000000000000000000000000000000000'
-
-        >>> FeeSplitter.set_owner('0x40907540d8a6C65c637785e8f8B742ae6b0b9968')
-        
-        >>> FeeSplitter.owner()
-        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
+        >>> soon
         ```
 
 
----
+### `version`
+!!! description "`FeeSplitter.version() -> String[8]: view`"
 
-## **Other Methods**
+    Getter for the version of the contract.
 
-### `factory`
-!!! description "`FeeSplitter.factory() -> address: view`"
-
-    Getter for the `ControllerFactory` which is used to create new markets from which crvUSD can be minted.
-
-    Returns: `Factory` (`address`).
+    Returns: contract version (`String[8]`). 
 
     ??? quote "Source code"
 
-        === "FeeSplitter.vy"
+        === "`FeeSplitter.vy`"
+
+            todo: add commit hash
 
             ```python
-            interface ControllerFactory:
-                def controllers(index: uint256) -> address: nonpayable
-                def n_collaterals() -> uint256: nonpayable
-
-            factory: immutable(ControllerFactory)
-
-            @external
-            def __init__(_crvusd: address, _factory: address, collector_weight: uint256, collector: address, incentives_manager: address, owner: address):
-                """
-                @notice Contract constructor
-                @param _crvusd The address of the crvUSD token contract
-                @param collector_weight The initial weight for veCRV distribution (scaled by 1e18)
-                @param collector The address to receive the amount for veCRV holders
-                @param incentives_manager The address to receive the incentives amount
-                @param owner The address of the contract owner
-                """
-                ...
-                assert _factory != empty(address), "zeroaddr: factory"
-                ...
-                factory = ControllerFactory(_factory)
-                ...
+            version: public(constant(String[8])) = "0.1.0" # no guarantees on abi stability
             ```
 
     === "Example"
 
         ```shell
-        >>> FeeSplitter.factory()
-        '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
-        ```
-
-
-### `crvusd`
-!!! description "`FeeSplitter.crvusd() -> address: view`"
-
-    Getter for the `crvUSD` token address.
-
-    Returns: crvUSD token (`address`).
-
-    ??? quote "Source code"
-
-        === "FeeSplitter.vy"
-
-            ```python
-            crvusd: immutable(ERC20)
-
-            from vyper.interfaces import ERC20
-
-            @external
-            def __init__(_crvusd: address, _factory: address, collector_weight: uint256, collector: address, incentives_manager: address, owner: address):
-                """
-                @notice Contract constructor
-                @param _crvusd The address of the crvUSD token contract
-                @param collector_weight The initial weight for veCRV distribution (scaled by 1e18)
-                @param collector The address to receive the amount for veCRV holders
-                @param incentives_manager The address to receive the incentives amount
-                @param owner The address of the contract owner
-                """
-                assert _crvusd != empty(address), "zeroaddr: crvusd"
-                ...
-                crvusd = ERC20(_crvusd)
-                ...
-            ```
-
-    === "Example"
-
-        ```shell
-        >>> FeeSplitter.crvusd()
-        '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
+        >>> FeeSplitter.version()
+        '0.1.0'
         ```
