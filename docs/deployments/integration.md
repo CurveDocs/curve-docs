@@ -34,7 +34,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | :logos-avalanche: `Avalanche`   | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://snowscan.xyz/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
 | :logos-kava: `Kava`             | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://kavascan.io/search?q=0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
 | :logos-xlayer: `X-Layer`        | [0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98](https://www.okx.com/web3/explorer/xlayer/address/0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98) |
-| :logos-zksync: `zk-Sync`        | [0x54A5a69e17Aa6eB89d77aa3828E38C9Eb4fF263D](https://era.zksync.network/address/0x54A5a69e17Aa6eB89d77aa3828E38C9Eb4fF263D) |
+| :logos-zksync: `zk-Sync`        | [0x960C90aE833af0fd699dBc2503468A07cC28FA4F](https://era.zksync.network/address/0x960C90aE833af0fd699dBc2503468A07cC28FA4F) |
 
 
 ---
