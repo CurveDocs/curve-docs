@@ -54,7 +54,7 @@ search:
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
 | `Math`      | [0xD4a8bd4d59d65869E99f20b642023a5015619B34](https://arbiscan.io/address/0xD4a8bd4d59d65869E99f20b642023a5015619B34) |
-| `Views`     | [0xDD7EBB1C49780519dD9755B8B1A23a6f42CE099E](https://arbiscan.io/address/0xDD7EBB1C49780519dD9755B8B1A23a6f42CE099E) |
+| `Views`     | [0x3BbA971980A721C7A33cEF62cE01c0d744F26e95](https://arbiscan.io/address/0x3BbA971980A721C7A33cEF62cE01c0d744F26e95) |
 | `Factory`   | [0x9AF14D26075f142eb3F292D5065EB3faa646167b](https://arbiscan.io/address/0x9AF14D26075f142eb3F292D5065EB3faa646167b) |
 | `Plain AMM` | [0xf6841C27fe35ED7069189aFD5b81513578AFD7FF](https://arbiscan.io/address/0xf6841C27fe35ED7069189aFD5b81513578AFD7FF) |
 | `Meta AMM`  | [0xFf02cBD91F57A778Bab7218DA562594a680B8B61](https://arbiscan.io/address/0xFf02cBD91F57A778Bab7218DA562594a680B8B61) |
@@ -240,12 +240,13 @@ search:
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | [0xcf19236e85000901dE2Fad3199aA4A1F74a78B6C](https://era.zksync.network/address/0xcf19236e85000901dE2Fad3199aA4A1F74a78B6C) |
-| `Views`     | [0xeF62cD5CBa8B040827B648dBc6a755ddeeb84E65](https://era.zksync.network/address/0xeF62cD5CBa8B040827B648dBc6a755ddeeb84E65) |
-| `Factory`   | [0x375444aeDEb6C3db897f293E1DBa85D7422A6859](https://era.zksync.network/address/0x375444aeDEb6C3db897f293E1DBa85D7422A6859) |
-| `Plain AMM` | [0x3ce3009F8ad07161BA9d02d7A0173180d0281cA4](https://era.zksync.network/address/0x3ce3009F8ad07161BA9d02d7A0173180d0281cA4) |
-| `Meta AMM`  | [0x1E9A82C2a3DF2E0793a2B828aA652Db192f3C8F3](https://era.zksync.network/address/0x1E9A82C2a3DF2E0793a2B828aA652Db192f3C8F3) |
+| `Math`      | [0x29Fc22c7fEC8748a85852E2D36728D9194DDb854](https://era.zksync.network/address/0x29Fc22c7fEC8748a85852E2D36728D9194DDb854) |
+| `Views`     | [0x59557D68d46e8367Fb357F2E848D8506cBf371c9](https://era.zksync.network/address/0x59557D68d46e8367Fb357F2E848D8506cBf371c9) |
+| `Factory`   | [0xFcAb5d04e8e031334D5e8D2C166B08daB0BE6CaE](https://era.zksync.network/address/0xFcAb5d04e8e031334D5e8D2C166B08daB0BE6CaE) |
+| `Plain AMM` | [0x04D0095a1A4Ae881a078ae61F36945E85464e6d7](https://era.zksync.network/address/0x04D0095a1A4Ae881a078ae61F36945E85464e6d7) |
+| `Meta AMM`  | [0xC5d5402481aefec461Ab86b1051AC26dF05BeE3B](https://era.zksync.network/address/0xC5d5402481aefec461Ab86b1051AC26dF05BeE3B) |
 
+views: 0x1F280a5CFd3220b95819674a635B0D12a32F0E6a
 
 **:logos-tron: Tron**
 
@@ -476,10 +477,10 @@ search:
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x5AF4Fa25F76491F949C648AC439b1953df78f594](https://era.zksync.network/address/0x5AF4Fa25F76491F949C648AC439b1953df78f594) |
-| `Views`     | [0xfe30c516c23504B6CF740de513390DC6943888d8](https://era.zksync.network/address/0xfe30c516c23504B6CF740de513390DC6943888d8) |
-| `Factory`   | [0x24992A09E2257AF325102Cefa1F09E80E9062d49](https://era.zksync.network/address/0x24992A09E2257AF325102Cefa1F09E80E9062d49) |
-| `AMM`       | [0x69949489645190D5C4e57a5B9e57705C57033EBb](https://era.zksync.network/address/0x69949489645190D5C4e57a5B9e57705C57033EBb) |
+| `Math`      | [0x75D022039Ee9e386Ed66186950a1C57c4C33c584](https://era.zksync.network/address/0x75D022039Ee9e386Ed66186950a1C57c4C33c584) |
+| `Views`     | [0x029A5c01D753eA0291157FCBA163DEB644c76a55](https://era.zksync.network/address/0x029A5c01D753eA0291157FCBA163DEB644c76a55) |
+| `Factory`   | [0xf3a546AF64aFd6BB8292746BA66DB33aFAE72114](https://era.zksync.network/address/0xf3a546AF64aFd6BB8292746BA66DB33aFAE72114) |
+| `AMM`       | [0x0d74e4315AC9Ea0CE299CF1238481e9311574e48](https://era.zksync.network/address/0x0d74e4315AC9Ea0CE299CF1238481e9311574e48) |
 
 
 **:logos-tron: Tron**
@@ -733,11 +734,11 @@ search:
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x07a1684378324825F67D92d944a713E2b8666DEb](https://era.zksync.network/address/0x07a1684378324825F67D92d944a713E2b8666DEb) |
-| `Views`     | [0x30E9b9b8449056d17B33D5F42e1fdd5600A2397F](https://era.zksync.network/address/0x30E9b9b8449056d17B33D5F42e1fdd5600A2397F) |
-| `Factory`   | [0x5044112fDf6c8DCc788a669c17345cfDB06549fa](https://era.zksync.network/address/0x5044112fDf6c8DCc788a669c17345cfDB06549fa) |
-| `AMM native disable` | [0x46e1530c07D5BF2A5654C8cAAA60525D1a3f807A](https://era.zksync.network/address/0x46e1530c07D5BF2A5654C8cAAA60525D1a3f807A) |
-| `AMM native enabled` | [0xe1D19a2036BB6F78605cc6B0ac858C83196cAd22](https://era.zksync.network/address/0xe1D19a2036BB6F78605cc6B0ac858C83196cAd22) |
+| `Math`      | [0x493c70dd5c6A8F6D21e7742D51E3b70A3026C035](https://era.zksync.network/address/0x493c70dd5c6A8F6D21e7742D51E3b70A3026C035) |
+| `Views`     | [0x9752B6a3c30502e90918534B2417Ca08123880D6](https://era.zksync.network/address/0x9752B6a3c30502e90918534B2417Ca08123880D6) |
+| `Factory`   | [0x5d4174C40f1246dABe49693845442927d5929f0D](https://era.zksync.network/address/0x5d4174C40f1246dABe49693845442927d5929f0D) |
+| `AMM native disable` | [0x1BD7d40CF9bBb63537746C89992f421bC35C6716](https://era.zksync.network/address/0x1BD7d40CF9bBb63537746C89992f421bC35C6716) |
+| `AMM native enabled` | [0x18d01726FeDaBd91579A9368DFB2F8A24f905280](https://era.zksync.network/address/0x18d01726FeDaBd91579A9368DFB2F8A24f905280) |
 
 
 **:logos-tron: Tron**
