@@ -5,7 +5,7 @@ The `FeeSplitter.vy` contract is a straightforward contract that collects accumu
 [^1]: These are Controllers from which crvUSD is minted. See here: https://crvusd.curve.fi/
 
 !!!github "GitHub"
-    The source code for the `FeeSplitter.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/pull/1).
+    The source code for the `FeeSplitter.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/pull/1). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.4.0` and utilizes a [snekmate module](https://github.com/pcaversaccio/snekmate/blob/main/src/snekmate/auth/ownable.vy) to handle contract ownership.
 
 ![](../assets/images/fee-splitter/feesplitter.svg)
 *The flow above, which involves claiming fees and distributing them among different components such as the `FeeCollector`, is facilitated with a single call to the `dispatch_fees()` function.*
@@ -428,7 +428,7 @@ The weights assigned to different components receiving `crvUSD` are determined w
 !!! description "`FeeSplitter.set_receivers(receivers: DynArray[Receiver, MAX_RECEIVERS])`"
 
     !!!guard "Guarded Method"
-        This function is only callable by the `owner` of the contract. todo: snekmate
+        This function can only be called by the `owner` of the contract. The contract uses the following Snekmate module for handling ownership: [:material-github: GitHub](https://github.com/pcaversaccio/snekmate/blob/main/src/snekmate/auth/ownable.vy).
 
     Function to set receivers and their respective weights of the collected crvUSD fees. When adding new receivers, one must include the current ones in the array of `Receiver` structs. The function will revert if the address is `ZERO_ADDRESS`, if the weight is 0 or greater than `MAX_BPS` (10000), or if the sum of the weights of all receivers does not equal `MAX_BPS` (100%). The weight is based on a scale of 1e5, meaning e.g. 100% corresponds to a weight value of 10000, and 50% would be a weight value of 5000. Additionally, when adding receivers with dynamic weights, they must support the `DYNAMIC_WEIGHT_EIP165_ID` as specified by EIP-165; otherwise, the function will revert.
 
