@@ -52,6 +52,19 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../curve_
 | Agent Blueprint    | [0xF3BC9E5fA891977DCa765ff52E8f22A1F7d49c1f](https://basescan.org/address/0xF3BC9E5fA891977DCa765ff52E8f22A1F7d49c1f) |
 
 
+**:logos-gnosis: Gnosis**
+
+| Contract Type      | Contract Address |
+| :----------------: | :--------------: |
+| L1 Broadcaster     | [0x22089A449ABdAd415d3B8476A501BFe70870C1a7](https://etherscan.io/address/0x22089A449ABdAd415d3B8476A501BFe70870C1a7) |
+| L2 Relayer         | [0x22089A449ABdAd415d3B8476A501BFe70870C1a7](https://gnosisscan.io/address/0x22089A449ABdAd415d3B8476A501BFe70870C1a7) |
+| L2 Ownership Agent | [0x383544581A70d2C4E4688d2C5C18C3941e0c8637](https://gnosisscan.io/address/0x383544581A70d2C4E4688d2C5C18C3941e0c8637) |
+| L2 Parameter Agent | [0x91304259119506185Fd74e3950bdd65A7e03E15E](https://gnosisscan.io/address/0x91304259119506185Fd74e3950bdd65A7e03E15E) |
+| L2 Emergency Agent | [0xEFDA01FE1dE71c9bDcFd78A58EA34d9F8f8bde90](https://gnosisscan.io/address/0xEFDA01FE1dE71c9bDcFd78A58EA34d9F8f8bde90) |
+| L2 Vault           | [0x0B8c6A25904a1b8A0712Bc857390130a438c52AA](https://gnosisscan.io/address/0x0B8c6A25904a1b8A0712Bc857390130a438c52AA) |
+| Agent Blueprint    | [0x61951AC5664c7a7d7aB7df9892a82a5fCd622Bb2](https://gnosisscan.io/address/0x61951AC5664c7a7d7aB7df9892a82a5fCd622Bb2) |
+
+
 **:logos-mantle: Mantle**
 
 | Contract Type      | Contract Address |
