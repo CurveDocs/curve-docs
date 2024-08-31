@@ -65,6 +65,19 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../curve_
 | Agent Blueprint    | [0x61951AC5664c7a7d7aB7df9892a82a5fCd622Bb2](https://gnosisscan.io/address/0x61951AC5664c7a7d7aB7df9892a82a5fCd622Bb2) |
 
 
+**:logos-fraxtal: Fraxtal**
+
+| Contract Type      | Contract Address |
+| :----------------: | :--------------: |
+| L1 Broadcaster     | [0xE0fE4416214e95F0C67Dc044AAf1E63d6972e0b9](https://etherscan.io/address/0xE0fE4416214e95F0C67Dc044AAf1E63d6972e0b9) |
+| L2 Relayer         | [0x7BE6BD57A319A7180f71552E58c9d32Da32b6f96](https://fraxscan.com/address/0x7BE6BD57A319A7180f71552E58c9d32Da32b6f96) |
+| L2 Ownership Agent | [0x4BbdFEd5696b3a8F6B3813506b5389959C5CDC57](https://fraxscan.com/address/0x4BbdFEd5696b3a8F6B3813506b5389959C5CDC57) |
+| L2 Parameter Agent | [0x61E0521A1FA8CA2f544ab6b7B7e89059e5b361FF](https://fraxscan.com/address/0x61E0521A1FA8CA2f544ab6b7B7e89059e5b361FF) |
+| L2 Emergency Agent | [0xeF3D6Bc9a603AcABAEd46f43506F01e7eC4d1301](https://fraxscan.com/address/0xeF3D6Bc9a603AcABAEd46f43506F01e7eC4d1301) |
+| L2 Vault           | [0x50eD95CEb917443eE0790Eea97494121CA318a6C](https://fraxscan.com/address/0x50eD95CEb917443eE0790Eea97494121CA318a6C) |
+| Agent Blueprint    | [0x47fE2319e3Ea3451f87196Aca4973563CEda838b](https://fraxscan.com/address/0x47fE2319e3Ea3451f87196Aca4973563CEda838b) |
+
+
 **:logos-mantle: Mantle**
 
 | Contract Type      | Contract Address |
