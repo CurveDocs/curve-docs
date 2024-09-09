@@ -3,10 +3,7 @@ search:
   exclude: true
 ---
 
-<h1></h1>
-
-
-## **Curve Lending**
+<h1>Curve Lending: Deployment Addresses</h1>
 
 !!!github
     The source code for all lending-relevant contracts can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/tree/lending).
@@ -38,7 +35,7 @@ AMM, Controller, and Price Oracle contracts and other variables of a vault can s
 ---
 
 
-**:logos-ethereum: Ethereum**
+### **:logos-ethereum: Ethereum**
 
 | Contract Type                      | Contract Address                                                         |
 | :--------------------------------: | :----------------------------------------------------------------------: |
@@ -51,7 +48,10 @@ AMM, Controller, and Price Oracle contracts and other variables of a vault can s
 | `OneWay Lending Factory`           | [0xeA6876DDE9e3467564acBeE1Ed5bac88783205E0](https://etherscan.io/address/0xeA6876DDE9e3467564acBeE1Ed5bac88783205E0) |
 
 
-**:logos-arbitrum: Arbitrum**
+---
+
+
+### **:logos-arbitrum: Arbitrum**
 
 | Contract Type                      | Contract Address                                                         |
 | :--------------------------------: | :----------------------------------------------------------------------: |
@@ -61,3 +61,33 @@ AMM, Controller, and Price Oracle contracts and other variables of a vault can s
 | `Pool price oracle implementation` | [0x57390a776A2312eF8BFc25e8624483303Dd8DfF8](https://arbiscan.io/address/0x57390a776A2312eF8BFc25e8624483303Dd8DfF8) |
 | `Monetary Policy Implementation`   | [0x0b3536245faDABCF091778C4289caEbDc2c8f5C1](https://arbiscan.io/address/0x0b3536245faDABCF091778C4289caEbDc2c8f5C1) |
 | `OneWay Lending Factory`           | [0xcaEC110C784c9DF37240a8Ce096D352A75922DeA](https://arbiscan.io/address/0xcaEC110C784c9DF37240a8Ce096D352A75922DeA) |
+
+
+---
+
+
+### **:logos-optimism: Optimism**
+
+| Contract Type                      | Contract Address                                                         |
+| :--------------------------------: | :----------------------------------------------------------------------: |
+| `AMM implementation`               | [0x40b8c0c9186eAEaf84023d81CD2a709e81fCFbC1](https://optimistic.etherscan.io/address/0x40b8c0c9186eAEaf84023d81CD2a709e81fCFbC1) |
+| `Controller implementation`        | [0xCc65F473815c97bDe543Db458358F09852eDb5B4](https://optimistic.etherscan.io/address/0xCc65F473815c97bDe543Db458358F09852eDb5B4) |
+| `Vault implementation`             | [0x3B1DF11b96b2F5525aBe75eebeFb1ce0928d2411](https://optimistic.etherscan.io/address/0x3B1DF11b96b2F5525aBe75eebeFb1ce0928d2411) |
+| `Pool price oracle implementation` | [0x227c9AD884e0E32a698FB38ba0511eE36fA92b7d](https://optimistic.etherscan.io/address/0x227c9AD884e0E32a698FB38ba0511eE36fA92b7d) |
+| `Monetary Policy Implementation`   | [0xa2294769e9CFA9Fd029030F7be94E2602821677B](https://optimistic.etherscan.io/address/0xa2294769e9CFA9Fd029030F7be94E2602821677B) |
+| `OneWay Lending Factory`           | [0x5EA8f3D674C70b020586933A0a5b250734798BeF](https://optimistic.etherscan.io/address/0x5EA8f3D674C70b020586933A0a5b250734798BeF) |
+
+
+---
+
+
+### **:logos-fraxtal: Fraxtal**
+
+| Contract Type                      | Contract Address                                                         |
+| :--------------------------------: | :----------------------------------------------------------------------: |
+| `AMM implementation`               | [0x59CfFdC8cf8b9b71D91Da6de480c957993020E8A](https://fraxscan.com/address/0x59CfFdC8cf8b9b71D91Da6de480c957993020E8A) |
+| `Controller implementation`        | [0x7002B727Ef8F5571Cb5F9D70D13DBEEb4dFAe9d1](https://fraxscan.com/address/0x7002B727Ef8F5571Cb5F9D70D13DBEEb4dFAe9d1) |
+| `Vault implementation`             | [0xc1DB00a8E5Ef7bfa476395cdbcc98235477cDE4E](https://fraxscan.com/address/0xc1DB00a8E5Ef7bfa476395cdbcc98235477cDE4E) |
+| `Pool price oracle implementation` | [0x0cD5A1e9E19Af1f1b910Ac3C3452A16B2B37155b](https://fraxscan.com/address/0x0cD5A1e9E19Af1f1b910Ac3C3452A16B2B37155b) |
+| `Monetary Policy Implementation`   | [0x86D347cE5f1E6f7Ef4Da00FB7c8d31fBD16996F0](https://fraxscan.com/address/0x86D347cE5f1E6f7Ef4Da00FB7c8d31fBD16996F0) |
+| `OneWay Lending Factory`           | [0xf3c9bdAB17B7016fBE3B77D17b1602A7db93ac66](https://fraxscan.com/address/0xf3c9bdAB17B7016fBE3B77D17b1602A7db93ac66) |
