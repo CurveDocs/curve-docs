@@ -116,6 +116,10 @@ Additionally, methods like `mint()`, `deposit()`, `redeem()`, and `withdraw()` c
 
 Because shares are transferable, a user can also acquire shares by means other than depositing assets and minting shares.
 
+!!!tip
+    A newer version of the vault contract allows for setting a maximum supply of assets that can be deposited into the vault. This change was introduced in commit [`cb08681`](https://github.com/curvefi/curve-stablecoin/tree/cb08681ae940f8ff57889e79dce5a23212f0dc19) and [`46fdec2`](https://github.com/curvefi/curve-stablecoin/tree/46fdec2561cc32f43f0e8c1080429a9f3f984e60). When using newer vaults, `mint` and `deposit` functions will check if the maximum supply is exceeded and revert if it is.
+
+
 ### `deposit`
 !!! description "`Vault.deposit(assets: uint256, receiver: address = msg.sender) -> uint256:`"
 
@@ -693,7 +697,84 @@ Because shares are transferable, a user can also acquire shares by means other t
         ```
 
 
+### `maxSupply`
+!!! description "`Vault.maxSupply() -> uint256: view`"
+
+    Getter for the maximum amount of assets that can be supplied to the vault. This function is only avaliable in a newer version of the vault contract.
+
+    Returns: maximum supply (`uint256`).
+
+    ??? quote "Source code"
+
+        === "Vault.vy"
+
+            ```vyper
+            event SetMaxSupply:
+                max_supply: uint256
+
+            maxSupply: public(uint256)
+
+            @external
+            def set_max_supply(max_supply: uint256):
+                """
+                @notice Set maximum depositable supply
+                """
+                assert msg.sender == self.factory.admin() or msg.sender == self.factory.address
+                self.maxSupply = max_supply
+                log SetMaxSupply(max_supply)
+            ```
+
+    === "Example"
+        ```shell
+        >>> Vault.maxSupply()
+        1500000000000000000000000       # 15m of the underlying asset
+        ```
+
+
+### `set_max_supply `
+!!! description "`Vault.set_max_supply(max_supply: uint256):`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the factory.
+
+    Function to set the maximum amount of assets that can be supplied to the vault. This function is only avaliable in a newer version of the vault contract.
+
+    Emits: `SetMaxSupply`
+
+    | Input      | Type      | Description                   |
+    |------------|-----------|-------------------------------|
+    | `max_supply` | `uint256` | Maximum amount of assets to set. |
+
+    ??? quote "Source code"
+
+        === "Vault.vy"
+
+            ```vyper
+            event SetMaxSupply:
+                max_supply: uint256
+
+            maxSupply: public(uint256)
+
+            @external
+            def set_max_supply(max_supply: uint256):
+                """
+                @notice Set maximum depositable supply
+                """
+                assert msg.sender == self.factory.admin() or msg.sender == self.factory.address
+                self.maxSupply = max_supply
+                log SetMaxSupply(max_supply)
+            ```
+
+    === "Example"
+        ```shell
+        >>> Vault.maxSupply()
+        1500000000000000000000000       # 15m of the underlying asset
+        ```
+
+
+
 ---
+
 
 
 ## **Withdrawing Assets and Redeeming Shares**
