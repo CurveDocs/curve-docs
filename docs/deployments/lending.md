@@ -68,6 +68,8 @@ AMM, Controller, and Price Oracle contracts and other variables of a vault can s
 
 ### **:logos-optimism: Optimism**
 
+The deployments on Optimism were done using a new implementation of the `Controller.vy` contract and a slightly modified `Vault.vy` contract. Commit [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721) contains the changes.
+
 | Contract Type                      | Contract Address                                                         |
 | :--------------------------------: | :----------------------------------------------------------------------: |
 | `AMM implementation`               | [0x40b8c0c9186eAEaf84023d81CD2a709e81fCFbC1](https://optimistic.etherscan.io/address/0x40b8c0c9186eAEaf84023d81CD2a709e81fCFbC1) |
@@ -82,6 +84,8 @@ AMM, Controller, and Price Oracle contracts and other variables of a vault can s
 
 
 ### **:logos-fraxtal: Fraxtal**
+
+The deployments on Fraxtal were done using a new implementation of the `Controller.vy` contract and a slightly modified `Vault.vy` contract. Commit [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721) contains the changes.
 
 | Contract Type                      | Contract Address                                                         |
 | :--------------------------------: | :----------------------------------------------------------------------: |
