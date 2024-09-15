@@ -12,7 +12,7 @@ The contract has a flexible architecture by introducing a [`target`](#target) va
 
 ---
 
-
+ 
 ## **Epochs**
 
 The contract operates in different [epochs](#epochs) (phases) in which certain actions are possible.

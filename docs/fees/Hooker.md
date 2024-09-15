@@ -16,7 +16,7 @@ The `Hooker` contract is a versatile and essential component within the Curve Fi
 
 Hooks need to be added to the contract via the [`set_hooks`](#set_hooks) function. Once added, these hooks can be executed by anyone using the [`act`](#act) function. Mandatory hooks, marked with the duty flag, are executed during the fee collection process using the [`duty_act`](#duty_act) function.
 
-
+ 
 ---
 
 

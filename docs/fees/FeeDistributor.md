@@ -24,7 +24,7 @@ Fees used to be distributed to [`veCRV`](https://etherscan.io/address/0x5f3b5DfE
         ```
 
 Fees are **distributed on a weekly basis**. The proportional amount of fees that each user is to receive is calculated **based on their veCRV balance** relative to the total veCRV supply. This amount is calculated at the start of the week. The actual distribution occurs at the end of the week based on the fees that were collected. As such, a user that creates **a new vote-lock should expect to receive their first fee payout at the end of the following epoch week**. To facilitate this process, the contract keeps track of the reward token balance and the total veCRV balance using a system of **checkpoints**.
-
+ 
 
 ---
 
