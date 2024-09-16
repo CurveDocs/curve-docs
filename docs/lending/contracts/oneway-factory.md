@@ -163,7 +163,7 @@ A lending market **must always include crvUSD, either as collateral or as the bo
                 "0x8f22779662ad253844013d8e99eccb4d80e31417",       # collateral_token
                 50,                                                 # A
                 6000000000000000,                                   # fee
-                140000000000000016,                                 # loan_discount
+                140000000000000000,                                 # loan_discount
                 110000000000000000,                                 # liquidation_discount
                 external price oracle,                              # price_oracle
                 "bobrCRV-long",                                     # name
