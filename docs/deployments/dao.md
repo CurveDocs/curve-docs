@@ -55,6 +55,9 @@ search:
 | :logos-gnosis: `Gnosis`         | [0x712b3d230F3C1c19db860d80619288b1F0BDd0Bd](https://gnosisscan.io/address/0x712b3d230f3c1c19db860d80619288b1f0bdd0bd) | [**xDai Bridge**](https://bridge.xdaichain.com/)​ |
 | :logos-gnosis: `Gnosis`         | [0x712b3d230F3C1c19db860d80619288b1F0BDd0Bd](https://gnosisscan.io/address/0x712b3d230f3c1c19db860d80619288b1f0bdd0bd) | [**Omni Bridge**](https://omni.xdaichain.com/bridge)​ |
 | :logos-xlayer: `X-Layer` | [0x3d5320821bfca19fb0b5428f2c79d63bd5246f89](https://www.oklink.com/xlayer/address/0x3d5320821bfca19fb0b5428f2c79d63bd5246f89/contract) | [**X-Layer Bridge**](https://www.okx.com/xlayer/bridge) |
+| :logos-mantle: `Mantle` | [0xE265FC71d45fd791c9ebf3EE0a53FBB220Eb8f75](https://mantlescan.xyz/address/0xE265FC71d45fd791c9ebf3EE0a53FBB220Eb8f75) |  |
+| :logos-fraxtal: `Fraxtal` | [0x331b9182088e2a7d6d3fe4742aba1fb231aecc56](https://fraxscan.com/token/0x331b9182088e2a7d6d3fe4742aba1fb231aecc56) |  |
+| :logos-zksync: `zk-Sync` | [0x5945932099f124194452a4c62d34bb37f16183b2](https://era.zksync.network/token/0x5945932099f124194452a4c62d34bb37f16183b2) |  |
 | :logos-avalanche: `Avalanche`​ | [0x47536F17F4fF30e64A96a7555826b8f9e66ec468](https://snowscan.xyz/address/0x47536F17F4fF30e64A96a7555826b8f9e66ec468) | [**<mark style="background-color: #f31743; color: black">Multichain</mark>**](https://multichain.org/)​ |
 | :logos-fantom: `Fantom`         | [0x1E4F97b9f9F913c46F1632781732927B9019C68b](https://ftmscan.com/address/0x1e4f97b9f9f913c46f1632781732927b9019c68b) | [**<mark style="background-color: #f31743; color: black">Multichain</mark>**](https://multichain.org/)​ |
 | :logos-celo: `Celo`             | [0x173fd7434B8B50dF08e3298f173487ebDB35FD14](https://explorer.celo.org/mainnet/address/0x173fd7434B8B50dF08e3298f173487ebDB35FD14) | [**<mark style="background-color: #f31743; color: black">Multichain</mark>**](https://multichain.org/)​ |
