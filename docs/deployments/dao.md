@@ -40,7 +40,7 @@ search:
 ---
 
 
-## **CRV Token**
+# **CRV Token**
 
 *Despite being launched on Ethereum, the Curve DAO Token can be bridged to various chains:*
 
