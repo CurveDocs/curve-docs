@@ -156,6 +156,19 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../curve_
 | Agent Blueprint    | [0x1fE46Da288A55aAf32facc6D182fB1933B22c2E9](https://polygonscan.com/address/0x1fE46Da288A55aAf32facc6D182fB1933B22c2E9) |
 
 
+**:logos-polygon: Polygon zk-EVM**
+
+| Contract Type      | Contract Address |
+| :----------------: | :--------------: |
+| L1 Broadcaster     | [0xB5e7fE8eA8ECbd33504485756fCabB5f5D29C051](https://etherscan.io/address/0xB5e7fE8eA8ECbd33504485756fCabB5f5D29C051) |
+| L2 Relayer         | [0x5bcA7dDF1bcccB2eE8e46c56bfc9d3CDC77262bC](https://zkevm.polygonscan.com/address/0x5bcA7dDF1bcccB2eE8e46c56bfc9d3CDC77262bC) |
+| L2 Ownership Agent | [0x2641ed8034CE92f57377F88852E95eB97AeFDf3a](https://zkevm.polygonscan.com/address/0x2641ed8034CE92f57377F88852E95eB97AeFDf3a) |
+| L2 Parameter Agent | [0x4f172B31Da98bc3806aeB98C22525d43304bfea2](https://zkevm.polygonscan.com/address/0x4f172B31Da98bc3806aeB98C22525d43304bfea2) |
+| L2 Emergency Agent | [0xb0261f64E512322EfB35E92C353301eC36b9712B](https://zkevm.polygonscan.com/address/0xb0261f64E512322EfB35E92C353301eC36b9712B) |
+| L2 Vault           | [0x13DFF1809D1E9ddf9Ac901F47817B7F45220A846](https://zkevm.polygonscan.com/address/0x13DFF1809D1E9ddf9Ac901F47817B7F45220A846) |
+| Agent Blueprint    | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://zkevm.polygonscan.com/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
+
+
 **:logos-xlayer: X-Layer**
 
 | Contract Type      | Contract Address |
