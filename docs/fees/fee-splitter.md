@@ -20,7 +20,7 @@ The `FeeSplitter.vy` contract is a straightforward contract that collects accumu
 
 ### **Dispatching Fees**
 
-The `dispatch_fees` function is responsible for both collecting crvUSD fees from the `Controllers` and distributing them according to a predetermined set of weights. The contract utilizes a "helper contract" called `ControllerMulticlaim.vy`, which aims to track all `Controllers` and provides an interface for claiming fees from them. By default, the `dispatch_fees` function claims fees from all `Controllers` added to `ControllerMulticlaim.vy`, but it also allows for specifying particular controllers if one wants to claim fees from only those.
+The `dispatch_fees` function is responsible for both collecting crvUSD fees from the `Controllers` and distributing them according to a predetermined set of weights. The contract utilizes a module called `ControllerMulticlaim.vy`, which aims to track all `Controllers` and provides an interface for claiming fees from them. By default, the `dispatch_fees` function claims fees from all `Controllers` added to `ControllerMulticlaim.vy`, but it also allows for specifying particular controllers if one wants to claim fees from only those.
 
 !!!info "`ControllerMulticlaim.vy` Module"
 
