@@ -22,9 +22,9 @@ The `FeeSplitter.vy` contract is a straightforward contract that collects accumu
 
 The `dispatch_fees` function is responsible for both collecting crvUSD fees from the `Controllers` and distributing them according to a predetermined set of weights. The contract utilizes a "helper contract" called `ControllerMulticlaim.vy`, which aims to track all `Controllers` and provides an interface for claiming fees from them. By default, the `dispatch_fees` function claims fees from all `Controllers` added to `ControllerMulticlaim.vy`, but it also allows for specifying particular controllers if one wants to claim fees from only those.
 
-!!!info "Documentation for the `ControllerMulticlaim.vy` contract"
+!!!info "`ControllerMulticlaim.vy` Module"
 
-    The `ControllerMulticlaim.vy` contract uses a simple `update_controller` function, callable by anyone, to update the list of controllers from which the fees are claimed. This is necessary because newly deployed controllers are not directly picked up by the contract. This contract is not documented separately but is instead covered on this page in the relevant section. The full source code for the contract can be found below. An easy way to check if the `FeeSplitter` "recognizes" all controllers is to call the `n_receivers` function on both the `FeeCollector` and `ControllerMulticlaim` contracts. If both functions return the same value, it's up-to-date. If not, `update_controller` needs to be called to update.
+    The `ControllerMulticlaim.vy` module is a simple contract to efficiently claim fees from multiple controllers simultaneously in a single transaction. This is necessary because newly deployed controllers are not directly picked up by the contract. This contract does not have a dedicated page but is instead covered here in the relevant section. To check if the `FeeSplitter` "recognizes" all `Controller` is to call the `n_receivers` function on both the `FeeCollector` and `ControllerMulticlaim` contracts. If both functions return the same value, it's up-to-date. If not, `update_controller` needs to be called to update the list.
 
     ??? quote "Source Code"
 
