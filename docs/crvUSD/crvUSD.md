@@ -1,12 +1,33 @@
-<h1>crvUSD Token</h1>
+<h1>crvUSD</h1>
 
-!!!deploy "Contract Source & Deployment"
-    The **crvUSD contract** is deployed to the Ethereum mainnet at: [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/address/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E#code). Addresses of crvUSD on sidechains can be found [here](../references/deployed-contracts.md#curve-stablecoin).
-    Source code for this contract is available on [GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/Stablecoin.vy).
 
-!!!warning
-    Due to some testing in production, there have been several deployments for the stablecoin and its components. Please always make sure you are using the latest deployment. See [here](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
+!!!github "GitHub"
+    The source code of the `crvUSD` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/Stablecoin.vy).
 
+`crvUSD` has been [deployed](https://etherscan.io/tx/0x5f501b4e420485ac3a18be3b88ad73413ac17ee45c776bb48cfd26902585e9fd) on May, 14th 2024 on Ethereum Mainnet. Prior to the lauch, there have been several deployments for the stablecoin and its components. Please always make sure you are using the latest deployment. See [`deployment-logs/mainnet.log`](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
+
+Since the initial deployment of crvUSD, the token was bridged to several chains, including the following:
+
+<div class="centered" markdown="block">
+
+| Chain                         | Token Address | 
+| :---------------------------: | :------------------: | 
+| :logos-ethereum: `Ethereum` | [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/token/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E) | 
+| :logos-arbitrum: `Arbitrum` | [0x498Bf2B1e120FeD3ad3D42EA2165E9b73f99C1e5](https://arbiscan.io/address/0x498Bf2B1e120FeD3ad3D42EA2165E9b73f99C1e5) |
+| :logos-optimism: `Optimism` | [0xc52d7f23a2e460248db6ee192cb23dd12bddcbf6](https://optimistic.etherscan.io/address/0xc52d7f23a2e460248db6ee192cb23dd12bddcbf6) |
+| :logos-base: `Base`         | [0x417Ac0e078398C154EdFadD9Ef675d30Be60Af93](https://basescan.org/address/0x417Ac0e078398C154EdFadD9Ef675d30Be60Af93) | 
+| :logos-gnosis: `Gnosis`     | [0xaBEf652195F98A91E490f047A5006B71c85f058d](https://gnosisscan.io/address/0xaBEf652195F98A91E490f047A5006B71c85f058d) |
+| :logos-polygon: `Polygon`     | [0xc4Ce1D6F5D98D65eE25Cf85e9F2E9DcFEe6Cb5d6](https://polygonscan.com/address/0xc4Ce1D6F5D98D65eE25Cf85e9F2E9DcFEe6Cb5d6) | 
+| :logos-xlayer: `X-Layer`     | [0xda8f4eb4503acf5dec5420523637bb5b33a846f6](https://www.oklink.com/xlayer/address/0xda8f4eb4503acf5dec5420523637bb5b33a846f6) |
+| :logos-fraxtal: `Fraxtal`     | [0xB102f7Efa0d5dE071A8D37B3548e1C7CB148Caf3](https://fraxscan.com/address/0xB102f7Efa0d5dE071A8D37B3548e1C7CB148Caf3) | 
+| :logos-bsc: `BinanceSmartChain`     | [0xe2fb3F127f5450DeE44afe054385d74C392BdeF4](https://bscscan.com/address/0xe2fb3F127f5450DeE44afe054385d74C392BdeF4) |
+| :logos-mantle: `Mantle`     | [0x0994206dfe8de6ec6920ff4d779b0d950605fb53](https://mantlescan.xyz/address/0x0994206dfe8de6ec6920ff4d779b0d950605fb53) | 
+| :logos-zksync: `zk-Sync`     | [0x43cd37cc4b9ec54833c8ac362dd55e58bfd62b86](https://era.zksync.network/address/0x43cd37cc4b9ec54833c8ac362dd55e58bfd62b86) |
+
+</div>
+
+
+---
 
 
 ## **Mint and Burn**
