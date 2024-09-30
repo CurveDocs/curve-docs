@@ -105,7 +105,7 @@ The fee collection, burning, and distribution system of Curve involves the follo
     ---
     Contract that collects accumulated crvUSD fees from crvUSD Controllers and distributes them to other contracts according to predetermined weights in a single transaction.
 
-    [:octicons-arrow-right-24: `FeeSplitter.vy`](fee-splitter.md)
+    [:octicons-arrow-right-24: `FeeSplitter.vy`](FeeSplitter.md)
 
 </div>
 
