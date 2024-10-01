@@ -9,7 +9,7 @@ Unlike other liquidation mechanisms that have a single liquidation price at whic
 
 Each individual market has its own AMM containing the collateral and borrowable asset, such as the `ETH <> crvUSD` AMM consisting of `ETH` and `crvUSD`.
 
-Before explaining the hearth of the system, the liquidation process, in more detail, it is crucial to understand how the general structure of the AMM works. The AMM is similar to a **Uniswap V3-style AMM** using bands/ticks. Liquidity can be deposited into these bands, which have upper and lower price ranges. When opening a loan and adding collateral, this collateral is deposited into these bands. Users can choose the number of bands at loan creation, ranging from a **minimum of `4`** to a **maximum of `50`**. The liquidity sits idle in these bands and is only accessible for trading when the collateral price falls within the price range of a band.
+Before explaining the heart of the system, the liquidation process, in more detail, it is crucial to understand how the general structure of the AMM works. The AMM is similar to a **Uniswap V3-style AMM** using bands/ticks. Liquidity can be deposited into these bands, which have upper and lower price ranges. When opening a loan and adding collateral, this collateral is deposited into these bands. Users can choose the number of bands at loan creation, ranging from a **minimum of `4`** to a **maximum of `50`**. The liquidity sits idle in these bands and is only accessible for trading when the collateral price falls within the price range of a band.
 
 
 ---
@@ -71,7 +71,7 @@ De-liquidation is essentially exactly the same as soft-liquidation, but the othe
 
 De-liquidation can happen until all the assets backing the loan are converted back into the original asset (ETH).
 
-Summary: If the price of the collateral 
+*Summary: If the price of the collateral rises, LLAMMA starts buying back the collateral for the borrow asset.*
 
 ### **Hard-Liquidation**
 
@@ -112,14 +112,14 @@ A loan's health can be read directly from the `Controller.vy` contract of the co
     <figcaption></figcaption>
     </figure>
 
-2. **Band contains only the collateral token:** This band has not been soft-liquidated. The collateral price is higher than the upper price of the band and is therefore outside the band. These are the bands above the \[`active_band`\](amm.md#active_band).
+2. **Band contains only the collateral token:** This band has not been soft-liquidated. The collateral price is higher than the upper price of the band and is therefore outside the band. These are the bands above the [`active_band`](amm.md#active_band).
 
     <figure markdown="span">
     ![](../assets/images/llamma/two_bands_eth_final.svg){ width="400" }
     <figcaption></figcaption>
     </figure>
 
-3. **Band contains only the borrowable token:** This band has already been soft-liquidated. The collateral price is below the band, and arbitrage trades have exchanged all the ETH for crvUSD in the band. These are the bands below the \[`active_band`\](amm.md#active_band).
+3. **Band contains only the borrowable token:** This band has already been soft-liquidated. The collateral price is below the band, and arbitrage trades have exchanged all the ETH for crvUSD in the band. These are the bands below the [`active_band`](amm.md#active_band).
 
     <figure markdown="span">
     ![](../assets/images/llamma/two_bands_crvusd_final.svg){ width="400" }
