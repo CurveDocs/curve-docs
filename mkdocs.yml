@@ -159,11 +159,11 @@ nav:
 
   - Fee Collection & Distribution:
       - Overview: fees/overview.md
-      - FeeSplitter.vy: fees/fee-splitter.md
-      - FeeCollector.vy: fees/FeeCollector.md
-      - CowSwapBurner.vy: fees/CowSwapBurner.md
-      - Hooker.vy: fees/Hooker.md
-      - FeeDistributor.vy: fees/FeeDistributor.md
+      - FeeSplitter: fees/FeeSplitter.md
+      - FeeCollector: fees/FeeCollector.md
+      - CowSwapBurner: fees/CowSwapBurner.md
+      - Hooker: fees/Hooker.md
+      - FeeDistributor: fees/FeeDistributor.md
       - Original Architecture:
         - Overview: fees/old-architecture/overview.md
         - Burner: fees/old-architecture/burner.md
