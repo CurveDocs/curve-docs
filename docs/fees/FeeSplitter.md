@@ -475,7 +475,7 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
 
 
 ### `allowed_controllers`
-!!! description "`FeeSplitter.allowed_controllers(arg0: uint256) -> address: view`"
+!!! description "`FeeSplitter.allowed_controllers(arg0: address) -> bool: view`"
 
     Getter for the allowed controller address at index `arg0`.
 
@@ -483,7 +483,7 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
 
     | Input  | Type      | Description           |
     | ------ | --------- | --------------------- |
-    | `arg0` | `uint256` | Index of the receiver |
+    | `arg0` | `address` | Address of the controller |
 
     ??? quote "Source code"
 
@@ -515,7 +515,7 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
         This example checks if a specific `Controller` address is allowed to be claimed from.
 
         <div class="highlight">
-        <pre><code>>>> FeeSplitter.allowed_controllers(<input id="allowedControllerAddress" type="text" style="width: 330px; background: transparent; border: none; border-bottom: 1px solid #ccc; color: inherit; font-family: inherit; font-size: inherit;" placeholder="Enter address"/>) <span id="allowedControllerOutput">>>> Loading...</span></code></pre>
+        <pre><code>>>> FeeSplitter.allowed_controllers(<input id="allowedControllerAddress" type="text" value="0xa920de414ea4ab66b97da1bfe9e6eca7d4219635" style="width: 330px; background: transparent; border: none; border-bottom: 1px solid #ccc; color: inherit; font-family: inherit; font-size: inherit;"/>) <span id="allowedControllerOutput">>>> Loading...</span></code></pre>
         </div>
 
 
