@@ -210,21 +210,6 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
                     self.controllers.append(c)
             ```
 
-        === "DynamicWeight.vyi"
-
-            ```python
-            @view
-            @external
-            def supportsInterface(interface_id: bytes4) -> bool:
-                ...
-
-
-            @view
-            @external
-            def weight() -> uint256:
-                ...
-            ```
-
     === "Example"
 
         ```shell
