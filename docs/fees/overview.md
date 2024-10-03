@@ -2,53 +2,6 @@
 
 The Curve ecosystem generates revenue from various sources, primarily through trading fees from liquidity pools and interest from crvUSD markets. This page explains how these fees are collected, converted, and distributed to veCRV holders, detailing the contracts and processes involved.
 
-*Curve has implemented different fee burning architectures over time to optimize the process:*
-
-<div class="grid cards" markdown>
-
--   :logos-cowswap: **CowSwap Architecture**
-
-    ---
-
-    A more efficient system using contracts like FeeCollector, CowSwapBurner, and FeeSplitter. This architecture is currently available on Ethereum and Gnosis Chain, with plans to deploy on Arbitrum.
-
-    [:octicons-arrow-right-24: CowSwap Fee System](#cowswap-fee-system)
-
--   :fontawesome-solid-piggy-bank: **Original Architecture**
-
-    ---
-
-    An older system using multiple burner contracts with manually added and hardcoded exchange routes. This architecture is still in use on some sidechains where the CowSwap system hasn't been implemented yet.
-
-    [:octicons-arrow-right-24: Original Architecture](./old-architecture/overview.md)
-
-</div>
-
-The choice of architecture depends on the blockchain and available infrastructure. For chains where the CowSwap system isn't deployed, admin fees are burned using the original architecture and then transferred to Ethereum via bridging contracts.
-
-This page will primarily focus on the CowSwap fee system while also providing information on the original architecture for context and comparison.
-
----
-
-# **CowSwap Fee System**
-
-The current fee system utilizes a set of contracts to efficiently collect, convert, and distribute fees:
-
-1. **FeeCollector**: Acts as the entry point for fee collection from various sources.
-2. **FeeSplitter**: Handles the distribution of crvUSD fees from crvUSD markets.
-3. **CowSwapBurner**: Converts collected fees into a unified token using CowSwap's conditional orders.
-4. **Hooker**: Facilitates the execution of specific actions, such as forwarding fees.
-5. **FeeDistributor**: Distributes the converted fees to veCRV holders.
-
-This system ensures that all types of fees can be efficiently processed **without the need to manually add coins to burners or hardcode exchange routes.**
-
-!!!warning "Current Limitation"
-    It's important to note that this new fee system is currently only available on Ethereum and Gnosis Chain, with plans to deploy on Arbitrum soon. Other chains where Curve is deployed still use the previous fee burning architecture.
-
-    For chains not yet using this new system, admin fees are burned using the [original architecture](./old-architecture/sidechains.md) and then transferred via a bridging contract to Ethereum.
-
-
----
 
 
 # **System Overview**
@@ -109,9 +62,11 @@ The fee collection, burning, and distribution system of Curve involves the follo
 
 </div>
 
+
 ---
 
-# **Technical Flow of Fee Burning**
+
+# **Fee Burning**
 
 The process of burning coins into the target coin involves the following flow:
 
@@ -123,9 +78,53 @@ The process of burning coins into the target coin involves the following flow:
 
 This system ensures efficient fee collection, conversion, and distribution across the Curve ecosystem, rewarding veCRV holders and supporting the ongoing development and maintenance of the protocol.
 
+*Curve has implemented different fee burning architectures over time to optimize the process:*
+
+<div class="grid cards" markdown>
+
+-   :logos-cowswap: **CowSwap Architecture**
+
+    ---
+
+    A more efficient system using contracts like FeeCollector, CowSwapBurner, and FeeSplitter. This architecture is currently available on Ethereum and Gnosis Chain, with plans to deploy on Arbitrum.
+
+    [:octicons-arrow-right-24: CowSwap Fee System](#cowswap-fee-system)
+
+-   :fontawesome-solid-piggy-bank: **Original Architecture**
+
+    ---
+
+    An older system using multiple burner contracts with manually added and hardcoded exchange routes. This architecture is still in use on some sidechains where the CowSwap system hasn't been implemented yet.
+
+    [:octicons-arrow-right-24: Original Architecture](./old-architecture/overview.md)
+
+</div>
+
+The choice of architecture depends on the blockchain and available infrastructure. For chains where the CowSwap system isn't deployed, admin fees are burned using the original architecture and then transferred to Ethereum via bridging contracts.
+
+This page will primarily focus on the CowSwap fee system while also providing information on the original architecture for context and comparison.
+
 ---
 
-# **Previous Architecture**
+## **CowSwap Fee System**
+
+The current fee system utilizes a set of contracts to efficiently collect, convert, and distribute fees:
+
+1. **FeeCollector**: Acts as the entry point for fee collection from various sources.
+2. **FeeSplitter**: Handles the distribution of crvUSD fees from crvUSD markets.
+3. **CowSwapBurner**: Converts collected fees into a unified token using CowSwap's conditional orders.
+4. **Hooker**: Facilitates the execution of specific actions, such as forwarding fees.
+5. **FeeDistributor**: Distributes the converted fees to veCRV holders.
+
+This system ensures that all types of fees can be efficiently processed **without the need to manually add coins to burners or hardcode exchange routes.**
+
+!!!warning "Current Limitation"
+    It's important to note that this new fee system is currently only available on Ethereum and Gnosis Chain, with plans to deploy on Arbitrum soon. Other chains where Curve is deployed still use the previous fee burning architecture.
+
+    For chains not yet using this new system, admin fees are burned using the [original architecture](./old-architecture/sidechains.md) and then transferred via a bridging contract to Ethereum.
+
+
+## **Previous Architecture**
 
 Prior to this system, Curve used multiple different kinds of burners where the **exchange routes for the to-be-burned coins had to be manually added**. Additionally, exchange routes were hardcoded, which often led to semi-efficient fee burning. If coins were not manually added to the burners, they could not be burned, which resulted in unburned (but obviously not lost) fees. The old burner contracts required lots of maintenance and dev resources.
 
