@@ -334,7 +334,7 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
 ### `set_receivers`
 !!! description "`FeeSplitter.set_receivers(receivers: DynArray[Receiver, MAX_RECEIVERS])`"
 
-    !!!guard "Guarded Method by Snekmate 🐍"
+    !!!guard "Guarded Method by [Snekmate 🐍](https://github.com/pcaversaccio/snekmate)"
         This contract makes use of a Snekmate module to manage roles and permissions. This specific function can only be called by the current `owner` of the contract.
 
     Function to set receivers and their respective weights. New receveivers can not simply be added or removed from the exisiting array of receivers. One must include the current receivers in the array of `Receiver` structs. The weight is based on a scale of 1e5, meaning e.g. 100% corresponds to a weight value of 10000, and 50% would be a weight value of 5000. 
@@ -735,7 +735,7 @@ Ownership of the contract is managed using the [`Ownable.vy`](https://github.com
 ### `transfer_ownership`
 !!! description "`FeeSplitter.transfer_ownership(new_owner: address)`"
 
-    !!!guard "Guarded Method by Snekmate 🐍"
+    !!!guard "Guarded Method by [Snekmate 🐍](https://github.com/pcaversaccio/snekmate)"
         This contract makes use of a Snekmate module to manage roles and permissions. This specific function can only be called by the current `owner` of the contract.
 
     Function to transfer the ownership of the contract to a new address.
@@ -844,7 +844,7 @@ Ownership of the contract is managed using the [`Ownable.vy`](https://github.com
 ### `renounce_ownership`
 !!! description "`FeeSplitter.renounce_ownership()`"
 
-    !!!guard "Guarded Method by Snekmate 🐍"
+    !!!guard "Guarded Method by [Snekmate 🐍](https://github.com/pcaversaccio/snekmate)"
         This contract makes use of a Snekmate module to manage roles and permissions. This specific function can only be called by the current `owner` of the contract.
 
     Function to renounce the ownership of the contract. Calling this method will leave the contract without an owner, thereby removing any functionality that is only available to the owner.
