@@ -1,13 +1,14 @@
 <h1>FeeSplitter</h1>
 
-The `FeeSplitter.vy` is a contract that collects and splits accumulated crvUSD fees from crvUSD Controllers[^1] in a single transaction across other contracts according to predetermined weights.
+The `FeeSplitter` is a contract that collects and splits accumulated crvUSD fees from crvUSD Controllers[^1] in a single transaction across other contracts according to predetermined weights.
 
 [^1]: These are Controllers from where crvUSD is minted. See here: https://crvusd.curve.fi/
 
-!!!github "GitHub"
+!!!vyper "`FeeSplitter.vy`"
     The source code for the `FeeSplitter.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/fee-splitter/blob/main/contracts/FeeSplitter.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.4.0` and utilizes a [snekmate module](https://github.com/pcaversaccio/snekmate/blob/main/src/snekmate/auth/ownable.vy) to handle contract ownership.
 
     The source code was audited by [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/). The full audit report can be found [here](https://github.com/curvefi/fee-splitter/blob/main/audits/ChainSecurity.pdf).
+
 
 ![](../assets/images/fees/fee_splitter_flow.svg)
 
