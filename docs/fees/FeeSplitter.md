@@ -60,7 +60,7 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
 
     | Input         | Type                                                          | Description |
     | ------------- | ------------------------------------------------------------- | ----------- |
-    | `controllers` | `DynArray[multiclaim.Controller, multiclaim.MAX_CONTROLLERS]` | Array of Controllers to claim from; defaults to claiming fees from all Controllers in `controllers` |
+    | `controllers` | `DynArray[multiclaim.Controller, multiclaim.MAX_CONTROLLERS]` | Array of `Controllers` to claim from; defaults to claiming fees from all Controllers in [`controllers`](#controllers) |
 
     ??? quote "Source code"
 
@@ -245,7 +245,16 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
         This example allows you to fetch the receiver information for a given index. Enter an index number to see the corresponding receiver's address and weight.
 
         <div class="highlight">
-        <pre><code>>>> FeeSplitter.receivers(<input id="receiverIndex" type="number" value="0" min="0" style="width: 50px; background: transparent; border: none; border-bottom: 1px solid #ccc; color: inherit; font-family: inherit; font-size: inherit; -moz-appearance: textfield;" oninput="fetchReceiver()"/>)
+        <pre><code>>>> FeeSplitter.receivers(<input id="receiverIndex" type="number" value="0" min="0" 
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="fetchReceiver()"/>)
         <span id="receiverOutput"></span></code></pre>
         </div>
 
@@ -430,7 +439,7 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
 
     | Input  | Type      | Description           |
     | ------ | --------- | --------------------- |
-    | `arg0` | `uint256` | Index of the controller |
+    | `arg0` | `uint256` | Index of the `Controller` |
 
     ??? quote "Source code"
 
@@ -470,8 +479,29 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
         This example fetches the `Controller` address at a certain index.
 
         <div class="highlight">
-        <pre><code>>>> FeeSplitter.controllers(<input id="controllerIndex" type="number" value="0" min="0" style="width: 50px; background: transparent; border: none; border-bottom: 1px solid #ccc; color: inherit; font-family: inherit; font-size: inherit; -moz-appearance: textfield;" oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>) <span id="controllerOutput">>>> Loading...</span></code></pre>
+        <pre><code>>>> FeeSplitter.controllers(<input id="controllerIndex" 
+        type="number" 
+        value="0" 
+        min="0" 
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>)
+        <span id="controllerOutput">>>> Loading...</span></code></pre>
         </div>
+
+        <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        </style>
 
 
 ### `allowed_controllers`
@@ -483,7 +513,7 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
 
     | Input  | Type      | Description           |
     | ------ | --------- | --------------------- |
-    | `arg0` | `address` | Address of the controller |
+    | `arg0` | `address` | Address of the `Controller` |
 
     ??? quote "Source code"
 
@@ -515,7 +545,17 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
         This example checks if a specific `Controller` address is allowed to be claimed from.
 
         <div class="highlight">
-        <pre><code>>>> FeeSplitter.allowed_controllers(<input id="allowedControllerAddress" type="text" value="0xa920de414ea4ab66b97da1bfe9e6eca7d4219635" style="width: 330px; background: transparent; border: none; border-bottom: 1px solid #ccc; color: inherit; font-family: inherit; font-size: inherit;"/>) <span id="allowedControllerOutput">>>> Loading...</span></code></pre>
+        <pre><code>>>> FeeSplitter.allowed_controllers(<input id="allowedControllerAddress" 
+        type="text" 
+        value="0xa920de414ea4ab66b97da1bfe9e6eca7d4219635" 
+        style="width: 330px; 
+               background: transparent; 
+               border: none; 
+               border-bottom: 1px solid #ccc; 
+               color: inherit; 
+               font-family: inherit; 
+               font-size: inherit;"/>)
+        <span id="allowedControllerOutput">>>> Loading...</span></code></pre>
         </div>
 
 
