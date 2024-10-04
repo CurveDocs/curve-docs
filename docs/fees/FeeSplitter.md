@@ -30,25 +30,51 @@ struct Receiver:
     weight: uint256
 ```
 
-
 The weight assigned to a receiver is set when a receiver address is added using the `set_receivers` function. In addition to static weights, the contract supports dynamic weights based on various conditions defined in the receiver contract itself. To support dynamic weights, the receiver contract must implement `DYNAMIC_WEIGHT_EIP165_ID: constant(bytes4) = 0xA1AAB33F` a la EIP-165 and a `weight()` function which returns the actual dynamic weight.
 
 If a weight is dynamic, the `weight` value in the struct acts as an upper cap. If the actual dynamic weight returned by the receiving contract is less than the defined weight in the struct, the unused weight is rolled over to the weight of the `excess_receiver`.
 
-!!!tip "Weight Example"
-    Consider a scenario where the initial weights stored in a `Receiver` struct are defined as follows: 
+???example "Weight Example"
+    The FeeSplitter supports both static and dynamic weights for fee distribution. Dynamic weights allow for more flexible allocation based on changing conditions, while still respecting a maximum cap.
 
-    - `receiver1` has a weight of 10% 
-    - `receiver2` has a weight of 10%
-    - `receiver3` has a weight of 80%
+    Consider the following receivers and their respective weight caps:
 
-    However, due to the dynamic nature of `receiver1`'s weight, the actual weight turns out to be 8%. The 2% difference is then rolled over to the last receiver in `receivers` (which is `excess_receiver`), `receiver3`.
+    - `receiver1` has a **dynamic** weight with a cap of 10% 
+    - `receiver2` has a **static** weight of 10%
+    - `receiver3` has a **static** weight of 80%
+
+    Due to the dynamic nature of `receiver1`'s weight, the actual weight is determined in the receiver contract based on different conditions (e.g. ratio of staked assets, etc.). If the receiver contract would ask for more than 10% of the total weight, the weight is ultimately capped at 10%. If he asks for less than 10%, the spare weight is then rolled over to the weight of the `excess_receiver` (in this case `receiver3`).
 
     As a result, the final weights are adjusted as follows:
     
     - `receiver1` ends up with a weight of 8%
     - `receiver2` remains at 10%
     - `receiver3` receives an adjusted weight of 82%, which includes the 2% rolled over from `receiver1`.
+
+    ---
+
+    The general logic of dynamic weights is as follows:
+
+    ```mermaid
+    flowchart TD
+        IsDynamic["dynamic weight?"]
+        IsDynamic -->|Yes| DynamicCalc["Weight calculation in receiver contract"]
+        IsDynamic -->|No| StaticWeight["Use weight from Receiver struct"]
+        
+        DynamicCalc --> CheckCap["Returned weight<br>exceeds defined weight<br>in Receiver struct?"]
+        CheckCap -->|Yes| CapWeight["Use defined weight<br>in Receiver struct"]
+        CheckCap -->|No| UseWeight["Use actual dynamic weight"]
+        
+        UseWeight --> RollOver["Roll over unused weight<br>to excess_receiver"]
+        
+        style IsDynamic fill:#e6e6fa,stroke:#483d8b,stroke-width:2px
+        style CheckCap fill:#e6e6fa,stroke:#483d8b,stroke-width:2px
+        style DynamicCalc fill:#f5f5f5,stroke:#708090,stroke-width:1px
+        style StaticWeight fill:#f5f5f5,stroke:#708090,stroke-width:1px
+        style CapWeight fill:#f5f5f5,stroke:#708090,stroke-width:1px
+        style UseWeight fill:#f5f5f5,stroke:#708090,stroke-width:1px
+        style RollOver fill:#f5f5f5,stroke:#708090,stroke-width:1px
+    ```
 
 
 ---
