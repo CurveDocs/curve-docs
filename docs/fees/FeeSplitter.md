@@ -57,7 +57,7 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
 
     ```mermaid
     flowchart TD
-        IsDynamic["dynamic weight?"]
+        IsDynamic["Dynamic weight?"]
         IsDynamic -->|Yes| DynamicCalc["Weight calculation in receiver contract"]
         IsDynamic -->|No| StaticWeight["Use weight from Receiver struct"]
         
