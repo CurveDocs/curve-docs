@@ -87,6 +87,9 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
 ### `dispatch_fees`
 !!! description "`FeeSplitter.dispatch_fees(controllers: DynArray[multiclaim.Controller, multiclaim.MAX_CONTROLLERS]=[])`"
 
+    !!!warning "Claiming from Controllers not in `controllers`"
+        Function reverts when trying to claim from `Controllers` that are not registered in the `controllers` array.
+
     Function to claim crvUSD fees from crvUSD Controllers and distribute them to addresses and weights defined in the `receivers` variable. This function is callable by anyone.
 
     | Input         | Type                                                          | Description |
@@ -243,9 +246,21 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
 
     === "Example"
 
+        The following example demonstrates how to dispatch fees from all `Controller` contracts listed in the [`controllers`](#controllers) section.
+
         ```shell
-        >>> soon
+        >>> FeeSplitter.dispatch_fees()
         ```
+
+        The next example shows how to dispatch fees from specific `Controller` contracts by directly providing their addresses - specifically, the `sfrxETH` and `wstETH` controllers.
+
+        ```shell
+        >>> FeeSplitter.dispatch_fees([
+            "0x8472A9A7632b173c8Cf3a86D3afec50c35548e76",                     # sfrxETH Controller
+            "0x100dAa78fC509Db39Ef7D04DE0c1ABD299f4C6CE"])                    # wstETH Controller
+        ```
+
+
 
 
 ### `receivers`
@@ -273,7 +288,7 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
 
     === "Example"
 
-        This example allows you to fetch the receiver information for a given index. Enter an index number to see the corresponding receiver's address and weight.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } In this example, the address and weight of a receiver at a specific index is returned.
 
         <div class="highlight">
         <pre><code>>>> FeeSplitter.receivers(<input id="receiverIndex" type="number" value="0" min="0" 
@@ -324,7 +339,7 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
 
     === "Example"
 
-        This example returns the total number of crvUSD Controllers "registered" in the [`receivers`](#receivers) array.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } In this example, the total number of receivers is returned.
 
         <div class="highlight">
         <pre><code>>>> FeeSplitter.n_receivers()
@@ -362,7 +377,7 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
 
     === "Example"
 
-        This example returns the total number of crvUSD Controllers "registered" in the [`receivers`](#receivers) array.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } In this example, the excess receiver is returned.
 
         <div class="highlight">
         <pre><code>>>> FeeSplitter.excess_receiver()
@@ -438,16 +453,26 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
 
     === "Example"
 
-        This example sets two receiver addresses and their respective weights: 
-        
-        1. the first address is the Vyper Gitcoin address with a 10% weight, and 
-        2. the second address is the `FeeCollector` with the remaining 90%.
+        In this example, two receiver addresses are set with specific weights:
+
+        1. The first address is the Vyper Gitcoin address with a weight of 10%.
+        2. The second address is the `FeeCollector`, assigned the remaining 90%.
 
         ```shell
         >>> FeeSplitter.set_receivers([
-            ('0x70CCBE10F980d80b7eBaab7D2E3A73e87D67B775', 1000), 
-            ('0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00', 9000)])
+            ("0x70CCBE10F980d80b7eBaab7D2E3A73e87D67B775", 1000), 
+            ("0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00", 9000)])
         ```
+
+        If, later on, a third receiver with a weight of 1000 (at the cost of reducing the second receiver's weight) should be added, we would include the first two receivers in the updated list:
+
+        ```shell
+        >>> FeeSplitter.set_receivers([
+            ("0x70CCBE10F980d80b7eBaab7D2E3A73e87D67B775", 1000),
+            ("0x1234567890123456789012345678901234567890", 1000),
+            ("0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00", 8000)])
+        ```
+
 
 
 ---
@@ -507,7 +532,7 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
 
     === "Example"
 
-        This example fetches the `Controller` address at a certain index.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } In this example, a `Controller` address at a specific index is returned.
 
         <div class="highlight">
         <pre><code>>>> FeeSplitter.controllers(<input id="controllerIndex" 
@@ -573,7 +598,7 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
 
     === "Example"
 
-        This example checks if a specific `Controller` address is allowed to be claimed from.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } In this example, it is checked if a specific `Controller` address is allowed to be claimed from.
 
         <div class="highlight">
         <pre><code>>>> FeeSplitter.allowed_controllers(<input id="allowedControllerAddress" 
@@ -629,7 +654,7 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
 
     === "Example"
 
-        This example returns the number of `Controller` contracts.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } In this example, the number of `Controller` contracts is returned.
 
         <div class="highlight">
         <pre><code>>>> FeeSplitter.n_controllers()
@@ -710,11 +735,18 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
 
     === "Example"
 
-        This example updates the `controllers` list to correspond with the actual list of `Controllers` in the `Factory`.
+        In this example, the `update_controllers` function is called to synchronize the list of `Controllers` with the actual list in the `Factory`. To demonstrate the function's functionality, we assume an additional `Controller` has been created since the last update.
 
-        ```shell
-        >>> FeeSplitter.update_controllers()
         ```
+        >>> FeeSplitter.n_controllers()
+        5
+
+        >>> FeeSplitter.update_controllers()
+
+        >>> FeeSplitter.n_controllers()
+        6
+        ```
+
 
 
 ---
@@ -722,7 +754,7 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
 
 ## **Contract Ownership**
 
-Ownership of the contract is managed using the [`Ownable.vy`](https://github.com/pcaversaccio/snekmate/blob/main/src/snekmate/auth/ownable.vy) module from 🐍 [Snekmate](https://github.com/pcaversaccio/snekmate) which implements a basic control access mechanism, where there is an `owner` that can be granted exclusive access to specific functions.
+Ownership of the contract is managed using the [`ownable.vy`](https://github.com/pcaversaccio/snekmate/blob/main/src/snekmate/auth/ownable.vy) module from 🐍 [Snekmate](https://github.com/pcaversaccio/snekmate) which implements a basic control access mechanism, where there is an `owner` that can be granted exclusive access to specific functions.
 
 
 ### `owner`
@@ -730,7 +762,7 @@ Ownership of the contract is managed using the [`Ownable.vy`](https://github.com
 
     Getter for the owner of the contract. This is the address that can call restricted functions like `transfer_ownership`, `renounce_ownership` or `set_receivers`.
 
-    Returns: contract owner (`address`). 
+    Returns: contract owner (`address`).
 
     ??? quote "Source code"
 
@@ -796,7 +828,7 @@ Ownership of the contract is managed using the [`Ownable.vy`](https://github.com
 
     === "Example"
 
-        This example fetches the current owner of the `FeeSplitter` contract.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } In this example, the current owner of the `FeeSplitter` contract is returned.
 
         <div class="highlight">
         <pre><code>>>> FeeSplitter.owner() <span id="ownerOutput"></span></code></pre>
@@ -905,10 +937,16 @@ Ownership of the contract is managed using the [`Ownable.vy`](https://github.com
 
     === "Example"
 
-        This example transfers the ownership of the contract to `new_owner`.
+        In this example, the ownership of the contract is transferred to a new address. The ownership is transfered from the Curve DAO to our overlord Vitalik Buterin.
 
         ```shell
-        >>> FeeSplitter.transfer_ownership(new_owner)
+        >>> FeeSplitter.owner()
+        "0x40907540d8a6C65c637785e8f8B742ae6b0b9968"
+
+        >>> FeeSplitter.transfer_ownership("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045")
+
+        >>> FeeSplitter.owner()
+        "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
         ```
 
 
@@ -1010,8 +1048,16 @@ Ownership of the contract is managed using the [`Ownable.vy`](https://github.com
 
     === "Example"
 
+        In this example, the ownership of the contract is renounced.
+
         ```shell
+        >>> FeeSplitter.owner()
+        "0x40907540d8a6C65c637785e8f8B742ae6b0b9968"
+
         >>> FeeSplitter.renounce_ownership()
+
+        >>> FeeSplitter.owner()
+        "0x0000000000000000000000000000000000000000"
         ```
 
 
