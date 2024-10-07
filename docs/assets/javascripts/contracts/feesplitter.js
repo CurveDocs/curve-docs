@@ -94,11 +94,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         const inputElement = document.getElementById(inputId);
         const outputElement = document.getElementById(outputId);
         
-        if (!inputElement || !outputElement) {
-            console.warn(`Input or output element not found for ${method}`);
-            return;
-        }
-
         async function fetchData() {
             const input = inputElement.value.trim();
             
@@ -118,7 +113,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     });
                 } else {
                     // For other methods, display the full result
-                    outputElement.textContent = JSON.stringify(result);
+                    outputElement.textContent = result;
                 }
                 outputElement.style.color = 'green';
             } catch (error) {
