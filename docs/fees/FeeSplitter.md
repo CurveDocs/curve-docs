@@ -3,7 +3,7 @@
 <script src="/assets/javascripts/contracts/feesplitter.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
 
-The `FeeSplitter` is a contract that collects and splits accumulated crvUSD fees from crvUSD Controllers[^1] in a single transaction across other contracts according to predetermined weights.
+The `FeeSplitter` is a contract that collects and splits accumulated crvUSD fees from crvUSD Controllers[^1] in a single transaction and distributes them across other contracts according to predetermined weights.
 
 [^1]: These are Controllers from where crvUSD is minted. See here: https://crvusd.curve.fi/
 
