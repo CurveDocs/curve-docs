@@ -1,18 +1,21 @@
-<h1>FeeCollector.vy</h1>
+<h1>FeeCollector</h1>
 
-!!!github "GitHub"
-    The source code for the `FeeCollector.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/FeeCollector.vy).
+The `FeeCollector` serves as an entry point for the fee burning and distribution mechanism, acting as a universal contract that collects all admin fees from various revenue sources within the Curve ecosystem. 
 
-The `FeeCollector` is the entry point for the fee burning and distribution mechanism and acts as a universal contract where all admin fees[^1] from various revenue sources within the Curve ecosystem are collected. The two main revenue streams for the DAO are fees collected from liquidity pools and the interest earned through crvUSD markets.
+???+ vyper "`FeeCollector.vy`"
+    The source code for the `FeeCollector.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/FeeCollector.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`.
 
-Most admin fees are collected in "regular" tokens, though sometimes they are LP tokens. For the system, this distinction does not make any difference.
+    This version of `FeeCollector` is only deployed on the following chains, as CowSwap is only deployed on these chains:
 
-The contract has a flexible architecture by introducing a [`target`](#target) variable, which represents the coin into which all the various fee tokens are burned. This variable can be changed to any token, although it requires a successfully passed on-chain vote, as this contract is under the control of the Curve DAO.
+    - :logos-ethereum: Ethereum at [`0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00`](https://etherscan.io/address/0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00) 
+    - :logos-gnosis: Gnosis at [`0xBb7404F9965487a9DdE721B3A5F0F3CcfA9aa4C5`](https://gnosisscan.io/address/0xBb7404F9965487a9DdE721B3A5F0F3CcfA9aa4C5)
+
+This new architecture simplifies the collection of fees and the burning of these fees into a designated fee token. The FeeCollector introduces a [`target`](#target) variable that represents the token into which all collected fees are burned. This variable can be changed to any token, but such a change requires a successfully passed on-chain vote, as the contract is fully controlled by the Curve DAO.
 
 
 ---
 
- 
+
 ## **Epochs**
 
 The contract operates in different [epochs](#epochs) (phases) in which certain actions are possible.
@@ -98,10 +101,12 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
             ```
 
     === "Example"
-        ```shell
-        >>> FeeCollector.epoch()
-        2
-        ```
+
+        This example fetches the current epoch of the `FeeCollector` contract.
+
+        <div class="highlight">
+        <pre><code>>>> FeeCollector.epoch() <span id="epochOutput"></span></code></pre>
+        </div>
 
 
 ### `epoch_time_frame`
@@ -143,19 +148,16 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
             ```
 
     === "Example"
-        ```shell
-        >>> FeeCollector.epoch_time_frame(1)        # SLEEP
-        (1718236800, 1718582400)
 
-        >>> FeeCollector.epoch_time_frame(2)        # COLLECT
-        (1718582400, 1718668800)
+        This example fetches various data from the `FeeCollector` contract.
 
-        >>> FeeCollector.epoch_time_frame(4)        # EXCHANGE
-        (1718668800, 1718755200)
+        <div class="highlight">
+        <pre><code>>>> FeeCollector.epoch_time_frame(1) <span id="epochTimeFrameOutput1"></span>
+        FeeCollector.epoch_time_frame(2) <span id="epochTimeFrameOutput2"></span>
+        FeeCollector.epoch_time_frame(4) <span id="epochTimeFrameOutput4"></span>
+        FeeCollector.epoch_time_frame(8) <span id="epochTimeFrameOutput8"></span></code></pre>
+        </div>
 
-        >>> FeeCollector.epoch_time_frame(8)        # FORWARD
-        (1718755200, 1718841600)
-        ```
 
 
 ---
@@ -217,10 +219,12 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
             ```
 
     === "Example"
-        ```shell
-        >>> FeeCollector.fee()
-        8375000000000000
-        ```
+
+        This example fetches the current fee of the `FeeCollector` contract.
+
+        <div class="highlight">
+        <pre><code>>>> FeeCollector.fee() <span id="feeOutput"></span></code></pre>
+        </div>
 
 
 ### `max_fee`
@@ -377,10 +381,12 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
             ```
 
     === "Example"
-        ```shell
-        >>> FeeCollector.target()
-        '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
-        ```
+
+        This example fetches the current target of the `FeeCollector` contract.
+
+        <div class="highlight">
+        <pre><code>>>> FeeCollector.target() <span id="targetOutput"></span></code></pre>
+        </div>
 
 
 ### `set_target`
@@ -613,10 +619,12 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
             ```
 
     === "Example"
-        ```shell
-        >>> FeeCollector.can_exchange(['0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'])
-        'false'
-        ```
+
+        todo
+
+        <div class="highlight">
+        <pre><code>>>> FeeCollector.owner() <span id="ownerOutput"></span></code></pre>
+        </div>
 
 
 ### `transfer`
@@ -997,6 +1005,7 @@ When setting up a burner or hooker, they need to support a specific interface st
                 """
                 @notice Set burner for exchanging coins
                 @dev Callable only by owner
+                @param _new_burner Address of the new contract
                 """
                 assert msg.sender == self.owner, "Only owner"
                 assert _new_burner.supportsInterface(BURNER_INTERFACE_ID)
@@ -1004,10 +1013,12 @@ When setting up a burner or hooker, they need to support a specific interface st
             ```
 
     === "Example"
-        ```shell
-        >>> FeeCollector.burner()
-        '0xC0fC3dDfec95ca45A0D2393F518D3EA1ccF44f8b'
-        ```
+
+        This example fetches the current burner of the `FeeCollector` contract.
+
+        <div class="highlight">
+        <pre><code>>>> FeeCollector.burner() <span id="burnerOutput"></span></code></pre>
+        </div>
 
 
 ### `hooker`
@@ -1033,10 +1044,12 @@ When setting up a burner or hooker, they need to support a specific interface st
             ```
 
     === "Example"
-        ```shell
-        >>> FeeCollector.hooker()
-        '0x9A9DF35cd8E88565694CA6AD5093c236C7f6f69D'
-        ```
+
+        This example fetches the current hooker of the `FeeCollector` contract.
+
+        <div class="highlight">
+        <pre><code>>>> FeeCollector.hooker() <span id="hookerOutput"></span></code></pre>
+        </div>
 
 
 ### `set_burner`
@@ -1309,10 +1322,12 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
             ```
 
     === "Example"
-        ```shell
-        >>> FeeCollector.owner()
-        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
-        ```
+
+        This example fetches the current owner of the `FeeCollector` contract.
+
+        <div class="highlight">
+        <pre><code>>>> FeeCollector.owner() <span id="ownerOutput"></span></code></pre>
+        </div>
 
 
 ### `emergency_owner`
@@ -1328,7 +1343,7 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
         === "FeeCollector.vy"
 
-            ```vyper
+            ```py
             event SetEmergencyOwner:
                 emergency_owner: indexed(address)
 
@@ -1351,10 +1366,12 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
             ```
 
     === "Example"
-        ```shell
-        >>> FeeCollector.emergency_owner()
-        '0x467947EE34aF926cF1DCac093870f613C96B1E0c'
-        ```
+
+        This example fetches the current owner of the `FeeSplitter` contract.
+
+        <div class="highlight">
+        <pre><code>>>> FeeCollector.emergency_owner() <span id="emergencyOwnerOutput"></span></code></pre>
+        </div>
 
 
 ### `set_owner`
@@ -1441,3 +1458,178 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
         ```shell
         >>> soon
         ```
+
+
+---
+
+
+<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async function() {
+    const web3 = new Web3('https://eth.llamarpc.com');
+
+    // Multicall contract address for Ethereum Mainnet (apply checksum)
+    const multicallAddress = web3.utils.toChecksumAddress('0x5e227ad1969ea493b43f840cff78d08a6fc17796');
+
+    // ABI for the Multicall contract
+    const multicallABI = [
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "components": [
+                        { "name": "target", "type": "address" },
+                        { "name": "callData", "type": "bytes" }
+                    ],
+                    "name": "calls",
+                    "type": "tuple[]"
+                }
+            ],
+            "name": "aggregate",
+            "outputs": [
+                { "name": "blockNumber", "type": "uint256" },
+                { "name": "returnData", "type": "bytes[]" }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ];
+
+    // FeeCollector contract address and ABI
+    const feeCollectorAddress = '0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00';
+    const feeCollectorABI = [
+        {
+            "stateMutability": "view",
+            "type": "function",
+            "name": "target",
+            "inputs": [],
+            "outputs": [
+                { "name": "", "type": "address" }
+            ]
+        },
+        {
+            "stateMutability": "view",
+            "type": "function",
+            "name": "epoch",
+            "inputs": [],
+            "outputs": [
+                { "name": "", "type": "uint256" }
+            ]
+        },
+        {
+            "stateMutability": "view",
+            "type": "function",
+            "name": "fee",
+            "inputs": [],
+            "outputs": [
+                { "name": "", "type": "uint256" }
+            ]
+        },
+        {
+            "stateMutability": "view",
+            "type": "function",
+            "name": "burner",
+            "inputs": [],
+            "outputs": [
+                { "name": "", "type": "address" }
+            ]
+        },
+        {
+            "stateMutability": "view",
+            "type": "function",
+            "name": "hooker",
+            "inputs": [],
+            "outputs": [
+                { "name": "", "type": "address" }
+            ]
+        },
+        {
+            "stateMutability": "view",
+            "type": "function",
+            "name": "owner",
+            "inputs": [],
+            "outputs": [
+                { "name": "", "type": "address" }
+            ]
+        },
+        {
+            "stateMutability": "view",
+            "type": "function",
+            "name": "emergency_owner",
+            "inputs": [],
+            "outputs": [
+                { "name": "", "type": "address" }
+            ]
+        }
+    ];
+
+    // Initialize the Multicall and the FeeCollector contract instance
+    const multicallContract = new web3.eth.Contract(multicallABI, multicallAddress);
+    const feeCollectorContract = new web3.eth.Contract(feeCollectorABI, feeCollectorAddress);
+
+    // List of methods to call and their corresponding DOM element IDs
+    const methodsToCall = [
+        { methodName: 'target', outputId: 'targetOutput', outputType: 'address' },
+        { methodName: 'epoch', outputId: 'epochOutput', outputType: 'uint256' },
+        { methodName: 'fee', outputId: 'feeOutput', outputType: 'uint256' },
+        { methodName: 'burner', outputId: 'burnerOutput', outputType: 'address' },
+        { methodName: 'hooker', outputId: 'hookerOutput', outputType: 'address' },
+        { methodName: 'owner', outputId: 'ownerOutput', outputType: 'address' },  // Owner method
+        { methodName: 'emergency_owner', outputId: 'emergencyOwnerOutput', outputType: 'address' }
+    ];
+
+    // Utility function to update the displayed values
+    async function updateValue(elementId, value, success = true) {
+        try {
+            const element = document.getElementById(elementId);
+
+            // Log the element and value to check for issues
+            console.log(`Updating ${elementId} with value:`, value);
+
+            if (element) {
+                element.textContent = value;
+                element.style.color = success ? 'green' : 'red';
+            } else {
+                console.error(`Element with ID ${elementId} not found.`);
+            }
+        } catch (error) {
+            console.error(`Error updating ${elementId}:`, error);
+        }
+    }
+
+    // Dynamically build multicall queries
+    const multicallQueries = methodsToCall.map(({ methodName }) => ({
+        target: feeCollectorAddress,
+        callData: feeCollectorContract.methods[methodName]().encodeABI()  // Encode the call for the method
+    }));
+
+    try {
+        // Perform the multicall aggregate
+        const result = await multicallContract.methods.aggregate(multicallQueries).call();
+
+        // Debugging: Log the result to check if the owner is being returned correctly
+        console.log('Multicall result:', result);
+
+        // Loop through the methods and decode each result
+        methodsToCall.forEach((method, index) => {
+            try {
+                const decodedValue = web3.eth.abi.decodeParameter(method.outputType, result.returnData[index]);
+                console.log(`Decoded ${method.methodName}:`, decodedValue);  // Debugging log
+                updateValue(method.outputId, decodedValue);  // Update DOM
+            } catch (decodeError) {
+                console.error(`Error decoding ${method.methodName}:`, decodeError);
+                updateValue(method.outputId, 'Error decoding data', false);
+            }
+        });
+
+    } catch (error) {
+        console.error('Error with multicall:', error);
+
+        // In case of error, update all outputs to show an error
+        methodsToCall.forEach(({ outputId }) => {
+            updateValue(outputId, 'Error fetching data', false);
+        });
+    }
+});
+</script>

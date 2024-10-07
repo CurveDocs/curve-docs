@@ -1,10 +1,16 @@
-<h1>Hooker.vy</h1>
-
-!!!github "GitHub"
-    The source code for the `Hooker.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/hooks/Hooker.vy).
-
+<h1>Hooker</h1>
 
 The `Hooker` contract is a versatile and essential component within the Curve Finance ecosystem, designed to support and manage hooks that interact with the `FeeCollector` contract. This contract enables the execution of predefined actions (hooks) that can be triggered under specific conditions, such as during the fee collection process. It handles the calculation and distribution of compensations, ensuring that hooks are executed correctly and at the appropriate times.
+
+???+ vyper "`Hooker.vy`"
+    The source code for the `Hooker.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/hooks/Hooker.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`.
+
+    The `Hooker` contract is deployed on the following chains:
+
+    - :logos-ethereum: Ethereum at [`0x9A9DF35cd8E88565694CA6AD5093c236C7f6f69D`](https://etherscan.io/address/0x9A9DF35cd8E88565694CA6AD5093c236C7f6f69D) 
+    - :logos-gnosis: Gnosis at [`0xE898893ebAe7b75dc4cAB0fb16e24137309ff178`](https://gnosisscan.io/address/0xE898893ebAe7b75dc4cAB0fb16e24137309ff178)
+
+
 
 *The contract has the following key features:*
 

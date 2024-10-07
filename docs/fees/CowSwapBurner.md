@@ -1,9 +1,16 @@
-<h1>CowSwapBurner.vy</h1>
-
-!!!github "GitHub"
-    The source code for the `CoWSwapBurner.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/burners/CowSwapBurner.vy).
+<h1>CowSwapBurner</h1>
 
 The `CowSwapBurner` is an essential component of the fee burning architecture, designed to facilitate the efficient and automated exchange of admin fees using [conditional orders](https://docs.cow.fi/cow-protocol/concepts/order-types/programmatic-orders) of the CoWSwap protocol.
+
+???+ vyper "`CowSwapBurner.vy`"
+    The source code for the `CowSwapBurner.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/burners/CowSwapBurner.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`.
+
+    The `CowSwapBurner` is only deployed on Ethereum and Gnosis so far, as CowSwap is only deployed on these chains.[^1]
+
+    - :logos-ethereum: Ethereum at [`0xC0fC3dDfec95ca45A0D2393F518D3EA1ccF44f8b`](https://etherscan.io/address/0xC0fC3dDfec95ca45A0D2393F518D3EA1ccF44f8b) 
+    - :logos-gnosis: Gnosis at [`0x566b9F24200A9B51b76792D4e81B569AF27eda83`](https://gnosisscan.io/address/0x566b9F24200A9B51b76792D4e81B569AF27eda83)
+
+    [^1]: CowSwap recently deployed on Arbitrum. In the future, a new burner contract will be deployed on Arbitrum as well.
 
 This system simplifies fee burning by requiring only a single burner contract. A simple function call can create an order that sells a accrued fee token into the target token.
 
@@ -40,9 +47,9 @@ composable_cow.create(ConditionalOrderParams({
 ### `created`
 !!! description "`CowSwapBurner.created(arg0: address) -> bool: view`"
 
-    Getter method to check if a conditional order for coin `arg0` has been created. If there is not an existing order, a new order will be created when the `burn` function is called.[^1]
+    Getter method to check if a conditional order for coin `arg0` has been created. If there is not an existing order, a new order will be created when the `burn` function is called.[^2]
 
-    [^1]: The `burn` function can only be called indirectly by the `fee_receiver` via the `collect` function.
+    [^2]: The `burn` function can only be called indirectly by the `fee_receiver` via the `collect` function.
 
     Returns: true or false (`bool`).
 
@@ -459,9 +466,9 @@ composable_cow.create(ConditionalOrderParams({
 ### `target_threshold`
 !!! description "`CowSwapBurner.target_threshold() -> uint256: view`"
 
-    Getter for the minimum amount of target token to be bought in an order. This value ensure that each executed order meets a certain minimum value. This variable can be changed by the `owner` of the `FeeCollector` using the [`set_target_threshold`](#set_target_threshold) function. Due to the gas efficiency of L2's, the value can be set much lower e.g. on Gnosis than on Ethereum.[^1]
+    Getter for the minimum amount of target token to be bought in an order. This value ensure that each executed order meets a certain minimum value. This variable can be changed by the `owner` of the `FeeCollector` using the [`set_target_threshold`](#set_target_threshold) function. Due to the gas efficiency of L2's, the value can be set much lower e.g. on Gnosis than on Ethereum.[^3]
 
-    [^1]: The minimum target threshold value on Gnosis is `1 (1e18)`, on Ethereum `50 (50 * 1e18)`. 
+    [^3]: The minimum target threshold value on Gnosis is `1 (1e18)`, on Ethereum `50 (50 * 1e18)`. 
 
     Returns: target threshold (`uint256`).
 

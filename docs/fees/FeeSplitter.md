@@ -7,7 +7,7 @@ The `FeeSplitter` is a contract that collects and splits accumulated crvUSD fees
 
 [^1]: These are Controllers from where crvUSD is minted. See here: https://crvusd.curve.fi/
 
-!!!vyper "`FeeSplitter.vy`"
+???+ vyper "`FeeSplitter.vy`"
     The source code for the `FeeSplitter.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/fee-splitter/blob/main/contracts/FeeSplitter.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.4.0` and utilizes a [snekmate module](https://github.com/pcaversaccio/snekmate/blob/main/src/snekmate/auth/ownable.vy) to handle contract ownership.
 
     The contract is deployed on :logos-ethereum: Ethereum at [`0x22556558419EeD2d0A1Af2e7Fd60E63f3199aca3`](https://eth.blockscout.com/address/0x22556558419EeD2d0A1Af2e7Fd60E63f3199aca3).
