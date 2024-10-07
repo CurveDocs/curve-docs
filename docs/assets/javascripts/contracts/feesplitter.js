@@ -59,12 +59,14 @@ document.addEventListener('DOMContentLoaded', async function() {
                         let decodedResult;
                         if (index === 0) { // version is a string
                             decodedResult = web3.eth.abi.decodeParameter('string', result.returnData);
+                            element.textContent = `"${decodedResult}"`;
                         } else if (index === 1 || index === 3) { // owner and excess_receiver are addresses
                             decodedResult = web3.eth.abi.decodeParameter('address', result.returnData);
+                            element.textContent = `"${decodedResult}"`;
                         } else { // n_controllers and n_receivers are uint256
                             decodedResult = web3.eth.abi.decodeParameter('uint256', result.returnData);
+                            element.textContent = decodedResult;
                         }
-                        element.textContent = decodedResult;
                         element.style.color = 'green';
                     } else {
                         element.textContent = `>>> Error fetching data`;
@@ -105,16 +107,23 @@ document.addEventListener('DOMContentLoaded', async function() {
             
             try {
                 const result = await FeeSplitterContract.methods[method](input).call();
+                let formattedResult;
+
                 if (method === 'receivers') {
-                    // For receivers, only display address and weight
-                    outputElement.textContent = JSON.stringify({
-                        addr: result.addr,
-                        weight: result.weight
-                    });
+                    formattedResult = `{ addr: "${result.addr}", weight: ${result.weight} }`;
+                } else if (method === 'controllers') {
+                    formattedResult = `"${result}"`;
+                } else if (method === 'allowed_controllers') {
+                    formattedResult = result.toString();
+                } else if (typeof result === 'string' && result.startsWith('0x')) {
+                    formattedResult = `"${result}"`;
+                } else if (typeof result === 'string') {
+                    formattedResult = `"${result}"`;
                 } else {
-                    // For other methods, display the full result
-                    outputElement.textContent = result;
+                    formattedResult = result.toString();
                 }
+
+                outputElement.textContent = formattedResult;
                 outputElement.style.color = 'green';
             } catch (error) {
                 console.error(`Error fetching ${method}:`, error);
