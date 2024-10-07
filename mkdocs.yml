@@ -302,8 +302,8 @@ nav:
       - Overview: factory/twocrypto-ng/overview.md
       - Deployer API: factory/twocrypto-ng/deployer-api.md
     - TriCrypto-NG:
-      - Overview: factory/tricryptoNG/overview.md
-      - Deployer API: factory/tricryptoNG/deployer-api.md
+      - Overview: factory/tricrypto-ng/overview.md
+      - Deployer API: factory/tricrypto-ng/deployer-api.md
     - StableSwap: 
       - Overview: factory/stableswap/overview.md
       - Deployer API: factory/stableswap/deployer-api.md

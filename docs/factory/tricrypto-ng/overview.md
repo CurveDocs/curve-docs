@@ -9,8 +9,6 @@ Additionally, the Factory contract is the direct admin and fee receiver of all p
     A list of all deployed contracts can be found [here](../../references/deployed-contracts.md#pool-factory).
 
 
-
-
 ---
 
 
