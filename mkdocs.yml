@@ -106,9 +106,7 @@ extra_css:
 
 extra_javascript:
   - assets/javascripts/extra.js
-  - assets/javascripts/contracts/feesplitter.js
   - assets/javascripts/mathjax.js
-  - assets/javascripts/version-selector.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
 
