@@ -2,16 +2,22 @@
 
 Fees used to be distributed to [`veCRV`](https://etherscan.io/address/0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2) in the form of [`3CRV`](https://etherscan.io/address/0x6c3f90f043a72fa612cbac8115ee7e52bde6e490) tokens, the LP token of the [`threepool`](https://etherscan.io/address/0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7), which consists of `USDT`, `USDC`, and `DAI`. After the release of Curve's own stablecoin [`crvUSD`](https://etherscan.io/token/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E) and following a successful DAO vote to change the reward token to it, a new `FeeDistributor` contract was deployed to distribute fees in the form of `crvUSD` tokens.
 
-!!!github "GitHub & Deployment"
-    There are two `FeeDistributor` contracts deployed on Ethereum, depending on the reward token:
+**Fee claming always takes place on Ethereum.**
 
-    - `3CRV`: [0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc](https://etherscan.io/address/0xa464e6dcda8ac41e03616f95f4bc98a13b8922dc)
-    - `crvUSD`: [0xD16d5eC345Dd86Fb63C6a9C43c517210F1027914](https://etherscan.io/address/0xD16d5eC345Dd86Fb63C6a9C43c517210F1027914)
+???+ vyper "`FeeDistributor.vy`"
+    The source code for the `FeeDistributor.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/FeeDistributor.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.2.7` and `0.3.7`.
 
-    !!!warning "Unclaimed 3CRV Tokens"
+    There are two different `FeeDistributor` contracts deployed on :logos-ethereum: Ethereum, depending on the reward token:
+
+    - ![](../assets/images/logos/3crv.png){height="18" width="18" style="vertical-align: -2px;"} `3CRV`: [0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc](https://etherscan.io/address/0xa464e6dcda8ac41e03616f95f4bc98a13b8922dc)
+    - :logos-crvusd: `crvUSD`: [0xD16d5eC345Dd86Fb63C6a9C43c517210F1027914](https://etherscan.io/address/0xD16d5eC345Dd86Fb63C6a9C43c517210F1027914)
+
+    !!!warning "Unclaimed ![](../assets/images/logos/3crv.png){height="18" width="18" style="vertical-align: -2px;"} `3CRV` Tokens"
         Old unclaimed `3CRV` tokens are not lost with the introduction of `crvUSD` as the reward token. They can still be claimed from the old `FeeDistributor` contract and will remain there until they are claimed.
 
-    The source code for the `FeeDistributor.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/FeeDistributor.vy). Note: The source code of both contracts is almost identical. The difference with respect to the first `FeeDistributor` is that the `token` variable was initialized with the crvUSD token address instead of `3CRV`, and the `rounded_timestamp` calculation was modified as follows:
+    ---
+
+    The source code of both contracts is almost identical. The difference with respect to the first `FeeDistributor` is that the `token` variable was initialized with the crvUSD token address instead of `3CRV`, and the `rounded_timestamp` calculation was modified as follows:
 
     === "Code Modifications"
 
@@ -24,7 +30,7 @@ Fees used to be distributed to [`veCRV`](https://etherscan.io/address/0x5f3b5DfE
         ```
 
 Fees are **distributed on a weekly basis**. The proportional amount of fees that each user is to receive is calculated **based on their veCRV balance** relative to the total veCRV supply. This amount is calculated at the start of the week. The actual distribution occurs at the end of the week based on the fees that were collected. As such, a user that creates **a new vote-lock should expect to receive their first fee payout at the end of the following epoch week**. To facilitate this process, the contract keeps track of the reward token balance and the total veCRV balance using a system of **checkpoints**.
-
+ 
 
 ---
 

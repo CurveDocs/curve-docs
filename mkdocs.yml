@@ -124,12 +124,6 @@ nav:
         - Contract Methods: curve_dao/voting-escrow/voting-escrow.md
         - Admin Controls: curve_dao/voting-escrow/admin-controls.md
       - SmartWalletChecker: curve_dao/voting-escrow/smartwalletchecker.md
-    - Fee Collection and Distribution:
-      - Overview: curve_dao/fee-collection-distribution/overview.md
-      - Withdraw and Burn: curve_dao/fee-collection-distribution/withdraw-and-burn.md
-      - Burners: curve_dao/fee-collection-distribution/burner.md
-      - Fee Distribution: curve_dao/fee-collection-distribution/distributor.md
-      - Sidechains: curve_dao/fee-collection-distribution/sidechains.md
     - Liquidity Gauges and Minting CRV:
       - Overview & Implementation: curve_dao/liquidity-gauge-and-minting-crv/overview.md
       - GaugeController:
@@ -163,11 +157,18 @@ nav:
 
 
   - Fee Collection & Distribution:
-      - Overview: curve_dao/fee-collection-distribution/curve-burner/overview.md
-      - Fee Collector: curve_dao/fee-collection-distribution/curve-burner/FeeCollector.md
-      - CowSwap Burner: curve_dao/fee-collection-distribution/curve-burner/CowSwapBurner.md
-      - Hooker: curve_dao/fee-collection-distribution/curve-burner/Hooker.md
-      - Fee Distributor: curve_dao/fee-collection-distribution/curve-burner/FeeDistributor.md
+      - Overview: fees/overview.md
+      - FeeSplitter: fees/FeeSplitter.md
+      - FeeCollector: fees/FeeCollector.md
+      - CowSwapBurner: fees/CowSwapBurner.md
+      - Hooker: fees/Hooker.md
+      - FeeDistributor: fees/FeeDistributor.md
+      - Original Architecture:
+        - Overview: fees/old-architecture/overview.md
+        - Burner: fees/old-architecture/burner.md
+        - FeeDistributor: fees/old-architecture/distributor.md
+        - Sidechains: fees/old-architecture/sidechains.md
+        - Withdraw and Burn: fees/old-architecture/withdraw-and-burn.md
 
 
   - Registry:
