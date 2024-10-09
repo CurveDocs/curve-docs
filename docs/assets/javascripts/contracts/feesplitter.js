@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function() {
     const web3 = new Web3('https://eth.llamarpc.com');
-    const FeeSplitterAddress = '0x22556558419EeD2d0A1Af2e7Fd60E63f3199aca3';
+    const FeeSplitterAddress = '0x2dFd89449faff8a532790667baB21cF733C064f2';
     const Multicall3Address = '0xcA11bde05977b3631167028862bE2a173976CA11';
 
     const FeeSplitterABI = [
@@ -21,31 +21,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     async function updateValues() {
         const calls = [
-            {
-                target: FeeSplitterAddress,
-                allowFailure: false,
-                callData: web3.eth.abi.encodeFunctionSignature('version()')
-            },
-            {
-                target: FeeSplitterAddress,
-                allowFailure: false,
-                callData: web3.eth.abi.encodeFunctionSignature('owner()')
-            },
-            {
-                target: FeeSplitterAddress,
-                allowFailure: false,
-                callData: web3.eth.abi.encodeFunctionSignature('n_controllers()')
-            },
-            {
-                target: FeeSplitterAddress,
-                allowFailure: false,
-                callData: web3.eth.abi.encodeFunctionSignature('excess_receiver()')
-            },
-            {
-                target: FeeSplitterAddress,
-                allowFailure: false,
-                callData: web3.eth.abi.encodeFunctionSignature('n_receivers()')
-            }
+            { target: FeeSplitterAddress, allowFailure: false, callData: web3.eth.abi.encodeFunctionSignature('version()') },
+            { target: FeeSplitterAddress, allowFailure: false, callData: web3.eth.abi.encodeFunctionSignature('owner()') },
+            { target: FeeSplitterAddress, allowFailure: false, callData: web3.eth.abi.encodeFunctionSignature('n_controllers()') },
+            { target: FeeSplitterAddress, allowFailure: false, callData: web3.eth.abi.encodeFunctionSignature('excess_receiver()') },
+            { target: FeeSplitterAddress, allowFailure: false, callData: web3.eth.abi.encodeFunctionSignature('n_receivers()') }
         ];
 
         try {
