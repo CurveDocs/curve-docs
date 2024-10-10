@@ -25,7 +25,12 @@ The `Hooker` contract is a versatile and essential component within the Curve Fi
 
 Hooks need to be added to the contract via the [`set_hooks`](#set_hooks) function. Once added, these hooks can be executed by anyone using the [`act`](#act) function. Mandatory hooks, marked with the duty flag, are executed during the fee collection process using the [`duty_act`](#duty_act) function.
 
- 
+!!!telegram "Telegram"
+    If you are running or planning to run fee collection for Curve DAO, there is a Telegram channel and a group for necessary updates. Also, many hooks for automation are coming in the future which will be written about in the group.
+
+    [:octicons-arrow-right-24: Join the Telegram group](https://t.me/curve_automation)
+
+
 ---
 
 

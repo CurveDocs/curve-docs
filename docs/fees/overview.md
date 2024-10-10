@@ -7,6 +7,11 @@ The two primary revenue sources of the DAO are **fees collected from liquidity p
 Usually, admin fees of liquidity pools are collected just as the tokens in the pool, though sometimes fees are collected in LP tokens. For the system, this distinction does not make any significant difference.
 
 
+!!!telegram "Telegram"
+    If you are running or planning to run fee collection for Curve DAO, there is a Telegram channel and a group for necessary updates. Also, many hooks for automation are coming in the future which will be written about in the group.
+
+    [:octicons-arrow-right-24: Join the Telegram group](https://t.me/curve_automation)
+
 ---
 
 

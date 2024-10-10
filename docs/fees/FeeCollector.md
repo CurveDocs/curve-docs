@@ -15,6 +15,11 @@ The `FeeCollector` serves as an entry point for the fee burning and distribution
 
 This new architecture simplifies the collection of fees and the burning of these fees into a designated fee token. The `FeeCollector` introduces a [`target`](#target) variable that represents the token into which all collected fees are burned. This variable can be changed to any token, but such a change requires a successfully passed on-chain vote, as the contract is fully controlled by the Curve DAO.
 
+!!!telegram "Telegram"
+    If you are running or planning to run fee collection for Curve DAO, there is a Telegram channel and a group for necessary updates. Also, many hooks for automation are coming in the future which will be written about in the group.
+
+    [:octicons-arrow-right-24: Join the Telegram group](https://t.me/curve_automation)
+
 
 ---
 
