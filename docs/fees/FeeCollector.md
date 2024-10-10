@@ -1,5 +1,8 @@
 <h1>FeeCollector</h1>
 
+<script src="/assets/javascripts/contracts/feecollector.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+
 The `FeeCollector` serves as an entry point for the fee burning and distribution mechanism, acting as a universal contract that collects all admin fees from various revenue sources within the Curve ecosystem. 
 
 ???+ vyper "`FeeCollector.vy`"
@@ -10,7 +13,12 @@ The `FeeCollector` serves as an entry point for the fee burning and distribution
     - :logos-ethereum: Ethereum at [`0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00`](https://etherscan.io/address/0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00) 
     - :logos-gnosis: Gnosis at [`0xBb7404F9965487a9DdE721B3A5F0F3CcfA9aa4C5`](https://gnosisscan.io/address/0xBb7404F9965487a9DdE721B3A5F0F3CcfA9aa4C5)
 
-This new architecture simplifies the collection of fees and the burning of these fees into a designated fee token. The FeeCollector introduces a [`target`](#target) variable that represents the token into which all collected fees are burned. This variable can be changed to any token, but such a change requires a successfully passed on-chain vote, as the contract is fully controlled by the Curve DAO.
+This new architecture simplifies the collection of fees and the burning of these fees into a designated fee token. The `FeeCollector` introduces a [`target`](#target) variable that represents the token into which all collected fees are burned. This variable can be changed to any token, but such a change requires a successfully passed on-chain vote, as the contract is fully controlled by the Curve DAO.
+
+!!!telegram "Telegram"
+    If you are running or planning to run fee collection for Curve DAO, there is a Telegram channel and a group for necessary updates. Also, many hooks for automation are coming in the future which will be written about in the group.
+
+    [:octicons-arrow-right-24: Join the Telegram group](https://t.me/curve_automation)
 
 
 ---
@@ -102,11 +110,32 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
 
     === "Example"
 
-        This example fetches the current epoch of the `FeeCollector` contract.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current `epoch`. Default value is set to the current timestamp.
 
         <div class="highlight">
-        <pre><code>>>> FeeCollector.epoch() <span id="epochOutput"></span></code></pre>
+        <pre><code>>>> FeeCollector.epoch(<input id="epochInput" 
+        type="number" 
+        value="{Math.floor(Date.now() / 1000)}" 
+        min="0" 
+        style="width: 100px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>)
+        <span id="epochOutput">>>> Loading...</span></code></pre>
         </div>
+
+        <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        </style>
 
 
 ### `epoch_time_frame`
@@ -149,13 +178,32 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
 
     === "Example"
 
-        This example fetches various data from the `FeeCollector` contract.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the timeframe of a given epoch and timestamp. Default value is set to the current epoch and timestamp.
 
         <div class="highlight">
-        <pre><code>>>> FeeCollector.epoch_time_frame(1) <span id="epochTimeFrameOutput1"></span>
-        FeeCollector.epoch_time_frame(2) <span id="epochTimeFrameOutput2"></span>
-        FeeCollector.epoch_time_frame(4) <span id="epochTimeFrameOutput4"></span>
-        FeeCollector.epoch_time_frame(8) <span id="epochTimeFrameOutput8"></span></code></pre>
+        <pre><code>>>> FeeCollector.epoch_time_frame(
+        Epoch: <input id="epochTimeFrameEpochInput" 
+        type="number" 
+        style="width: 100px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;" 
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
+        Timestamp: <input id="epochTimeFrameTsInput" 
+        type="number"
+        style="width: 150px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;" 
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>)
+        <span id="epochWarning"></span>
+        <span id="epochTimeFrameOutput">>>> Enter an epoch and a unix timestamp</span></code></pre>
         </div>
 
 
@@ -220,10 +268,31 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
 
     === "Example"
 
-        This example fetches the current fee of the `FeeCollector` contract.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `fee` of an epoch based on a given epoch and timestamp. Default value is set to the current timestamp.
 
         <div class="highlight">
-        <pre><code>>>> FeeCollector.fee() <span id="feeOutput"></span></code></pre>
+        <pre><code>>>> FeeCollector.fee(
+        Epoch: <input id="feeEpochInput" 
+        type="number" 
+        style="width: 100px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;">
+        Timestamp: <input id="feeTsInput" 
+        type="number"
+        style="width: 150px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;">
+        )
+        <span id="epochWarning"></span>
+        <span id="feeOutput">>>> Enter an epoch and a unix timestamp</span></code></pre>
         </div>
 
 
@@ -276,13 +345,32 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
             ```
 
     === "Example"
-        ```shell
-        >>> FeeCollector.max_fee(1)         # SLEEP
-        0
 
-        >>> FeeCollector.max_fee(2)         # COLLECT
-        10000000000000000
-        ```
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `max_fee` of a specific epoch.
+
+        <div class="highlight">
+        <pre><code>>>> FeeCollector.max_fee(<input id="maxFeeEpochInput" 
+        type="number" 
+        min="0" 
+        style="width: 100px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>)
+        <span id="maxFeeOutput">>>> Loading...</span></code></pre>
+        </div>
+
+        <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        </style>
 
 
 ### `set_max_fee`
@@ -327,8 +415,11 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
             ```
 
     === "Example"
-        ```shell
-        >>> soon
+
+        This example sets the maximum fee for the `COLLECT` epoch to `0.05`.
+
+        ```console
+        >>> FeeCollector.set_max_fee(Epoch.COLLECT, 0.05)
         ```
 
 
@@ -342,7 +433,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 *The general flow of the fee burning process is the following:*
 
 1. Admin fees are collected from pools or other revenue sources using the `withdraw_many` function. While fees from older pools need to be claimed manually, the accrued fees from newer pools (mostly NG pools) are periodically claimed when removing liquidity from the pool.
-2. The accrued tokens can be burned by calling the `collect` function. This creates, if there isn't already one, a conditional order on CowSwap which automatically exchanges the fee tokens into the `target` coin. Admin fees can only be burned during the `EXCHANGE` epoch. If `collect` is called during the `COLLECT` epoch, the coins are transferred to the CowSwapBurner, and a conditional order is created, but the order is not yet valid and is waiting for the WatchTower to place the order with the CowSwap API.
+2. The accrued tokens can be burned by calling the `collect` function. This creates, if there isn't already one, a conditional order on CowSwap which automatically exchanges the fee tokens into the `target` coin. Admin fees can only be burned during the `EXCHANGE` epoch. If `collect` is called during the `COLLECT epoch, the coins are transferred to the CowSwapBurner, and a conditional order is created, but the order is not yet valid and is waiting for the WatchTower to place the order with the CowSwap API.
 3. After burning the tokens, they can be forwarded to the `FeeDistributor` using the `forward` function.
 
 
@@ -382,10 +473,10 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
     === "Example"
 
-        This example fetches the current target of the `FeeCollector` contract.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current `target` coin.
 
         <div class="highlight">
-        <pre><code>>>> FeeCollector.target() <span id="targetOutput"></span></code></pre>
+        <pre><code>>>> FeeCollector.target()<span id="targetOutput"></span></code></pre>
         </div>
 
 
@@ -433,8 +524,17 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
             ```
 
     === "Example"
+
+        This example sets the `target` coin to `0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2`.
+
         ```shell
-        >>> soon
+        >>> FeeCollector.target()
+        "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E"
+
+        >>> FeeCollector.set_target("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2")
+
+        >>> FeeCollector.target()
+        "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
         ```
 
 
@@ -471,8 +571,9 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
             ```
 
     === "Example"
+
         ```shell
-        >>> soon
+        >>> FeeCollector.withdraw_many(["0x090D543868463090389830384630903846309038", "0x090D543868463090389830384630903846309038"])
         ```
 
 
@@ -578,8 +679,9 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
             ```
 
     === "Example"
+
         ```shell
-        >>> soon
+        >>> FeeCollector.collect(["0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", "0x6b175474e89094c44da98b954eedeac495271d0f"])
         ```
 
 
@@ -620,10 +722,21 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
     === "Example"
 
-        todo
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example checks if a specific coin can be exchanged.
 
         <div class="highlight">
-        <pre><code>>>> FeeCollector.owner() <span id="ownerOutput"></span></code></pre>
+        <pre><code>>>> FeeCollector.can_exchange(<input id="coinsInput" 
+        type="text"
+        value="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+        style="width: 310px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;" 
+        />)
+        <span id="canExchangeOutput">Loading...</span></code></pre>
         </div>
 
 
@@ -722,9 +835,8 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
     === "Example"
         ```shell
-        >>> soon
+        >>> FeeCollector.transfer([Transfer({coin: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", to: "0x090D543868463090389830384630903846309038", amount: 1000000000000000000})])
         ```
-
 
 ### `forward`
 !!! description "`FeeCollector.forward(_hook_inputs: DynArray[HookInput, MAX_HOOK_LEN], _receiver: address=msg.sender) -> uint256`"
@@ -871,8 +983,9 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
             ```
 
     === "Example"
+
         ```shell
-        >>> soon
+        >>> FeeCollector.forward([HookInput({hook_id: 1, value: 0, data: b""})], "0x090D543868463090389830384630903846309038")
         ```
 
 
@@ -912,7 +1025,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
     === "Example"
         ```shell
-        >>> soon
+        >>> FeeCollector.burn("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2")
         ```
 
 
@@ -929,7 +1042,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
     | `_recovers` | `DynArray[RecoverInput, MAX_LEN]` | Dynamic array of `RecoverInput` structs |
     | `_receiver` | `address`                         | Receiver of the recovered coins         |
 
-    *Each `RecoverInput` struct contains:*
+    *Each `RecoverInput struct contains:*
 
     - `coin`: `address` - The address of the ERC20 token to recover.
     - `amount`: `uint256` - The amount of the token to recover. Use `2^256-1` to recover the entire balance.
@@ -967,7 +1080,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 
     === "Example"
         ```shell
-        >>> soon
+        >>> FeeCollector.recover([RecoverInput({coin: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", amount: 1000000000000000000})], "0x090D543868463090389830384630903846309038")
         ```
 
 
@@ -1014,7 +1127,7 @@ When setting up a burner or hooker, they need to support a specific interface st
 
     === "Example"
 
-        This example fetches the current burner of the `FeeCollector` contract.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example fetches the current `burner` contract.
 
         <div class="highlight">
         <pre><code>>>> FeeCollector.burner() <span id="burnerOutput"></span></code></pre>
@@ -1045,7 +1158,7 @@ When setting up a burner or hooker, they need to support a specific interface st
 
     === "Example"
 
-        This example fetches the current hooker of the `FeeCollector` contract.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example fetches the current `hooker` contract.
 
         <div class="highlight">
         <pre><code>>>> FeeCollector.hooker() <span id="hookerOutput"></span></code></pre>
@@ -1058,7 +1171,7 @@ When setting up a burner or hooker, they need to support a specific interface st
     !!!guard "Guarded Method"
         This function is only callable by the `owner` of the contract.
 
-    Function to set a new burner contract. When setting, the contract checks if the new burner supports a certain `BURNER_INTERFACE_ID`.
+    Function to set a new burner contract. When setting, the contract checks if the new burner supports a certain `BURNER_INTERFACE_ID`, if not, the transaction will revert.
 
     Emits: `SetBurner`
 
@@ -1098,8 +1211,17 @@ When setting up a burner or hooker, they need to support a specific interface st
             ```
 
     === "Example"
+
+        This example sets the `burner` contract to `0x0000000000000000000000000000000000000000`. 
+
         ```shell
-        >>> soon
+        >>> FeeCollector.burner()
+        "0xC0fC3dDfec95ca45A0D2393F518D3EA1ccF44f8b"
+
+        >>> FeeCollector.set_burner("0x0000000000000000000000000000000000000000")
+
+        >>> FeeCollector.burner()
+        "0x0000000000000000000000000000000000000000"
         ```
 
 
@@ -1152,8 +1274,17 @@ When setting up a burner or hooker, they need to support a specific interface st
             ```
 
     === "Example"
+
+        This example sets the `hooker` contract to `0x0000000000000000000000000000000000000000`. 
+
         ```shell
-        >>> soon
+        >>> FeeCollector.hooker()
+        "0x9A9DF35cd8E88565694CA6AD5093c236C7f6f69D"
+
+        >>> FeeCollector.set_hooker("0x0000000000000000000000000000000000000000")
+
+        >>> FeeCollector.hooker()
+        "0x0000000000000000000000000000000000000000"
         ```
 
 
@@ -1213,18 +1344,22 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
     === "Example"
 
-        If a coin is not killed, the method will return 0. The method returns the sum of the indices within the Epoch enum. Therefore, after we have killed wETH for the epochs `COLLECT` and `EXCHANGE`, the call now returns 6 (indices of `COLLECT` and `EXCHANGE` are 2 and 4, which sum up to six).
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } Example to check if a coin is killed. If a coin is not killed, the method will return 0. The method returns the sum of the indices within the Epoch enum. Therefore, after we have killed wETH for the epochs `COLLECT` and `EXCHANGE`, the call now returns 6 (indices of `COLLECT` and `EXCHANGE` are 2 and 4, which sum up to six).
 
-        ```shell
-        >>> FeeCollector.is_killed("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2")
-        0
-
-        >>> FeeCollector.set_killed([("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", 2 | 4)])
-        # kills wETH for epochs COLLECT and EXCHANGE
-
-        >>> FeeCollector.is_killed("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2")
-        6
-        ```
+        <div class="highlight">
+        <pre><code>>>> FeeCollector.is_killed(<input id="isKilledCoinInput" 
+        type="text" 
+        value="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2" 
+        style="width: 310px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;" 
+        />)
+        <span id="isKilledOutput">Loading...</span></code></pre>
+        </div>
 
 
 ### `set_killed`
@@ -1239,7 +1374,7 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
     | Input   | Type                                 | Description                                      |
     | ------- | ------------------------------------ | ------------------------------------------------ |
-    | `_input | `DynArray[KilledInput, MAX_LEN]`     | Array of `KilledInput` structs                   |
+    | `_input` | `DynArray[KilledInput, MAX_LEN]`     | Array of `KilledInput` structs                   |
 
     *Each `KilledInput` struct contains:*
 
@@ -1276,14 +1411,16 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
             ```
 
     === "Example"
+
+        The first example kills wETH for the `SLEEP` epoch. The second example kills wETH for the `COLLECT` and `EXCHANGE` epochs.
+
         ```shell
-        >>> FeeCollector.set_killed([("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", 1)])
         # kills wETH for epoch SLEEP
+        >>> FeeCollector.set_killed([("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", 1)])
 
-        >>> FeeCollector.set_killed([("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", 2 | 4)])
         # kills wETH for epochs COLLECT and EXCHANGE
+        >>> FeeCollector.set_killed([("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", 2 | 4)])
         ```
-
 
 
 ### `owner`
@@ -1323,7 +1460,7 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
     === "Example"
 
-        This example fetches the current owner of the `FeeCollector` contract.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example fetches the current `owner`.
 
         <div class="highlight">
         <pre><code>>>> FeeCollector.owner() <span id="ownerOutput"></span></code></pre>
@@ -1367,7 +1504,7 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
     === "Example"
 
-        This example fetches the current owner of the `FeeSplitter` contract.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example fetches the current `emergency_owner`.
 
         <div class="highlight">
         <pre><code>>>> FeeCollector.emergency_owner() <span id="emergencyOwnerOutput"></span></code></pre>
@@ -1412,8 +1549,17 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
             ```
 
     === "Example"
+
+        This example sets the `owner` of the contract to our overlord Vitalik Buterin (`0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045`).
+
         ```shell
-        >>> soon
+        >>> FeeCollector.owner()
+        "0x40907540d8a6C65c637785e8f8B742ae6b0b9968"
+
+        >>> FeeCollector.set_owner("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045")
+
+        >>> FeeCollector.owner()
+        "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
         ```
 
 
@@ -1455,181 +1601,15 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
             ```
 
     === "Example"
+
+        This example sets the `emergency_owner` of the contract to `0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045`.
+
         ```shell
-        >>> soon
+        >>> FeeCollector.emergency_owner()
+        "0x40907540d8a6C65c637785e8f8B742ae6b0b9968"
+
+        >>> FeeCollector.set_emergency_owner("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045")
+
+        >>> FeeCollector.emergency_owner()
+        "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
         ```
-
-
----
-
-
-<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', async function() {
-    const web3 = new Web3('https://eth.llamarpc.com');
-
-    // Multicall contract address for Ethereum Mainnet (apply checksum)
-    const multicallAddress = web3.utils.toChecksumAddress('0x5e227ad1969ea493b43f840cff78d08a6fc17796');
-
-    // ABI for the Multicall contract
-    const multicallABI = [
-        {
-            "constant": true,
-            "inputs": [
-                {
-                    "components": [
-                        { "name": "target", "type": "address" },
-                        { "name": "callData", "type": "bytes" }
-                    ],
-                    "name": "calls",
-                    "type": "tuple[]"
-                }
-            ],
-            "name": "aggregate",
-            "outputs": [
-                { "name": "blockNumber", "type": "uint256" },
-                { "name": "returnData", "type": "bytes[]" }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        }
-    ];
-
-    // FeeCollector contract address and ABI
-    const feeCollectorAddress = '0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00';
-    const feeCollectorABI = [
-        {
-            "stateMutability": "view",
-            "type": "function",
-            "name": "target",
-            "inputs": [],
-            "outputs": [
-                { "name": "", "type": "address" }
-            ]
-        },
-        {
-            "stateMutability": "view",
-            "type": "function",
-            "name": "epoch",
-            "inputs": [],
-            "outputs": [
-                { "name": "", "type": "uint256" }
-            ]
-        },
-        {
-            "stateMutability": "view",
-            "type": "function",
-            "name": "fee",
-            "inputs": [],
-            "outputs": [
-                { "name": "", "type": "uint256" }
-            ]
-        },
-        {
-            "stateMutability": "view",
-            "type": "function",
-            "name": "burner",
-            "inputs": [],
-            "outputs": [
-                { "name": "", "type": "address" }
-            ]
-        },
-        {
-            "stateMutability": "view",
-            "type": "function",
-            "name": "hooker",
-            "inputs": [],
-            "outputs": [
-                { "name": "", "type": "address" }
-            ]
-        },
-        {
-            "stateMutability": "view",
-            "type": "function",
-            "name": "owner",
-            "inputs": [],
-            "outputs": [
-                { "name": "", "type": "address" }
-            ]
-        },
-        {
-            "stateMutability": "view",
-            "type": "function",
-            "name": "emergency_owner",
-            "inputs": [],
-            "outputs": [
-                { "name": "", "type": "address" }
-            ]
-        }
-    ];
-
-    // Initialize the Multicall and the FeeCollector contract instance
-    const multicallContract = new web3.eth.Contract(multicallABI, multicallAddress);
-    const feeCollectorContract = new web3.eth.Contract(feeCollectorABI, feeCollectorAddress);
-
-    // List of methods to call and their corresponding DOM element IDs
-    const methodsToCall = [
-        { methodName: 'target', outputId: 'targetOutput', outputType: 'address' },
-        { methodName: 'epoch', outputId: 'epochOutput', outputType: 'uint256' },
-        { methodName: 'fee', outputId: 'feeOutput', outputType: 'uint256' },
-        { methodName: 'burner', outputId: 'burnerOutput', outputType: 'address' },
-        { methodName: 'hooker', outputId: 'hookerOutput', outputType: 'address' },
-        { methodName: 'owner', outputId: 'ownerOutput', outputType: 'address' },  // Owner method
-        { methodName: 'emergency_owner', outputId: 'emergencyOwnerOutput', outputType: 'address' }
-    ];
-
-    // Utility function to update the displayed values
-    async function updateValue(elementId, value, success = true) {
-        try {
-            const element = document.getElementById(elementId);
-
-            // Log the element and value to check for issues
-            console.log(`Updating ${elementId} with value:`, value);
-
-            if (element) {
-                element.textContent = value;
-                element.style.color = success ? 'green' : 'red';
-            } else {
-                console.error(`Element with ID ${elementId} not found.`);
-            }
-        } catch (error) {
-            console.error(`Error updating ${elementId}:`, error);
-        }
-    }
-
-    // Dynamically build multicall queries
-    const multicallQueries = methodsToCall.map(({ methodName }) => ({
-        target: feeCollectorAddress,
-        callData: feeCollectorContract.methods[methodName]().encodeABI()  // Encode the call for the method
-    }));
-
-    try {
-        // Perform the multicall aggregate
-        const result = await multicallContract.methods.aggregate(multicallQueries).call();
-
-        // Debugging: Log the result to check if the owner is being returned correctly
-        console.log('Multicall result:', result);
-
-        // Loop through the methods and decode each result
-        methodsToCall.forEach((method, index) => {
-            try {
-                const decodedValue = web3.eth.abi.decodeParameter(method.outputType, result.returnData[index]);
-                console.log(`Decoded ${method.methodName}:`, decodedValue);  // Debugging log
-                updateValue(method.outputId, decodedValue);  // Update DOM
-            } catch (decodeError) {
-                console.error(`Error decoding ${method.methodName}:`, decodeError);
-                updateValue(method.outputId, 'Error decoding data', false);
-            }
-        });
-
-    } catch (error) {
-        console.error('Error with multicall:', error);
-
-        // In case of error, update all outputs to show an error
-        methodsToCall.forEach(({ outputId }) => {
-            updateValue(outputId, 'Error fetching data', false);
-        });
-    }
-});
-</script>

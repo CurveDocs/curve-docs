@@ -1,18 +1,19 @@
-<h1>Fee Distributor</h1>
+<h1>FeeDistributor</h1>
 
-Fees used to be distributed to [`veCRV`](https://etherscan.io/address/0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2) in the form of [`3CRV`](https://etherscan.io/address/0x6c3f90f043a72fa612cbac8115ee7e52bde6e490) tokens, the LP token of the [`threepool`](https://etherscan.io/address/0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7), which consists of `USDT`, `USDC`, and `DAI`. After the release of Curve's own stablecoin [`crvUSD`](https://etherscan.io/token/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E) and following a successful DAO vote to change the reward token to it, a new `FeeDistributor` contract was deployed to distribute fees in the form of `crvUSD` tokens.
+<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+<script src="/assets/javascripts/contracts/feedistributor.js"></script>
 
-**Fee claming always takes place on Ethereum.**
+Fees used to be distributed to [`veCRV`](https://etherscan.io/address/0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2) in the form of [`3CRV`](https://etherscan.io/address/0x6c3f90f043a72fa612cbac8115ee7e52bde6e490) tokens, the LP token of the [`threepool`](https://etherscan.io/address/0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7), which consists of `USDT`, `USDC`, and `DAI`. After the release of Curve's own stablecoin [`crvUSD`](https://etherscan.io/token/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E) and following a successful DAO vote to change the reward token to it, a new `FeeDistributor` contract was deployed to distribute fees in the form of `crvUSD` tokens. **Fee claiming always takes place on Ethereum**.
 
 ???+ vyper "`FeeDistributor.vy`"
     The source code for the `FeeDistributor.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/FeeDistributor.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.2.7` and `0.3.7`.
 
-    There are two different `FeeDistributor` contracts deployed on :logos-ethereum: Ethereum, depending on the reward token:
+    There are two different `FeeDistributor` contracts deployed on Ethereum, depending on the reward token:
 
     - ![](../assets/images/logos/3crv.png){height="18" width="18" style="vertical-align: -2px;"} `3CRV`: [0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc](https://etherscan.io/address/0xa464e6dcda8ac41e03616f95f4bc98a13b8922dc)
     - :logos-crvusd: `crvUSD`: [0xD16d5eC345Dd86Fb63C6a9C43c517210F1027914](https://etherscan.io/address/0xD16d5eC345Dd86Fb63C6a9C43c517210F1027914)
 
-    !!!warning "Unclaimed ![](../assets/images/logos/3crv.png){height="18" width="18" style="vertical-align: -2px;"} `3CRV` Tokens"
+    !!!warning "Unclaimed ![](../assets/images/logos/3crv.png){height="18" width="18" style="vertical-align: -2px;"} 3CRV Tokens"
         Old unclaimed `3CRV` tokens are not lost with the introduction of `crvUSD` as the reward token. They can still be claimed from the old `FeeDistributor` contract and will remain there until they are claimed.
 
     ---
@@ -180,8 +181,11 @@ The `claim` and `claim_many` functions allow users to claim their share of distr
             ```
 
     === "Example"
+
+        This example claims the accrued fees for the caller.
+
         ```shell
-        >>> soon
+        >>> FeeDistributor.claim()
         ```
 
 
@@ -321,8 +325,11 @@ The `claim` and `claim_many` functions allow users to claim their share of distr
             ```
 
     === "Example"
+
+        This examples claims fees from two addresses.
+
         ```shell
-        >>> soon
+        >>> FeeDistributor.claim_many(["0x7a16fF8270133F063aAb6C9977183D9e72835428", "0xEDF7b675a2fE3c27efb263fb4c204A3f0fb17D46"])
         ```
 
 
@@ -362,8 +369,9 @@ The `claim` and `claim_many` functions allow users to claim their share of distr
             ```
 
     === "Example"
+
         ```shell
-        >>> soon
+        >>> FeeDistributor.burn("0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E")
         ```
 
 
@@ -443,8 +451,9 @@ Checkpointing is a critical process in the contract that ensures accurate tracki
             ```
 
     === "Example"
+
         ```shell
-        >>> soon
+        >>> FeeDistributor.checkpoint_token()
         ```
 
 
@@ -500,10 +509,12 @@ Checkpointing is a critical process in the contract that ensures accurate tracki
             ```
 
     === "Example"
-        ```shell
-        >>> FeeDistributor.token_last_balance()
-        4576710126386983907488318
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `token_last_balance`.
+
+        <div class="highlight">
+        <pre><code>>>> FeeDistributor.token_last_balance() <span id="tokenLastBalanceOutput"></span></code></pre>
+        </div>
 
 
 ### `last_token_time`
@@ -522,10 +533,12 @@ Checkpointing is a critical process in the contract that ensures accurate tracki
             ```
 
     === "Example"
-        ```shell
-        >>> FeeDistributor.last_token_time()
-        1719595823
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `last_token_time`.
+
+        <div class="highlight">
+        <pre><code>>>> FeeDistributor.last_token_time() <span id="lastTokenTimeOutput"></span></code></pre>
+        </div>
 
 
 ### `can_checkpoint_token`
@@ -544,10 +557,12 @@ Checkpointing is a critical process in the contract that ensures accurate tracki
             ```
 
     === "Example"
-        ```shell
-        >>> FeeDistributor.can_checkpoint_token()
-        'true'
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `can_checkpoint_token` state.
+
+        <div class="highlight">
+        <pre><code>>>> FeeDistributor.can_checkpoint_token() <span id="canCheckpointTokenOutput"></span></code></pre>
+        </div>
 
 
 ### `toggle_allow_checkpoint_token`
@@ -578,9 +593,9 @@ Checkpointing is a critical process in the contract that ensures accurate tracki
             ```
 
     === "Example"
+
         ```shell
         >>> FeeDistributor.toggle_allow_checkpoint_token()
-        'true'
         ```
 
 
@@ -637,8 +652,11 @@ Checkpointing the ve-Supply is an essential process to ensure fair reward distri
             ```
 
     === "Example"
+
+        This example checkpoints the total supply of veCRV.
+
         ```shell
-        >>> soon
+        >>> FeeDistributor.checkpoint_total_supply()
         ```
 
 
@@ -658,10 +676,12 @@ Checkpointing the ve-Supply is an essential process to ensure fair reward distri
             ```
 
     === "Example"
-        ```shell
-        >>> FeeDistributor.time_cursor()
-        1720051200
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `time_cursor`.
+
+        <div class="highlight">
+        <pre><code>>>> FeeDistributor.time_cursor() <span id="timeCursorOutput"></span></code></pre>
+        </div>
 
 
 ### `time_cursor_of`
@@ -684,6 +704,9 @@ Checkpointing the ve-Supply is an essential process to ensure fair reward distri
             ```
 
     === "Example"
+
+        This example returns the `time_cursor_of` for a given address.
+
         ```shell
         >>> FeeDistributor.time_cursor_of('0x7a16fF8270133F063aAb6C9977183D9e72835428')
         1719446400
@@ -724,6 +747,7 @@ Checkpointing the ve-Supply is an essential process to ensure fair reward distri
             ```
 
     === "Example"
+
         ```shell
         >>> FeeDistributor.ve_for_at("0x989AEb4d175e16225E39E87d0D97A3360524AD80", 1685972555)
         290896146145001156884162140
@@ -750,6 +774,7 @@ Checkpointing the ve-Supply is an essential process to ensure fair reward distri
             ```
 
     === "Example"
+
         ```shell
         >>> FeeDistributor.ve_supply(1718841600)
         667140493408797243694521600
@@ -783,10 +808,12 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
             ```
 
     === "Example"
-        ```shell
-        >>> FeeDistributor.is_killed()
-        'false'
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example fetches the `is_killed` status.
+
+        <div class="highlight">
+        <pre><code>>>> FeeDistributor.is_killed() <span id="isKilledOutput"></span></code></pre>
+        </div>
 
 
 ### `kill_me`
@@ -822,6 +849,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
             ```
 
     === "Example"
+
         ```shell
         >>> FeeDistributor.kill_me()
         ```
@@ -901,8 +929,12 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
             ```
 
     === "Example"
+
+        This example recovers the balance of a given token.
+
         ```shell
-        >>> soon
+        >>> FeeDistributor.recover_balance("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2")
+        true
         ```
 
 
@@ -927,10 +959,12 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
             ```
 
     === "Example"
-        ```shell
-        >>> FeeDistributor.admin()
-        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current `admin`.
+
+        <div class="highlight">
+        <pre><code>>>> FeeDistributor.admin() <span id="adminOutput"></span></code></pre>
+        </div>
 
 
 ### `future_admin`
@@ -949,10 +983,12 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
             ```
 
     === "Example"
-        ```shell
-        >>> FeeDistributor.future_admin()
-        '0x0000000000000000000000000000000000000000'
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current `future_admin`.
+
+        <div class="highlight">
+        <pre><code>>>> FeeDistributor.future_admin() <span id="futureAdminOutput"></span></code></pre>
+        </div>
 
 
 ### `commit_admin`
@@ -992,8 +1028,11 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
             ```
 
     === "Example"
+
+        This example commits the transfer of the ownership.
+
         ```shell
-        >>> soon
+        >>> FeeDistributor.commit_admin("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045")
         ```
 
 
@@ -1031,8 +1070,11 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
             ```
 
     === "Example"
+
+        This example applies the transfer of the ownership.
+
         ```shell
-        >>> soon
+        >>> FeeDistributor.apply_admin()
         ```
 
 
@@ -1084,12 +1126,15 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
             ```
 
     === "Example"
+
+        This example returns the `start_time` of the first distribution of rewards.
+
         ```shell
         >>> FeeDistributor.start_time()         # 3CRV Distributor
-        1600300800
+        1600300800                              # Thu Sep 17 2020 00:00:00 GMT+0000
 
         >>> FeeDistributor.start_time()         # crvUSD Distributor
-        1718841600
+        1718841600                              # Thu Jun 20 2024 00:00:00 GMT+0000
         ```
 
 
@@ -1098,7 +1143,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
     Getter for the voting escrow contract.
 
-    Returns: voting-escrow (`address`).
+    Returns: voting escrow (`address`).
 
     ??? quote "Source code"
 
@@ -1135,10 +1180,12 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
             ```
 
     === "Example"
-        ```shell
-        >>> FeeDistributor.voting_escrow()
-        '0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2'
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `voting_escrow`.
+
+        <div class="highlight">
+        <pre><code>>>> FeeDistributor.voting_escrow() <span id="votingEscrowOutput"></span></code></pre>
+        </div>
 
 
 ### `token`
@@ -1183,16 +1230,20 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
             ```
 
     === "Example"
-        ```shell
-        >>> FeeDistributor.token()
-        '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the reward token (`token`) of the `FeeDistributor` contract.
+
+        <div class="highlight">
+        <pre><code>>>> FeeDistributor.token() <span id="tokenOutput"></span></code></pre>
+        </div>
 
 
 ### `user_epoch_of`
 !!! description "`FeeDistributor.user_epoch_of(arg0: address) -> uint256: view`"
 
-    Getter for the user epoch of an address. This value increments by one each time rewards are claimed.$$
+    Getter for the user epoch of an address. This value increments by one each time rewards are claimed.
+
+    Returns: user epoch (`uint256`).
 
     | Input  | Type      | Description                       |
     | ------ | --------- | --------------------------------- |
@@ -1207,6 +1258,9 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
             ```
 
     === "Example"
+
+        This example returns the user epoch of a given address.
+
         ```shell
         >>> FeeDistributor.user_epoch_of("0x989AEb4d175e16225E39E87d0D97A3360524AD80")
         7739

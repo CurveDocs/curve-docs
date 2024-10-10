@@ -1,5 +1,8 @@
 <h1>Hooker</h1>
 
+<script src="/assets/javascripts/contracts/hooker.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+
 The `Hooker` contract is a versatile and essential component within the Curve Finance ecosystem, designed to support and manage hooks that interact with the `FeeCollector` contract. This contract enables the execution of predefined actions (hooks) that can be triggered under specific conditions, such as during the fee collection process. It handles the calculation and distribution of compensations, ensuring that hooks are executed correctly and at the appropriate times.
 
 ???+ vyper "`Hooker.vy`"
@@ -22,7 +25,12 @@ The `Hooker` contract is a versatile and essential component within the Curve Fi
 
 Hooks need to be added to the contract via the [`set_hooks`](#set_hooks) function. Once added, these hooks can be executed by anyone using the [`act`](#act) function. Mandatory hooks, marked with the duty flag, are executed during the fee collection process using the [`duty_act`](#duty_act) function.
 
- 
+!!!telegram "Telegram"
+    If you are running or planning to run fee collection for Curve DAO, there is a Telegram channel and a group for necessary updates. Also, many hooks for automation are coming in the future which will be written about in the group.
+
+    [:octicons-arrow-right-24: Join the Telegram group](https://t.me/curve_automation)
+
+
 ---
 
 
@@ -90,10 +98,30 @@ Before hooks can be executed, they need to be added via `set_hooks`. These hooks
             ```
 
     === "Example"
-        ```shell
-        >>> Hooker.hooks(0)
-        '0xD16d5eC345Dd86Fb63C6a9C43c517210F1027914, 0x89afcb44000000000000000000000000f939e0a03fb07f59a73314e73794be0e57ac1b4e, 0, 0, 0, 0, 0, 0, false, true'
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns a `Hook` struct at a specific index.
+
+        <div class="highlight">
+        <pre><code>>>> Hooker.hooks(<input id="hookIndex" type="number" value="0" min="0" 
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="handleInputQuery('hookIndex', 'hooksOutput', 'hooks')"/>)
+        <span id="hooksOutput"></span></code></pre>
+        </div>
+
+        <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        </style>
 
 
 ### `set_hooks`
@@ -156,8 +184,28 @@ Before hooks can be executed, they need to be added via `set_hooks`. These hooks
             ```
 
     === "Example"
+
+        This example sets a new hook with the target address `0xD16d5eC345Dd86Fb63C6a9C43c517210F1027914`.
+
         ```shell
-        >>> soon
+        >>> Hooker.set_hooks([
+        ...     Hooker.Hook(
+        ...         to=address("0xD16d5eC345Dd86Fb63C6a9C43c517210F1027914"),
+        ...         foreplay=b"",
+        ...         compensation_strategy=Hooker.CompensationStrategy(
+        ...             amount=1000000000000000000,
+        ...             cooldown=Hooker.CompensationCooldown(
+        ...                 duty_counter=0,
+        ...                 used=0,
+        ...                 limit=1000000000000000000
+        ...             ),
+        ...             start=0,
+        ...             end=WEEK,
+        ...             dutch=True
+        ...         ),
+        ...         duty=True
+        ...     )
+        ... ])
         ```
 
 
@@ -324,8 +372,9 @@ struct CompensationCooldown:
             ```
 
     === "Example"
+
         ```shell
-        >>> soon
+        >>> Hooker.duty_act([Hooker.HookInput(hook_id=0, value=1000000000000000000, data=b"")], Hooker.address)
         ```
 
 
@@ -342,15 +391,15 @@ struct CompensationCooldown:
 
             ```vyper
             duty_counter: public(uint64)
-
-
             ```
 
     === "Example"
-        ```shell
-        >>> Hooker.duty_counter()
-        0
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the duty counter.
+
+        <div class="highlight">
+        <pre><code>>>> Hooker.duty_counter()<span id="duty_counterOutput"></span></code></pre>
+        </div>
 
 
 ### `act`
@@ -449,8 +498,9 @@ struct CompensationCooldown:
             ```
 
     === "Example"
+
         ```shell
-        >>> soon
+        >>> Hooker.act([Hooker.HookInput(hook_id=0, value=1000000000000000000, data=b"")], Hooker.address)
         ```
 
 
@@ -464,8 +514,8 @@ struct CompensationCooldown:
     | Input          | Type                                 | Description                                                                         |
     | -------------- | ------------------------------------ | ----------------------------------------------------------------------------------- |
     | `_hook_inputs` | `DynArray[HookInput, MAX_HOOKS_LEN]` | Array of `HookInput` structs representing the hooks to be executed                  |
-    | `_duty`        | `bool`                               | Wether the act is performed by the FeeCollector; defaults to `False`                |
-    | `_ts`          | `address`                            | Timestamp at which to calculate the compensation for; defaults to `block.timestamp` |
+    | `_duty`        | `bool`                               | Whether the act is performed by the FeeCollector; defaults to `False`               |
+    | `_ts`          | `uint256`                            | Timestamp at which to calculate the compensation for; defaults to `block.timestamp` |
 
     *Each `HookInput` struct contains:*
 
@@ -527,9 +577,11 @@ struct CompensationCooldown:
             ```
 
     === "Example"
+
         ```shell
-        >>> soon
-        ```
+        >>> Hooker.calc_compensation([Hooker.HookInput(hook_id=0, value=1000000000000000000, data=b"")], _duty=True, _ts=1717286400)
+        1000000000000000000
+        ``` 
 
 
 ### `one_time_hooks`
@@ -608,7 +660,7 @@ struct CompensationCooldown:
 
     === "Example"
         ```shell
-        >>> soon
+        >>> Hooker.one_time_hooks([Hooker.Hook(to=address("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"), foreplay=b"", compensation_strategy=Hooker.CompensationStrategy(amount=1000000000000000000, cooldown=Hooker.CompensationCooldown(duty_counter=0, used=0, limit=1000000000000000000), start=0, end=WEEK, dutch=True), duty=True)], [Hooker.HookInput(hook_id=0, value=1000000000000000000, data=b"")])
         ```
 
 
@@ -628,10 +680,12 @@ struct CompensationCooldown:
             ```
 
     === "Example"
-        ```shell
-        >>> Hooker.buffer_amount()
-        0
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current `buffer_amount`.
+
+        <div class="highlight">
+        <pre><code>>>> Hooker.buffer_amount()<span id="buffer_amountOutput"></span></code></pre>
+        </div>
 
 
 ---
@@ -689,9 +743,30 @@ SUPPORTED_INTERFACES: constant(bytes4[2]) = [
             ```
 
     === "Example"
-        ```shell
-        >>> soon
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns a boolean value whether the Hooker contract supports a specific interface.
+
+        <div class="highlight">
+        <pre><code>>>> Hooker.supportsInterface(<input id="interfaceId" type="bytes4" value="0x01ffc9a7" 
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="handleInputQuery('interfaceId', 'interfaceIdOutput', 'supportsInterface')"/>)
+        <span id="interfaceIdOutput"></span></code></pre>
+        </div>
+
+        <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        </style>
 
 
 
@@ -735,8 +810,11 @@ SUPPORTED_INTERFACES: constant(bytes4[2]) = [
             ```
 
     === "Example"
+
+        This example recovers ETH from the Hooker contract and transfers it to the address defined in `fee_collector`.
+
         ```shell
-        >>> soon
+        >>> Hooker.recover(["0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"])
         ```
 
 
@@ -772,7 +850,9 @@ SUPPORTED_INTERFACES: constant(bytes4[2]) = [
             ```
 
     === "Example"
-        ```shell
-        >>> Hooker.fee_collector()
-        '0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00'
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current `fee_collector` address.
+
+        <div class="highlight">
+        <pre><code>>>> Hooker.fee_collector()<span id="fee_collectorOutput"></span></code></pre>
+        </div>

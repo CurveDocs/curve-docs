@@ -2,6 +2,17 @@
 
 The Curve ecosystem generates revenue from various sources, primarily through trading fees from liquidity pools and interest from crvUSD markets. This page explains how these fees are collected, converted, and distributed to veCRV holders, detailing the contracts and processes involved.
 
+The two primary revenue sources of the DAO are **fees collected from liquidity pools** and **interest rate fees from crvUSD markets**.
+
+Usually, admin fees of liquidity pools are collected just as the tokens in the pool, though sometimes fees are collected in LP tokens. For the system, this distinction does not make any significant difference.
+
+
+!!!telegram "Telegram"
+    If you are running or planning to run fee collection for Curve DAO, there is a Telegram channel and a group for necessary updates. Also, many hooks for automation are coming in the future which will be written about in the group.
+
+    [:octicons-arrow-right-24: Join the Telegram group](https://t.me/curve_automation)
+
+---
 
 
 # **System Overview**
@@ -32,6 +43,13 @@ The fee collection, burning, and distribution system of Curve involves the follo
     
     [:octicons-arrow-right-24: `FeeCollector.vy`](FeeCollector.md)
 
+- **:material-call-split: Fee Splitter**
+
+    ---
+    Contract that collects accumulated crvUSD fees from crvUSD Controllers and distributes them to other contracts according to predetermined weights in a single transaction.
+
+    [:octicons-arrow-right-24: `FeeSplitter.vy`](FeeSplitter.md)
+
 - **:logos-cowswap: CowSwap Burner**
 
     ---
@@ -52,13 +70,6 @@ The fee collection, burning, and distribution system of Curve involves the follo
     The `FeeDistributor` is the contract which distributes the fee token to veCRV holders. This contract is only deployed on Ethereum mainnet. There are actually two `FeeDistributors` deployed, as rewards were distributed in `3CRV` tokens, before a DAO vote changed the reward token to `crvUSD`.
 
     [:octicons-arrow-right-24: `FeeDistributor.vy`](FeeDistributor.md)
-
-- **:material-call-split: Fee Splitter**
-
-    ---
-    Contract that collects accumulated crvUSD fees from crvUSD Controllers and distributes them to other contracts according to predetermined weights in a single transaction.
-
-    [:octicons-arrow-right-24: `FeeSplitter.vy`](FeeSplitter.md)
 
 </div>
 

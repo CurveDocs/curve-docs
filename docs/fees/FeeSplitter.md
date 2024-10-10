@@ -10,7 +10,7 @@ The `FeeSplitter` is a contract that collects and splits accumulated crvUSD fees
 ???+ vyper "`FeeSplitter.vy`"
     The source code for the `FeeSplitter.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/fee-splitter/blob/main/contracts/FeeSplitter.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.4.0` and utilizes a [snekmate module](https://github.com/pcaversaccio/snekmate/blob/main/src/snekmate/auth/ownable.vy) to handle contract ownership.
 
-    The contract is deployed on :logos-ethereum: Ethereum at [`0x22556558419EeD2d0A1Af2e7Fd60E63f3199aca3`](https://eth.blockscout.com/address/0x22556558419EeD2d0A1Af2e7Fd60E63f3199aca3).
+    The contract is deployed on :logos-ethereum: Ethereum at [`0x2dFd89449faff8a532790667baB21cF733C064f2`](https://eth.blockscout.com/address/0x2dFd89449faff8a532790667baB21cF733C064f2).
 
     The source code was audited by [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/). The full audit report can be found [here](https://github.com/curvefi/fee-splitter/blob/main/audits/ChainSecurity.pdf).
 
@@ -198,7 +198,7 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
             controllers: public(DynArray[Controller, MAX_CONTROLLERS])
 
             # maximum number of claims in a single transaction
-            MAX_CONTROLLERS: constant(uint256) = 100
+            MAX_CONTROLLERS: constant(uint256) = 50
 
 
             @deploy
@@ -519,7 +519,7 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
             
             controllers: public(DynArray[IController, MAX_CONTROLLERS])
 
-            MAX_CONTROLLERS: constant(uint256) = 50000
+            MAX_CONTROLLERS: constant(uint256) = 50
             ```
 
         === "IController.vy"
@@ -644,7 +644,7 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
             ```python
             controllers: public(DynArray[IController, MAX_CONTROLLERS])
 
-            MAX_CONTROLLERS: constant(uint256) = 50000
+            MAX_CONTROLLERS: constant(uint256) = 50
 
             @view
             @external
@@ -698,7 +698,7 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
             controllers: public(DynArray[IController, MAX_CONTROLLERS])
 
             # maximum number of claims in a single transaction
-            MAX_CONTROLLERS: constant(uint256) = 50000
+            MAX_CONTROLLERS: constant(uint256) = 50
 
             @nonreentrant
             @external
