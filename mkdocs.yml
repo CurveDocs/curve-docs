@@ -336,7 +336,7 @@ nav:
 
   - Deployment Addresses:
     - Curve DAO: deployments/dao.md
-    - Cross-Chain Gauges & Governance: deployments/xgov-xgauges.md
+    - Cross-Chain Gauges & Governance: deployments/crosschain.md
     - AMM: deployments/amm.md
     - Router & Zaps: deployments/router-zaps.md
     - Curve Stablecoin: deployments/crvusd.md

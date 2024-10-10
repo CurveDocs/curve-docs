@@ -3,12 +3,12 @@ search:
   exclude: true
 ---
 
-<h1></h1>
+<h1>Automated Market Maker (AMM)</h1>
 
 
 # **Stableswap-NG**
 
-!!!deploy "Source Code"
+!!!github "GitHub"
     Source code for the `stableswap-ng` contracts is available on [GitHub](https://github.com/curvefi/stableswap-ng).
 
 !!!warning "Implementations"
@@ -18,11 +18,13 @@ search:
 
     ```shell
     >>> Factory.pool_implementation(0)
-    '0xDCc91f930b42619377C200BA05b7513f2958b202'
+    "0xDCc91f930b42619377C200BA05b7513f2958b202"
+
     >>> Factory.metapool_implementation(0)
-    '0xede71F77d7c900dCA5892720E76316C6E575F0F7'
+    "0xede71F77d7c900dCA5892720E76316C6E575F0F7"
+
     >>> Factory.gauge_implementation() # ethereum mainnet only! 
-    '0x38D9BdA812da2C68dFC6aDE85A7F7a54E77F8325'
+    "0x38D9BdA812da2C68dFC6aDE85A7F7a54E77F8325"
     ```
 
 
