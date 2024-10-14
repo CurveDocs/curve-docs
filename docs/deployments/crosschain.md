@@ -263,7 +263,7 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../curve_
 | Message Digest Prover | [`0xAb0ab357a10c0161002A91426912933750082A9d`](https://ftmscan.com/address/0xAb0ab357a10c0161002A91426912933750082A9d#code) |
 
 
-**:logos-binance: Binance Smart Chain**
+**:logos-bsc: Binance Smart Chain**
 
 | Contract Type | Contract Address |
 | :------------ | :--------------- |
@@ -292,7 +292,7 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../curve_
 | Minter (CRVUSD) | [`0xEfDE221f306152971D8e9f181bFe998447975810`](https://kavascan.com/address/0xEfDE221f306152971D8e9f181bFe998447975810#code) |
 | Gauge Type Oracle | [`0x1E7B1Bd0490ddE12F6E3d09766Beb05552AFe27A`](https://kavascan.com/address/0x1E7B1Bd0490ddE12F6E3d09766Beb05552AFe27A#code) |
 | Gauge Type Prover | [`0x64ed8CfF5Ad3DaEb217abE03a00Ff2D90b86456b`](https://kavascan.com/address/0x64ed8CfF5Ad3DaEb217abE03a00Ff2D90b86456b#code) |
-| Message Digest Prover | [`0x5373E1B9f2781099f6796DFe5D68DE59ac2F18E3`](https://kavascan.com/address/0x5373E1B9f2781099f6796DFe5D68DE59ac2F18E3#code) |
+| Message Digest Prover | [`0x5373E1B9f2781099f6796DFe5D68DE59ac2F18E3](https://kavascan.com/address/0x5373E1B9f2781099f6796DFe5D68DE59ac2F18E3#code) |
 
 
 **:logos-polygon: Polygon**
@@ -309,12 +309,17 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../curve_
 
 # **EVM Sidechain Gauges**
 
+## **Old Implementation**
+
+!!!warning "Deprecated"
+    The old implementation of sidechain gauges is deprecated and will be removed in the future.
+
 !!!danger "MULTICHAIN WARNING"
     At the time of writing (13.11.2023), sidechain gauges on Celo, Avalanche and Fantom are disabled due to issues with Multichain.    
     The Multichain service stopped currently, and all bridge transactions will be stuck on the source chains. There is no confirmed resume time.  
     Multichain statement: https://twitter.com/MultichainOrg/status/1677180114227056641
 
-!!!deploy "Source Code"
+!!!github "GitHub"
     Source code is available on [GitHub](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges/sidechain).
 
 The `RootLiquidityGaugeFactory` contract on Ethereum is utilized across a majority of sidechains, with the exception of Fraxtal, Binance Smart Chain, Avalanche, and Fantom. Each of these networks hosts its own version of the `RootLiquidityGaugeFactory` contract. While the functionality across these contracts remains consistent, they differ in their contract addresses.
@@ -336,3 +341,38 @@ The `RootLiquidityGaugeFactory` contract on Ethereum is utilized across a majori
 | `ChildLiquidityGaugeFactory` | :logos-mantle: Mantle | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c](https://mantlescan.xyz/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c) |
 | :logos-xlayer: `RootLiquidityGaugeFactory` | :logos-ethereum: Ethereum | [0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c](https://etherscan.io/address/0xeF672bD94913CB6f1d2812a6e18c1fFdEd8eFf5c) |
 | `ChildLiquidityGaugeFactory` | :logos-xlayer: X-Layer | [0xef672bd94913cb6f1d2812a6e18c1ffded8eff5c](https://www.oklink.com/xlayer/address/0xef672bd94913cb6f1d2812a6e18c1ffded8eff5c/contract) |
+
+
+---
+
+
+## **New Implementation**
+
+### **RootGauge Factory**
+
+| Chain ID | Chain | Address |
+| :------: | ----- | ------- |
+| `1` | :logos-ethereum: Ethereum | [0x306A45a1478A000dC701A6e1f7a569afb8D9DCD6](https://etherscan.io/address/0x306A45a1478A000dC701A6e1f7a569afb8D9DCD6) |
+
+
+### **ChildGauge Factory**
+
+| Chain ID | Chain | Address |
+| :------: | ----- | ------- |
+| `100` | :logos-gnosis: Gnosis | [0x06471ED238306a427241B3eA81352244E77B004F](https://gnosisscan.io/address/0x06471ED238306a427241B3eA81352244E77B004F) |
+| `137` | :logos-polygon: Polygon | [0x55a1C26CE60490A15Bdd6bD73De4F6346525e01e](https://polygonscan.com/address/0x55a1C26CE60490A15Bdd6bD73De4F6346525e01e) |
+| `196` | :logos-kava: Kava | [0xD5C3e070E121488806AaA5565283A164ACEB94Df](https://explorer.kava.io/address/0xD5C3e070E121488806AaA5565283A164ACEB94Df) |
+| `5000` | :logos-mantle: Mantle | [0x0B8D6B6CeFC7Aa1C2852442e518443B1b22e1C52](https://explorer.mantle.xyz/address/0x0B8D6B6CeFC7Aa1C2852442e518443B1b22e1C52) |
+| `1101` | :logos-polygon: Polygon zkEVM | [0x3c0a405E914337139992625D5100Ea141a9C4d11](https://zkevm.polygonscan.com/address/0x3c0a405E914337139992625D5100Ea141a9C4d11) |
+| `252` | :logos-fantom: Fantom | [0x0B8D6B6CeFC7Aa1C2852442e518443B1b22e1C52](https://ftmscan.com/address/0x0B8D6B6CeFC7Aa1C2852442e518443B1b22e1C52) |
+| `42161` | :logos-arbitrum: Arbitrum | [0x988d1037e9608B21050A8EFba0c6C45e01A3Bce7](https://arbiscan.io/address/0x988d1037e9608B21050A8EFba0c6C45e01A3Bce7) |
+| `8453` | :logos-base: Base | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://basescan.org/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
+| `10` | :logos-optimism: Optimism | [0x871fBD4E01012e2E8457346059e8C189d664DbA4](https://optimistic.etherscan.io/address/0x871fBD4E01012e2E8457346059e8C189d664DbA4) |
+| `324` | :logos-zksync: zkSync Era | [0x167D9C27070Ce04b79820E6aaC0cF243d6098812](https://explorer.zksync.io/address/0x167D9C27070Ce04b79820E6aaC0cF243d6098812) |
+| `1313161554` | :logos-aurora: Aurora | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://explorer.aurora.dev/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
+| `43114` | :logos-avalanche: Avalanche | [0x97aDC08FA1D849D2C48C5dcC1DaB568B169b0267](https://snowtrace.io/address/0x97aDC08FA1D849D2C48C5dcC1DaB568B169b0267) |
+| `56` | :logos-bsc: Binance Smart Chain | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://bscscan.com/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
+| `42220` | :logos-celo: Celo | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://explorer.celo.org/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
+| `250` | :logos-fantom: Fantom | [0x004A476B5B76738E34c86C7144554B9d34402F13](https://ftmscan.com/address/0x004A476B5B76738E34c86C7144554B9d34402F13) |
+| `2222` | :logos-kava: Kava | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://explorer.kava.io/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
+| `1284` | Moonbeam | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://moonbeam.moonscan.io/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
