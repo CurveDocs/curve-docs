@@ -7,7 +7,7 @@ Curve DAO Token is based on the ERC-20 token standard as defined at [EIP-20](htt
 
     Source code is available on [:material-github: Github](https://github.com/curvefi/curve-dao-contracts/blob/567927551903f71ce5a73049e077be87111963cc/contracts/ERC20CRV.vy). 
 
-For a broader understanding of the use case of the CRV token, check out [**Understanding CRV**](https://resources.curve.fi/crv-token/understanding-crv/).
+For a broader understanding of the use case of the CRV token, check out [**Understanding CRV**](https://resources.curve.fi/crv-token/overview/).
 
 
 ---
