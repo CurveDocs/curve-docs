@@ -73,6 +73,7 @@ theme:
   favicon: "assets/images/lama.png"
   icon:
     repo: simple/github
+    annotation: material/skull-outline
   features:
     - content.tooltips
     - content.code.annotate
@@ -116,6 +117,14 @@ repo_url: https://github.com/CurveDocs/curve-docs
 
 
 nav:
+
+  - st-crvUSD:
+    - Overview: s-crvusd/overview.md
+    - Vault: s-crvusd/Vault.md
+    - RewardsHandler: s-crvusd/RewardsHandler.md
+    - TWA: s-crvusd/TWA.md
+    - StablecoinLens: s-crvusd/StablecoinLens.md 
+
   - Documentation Overview: documentation-overview.md
   - Curve DAO:
     - Curve DAO Token: curve_dao/crv-token.md
