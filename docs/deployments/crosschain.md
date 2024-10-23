@@ -235,16 +235,16 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../curve_
 
 | Contract Type | Contract Address |
 | :------------ | :--------------- |
-| CRV ETH Bridge (LayerZero) | [`0x5cc0144A511807608eF644c9e99B486124D1cFd6`](https://snowtrace.io/address/0x5cc0144A511807608eF644c9e99B486124D1cFd6#code) |
-| CRVUSD ETH Bridge (LayerZero) | [`0x26D01ce989037befd7Ff63837A86e2da32E7D7e2`](https://snowtrace.io/address/0x26D01ce989037befd7Ff63837A86e2da32E7D7e2#code) |
-| Block Hash Oracle | [`0xD823D2a2B5AF77835e972A0D5B77f5F5A9a003A6`](https://snowtrace.io/address/0xD823D2a2B5AF77835e972A0D5B77f5F5A9a003A6#code) |
-| CRV Minter | [`0xcaf4969dAb56C20fCb89ceC041079AB02158fE3E`](https://snowtrace.io/address/0xcaf4969dAb56C20fCb89ceC041079AB02158fE3E#code) |
-| CRVUSD Minter | [`0x4765288DE2672A961cc5A9f52bE75005cAF005a5`](https://snowtrace.io/address/0x4765288DE2672A961cc5A9f52bE75005cAF005a5#code) |
-| Token (CRV20) | [`0xEEbC562d445F4bC13aC75c8caABb438DFae42A1B`](https://snowtrace.io/address/0xEEbC562d445F4bC13aC75c8caABb438DFae42A1B#code) |
-| Token (CRVUSD) | [`0xCb7c161602d04C4e8aF1832046EE08AAF96d855D`](https://snowtrace.io/address/0xCb7c161602d04C4e8aF1832046EE08AAF96d855D#code) |
-| Gauge Type Oracle | [`0x01689FE734D0aA98be3A9a761aE11a20Dd968E41`](https://snowtrace.io/address/0x01689FE734D0aA98be3A9a761aE11a20Dd968E41#code) |
-| Gauge Type Prover | [`0x0B2584EfC66e9954e72d516be2Bb855EF0Defe62`](https://snowtrace.io/address/0x0B2584EfC66e9954e72d516be2Bb855EF0Defe62#code) |
-| Message Digest Prover | [`0xd5cF10C83aC5F30Ab27B6156DA9c238Aa63a63d0`](https://snowtrace.io/address/0xd5cF10C83aC5F30Ab27B6156DA9c238Aa63a63d0#code) |
+| CRV ETH Bridge (LayerZero) | [`0x5cc0144A511807608eF644c9e99B486124D1cFd6`](https://snowscan.xyz/address/0x5cc0144A511807608eF644c9e99B486124D1cFd6#code) |
+| CRVUSD ETH Bridge (LayerZero) | [`0x26D01ce989037befd7Ff63837A86e2da32E7D7e2`](https://snowscan.xyz/address/0x26D01ce989037befd7Ff63837A86e2da32E7D7e2#code) |
+| Block Hash Oracle | [`0xD823D2a2B5AF77835e972A0D5B77f5F5A9a003A6`](https://snowscan.xyz/address/0xD823D2a2B5AF77835e972A0D5B77f5F5A9a003A6#code) |
+| CRV Minter | [`0xcaf4969dAb56C20fCb89ceC041079AB02158fE3E`](https://snowscan.xyz/address/0xcaf4969dAb56C20fCb89ceC041079AB02158fE3E#code) |
+| CRVUSD Minter | [`0x4765288DE2672A961cc5A9f52bE75005cAF005a5`](https://snowscan.xyz/address/0x4765288DE2672A961cc5A9f52bE75005cAF005a5#code) |
+| Token (CRV20) | [`0xEEbC562d445F4bC13aC75c8caABb438DFae42A1B`](https://snowscan.xyz/address/0xEEbC562d445F4bC13aC75c8caABb438DFae42A1B#code) |
+| Token (CRVUSD) | [`0xCb7c161602d04C4e8aF1832046EE08AAF96d855D`](https://snowscan.xyz/address/0xCb7c161602d04C4e8aF1832046EE08AAF96d855D#code) |
+| Gauge Type Oracle | [`0x01689FE734D0aA98be3A9a761aE11a20Dd968E41`](https://snowscan.xyz/address/0x01689FE734D0aA98be3A9a761aE11a20Dd968E41#code) |
+| Gauge Type Prover | [`0x0B2584EfC66e9954e72d516be2Bb855EF0Defe62`](https://snowscan.xyz/address/0x0B2584EfC66e9954e72d516be2Bb855EF0Defe62#code) |
+| Message Digest Prover | [`0xd5cF10C83aC5F30Ab27B6156DA9c238Aa63a63d0`](https://snowscan.xyz/address/0xd5cF10C83aC5F30Ab27B6156DA9c238Aa63a63d0#code) |
 
 
 **:logos-fantom: Fantom**
@@ -361,16 +361,16 @@ The `RootLiquidityGaugeFactory` contract on Ethereum is utilized across a majori
 | :------: | ----- | ------- |
 | `100` | :logos-gnosis: Gnosis | [0x06471ED238306a427241B3eA81352244E77B004F](https://gnosisscan.io/address/0x06471ED238306a427241B3eA81352244E77B004F) |
 | `137` | :logos-polygon: Polygon | [0x55a1C26CE60490A15Bdd6bD73De4F6346525e01e](https://polygonscan.com/address/0x55a1C26CE60490A15Bdd6bD73De4F6346525e01e) |
-| `196` | :logos-kava: Kava | [0xD5C3e070E121488806AaA5565283A164ACEB94Df](https://explorer.kava.io/address/0xD5C3e070E121488806AaA5565283A164ACEB94Df) |
+| `196` | :logos-xlayer: X-Layer | [0xD5C3e070E121488806AaA5565283A164ACEB94Df](https://www.oklink.com/xlayer/address/0xd5c3e070e121488806aaa5565283a164aceb94df) |
 | `5000` | :logos-mantle: Mantle | [0x0B8D6B6CeFC7Aa1C2852442e518443B1b22e1C52](https://explorer.mantle.xyz/address/0x0B8D6B6CeFC7Aa1C2852442e518443B1b22e1C52) |
 | `1101` | :logos-polygon: Polygon zkEVM | [0x3c0a405E914337139992625D5100Ea141a9C4d11](https://zkevm.polygonscan.com/address/0x3c0a405E914337139992625D5100Ea141a9C4d11) |
-| `252` | :logos-fantom: Fantom | [0x0B8D6B6CeFC7Aa1C2852442e518443B1b22e1C52](https://ftmscan.com/address/0x0B8D6B6CeFC7Aa1C2852442e518443B1b22e1C52) |
+| `252` | :logos-fraxtal: Fraxtal | [0x0B8D6B6CeFC7Aa1C2852442e518443B1b22e1C52](https://fraxscan.com/address/0x0B8D6B6CeFC7Aa1C2852442e518443B1b22e1C52) |
 | `42161` | :logos-arbitrum: Arbitrum | [0x988d1037e9608B21050A8EFba0c6C45e01A3Bce7](https://arbiscan.io/address/0x988d1037e9608B21050A8EFba0c6C45e01A3Bce7) |
 | `8453` | :logos-base: Base | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://basescan.org/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
 | `10` | :logos-optimism: Optimism | [0x871fBD4E01012e2E8457346059e8C189d664DbA4](https://optimistic.etherscan.io/address/0x871fBD4E01012e2E8457346059e8C189d664DbA4) |
 | `324` | :logos-zksync: zkSync Era | [0x167D9C27070Ce04b79820E6aaC0cF243d6098812](https://explorer.zksync.io/address/0x167D9C27070Ce04b79820E6aaC0cF243d6098812) |
 | `1313161554` | :logos-aurora: Aurora | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://explorer.aurora.dev/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
-| `43114` | :logos-avalanche: Avalanche | [0x97aDC08FA1D849D2C48C5dcC1DaB568B169b0267](https://snowtrace.io/address/0x97aDC08FA1D849D2C48C5dcC1DaB568B169b0267) |
+| `43114` | :logos-avalanche: Avalanche | [0x97aDC08FA1D849D2C48C5dcC1DaB568B169b0267](https://snowscan.xyz/address/0x97aDC08FA1D849D2C48C5dcC1DaB568B169b0267) |
 | `56` | :logos-bsc: Binance Smart Chain | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://bscscan.com/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
 | `42220` | :logos-celo: Celo | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://explorer.celo.org/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
 | `250` | :logos-fantom: Fantom | [0x004A476B5B76738E34c86C7144554B9d34402F13](https://ftmscan.com/address/0x004A476B5B76738E34c86C7144554B9d34402F13) |
