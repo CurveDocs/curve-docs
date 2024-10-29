@@ -3,6 +3,8 @@
 <script src="/assets/javascripts/contracts/rootgaugefactory.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
 
+The `RootGaugeFactory` contract is used to deploy liquidity gauges on the Ethereum mainnet. These gauges can then be voted on to be added to the `GaugeController`. If successful, the gauges will be able to receive CRV emissions, which then can be bridged via a `Bridger` contract to the child chains `ChildGauge`.
+
 ???+ vyper "`RootGaugeFactory.vy`"
     The source code for the `RootGaugeFactory.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/blob/master/contracts/RootGaugeFactory.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10` 
 
@@ -14,10 +16,13 @@
 
 ## **Deploying Gauges**
 
+The `RootGaugeFactory` allows the deployment of root gauges on Ethereum and child gauges on the child chains. Root gauges can only be deployed if there is a `bridger` contract set for the given chain ID. To check if that is the case, the `get_bridger(chain_id)` function can be used.
+
+
 ### `deploy_gauge`
 !!! description "`RootGaugeFactory.deploy_gauge(_chain_id: uint256, _salt: bytes32) -> RootGauge`"
 
-    Function to deploy a new root gauge.
+    Function to deploy and initialize a new root gauge for a given chain ID. This function call reverts if there is no `bridger` contract set for the given `_chain_id`.
 
     Returns: newly deployed gauge (`RootGauge`).
 
@@ -100,6 +105,33 @@
                 return convert(convert(digest, uint256) & convert(max_value(uint160), uint256), address)
             ```
 
+        === "RootGauge.vy"
+
+            ```python
+            @external
+            def initialize(_bridger: Bridger, _chain_id: uint256, _child: address):
+                """
+                @notice Proxy initialization method
+                """
+                assert self.factory == empty(Factory)  # dev: already initialized
+
+                self.child_gauge = _child
+                self.chain_id = _chain_id
+                self.bridger = _bridger
+                self.factory = Factory(msg.sender)
+
+                inflation_params: InflationParams = InflationParams({
+                    rate: CRV.rate(),
+                    finish_time: CRV.future_epoch_time_write()
+                })
+                assert inflation_params.rate != 0
+
+                self.inflation_params = inflation_params
+                self.last_period = block.timestamp / WEEK
+
+                CRV.approve(_bridger.address, max_value(uint256))
+            ```
+
     === "Example"
 
         ```shell
@@ -111,9 +143,7 @@
 ### `deploy_child_gauge`
 !!! description "`RootGaugeFactory.deploy_child_gauge(_chain_id: uint256, _lp_token: address, _salt: bytes32, _manager: address = msg.sender)`"
 
-    Function to deploy a new child gauge.
-
-    Returns: newly deployed child gauge (`RootGauge`).
+    Function to deploy a new child gauge on the child chain.
 
     | Input      | Type      | Description |
     | ----------- | --------- | ----------- |
@@ -155,11 +185,132 @@
         'child gauge address'
         ```
 
+---
+
+## **Transmitting Emissions**
+
+Once a root gauge has received emissions, they can be transmitted to the child gauge. This is done by calling the `transmit_emissions` function. Emissions can only be transmitted from the `RootGaugeFactory`. 
+
+Transmitting emissions is permissionless. Anyone can call the function.
+
+### `transmit_emissions`
+!!! description "`RootGaugeFactory.transmit_emissions(_gauge: RootGauge)`"
+
+    Function to transmit emissions to the child gauge. This function is permissionsless and can be called by anyone. The function reverts if 
+
+    ??? quote "Source code"
+
+        === "RootGaugeFactory.vy"
+
+            ```python
+            interface Bridger:
+                def check(_addr: address) -> bool: view
+
+            interface RootGauge:
+                def transmit_emissions(): nonpayable
+
+            @external
+            def transmit_emissions(_gauge: RootGauge):
+                """
+                @notice Call `transmit_emissions` on a root gauge
+                @dev Entrypoint to request emissions for a child gauge.
+                    The way that gauges work, this can also be called on the root
+                    chain without a request.
+                """
+                # in most cases this will return True
+                # for special bridges *cough cough Multichain, we can only do
+                # one bridge per tx, therefore this will verify msg.sender in [tx.origin, self.call_proxy]
+                assert _gauge.bridger().check(msg.sender)
+                _gauge.transmit_emissions()
+            ```
+
+        === "RootGauge.vy"
+
+            ```python
+            @external
+            def transmit_emissions():
+                """
+                @notice Mint any new emissions and transmit across to child gauge
+                """
+                assert msg.sender == self.factory.address  # dev: call via factory
+
+                MINTER.mint(self)
+                minted: uint256 = CRV.balanceOf(self)
+
+                assert minted != 0  # dev: nothing minted
+                bridger: Bridger = self.bridger
+
+                bridger.bridge(CRV, self.child_gauge, minted, value=bridger.cost())
+            ```
+
+        === "Bridger.vy"
+
+            ```python
+            @pure
+            @external
+            def check(_account: address) -> bool:
+                """
+                @notice Verify if `_account` is allowed to bridge using `transmit_emissions`
+                @param _account The account calling `transmit_emissions`
+                """
+                return True
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> RootGaugeFactory.transmit_emissions()
+        ```
+
+
+### `get_bridger`
+!!! description "`RootGaugeFactory.get_bridger(_chain_id: uint256) -> address: view`"
+
+    Getter for the bridger for a given chain ID.
+
+    Returns: bridger (`address`).
+
+    ??? quote "Source code"
+
+        === "RootGaugeFactory.vy"
+
+            ```python
+            get_bridger: public(HashMap[uint256, Bridger])
+            ```
+
+    === "Example"
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the bridger for a given chain ID.
+
+        <div class="highlight">
+        <pre><code>>>> RootGaugeFactory.get_bridger(<input id="getBridgerInput" type="number" value="42161" min="0" 
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="fetchBridger()"/>)
+        <span id="getBridgerOutput"></span></code></pre>
+        </div>
+
+        <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        </style>
+
 
 ---
 
 
 ## **Gauge Information**
+
+The `RootGaugeFactory` contract also provides a few getters to retrieve information about the deployed root gauges.
 
 ### `is_valid_gauge`
 !!! description "`RootGaugeFactory.is_valid_gauge(_gauge: RootGauge) -> bool`"
@@ -204,7 +355,7 @@
 ### `get_gauge`
 !!! description "`RootGaugeFactory.get_gauge(_chain_id: uint256, _idx: uint256) -> RootGauge`"
 
-    Getter to get a gauge by chain ID and index.
+    Getter for gauges on a given chain ID and index.
 
     Returns: gauge (`address`).
 
@@ -299,88 +450,6 @@
         </style>
 
 
-### `get_bridger`
-!!! description "`RootGaugeFactory.get_bridger(_chain_id: uint256) -> Bridger: view`"
-
-    Getter to get the bridger for a given chain ID.
-
-    Returns: bridger (`Bridger`).
-
-    ??? quote "Source code"
-
-        === "RootGaugeFactory.vy"
-
-            ```python
-            get_bridger: public(HashMap[uint256, Bridger])
-            ```
-
-    === "Example"
-
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the bridger for a given chain ID.
-
-        <div class="highlight">
-        <pre><code>>>> RootGaugeFactory.get_bridger(<input id="getBridgerInput" type="number" value="42161" min="0" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
-            oninput="fetchBridger()"/>)
-        <span id="getBridgerOutput"></span></code></pre>
-        </div>
-
-        <style>
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        </style>
-
-
-### `transmit_emissions`
-!!! description "`RootGaugeFactory.transmit_emissions() -> uint256`"
-
-    Function to transmit emissions to the child gauge.
-
-    Returns: number of receivers (`uint256`).
-
-    ??? quote "Source code"
-
-        === "RootGaugeFactory.vy"
-
-            ```python
-            interface Bridger:
-                def check(_addr: address) -> bool: view
-
-            interface RootGauge:
-                def transmit_emissions(): nonpayable
-
-            @external
-            def transmit_emissions(_gauge: RootGauge):
-                """
-                @notice Call `transmit_emissions` on a root gauge
-                @dev Entrypoint to request emissions for a child gauge.
-                    The way that gauges work, this can also be called on the root
-                    chain without a request.
-                """
-                # in most cases this will return True
-                # for special bridges *cough cough Multichain, we can only do
-                # one bridge per tx, therefore this will verify msg.sender in [tx.origin, self.call_proxy]
-                assert _gauge.bridger().check(msg.sender)
-                _gauge.transmit_emissions()
-            ```
-
-    === "Example"
-
-        ```shell
-        >>> RootGaugeFactory.transmit_emissions()
-        ```
-
-
 ---
 
 
@@ -389,7 +458,10 @@
 ### `set_child`
 !!! description "`RootGaugeFactory.set_child(_chain_id: uint256, _bridger: Bridger, _child_factory: address, _child_impl: address)`"
 
-    Setter to set the bridger for a given chain ID.
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the contract.
+
+    Function to set different child properties for a given chain ID such as the bridger, child gauge factory and child gauge implementation.
 
     Emits: `ChildUpdated` event.
 
@@ -447,7 +519,7 @@
 ### `get_child_factory`
 !!! description "`RootGaugeFactory.get_child_factory(_chain_id: uint256) -> address: view`"
 
-    Getter to get the child factory for a given chain ID.
+    Getter for the child factory for a given chain ID.
 
     Returns: child factory address (`address`).
 
@@ -489,7 +561,7 @@
 ### `get_child_implementation`
 !!! description "`RootGaugeFactory.get_child_implementation(_chain_id: uint256) -> address: view`"
 
-    Getter to get the child implementation for a given chain ID.
+    Getter for the child implementation for a given chain ID.
 
     Returns: child implementation address (`address`).
 
@@ -535,7 +607,7 @@
 ### `get_implementation`
 !!! description "`RootGaugeFactory.get_implementation() -> address: view`"
 
-    Getter to get the implementation contract of the root chain gauge factory.
+    Getter for the implementation contract of the root chain gauge factory.
 
     Returns: implementation address (`address`).
 
@@ -559,6 +631,9 @@
 
 ### `set_implementation`
 !!! description "`RootGaugeFactory.set_implementation(_implementation: address)`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the contract.
 
     !!!warning
         Changing the implementation contract requires a change on all child factories.
@@ -647,6 +722,9 @@
 ### `set_call_proxy`
 !!! description "`RootGaugeFactory.set_call_proxy(_call_proxy: CallProxy)`"
 
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the contract.
+
     Function to set the call proxy.
 
     Emits: `UpdateCallProxy` event.
@@ -691,19 +769,9 @@
 ---
 
 
-## **Contract Ownership**
+## **Ownership and Other Methods**
 
-### `owner`
-### `future_owner`
-### `commit_transfer_ownership`
-### `accept_transfer_ownership`
-
-
----
-
-
-## **Other Methods**
-
+todo: Ownership follows the standard pattern for upgradable contracts with owner, future_owner and transfer_ownership functions.
 
 ### `version`
 !!! description "`RootGaugeFactory.version() -> String[8]`"
