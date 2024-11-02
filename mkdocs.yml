@@ -117,14 +117,6 @@ repo_url: https://github.com/CurveDocs/curve-docs
 
 
 nav:
-
-  - st-crvUSD:
-    - Overview: s-crvusd/overview.md
-    - Vault: s-crvusd/Vault.md
-    - RewardsHandler: s-crvusd/RewardsHandler.md
-    - TWA: s-crvusd/TWA.md
-    - StablecoinLens: s-crvusd/StablecoinLens.md 
-
   - Documentation Overview: documentation-overview.md
   - Curve DAO:
     - Curve DAO Token: curve_dao/crv-token.md
@@ -192,6 +184,13 @@ nav:
   - Routers:
     - CurveRouterNG: router/CurveRouterNG.md
     - CurveRegistryExchange: router/CurveRegistryExchange.md
+
+
+  - Savings crvUSD:
+    - Overview: s-crvusd/overview.md
+    - Vault: s-crvusd/Vault.md
+    - RewardsHandler: s-crvusd/RewardsHandler.md
+    - StablecoinLens: s-crvusd/StablecoinLens.md 
 
 
   - Curve Stablecoin:
