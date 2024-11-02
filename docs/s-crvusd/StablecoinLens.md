@@ -11,13 +11,15 @@ The `StablecoinLens` contract calculates the accurate circulating supply of crvU
 
     The contract is deployed on :logos-ethereum: Ethereum at [`0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7`](https://etherscan.io/address/0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7).
 
-    The source code was audited by [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/). The full audit report can be found [tbd]().
+    The source code was audited by [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/). Audit report coming soon.
 
 
 !!!danger "Warning: Usage of `StablecoinLens.vy` contract"
     In theory, the calculation of the true circulating supply of crvUSD could be manipulated using MEV techniques. For example, one could take a flash loan of up to 1 million crvUSD or borrow a significant amount of crvUSD from a Controller, then take a snapshot via `RewardsHandler.take_snapshot()`, and subsequently repay the debt. However, there is a lower bound defined by `minimum_weight` and an upper bound defined by the `FeeSplitter` cap.
 
-    Ultimately, as this calculation is a moving average, successful manipulation would require repeated MEV actions over multiple snapshots to have a substantial impact. 
+    Ultimately, as this calculation is a moving average, successful manipulation would require repeated MEV actions over multiple snapshots to have a substantial impact.
+
+    **Nontheless, the contract should not be used by third parties before consulting with the Curve team.**
 
 
 ---
