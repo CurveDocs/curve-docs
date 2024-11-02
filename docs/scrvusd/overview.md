@@ -12,13 +12,13 @@ The Savings crvUSD system consists of multiple smart contracts:
 
 <div class="grid cards" markdown>
 
--   :logos-vyper: `Vault.vy`
+-   :logos-vyper: `VaultV3.vy`
 
     ---
 
-    The Vault contract is the main contract of the st-crvUSD. It is an `ERC4626` compliant Vault that handles all logic associated with deposits, withdrawals, strategy management, profit reporting, etc.
+    The Vault contract is based on Yearn's `VaultV3.vy` contract. It is an `ERC4626` compliant Vault that handles all logic associated with deposits, withdrawals, strategy management, profit reporting, etc.
 
-    [:octicons-arrow-right-24: Getting started](./Vault.md)
+    [:octicons-arrow-right-24: Read more](./Vault.md)
 
 -   :logos-vyper: `RewardsHandler.vy`
 
@@ -27,7 +27,7 @@ The Savings crvUSD system consists of multiple smart contracts:
     The `RewardsHandler` contract is responsible for taking and storing snapshots of the ratio of crvUSD deposited into the Vault compared to the total circulating supply of crvUSD and calculating the time-weighted average of this ratio using the trapezoidal rule for interpolation. This value is then used to decide on the amount of rewards to "ask for" from the `FeeSplitter`. Calculation is done using a `TWA` module.
     
 
-    [:octicons-arrow-right-24: Getting started](./RewardsHandler.md)
+    [:octicons-arrow-right-24: Read more](./RewardsHandler.md)
 
 -   :logos-vyper: `StablecoinLens.vy`
 
@@ -35,11 +35,11 @@ The Savings crvUSD system consists of multiple smart contracts:
 
     Helper contract to calculate the true circulating supply of crvUSD by excluding e.g. unborrowed crvUSD from Controllers, crvUSD in PegKeep, etc.
 
-    [:octicons-arrow-right-24: Reference](./StablecoinLens.md)
+    [:octicons-arrow-right-24: Read more](./StablecoinLens.md)
 
 </div>
 
-The documentation of the :logos-vyper: `FeeSplitter` contract can be found [here](tbd).
+The documentation of the :logos-vyper: `FeeSplitter` contract can be found [here](../fees/FeeSplitter.md).
 
 
 ---
@@ -83,11 +83,11 @@ For instance if the time-weighed average of the ratio is 0.1 (10% of the circula
 
 # **Rewards Allocation**
 
-Rewards allocated to st-crvUSD come from crvUSD interest fees or any external donations sent to the `RewardsHandler` contract.
+Rewards allocated to scrvUSD come from crvUSD interest fees or any external donations sent to the `RewardsHandler` contract.
 
 The ultimate amount of rewards is dynamic and is determined by the ratio of the staked supply to the total supply of crvUSD. Although it is dynamic, the weight has an upper and lower bound.
 
-Rewards are distributed to st-crvUSD holders thought the `RewardsHandler` contract using a simple `process_rewards` function. This function permnissionlessly lets anyone distribute rewards to the crvUSD vault.
+Rewards are distributed to scrvUSD holders thought the `RewardsHandler` contract using a simple `process_rewards` function. This function permnissionlessly lets anyone distribute rewards to the crvUSD vault.
 
 <figure markdown="span">
   ![](../assets/images/stcrvusd/stcrvusd.svg){ width="2000" }
@@ -96,8 +96,8 @@ Rewards are distributed to st-crvUSD holders thought the `RewardsHandler` contra
 
 Although the weight is dynamic, it has a upper and lower bound:
 
-1. The lower bound is defined in the `RewardsHandler` contract as `minimum_weight`. This is the minimum percentage of rewards that st-crvUSD will receive.
-2. The upper bound is defined in the `FeeSplitter` and represents the maximum percentage of rewards that st-crvUSD will receive from the FeeSplitter. The FeeSplitter allows for dynamic weights, which is the case for st-crvUSD. This upper value can be checked in the `FeeSplitter` contract by calling `FeeSplitter.receivers(i)`, where `i` is the index of the receiver. This method returns the address and the maximum weight of the receiver.
+1. The lower bound is defined in the `RewardsHandler` contract as `minimum_weight`. This is the minimum percentage of rewards that scrvUSD will receive.
+2. The upper bound is defined in the `FeeSplitter` and represents the maximum percentage of rewards that scrvUSD will receive from the FeeSplitter. The FeeSplitter allows for dynamic weights, which is the case for scrvUSD. This upper value can be checked in the `FeeSplitter` contract by calling `FeeSplitter.receivers(i)`, where `i` is the index of the receiver. This method returns the address and the maximum weight of the receiver.
 
 !!!example
 
