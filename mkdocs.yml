@@ -187,10 +187,10 @@ nav:
 
 
   - Savings crvUSD:
-    - Overview: s-crvusd/overview.md
-    - Vault: s-crvusd/Vault.md
-    - RewardsHandler: s-crvusd/RewardsHandler.md
-    - StablecoinLens: s-crvusd/StablecoinLens.md 
+    - Overview: scrvusd/overview.md
+    - Vault: scrvusd/Vault.md
+    - RewardsHandler: scrvusd/RewardsHandler.md
+    - StablecoinLens: scrvusd/StablecoinLens.md 
 
 
   - Curve Stablecoin:
