@@ -19,7 +19,7 @@ The contract takes snapshots of the ratio of crvUSD deposited into the Vault com
 
 # **General Explanation**
 
-The weight in the `FeeSplitter` allocated to st-crvUSD is based on the time-weighted average of the ratio of crvUSD deposited into the Vault compared to the total circulating supply of crvUSD.
+The weight in the `FeeSplitter` allocated to scrvUSD is based on the time-weighted average of the ratio of crvUSD deposited into the Vault compared to the total circulating supply of crvUSD.
 
 To calculate the time-weighted average of the deposited supply ratio, the `RewardsHandler` makes use of a `TWA module` which takes snapshots of the deposited supply ratio and stores them in a `DynArray` of snapshots. Each snapshot contains a ratio value and the timestamp of whem the snapshot was taken.
 
@@ -842,15 +842,7 @@ The value is calculated over a specified time window defined by `twa_window` by 
 
 # **Reward Distribution**
 
-todo.
-
-processing reports means comparing the debt that the strategy has taken with the current amount of funds it is reporting. If the strategy owes less than it currently has, it means it has had a profit, else (assets < debt) it has had a loss.
-
-The `RewardsHandler` acts as a strategy in the Yearn V3 vault.
-
-st-crvusd does not really use strategies. sending rewards to the vault and calling proess_report will essentially just 
-
-
+Rewards are distributed to the Vault thought the `RewardsHandler` contract using a simple `process_rewards` function. This function permnissionlessly lets anyone distribute rewards to the Savings Vault.
 
 ### `process_rewards`
 !!! description "`RewardsHandler.process_rewards()`"
@@ -1266,9 +1258,16 @@ For a detailed explanation of how to use the access control module, please refer
 
     === "Example"
 
+        This example sets the TWA window from 604800 seconds (1 week) to 302400 seconds (1/2 week).
+
         ```shell
-        >>> RewardsHandler.set_twa_window(todo)
-        soon
+        >>> RewardsHandler.set_twa_window()
+        604800
+
+        >>> RewardsHandler.set_twa_window(302400)
+
+        >>> RewardsHandler.twa_window()
+        302400
         ```
 
 
@@ -1339,9 +1338,16 @@ For a detailed explanation of how to use the access control module, please refer
 
     === "Example"
 
+        This example sets the minimum time between snapshots from 3600 seconds (1 hour) to 7200 seconds (2 hours).
+
         ```shell
-        >>> RewardsHandler.set_twa_snapshot_dt(todo)
-        soon
+        >>> RewardsHandler.min_snapshot_dt_seconds()
+        3600
+
+        >>> RewardsHandler.set_twa_snapshot_dt(7200)
+
+        >>> RewardsHandler.min_snapshot_dt_seconds()
+        7200
         ```
 
 
@@ -1678,9 +1684,16 @@ For a detailed explanation of how to use the access control module, please refer
 
     === "Example"
 
+        This example sets the distribution time from 1 week to 1/2 week.
+
         ```shell
-        >>> RewardsHandler.set_distribution_time(todo)
-        soon
+        >>> RewardsHandler.distribution_time()
+        604800
+
+        >>> RewardsHandler.set_distribution_time(302400)
+
+        >>> RewardsHandler.distribution_time()
+        302400
         ```
 
 
@@ -1734,9 +1747,16 @@ For a detailed explanation of how to use the access control module, please refer
 
     === "Example"
 
+        This example sets the `stablecoin_lens` address to `ZERO_ADDRESS`. This is just an example but would not make sense in practice.
+
         ```shell
-        >>> RewardsHandler.set_twa_snapshot_dt(todo)
-        soon
+        >>> RewardsHandler.stablecoin_lens()
+        '0xe24e2dB9f6Bb40bBe7c1C025bc87104F5401eCd7'
+
+        >>> RewardsHandler.set_stablecoin_lens('0x0000000000000000000000000000000000000000')
+
+        >>> RewardsHandler.stablecoin_lens()
+        '0x0000000000000000000000000000000000000000'
         ```
 
 
@@ -1796,9 +1816,16 @@ For a detailed explanation of how to use the access control module, please refer
 
     === "Example"
 
+        This example sets the minimum weight the `RewardsHandler` will ask for from 5% to 10%.
+
         ```shell
-        >>> RewardsHandler.set_minimum_weight(todo)
-        ''
+        >>> RewardsHandler.minimum_weight()
+        500      # 5%
+
+        >>> RewardsHandler.set_minimum_weight(1000)
+
+        >>> RewardsHandler.minimum_weight()
+        1000     # 10%
         ```
 
 
@@ -1841,9 +1868,16 @@ For a detailed explanation of how to use the access control module, please refer
 
     === "Example"
 
+        This example sets the scaling factor from 10000 to 15000.
+
         ```shell
         >>> RewardsHandler.scaling_factor()
         10000
+
+        >>> RewardsHandler.set_scaling_factor(15000)
+
+        >>> RewardsHandler.scaling_factor()
+        15000
         ```
 
 
@@ -1855,9 +1889,9 @@ For a detailed explanation of how to use the access control module, please refer
 ### `vault`
 !!! description "`RewardsHandler.vault() -> address: view`"
 
-    Getter for the [YearnV3 vault contract](https://github.com/yearn/yearn-vaults-v3). This value is set at initialization of the contract and cannot be changed.
+    Getter for the [YearnV3 Vault contract](https://github.com/yearn/yearn-vaults-v3). This contract address is at the same time also the address of the `scrvUSD` token.
 
-    Returns: YearnV3 vault (`address`).
+    Returns: YearnV3 Vault (`address`).
 
     ??? quote "Source code"
 
@@ -1921,7 +1955,7 @@ For a detailed explanation of how to use the access control module, please refer
 ### `stablecoin`
 !!! description "`RewardsHandler.stablecoin() -> address: view`"
 
-    Getter for the crvUSD stablecoin address. This value is set at initialization of the contract and cannot be changed.
+    Getter for the crvUSD stablecoin address.
 
     Returns: crvUSD stablecoin (`address`).
 
@@ -2494,8 +2528,10 @@ Ownership in this contract is handled by the [Access Control Module](https://git
 
     === "Example"
 
+        This example revokes the `RATE_MANAGER` role from `0x40907540d8a6C65c637785e8f8B742ae6b0b9968`.
+
         ```shell
-        >>> RewardsHandler.revokeRole('0x4456736574657265645f726174655f6d616e6167657200000000000000000000', '0x...')
+        >>> RewardsHandler.revokeRole('0x2eb8ae3bf4f7ccce3124b351006550c82803b59ffcc079d490ebdc6c9946d68c', '0x40907540d8a6C65c637785e8f8B742ae6b0b9968')
         ```
 
 
@@ -2572,8 +2608,10 @@ Ownership in this contract is handled by the [Access Control Module](https://git
 
     === "Example"
 
+        This example renounces the `RATE_MANAGER` role from `0x40907540d8a6C65c637785e8f8B742ae6b0b9968`.
+
         ```shell
-        >>> RewardsHandler.renounceRole('0x4456736574657265645f726174655f6d616e6167657200000000000000000000', '0x...')
+        >>> RewardsHandler.renounceRole('0x2eb8ae3bf4f7ccce3124b351006550c82803b59ffcc079d490ebdc6c9946d68c', '0x40907540d8a6C65c637785e8f8B742ae6b0b9968')
         ```
 
 
@@ -2584,8 +2622,8 @@ Ownership in this contract is handled by the [Access Control Module](https://git
 
     | Input      | Type      | Description                          |
     | ---------- | --------- | ------------------------------------ |
-    | `role`     | `bytes32` | Role to set the admin role for        |
-    | `admin_role`  | `bytes32` | New admin role                        |
+    | `role`     | `bytes32` | Role to set the admin role for       |
+    | `admin_role`  | `bytes32` | New admin role                    |
 
     ??? quote "Source code"
 
@@ -2644,6 +2682,8 @@ Ownership in this contract is handled by the [Access Control Module](https://git
 
     === "Example"
 
+        This example sets the admin role for the `RATE_MANAGER` role to the `DEFAULT_ADMIN_ROLE`.
+
         ```shell
-        >>> RewardsHandler.set_role_admin('0x4456736574657265645f726174655f6d616e6167657200000000000000000000', '0x...')
+        >>> RewardsHandler.set_role_admin('0x2eb8ae3bf4f7ccce3124b351006550c82803b59ffcc079d490ebdc6c9946d68c', '0x0000000000000000000000000000000000000000000000000000000000000000')
         ```
