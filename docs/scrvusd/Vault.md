@@ -9,11 +9,9 @@
 [^1]: [Yearn Documentation](https://docs.yearn.fi/getting-started/products/yvaults/v3)
 
 
-???+ vyper "`Vault.vy`"
-    The source code for the Yearn `VaultV3.vy` contract is available on [:material-github: GitHub](https://github.com/yearn/yearn-vaults-v3/blob/104a2b233bc6d43ba40720d68355b04d2dc31795/contracts/VaultV3.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.7`. A full technical documentation is available on the [Yearn Dev Docs](https://docs.yearn.fi/developers/v3/overview).
+???+ quote "VaultV3.vy"
+    The source code for the Yearn `VaultV3.vy` contract is available on [:material-github: GitHub](https://github.com/yearn/yearn-vaults-v3/blob/104a2b233bc6d43ba40720d68355b04d2dc31795/contracts/VaultV3.vy). The contract is written in [Vyper](https://github.com/vyperlang/vyper) version `0.3.7`. Full technical documentation is available in the [Yearn Dev Docs](https://docs.yearn.fi/developers/v3/overview).
 
+    **The `Vault` and the `scrvUSD` vault token share the same address.** The contract is deployed on :logos-ethereum: Ethereum at [`0x0655977FEb2f289A4aB78af67BAB0d17aAb84367`](https://etherscan.io/address/0x0655977FEb2f289A4aB78af67BAB0d17aAb84367).
 
-    **`Vault` and `scrvUSD` token address share the same address.** The contract is deployed on :logos-ethereum: Ethereum at [`0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7`](https://etherscan.io/address/0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7).
-
-    The source code was audited by [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/). Audit report coming soon.
-
+    The source code was audited by [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/). The audit report will be available soon.
