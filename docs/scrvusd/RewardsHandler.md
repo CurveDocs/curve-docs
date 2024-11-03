@@ -3,38 +3,25 @@
 <script src="/assets/javascripts/contracts/scrvusd/rewards-handler.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
 
-The `RewardsHandler` contract handles the crvUSD rewards distribution to `Savings crvUSD (scrvUSD)`.
-The contract takes snapshots of the ratio of crvUSD deposited into the Vault compared to the total circulating supply of crvUSD and computes the time-weighted average of this ratio to decide on the amount of rewards to "ask for" from the `FeeSplitter`.
 
-???+ vyper "`RewardsHandler.vy`"
-    The source code for the `RewardsHandler.vy` contract is available on [:material-github: GitHub](https://github.com/curvefi/scrvusd/blob/main/contracts/RewardsHandler.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `~=0.4`.
+The `RewardsHandler` contract manages the distribution of crvUSD rewards to `Savings crvUSD (scrvUSD)`. The contract takes snapshots of the ratio of crvUSD deposited into the Vault relative to the total circulating supply of crvUSD to calculate a time-weighted average of this ratio to determine the amount of rewards to request from the `FeeSplitter`.
+
+???+ quote "`RewardsHandler.vy`"
+    The source code for the `RewardsHandler.vy` contract is available on [:material-github: GitHub](https://github.com/curvefi/scrvusd/blob/main/contracts/RewardsHandler.vy). The contract is written in [Vyper](https://github.com/vyperlang/vyper) version `~=0.4`.
 
     The contract is deployed on :logos-ethereum: Ethereum at [`0xe8d1e2531761406af1615a6764b0d5ff52736f56`](https://etherscan.io/address/0xe8d1e2531761406af1615a6764b0d5ff52736f56).
 
-    The source code was audited by [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/). Audit report coming soon.
+    The source code was audited by [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/). The audit report will be available soon.
 
 
 ---
 
 
-# **General Explanation**
+# **General Explainer**
 
-The weight in the `FeeSplitter` allocated to scrvUSD is based on the time-weighted average of the ratio of crvUSD deposited into the Vault compared to the total circulating supply of crvUSD.
+The weight allocated to the `RewardsHandler` in the `FeeSplitter` is determined by the time-weighted average of the ratio of crvUSD deposited into the Vault compared to the total circulating supply of crvUSD. The weight allocated to the `RewardsHandler` can be permissionlessly distributed as rewards to the `Savings Vault (scrvUSD)` by anyone calling the [`process_rewards`](#process_rewards) function.
 
-To calculate the time-weighted average of the deposited supply ratio, the `RewardsHandler` makes use of a `TWA module` which takes snapshots of the deposited supply ratio and stores them in a `DynArray` of snapshots. Each snapshot contains a ratio value and the timestamp of whem the snapshot was taken.
-
-Based on these `Snapshots`, a time-weighted average of the deposited supply ratio is calculated.
-
-
-*Calling the [`take_snapshot`](#take_snapshot) function will compute and store the supply ratio snapshot the following way:*
-
-1. Get the circulating supply of crvUSD in circulation. Simply calling `crvUSD.totalSupply()` is not possible as there are crvUSD minted to several contracts which are not circulating e.g. unborrowed crvUSD from Controllers, allocated crvUSD for PegKeepers or crvUSD allocated to the [`FlashLender`](../crvusd/FlashLender.md).
-2. Get the supply of crvUSD in the vault by simply calling `crvUSD.balanceOf(vault)`. This will also take into account rewards that are not yet distributed.
-3. Compute the supply ratio as:
-   
-    $$\text{SupplyRatio} = \frac{\text{SupplyInVault} \times 10^{18}}{\text{CirculatingSupply}}$$
-
-4. The supply ratio is then stored in a `DynArray` of snapshots using the `_take_snapshot` function via the `TWA` module.
+To calculate this time-weighted average, the `RewardsHandler` uses a `TWA module` that takes snapshots of the deposited supply ratio and stores them in a `Snapshot` struct. All structs are stored in a dynamic array called `snapshots`. Each snapshot includes a ratio value and the timestamp at which it was taken.
 
 
 ??? quote "Source code for snapshot calculation and storage"
@@ -174,12 +161,31 @@ Based on these `Snapshots`, a time-weighted average of the deposited supply rati
 
 # **Snapshots**
 
-Snapshots are used to calculate the time-weighted average of the ratio of crvUSD deposited into the Vault and the total circulating supply of crvUSD. The logic for taking snapshots is implemented in the `TWA` module. Source code can be found on [:material-github: GitHub](https://github.com/curvefi/stcrvusd/blob/main/contracts/TWA.vy).
+Snapshots are used to calculate the time-weighted average (TWA) of the ratio between crvUSD deposited into the Vault and the total circulating supply of crvUSD. Each snapshot stores the ratio of crvUSD deposited in the Vault to the circulating supply of crvUSD, along with the timestamp when the snapshot was taken. Taking a snapshot is fully permissionless—anyone can take one by calling the [`take_snapshot`](#take_snapshot) function. The snapshot values are stored in a `Snapshot` struct, and each struct is saved in a dynamic array called `snapshots`.
 
-Snapshots store information about the ratio of crvUSD deposited into the Vault compared to the total circulating supply of crvUSD and the timestamp when the snapshot was taken. Taking a snapshot is fully permissionless and can be taken by anyone calling the [`take_snapshot`](#take_snapshot) function. The values are stored in a `Snapshot` struct and the structs are stored in a dynamic array called `snapshots`.
+```vyper
+MAX_SNAPSHOTS: constant(uint256) = 10**18  # 31.7 billion years if snapshot every second
 
-Snapshots can be taken ensuring a minimum time interval ([`min_snapshot_dt_seconds`](#min_snapshot_dt_seconds)) has passed since the last snapshot. The TWA is computed using the trapezoidal rule, iterating over the stored snapshots in reverse chronological order and calculating the weighted average of the tracked value over the specified time window ([`twa_window`](#twa_window)).
+snapshots: public(DynArray[Snapshot, MAX_SNAPSHOTS])
 
+struct Snapshot:
+    tracked_value: uint256
+    timestamp: uint256
+```
+
+Snapshots can only be taken once a minimum time interval ([`min_snapshot_dt_seconds`](#min_snapshot_dt_seconds)) has passed since the last one. The TWA is then computed using the trapezoidal rule, iterating over the stored snapshots in reverse chronological order to calculate the weighted average of the tracked value over the specified time window ([`twa_window`](#twa_window)).
+
+*Snapshots are taken by calling the [`take_snapshot`](#take_snapshot) function. When this function is called, the snapshot value is computed and stored as follows:*
+
+1. **Determine the circulating supply of crvUSD.** Directly calling `crvUSD.totalSupply()` is not feasible because some crvUSD is minted to specific contracts and is not part of the circulating supply (e.g., unborrowed crvUSD held by Controllers, crvUSD allocated to PegKeepers, or crvUSD assigned to the [`FlashLender`](../crvusd/FlashLender.md)). Therefore, the [`StablecoinLens`](./StablecoinLens.md) contract is used to obtain the actual circulating supply of crvUSD.
+   
+2. **Obtain the amount of crvUSD held in the Vault** by calling `Vault.totalAssets()`, which excludes rewards that have not yet been distributed.
+
+3. **Calculate the supply ratio** as follows:
+   
+    $$\text{SupplyRatio} = \frac{\text{SupplyInVault} \times 10^{18}}{\text{CirculatingSupply}}$$
+
+4. **Store the calculated supply ratio** and the timestamp at which the snapshot was taken in the dynamic array.
 
 ---
 
@@ -192,6 +198,8 @@ Snapshots can be taken ensuring a minimum time interval ([`min_snapshot_dt_secon
     Function to take a snapshot of the current deposited supply ratio in the Vault. This function is fully permissionless and can be called by anyone. Snapshots are used to compute the time-weighted average of the TVL to decide on the amount of rewards to ask for (weight). 
     
     Minimum time inbetween snapshots is defined by `min_snapshot_dt_seconds`. The maximum number of snapshots is set to `10^18`, which is equivalent to 31.7 billion years if a snapshot were to be taken every second.
+
+    Emits: `SnapshotTaken` event.
 
     ??? quote "Source code"
 
