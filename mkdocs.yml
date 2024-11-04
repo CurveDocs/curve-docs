@@ -87,6 +87,7 @@ theme:
     - search.suggest
     - toc.follow
     - content.code.copy
+    - announce.dismiss
   palette:
     # - media: "(prefers-color-scheme: dark)"
     - scheme: default
