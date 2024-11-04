@@ -7,7 +7,7 @@
 The `StablecoinLens` contract calculates the accurate circulating supply of crvUSD by summing the debt of all `PegKeepers` and the total debt of all `Controllers`. This approach is necessary because simply calling `crvUSD.totalSupply()` returns an inflated number, as it includes idle crvUSD in `PegKeepers`, unborrowed crvUSD in `Controllers`, and crvUSD allocated to the `FlashLender` or other venues.
 
 ???+ vyper "`StablecoinLens.vy`"
-    The source code for the `StablecoinLens.vy` contract is available on [:material-github: GitHub](https://github.com/curvefi/scrvusd/blob/main/contracts/StablecoinLens.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `~=0.4`.
+    The source code for the `StablecoinLens.vy` contract is available on [:material-github: GitHub](https://github.com/curvefi/scrvusd/blob/main/contracts/StablecoinLens.vy). The contract is written using [Vyper](https://vyperlang.org/) version `~=0.4`.
 
     The contract is deployed on :logos-ethereum: Ethereum at [`0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7`](https://etherscan.io/address/0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7).
 
