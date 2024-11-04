@@ -61,6 +61,15 @@ hide:
 
     [:octicons-arrow-right-24: PDF](../assets/pdf/curve-dao-quantstamp.pdf)
 
+-   **FeeSplitter**
+
+    Code Assessment of the Fee Splitter Smart Contracts.
+
+    *Auditor: ChainSecurity*  
+    *Date: 25. September, 2024*
+
+    [:material-github: GitHub](https://github.com/curvefi/fee-splitter/blob/main/audits/ChainSecurity.pdf)
+
 </div>
 
 
@@ -134,7 +143,7 @@ hide:
 ---
 
 
-## **Curve Stablecoin and Lending**
+## **crvUSD and Lending**
 
 <div class="grid cards" markdown>
 
