@@ -73,6 +73,7 @@ theme:
   favicon: "assets/images/lama.png"
   icon:
     repo: simple/github
+    annotation: material/skull-outline
   features:
     - content.tooltips
     - content.code.annotate
@@ -86,6 +87,7 @@ theme:
     - search.suggest
     - toc.follow
     - content.code.copy
+    - announce.dismiss
   palette:
     # - media: "(prefers-color-scheme: dark)"
     - scheme: default
@@ -186,7 +188,7 @@ nav:
     - CurveRegistryExchange: router/CurveRegistryExchange.md
 
 
-  - Curve Stablecoin:
+  - crvUSD:
     - Overview: crvUSD/overview.md
     - crvUSD Token: crvUSD/crvUSD.md
     - Controller: crvUSD/controller.md
@@ -208,6 +210,12 @@ nav:
       - Overview: crvUSD/factory/overview.md
       - Deployer API: crvUSD/factory/deployer-api.md
       - Admin Controls: crvUSD/factory/admin-controls.md
+
+
+  - Savings crvUSD:
+    - Overview: scrvusd/overview.md
+    - RewardsHandler: scrvusd/RewardsHandler.md
+    - StablecoinLens: scrvusd/StablecoinLens.md 
 
 
   - Curve Lending:
