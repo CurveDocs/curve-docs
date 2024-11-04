@@ -775,7 +775,7 @@ The value is calculated over a specified time window defined by `twa_window` by 
 
     === "Example"
 
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the weight the `FeeSplitter` will request from the `RewardsHandler`.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the weight the `RewardsHandler` will request from the `FeeSplitter`.
 
         <div class="highlight">
         <pre><code>>>> RewardsHandler.weight() <span id="weightOutput"></span></code></pre>
@@ -813,7 +813,7 @@ The value is calculated over a specified time window defined by `twa_window` by 
 
     === "Example"
 
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the minimum weight the `FeeSplitter` will request from the `RewardsHandler`.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the weight the `RewardsHandler` will request from the `FeeSplitter`.
 
         <div class="highlight">
         <pre><code>>>> RewardsHandler.minimum_weight() <span id="minimumWeightOutput"></span></code></pre>
@@ -1145,7 +1145,7 @@ Rewards are distributed to the Vault thought the `RewardsHandler` contract using
 ### `distribution_time`
 !!! description "`RewardsHandler.distribution_time() -> uint256: view`"
 
-    Getter for the distribution time. This is the time it takes to stream the rewards. This method mirrors the private `profit_max_unlock_time` variable from yearn vaults. This value can be changed by the [`set_distribution_time`](#set_distribution_time) function.
+    Getter for the distribution time. This is the time it takes to stream the rewards.
 
     Returns: distribution time (`uint256`).
 
