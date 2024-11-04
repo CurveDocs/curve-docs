@@ -6,7 +6,7 @@
 
 The `RewardsHandler` contract manages the distribution of crvUSD rewards to `Savings crvUSD (scrvUSD)`. The contract takes snapshots of the ratio of crvUSD deposited into the Vault relative to the total circulating supply of crvUSD to calculate a time-weighted average of this ratio to determine the amount of rewards to request from the `FeeSplitter`.
 
-???+ quote "`RewardsHandler.vy`"
+???+ vyper "`RewardsHandler.vy`"
     The source code for the `RewardsHandler.vy` contract is available on [:material-github: GitHub](https://github.com/curvefi/scrvusd/blob/main/contracts/RewardsHandler.vy). The contract is written in [Vyper](https://github.com/vyperlang/vyper) version `~=0.4`.
 
     The contract is deployed on :logos-ethereum: Ethereum at [`0xe8d1e2531761406af1615a6764b0d5ff52736f56`](https://etherscan.io/address/0xe8d1e2531761406af1615a6764b0d5ff52736f56).
