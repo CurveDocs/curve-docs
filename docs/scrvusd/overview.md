@@ -16,9 +16,9 @@ The Savings crvUSD system consists of multiple smart contracts:
 
     ---
 
-    The Vault contract is based on Yearn's `VaultV3.vy` contract. It is an `ERC4626` compliant Vault that handles all logic associated with deposits, withdrawals, strategy management, profit reporting, etc.
+    The Vault contract is based on Yearn's `VaultV3.vy` contract, more precisely [version `3.0.4`](https://github.com/yearn/yearn-vaults-v3/blob/104a2b233bc6d43ba40720d68355b04d2dc31795/contracts/VaultV3.vy). It is an `ERC4626` compliant Vault that handles all logic associated with deposits, withdrawals, strategy management, profit reporting, etc.
 
-    [:octicons-arrow-right-24: Read more](./Vault.md)
+    [:octicons-arrow-right-24: Yearn Dev Docs](https://docs.yearn.fi/developers/v3/overview)
 
 -   :logos-vyper: `RewardsHandler.vy`
 
