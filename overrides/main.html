@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block announce %}
+  <style>
+    .md-banner {
+      background-color: #3b82f6;
+      color: white;
+      font-weight: 500;
+      padding: 4px 0;
+    }
+    .md-announce a {
+      color: #f8fafc;
+      text-decoration: underline;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.1);
+      transition: background-color 0.2s;
+      text-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+    }
+    .md-announce a:hover {
+      text-decoration: none;
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+  </style>
+  New documentation for Savings crvUSD (scrvUSD) is now available! Learn about the Vault implementation, Rewards Distribution, and more in the <a href="/scrvusd/overview">scrvUSD section</a>.
+{% endblock %}
