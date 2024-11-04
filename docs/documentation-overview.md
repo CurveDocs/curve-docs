@@ -35,6 +35,14 @@ This documentation outlines the technical implementation of the core Curve proto
 
     [**:octicons-arrow-right-24: Getting started**](./crvUSD/overview.md)
 
+-   ![](./assets/images/scrvusd/scrvusd_round.png){ width="21" height="21" .middle } **Savings crvUSD (scrvUSD)**
+
+    ---
+
+    Savings crvUSD, in short scrvUSD, is a savings version of crvUSD.
+
+    [**:octicons-arrow-right-24: Getting started**](./scrvusd/overview.md)
+
 -   **:material-bank: Curve Lending**
 
     ---
