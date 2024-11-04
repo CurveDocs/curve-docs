@@ -8,6 +8,8 @@ Savings crvUSD, in short scrvUSD, is a savings version of crvUSD.
 
 # **Smart Contracts**
 
+The documentation of the `FeeSplitter` contract can be found [here](https://docs.curve.fi/fees/FeeSplitter/).
+
 <div class="grid cards" markdown>
 
 -   :logos-vyper: `VaultV3.vy`
@@ -37,7 +39,14 @@ Savings crvUSD, in short scrvUSD, is a savings version of crvUSD.
 
 </div>
 
-The documentation of the :logos-vyper: `FeeSplitter` contract can be found [here](https://docs.curve.fi/fees/FeeSplitter/).
+
+## **Deployments**
+
+The contracts are deployed at the following addresses:
+
+- `Vault` on :logos-ethereum: Ethereum at [0x0655977FEb2f289A4aB78af67BAB0d17aAb84367](https://etherscan.io/address/0x0655977FEb2f289A4aB78af67BAB0d17aAb84367)
+- `RewardsHandler` on :logos-ethereum: Ethereum at [0xe8d1e2531761406af1615a6764b0d5ff52736f56](https://etherscan.io/address/0xe8d1e2531761406af1615a6764b0d5ff52736f56)
+- `StablecoinLens` on :logos-ethereum: Ethereum at [0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7](https://etherscan.io/address/0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7)
 
 
 ---
