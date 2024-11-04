@@ -186,14 +186,7 @@ nav:
     - CurveRegistryExchange: router/CurveRegistryExchange.md
 
 
-  - Savings crvUSD:
-    - Overview: scrvusd/overview.md
-    - Vault: scrvusd/Vault.md
-    - RewardsHandler: scrvusd/RewardsHandler.md
-    - StablecoinLens: scrvusd/StablecoinLens.md 
-
-
-  - Curve Stablecoin:
+  - crvUSD:
     - Overview: crvUSD/overview.md
     - crvUSD Token: crvUSD/crvUSD.md
     - Controller: crvUSD/controller.md
@@ -215,6 +208,12 @@ nav:
       - Overview: crvUSD/factory/overview.md
       - Deployer API: crvUSD/factory/deployer-api.md
       - Admin Controls: crvUSD/factory/admin-controls.md
+
+
+  - Savings crvUSD:
+    - Overview: scrvusd/overview.md
+    - RewardsHandler: scrvusd/RewardsHandler.md
+    - StablecoinLens: scrvusd/StablecoinLens.md 
 
 
   - Curve Lending:
