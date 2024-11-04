@@ -39,7 +39,7 @@ The Savings crvUSD system consists of multiple smart contracts:
 
 </div>
 
-The documentation of the :logos-vyper: `FeeSplitter` contract can be found [here](../fees/FeeSplitter.md).
+The documentation of the :logos-vyper: `FeeSplitter` contract can be found [here](https://docs.curve.fi/fees/FeeSplitter/).
 
 
 ---
@@ -110,79 +110,3 @@ Although the weight is dynamic, it has a upper and lower bound:
     Therefore, the weight allocated to the RewardsHandler contract will be somewhere in between `minimum_weight` and `10%`. If there is no value set for `minimum_weight`, this value will be treated as 0 meaning the dynamic weight is fully dependant on the ratio of the staked supply to the total supply of crvUSD. 
 
     For more informations about the calcuation of the dynamic weight, check the [RewardsHandler contract](./RewardsHandler.md).
-
-
----
-
-
-feesplitter -> plug in rewardshandler which supports the dynamic weight interface (EIP-165) of the FeeSplitter, meaning the RewardsHandler contract calculates the actual weight based on some values.
-
-to check if a contract supports an interface, you can use the `supportsInterface` method. This method is part of the EIP-165 standard and is implemented by the RewardsHandler contract.
-
-The amount of funds that this contract should receive from the fee splitter is determined by computing the time-weighted average of the vault balance over crvUSD circulating supply ratio.
-
-The dynamic weight calculation in the RewardsHandler is based on the ratio of the staked supply to the total supply of crvUSD. The weight is determined by the `weight()` function, which is called by the FeeSplitter and based on the `_compute()` function of the TWA module and the `minimum_weight` variable, which serves as a minimum weight[^1].
-
-[^1]: The minimum weight can also be set to 0, which means the weight will be fully dependant on the time-weighted average of the TVL ratio.
-
-```py
-return max(twa._compute(), self.minimum_weight)
-```
-
-where `twa._compute()` is the time-weighted average of the TVL ratio, and `self.minimum_weight` is the minimum weight that is set to 10% (100000000000000000):
-
-```py
-@internal
-@view
-def _compute() -> uint256:
-    """
-    @notice Computes the TWA over the specified time window by iterating backwards over the snapshots.
-    @return The TWA for tracked value over the self.twa_window (10**18 decimals precision).
-    """
-    num_snapshots: uint256 = len(self.snapshots)
-    if num_snapshots == 0:
-        return 0
-
-    time_window_start: uint256 = block.timestamp - self.twa_window
-
-    total_weighted_tracked_value: uint256 = 0
-    total_time: uint256 = 0
-    # Iterate backwards over all snapshots
-    index_array_end: uint256 = num_snapshots - 1
-    for i: uint256 in range(0, num_snapshots, bound=MAX_SNAPSHOTS):  # i from 0 to (num_snapshots-1)
-        i_backwards: uint256 = index_array_end - i
-        current_snapshot: Snapshot = self.snapshots[i_backwards]
-        next_snapshot: Snapshot = current_snapshot
-        if i != 0:  # If not the first iteration, get the next snapshot
-            next_snapshot = self.snapshots[i_backwards + 1]
-
-        interval_start: uint256 = current_snapshot.timestamp
-        # Adjust interval start if it is before the time window start
-        if interval_start < time_window_start:
-            interval_start = time_window_start
-
-        interval_end: uint256 = 0
-        if i == 0:  # First iteration - we are on the last snapshot (i_backwards = num_snapshots - 1)
-            # For the last snapshot, interval end is block.timestamp
-            interval_end = block.timestamp
-        else:
-            # For other snapshots, interval end is the timestamp of the next snapshot
-            interval_end = next_snapshot.timestamp
-
-        if interval_end <= time_window_start:
-            break
-
-        time_delta: uint256 = interval_end - interval_start
-
-        # Interpolation using the trapezoidal rule
-        averaged_tracked_value: uint256 = (current_snapshot.tracked_value + next_snapshot.tracked_value) // 2
-
-        # Accumulate weighted rate and time
-        total_weighted_tracked_value += averaged_tracked_value * time_delta
-        total_time += time_delta
-
-    assert total_time > 0, "Zero total time!"
-    twa: uint256 = total_weighted_tracked_value // total_time
-
-    return twa
-```
