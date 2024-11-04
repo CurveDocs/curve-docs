@@ -1,14 +1,12 @@
 <h1>Savings crvUSD</h1>
 
-Savings crvUSD, in short scrvUSD, is a savings version of crvUSD. 
+Savings crvUSD, in short scrvUSD, is a savings version of crvUSD.
 
 
 ---
 
 
 # **Smart Contracts**
-
-The Savings crvUSD system consists of multiple smart contracts:
 
 <div class="grid cards" markdown>
 
