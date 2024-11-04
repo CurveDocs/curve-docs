@@ -1,4 +1,4 @@
-<h1>RewardsHandler.vy</h1>
+<h1>RewardsHandler</h1>
 
 <script src="/assets/javascripts/contracts/scrvusd/rewards-handler.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
