@@ -39,14 +39,22 @@ The documentation of the `FeeSplitter` contract can be found [here](https://docs
 
 </div>
 
+---
 
 ## **Deployments**
 
-The contracts are deployed at the following addresses:
+The main `scrvUSD` contracts are deployed on :logos-ethereum: Ethereum at the following addresses:
 
-- `Vault` on :logos-ethereum: Ethereum at [0x0655977FEb2f289A4aB78af67BAB0d17aAb84367](https://etherscan.io/address/0x0655977FEb2f289A4aB78af67BAB0d17aAb84367)
-- `RewardsHandler` on :logos-ethereum: Ethereum at [0xe8d1e2531761406af1615a6764b0d5ff52736f56](https://etherscan.io/address/0xe8d1e2531761406af1615a6764b0d5ff52736f56)
-- `StablecoinLens` on :logos-ethereum: Ethereum at [0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7](https://etherscan.io/address/0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7)
+- `scrvUSD / Vault` at [0x0655977FEb2f289A4aB78af67BAB0d17aAb84367](https://etherscan.io/address/0x0655977FEb2f289A4aB78af67BAB0d17aAb84367)
+- `RewardsHandler` at [0xe8d1e2531761406af1615a6764b0d5ff52736f56](https://etherscan.io/address/0xe8d1e2531761406af1615a6764b0d5ff52736f56)
+- `StablecoinLens` at [0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7](https://etherscan.io/address/0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7)
+
+
+Additionally, the `scrvUSD` token is bridged using the [x-dao](crosschain.md#curve-x-dao) system to the following chains:
+
+- :logos-fantom: Fantom at [`0x5191946500e75f0A74476F146dF7d386e52961d9`](https://ftmscan.com/address/0x5191946500e75f0A74476F146dF7d386e52961d9)
+- :logos-bsc: BinanceSmartChain at [`0x0094Ad026643994c8fB2136ec912D508B15fe0E5`](https://bscscan.com/address/0x0094Ad026643994c8fB2136ec912D508B15fe0E5)
+- :logos-avalanche: Avalanche at [`0xA3ea433509F7941df3e33857D9c9f212Ad4A4e64`](https://snowscan.xyz/address/0xA3ea433509F7941df3e33857D9c9f212Ad4A4e64)
 
 
 ---

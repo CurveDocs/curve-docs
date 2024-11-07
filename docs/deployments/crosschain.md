@@ -237,11 +237,14 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../curve_
 | :------------ | :--------------- |
 | CRV ETH Bridge (LayerZero) | [`0x5cc0144A511807608eF644c9e99B486124D1cFd6`](https://snowscan.xyz/address/0x5cc0144A511807608eF644c9e99B486124D1cFd6#code) |
 | CRVUSD ETH Bridge (LayerZero) | [`0x26D01ce989037befd7Ff63837A86e2da32E7D7e2`](https://snowscan.xyz/address/0x26D01ce989037befd7Ff63837A86e2da32E7D7e2#code) |
+| SCRVUSD ETH Bridge (LayerZero) | [`0x26E91B1f142b9bF0bB37e82959bA79D2Aa6b99b8`](https://snowscan.xyz/address/0x26E91B1f142b9bF0bB37e82959bA79D2Aa6b99b8#code) |
 | Block Hash Oracle | [`0xD823D2a2B5AF77835e972A0D5B77f5F5A9a003A6`](https://snowscan.xyz/address/0xD823D2a2B5AF77835e972A0D5B77f5F5A9a003A6#code) |
 | CRV Minter | [`0xcaf4969dAb56C20fCb89ceC041079AB02158fE3E`](https://snowscan.xyz/address/0xcaf4969dAb56C20fCb89ceC041079AB02158fE3E#code) |
 | CRVUSD Minter | [`0x4765288DE2672A961cc5A9f52bE75005cAF005a5`](https://snowscan.xyz/address/0x4765288DE2672A961cc5A9f52bE75005cAF005a5#code) |
+| SCRVUSD Minter | [`0x47ca04Ee05f167583122833abfb0f14aC5677Ee4`](https://snowscan.xyz/address/0x47ca04Ee05f167583122833abfb0f14aC5677Ee4#code) |
 | Token (CRV20) | [`0xEEbC562d445F4bC13aC75c8caABb438DFae42A1B`](https://snowscan.xyz/address/0xEEbC562d445F4bC13aC75c8caABb438DFae42A1B#code) |
 | Token (CRVUSD) | [`0xCb7c161602d04C4e8aF1832046EE08AAF96d855D`](https://snowscan.xyz/address/0xCb7c161602d04C4e8aF1832046EE08AAF96d855D#code) |
+| Token (SCRVUSD) | [`0xA3ea433509F7941df3e33857D9c9f212Ad4A4e64`](https://snowscan.xyz/address/0xA3ea433509F7941df3e33857D9c9f212Ad4A4e64#code) |
 | Gauge Type Oracle | [`0x01689FE734D0aA98be3A9a761aE11a20Dd968E41`](https://snowscan.xyz/address/0x01689FE734D0aA98be3A9a761aE11a20Dd968E41#code) |
 | Gauge Type Prover | [`0x0B2584EfC66e9954e72d516be2Bb855EF0Defe62`](https://snowscan.xyz/address/0x0B2584EfC66e9954e72d516be2Bb855EF0Defe62#code) |
 | Message Digest Prover | [`0xd5cF10C83aC5F30Ab27B6156DA9c238Aa63a63d0`](https://snowscan.xyz/address/0xd5cF10C83aC5F30Ab27B6156DA9c238Aa63a63d0#code) |
@@ -253,11 +256,14 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../curve_
 | :------------ | :--------------- |
 | CRV ETH Bridge (LayerZero) | [`0x7ce8aF75A9180B602445bE230860DDcb4cAc3E42`](https://ftmscan.com/address/0x7ce8aF75A9180B602445bE230860DDcb4cAc3E42#code) |
 | CRVUSD ETH Bridge (LayerZero) | [`0x76EAfda658C54548B460B3f190386699DE3827d8`](https://ftmscan.com/address/0x76EAfda658C54548B460B3f190386699DE3827d8#code) |
+| SCRVUSD ETH Bridge (LayerZero) | [`0x08132eA9b02750E118cF5F5C640B7c46A8E638E8`](https://ftmscan.com/address/0x08132eA9b02750E118cF5F5C640B7c46A8E638E8#code) |
 | Block Hash Oracle | [`0xF179D410C710e3c35A17468B2624dCFCC7DB8267`](https://ftmscan.com/address/0xF179D410C710e3c35A17468B2624dCFCC7DB8267#code) |
 | CRV Minter | [`0x444D6B4d7Ad9521FbFB563B4f896ace22DDB70c6`](https://ftmscan.com/address/0x444D6B4d7Ad9521FbFB563B4f896ace22DDB70c6#code) |
 | CRVUSD Minter | [`0x01689FE734D0aA98be3A9a761aE11a20Dd968E41`](https://ftmscan.com/address/0x01689FE734D0aA98be3A9a761aE11a20Dd968E41#code) |
+| SCRVUSD Minter | [`0xF830b9E88f994BbB069aC884d40fA2E09d050BB8`](https://ftmscan.com/address/0xF830b9E88f994BbB069aC884d40fA2E09d050BB8#code) |
 | Token (CRV20) | [`0xE6c259bc0FCE25b71fE95A00361D3878E16232C3`](https://ftmscan.com/address/0xE6c259bc0FCE25b71fE95A00361D3878E16232C3#code) |
 | Token (CRVUSD) | [`0xD823D2a2B5AF77835e972A0D5B77f5F5A9a003A6`](https://ftmscan.com/address/0xD823D2a2B5AF77835e972A0D5B77f5F5A9a003A6#code) |
+| Token (SCRVUSD) | [`0x5191946500e75f0A74476F146dF7d386e52961d9`](https://ftmscan.com/address/0x5191946500e75f0A74476F146dF7d386e52961d9#code) |
 | Gauge Type Oracle | [`0x898Cd2cCE27CE3eb7eACBDD85FEd8181379f0F46`](https://ftmscan.com/address/0x898Cd2cCE27CE3eb7eACBDD85FEd8181379f0F46#code) |
 | Gauge Type Prover | [`0x7FA0a0E2820b7B12aeFb3A2A3c0C6F83aAD87054`](https://ftmscan.com/address/0x7FA0a0E2820b7B12aeFb3A2A3c0C6F83aAD87054#code) |
 | Message Digest Prover | [`0xAb0ab357a10c0161002A91426912933750082A9d`](https://ftmscan.com/address/0xAb0ab357a10c0161002A91426912933750082A9d#code) |
@@ -269,11 +275,14 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../curve_
 | :------------ | :--------------- |
 | CRV ETH Bridge (LayerZero) | [`0xC91113B4Dd89dd20FDEECDAC82477Bc99A840355`](https://bscscan.com/address/0xC91113B4Dd89dd20FDEECDAC82477Bc99A840355#code) |
 | crvUSD ETH Bridge (LayerZero) | [`0x0A92Fd5271dB1C41564BD01ef6b1a75fC1db4d4f`](https://bscscan.com/address/0x0A92Fd5271dB1C41564BD01ef6b1a75fC1db4d4f#code) |
+| SCRVUSD ETH Bridge (LayerZero) | [`0xAE0666C978500f2C05784242B79B08C478Dd999c`](https://bscscan.com/address/0xAE0666C978500f2C05784242B79B08C478Dd999c#code) |
 | Block Hash Oracle | [`0x7cDe6Ef7e2e2FD3B6355637F1303586D7262ba37`](https://bscscan.com/address/0x7cDe6Ef7e2e2FD3B6355637F1303586D7262ba37#code) |
-| Minter | [`0x458599F83764aE9D0528301c1b6CB18dE63726bF`](https://bscscan.com/address/0x458599F83764aE9D0528301c1b6CB18dE63726bF#code) |
+| CRV Minter | [`0x458599F83764aE9D0528301c1b6CB18dE63726bF`](https://bscscan.com/address/0x458599F83764aE9D0528301c1b6CB18dE63726bF#code) |
+| CRVUSD Minter | [`0xc417E91098402Dd4F677782a2eC204C429CE513A`](https://bscscan.com/address/0xc417E91098402Dd4F677782a2eC204C429CE513A#code) |
+| SCRVUSDMinter | [`0x4C62AC3F6088E882C9B2a315056bc298D22128bd`](https://bscscan.com/address/0x4C62AC3F6088E882C9B2a315056bc298D22128bd#code) |
 | Token (CRV20) | [`0x9996D0276612d23b35f90C51EE935520B3d7355B`](https://bscscan.com/address/0x9996D0276612d23b35f90C51EE935520B3d7355B#code) |
 | Token (CRVUSD) | [`0xe2fb3F127f5450DeE44afe054385d74C392BdeF4`](https://bscscan.com/address/0xe2fb3F127f5450DeE44afe054385d74C392BdeF4#code) |
-| Minter (CRVUSD) | [`0xc417E91098402Dd4F677782a2eC204C429CE513A`](https://bscscan.com/address/0xc417E91098402Dd4F677782a2eC204C429CE513A#code) |
+| Token (SCRVUSD) | [`0x0094Ad026643994c8fB2136ec912D508B15fe0E5`](https://bscscan.com/address/0x0094Ad026643994c8fB2136ec912D508B15fe0E5#code) |
 | Gauge Type Oracle | [`0x60dcc21869C6De55b50a196bE3c6D2Da189efD18`](https://bscscan.com/address/0x60dcc21869C6De55b50a196bE3c6D2Da189efD18#code) |
 | Gauge Type Prover | [`0xd7454AEbf1C37661dfb5d2857F6aF7a2E09975bc`](https://bscscan.com/address/0xd7454AEbf1C37661dfb5d2857F6aF7a2E09975bc#code) |
 | Message Digest Prover | [`0xbfF1f56c8e48e2F2F52941e16FEecc76C49f1825`](https://bscscan.com/address/0xbfF1f56c8e48e2F2F52941e16FEecc76C49f1825#code) |
