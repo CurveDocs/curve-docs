@@ -347,6 +347,6 @@ nav:
     - Cross-Chain Gauges & Governance: deployments/crosschain.md
     - AMM: deployments/amm.md
     - Router & Zaps: deployments/router-zaps.md
-    - Curve Stablecoin: deployments/crvusd.md
-    - Curve Lending: deployments/lending.md
+    - crvUSD & scrvUSD: deployments/crvusd.md
+    - Lending: deployments/lending.md
     - Integration: deployments/integration.md
