@@ -215,8 +215,8 @@ nav:
   - Savings crvUSD:
     - Overview: scrvusd/overview.md
     - RewardsHandler: scrvusd/RewardsHandler.md
-    - StablecoinLens: scrvusd/StablecoinLens.md 
-
+    - StablecoinLens: scrvusd/StablecoinLens.md
+    - Crosschain scrvUSD Oracle: scrvusd/crosschain-oracle.md
 
   - Curve Lending:
     - Overview: lending/overview.md
