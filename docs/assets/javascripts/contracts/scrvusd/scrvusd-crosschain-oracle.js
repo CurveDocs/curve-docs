@@ -39,12 +39,18 @@ document.addEventListener('DOMContentLoaded', async function() {
                 if (element) {
                     if (result.success) {
                         let decodedResult;
-                        if (index === 0) { // price is uint256
-                            decodedResult = web3.eth.abi.decodeParameter('uint256', result.returnData);
-                            element.textContent = decodedResult;
-                        } else if (index === 1) { // time is uint256
-                            decodedResult = web3.eth.abi.decodeParameter('uint256', result.returnData);
-                            element.textContent = decodedResult;
+                        if (index === 0) { // price is tuple(uint256,uint256)
+                            decodedResult = web3.eth.abi.decodeParameters(
+                                ['tuple(uint256 previous, uint256 future)'], 
+                                result.returnData
+                            )[0];
+                            element.textContent = `{previous: ${decodedResult.previous}, future: ${decodedResult.future}}`;
+                        } else if (index === 1) { // time is tuple(uint256,uint256)
+                            decodedResult = web3.eth.abi.decodeParameters(
+                                ['tuple(uint256 previous, uint256 future)'], 
+                                result.returnData
+                            )[0];
+                            element.textContent = `{previous: ${decodedResult.previous}, future: ${decodedResult.future}}`;
                         } else if (index === 2) { // price_oracle is uint256
                             decodedResult = web3.eth.abi.decodeParameter('uint256', result.returnData);
                             element.textContent = decodedResult;

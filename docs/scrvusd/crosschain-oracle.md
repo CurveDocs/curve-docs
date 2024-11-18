@@ -3,29 +3,25 @@
 <script src="/assets/javascripts/contracts/scrvusd/scrvusd-crosschain-oracle.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
 
-`scrvUSD` is a ERC-4626 compatible token. While the contract provides a price by different methods such as `pricePerShare` or `pricePerAsset`, when bridging it to other chains, it is not treated as a ERC-4626 token, and will not have methods to returns its price. Therefore, Curve uses a system to commit and prove the price of `scrvUSD` on other chains.
 
-*The system consists of three contracts, all documented below:*
-
-- `ScrvusdOracle`: The main contract responsible for updating the price of the scrvUSD token.
-- `BlockHashOracle`: A contract that provides the latest block hash for the given chain.
-- `ScrvusdProver`: A contract that verifies the authenticity of the scrvUSD price update.
+`scrvUSD` on Ethereum is an ERC-4626 compatible token. While the contract provides a price through various methods, such as `pricePerShare` or `pricePerAsset`, it is not treated as an ERC-4626 token when bridged to other chains. Consequently, it will lack methods to return its continuously updating price. To address this, Curve uses a system to commit to and verify the price of `scrvUSD` on other chains.
 
 
-???+abstract "scrvUSD Crosschain System"
+???+abstract "Smart Contracts"
 
     The source code for the contracts is available on [:material-github: GitHub](https://github.com/curvefi/curve-xdao):
   
-    - [:logos-vyper: `ScrvusdOracle.vy`](https://github.com/curvefi/curve-xdao/blob/feat/scrvusd-oracle/contracts/oracles/ScrvusdOracle.vy) written in [Vyper](https://vyperlang.org/) version `0.4.0`
+    - [:logos-vyper: `scrvUSDOracle.vy`](https://github.com/curvefi/curve-xdao/blob/feat/scrvusd-oracle/contracts/oracles/scrvUSDOracle.vy) written in [Vyper](https://vyperlang.org/) version `0.4.0`
     - [:logos-vyper: `BlockHashOracle.vy`](https://github.com/curvefi/curve-xdao/blob/feat/scrvusd-oracle/contracts/oracles/BlockHashOracle.vy) written in [Vyper](https://vyperlang.org/) version `0.3.10`
     - [:logos-solidity: `ScrvusdProver.sol`](https://github.com/curvefi/curve-xdao/blob/feat/scrvusd-oracle/contracts/provers/ScrvusdProver.sol) written in [Solidity](https://soliditylang.org/) version `0.8.18`
 
+    **NOTE: Source code and versions may vary between different chains.**
 
     === ":logos-optimism: Optimism"
 
         |Contract | Address |
         | ------------- | ---------------- |
-        | `ScrvusdOracle` | [`0xC772063cE3e622B458B706Dd2e36309418A1aE42`](https://optimistic.etherscan.io/address/0xC772063cE3e622B458B706Dd2e36309418A1aE42) |
+        | `scrvUSDOracle` | [`0xC772063cE3e622B458B706Dd2e36309418A1aE42`](https://optimistic.etherscan.io/address/0xC772063cE3e622B458B706Dd2e36309418A1aE42) |
         | `Prover` | [`0x47ca04Ee05f167583122833abfb0f14aC5677Ee4`](https://optimistic.etherscan.io/address/0x47ca04Ee05f167583122833abfb0f14aC5677Ee4) |
         | `BlockHashOracle` | [`0x988d1037e9608B21050A8EFba0c6C45e01A3Bce7`](https://optimistic.etherscan.io/address/0x988d1037e9608B21050A8EFba0c6C45e01A3Bce7) |
 
@@ -34,7 +30,7 @@
 
         | Contract | Address |
         | ------------- | ---------------- |
-        | `ScrvusdOracle` | [`0x09F8D940EAD55853c51045bcbfE67341B686C071`](https://fraxscan.com/address/0x09F8D940EAD55853c51045bcbfE67341B686C071) |
+        | `scrvUSDOracle` | [`0x09F8D940EAD55853c51045bcbfE67341B686C071`](https://fraxscan.com/address/0x09F8D940EAD55853c51045bcbfE67341B686C071) |
         | `Prover` | [`0x0094Ad026643994c8fB2136ec912D508B15fe0E5`](https://fraxscan.com/address/0x0094Ad026643994c8fB2136ec912D508B15fe0E5) |
         | `BlockHashOracle` | [`0xbD2775B8eADaE81501898eB208715f0040E51882`](https://fraxscan.com/address/0xbD2775B8eADaE81501898eB208715f0040E51882) |
 
@@ -44,7 +40,7 @@
 
         | Contract | Address |
         | ------------- | ---------------- |
-        | `ScrvusdOracle` | [`0x3d8EADb739D1Ef95dd53D718e4810721837c69c1`](https://basescan.org/address/0x3d8EADb739D1Ef95dd53D718e4810721837c69c1) |
+        | `scrvUSDOracle` | [`0x3d8EADb739D1Ef95dd53D718e4810721837c69c1`](https://basescan.org/address/0x3d8EADb739D1Ef95dd53D718e4810721837c69c1) |
         | `Prover` | [`0x6a2691068C7CbdA03292Ba0f9c77A25F658bAeF5`](https://basescan.org/address/0x6a2691068C7CbdA03292Ba0f9c77A25F658bAeF5) |
         | `BlockHashOracle` | [`0x3c0a405E914337139992625D5100Ea141a9C4d11`](https://basescan.org/address/0x3c0a405E914337139992625D5100Ea141a9C4d11) |
 
@@ -53,9 +49,28 @@
 
         | Contract | Address |
         | ------------- | ---------------- |
-        | `ScrvusdOracle` | [`0xbD2775B8eADaE81501898eB208715f0040E51882`](https://mantlescan.xyz/address/0xbD2775B8eADaE81501898eB208715f0040E51882) |
+        | `scrvUSDOracle` | [`0xbD2775B8eADaE81501898eB208715f0040E51882`](https://mantlescan.xyz/address/0xbD2775B8eADaE81501898eB208715f0040E51882) |
         | `Prover` | [`0x09F8D940EAD55853c51045bcbfE67341B686C071`](https://mantlescan.xyz/address/0x09F8D940EAD55853c51045bcbfE67341B686C071) |
         | `BlockHashOracle` | [`0x004A476B5B76738E34c86C7144554B9d34402F13`](https://mantlescan.xyz/address/0x004A476B5B76738E34c86C7144554B9d34402F13) |
+
+
+The cross-chain scrvUSD system operates through three main components working together:
+
+1. **Block Hash Oracle**: 
+    - Provides Ethereum block hash values across different chains.
+    - Maintains a record of the latest known Ethereum block hashes on L2s.
+    - Implemented as a separate contract to handle uncertain block timing and enable reuse.
+
+2. **Prover**:
+    - Uses verified block hashes to validate storage proofs.
+    - Each block hash represents a Merkle tree containing various data, including storage slots.
+    - Verifies all storage slots needed for rate replication.
+
+3. **scrvUSD Oracle**:
+    - Receives verified storage values from the Prover.
+    - Calculates and stores the scrvUSD rate.
+    - Implements time-weighted updates to prevent sudden changes that could enable sandwich attacks.
+    - Controls the rate of change using the `max_acceleration` parameter.
 
 
 ---
@@ -63,26 +78,26 @@
 
 # **scrvUSD Oracle**
 
-Contract which contains informations about the price of scrvUSD. Uses a `max_acceleration` parameter to limit the rate of price updates. The oracle has a `price_oracle` method to ensure compatibility with other smart contracts such as Stableswap implementations.
+Contract that contains information about the price of scrvUSD. It uses a `max_acceleration` parameter to limit the rate of price updates. The oracle includes a `price_oracle` method to ensure compatibility with other smart contracts, such as Stableswap implementations.
 
 ## **Price Methods**
 
 ### `update_price`
-!!! description "`ScrvusdOracle.update_price(_parameters: uint256[ASSETS_PARAM_CNT + SUPPLY_PARAM_CNT]) -> uint256`"
+!!! description "`scrvUSDOracle.update_price(_parameters: uint256[ASSETS_PARAM_CNT + SUPPLY_PARAM_CNT]) -> uint256`"
 
     Function to update the price of the scrvUSD token.
 
-    Returns: relative price change of final price with 10^18 precision (`uint256`).
+    Returns: relative price change of final price with 10**18 precision (`uint256`).
 
     Emits: `PriceUpdate` event.
 
     | Input         | Type      | Description                  |
     | ------------- | --------- | ---------------------------- |
-    | `_parameters` | `uint256[ASSETS_PARAM_CNT + SUPPLY_PARAM_CNT]` | Parameters of the scrvUSD token |
+    | `_parameters` | `uint256[ASSETS_PARAM_CNT + SUPPLY_PARAM_CNT]` | Parameters |
 
     ??? quote "Source code"
 
-        === "ScrvusdOracle.vy"
+        === "scrvUSDOracle.vy"
 
             ```python
             event PriceUpdate:
@@ -177,18 +192,18 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
         This example updates the price of the scrvUSD token.
 
         ```py
-        >>> ScrvusdOracle.price()
+        >>> scrvUSDOracle.price()
         1008353536323212312
 
-        >>> ScrvusdOracle.update_price()
+        >>> scrvUSDOracle.update_price()
 
-        >>> ScrvusdOracle.price()
+        >>> scrvUSDOracle.price()
         1009393556372147140
         ```
 
 
 ### `price`
-!!! description "`ScrvusdOracle.price() -> Interval: view`"
+!!! description "`scrvUSDOracle.price() -> Interval: view`"
 
     Getter for the previous and future price of crvUSD.
 
@@ -196,7 +211,7 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
 
     ??? quote "Source code"
 
-        === "ScrvusdOracle.vy"
+        === "scrvUSDOracle.vy"
 
             ```python
             struct Interval:
@@ -211,20 +226,20 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the price of scrvUSD on Optimism.
 
         <div class="highlight">
-        <pre><code>>>> ScrvusdOracle.price() <span id="priceOutput"></span></code></pre>
+        <pre><code>>>> scrvUSDOracle.price() <span id="priceOutput"></span></code></pre>
         </div>
 
 
 ### `time`
-!!! description "`ScrvusdOracle.time() -> Interval: view`"
+!!! description "`scrvUSDOracle.time() -> Interval: view`"
 
-    Getter for the previous and future time of crvUSD the price will be updated.
+    Getter for the previous and future time of when the price will be updated.
 
-    Returns: `Interval` struct containing `previous` and `future` timestamps.
+    Returns: `Interval` struct containing `previous` and `future` timestamps (`uint256`).
 
     ??? quote "Source code"
 
-        === "ScrvusdOracle.vy"
+        === "scrvUSDOracle.vy"
 
             ```python
             struct Interval:
@@ -239,12 +254,12 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the time of the previous and future price updates on Optimism.
 
         <div class="highlight">
-        <pre><code>>>> ScrvusdOracle.time() <span id="timeOutput"></span></code></pre>
+        <pre><code>>>> scrvUSDOracle.time() <span id="timeOutput"></span></code></pre>
         </div>
 
 
 ### `pricePerShare`
-!!! description "`ScrvusdOracle.pricePerShare(_ts: uint256) -> uint256: view`"
+!!! description "`scrvUSDOracle.pricePerShare(_ts: uint256) -> uint256: view`"
 
     !!!warning
         This function is not precise. The price is smoothed over time to eliminate sharp changes. Only timestamps near the future are supported.
@@ -255,11 +270,11 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
 
     | Input         | Type      | Description                  |
     | ------------- | --------- | ---------------------------- |
-    | `_ts`         | `uint256` | Timestamp to look price at |
+    | `_ts`         | `uint256` | Timestamp to get the price at |
 
     ??? quote "Source code"
 
-        === "ScrvusdOracle.vy"
+        === "scrvUSDOracle.vy"
 
             ```python
             struct Interval:
@@ -298,7 +313,7 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the price per share of the scrvUSD token at a specific timestamp on Optimism.
 
         <div class="highlight">
-        <pre><code>>>> ScrvusdOracle.pricePerShare(<input id="pricePerShareTimestamp" type="number" 
+        <pre><code>>>> scrvUSDOracle.pricePerShare(<input id="pricePerShareTimestamp" type="number" 
         style="width: 70px; 
             background: transparent; 
             border: none; 
@@ -321,7 +336,7 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
 
 
 ### `pricePerAsset`
-!!! description "`ScrvusdOracle.pricePerAsset(_ts: uint256) -> uint256: view`"
+!!! description "`scrvUSDOracle.pricePerAsset(_ts: uint256) -> uint256: view`"
 
     !!!warning
         This function is not precise. The price is smoothed over time to eliminate sharp changes. Only timestamps near the future are supported.
@@ -332,11 +347,11 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
 
     | Input         | Type      | Description                  |
     | ------------- | --------- | ---------------------------- |
-    | `_ts`         | `uint256` | Timestamp to look price at |
+    | `_ts`         | `uint256` | Timestamp to get the price at |
 
     ??? quote "Source code"
 
-        === "ScrvusdOracle.vy"
+        === "scrvUSDOracle.vy"
 
             ```python
             struct Interval:
@@ -375,7 +390,7 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the price per asset of the scrvUSD token at a specific timestamp on Optimism.
 
         <div class="highlight">
-        <pre><code>>>> ScrvusdOracle.pricePerAsset(<input id="pricePerAssetTimestamp" type="number" 
+        <pre><code>>>> scrvUSDOracle.pricePerAsset(<input id="pricePerAssetTimestamp" type="number" 
         style="width: 70px; 
             background: transparent; 
             border: none; 
@@ -398,7 +413,7 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
 
 
 ### `price_oracle`
-!!! description "`ScrvusdOracle.price_oracle() -> uint256: view`"
+!!! description "`scrvUSDOracle.price_oracle() -> uint256: view`"
 
     Getter for the price of the scrvUSD token. This function is an alias for `pricePerShare` and `pricePerAsset` and is made for compatability reasons.
 
@@ -406,7 +421,7 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
 
     ??? quote "Source code"
 
-        === "ScrvusdOracle.vy"
+        === "scrvUSDOracle.vy"
 
             ```python
             struct Interval:
@@ -444,18 +459,19 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the price of scrvUSD on Optimism.
 
         <div class="highlight">
-        <pre><code>>>> ScrvusdOracle.price_oracle() <span id="priceOracleOutput"></span></code></pre>
+        <pre><code>>>> scrvUSDOracle.price_oracle() <span id="priceOracleOutput"></span></code></pre>
         </div>
 
 
 ---
 
 
-## **Acceleration and Prover**
+## **Oracle Acceleration**
 
+Because the rates are stored over time, the price can change suddenly and can lead to sandwich attacks. To prevent this, the `max_acceleration` parameter is used to limit the rate of price updates.
 
 ### `max_acceleration`
-!!! description "`ScrvusdOracle.max_acceleration() -> uint256: view`"
+!!! description "`scrvUSDOracle.max_acceleration() -> uint256: view`"
 
     Getter for the maximum acceleration. The value is set at initialization and can be changed by the [`owner`](#owner) using the [`set_max_acceleration`](#set_max_acceleration) function.
 
@@ -463,7 +479,7 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
 
     ??? quote "Source code"
 
-        === "ScrvusdOracle.vy"
+        === "scrvUSDOracle.vy"
 
             ```python
             max_acceleration: public(uint256)  # precision 10**18
@@ -487,12 +503,12 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the maximum acceleration of the oracleon Optimism.
 
         <div class="highlight">
-        <pre><code>>>> ScrvusdOracle.max_acceleration() <span id="maxAccelerationOutput"></span></code></pre>
+        <pre><code>>>> scrvUSDOracle.max_acceleration() <span id="maxAccelerationOutput"></span></code></pre>
         </div>
 
 
 ### `set_max_acceleration`
-!!! description "`ScrvusdOracle.set_max_acceleration(_max_acceleration: uint256)`"
+!!! description "`scrvUSDOracle.set_max_acceleration(_max_acceleration: uint256)`"
 
     !!!guard "Guarded Method by Snekmate 🐍"
         This contract makes use of a Snekmate module to manage roles and permissions. This specific function is only callable by the `owner`.
@@ -505,7 +521,7 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
 
     ??? quote "Source code"
 
-        === "ScrvusdOracle.vy"
+        === "scrvUSDOracle.vy"
 
             ```python
             max_acceleration: public(uint256)  # precision 10**18
@@ -527,18 +543,23 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
     === "Example"
 
         ```py
-        >>> ScrvusdOracle.max_acceleration()
+        >>> scrvUSDOracle.max_acceleration()
         1000000000000000000
 
-        >>> ScrvusdOracle.set_max_acceleration(10**11)
+        >>> scrvUSDOracle.set_max_acceleration(10**11)
 
-        >>> ScrvusdOracle.max_acceleration()
+        >>> scrvUSDOracle.max_acceleration()
         100000000000000000
         ```
 
 
+---
+
+
+## **Prover**
+
 ### `prover`
-!!! description "`ScrvusdOracle.prover() -> address: view`"
+!!! description "`scrvUSDOracle.prover() -> address: view`"
 
     Getter for the prover address. The address can be changed using the [`set_prover`](#set_prover) function.
 
@@ -546,7 +567,7 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
 
     ??? quote "Source code"
 
-        === "ScrvusdOracle.vy"
+        === "scrvUSDOracle.vy"
 
             ```python
             prover: public(address)
@@ -557,12 +578,12 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the prover contract on Optimism.
 
         <div class="highlight">
-        <pre><code>>>> ScrvusdOracle.prover() <span id="proverOutput"></span></code></pre>
+        <pre><code>>>> scrvUSDOracle.prover() <span id="proverOutput"></span></code></pre>
         </div>
 
 
 ### `set_prover`
-!!! description "`ScrvusdOracle.set_prover(_prover: address)`"
+!!! description "`scrvUSDOracle.set_prover(_prover: address)`"
 
     !!!guard "Guarded Method by Snekmate 🐍"
         This contract makes use of a Snekmate module to manage roles and permissions. This specific function is only callable by the `owner`.
@@ -575,7 +596,7 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
 
     ??? quote "Source code"
 
-        === "ScrvusdOracle.vy"
+        === "scrvUSDOracle.vy"
 
             ```python
             prover: public(address)
@@ -596,12 +617,12 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
         This example sets the prover to the `0x47ca04Ee05f167583122833abfb0f14aC5677Ee4` contract.
 
         ```py
-        >>> ScrvusdOracle.prover()
+        >>> scrvUSDOracle.prover()
         '0x0000000000000000000000000000000000000000'
 
-        >>> ScrvusdOracle.set_prover('0x47ca04Ee05f167583122833abfb0f14aC5677Ee4')
+        >>> scrvUSDOracle.set_prover('0x47ca04Ee05f167583122833abfb0f14aC5677Ee4')
 
-        >>> ScrvusdOracle.prover()
+        >>> scrvUSDOracle.prover()
         '0x47ca04Ee05f167583122833abfb0f14aC5677Ee4'
         ```
 
@@ -611,7 +632,7 @@ Contract which contains informations about the price of scrvUSD. Uses a `max_acc
 
 # **Block Hash Oracle**
 
-todo
+The `BlockHashOracle` contract is providing Ethereum's `blockhash(block number)` values. Optimism stores some latest known blockhash, so the OP stack oracle works like simply saving latest known.
 
 ### `commit`
 !!! description "`BlockHashOracle.commit(_block_number: uint256) -> uint256: view`"
@@ -619,6 +640,10 @@ todo
     Function to commit (and apply) a block hash.
 
     Returns: block number (`uint256`).
+
+    | Input | Type | Description |
+    | ----- | ---- | ----------- |
+    | `_block_number` | `uint256` | Block number |
 
     ??? quote "Source code"
 
@@ -731,6 +756,10 @@ todo
 
     Returns: block hash (`bytes32`).
 
+    | Input | Type | Description |
+    | ----- | ---- | ----------- |
+    | `_number` | `uint256` | Block number |
+
     ??? quote "Source code"
 
         === "BlockHashOracle.vy"
@@ -770,6 +799,11 @@ todo
     Getter for the block hash of a given block number.
 
     Returns: block hash (`bytes32`).
+
+
+    | Input | Type | Description |
+    | ----- | ---- | ----------- |
+    | `_number` | `uint256` | Block number |
 
     ??? quote "Source code"
 
@@ -824,8 +858,6 @@ todo
 
 # **scrvUSD Prover**
 
-
-
 ### `prove`
 !!! description "`ScrvusdProver.prove(bytes, bytes) -> bool`"
 
@@ -847,7 +879,7 @@ todo
                 function get_block_hash(uint256 _number) external view returns (bytes32);
             }
 
-            interface IScrvusdOracle {
+            interface IscrvUSDOracle {
                 function update_price(
                     uint256[2 + 6] memory _parameters
                 ) external returns (uint256);
@@ -935,7 +967,7 @@ todo
                         i++;
                     }
                     params[i] = block_header.timestamp;
-                    return IScrvusdOracle(SCRVUSD_ORACLE).update_price(params);
+                    return IscrvUSDOracle(SCRVUSD_ORACLE).update_price(params);
                 }
             }
             ```
@@ -948,9 +980,9 @@ todo
 
 
 ### `BLOCK_HASH_ORACLE`
-!!! description "`BlockHashOracle.version() -> String[8]: view`"
+!!! description "`ScrvusdProver.BLOCK_HASH_ORACLE() -> address: view`"
 
-    Getter for the `BlockHashOracle` contract address.
+    Getter for the `BlockHashOracle` contract.
 
     Returns: `BlockHashOracle` contract (`address`).
 
@@ -977,11 +1009,11 @@ todo
 
 
 ### `SCRVUSD_ORACLE`
-!!! description "`BlockHashOracle.version() -> String[8]: view`"
+!!! description "`ScrvusdProver.SCRVUSD_ORACLE() -> address: view`"
 
-    Getter for the `ScrvusdOracle` contract address.
+    Getter for the `scrvUSDOracle` contract.
 
-    Returns: `ScrvusdOracle` contract (`address`).
+    Returns: `scrvUSDOracle` contract (`address`).
 
     ??? quote "Source code"
 
@@ -1001,5 +1033,5 @@ todo
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the scrvUSD oracle contract on Optimism.
 
         <div class="highlight">
-        <pre><code>>>> Prover.SCRVUSD_ORACLE() <span id="scrvusdOracleOutput"></span></code></pre>
+        <pre><code>>>> Prover.SCRVUSD_ORACLE() <span id="scrvUSDOracleOutput"></span></code></pre>
         </div>
