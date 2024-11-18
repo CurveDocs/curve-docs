@@ -216,10 +216,7 @@ nav:
     - Overview: scrvusd/overview.md
     - RewardsHandler: scrvusd/RewardsHandler.md
     - StablecoinLens: scrvusd/StablecoinLens.md
-    - Crosschain scrvUSD:
-      - Oracle: scrvusd/crosschain/scrvusd-oracle.md
-      - Prover: scrvusd/crosschain/scrvusd-prover.md
-      - BlockHashOracle: scrvusd/crosschain/block-hash-oracle.md
+    - Crosschain scrvUSD Oracle: scrvusd/crosschain-oracle.md
 
   - Curve Lending:
     - Overview: lending/overview.md
