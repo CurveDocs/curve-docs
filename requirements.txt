@@ -5,3 +5,4 @@ mkdocs-minify-plugin
 pymdown-extensions
 mkdocs-git-revision-date-localized-plugin
 mkdocs-swagger-ui-tag
+markdown-tables-extended
