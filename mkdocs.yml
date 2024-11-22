@@ -341,6 +341,7 @@ nav:
     - Useful Resources: references/useful.md
     - Notebooks: references/notebooks.md
 
+  - Security: security/security.md
 
   - Deployment Addresses:
     - Curve DAO: deployments/dao.md
