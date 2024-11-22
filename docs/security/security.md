@@ -78,7 +78,7 @@ Provide enough information about the vulnerability
 
     ---
 
-    Auditor: [:logos-quantstamp2: Quantstamp](https://quantstamp.com/)  
+    Auditor: [:logos-quantstamp: Quantstamp](https://quantstamp.com/)  
     Date: 5. August, 2020
 
     [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/curve-dao-quantstamp.pdf)
@@ -108,7 +108,7 @@ Provide enough information about the vulnerability
 
     ---
 
-    Auditor: [:logos-quantstamp2: Quantstamp](https://quantstamp.com/)  
+    Auditor: [:logos-quantstamp: Quantstamp](https://quantstamp.com/)  
     Date: 15. October, 2020
 
     [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/CurveMetapoolAudit.pdf)
