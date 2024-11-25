@@ -1,12 +1,12 @@
 <h1>ChildGaugeFactory</h1>
 
-<script src="/assets/javascripts/contracts/childgaugefactory.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+The `ChildGaugeFactory` contract is used to deploy liquidity gauges on the child chains. It serves as some sort of registry for the child gauges by storing information such as the gauge data, minted amounts, and more. It is also the contract where CRV emissions are claimed from.
+
 
 ???+ vyper "`ChildGaugeFactory.vy`"
     The source code for the `ChildGaugeFactory.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/blob/master/contracts/ChildGaugeFactory.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10` 
 
-    A full list of all deployed `ChildGaugeFactory` contracts can be found [:material-github: here](../deployments/crosschain.md#childgaugefactory).
+    A full list of all deployed `ChildGaugeFactory` contracts can be found [here](../deployments/crosschain.md#childgaugefactory).
 
 
 ---
@@ -14,7 +14,7 @@
 
 ## **Deploy Child Gauge**
 
-Child gauges can either be deployed from the `RootChainFactory` or directly from the according `ChildGaugeFactory`. The `ChildGaugeFactory` allows for the deployment of child gauges on the child chains. Child gauges can also be deployed without the need for a root gauge.
+Child gauges can either be deployed from the `RootChainFactory` or directly from the according `ChildGaugeFactory`.
 
 ### `deploy_gauge`
 !!! description "`ChildGaugeFactory.deploy_gauge(_lp_token: address, _salt: bytes32, _manager: address = msg.sender) -> address`"
@@ -121,8 +121,7 @@ Child gauges can either be deployed from the `RootChainFactory` or directly from
     === "Example"
 
         ```shell
-        >>> ChildGaugeFactory.deploy_gauge(lp_token, salt)
-        '0x1234567890123456789012345678901234567890'
+        >>> soon
         ```
 
 
@@ -211,7 +210,7 @@ When claiming emissions via `claim` or `claim_many`, and `is_mirrored` is set to
     === "Example"
 
         ```shell
-        >>> ChildGaugeFactory.mint(gauge)
+        >>> soon
         ```
 
 
@@ -294,7 +293,7 @@ When claiming emissions via `claim` or `claim_many`, and `is_mirrored` is set to
     === "Example"
 
         ```shell
-        >>> ChildGaugeFactory.mint_many(['gauge1', 'gauge2', 'gauge3'])
+        >>> soon
         ```
 
 
@@ -321,8 +320,7 @@ When claiming emissions via `claim` or `claim_many`, and `is_mirrored` is set to
     === "Example"
 
         ```shell
-        >>> ChildGaugeFactory.minted(user, gauge)
-        0
+        >>> soon
         ```
 
 
@@ -342,7 +340,7 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
     - `[2:3]`: `has_counterpart`
     - `[3:256]`: `last_request`
 
-    Returns: Gauge data (`uint256`).
+    Returns: gauge data (`uint256`).
 
     | Input    | Type      | Description |
     | -------- | --------- | ----------- |
@@ -360,8 +358,7 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
     === "Example"
 
         ```shell
-        >>> ChildGaugeFactory.gauge_data(gauge)
-        0
+        >>> soon
         ```
 
 
@@ -396,8 +393,7 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
     === "Example"
 
         ```shell
-        >>> ChildGaugeFactory.is_valid_gauge(gauge)
-        True
+        >>> soon
         ```
 
 
@@ -406,7 +402,7 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
 
     Getter for gauge associated with a given LP token.
 
-    Returns: Gauge address (`address`).
+    Returns: gauge (`address`).
 
     | Input    | Type      | Description |
     | -------- | --------- | ----------- |
@@ -423,8 +419,7 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
     === "Example"
 
         ```shell
-        >>> ChildGaugeFactory.get_gauge_from_lp_token(lp_token)
-        '0x1234567890123456789012345678901234567890'
+        >>> soon
         ```
 
 
@@ -433,7 +428,7 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
 
     Getter for the number of gauges deployed.
 
-    Returns: Number of gauges deployed (`uint256`).
+    Returns: number of gauges deployed (`uint256`).
 
     ??? quote "Source code"
 
@@ -447,7 +442,7 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
 
         ```shell
         >>> ChildGaugeFactory.get_gauge_count()
-        0
+        3
         ```
 
 
@@ -456,7 +451,7 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
 
     Getter for the gauge address at a given index. First gauge has index `0`, second has index `1`, etc.
 
-    Returns: Gauge address (`address`).
+    Returns: gauge (`address`).
 
     | Input    | Type      | Description |
     | -------- | --------- | ----------- |
@@ -472,12 +467,14 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
 
     === "Example"
 
+        This example returns the first two child gauges deployed via the `ChildGaugeFactory` on Fraxtal.
+
         ```shell
         >>> ChildGaugeFactory.get_gauge(0)
-        '0x1234567890123456789012345678901234567890'
+        '0x0092782EF5d4dFBB2949c2C147020E7aC644D870'
 
         >>> ChildGaugeFactory.get_gauge(1)
-        '0x1234567890123456789012345678901234567891'
+        '0xcde3Cdf332E35653A7595bA555c9fDBA3c78Ec04'
         ```
 
 
@@ -486,7 +483,7 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
 
     Getter for the last request timestamp for a gauge. This variable updates whenever CRV emissions were minted from the according gauge.
 
-    Returns: Last request timestamp (`uint256`).
+    Returns: last request timestamp (`uint256`).
 
     | Input    | Type      | Description |
     | -------- | --------- | ----------- |
@@ -513,8 +510,7 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
     === "Example"
 
         ```shell
-        >>> ChildGaugeFactory.last_request(gauge)
-        0
+        >>> soon
         ```
 
 
@@ -550,8 +546,8 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
     === "Example"
 
         ```shell
-        >>> ChildGaugeFactory.is_mirrored(gauge)
-        True
+        >>> ChildGaugeFactory.is_mirrored('0xcde3Cdf332E35653A7595bA555c9fDBA3c78Ec04')
+        False
         ```
 
 
@@ -606,6 +602,7 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
     === "Example"
 
         ```shell
+        >>> soon
         ```
 
 
@@ -631,11 +628,11 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
 
     === "Example"
 
-        This example returns the `ChildGauge` implementation contract for the `ChildGaugeFactory` on Arbitrum.
+        This example returns the `ChildGauge` implementation contract for the `ChildGaugeFactory` on Fraxtal.
 
         ```shell
         >>> ChildGaugeFactory.get_implementation()
-        '0xC772063cE3e622B458B706Dd2e36309418A1aE42'
+        '0x6A611215540555A7feBCB64CB0Ed11Ac90F165Af'
         ```
 
 
@@ -680,7 +677,7 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
 
         ```shell
         >>> ChildGaugeFactory.get_implementation()
-        '0xC772063cE3e622B458B706Dd2e36309418A1aE42'
+        '0x6A611215540555A7feBCB64CB0Ed11Ac90F165Af'
 
         >>> ChildGaugeFactory.set_implementation('0x1234567890123456789012345678901234567892')
 
@@ -734,6 +731,8 @@ The `root_factory` and `root_implementation` variables store the addresses of th
 
     === "Example"
 
+        This example returns the `RootGaugeFactory` contract on Ethereum.
+
         ```shell
         >>> ChildGaugeFactory.root_factory()
         '0x306A45a1478A000dC701A6e1f7a569afb8D9DCD6'
@@ -773,6 +772,8 @@ The `root_factory` and `root_implementation` variables store the addresses of th
             ```
 
     === "Example"
+
+        This example returns the `RootGauge` implementation contract on Ethereum.
 
         ```shell
         >>> ChildGaugeFactory.root_implementation()
@@ -830,6 +831,7 @@ The `root_factory` and `root_implementation` variables store the addresses of th
 
 ## **CRV Token and Voting Escrow**
 
+The `crv` and `voting_escrow` variables store the addresses of the CRV token and `VotingEscrow` contract, respectively. `crv` represents a bridged version of the CRV token, whereas `voting_escrow` represents a `L2 VotingEscrow Oracle` contract. This oracle is responsible for providing data from the `VotingEscrow` contract on Ethereum to the child chain in order to make boosts on sidechains work. If there is no `L2 VotingEscrow Oracle` set, the boosts on the child chain will not work.
 
 
 ### `crv`
@@ -861,9 +863,11 @@ The `root_factory` and `root_implementation` variables store the addresses of th
 
     === "Example"
 
+        This example returns the token address of bridged CRV on Fraxtal.
+
         ```shell
         >>> ChildGaugeFactory.crv()
-        '0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978'
+        '0x331B9182088e2A7d6D3Fe4742AbA1fB231aEcc56'
         ```
 
 
@@ -906,7 +910,7 @@ The `root_factory` and `root_implementation` variables store the addresses of th
 
         ```shell
         >>> ChildGaugeFactory.crv()
-        '0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978'
+        '0x331B9182088e2A7d6D3Fe4742AbA1fB231aEcc56'
 
         >>> ChildGaugeFactory.set_crv('0x1234567890123456789012345678901234567892')
 
@@ -934,7 +938,7 @@ The `root_factory` and `root_implementation` variables store the addresses of th
 
         ```shell
         >>> ChildGaugeFactory.voting_escrow()
-        '0x0000000000000000000000000000000000000000'
+        '0xc73e8d8f7A68Fc9d67e989250484E57Ae03a5Da3'
         ```
 
 
@@ -979,113 +983,12 @@ The `root_factory` and `root_implementation` variables store the addresses of th
 
         ```shell
         >>> ChildGaugeFactory.voting_escrow()
-        '0x0000000000000000000000000000000000000000'
+        '0xc73e8d8f7A68Fc9d67e989250484E57Ae03a5Da3'
 
         >>> ChildGaugeFactory.set_voting_escrow('0x1234567890123456789012345678901234567893')
 
         >>> ChildGaugeFactory.voting_escrow()
         '0x1234567890123456789012345678901234567893'
-        ```
-
-
----
-
-
-## **Call Proxy**
-
-todo: what is it for?
-
-### `call_proxy`
-!!! description "`ChildGaugeFactory.call_proxy() -> address: view`"
-
-    Getter to check the call proxy address.
-
-    Returns: Call proxy address (`address`).
-
-    Emits: `UpdateCallProxy` event at initialization.
-
-    ??? quote "Source code"
-
-        === "ChildGaugeFactory.vy"
-
-            ```python
-            event UpdateCallProxy:
-                _old_call_proxy: address
-                _new_call_proxy: address
-
-            call_proxy: public(address)
-
-            @external
-            def __init__(_call_proxy: address, _root_factory: address, _root_impl: address, _crv: address, _owner: address):
-                """
-                @param _call_proxy Contract for
-                @param _root_factory Root factory to anchor to
-                @param _root_impl Address of root gauge implementation to calculate mirror (can be updated)
-                @param _crv Bridged CRV token address (might be zero if not known yet)
-                @param _owner Owner of factory (xgov)
-                """
-                ...
-                self.call_proxy = _call_proxy
-                log UpdateCallProxy(empty(address), _call_proxy)
-                ...
-            ```
-
-    === "Example"
-
-        ```shell
-        >>> ChildGaugeFactory.call_proxy()
-        '0x0000000000000000000000000000000000000000'
-        ```
-
-
-### `set_call_proxy`
-!!! description "`ChildGaugeFactory.set_call_proxy(_new_call_proxy: address)`"
-
-    !!!guard "Guarded Method"
-        This function is only callable by the `owner` of the contract.
-
-    Function to set or update the call proxy address.
-
-    Emits: `UpdateCallProxy` event.
-
-    | Input      | Type      | Description |
-    | ---------- | --------- | ----------- |
-    | `_new_call_proxy` | `address` | New call proxy address |
-
-    ??? quote "Source code"
-
-        === "ChildGaugeFactory.vy"
-
-            ```python
-            event UpdateCallProxy:
-                _old_call_proxy: address
-                _new_call_proxy: address
-
-            call_proxy: public(address)
-
-            @external
-            def set_call_proxy(_new_call_proxy: address):
-                """
-                @notice Set the address of the call proxy used
-                @dev _new_call_proxy should adhere to the same interface as defined
-                @param _new_call_proxy Address of the cross chain call proxy
-                """
-                assert msg.sender == self.owner
-
-                log UpdateCallProxy(self.call_proxy, _new_call_proxy)
-                self.call_proxy = _new_call_proxy
-            ```
-
-    === "Example"
-
-        ```shell
-        >>> ChildGaugeFactory.call_proxy()
-        '0x0000000000000000000000000000000000000000'
-
-        >>> ChildGaugeFactory.set_call_proxy('0x1234567890123456789012345678901234567894')  
-
-        >>> ChildGaugeFactory.call_proxy()
-        '0x1234567890123456789012345678901234567894'
         ```
 
 
@@ -1128,7 +1031,7 @@ todo: what is it for?
 
         ```shell
         >>> ChildGaugeFactory.manager()
-        '0x71F718D3e4d1449D1502A6A7595eb84eBcCB1683'
+        '0xaE50429025B59C9D62Ae9c3A52a657BC7AB64036'
         ```
 
 
@@ -1182,8 +1085,6 @@ todo: what is it for?
 
 ## **Ownership**
 
-
-
 ### `owner`
 !!! description "`ChildGaugeFactory.owner() -> address: view`"
 
@@ -1203,7 +1104,7 @@ todo: what is it for?
 
         ```shell
         >>> ChildGaugeFactory.owner()
-        '0x71F718D3e4d1449D1502A6A7595eb84eBcCB1683'
+        '0xaE50429025B59C9D62Ae9c3A52a657BC7AB64036'
         ```
 
 
@@ -1316,12 +1217,107 @@ todo: what is it for?
 
 ## **Other Methods**
 
+
+### `call_proxy`
+!!! description "`ChildGaugeFactory.call_proxy() -> address: view`"
+
+    Getter for the call proxy contract. This contract acts as an intermediary to facilitate cross-chain calls.
+
+    Returns: call proxy address (`address`).
+
+    Emits: `UpdateCallProxy` event at initialization.
+
+    ??? quote "Source code"
+
+        === "ChildGaugeFactory.vy"
+
+            ```python
+            event UpdateCallProxy:
+                _old_call_proxy: address
+                _new_call_proxy: address
+
+            call_proxy: public(address)
+
+            @external
+            def __init__(_call_proxy: address, _root_factory: address, _root_impl: address, _crv: address, _owner: address):
+                """
+                @param _call_proxy Contract for
+                @param _root_factory Root factory to anchor to
+                @param _root_impl Address of root gauge implementation to calculate mirror (can be updated)
+                @param _crv Bridged CRV token address (might be zero if not known yet)
+                @param _owner Owner of factory (xgov)
+                """
+                ...
+                self.call_proxy = _call_proxy
+                log UpdateCallProxy(empty(address), _call_proxy)
+                ...
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> ChildGaugeFactory.call_proxy()
+        '0x0000000000000000000000000000000000000000'
+        ```
+
+
+### `set_call_proxy`
+!!! description "`ChildGaugeFactory.set_call_proxy(_new_call_proxy: address)`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the contract.
+
+    Function to set or update the call proxy address.
+
+    Emits: `UpdateCallProxy` event.
+
+    | Input      | Type      | Description |
+    | ---------- | --------- | ----------- |
+    | `_new_call_proxy` | `address` | New call proxy address |
+
+    ??? quote "Source code"
+
+        === "ChildGaugeFactory.vy"
+
+            ```python
+            event UpdateCallProxy:
+                _old_call_proxy: address
+                _new_call_proxy: address
+
+            call_proxy: public(address)
+
+            @external
+            def set_call_proxy(_new_call_proxy: address):
+                """
+                @notice Set the address of the call proxy used
+                @dev _new_call_proxy should adhere to the same interface as defined
+                @param _new_call_proxy Address of the cross chain call proxy
+                """
+                assert msg.sender == self.owner
+
+                log UpdateCallProxy(self.call_proxy, _new_call_proxy)
+                self.call_proxy = _new_call_proxy
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> ChildGaugeFactory.call_proxy()
+        '0x0000000000000000000000000000000000000000'
+
+        >>> ChildGaugeFactory.set_call_proxy('0x1234567890123456789012345678901234567894')  
+
+        >>> ChildGaugeFactory.call_proxy()
+        '0x1234567890123456789012345678901234567894'
+        ```
+
+
 ### `version`
 !!! description "`ChildGaugeFactory.version() -> string[8]: view`"
 
-    Getter for the version of the factory.
+    Getter for the version of the `ChildGaugeFactory` contract.
 
-    Returns: version (`string`).
+    Returns: version (`string[8]`).
 
     ??? quote "Source code"
 

@@ -1,8 +1,5 @@
 <h1>RootGaugeFactory</h1>
 
-<script src="/assets/javascripts/contracts/rootgaugefactory.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
-
 The `RootGaugeFactory` contract is used to deploy liquidity gauges on the Ethereum mainnet. These gauges can then be voted on to be added to the `GaugeController`. If successful, the gauges will be able to receive CRV emissions, which then can be bridged via a `Bridger` contract to the child chains `ChildGauge`.
 
 ???+ vyper "`RootGaugeFactory.vy`"
@@ -16,7 +13,9 @@ The `RootGaugeFactory` contract is used to deploy liquidity gauges on the Ethere
 
 ## **Deploying Gauges**
 
-The `RootGaugeFactory` allows the deployment of root gauges on Ethereum and child gauges on the child chains. Root gauges can only be deployed if there is a `bridger` contract set for the given chain ID. To check if that is the case, the `get_bridger(chain_id)` function can be used.
+The `RootGaugeFactory` allows the deployment of root gauges on Ethereum and child gauges on the child chains. Root gauges can only be deployed if there is a `bridger` contract set for the given chain ID, otherwise the chain is not supported. 
+
+To check if a certain chain is supported can be done by calling `Bridger.get_bridger(chain_id)`. If a address is returnd, the chain is supported. If `ZERO_ADDRESS` is returned, the chain is not supportd and no root gauge can be deployed.
 
 
 ### `deploy_gauge`
@@ -135,8 +134,7 @@ The `RootGaugeFactory` allows the deployment of root gauges on Ethereum and chil
     === "Example"
 
         ```shell
-        >>> RootGaugeFactory.deploy_gauge(1, bytes32(0))
-        'gauge address'
+        >>> soon
         ```
 
 
@@ -181,22 +179,26 @@ The `RootGaugeFactory` allows the deployment of root gauges on Ethereum and chil
     === "Example"
 
         ```shell
-        >>> RootGaugeFactory.deploy_child_gauge(1, lp_token_address, bytes32(0), msg.sender)
-        'child gauge address'
+        >>> soon
         ```
 
 ---
+
 
 ## **Transmitting Emissions**
 
 Once a root gauge has received emissions, they can be transmitted to the child gauge. This is done by calling the `transmit_emissions` function. Emissions can only be transmitted from the `RootGaugeFactory`. 
 
-Transmitting emissions is permissionless. Anyone can call the function.
+Transmitting emissions is permissionless. Anyone can do it.
 
 ### `transmit_emissions`
 !!! description "`RootGaugeFactory.transmit_emissions(_gauge: RootGauge)`"
 
     Function to transmit emissions to the child gauge. This function is permissionsless and can be called by anyone. The function reverts if 
+
+    | Input    | Type      | Description |
+    | -------- | --------- | ----------- |
+    | `_gauge` | `address` | Root gauge to transmit emissions for |
 
     ??? quote "Source code"
 
@@ -254,21 +256,46 @@ Transmitting emissions is permissionless. Anyone can call the function.
                 @param _account The account calling `transmit_emissions`
                 """
                 return True
+
+            @external
+            @payable
+            def bridge(_token: IERC20, _to: address, _amount: uint256, _min_amount: uint256=0) -> uint256:
+                """
+                @notice Bridge `_token` through XDAO Layer Zero
+                @param _token The ERC20 asset to bridge
+                @param _to The receiver on `_chain_id`
+                @param _amount The amount of `_token` to deposit, 2^256-1 for the whole balance
+                @param _min_amount Minimum amount when to bridge
+                @return Bridged amount
+                """
+                amount: uint256 = _amount
+                if amount == max_value(uint256):
+                    amount = min(staticcall _token.balanceOf(msg.sender), staticcall _token.allowance(msg.sender, self))
+                assert amount >= _min_amount, "Amount too small"
+
+                assert extcall _token.transferFrom(msg.sender, self, amount)
+
+                extcall BRIDGE.bridge(_to, amount, msg.sender, value=self.balance)
+                return amount
             ```
 
     === "Example"
 
         ```shell
-        >>> RootGaugeFactory.transmit_emissions()
+        >>> soon
         ```
 
 
 ### `get_bridger`
 !!! description "`RootGaugeFactory.get_bridger(_chain_id: uint256) -> address: view`"
 
-    Getter for the bridger for a given chain ID.
+    Getter for the bridger for a given chain ID. This contract is used to bridge CRV emissions to the `ChildGauge`.
 
     Returns: bridger (`address`).
+
+    | Input      | Type      | Description |
+    | ----------- | --------- | ----------- |
+    | `_chain_id` | `uint256` | Chain ID of the child gauge |
 
     ??? quote "Source code"
 
@@ -280,29 +307,12 @@ Transmitting emissions is permissionless. Anyone can call the function.
 
     === "Example"
 
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the bridger for a given chain ID.
+        This example returns the bridger contract for chain ID 252 which is Fraxtal.
 
-        <div class="highlight">
-        <pre><code>>>> RootGaugeFactory.get_bridger(<input id="getBridgerInput" type="number" value="42161" min="0" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
-            oninput="fetchBridger()"/>)
-        <span id="getBridgerOutput"></span></code></pre>
-        </div>
-
-        <style>
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        </style>
+        ```shell
+        >>> RootGaugeFactory.get_bridger(252)
+        '0x0199429171bcE183048dccf1d5546Ca519EA9717'
+        ```
 
 
 ---
@@ -310,47 +320,7 @@ Transmitting emissions is permissionless. Anyone can call the function.
 
 ## **Gauge Information**
 
-The `RootGaugeFactory` contract also provides a few getters to retrieve information about the deployed root gauges.
-
-### `is_valid_gauge`
-!!! description "`RootGaugeFactory.is_valid_gauge(_gauge: RootGauge) -> bool`"
-
-    Getter to check if a gauge is valid.
-
-    Returns: `True` if the gauge is valid, `False` otherwise (`bool`).
-
-    | Input    | Type      | Description |
-    | -------- | --------- | ----------- |
-    | `_gauge` | `address` | Root gauge to check validity for |
-
-    ??? quote "Source code"
-
-        === "RootGaugeFactory.vy"
-
-            ```python
-            is_valid_gauge: public(HashMap[RootGauge, bool])
-            ```
-
-    === "Example"
-
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the validity of a gauge.
-
-        <div class="highlight">
-        <pre><code>>>> RootGaugeFactory.is_valid_gauge(
-        <input id="isValidGaugeInput"
-        type="text" 
-        value="0x1234567890123456789012345678901234567890"
-        style="width: 300px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit;" 
-            oninput="fetchIsValidGauge()"/>)
-        <span id="isValidGaugeOutput"></span></code></pre>
-        </div>
-
+The `RootGaugeFactory` contract also provides a few getters to retrieve information about the deployed `RootGauges`.
 
 ### `get_gauge`
 !!! description "`RootGaugeFactory.get_gauge(_chain_id: uint256, _idx: uint256) -> RootGauge`"
@@ -374,34 +344,10 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
     === "Example"
 
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the gauge for a given chain ID and index.
-
-        <div class="highlight">
-        <pre><code>>>> RootGaugeFactory.get_gauge(
-        Chain ID: <input id="getGaugeChainIdInput" 
-        type="number" 
-        value="42161"
-        style="width: 100px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit;" 
-            oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
-        Index: <input id="getGaugeIndexInput" 
-        type="number"
-        value="0"
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit;" 
-            oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>)
-        <span id="getGaugeOutput"></span></code></pre>
-        </div>
+        ```shell
+        >>> RootGaugeFactory.get_gauge(252, 0)
+        '0x6233394c3C466A45A505EFA4857489743168E9Fa'
+        ```
 
 
 ### `get_gauge_count`
@@ -425,35 +371,174 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
     === "Example"
 
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the number of gauges for a given chain ID.
+        ```shell
+        >>> RootGaugeFactory.get_gauge_count(252)
+        4
+        ```
 
-        <div class="highlight">
-        <pre><code>>>> RootGaugeFactory.get_gauge_count(<input id="getGaugeCountInput" type="number" value="42161" min="0" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
-            oninput="fetchGaugeCount()"/>)
-        <span id="getGaugeCountOutput"></span></code></pre>
-        </div>
 
-        <style>
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        </style>
+### `is_valid_gauge`
+!!! description "`RootGaugeFactory.is_valid_gauge(_gauge: RootGauge) -> bool`"
+
+    Getter to check if a gauge is valid.
+
+    Returns: `True` if the gauge is valid, `False` otherwise (`bool`).
+
+    | Input    | Type      | Description |
+    | -------- | --------- | ----------- |
+    | `_gauge` | `address` | Root gauge to check validity for |
+
+    ??? quote "Source code"
+
+        === "RootGaugeFactory.vy"
+
+            ```python
+            is_valid_gauge: public(HashMap[RootGauge, bool])
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> RootGaugeFactory.is_valid_gauge('0x6233394c3C466A45A505EFA4857489743168E9Fa')
+        True
+        ```
 
 
 ---
 
 
-## **Child Implementations and Factories**
+## **Child and Root Implementations and Factories**
+
+The `RootGaugeFactory` contract also provides a few getters to retrieve information about the deployed `ChildGauge` implementations and factories.
+
+### `get_implementation`
+!!! description "`RootGaugeFactory.get_implementation() -> address: view`"
+
+    Getter for the `RootGauge` implementation contract.
+
+    Returns: implementation address (`address`).
+
+    ??? quote "Source code"
+
+        === "RootGaugeFactory.vy"
+
+            ```python
+            get_implementation: public(address)
+            ```
+
+    === "Example"
+
+        This example returns the `RootGauge` implementation contract address.
+
+        ```shell
+        >>> RootGaugeFactory.get_implementation()
+        '0x96720942F9fF22eFd8611F696E5333Fe3671717a'
+        ```
+
+
+### `set_implementation`
+!!! description "`RootGaugeFactory.set_implementation(_implementation: address)`"
+
+    !!!guard "Guarded Method"
+        This function is only callable by the `owner` of the contract.
+
+    !!!warning
+        Changing the implementation contract requires a change on all child factories.
+
+    Function to set the implementation contract of the `RootGauge`.
+
+    Emits: `UpdateImplementation` event.
+
+    | Input      | Type      | Description |
+    | ----------- | --------- | ----------- |
+    | `_implementation` | `address` | Address of the implementation contract |
+
+    ??? quote "Source code"
+
+        === "RootGaugeFactory.vy"
+
+            ```python
+            event UpdateImplementation:
+                _old_implementation: address
+                _new_implementation: address
+
+            get_implementation: public(address)
+
+            owner: public(address)
+
+            @external
+            def set_implementation(_implementation: address):
+                """
+                @notice Set the implementation
+                @dev Changing implementation require change on all child factories
+                @param _implementation The address of the implementation to use
+                """
+                assert msg.sender == self.owner  # dev: only owner
+
+                log UpdateImplementation(self.get_implementation, _implementation)
+                self.get_implementation = _implementation
+            ```
+
+    === "Example"
+
+        ```shell
+        >>> soon
+        ```
+
+
+### `get_child_factory`
+!!! description "`RootGaugeFactory.get_child_factory(_chain_id: uint256) -> address: view`"
+
+    Getter for the child factory for a given chain ID.
+
+    Returns: child factory address (`address`).
+
+    ??? quote "Source code"
+
+        === "RootGaugeFactory.vy"
+
+            ```python
+            get_child_factory: public(HashMap[uint256, address])
+            ```
+
+    === "Example"
+
+        This example returns the `ChildGaugeFactory` contractaddress for chain ID 252 which is Fraxtal.
+
+        ```shell
+        >>> RootGaugeFactory.get_child_factory(252)
+        '0x0B8D6B6CeFC7Aa1C2852442e518443B1b22e1C52'
+        ```
+
+
+### `get_child_implementation`
+!!! description "`RootGaugeFactory.get_child_implementation(_chain_id: uint256) -> address: view`"
+
+    Getter for the child implementation for a given chain ID.
+
+    Returns: child implementation address (`address`).
+
+    | Input      | Type      | Description |
+    | ----------- | --------- | ----------- |
+    | `_chain_id` | `uint256` | Chain ID of the child gauge |
+
+    ??? quote "Source code"
+
+        === "RootGaugeFactory.vy"
+
+            ```python
+            get_child_implementation: public(HashMap[uint256, address])
+            ```
+
+    === "Example"
+
+        This example returns the `ChildGauge` implementation contract address for chain ID 252 which is Fraxtal.
+
+        ```shell
+        >>> RootGaugeFactory.get_child_implementation(252)
+        '0x6A611215540555A7feBCB64CB0Ed11Ac90F165Af'
+        ```
+
 
 ### `set_child`
 !!! description "`RootGaugeFactory.set_child(_chain_id: uint256, _bridger: Bridger, _child_factory: address, _child_impl: address)`"
@@ -461,16 +546,16 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
     !!!guard "Guarded Method"
         This function is only callable by the `owner` of the contract.
 
-    Function to set different child properties for a given chain ID such as the bridger, child gauge factory and child gauge implementation.
+    Function to set different child properties for a given chain ID such as the bridger contract, `ChildGaugeFactory` and `ChildGauge` implementation.
 
     Emits: `ChildUpdated` event.
 
     | Input      | Type      | Description |
     | ----------- | --------- | ----------- |
     | `_chain_id` | `uint256` | Chain ID of the child gauge |
-    | `_bridger`  | `Bridger` | Bridger for the child gauge |
-    | `_child_factory` | `address` | Address of the child gauge factory |
-    | `_child_impl` | `address` | Address of the child gauge implementation |
+    | `_bridger`  | `Bridger` | Bridger contract for the child gauge |
+    | `_child_factory` | `address` | Address of the new `ChildGaugeFactory` |
+    | `_child_impl` | `address` | Address of the new `ChildGauge` implementation |
 
     ??? quote "Source code"
 
@@ -508,183 +593,18 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
     === "Example"
 
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } In this example, the total number of receivers is returned.
+        ```shell
+        >>> soon     
+        ```
 
-        <div class="highlight">
-        <pre><code>>>> FeeSplitter.n_receivers()
-        <span id="nReceiversOutput"></span></code></pre>
-        </div>
-
-
-### `get_child_factory`
-!!! description "`RootGaugeFactory.get_child_factory(_chain_id: uint256) -> address: view`"
-
-    Getter for the child factory for a given chain ID.
-
-    Returns: child factory address (`address`).
-
-    ??? quote "Source code"
-
-        === "RootGaugeFactory.vy"
-
-            ```python
-            get_child_factory: public(HashMap[uint256, address])
-            ```
-
-    === "Example"
-
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the child factory address for a given chain ID.
-
-        <div class="highlight">
-        <pre><code>>>> RootGaugeFactory.get_child_factory(<input id="getChildFactoryInput" type="number" value="42161" min="0" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
-            oninput="fetchChildFactory()"/>)
-        <span id="getChildFactoryOutput"></span></code></pre>
-        </div>
-
-        <style>
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        </style>
-
-
-### `get_child_implementation`
-!!! description "`RootGaugeFactory.get_child_implementation(_chain_id: uint256) -> address: view`"
-
-    Getter for the child implementation for a given chain ID.
-
-    Returns: child implementation address (`address`).
-
-    | Input      | Type      | Description |
-    | ----------- | --------- | ----------- |
-    | `_chain_id` | `uint256` | Chain ID of the child gauge |
-
-    ??? quote "Source code"
-
-        === "RootGaugeFactory.vy"
-
-            ```python
-            get_child_implementation: public(HashMap[uint256, address])
-            ```
-
-    === "Example"
-
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the child implementation address for a given chain ID.
-
-        <div class="highlight">
-        <pre><code>>>> RootGaugeFactory.get_child_implementation(<input id="getChildImplementationInput" type="number" value="42161" min="0" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
-            oninput="fetchChildImplementation()"/>)
-        <span id="getChildImplementationOutput"></span></code></pre>
-        </div>
-
-        <style>
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        </style>
-
-
-### `get_implementation`
-!!! description "`RootGaugeFactory.get_implementation() -> address: view`"
-
-    Getter for the implementation contract of the root chain gauge factory.
-
-    Returns: implementation address (`address`).
-
-    ??? quote "Source code"
-
-        === "RootGaugeFactory.vy"
-
-            ```python
-            get_implementation: public(address)
-            ```
-
-    === "Example"
-
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current root gauge factory implementation address.
-
-        <div class="highlight">
-        <pre><code>>>> RootGaugeFactory.get_implementation()
-        <span id="implementationOutput"></span></code></pre>
-        </div>
-
-
-### `set_implementation`
-!!! description "`RootGaugeFactory.set_implementation(_implementation: address)`"
-
-    !!!guard "Guarded Method"
-        This function is only callable by the `owner` of the contract.
-
-    !!!warning
-        Changing the implementation contract requires a change on all child factories.
-
-    Function to set the implementation contract of the root chain gauge factory.
-
-    Emits: `UpdateImplementation` event.
-
-    | Input      | Type      | Description |
-    | ----------- | --------- | ----------- |
-    | `_implementation` | `address` | Address of the implementation contract |
-
-    ??? quote "Source code"
-
-        === "RootGaugeFactory.vy"
-
-            ```python
-            event UpdateImplementation:
-                _old_implementation: address
-                _new_implementation: address
-
-            get_implementation: public(address)
-
-            owner: public(address)
-
-            @external
-            def set_implementation(_implementation: address):
-                """
-                @notice Set the implementation
-                @dev Changing implementation require change on all child factories
-                @param _implementation The address of the implementation to use
-                """
-                assert msg.sender == self.owner  # dev: only owner
-
-                log UpdateImplementation(self.get_implementation, _implementation)
-                self.get_implementation = _implementation
-            ```
-
-    === "Example"
-
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } In this example, the total number of receivers is returned.
-
-        <div class="highlight">
-        <pre><code>>>> FeeSplitter.n_receivers()
-        <span id="nReceiversOutput"></span></code></pre>
-        </div>
 
 ---
 
 
-## **Call Proxy**
+## **Ownership and Other Methods**
+
+Ownership follows the standard pattern for upgradable contracts with owner, future_owner and transfer_ownership functions.
+
 
 ### `call_proxy`
 !!! description "`RootGaugeFactory.call_proxy() -> CallProxy: view`"
@@ -711,12 +631,10 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
     === "Example"
 
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current call proxy address.
-
-        <div class="highlight">
-        <pre><code>>>> RootGaugeFactory.call_proxy()
-        <span id="callProxyOutput"></span></code></pre>
-        </div>
+        ```shell
+        >>> RootGaugeFactory.call_proxy()
+        '0x0000000000000000000000000000000000000000'
+        ```
 
 
 ### `set_call_proxy`
@@ -758,20 +676,10 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
     === "Example"
 
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } In this example, the total number of receivers is returned.
+        ```shell
+        >>> soon
+        ```
 
-        <div class="highlight">
-        <pre><code>>>> FeeSplitter.n_receivers()
-        <span id="nReceiversOutput"></span></code></pre>
-        </div>
-
-
----
-
-
-## **Ownership and Other Methods**
-
-todo: Ownership follows the standard pattern for upgradable contracts with owner, future_owner and transfer_ownership functions.
 
 ### `version`
 !!! description "`RootGaugeFactory.version() -> String[8]`"
@@ -790,9 +698,7 @@ todo: Ownership follows the standard pattern for upgradable contracts with owner
 
     === "Example"
 
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current version of the gauge.
-
-        <div class="highlight">
-        <pre><code>>>> RootGaugeFactory.version()
-        <span id="versionOutput"></span></code></pre>
-        </div>
+        ```shell
+        >>> RootGaugeFactory.version()
+        '1.0.2'
+        ```

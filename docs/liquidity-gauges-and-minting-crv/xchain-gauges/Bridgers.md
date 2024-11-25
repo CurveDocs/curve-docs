@@ -2,14 +2,20 @@
 
 Bridger wrappers are contracts used to transmit CRV emissions across chains. Due to the increasing number of networks Curve deploys to, bridge wrappers adhere to a specific interface and allow for a modular bridging system.
 
+
 ???+ vyper "Bridgers.vy" 
-    The source code for the various `Bridger Wrappers` contracts can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/tree/master/contracts/bridgers). The source code for different bridger contracts varies slightly to adapt to different chain-specific implementations. 
+    The source code for the various `Bridger Wrappers` contracts can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/tree/master/contracts/bridgers). The source code for different bridger contracts varies slightly to adapt to different chain-specific implementations.
 
 
----
+Bridgers for each specific chain can be fetched from the `RootGaugeFactory` contract the following way:
+
+```vyper
+>>> RootGaugeFactory.get_bridger(43114)
+0x46832Ee3AD01558CEA49738e816c33d5bC9f6E04      # LzXdaoBridger for Avalanche
+```
 
 
-The following three functions are required for bridge wrappers contracts to implement to ensure compatibility with the `RootGaugeFactory` and `RootGauge` contracts.
+The following three functions are required for bridge wrappers contracts to be implemented to ensure compatibility with the `RootGaugeFactory` and `RootGauge` contracts.
 
 - `cost()` estimates the cost of bridging.
 - `bridge()` bridges CRV to the child chain.
@@ -20,6 +26,7 @@ The following three functions are required for bridge wrappers contracts to impl
 
 !!!warning "Chain Specific Implementations"
     The following function examples are for the :logos-arbitrum: Arbitrum bridger. Due to the varying implementations across different chains, the source code might vary slightly between different bridger implementations.
+
 
 ### `cost`
 !!! description "`Bridger.cost() -> uint256: view`"
@@ -53,7 +60,7 @@ The following three functions are required for bridge wrappers contracts to impl
     === "Example"
 
         ```py
-        >>> bridger.cost()
+        >>> Bridger.cost()
         2000000000000000
         ```
 
@@ -134,7 +141,7 @@ The following three functions are required for bridge wrappers contracts to impl
     === "Example"
 
         ```py
-        >>> bridger.bridge(CRV20, child_gauge, 1000000000000000000)
+        >>> Bridger.bridge(CRV20, child_gauge, 1000000000000000000)
         ```
 
 
@@ -163,6 +170,6 @@ The following three functions are required for bridge wrappers contracts to impl
     === "Example"
 
         ```py
-        >>> bridger.check(child_gauge)
+        >>> Bridger.check(child_gauge)
         True
         ```
