@@ -1,32 +1,53 @@
 <h1>Bridger Wrappers</h1>
 
-Bridger wrappers are contracts used to transmit CRV emissions across chains. Due to the increasing number of networks Curve deploys to, bridge wrappers adhere to a specific interface and allow for a modular bridging system.
+<script src="/assets/javascripts/contracts/gauges/bridgers.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
 
+Bridger wrappers are contracts used to transmit ERC20 tokens and especially `CRV` emissions across chains. Due to the increasing number of networks to which Curve deploys, bridge wrappers adhere to a specific interface documented below and allow for a modular bridging system.
 
-???+ vyper "Bridgers.vy" 
-    The source code for the various `Bridger Wrappers` contracts can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/tree/master/contracts/bridgers). The source code for different bridger contracts varies slightly to adapt to different chain-specific implementations.
+???+ vyper "Bridgers.vy"
+    The source code for the various `Bridger Wrappers` contracts can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/tree/master/contracts/bridgers). The code varies slightly to adapt to different chain-specific implementations.
 
+    :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } Bridgers for each specific chain can be fetched from the `RootGaugeFactory`:
 
-Bridgers for each specific chain can be fetched from the `RootGaugeFactory` contract the following way:
+    <div class="highlight">
+    <pre><code>>>> Bridger.get_bridger(<input id="chainId" type="number" value="42161" min="0" 
+    style="width: 50px; 
+        background: transparent; 
+        border: none; 
+        border-bottom: 1px solid #ccc; 
+        color: inherit; 
+        font-family: inherit; 
+        font-size: inherit; 
+        -moz-appearance: textfield;" 
+        oninput="fetchBridger()"/>)
+    <span id="bridgerOutput"></span></code></pre>
+    </div>
 
-```vyper
->>> RootGaugeFactory.get_bridger(43114)
-0x46832Ee3AD01558CEA49738e816c33d5bC9f6E04      # LzXdaoBridger for Avalanche
-```
-
-
-The following three functions are required for bridge wrappers contracts to be implemented to ensure compatibility with the `RootGaugeFactory` and `RootGauge` contracts.
-
-- `cost()` estimates the cost of bridging.
-- `bridge()` bridges CRV to the child chain.
-- `check()` verifies if the bridger has been approved by the RootGauge.
-
+    <style>
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    </style>
 
 ---
 
-!!!warning "Chain Specific Implementations"
+!!!warning "Chain-Specific Implementations"
     The following function examples are for the :logos-arbitrum: Arbitrum bridger. Due to the varying implementations across different chains, the source code might vary slightly between different bridger implementations.
 
+The following three functions are required for bridge wrappers contracts to be implemented to ensure compatibility with the `RootGaugeFactory` and `RootGauge` contracts.
+
+- [`cost()`](#cost) estimates the cost of bridging.
+- [`bridge()`](#bridge) bridges CRV to the child chain.
+- [`check()`](#check) verifies if the bridger has been approved by the `RootGauge`.
+
+---
+
+## **Must-Implement Methods**
+
+*The following three functions are required to be implemented to ensure compatibility with the `RootGaugeFactory` and `RootGauge` contracts:*
 
 ### `cost`
 !!! description "`Bridger.cost() -> uint256: view`"
@@ -37,7 +58,7 @@ The following three functions are required for bridge wrappers contracts to be i
 
     ??? quote "Source code"
 
-        This source code might vary slightly between different bridger implementations. This example is specific to the Arbitrum bridger.
+        This source code might vary slightly between different bridger implementations. This example is specific to the `Bridger` contract for Arbitrum.
 
         === "ArbitrumBridger.vy"
 
@@ -59,26 +80,27 @@ The following three functions are required for bridge wrappers contracts to be i
 
     === "Example"
 
+        This example returns the cost of bridging denominated in `ETH` with a precision of 18 decimals.
+
         ```py
         >>> Bridger.cost()
-        2000000000000000
+        2000000000000000    # 0.002 ETH
         ```
-
 
 ### `bridge`
 !!! description "`Bridger.bridge(_token: address, _to: address, _amount: uint256)`"
 
-    Function to bridge CRV to the child chain.
+    Function to bridge any ERC20 token to the child chain.
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
     | `_token` | `address` | The address of the token to bridge. |
-    | `_to` | `address` | The address to transmit the emissions to. |
-    | `_amount` | `uint256` | The amount of CRV emissions to bridge. |
+    | `_to` | `address` | The address to bridge the token to. |
+    | `_amount` | `uint256` | The amount of `_token` to deposit. |
 
     ??? quote "Source code"
 
-        This source code might vary slightly between different bridger implementations. This example is specific to the Arbitrum bridger.
+        This source code might vary slightly between different bridger implementations. This example is specific to the `Bridger` contract for Arbitrum.
 
         === "ArbitrumBridger.vy"
 
@@ -93,6 +115,11 @@ The following three functions are required for bridge wrappers contracts to be i
                     _gas_price_bid: uint256,
                     _data: Bytes[128],  # _max_submission_cost, _extra_data
                 ): payable
+
+            CRV20: constant(address) = 0xD533a949740bb3306d119CC777fa900bA034cd52
+            GATEWAY: constant(address) = 0xa3A7B6F88361F48403514059F1F16C8E78d60EeC
+            GATEWAY_ROUTER: constant(address) = 0x72Ce9c846789fdB6fC1f34aC4AD25Dd9ef7031ef
+            INBOX: constant(address) = 0x4Dbd4fc535Ac27206064B68FfCf827b0A60BAB3f
 
             # [gas_limit uint64][gas_price uint64][max_submission_cost uint64]
             submission_data: uint256
@@ -140,19 +167,26 @@ The following three functions are required for bridge wrappers contracts to be i
 
     === "Example"
 
-        ```py
-        >>> Bridger.bridge(CRV20, child_gauge, 1000000000000000000)
-        ```
+        This example bridges 10,000 `CRV` to the address `0x1234567890123456789012345678901234567890` on Arbitrum.
 
+        ```py
+        >>> Bridger.bridge('0xD533a949740bb3306d119CC777fa900bA034cd52', '0x1234567890123456789012345678901234567890', 10000000000000000000000)
+        ```
 
 ### `check`
 !!! description "`Bridger.check(_account: address) -> bool: view`"
 
-    Function to check if the bridger has been approved by the `RootGauge`.
+    Function to check if the bridger contract has been approved by the `RootGauge`.
+
+    Returns: `True` if the bridger has been approved by the `RootGauge`, `False` otherwise (`bool`).
+
+    | Parameter | Type | Description |
+    | --------- | ---- | ------------ |
+    | `_account` | `address` | The address of the bridger contract to check. |
 
     ??? quote "Source code"
 
-        This source code might vary slightly between different bridger implementations. This example is specific to the Arbitrum bridger.
+        This source code might vary slightly between different bridger implementations. This example is specific to the `Bridger` contract for Arbitrum.
 
         === "ArbitrumBridger.vy"
 
@@ -170,6 +204,6 @@ The following three functions are required for bridge wrappers contracts to be i
     === "Example"
 
         ```py
-        >>> Bridger.check(child_gauge)
+        >>> Bridger.check('0x1234567890123456789012345678901234567890')
         True
         ```
