@@ -106,13 +106,13 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-arbitrum: `Arbitrum` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://arbiscan.io/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-optimism: `Optimism` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://optimistic.etherscan.io/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-base: `Base` | [0x69522fb5337663d3B4dFB0030b881c1A750Adb4f](https://basescan.org/address/0x69522fb5337663d3B4dFB0030b881c1A750Adb4f#code) |
-| :logos-fraxtal: `Fraxtal` | [0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF](https://fraxscan.com/address/0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF#code) |
+| :logos-fraxtal: `Fraxtal` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://fraxscan.com/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-polygon: `Polygon` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://polygonscan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-gnosis: `Gnosis` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://gnosisscan.io/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-avalanche: `Avalanche` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://snowscan.xyz/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-fantom: `Fantom` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://ftmscan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-bsc: `Binance Smart Chain` | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://bscscan.com/address/0x4f37A9d177470499A2dD084621020b023fcffc1F#code) |
-| :logos-mantle: `Mantle` | [0x5552b631e2ad801faa129aacf4b701071cc9d1f7](https://mantlescan.xyz/address/0x5552b631e2ad801faa129aacf4b701071cc9d1f7#code) |
+| :logos-mantle: `Mantle` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://mantlescan.xyz/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-kava: `Kava` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://kavascan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#contracts) |
 | :logos-zksync: `zk-Sync` | [0x253548e98C769aD2850da8DB3E4c2b2cE46E3839](https://era.zksync.network/address/0x253548e98C769aD2850da8DB3E4c2b2cE46E3839#contract) |
 
