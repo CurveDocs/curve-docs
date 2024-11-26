@@ -54,7 +54,7 @@ The cross-chain gauge factory requires components to be deployed both on Ethereu
 
     ---
 
-    These contracts are used to transmit CRV emissions across chains. Due to the increasing number of networks Curve deploys to, bridge wrappers adhere to a specific interface and allow for a modular bridging system.
+    These contracts are used to bridge CRV emissions across chains. Due to the increasing number of networks Curve deploys to, bridge wrappers adhere to a specific interface and allow for a modular bridging system.
 
     [:octicons-arrow-right-24: `Bridgers.vy`](./Bridgers.md)
 
@@ -62,9 +62,17 @@ The cross-chain gauge factory requires components to be deployed both on Ethereu
 
     ---
 
-    This contract is used to transmit veCRV information across chains.
+    This contract is used to transmit veCRV information across chains to a `L2 VotingEscrow Oracle`.
 
-    [:octicons-arrow-right-24: `Updater.vy`](./Updater.md)
+    [:octicons-arrow-right-24: `Updater.vy`](../boosting-sidechains/Updater.md)
+
+-   :logos-vyper: **L2 VotingEscrow Oracle**
+
+    ---
+
+    This contract is used to store veCRV information on child chains.
+
+    [:octicons-arrow-right-24: `L2 VotingEscrow Oracle.vy`](../boosting-sidechains/L2VotingEscrowOracle.md)
 
 </div>
 

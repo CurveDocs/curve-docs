@@ -15,7 +15,7 @@ Allocation, distribution and minting of CRV are managed via several related DAO 
 
 <div class="grid cards" markdown>
 
--   **GaugeController**
+-   :logos-vyper: **GaugeController**
 
     ---
 
@@ -23,35 +23,33 @@ Allocation, distribution and minting of CRV are managed via several related DAO 
 
     [:octicons-arrow-right-24: `GaugeController.vy`](./gauge-controller/GaugeController.md)
 
--   **Minter**
+-   :logos-vyper: **Minter**
 
     ---
 
     CRV minting contract, generates new CRV according to liquidity gauges
 
-    [:octicons-arrow-right-24: `Minter.vy`](./minter.md)
+    [:octicons-arrow-right-24: `Minter.vy`](./minter/Minter.md)
 
--   **Liquidity Gauges**
+-   :logos-vyper: **Liquidity Gauges**
 
     ---
 
     Measures liquidity provided by users over time, in order to distribute CRV and other rewards
 
-    [:octicons-arrow-right-24: `LiquidityGauge.vy`](./gauges/overview.md)
+    [:octicons-arrow-right-24: `LiquidityGauge.vy`](./gauges/LiquidityGaugeV6.md)
 
 -   **Liquidity Gauges on EVM Sidechains**
 
     ---
 
-    Liquidity gauges on EVM sidechains use a system of Root and Child Liquidity Gauges which allows gauge on sidechains to receive CRV emissions.
+    Liquidity gauges on EVM sidechains use a system of Root and Child Liquidity Gauges which allows gauges on sidechains to receive CRV emissions.
 
-    [:octicons-arrow-right-24: `Getting started`](./evm-sidechains/overview.md)
+    [:octicons-arrow-right-24: `Getting started`](./xchain-gauges/overview.md)
 
 </div>
 
-
 ---
-
 
 # **Implementation Details**
 
@@ -110,7 +108,7 @@ Finally, the gauge is supposed to not miss a full year of inflation (e.g. if the
 ## Gauge Weight Voting
 Users can allocate their veCRV towards one or more liquidity gauges. Gauges receive a fraction of newly minted CRV tokens proportional to how much veCRV the gauge is allocated. Each user with a veCRV balance can change their preference at any time.
 
-When a user applies a new weight vote, it gets applied at the start of the next epoch week. The weight vote for any one gauge cannot be changed more often than once in 10 days. Adding more $CRV to your lock or extending the locktime increases your veCRV balance. This increase is not automatically accounted for in your current gauge weight votes. If you want to allocate all of your newly acquired voting power, make sure to re-vote.
+When a user applies a new weight vote, it gets applied at the start of the next epoch week. The weight vote for any one gauge cannot be changed more often than once in 10 days. Adding more CRV to your lock or extending the locktime increases your veCRV balance. This increase is not automatically accounted for in your current gauge weight votes. If you want to allocate all of your newly acquired voting power, make sure to re-vote.
 
 !!!warning
     Resetting your gauge weight before re-voting means you'll need to wait 10 days to vote for the gauges whose weight you've reset. So, please ensure you simply re-vote; there is no need to reset your gauge weight votes before voting again.
