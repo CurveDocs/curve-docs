@@ -1,6 +1,6 @@
 <h1>GaugeController</h1>
 
-<script src="/assets/javascripts/contracts/core-contracts/gauge-controller.js"></script>
+<script src="/assets/javascripts/contracts/gauges/gauge-controller.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
 
 The `GaugeController` contract is responsible for managing and coordinating the distribution of rewards to liquidity providers in various liquidity pools. It **determines the allocation of CRV emissions based on the liquidity provided** by users. By analyzing the gauges, which are parameters that define how rewards are distributed across different pools, the GaugeController ensures a fair and balanced distribution of incentives, encouraging liquidity provision and participation in Curve's ecosystem.
@@ -11,14 +11,11 @@ The `GaugeController` contract is responsible for managing and coordinating the 
 
     The contract is deployed on :logos-ethereum: Ethereum at [`0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB`](https://etherscan.io/address/0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB).
 
-
 The contract also **acts as a registry for the gauges**, storing information such as the gauge data, minted amounts, and more.
-
 
 ---
 
-
-## **Adding Gauges**
+## **Adding Gauges and Gauge Data**
 
 After a liquidity gauge was deployed, it can be added to the `GaugeController` for it to be elegible to recieve CRV emissions. Adding a gauge requires a successfully passed DAO vote.
 
@@ -36,17 +33,16 @@ After a liquidity gauge was deployed, it can be added to the `GaugeController` f
 
     If the gauge returns an `int128`, this means the gauge has been added. The returned value represents the [gauge type](#gauge_types). If the query call reverts, this means the gauge has not been added.
 
-
 ### `add_gauge`
 !!! description "`GaugeController.add_gauge(addr: address, gauge_type: int128, weight: uint256 = 0)`"
 
     !!!guard "Guarded Method"
-        This function is only callable by the `admin` of the contract.
+        This function is only callable by the `admin` of the contract. The `admin` in this case is the Curve DAO. So, adding a gauge to the `GaugeController` is in the hands of the DAO.
 
     !!!warning
-        Once a gauge has been added, it cannot be removed. Therefore, new gauges should undergo thorough verification by the community before being added to the `GaugeController`. It is possible, however, to 'kill' a gauge, which sets its emission rate to zero. As a result, a 'killed' gauge becomes ineligible for any CRV emissions.
+        Once a gauge has been added, it cannot be removed. Therefore, new gauges should undergo thorough verification by the community before being added to the `GaugeController`. However, it is possible to 'kill' a gauge, which sets its emission rate to zero. As a result, a 'killed' gauge becomes ineligible for any CRV emissions.
 
-    Function to add a new gauge to the `GaugeController`.
+    Function to add a new gauge to the `GaugeController`. Doing this makes the gauge eligible to receive CRV emissions.
 
     Emits: `NewGauge` event.
 
@@ -106,18 +102,11 @@ After a liquidity gauge was deployed, it can be added to the `GaugeController` f
 
     === "Example"
         
-        This example adds the
+        This example adds the gauge at address `0x41af8cC0811DD07F167752B821CF5B11DBa7Ca85` to the `GaugeController`.
 
         ```shell
-        >>> GaugeController.add_gauge(todo)
-        todo
+        >>> GaugeController.add_gauge('0x41af8cC0811DD07F167752B821CF5B11DBa7Ca85')
         ```
-
-
----
-
-
-## **Gauge Data**
 
 ### `gauges`
 !!! description "`GaugeController.gauges(arg0: uint256) -> address: view`"
@@ -141,15 +130,29 @@ After a liquidity gauge was deployed, it can be added to the `GaugeController` f
 
     === "Example"
 
-        This example shows the first and 100th gauge added to the `GaugeController`.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } In this example, the address of a gauge at a specific index is returned.
 
-        ```shell
-        >>> GaugeController.gauges(0)
-        '0x7ca5b0a2910B33e9759DC7dDB0413949071D7575'
+        <div class="highlight">
+        <pre><code>>>> GaugeController.gauges(<input id="gaugeIndex" type="number" value="0" min="0" 
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="fetchGauge()"/>)
+        <span id="gaugeOutput"></span></code></pre>
+        </div>
 
-        >>> GaugeController.gauges(150)
-        '0xF2dDF89C04d702369Ab9eF8399Edb99a76e951Ce'
-        ```
+        <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        </style>
 
 
 ### `n_gauges`
@@ -195,12 +198,10 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
     At the time of writing, the inflation rate per second of CRV is `5181574864521283150 (CRV.rate())`, which equals 5.18157486452128315 CRV per second.
     The gauge will, therefore, receive approximately 313,381.65 CRV tokens as emissions for the current week, calculated as 5.18157486452128315 CRV per second * 10% * (7 * 86400 seconds).
 
-
-
 ### `vote_for_gauge_weights`
 !!! description "`GaugeController.vote_for_gauge_weights(_gauge_addr: address, _user_weight: uint256):`"
 
-    !!! warning ""
+    !!! warning "`WEIGHT_VOTE_DELAY`"
         Gauge weight votes may only be modified once every 10 days.
 
     Function to allocate a specific amount of voting power to a gauge. The voting power is expressed and measured in bps (units of 0.01%). Minimal weight is 0.01%.
@@ -209,7 +210,7 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
 
     | Input          | Type       | Description   |
     | -------------- | ---------- | ------------- |
-    | `_gauge_addr`  |  `address` | Gauge address |
+    | `_gauge_addr`  |  `address` | Gauge address to allocate weight to |
     | `_user_weight` |  `uint256` | Weight to allocate |
 
     ??? quote "Source code"
@@ -222,6 +223,9 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
                 user: address
                 gauge_addr: address
                 weight: uint256
+
+            # Cannot change weight votes more often than once in 10 days
+            WEIGHT_VOTE_DELAY: constant(uint256) = 10 * 86400
 
             vote_user_slopes: public(HashMap[address, HashMap[address, VotedSlope]])  # user -> gauge_addr -> VotedSlope
             vote_user_power: public(HashMap[address, uint256])  # Total vote power used by user
@@ -358,10 +362,12 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
             ```
 
     === "Example"
-        ```shell
-        >>> GaugeController.vote_for_gauge("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7", 10000)
-        ```
 
+        This example allocates 100% of the voting power to `0x4e6bb6b7447b7b2aa268c16ab87f4bb48bf57939`.
+
+        ```shell
+        >>> GaugeController.vote_for_gauge_weights('0x4e6bb6b7447b7b2aa268c16ab87f4bb48bf57939', 10000)
+        ```
 
 ### `vote_user_power`
 !!! description "`GaugeController.vote_user_power(arg0: address) -> uint256: view`"
@@ -384,15 +390,29 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
 
     === "Example"
 
-        This example shows the total allocated voting power for two different users.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the total allocated voting power by a specific user.
 
-        ```shell
-        >>> GaugeController.vote_user_power("0x989AEb4d175e16225E39E87d0D97A3360524AD80")
-        10000
-        >>> GaugeController.vote_user_power("0xD533a949740bb3306d119CC777fa900bA034cd52")
-        0
-        ```
+        <div class="highlight">
+        <pre><code>>>> GaugeController.vote_user_power(<input id="voteUserPowerInput" type="text" value="0x989AEb4d175e16225E39E87d0D97A3360524AD80" 
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="fetchVoteUserPower()"/>)
+        <span id="voteUserPowerOutput"></span></code></pre>
+        </div>
 
+        <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        </style>
 
 ### `last_user_vote`
 !!! description "`GaugeController.last_user_vote(arg0: address, arg1: address) -> uint256: view`"
@@ -416,13 +436,32 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
 
     === "Example"
 
-        This example shows the last timestamp a specific user voted for a specific gauge.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the last time a user voted for a specific gauge.
 
-        ```shell
-        >>> GaugeController.last_user_vote("0x989AEb4d175e16225E39E87d0D97A3360524AD80", "0x2932a86df44fe8d2a706d8e9c5d51c24883423f5")
-        1685414927
-        ```
-
+        <div class="highlight">
+        <pre><code>>>> GaugeController.last_user_vote(
+        User: <input id="lastUserVoteInput1" 
+        type="text" 
+        value="0x989AEb4d175e16225E39E87d0D97A3360524AD80"
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>
+        Gauge: <input id="lastUserVoteInput2" 
+        type="text"
+        value="0x4e6bb6b7447b7b2aa268c16ab87f4bb48bf57939"
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>)
+        <span id="lastUserVoteOutput"></span></code></pre>
+        </div>
 
 ### `vote_user_slopes`
 !!! description "`GaugeController.vote_user_slopes(arg0: address, arg1: address) -> slope: uint256, power: uint256, end: uint256`"
@@ -446,23 +485,42 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
 
     === "Example"
 
-        This example shows the current vote weight of a specific user for a specific gauge.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the slope, allocated voting-power and veCRV lock end for a specific user and gauge.
 
-        ```shell
-        >>> GaugeController.vote_user_slopes("0x989AEb4d175e16225E39E87d0D97A3360524AD80", "0x2932a86df44fe8d2a706d8e9c5d51c24883423f5")
-        204492251647245423, 882, 1810771200     # returned values: slope, allocated power and veCRV unlock time
-        ```
-
+        <div class="highlight">
+        <pre><code>>>> GaugeController.vote_user_slopes(
+        User: <input id="voteUserSlopesInput1" 
+        type="text" 
+        value="0x989AEb4d175e16225E39E87d0D97A3360524AD80"
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>
+        Gauge: <input id="voteUserSlopesInput2" 
+        type="text"
+        value="0x4e6bb6b7447b7b2aa268c16ab87f4bb48bf57939"
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>)
+        <span id="voteUserSlopesOutput"></span></code></pre>
+        </div>
 
 ### `gauge_relative_weight`
 !!! description "`GaugeController.gauge_relative_weight(addr: address, time: uint256 = block.timestamp) -> uint256: view`"
 
     Getter for the relative weight of specific gauge at a specific time.
 
-    Returns: relative gauge weight (`uint256`).
+    Returns: relative gauge weight normalized to 1e18 (`uint256`).
 
     | Input  | Type       | Description |
-    | -----: | ---------- | ----------- |
+    | ------ | ---------- | ----------- |
     | `addr` |  `address` | Gauge address |
     | `time` |  `uint256` | Timestamp to check the weight at; Defaults to `block.timestamp` |
 
@@ -510,20 +568,39 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
 
     === "Example"
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the relative weight of a specific gauge at a specific time.
 
-
-        ```shell
-        >>> GaugeController.gauge_relative_weight("0x555766f3da968ecbefa690ffd49a2ac02f47aa5f")
-        27557442674450559
-        ```
-
+        <div class="highlight">
+        <pre><code>>>> GaugeController.gauge_relative_weight(
+        Gauge: <input id="gaugeRelativeWeightInput1" 
+        type="text" 
+        value="0x4e6bb6b7447b7b2aa268c16ab87f4bb48bf57939"
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>
+        Time: <input id="gaugeRelativeWeightInput2" 
+        class="timestamp-input"
+        type="number"
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>)
+        <span id="gaugeRelativeWeightOutput"></span></code></pre>
+        </div>
 
 ### `get_gauge_weight`
-!!! description "GaugeController.get_gauge_weight(addr: address) -> uint256: view`"
+!!! description "`GaugeController.get_gauge_weight(addr: address) -> uint256: view`"
 
     Getter for the current gauge weight of gauge `addr`.
 
-    Returns: gauge weight (`uint256`).
+    Returns: gauge weight normalized to 1e18 (`uint256`).
 
     | Input  | Type      | Description |
     | ------ | --------- | ----------- |
@@ -548,11 +625,30 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
             ```
 
     === "Example"
-        ```shell
-        >>> GaugeController.get_gauge_weight("0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A")
-        1987873524145187062272000
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current gauge weight of a specific gauge.
+
+        <div class="highlight">
+        <pre><code>>>> GaugeController.get_gauge_weight(<input id="getGaugeWeightInput" type="text" value="0x4e6bb6b7447b7b2aa268c16ab87f4bb48bf57939" 
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="fetchGetGaugeWeight()"/>)
+        <span id="getGaugeWeightOutput"></span></code></pre>
+        </div>
+
+        <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        </style>
 
 ### `get_total_weight`
 !!! description "`GaugeController.get_total_weight() -> uint256: view`"
@@ -579,12 +675,13 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
             ```
 
     === "Example"
-        
-        ```shell
-        >>> GaugeController.get_total_weight()
-        547873886536122498468683976000000000000000000
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current total weight.
+
+        <div class="highlight">
+        <pre><code>>>> GaugeController.get_total_weight()
+        <span id="getTotalWeightOutput"></span></code></pre>
+        </div>
 
 ### `get_weights_sum_per_type`
 !!! description "`GaugeController.get_weights_sum_per_type(type_id: int128) -> uint256: view`"
@@ -616,15 +713,32 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
             ```
 
     === "Example"
-        ```shell
-        >>> GaugeController.get_weights_sum_per_type(0)
-        357345591048932206476271176
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the summed weight of a specific gauge type.
 
+        <div class="highlight">
+        <pre><code>>>> GaugeController.get_weights_sum_per_type(<input id="getWeightsSumPerTypeInput" type="number" value="0" min="0" 
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="fetchGetWeightsSumPerType()"/>)
+        <span id="getWeightsSumPerTypeOutput"></span></code></pre>
+        </div>
+
+        <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        </style>
 
 ---
-
 
 ## **Points**
 
@@ -632,12 +746,11 @@ GaugeController records points (bias + slope) per gauge in `vote_points`, and sc
 
 *A `Point` is composed of a `bias` and a `slope`:*
 
-```shell
+```vyper
 struct Point:
     bias: uint256
     slope: uint256
 ```
-
 
 ### `points_weight`
 !!! description "`GaugeController.points_weight(arg0: address, arg1: uint256)`"
@@ -660,11 +773,33 @@ struct Point:
             ```
 
     === "Example"
-        ```shell
-        >>> GaugeController.points_weight("0x95f00391cb5eebcd190eb58728b4ce23dbfa6ac1", 1708560000)
-        18672290337590727096672000, 156512213763875910      # returns: bias, slope
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the bias and slope for a specific user and point.
+
+        <div class="highlight">
+        <pre><code>>>> GaugeController.points_weight(
+        User: <input id="pointsWeightInput1" 
+        type="text" 
+        value="0x989AEb4d175e16225E39E87d0D97A3360524AD80"
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>
+        Point: <input id="pointsWeightInput2" 
+        type="number"
+        value="0"
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>)
+        <span id="pointsWeightOutput"></span></code></pre>
+        </div>
 
 ### `time_weight`
 !!! description "`GaugeController.time_weight(arg0: address) -> uint256: view`"
@@ -686,10 +821,30 @@ struct Point:
             ```
 
     === "Example"
-        ```shell
-        >>> GaugeController.time_weight("0x95f00391cb5eebcd190eb58728b4ce23dbfa6ac1")
-        1708560000  # Thu Feb 22 2024 00:00 UTC
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the last scheduled time the gauge weight of a specific gauge updates.
+
+        <div class="highlight">
+        <pre><code>>>> GaugeController.time_weight(<input id="timeWeightInput" type="text" value="0x4e6bb6b7447b7b2aa268c16ab87f4bb48bf57939" 
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="fetchTimeWeight()"/>)
+        <span id="timeWeightOutput"></span></code></pre>
+        </div>
+
+        <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        </style>
 
 
 ### `points_sum`
@@ -713,12 +868,34 @@ struct Point:
             ```
 
     === "Example"
-        ```shell
-        >>> GaugeController.points_sum(0, 1708560000)
-        545861154651279477482306376, 4768438559247426097    # returns: bias, slope
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the bias and slope for a specific gauge type and point.
 
+        <div class="highlight">
+        <pre><code>>>> GaugeController.points_sum(
+        Type: <input id="pointsSumInput1" 
+        type="number" 
+        value="0"
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>
+        Time: <input id="pointsSumInput2"
+        class="timestamp-input"
+        type="number"
+        value="1708560000"
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>)
+        <span id="pointsSumOutput"></span></code></pre>
+        </div>
 
 ### `time_sum`
 !!! description "`GaugeController.time_sum(arg0: uint256) -> uint256: view`"
@@ -729,7 +906,7 @@ struct Point:
 
     | Input  | Type      | Description   |
     | ------ | --------- | ------------- |
-    | `arg0` | `int128`  | Gauge type ID |
+    | `arg0` | `uint256` | Gauge type ID |
 
     ??? quote "Source code"
 
@@ -740,10 +917,30 @@ struct Point:
             ```
 
     === "Example"
-        ```shell
-        >>> GaugeController.time_sum(0)
-        1708560000
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the last scheduled time the gauge weights of a specific gauge type update.
+
+        <div class="highlight">
+        <pre><code>>>> GaugeController.time_sum(<input id="timeSumInput" type="number" value="0" min="0" 
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="fetchTimeSum()"/>)
+        <span id="timeSumOutput"></span></code></pre>
+        </div>
+
+        <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        </style>
 
 
 ### `points_total`
@@ -766,10 +963,30 @@ struct Point:
             ```
 
     === "Example"
-        ```shell
-        >>> GaugeController.points_total(1708560000)
-        629971693908992755199109576000000000000000000
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current future total weight at a specific timestamp.
+
+        <div class="highlight">
+        <pre><code>>>> GaugeController.points_total(<input id="pointsTotalInput" type="number" value="1732752000" min="0" 
+        style="width: 100px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="fetchPointsTotal()"/>)
+        <span id="pointsTotalOutput"></span></code></pre>
+        </div>
+
+        <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        </style>
 
 
 ### `time_total`
@@ -797,7 +1014,6 @@ struct Point:
         </div>
 
 
-
 ### `points_type_weight`
 !!! description "`GaugeController.points_type_weight(arg0: int128, arg1: uint256) -> uint256: view`"
 
@@ -819,11 +1035,33 @@ struct Point:
             ```
 
     === "Example"
-        ```shell
-        >>> GaugeController.points_type_weight(0, 1708560000)
-        1000000000000000000
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the weight for a specific gauge type at a specific timestamp.
+
+        <div class="highlight">
+        <pre><code>>>> GaugeController.points_type_weight(
+        Type: <input id="pointsTypeWeightInput1" 
+        type="number" 
+        value="0"
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>
+        Time: <input id="pointsTypeWeightInput2" 
+        class="timestamp-input"
+        type="number"
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>)
+        <span id="pointsTypeWeightOutput"></span></code></pre>
+        </div>
 
 ### `time_type_weight`
 !!! description "`GaugeController.time_type_weight(arg0: uint256) -> uint256: view`"
@@ -845,21 +1083,36 @@ struct Point:
             ```
 
     === "Example"
-        ```shell
-        >>> GaugeController.time_type_weight(0)
-        1708560000
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the last scheduled time when the gauge weights of a specific gauge type update.
+
+        <div class="highlight">
+        <pre><code>>>> GaugeController.time_type_weight(<input id="timeTypeWeightInput" type="number" value="0" min="0" 
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="fetchTimeTypeWeight()"/>)
+        <span id="timeTypeWeightOutput"></span></code></pre>
+        </div>
+
+        <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        </style>
 
 ---
-
 
 ## **Gauge Types**
 
 Each liquidity gauge is assigned a type within the `GaugeController`. Grouping gauges by type allows the DAO to adjust the emissions according to type, making it possible to e.g. end all emissions for a single type.
-
-!!!warning "Gauge types"
-    Gauge types are not really used. All liquidity gauges are added with type `0` (Ethereum).
-
 
 | Description                                | Gauge Type |
 | ------------------------------------------ | :--------: |
@@ -876,8 +1129,6 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
 |               :moneybag: `Fundraising`     |    `10`    |
 |       :logos-optimism: `Optimism`          |    `11`    |
 |  :logos-bsc: `BinanceSmartChain`           |    `12`    |
-
-
 
 ### `gauge_types`
 !!! description "`GaugeController.gauge_types(_addr: address) -> int128: view`"
@@ -913,13 +1164,29 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
 
     === "Example"
 
-        This example shows the gauge type of a specific gauge.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the gauge type of a specific gauge.
 
-        ```shell
-        >>> GaugeController.gauge_types("0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A")
-        0
-        ```
+        <div class="highlight">
+        <pre><code>>>> GaugeController.gauge_types(<input id="gaugeTypesInput" type="text" value="0x4e6bb6b7447b7b2aa268c16ab87f4bb48bf57939" 
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="fetchGaugeTypes()"/>)
+        <span id="gaugeTypesOutput"></span></code></pre>
+        </div>
 
+        <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        </style>
 
 ### `n_gauge_types`
 !!! description "`GaugeController.n_gauge_types() -> int128: view`"
@@ -945,7 +1212,6 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
         <span id="nGaugeTypesOutput"></span></code></pre>
         </div>
 
-
 ### `gauge_type_names`
 !!! description "`GaugeController.gauge_type_names(arg0: int128) -> String[64]: view`"
 
@@ -967,13 +1233,27 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
 
     === "Example"
 
-        This example shows the name of a specific gauge type.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the name of a specific gauge type.
 
-        ```shell
-        >>> GaugeController.gauge_type_names(5)
-        'Liquidity (Crypto Pools)'
-        ```
+        <div class="highlight">
+        <pre><code>>>> GaugeController.gauge_type_names(<input id="gaugeTypeNamesInput" type="number" value="0" min="0" 
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>)
+        <span id="gaugeTypeNamesOutput"></span></code></pre>
+        </div>
 
+        <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        </style>
 
 ### `get_type_weight`
 !!! description "`GaugeController.get_type_weight(type_id: int128) -> uint256: view`"
@@ -1026,10 +1306,29 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
 
     === "Example"
 
-        ```shell
-        >>> GaugeController.get_type_weight(0)
-        1000000000000000000
-        ```
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the type weight of a specific gauge type.
+
+        <div class="highlight">
+        <pre><code>>>> GaugeController.get_type_weight(<input id="getTypeWeightInput" type="number" value="0" min="0" 
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="fetchGetTypeWeight()"/>)
+        <span id="getTypeWeightOutput"></span></code></pre>
+        </div>
+
+        <style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        </style>
 
 ### `add_type`
 !!! description "`GaugeController.add_type(_name: String[64], weight: uint256 = 0):`"
@@ -1113,11 +1412,17 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
 
     === "Example"
 
-        ```shell
-        >>> GaugeController.add_type(todo):
-        todo
-        ```
+        This example adds a new gauge type with the name `New Test GaugeType` and a weight of `0`. Adding a new gauge type increases the `n_gauge_types` by `1`. Consequently, the new gauge type will have an ID of `14` (as there are already `13` gauge types before this new addition).
 
+        ```shell
+        >>> GaugeController.n_gauge_types()
+        13
+
+        >>> GaugeController.add_type('New Test GaugeType', 0)
+
+        >>> GaugeController.n_gauge_types()
+        14
+        ```
 
 ### `change_type_weight`
 !!! description "`GaugeController.change_type_weight(type_id: int128, weight: uint256):`"
@@ -1129,10 +1434,10 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
 
     Emits: `NewTypeWeight` event.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `type_id` |  `int128` | Gauge type ID |
-    | `weight` |  `uint256` | New gauge type weight |
+    | Input     | Type      | Description   |
+    | --------- | --------- | ------------- |
+    | `type_id` | `int128`  | Gauge type ID |
+    | `weight`  | `uint256` | New gauge type weight |
 
     ??? quote "Source code"
 
@@ -1192,14 +1497,19 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
 
     === "Example"
         
+        This example changes the weight of a gauge type with ID `14` to `1000000000000000000`.
+
         ```shell
-        >>> GaugeController.change_type_weight(todo)
-        todo
+        >>> GaugeController.get_type_weight(14)
+        0
+
+        >>> GaugeController.change_type_weight(14, 1000000000000000000)
+
+        >>> GaugeController.get_type_weight(14)
+        1000000000000000000
         ```
 
-
 ---
-
 
 ## **Contract Info Methods**
 
@@ -1232,7 +1542,7 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
 
     === "Example"
 
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `crvUSD` token address.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `CRV` token address.
 
         <div class="highlight">
         <pre><code>>>> GaugeController.token()
@@ -1268,26 +1578,14 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
 
     === "Example"
 
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `VotingEscrow` address.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `VotingEscrow (veCRV)` address.
 
         <div class="highlight">
         <pre><code>>>> GaugeController.voting_escrow()
         <span id="votingEscrowOutput"></span></code></pre>
         </div>
 
-
 ---
-
-
-
-<h1>GaugeController: Admin Controls</h1>
-
-These functions are guarded, meaning they can only be executed by the contract's **`admin`**.
-
----
-
----
-
 
 ## **Contract Ownership** 
 
@@ -1322,11 +1620,13 @@ Admin ownership can be commited by calling [`commit_transfer_ownership`](../gaug
             ```
 
     === "Example"
-        ```shell
-        >>> GaugeController.admin()
-        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current `admin` of the contract.
+
+        <div class="highlight">
+        <pre><code>>>> GaugeController.admin()
+        <span id="adminOutput"></span></code></pre>
+        </div>
 
 ### `future_admin`
 !!! description "`GaugeController.future_admin() -> address: view`"
@@ -1344,11 +1644,13 @@ Admin ownership can be commited by calling [`commit_transfer_ownership`](../gaug
             ```
 
     === "Example"
-        ```shell
-        >>> GaugeController.future_admin()
-        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current `future_admin` of the contract.
+
+        <div class="highlight">
+        <pre><code>>>> GaugeController.future_admin()
+        <span id="futureAdminOutput"></span></code></pre>
+        </div>
 
 ### `commit_transfer_ownership`
 !!! description "`GaugeController.commit_transfer_ownership(addr: address)`"
@@ -1387,10 +1689,17 @@ Admin ownership can be commited by calling [`commit_transfer_ownership`](../gaug
 
     === "Example"
         
-        ```shell
-        >>> GaugeController.commit_transfer_ownership("0xd8da6bf26964af9d7eed9e03e53415d37aa96045")
-        ```
+        This example commits the ownership of the contract to `0xd8da6bf26964af9d7eed9e03e53415d37aa96045`.
 
+        ```shell
+        >>> GaugeController.admin()
+        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
+
+        >>> GaugeController.commit_transfer_ownership("0xd8da6bf26964af9d7eed9e03e53415d37aa96045")
+
+        >>> GaugeController.future_admin()
+        '0xd8da6bf26964af9d7eed9e03e53415d37aa96045'
+        ```
 
 ### `apply_transfer_ownership`
 !!! description "`GaugeController.apply_transfer_ownership() -> address: view`"
@@ -1404,24 +1713,34 @@ Admin ownership can be commited by calling [`commit_transfer_ownership`](../gaug
 
     ??? quote "Source code"
 
-        ```vyper
-        event ApplyOwnership:
+        === "GaugeController.vy"
+
+            ```vyper
+            event ApplyOwnership:
             admin: address
 
-        @external
-        def apply_transfer_ownership():
-            """
-            @notice Apply pending ownership transfer
-            """
-            assert msg.sender == self.admin  # dev: admin only
-            _admin: address = self.future_admin
-            assert _admin != ZERO_ADDRESS  # dev: admin not set
-            self.admin = _admin
-            log ApplyOwnership(_admin)
-        ```
+            @external
+            def apply_transfer_ownership():
+                """
+                @notice Apply pending ownership transfer
+                """
+                assert msg.sender == self.admin  # dev: admin only
+                _admin: address = self.future_admin
+                assert _admin != ZERO_ADDRESS  # dev: admin not set
+                self.admin = _admin
+                log ApplyOwnership(_admin)
+            ```
 
     === "Example"
-        
+
+        This example applies the new ownership of the contract to `0xd8da6bf26964af9d7eed9e03e53415d37aa96045` (see the example above).
+
         ```shell
+        >>> GaugeController.admin()
+        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
+
         >>> GaugeController.apply_transfer_ownership()
+
+        >>> GaugeController.admin()
+        '0xd8da6bf26964af9d7eed9e03e53415d37aa96045'
         ```
