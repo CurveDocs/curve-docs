@@ -1,5 +1,8 @@
 <h1>RootGaugeFactory</h1>
 
+<script src="/assets/javascripts/contracts/gauges/rootgaugefactory.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+
 The `RootGaugeFactory` contract is used to deploy liquidity gauges on the Ethereum mainnet. These gauges can then be voted on to be added to the `GaugeController`. If successful, the gauges will be able to receive CRV emissions, which then can be bridged via a `Bridger` contract to the child chains `ChildGauge`.
 
 ???+ vyper "`RootGaugeFactory.vy`"
@@ -13,10 +16,18 @@ The `RootGaugeFactory` contract is used to deploy liquidity gauges on the Ethere
 
 ## **Deploying Gauges**
 
-The `RootGaugeFactory` allows the deployment of root gauges on Ethereum and child gauges on the child chains. Root gauges can only be deployed if there is a `bridger` contract set for the given chain ID, otherwise the chain is not supported. 
+The `RootGaugeFactory` allows the deployment of root gauges on Ethereum and child gauges on the child chains. Root gauges can only be deployed if there is a `bridger` contract set for the given chain ID, otherwise the chain is not supported.
 
-To check if a certain chain is supported can be done by calling `Bridger.get_bridger(chain_id)`. If a address is returnd, the chain is supported. If `ZERO_ADDRESS` is returned, the chain is not supportd and no root gauge can be deployed.
+!!!info "Supported Chains"
+    If `get_bridger(chain_id)` returns a non-zero address, the chain is supported and a `RootGauge` can be deployed.
 
+    ```vyper
+    >>> RootGaugeFactory.get_bridger(252)           # fraxtal
+    '0x0199429171bcE183048dccf1d5546Ca519EA9717'    # supported
+
+    >>> RootGaugeFactory.get_bridger(7700)          # canto
+    '0x0000000000000000000000000000000000000000'    # not supported
+    ```
 
 ### `deploy_gauge`
 !!! description "`RootGaugeFactory.deploy_gauge(_chain_id: uint256, _salt: bytes32) -> RootGauge`"
@@ -133,13 +144,18 @@ To check if a certain chain is supported can be done by calling `Bridger.get_bri
 
     === "Example"
 
+        This example deploys a `RootGauge` for Fraxtal.
+
         ```shell
-        >>> soon
+        >>> RootGaugeFactory.deploy_gauge(252, '0x0000000000000000000000000000000000000000000000000000000000000000')
         ```
 
 
 ### `deploy_child_gauge`
 !!! description "`RootGaugeFactory.deploy_child_gauge(_chain_id: uint256, _lp_token: address, _salt: bytes32, _manager: address = msg.sender)`"
+
+    !!!warning "Important"
+        This function will only work if a `call_proxy` is set. Otherwise, the function will revert.
 
     Function to deploy a new child gauge on the child chain.
 
@@ -178,12 +194,13 @@ To check if a certain chain is supported can be done by calling `Bridger.get_bri
 
     === "Example"
 
+        This example deploys a `ChildGauge` on Optimism for the `0xb757fc30bb2d96782188c45b6ebf20defe165ac7` LP token. `0x1234567890123456789012345678901234567890` is specified as the manager.
+
         ```shell
-        >>> soon
+        >>> RootGaugeFactory.deploy_child_gauge(10, '0xb757fc30bb2d96782188c45b6ebf20defe165ac7', '0x0000000000000000000000000000000000000000000000000000000000000000', '0x1234567890123456789012345678901234567890')
         ```
 
 ---
-
 
 ## **Transmitting Emissions**
 
@@ -194,7 +211,7 @@ Transmitting emissions is permissionless. Anyone can do it.
 ### `transmit_emissions`
 !!! description "`RootGaugeFactory.transmit_emissions(_gauge: RootGauge)`"
 
-    Function to transmit emissions to the child gauge. This function is permissionsless and can be called by anyone. The function reverts if 
+    Function to mint and transmit emissions to the `ChildGauge` on the destination chain. This function is permissionsless and can be called by anyone.
 
     | Input    | Type      | Description |
     | -------- | --------- | ----------- |
@@ -281,8 +298,10 @@ Transmitting emissions is permissionless. Anyone can do it.
 
     === "Example"
 
+        This example transmits CRV emissions for the `RootGauge` at `0x6233394c3C466A45A505EFA4857489743168E9Fa` to the `ChildGauge` on Fraxtal.
+
         ```shell
-        >>> soon
+        >>> RootGaugeFactory.transmit_emissions('0x6233394c3C466A45A505EFA4857489743168E9Fa')
         ```
 
 
@@ -302,21 +321,32 @@ Transmitting emissions is permissionless. Anyone can do it.
         === "RootGaugeFactory.vy"
 
             ```python
+            interface Bridger:
+                def check(_addr: address) -> bool: view
+
             get_bridger: public(HashMap[uint256, Bridger])
             ```
 
     === "Example"
 
-        This example returns the bridger contract for chain ID 252 which is Fraxtal.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `Bridger` contract for a given chain ID. If the chain ID is not supported, the function will return `0x0000000000000000000000000000000000000000`.
 
-        ```shell
-        >>> RootGaugeFactory.get_bridger(252)
-        '0x0199429171bcE183048dccf1d5546Ca519EA9717'
-        ```
-
+        <div class="highlight">
+        <pre><code>>>> RootGaugeFactory.get_bridger(
+        <input id="getBridgerInput" type="text" value="252" 
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="fetchGetBridger()"/>)
+        <span id="getBridgerOutput"></span></code></pre>
+        </div>
 
 ---
-
 
 ## **Gauge Information**
 
@@ -344,11 +374,32 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
     === "Example"
 
-        ```shell
-        >>> RootGaugeFactory.get_gauge(252, 0)
-        '0x6233394c3C466A45A505EFA4857489743168E9Fa'
-        ```
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `RootGauge` address for a given chain ID and index.
 
+        <div class="highlight">
+        <pre><code>>>> RootGaugeFactory.get_gauge(
+        Chain ID: <input id="getGaugeChainIdInput" 
+        type="text" 
+        value="252"
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>
+        Gauge: <input id="getGaugeIndexInput" 
+        type="text"
+        value="0"
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>)
+        <span id="getGaugeOutput"></span></code></pre>
+        </div>
 
 ### `get_gauge_count`
 !!! description "`RootGaugeFactory.get_gauge_count(_chain_id: uint256) -> uint256`"
@@ -371,11 +422,22 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
     === "Example"
 
-        ```shell
-        >>> RootGaugeFactory.get_gauge_count(252)
-        4
-        ```
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the number of deployed `RootGauges` for a given chain ID.
 
+        <div class="highlight">
+        <pre><code>>>> RootGaugeFactory.get_gauge_count(
+        <input id="getGaugeCountInput" type="text" value="252" 
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="fetchGetGaugeCount()"/>)
+        <span id="getGaugeCountOutput"></span></code></pre>
+        </div>
 
 ### `is_valid_gauge`
 !!! description "`RootGaugeFactory.is_valid_gauge(_gauge: RootGauge) -> bool`"
@@ -398,14 +460,24 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
     === "Example"
 
-        ```shell
-        >>> RootGaugeFactory.is_valid_gauge('0x6233394c3C466A45A505EFA4857489743168E9Fa')
-        True
-        ```
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example checks if a given `RootGauge` is valid.
 
+        <div class="highlight">
+        <pre><code>>>> RootGaugeFactory.is_valid_gauge(
+        <input id="isValidGaugeInput" type="text" value="0x6233394c3C466A45A505EFA4857489743168E9Fa" 
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="fetchIsValidGauge()"/>)
+        <span id="isValidGaugeOutput"></span></code></pre>
+        </div>
 
 ---
-
 
 ## **Child and Root Implementations and Factories**
 
@@ -414,7 +486,7 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 ### `get_implementation`
 !!! description "`RootGaugeFactory.get_implementation() -> address: view`"
 
-    Getter for the `RootGauge` implementation contract.
+    Getter for the `RootGauge` implementation contract. This implementation contract is used to deploy new `RootGauge` contracts using 
 
     Returns: implementation address (`address`).
 
@@ -428,13 +500,12 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
     === "Example"
 
-        This example returns the `RootGauge` implementation contract address.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current `RootGauge` implementation contract address.
 
-        ```shell
-        >>> RootGaugeFactory.get_implementation()
-        '0x96720942F9fF22eFd8611F696E5333Fe3671717a'
-        ```
-
+        <div class="highlight">
+        <pre><code>>>> RootGaugeFactory.get_implementation()
+        <span id="getImplementationOutput"></span></code></pre>
+        </div>
 
 ### `set_implementation`
 !!! description "`RootGaugeFactory.set_implementation(_implementation: address)`"
@@ -503,12 +574,22 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
     === "Example"
 
-        This example returns the `ChildGaugeFactory` contractaddress for chain ID 252 which is Fraxtal.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `ChildGaugeFactory` contract address for a specific chain ID.
 
-        ```shell
-        >>> RootGaugeFactory.get_child_factory(252)
-        '0x0B8D6B6CeFC7Aa1C2852442e518443B1b22e1C52'
-        ```
+        <div class="highlight">
+        <pre><code>>>> RootGaugeFactory.get_child_factory(
+        <input id="getChildFactoryInput" type="text" value="252" 
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="fetchGetChildFactory()"/>)
+        <span id="getChildFactoryOutput"></span></code></pre>
+        </div>
 
 
 ### `get_child_implementation`
@@ -532,13 +613,22 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
     === "Example"
 
-        This example returns the `ChildGauge` implementation contract address for chain ID 252 which is Fraxtal.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `ChildGauge` implementation contract address for a given chain ID.
 
-        ```shell
-        >>> RootGaugeFactory.get_child_implementation(252)
-        '0x6A611215540555A7feBCB64CB0Ed11Ac90F165Af'
-        ```
-
+        <div class="highlight">
+        <pre><code>>>> RootGaugeFactory.get_child_implementation(
+        <input id="getChildImplementationInput" type="text" value="252" 
+        style="width: 50px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="fetchGetChildImplementation()"/>)
+        <span id="getChildImplementationOutput"></span></code></pre>
+        </div>
 
 ### `set_child`
 !!! description "`RootGaugeFactory.set_child(_chain_id: uint256, _bridger: Bridger, _child_factory: address, _child_impl: address)`"
@@ -593,23 +683,24 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
     === "Example"
 
-        ```shell
-        >>> soon     
-        ```
+        This example sets the following properties for chain ID 252:
 
+        - Bridger: `0x0199429171bcE183048dccf1d5546Ca519EA9717`
+        - ChildGaugeFactory: `0x0B8D6B6CeFC7Aa1C2852442e518443B1b22e1C52`
+        - ChildGauge implementation: `0x6A611215540555A7feBCB64CB0Ed11Ac90F165Af`
+
+        ```shell
+        >>> RootGaugeFactory.set_child(252, '0x0199429171bcE183048dccf1d5546Ca519EA9717', '0x0B8D6B6CeFC7Aa1C2852442e518443B1b22e1C52', '0x6A611215540555A7feBCB64CB0Ed11Ac90F165Af')
+        ```
 
 ---
 
-
-## **Ownership and Other Methods**
-
-Ownership follows the standard pattern for upgradable contracts with owner, future_owner and transfer_ownership functions.
-
+## **Call Proxy**
 
 ### `call_proxy`
 !!! description "`RootGaugeFactory.call_proxy() -> CallProxy: view`"
 
-    Getter to get the call proxy which is initially set at initialization. This variable can be changed via the `set_call_proxy` function.
+    Getter to get the call proxy which is used for inter-chain communication. This variable is initially set at contract initialization and can be changed via the [`set_call_proxy`](#set_call_proxy) function.
 
     Returns: call proxy (`CallProxy`).
 
@@ -618,6 +709,11 @@ Ownership follows the standard pattern for upgradable contracts with owner, futu
         === "RootGaugeFactory.vy"
 
             ```python
+            interface CallProxy:
+                def anyCall(
+                    _to: address, _data: Bytes[1024], _fallback: address, _to_chain_id: uint256
+                ): nonpayable
+
             call_proxy: public(CallProxy)
 
             @external
@@ -631,11 +727,12 @@ Ownership follows the standard pattern for upgradable contracts with owner, futu
 
     === "Example"
 
-        ```shell
-        >>> RootGaugeFactory.call_proxy()
-        '0x0000000000000000000000000000000000000000'
-        ```
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current call proxy contract address.
 
+        <div class="highlight">
+        <pre><code>>>> RootGaugeFactory.call_proxy()
+        <span id="getCallProxyOutput"></span></code></pre>
+        </div>
 
 ### `set_call_proxy`
 !!! description "`RootGaugeFactory.set_call_proxy(_call_proxy: CallProxy)`"
@@ -676,29 +773,14 @@ Ownership follows the standard pattern for upgradable contracts with owner, futu
 
     === "Example"
 
-        ```shell
-        >>> soon
-        ```
-
-
-### `version`
-!!! description "`RootGaugeFactory.version() -> String[8]`"
-
-    Getter for the version of the gauge.
-
-    Returns: version (`String[8]`).
-
-    ??? quote "Source code"
-
-        === "RootGaugeFactory.vy"
-
-            ```python
-            version: public(constant(String[8])) = "1.0.2"
-            ```
-
-    === "Example"
+        This example sets the call proxy to `0x1234567890123456789012345678901234567890`.
 
         ```shell
-        >>> RootGaugeFactory.version()
-        '1.0.2'
+        >>> RootGaugeFactory.call_proxy()
+        '0x0000000000000000000000000000000000000000'
+
+        >>> RootGaugeFactory.set_call_proxy('0x1234567890123456789012345678901234567890')
+
+        >>> RootGaugeFactory.call_proxy()
+        '0x1234567890123456789012345678901234567890'
         ```
