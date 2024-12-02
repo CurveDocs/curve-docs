@@ -516,9 +516,9 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
     Emits: `UpdateImplementation` event.
 
-    | Input      | Type      | Description |
-    | ----------- | --------- | ----------- |
-    | `_implementation` | `address` | Address of the implementation contract |
+    | Input             | Type        | Description |
+    | ----------------- | ----------- | ----------- |
+    | `_implementation` | `address`   | Address of the new implementation |
 
     ??? quote "Source code"
 
@@ -567,7 +567,7 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
     Returns: child factory address (`address`).
 
-    | Input      | Type      | Description |
+    | Input       | Type      | Description |
     | ----------- | --------- | ----------- |
     | `_chain_id` | `uint256` | Chain ID of the child gauge |
 

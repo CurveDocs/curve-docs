@@ -8,9 +8,7 @@ The `ChildGaugeFactory` contract is used to deploy liquidity gauges on the child
 
     A full list of all deployed `ChildGaugeFactory` contracts can be found [here](../deployments/crosschain.md#childgaugefactory).
 
-
 ---
-
 
 ## **Deploy Child Gauge**
 
@@ -124,9 +122,7 @@ Child gauges can either be deployed from the `RootChainFactory` or directly from
         >>> soon
         ```
 
-
 ---
-
 
 ## **Minting Emissions**
 
@@ -212,7 +208,6 @@ When claiming emissions via `claim` or `claim_many`, and `is_mirrored` is set to
         ```shell
         >>> soon
         ```
-
 
 ### `mint_many`
 !!! description "`ChildGaugeFactory.mint_many(_gauges: address[32]) -> bool`"
@@ -323,9 +318,7 @@ When claiming emissions via `claim` or `claim_many`, and `is_mirrored` is set to
         >>> soon
         ```
 
-
 ---
-
 
 ## **Gauge Data**
 
@@ -361,7 +354,6 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
         >>> soon
         ```
 
-
 ### `is_valid_gauge`
 !!! description "`ChildGaugeFactory.is_valid_gauge(_gauge: address) -> bool`"
 
@@ -396,7 +388,6 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
         >>> soon
         ```
 
-
 ### `get_gauge_from_lp_token`
 !!! description "`ChildGaugeFactory.get_gauge_from_lp_token(_lp_token: address) -> address`"
 
@@ -422,7 +413,6 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
         >>> soon
         ```
 
-
 ### `get_gauge_count`
 !!! description "`ChildGaugeFactory.get_gauge_count() -> uint256`"
 
@@ -444,7 +434,6 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
         >>> ChildGaugeFactory.get_gauge_count()
         3
         ```
-
 
 ### `get_gauge`
 !!! description "`ChildGaugeFactory.get_gauge(_idx: uint256) -> address`"
@@ -476,7 +465,6 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
         >>> ChildGaugeFactory.get_gauge(1)
         '0xcde3Cdf332E35653A7595bA555c9fDBA3c78Ec04'
         ```
-
 
 ### `last_request`
 !!! description "`ChildGaugeFactory.last_request(_gauge: address) -> uint256`"
@@ -513,7 +501,6 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
         >>> soon
         ```
 
-
 ### `is_mirrored`
 !!! description "`ChildGaugeFactory.is_mirrored(_gauge: address) -> bool`"
 
@@ -549,7 +536,6 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
         >>> ChildGaugeFactory.is_mirrored('0xcde3Cdf332E35653A7595bA555c9fDBA3c78Ec04')
         False
         ```
-
 
 ### `set_mirrored`
 !!! description "`ChildGaugeFactory.set_mirrored(_gauge: address, _is_mirrored: bool)`"
@@ -605,9 +591,7 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
         >>> soon
         ```
 
-
 ---
-
 
 ## **Child Gauge Implementation**
 
@@ -635,7 +619,6 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
         '0x6A611215540555A7feBCB64CB0Ed11Ac90F165Af'
         ```
 
-
 ### `set_implementation`
 !!! description "`ChildGaugeFactory.set_implementation(_implementation: address)`"
 
@@ -646,8 +629,8 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
 
     Emits: `UpdateImplementation` event.
 
-    | Input      | Type      | Description |
-    | ---------- | --------- | ----------- |
+    | Input         | Type        | Description |
+    | ------------- | ----------- | ----------- |
     | `_implementation` | `address` | New implementation address |
 
     ??? quote "Source code"
@@ -685,9 +668,7 @@ The `ChildGaugeFactory` contract stores different gauge data for all the child g
         '0x1234567890123456789012345678901234567892'
         ```
 
-
 ---
-
 
 ## **Root Factory and Implementation**
 
@@ -738,7 +719,6 @@ The `root_factory` and `root_implementation` variables store the addresses of th
         '0x306A45a1478A000dC701A6e1f7a569afb8D9DCD6'
         ```
 
-
 ### `root_implementation`
 !!! description "`ChildGaugeFactory.root_implementation() -> address: view`"
 
@@ -779,7 +759,6 @@ The `root_factory` and `root_implementation` variables store the addresses of th
         >>> ChildGaugeFactory.root_implementation()
         '0x96720942F9fF22eFd8611F696E5333Fe3671717a'
         ```
-
 
 ### `set_root`
 !!! description "`ChildGaugeFactory.set_root(_factory: address, _implementation: address)`"
@@ -825,14 +804,11 @@ The `root_factory` and `root_implementation` variables store the addresses of th
         >>> ChildGaugeFactory.set_root('0x1234567890123456789012345678901234567890', '0x1234567890123456789012345678901234567891')
         ```
 
-
 ---
-
 
 ## **CRV Token and Voting Escrow**
 
 The `crv` and `voting_escrow` variables store the addresses of the CRV token and `VotingEscrow` contract, respectively. `crv` represents a bridged version of the CRV token, whereas `voting_escrow` represents a `L2 VotingEscrow Oracle` contract. This oracle is responsible for providing data from the `VotingEscrow` contract on Ethereum to the child chain in order to make boosts on sidechains work. If there is no `L2 VotingEscrow Oracle` set, the boosts on the child chain will not work.
-
 
 ### `crv`
 !!! description "`ChildGaugeFactory.crv() -> address: view`"
@@ -870,7 +846,6 @@ The `crv` and `voting_escrow` variables store the addresses of the CRV token and
         '0x331B9182088e2A7d6D3Fe4742AbA1fB231aEcc56'
         ```
 
-
 ### `set_crv`
 !!! description "`ChildGaugeFactory.set_crv(_crv: address)`"
 
@@ -881,8 +856,8 @@ The `crv` and `voting_escrow` variables store the addresses of the CRV token and
 
     Emits: `UpdateCRV` event.
 
-    | Input      | Type      | Description |
-    | ---------- | --------- | ----------- |
+    | Input  | Type      | Description |
+    | ------ | --------- | ----------- |
     | `_crv` | `address` | New CRV token address |
 
     ??? quote "Source code"
@@ -918,7 +893,6 @@ The `crv` and `voting_escrow` variables store the addresses of the CRV token and
         '0x1234567890123456789012345678901234567892'
         ```
 
-
 ### `voting_escrow`
 !!! description "`ChildGaugeFactory.voting_escrow() -> address: view`"
 
@@ -940,7 +914,6 @@ The `crv` and `voting_escrow` variables store the addresses of the CRV token and
         >>> ChildGaugeFactory.voting_escrow()
         '0xc73e8d8f7A68Fc9d67e989250484E57Ae03a5Da3'
         ```
-
 
 ### `set_voting_escrow`
 !!! description "`ChildGaugeFactory.set_voting_escrow(_voting_escrow: address)`"
@@ -991,7 +964,6 @@ The `crv` and `voting_escrow` variables store the addresses of the CRV token and
         '0x1234567890123456789012345678901234567893'
         ```
 
-
 ---
 
 ## **Manager**
@@ -1033,7 +1005,6 @@ The `crv` and `voting_escrow` variables store the addresses of the CRV token and
         >>> ChildGaugeFactory.manager()
         '0xaE50429025B59C9D62Ae9c3A52a657BC7AB64036'
         ```
-
 
 ### `set_manager`
 !!! description "`ChildGaugeFactory.set_manager(_new_manager: address)`"
@@ -1090,8 +1061,6 @@ The `crv` and `voting_escrow` variables store the addresses of the CRV token and
 
     Returns: call proxy address (`address`).
 
-    Emits: `UpdateCallProxy` event at initialization.
-
     ??? quote "Source code"
 
         === "ChildGaugeFactory.vy"
@@ -1124,7 +1093,6 @@ The `crv` and `voting_escrow` variables store the addresses of the CRV token and
         >>> ChildGaugeFactory.call_proxy()
         '0x0000000000000000000000000000000000000000'
         ```
-
 
 ### `set_call_proxy`
 !!! description "`ChildGaugeFactory.set_call_proxy(_new_call_proxy: address)`"
