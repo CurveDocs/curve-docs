@@ -779,3 +779,9 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
         >>> RootGaugeFactory.call_proxy()
         '0x1234567890123456789012345678901234567890'
         ```
+
+---
+
+## **Contract Ownership**
+
+For contract ownership details, see [here](../../references/curve-practices.md#commit--accept).

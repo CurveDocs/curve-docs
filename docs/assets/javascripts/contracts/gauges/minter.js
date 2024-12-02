@@ -121,6 +121,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
-    // Dual input queries
-    handleInputQuery('mintingUserInput', 'mintedOutput', 'minted', 'voteUserSlopesInput2');
+    // Set up input-based queries
+    // Single input queries
+    handleInputQuery('mintedInput1', 'mintedOutput', 'minted', 'mintedInput2');
+    handleInputQuery('allowedToMintForInput1', 'allowedToMintForOutput', 'allowed_to_mint_for', 'allowedToMintForInput2');
 });

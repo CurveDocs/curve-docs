@@ -697,25 +697,3 @@ Root gauges can be killed by the `owner` of the `RootGaugeFactory` to disable em
         >>> RootGauge.factory()
         '0x306A45a1478A000dC701A6e1f7a569afb8D9DCD6'
         ```
-
-### `version`
-!!! description "`RootGauge.version() -> String[8]: view`"
-
-    Getter for the version of the gauge.
-
-    Returns: version (`String[8]`).
-
-    ??? quote "Source code"
-
-        === "RootGauge.vy"
-
-            ```python
-            version: public(constant(String[8])) = "1.0.1"
-            ```
-
-    === "Example"
-
-        ```py
-        >>> RootGauge.version()
-        '1.0.1'
-        ```

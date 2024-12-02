@@ -1079,144 +1079,9 @@ The `crv` and `voting_escrow` variables store the addresses of the CRV token and
         '0x1234567890123456789012345678901234567895'
         ```
 
-
 ---
 
-
-## **Ownership**
-
-### `owner`
-!!! description "`ChildGaugeFactory.owner() -> address: view`"
-
-    Getter for the owner address.
-
-    Returns: owner (`address`).
-
-    ??? quote "Source code"
-
-        === "ChildGaugeFactory.vy"
-
-            ```python
-            owner: public(address)
-            ```
-
-    === "Example"
-
-        ```shell
-        >>> ChildGaugeFactory.owner()
-        '0xaE50429025B59C9D62Ae9c3A52a657BC7AB64036'
-        ```
-
-
-### `future_owner`
-!!! description "`ChildGaugeFactory.future_owner() -> address: view`"
-
-    Getter for the future owner address.
-
-    Returns: future owner (`address`).
-
-    ??? quote "Source code"
-
-        === "ChildGaugeFactory.vy"
-
-            ```python
-            future_owner: public(address)
-            ```
-
-    === "Example"
-
-        ```shell
-        >>> ChildGaugeFactory.future_owner()
-        '0x0000000000000000000000000000000000000000'
-        ```
-
-
-### `commit_transfer_ownership`
-!!! description "`ChildGaugeFactory.commit_transfer_ownership(_future_owner: address)`"
-
-    Function to commit the transfer of ownership to a new address.
-
-    Emits: `CommitOwnership` event.
-
-    | Input    | Type      | Description |
-    | ---------- | --------- | ----------- |
-    | `_future_owner` | `address` | New owner address |
-
-    ??? quote "Source code"
-
-        === "ChildGaugeFactory.vy"
-
-            ```python
-            owner: public(address)
-            future_owner: public(address)
-
-            @external
-            def commit_transfer_ownership(_future_owner: address):
-                """
-                @notice Transfer ownership to `_future_owner`
-                @param _future_owner The account to commit as the future owner
-                """
-                assert msg.sender == self.owner  # dev: only owner
-
-                self.future_owner = _future_owner
-            ```
-
-    === "Example"
-
-        ```shell
-        >>> ChildGaugeFactory.commit_transfer_ownership('0x1234567890123456789012345678901234567896')
-
-        >>> ChildGaugeFactory.future_owner()
-        '0x1234567890123456789012345678901234567896'
-        ```
-
-
-### `accept_transfer_ownership`
-!!! description "`ChildGaugeFactory.accept_transfer_ownership()`"
-
-    Function to accept the transfer of ownership.
-
-    Emits: `TransferOwnership` event.
-
-    ??? quote "Source code"
-
-        === "ChildGaugeFactory.vy"
-
-            ```python
-            event TransferOwnership:
-                _old_owner: address
-                _new_owner: address
-
-            owner: public(address)
-            future_owner: public(address)
-
-            @external
-            def accept_transfer_ownership():
-                """
-                @notice Accept the transfer of ownership
-                @dev Only the committed future owner can call this function
-                """
-                assert msg.sender == self.future_owner  # dev: only future owner
-
-                log TransferOwnership(self.owner, msg.sender)
-                self.owner = msg.sender
-            ```
-
-    === "Example"
-
-        ```shell
-        >>> ChildGaugeFactory.accept_transfer_ownership()
-
-        >>> ChildGaugeFactory.owner()
-        '0x1234567890123456789012345678901234567896'
-        ```
-
-
----
-
-
-## **Other Methods**
-
+## **Call Proxy**
 
 ### `call_proxy`
 !!! description "`ChildGaugeFactory.call_proxy() -> address: view`"
@@ -1311,25 +1176,8 @@ The `crv` and `voting_escrow` variables store the addresses of the CRV token and
         '0x1234567890123456789012345678901234567894'
         ```
 
+---
 
-### `version`
-!!! description "`ChildGaugeFactory.version() -> string[8]: view`"
+## **Ownership**
 
-    Getter for the version of the `ChildGaugeFactory` contract.
-
-    Returns: version (`string[8]`).
-
-    ??? quote "Source code"
-
-        === "ChildGaugeFactory.vy"
-
-            ```python
-            version: public(constant(String[8])) = "2.0.0"
-            ```
-
-    === "Example"
-
-        ```shell
-        >>> ChildGaugeFactory.version()
-        '2.0.0'
-        ```
+For contract ownership details, see [here](../../references/curve-practices.md#commit--accept).

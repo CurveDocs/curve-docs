@@ -1,16 +1,16 @@
 <h1>Minter</h1>
 
+<script src="/assets/javascripts/contracts/gauges/minter.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+
 The `Minter` is responsible for the **issuance and distribution of CRV tokens** to liquidity providers. It acts as a mechanism to reward users who provide liquidity to Curve's pools. The contract essentially calculates the amount of CRV tokens to be allocated based on various factors such as the duration and amount of liquidity provided.
 
-
 ???+vyper "`Minter.vy`"
-    The source code for the `Minter.vy` contract is available on  [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/Minter.vy). The contract is written in [Vyper](https://vyperlang.org/) version 0.2.4.
+    The source code for the `Minter.vy` contract is available on  [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/Minter.vy). The contract is written in [Vyper](https://vyperlang.org/) version `0.2.4`.
 
-    The contract is deployed on :logos-ethereum: Ethereum at [0xe8d1e2531761406af1615a6764b0d5ff52736f56](https://etherscan.io/address/0xe8d1e2531761406af1615a6764b0d5ff52736f56#code).
-
+    The contract is deployed on :logos-ethereum: Ethereum at [0xd061D61a4d941c39E5453435B6345Dc261C2fcE0](https://etherscan.io/address/0xd061D61a4d941c39E5453435B6345Dc261C2fcE0#code).
 
 ---
-
 
 ## **Minting CRV**
 
@@ -19,7 +19,6 @@ CRV tokens can be minted in several ways:
 - [`mint`](#mint): simple function which mints the elegible CRV tokens to `msg.sender` from a single gauge
 - [`mint_many`](#mint_many): function to mint the elegible CRV for `msg.sender` for multiple gauges at once
 - [`mint_for`](#mint_for): function to mint CRV for someone else and send it to them. Approval needs to be granted via [`toggle_approve_mint`](#toggle_approve_mint)
-
 
 ### `mint`
 !!! description "`Minter.mint(gauge_addr: address)`"
@@ -84,7 +83,6 @@ CRV tokens can be minted in several ways:
         ```shell
         >>> Minter.mint('0xe5d5aa1bbe72f68df42432813485ca1fc998de32')
         ```
-
 
 ### `mint_for`
 !!! description "`Minter.mint_for(gauge_addr: address, _for: address)`"
@@ -157,7 +155,6 @@ CRV tokens can be minted in several ways:
         >>> Minter.mint_for('0xe5d5aa1bbe72f68df42432813485ca1fc998de32', '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045')
         ```
 
-
 ### `mint_many`
 !!! description "`Minter.mint_many(gauge_addrs: address[8])`"
 
@@ -228,6 +225,55 @@ CRV tokens can be minted in several ways:
         >>> Minter.mint_many('0xe5d5aa1bbe72f68df42432813485ca1fc998de32', '0xbfcf63294ad7105dea65aa58f8ae5be2d9d0952a' '0xb9bdcdcd7c3c1a3255402d44639cb6c7281833cf', '0x0000000000000000000000000000000000000000')
         ```
 
+### `minted`
+!!! description "`Minter.minted(arg0: address, arg1: address) -> uint256: view`"
+
+    Getter for the total amount of CRV minted from a specific gauge to a specific user.
+
+    Returns: amount of CRV minted (`uint256`).
+
+    | Input  | Type      | Description   |
+    | ------ | --------- | ------------- |
+    | `arg0` | `address` | User address  |
+    | `arg1` | `address` | Gauge address |
+
+    ??? quote "Source code"
+
+        === "Minter.vy"
+
+            ```vyper
+            # user -> gauge -> value
+            minted: public(HashMap[address, HashMap[address, uint256]])
+            ```
+
+    === "Example"
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the amount of CRV minted from a specific gauge to a specific user.
+
+        <div class="highlight">
+        <pre><code>>>> Minter.minted(
+        Minter: <input id="mintedInput1" 
+        type="text" 
+        value="0x989AEb4d175e16225E39E87d0D97A3360524AD80"
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>
+        Gauge: <input id="mintedInput2" 
+        type="text"
+        value="0xbfcf63294ad7105dea65aa58f8ae5be2d9d0952a"
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>)
+        <span id="mintedOutput"></span></code></pre>
+        </div>
 
 ### `allowed_to_mint_for`
 !!! description "`Minter.allowed_to_mint_for(arg0: address, arg1: address) -> bool: view`"
@@ -252,13 +298,32 @@ CRV tokens can be minted in several ways:
 
     === "Example"
 
-        This example checks if `0x989AEb4d175e16225E39E87d0D97A3360524AD80` can mint for `0xF147b8125d2ef93FB6965Db97D6746952a133934`.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example checks if a specific user can mint for another user.
 
-        ```shell
-        >>> Minter.allowed_to_mint_for('0x989AEb4d175e16225E39E87d0D97A3360524AD80', '0xF147b8125d2ef93FB6965Db97D6746952a133934')
-        False
-        ```
-
+        <div class="highlight">
+        <pre><code>>>> Minter.allowed_to_mint_for(
+        Minter: <input id="allowedToMintForInput1" 
+        type="text" 
+        value="0x989AEb4d175e16225E39E87d0D97A3360524AD80"
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>
+        User: <input id="allowedToMintForInput2" 
+        type="text"
+        value="0x0000000000000000000000000000000000000000"
+        style="width: 350px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit;"/>)
+        <span id="allowedToMintForOutput"></span></code></pre>
+        </div>
 
 ### `toggle_approve_mint`
 !!! description "`Minter.toggle_approve_mint(minting_user: address)`"
@@ -300,47 +365,14 @@ CRV tokens can be minted in several ways:
         True
         ```
 
-
-### `minted`
-!!! description "`Minter.minted(arg0: address, arg1: address) -> uint256: view`"
-
-    Getter for the total amount of CRV minted from a specific gauge to a specific user.
-
-    Returns: amount of CRV minted (`uint256`).
-
-    | Input  | Type      | Description   |
-    | ------ | --------- | ------------- |
-    | `arg0` | `address` | User address  |
-    | `arg1` | `address` | Gauge address |
-
-    ??? quote "Source code"
-
-        === "Minter.vy"
-
-            ```vyper
-            # user -> gauge -> value
-            minted: public(HashMap[address, HashMap[address, uint256]])
-            ```
-
-    === "Example"
-
-        This example gets the total amount of CRV minted from `0xe5d5aa1bbe72f68df42432813485ca1fc998de32` to `0x989AEb4d175e16225E39E87d0D97A3360524AD80`.
-
-        ```shell
-        >>> Minter.minted('0x989AEb4d175e16225E39E87d0D97A3360524AD80', '0xe5d5aa1bbe72f68df42432813485ca1fc998de32')
-        2464666834080877175814487
-        ```
-
-
 ---
-
 
 ## **Other Methods**
 
 ### `token`
 !!! description "`Minter.token() -> address: view`"
 
-    Getter for the token address of Curve DAO Token (CRV). This varible is set at initialization and can not be changed after.
+    Getter for the token address of the Curve DAO Token (CRV). This variable is set at initialization and can not be changed after.
 
     Returns: CRV token contract (`address`).
 
@@ -359,13 +391,12 @@ CRV tokens can be minted in several ways:
 
     === "Example"
 
-        This example returns the CRV token address.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `CRV` token address.
 
-        ```shell
-        >>> Minter.token()
-        '0xD533a949740bb3306d119CC777fa900bA034cd52'
-        ```
-
+        <div class="highlight">
+        <pre><code>>>> Minter.token()
+        <span id="tokenOutput"></span></code></pre>
+        </div>
 
 ### `controller`
 !!! description "`Minter.controller() -> address: view`"
@@ -389,9 +420,9 @@ CRV tokens can be minted in several ways:
 
     === "Example"
 
-        This example returns the `GaugeController` contract.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `GaugeController` address.
 
-        ```shell
-        >>> Minter.controller()
-        '0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB'
-        ```
+        <div class="highlight">
+        <pre><code>>>> Minter.controller()
+        <span id="controllerOutput"></span></code></pre>
+        </div>
