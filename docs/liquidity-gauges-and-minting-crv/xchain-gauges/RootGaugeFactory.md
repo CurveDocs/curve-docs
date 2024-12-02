@@ -548,8 +548,16 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
     === "Example"
 
+        This example sets the `RootGauge` implementation to the address `0x6233394c3C466A45A505EFA4857489743168E9Fa`.
+
         ```shell
-        >>> soon
+        >>> RootGaugeFactory.get_implementation()
+        '0x0000000000000000000000000000000000000000'
+
+        >>> RootGaugeFactory.set_implementation('0x6233394c3C466A45A505EFA4857489743168E9Fa')
+        
+        >>> RootGaugeFactory.get_implementation()
+        '0x6233394c3C466A45A505EFA4857489743168E9Fa'
         ```
 
 ### `get_child_factory`
@@ -558,6 +566,10 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
     Getter for the child factory for a given chain ID.
 
     Returns: child factory address (`address`).
+
+    | Input      | Type      | Description |
+    | ----------- | --------- | ----------- |
+    | `_chain_id` | `uint256` | Chain ID of the child gauge |
 
     ??? quote "Source code"
 
@@ -678,7 +690,7 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
     === "Example"
 
-        This example sets the following properties for chain ID 252:
+        This example sets the following properties for chain ID `252`:
 
         - Bridger: `0x0199429171bcE183048dccf1d5546Ca519EA9717`
         - ChildGaugeFactory: `0x0B8D6B6CeFC7Aa1C2852442e518443B1b22e1C52`
@@ -739,8 +751,8 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
     Emits: `UpdateCallProxy` event.
 
-    | Input      | Type      | Description |
-    | ----------- | --------- | ----------- |
+    | Input         | Type        | Description       |
+    | ------------- | ----------- | ----------------- |
     | `_call_proxy` | `CallProxy` | Call proxy to set |
 
     ??? quote "Source code"
