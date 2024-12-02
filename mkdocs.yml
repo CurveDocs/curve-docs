@@ -119,43 +119,54 @@ repo_url: https://github.com/CurveDocs/curve-docs
 
 nav:
   - Documentation Overview: documentation-overview.md
-  - Curve DAO:
-    - Curve DAO Token: curve_dao/crv-token.md
-    - Vote-Escrowed CRV:
-      - VotingEscrow:
-        - Contract Methods: curve_dao/voting-escrow/voting-escrow.md
-        - Admin Controls: curve_dao/voting-escrow/admin-controls.md
-      - SmartWalletChecker: curve_dao/voting-escrow/smartwalletchecker.md
-    - Liquidity Gauges and Minting CRV:
-      - Overview & Implementation: curve_dao/liquidity-gauge-and-minting-crv/overview.md
-      - GaugeController:
-        - GaugeController.vy: curve_dao/liquidity-gauge-and-minting-crv/gauge-controller/GaugeController.md
-        - Admin Controls: curve_dao/liquidity-gauge-and-minting-crv/gauge-controller/admin-controls.md
-      - Gauges:
-        - Overview: curve_dao/liquidity-gauge-and-minting-crv/gauges/overview.md
-        - LiquidityGaugeV6: curve_dao/liquidity-gauge-and-minting-crv/gauges/LiquidityGaugeV6.md
-      - Gauges for EVM Sidechains: 
-        - Overview: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/overview.md
-        - RootChainGauge: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGauge.md
-        - RootChainGaugeFactory: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md
-        - ChilChaindGauge: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/ChildGauge.md
-        - ChildChainGaugeFactory: curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/ChildGaugeFactory.md
-      - Minter: curve_dao/liquidity-gauge-and-minting-crv/minter.md 
-    - Ownership Proxies:
-      - Overview: curve_dao/ownership-proxy/overview.md
-      - Agents: curve_dao/ownership-proxy/Agents.md
-      - PoolProxy: curve_dao/ownership-proxy/PoolProxy.md
-      - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
-      - RootChainGaugeProxy: curve_dao/ownership-proxy/RootChainGaugeFactoryProxy.md
 
-    - Governance and Voting:  
-      - Overview: curve_dao/governance/overview.md
-      - Crosschain Governance:
-        - Overview: curve_dao/governance/curve-xgov/overview.md
-        - Broadcaster.vy: curve_dao/governance/curve-xgov/broadcaster.md
-        - Relayer.vy: curve_dao/governance/curve-xgov/relayer.md
-        - Agent.vy: curve_dao/governance/curve-xgov/agents.md
-        - Vault.vy: curve_dao/governance/curve-xgov/vault.md
+  - Curve DAO Token: curve_dao/crv-token.md
+
+  - Vote-Escrowed CRV:
+    - VotingEscrow:
+      - Contract Methods: curve_dao/voting-escrow/voting-escrow.md
+      - Admin Controls: curve_dao/voting-escrow/admin-controls.md
+    - SmartWalletChecker: curve_dao/voting-escrow/smartwalletchecker.md
+
+  - Liquidity Gauges and Minting CRV:
+
+    - Overview & Implementation: liquidity-gauges-and-minting-crv/overview.md
+
+    - GaugeController: liquidity-gauges-and-minting-crv/gauge-controller/GaugeController.md
+
+    - Minter: liquidity-gauges-and-minting-crv/minter/Minter.md 
+
+    - Gauges:
+      - Overview: liquidity-gauges-and-minting-crv/gauges/overview.md
+      - LiquidityGaugeV6: liquidity-gauges-and-minting-crv/gauges/LiquidityGaugeV6.md
+
+    - Gauges for EVM Sidechains: 
+      - Overview: liquidity-gauges-and-minting-crv/xchain-gauges/overview.md
+      - RootGaugeFactory: liquidity-gauges-and-minting-crv/xchain-gauges/RootGaugeFactory.md
+      - ChildGaugeFactory: liquidity-gauges-and-minting-crv/xchain-gauges/ChildGaugeFactory.md
+      - RootGauge: liquidity-gauges-and-minting-crv/xchain-gauges/RootGauge.md
+      - ChildGauge: liquidity-gauges-and-minting-crv/xchain-gauges/ChildGauge.md
+      - Bridgers: liquidity-gauges-and-minting-crv/xchain-gauges/Bridgers.md
+
+      #- Boosting:
+      #  - Updater: liquidity-gauges-and-minting-crv/xchain-gauges/Updater.md
+      #  - L2 VotingEscrow Oracle: liquidity-gauges-and-minting-crv/xchain-gauges/L2VotingEscrowOracle.md
+
+  - Ownership Proxies:
+    - Overview: curve_dao/ownership-proxy/overview.md
+    - Agents: curve_dao/ownership-proxy/Agents.md
+    - PoolProxy: curve_dao/ownership-proxy/PoolProxy.md
+    - GaugeProxy: curve_dao/ownership-proxy/GaugeProxy.md
+    - RootChainGaugeProxy: curve_dao/ownership-proxy/RootChainGaugeFactoryProxy.md
+
+  - Governance and Voting:  
+    - Overview: curve_dao/governance/overview.md
+    - Crosschain Governance:
+      - Overview: curve_dao/governance/curve-xgov/overview.md
+      - Broadcaster.vy: curve_dao/governance/curve-xgov/broadcaster.md
+      - Relayer.vy: curve_dao/governance/curve-xgov/relayer.md
+      - Agent.vy: curve_dao/governance/curve-xgov/agents.md
+      - Vault.vy: curve_dao/governance/curve-xgov/vault.md
 
 
   - Fee Collection & Distribution:
@@ -339,6 +350,7 @@ nav:
       - CryptoSwap: references/whitepapers/cryptoswap.md
       - Curve Stablecoin: references/whitepapers/curve-stablecoin.md
     - Useful Resources: references/useful.md
+    - Contract Ownership: references/curve-practices.md
     - Notebooks: references/notebooks.md
 
   - Security: security/security.md
