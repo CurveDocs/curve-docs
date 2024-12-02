@@ -10,9 +10,7 @@ The `RootGaugeFactory` contract is used to deploy liquidity gauges on the Ethere
 
     The contract is deployed on :logos-ethereum: Ethereum at [`0x306A45a1478A000dC701A6e1f7a569afb8D9DCD6`](https://etherscan.io/address/0x306A45a1478A000dC701A6e1f7a569afb8D9DCD6).
 
-
 ---
-
 
 ## **Deploying Gauges**
 
@@ -149,7 +147,6 @@ The `RootGaugeFactory` allows the deployment of root gauges on Ethereum and chil
         ```shell
         >>> RootGaugeFactory.deploy_gauge(252, '0x0000000000000000000000000000000000000000000000000000000000000000')
         ```
-
 
 ### `deploy_child_gauge`
 !!! description "`RootGaugeFactory.deploy_child_gauge(_chain_id: uint256, _lp_token: address, _salt: bytes32, _manager: address = msg.sender)`"
@@ -303,7 +300,6 @@ Transmitting emissions is permissionless. Anyone can do it.
         ```shell
         >>> RootGaugeFactory.transmit_emissions('0x6233394c3C466A45A505EFA4857489743168E9Fa')
         ```
-
 
 ### `get_bridger`
 !!! description "`RootGaugeFactory.get_bridger(_chain_id: uint256) -> address: view`"
@@ -555,7 +551,6 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
         ```shell
         >>> soon
         ```
-
 
 ### `get_child_factory`
 !!! description "`RootGaugeFactory.get_child_factory(_chain_id: uint256) -> address: view`"

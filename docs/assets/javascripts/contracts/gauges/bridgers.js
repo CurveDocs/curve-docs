@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     const RootGaugeFactoryContract = new web3.eth.Contract(RootGaugeFactoryABI, RootGaugeFactoryAddress);
 
-    // Function to handle input-based queries
+    // Function to handle input-based queries 
     async function handleInputQuery(inputId, outputId, method) {
         const inputElement = document.getElementById(inputId);
         const outputElement = document.getElementById(outputId);

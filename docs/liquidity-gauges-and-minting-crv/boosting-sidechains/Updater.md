@@ -1,7 +1,6 @@
 <h1>Updater</h1>
 
-The `Updater` contract is responsible for bridging user information regarding the voting escrow onto other chains to enable boosting on child gauges.
-
+The `Updater` contract is deployed on Ethereum mainnet and is used to transmit veCRV information across chains to a `L2 VotingEscrow Oracle`.
 
 ---
 

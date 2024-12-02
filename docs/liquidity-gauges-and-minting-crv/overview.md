@@ -1,13 +1,10 @@
 <h1>Curve DAO: Liquidity Gauges and Minting CRV</h1>
 
-
 Curve is built in a way to incentivise liquidity providers with CRV, the protocols governance token. The protocol works in a way that it directs the inflation of the CRV token to the liquidity providers based on the votes of the veCRV holders. This is done through a system of gauges, the `GaugeController` contract, and the `Minter` contract.
 
 Users who have veCRV, Curve's voting-escrowed token, can vote on DAO-approved gauges to receive CRV emissions.
 
-
 ---
-
 
 # **Smart Contracts**
 
@@ -61,13 +58,10 @@ CRV follows a piecewise linear inflation schedule. The inflation is reduced by a
   <figcaption></figcaption>
 </figure>
 
-
-The initial supply of CRV is 1.273 billion tokens, which is 42% of the eventual t -> $\infty$ supply of $\approx$ 3.03 billion tokens. All of these initial tokens are gradually vested (with every block). The initial inflation rate which supports the above inflation schedule is $r = 22.0$% (279.6 millions per year).   
+The initial supply of CRV is 1.273 billion tokens, which is 42% of the eventual t -> $\infty$ supply of $\approx$ 3.03 billion tokens. All of these initial tokens are gradually vested (with every block). The initial inflation rate which supports the above inflation schedule is $r = 22.0$% (279.6 millions per year).
 All of the inflation is distributed to Curve liquidity providers, according to measurements taken by the gauges. During the first year, the approximate inflow into circulating supply is 2 million CRV per day. The initial circulating supply is 0.  
 
-
 ---
-
 
 ## Liquidity Gauges
 Inflation is directed to users who provide liquidity within the protocol. This usage is measured via “Liquidity Gauge” contracts. Each pool has an individual liquidity gauge. The Gauge Controller maintains a list of gauges and their types, with the weights of each gauge and type.
@@ -87,9 +81,7 @@ The value of $I_{is}$ is recorded at any point any user deposits or withdraws, a
 
 When a user deposits or withdraws, the change in $I_{u}$ can be calculated as the current (before user’s action) value of $I_{is}$ multiplied by the pre-action user’s balance, and sumed up across the user’s balances: $I_{u}(t_{k}) = \sum_{k} b_{u}(t_{k})[I_{is}(t_{k})-I_{is}(t_{k-1})]$. The per-user integral is possible to repalce with this sum because $b_{u}(t)$ changed for all times between $t_{k-1}$ and $t_{k}$.
 
-
 ---
-
 
 ## Boosting
 In order to incentivize users to participate in governance, and additionally create stickiness for liquidity, we implement the following mechanism. A user’s balance, counted in the liquidity gauge, gets boosted by users locking CRV tokens in Voting Escrow contract, depending on their vote weight $w_{i}:b_{u}^* = min(0.4b_{u}+0.6S\frac{w_{i}}W, b_{u})$.
@@ -101,9 +93,7 @@ Implementation details are such that a user gets the boost at the time of the la
 
 Finally, the gauge is supposed to not miss a full year of inflation (e.g. if there were no interactions with the guage for the full year). If that ever happens, the abandoned gauge gets less CRV.
 
-
 ---
-
 
 ## Gauge Weight Voting
 Users can allocate their veCRV towards one or more liquidity gauges. Gauges receive a fraction of newly minted CRV tokens proportional to how much veCRV the gauge is allocated. Each user with a veCRV balance can change their preference at any time.
@@ -113,10 +103,7 @@ When a user applies a new weight vote, it gets applied at the start of the next 
 !!!warning
     Resetting your gauge weight before re-voting means you'll need to wait 10 days to vote for the gauges whose weight you've reset. So, please ensure you simply re-vote; there is no need to reset your gauge weight votes before voting again.
 
-
-
 ---
-
 
 ## GaugeController
 The Gauge Controller maintains a list of gauges and their types, with the weights of each gauge and type. In order to implement weight voting, `GaugeController` has to include parameters handling linear character of voting power each user has.
@@ -128,6 +115,3 @@ Per-user, per-gauge slopes are stored in `vote_user_slopes`, along with the powe
 The totals for slopes and biases for vote weight per gauge, and sums of those per type, are scheduled / recorded for the next week, as well as the points when voting power gets to 0 at lock expiration for some of users.
 
 When a user changes their gauge weight vote, the change is scheduled for the next epoch week, not immediately. This reduces the number of reads from storage which must to be performed by each user: it is proportional to the number of weeks since the last change rather than the number of interactions from other users.
-
-
----

@@ -3,7 +3,7 @@
 <script src="/assets/javascripts/contracts/gauges/bridgers.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
 
-Bridger wrappers are contracts used to transmit ERC20 tokens and especially `CRV` emissions across chains. Due to the increasing number of networks to which Curve deploys, bridge wrappers adhere to a specific interface documented below and allow for a modular bridging system.
+Bridger wrappers are contracts used to transmit `ERC-20` tokens and especially `CRV` emissions across chains. Due to the increasing number of networks to which Curve deploys, bridge wrappers adhere to a specific interface documented below and allow for a modular bridging system.
 
 ???+ vyper "Bridgers.vy"
     The source code for the various `Bridger Wrappers` contracts can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/tree/master/contracts/bridgers). The code varies slightly to adapt to different chain-specific implementations.
@@ -93,10 +93,10 @@ The following three functions are required for bridge wrappers contracts to be i
     Function to bridge any ERC20 token to the child chain.
 
     | Parameter | Type | Description |
-    | --------- | ---- | ------------ |
-    | `_token` | `address` | The address of the token to bridge. |
-    | `_to` | `address` | The address to bridge the token to. |
-    | `_amount` | `uint256` | The amount of `_token` to deposit. |
+    | --------- | ---- | ----------- |
+    | `_token` | `address` | The address of the token to bridge |
+    | `_to` | `address` | The address to bridge the token to |
+    | `_amount` | `uint256` | The amount of `_token` to deposit |
 
     ??? quote "Source code"
 
@@ -182,7 +182,7 @@ The following three functions are required for bridge wrappers contracts to be i
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_account` | `address` | The address of the bridger contract to check. |
+    | `_account` | `address` | The address of the bridger contract to check |
 
     ??? quote "Source code"
 

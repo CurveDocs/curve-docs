@@ -1,12 +1,11 @@
 <h1>Child Gauge Implementation</h1>
 
+The `ChildGauge` is the liquidity gauge contract on the sidechain. It is used to track the balance of liquidity providers and distribute CRV emissions to them. It is pretty much the same as the `Gauge` contract on Ethereum mainnet.
 
 ???+ vyper "`ChildGauge.vy`"
     The source code for the `ChildGauge.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/blob/master/contracts/implementations/ChildGauge.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10` 
 
-
 ---
-
 
 # **Initialization**
 
@@ -17,9 +16,9 @@
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_lp_token` | `address` | The LP token address. |
-    | `_root` | `address` | The root gauge address. |
-    | `_manager` | `address` | The manager address. |
+    | `_lp_token` | `address` | The LP token address |
+    | `_root` | `address` | The root gauge address |
+    | `_manager` | `address` | The manager address |
 
     ??? quote "Source code"
 
@@ -75,9 +74,9 @@
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_value` | `uint256` | The amount of liquidity to deposit. |
-    | `_addr` | `address` | The address to deposit for. |
-    | `_claim_rewards` | `bool` | Whether to claim rewards. Defaults to `False`. |
+    | `_value` | `uint256` | The amount of liquidity to deposit |
+    | `_addr` | `address` | The address to deposit for |
+    | `_claim_rewards` | `bool` | Whether to claim rewards. Defaults to `False` |
 
     ??? quote "Source code"
 
@@ -221,11 +220,13 @@
 
     Function to withdraw `_value` of LP tokens from the gauge. When withdrawing LP tokens from the gauge, the contract burns the equivalent amount of "gauge tokens" from the user. Additionally, the function also allows for claiming any pending external rewards (not CRV emissions).
 
+    Emits: `Withdraw`, `Transfer` events.
+
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_value` | `uint256` | The amount of liquidity to withdraw. |
-    | `_claim_rewards` | `bool` | Whether to claim rewards. Defaults to `False`. |
-    | `_receiver` | `address` | The address to transfer the withdrawn LP tokens to. Defaults to `msg.sender`. |
+    | `_value` | `uint256` | The amount of liquidity to withdraw |
+    | `_claim_rewards` | `bool` | Whether to claim rewards. Defaults to `False` |
+    | `_receiver` | `address` | The address to transfer the withdrawn LP tokens to. Defaults to `msg.sender` |
 
     ??? quote "Source code"
 
@@ -343,10 +344,9 @@
 
 # **External Rewards**
 
-The following functions allow for claiming pending external rewards (not CRV emissions). CRV emissions can only be claimed directly from the `ChildGaugeFactory`.
+External rewards are externally added rewards (not coming from the CRV emissions) and are not boostable. They are distributed linearly over the chosen period to users based on their liquidity share of the gauge. Between 3 days and a year, week by default.
 
-External rewards are not boostable! They are distributed linearly over the chosen period to users based on their liquidity share of the gauge. Between 3 days and a year, week by default.
-
+The following functions allow for claiming external rewards (not CRV emissions). CRV emissions can only be claimed directly from the `ChildGaugeFactory`.
 
 ## **Claiming Rewards**
 
@@ -357,8 +357,8 @@ External rewards are not boostable! They are distributed linearly over the chose
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_addr` | `address` | The address to claim rewards for. Defaults to `msg.sender`. |
-    | `_receiver` | `address` | The address to transfer rewards to. Defaults to `empty(address)`. |
+    | `_addr` | `address` | The address to claim rewards for. Defaults to `msg.sender` |
+    | `_receiver` | `address` | The address to transfer rewards to. Defaults to `empty(address)` |
 
     ??? quote "Source code"
 
@@ -441,7 +441,7 @@ External rewards are not boostable! They are distributed linearly over the chose
     === "Example"
 
         ```python
-        >>> ChildGauge.claim_rewards()
+        >>> soon
         ```
 
 
@@ -454,8 +454,8 @@ External rewards are not boostable! They are distributed linearly over the chose
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_addr` | `address` | The address to get the number of claimed rewards for. |
-    | `_token` | `address` | The token to get the number of claimed rewards for. |
+    | `_addr` | `address` | The address to get the number of claimed rewards for |
+    | `_token` | `address` | The token to get the number of claimed rewards for |
 
     ??? quote "Source code"
 
@@ -492,8 +492,8 @@ External rewards are not boostable! They are distributed linearly over the chose
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_user` | `address` | The address to get the number of claimable rewards for. |
-    | `_reward_token` | `address` | The token to get the number of claimable rewards for. |
+    | `_user` | `address` | The address to get the number of claimable rewards for |
+    | `_reward_token` | `address` | The token to get the number of claimable rewards for |
 
     ??? quote "Source code"
 
@@ -532,7 +532,7 @@ External rewards are not boostable! They are distributed linearly over the chose
     === "Example"
 
         ```python
-        >>> ChildGauge.claimable_reward(todo)
+        >>> soon
         ```
 
 
@@ -559,7 +559,8 @@ External rewards are not boostable! They are distributed linearly over the chose
     === "Example"
 
         ```python
-        >>> ChildGauge.rewards_receiver(todo)
+        >>> ChildGauge.rewards_receiver('0x1234567890123456789012345678901234567890')
+        '0x0000000000000000000000000000000000000000'
         ```
 
 
@@ -570,7 +571,7 @@ External rewards are not boostable! They are distributed linearly over the chose
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_receiver` | `address` | The address to set as the default reward receiver for. |
+    | `_receiver` | `address` | The address to set as the default reward receiver for |
 
     ??? quote "Source code"
 
@@ -593,7 +594,13 @@ External rewards are not boostable! They are distributed linearly over the chose
     === "Example"
 
         ```python
+        >>> ChildGauge.rewards_receiver('0x1234567890123456789012345678901234567890')
+        '0x0000000000000000000000000000000000000000'
+
         >>> ChildGauge.set_rewards_receiver('0x1234567890123456789012345678901234567890')
+
+        >>> ChildGauge.rewards_receiver('0x1234567890123456789012345678901234567890')
+        '0x1234567890123456789012345678901234567890'
         ```
 
 
@@ -602,6 +609,7 @@ External rewards are not boostable! They are distributed linearly over the chose
 
 ## **Reward Data**
 
+The following functions allow for retrieving reward data for a specific reward token.
 
 ### `reward_data`
 !!! description "`ChildGauge.reward_data(_reward_token: address) -> Reward: view`"
@@ -612,7 +620,7 @@ External rewards are not boostable! They are distributed linearly over the chose
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_reward_token` | `address` | The reward token to get the reward data for. |
+    | `_reward_token` | `address` | The reward token to get the reward data for |
 
     ??? quote "Source code"
 
@@ -632,7 +640,7 @@ External rewards are not boostable! They are distributed linearly over the chose
     === "Example"
 
         ```py
-        >>> ChildGauge.reward_data(todo)
+        >>> soon
         ```
 
 
@@ -645,7 +653,7 @@ External rewards are not boostable! They are distributed linearly over the chose
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `arg0` | `uint256` | The index of the reward token to get. |
+    | `arg0` | `uint256` | The index of the reward token to get |
 
     ??? quote "Source code"
 
@@ -659,8 +667,7 @@ External rewards are not boostable! They are distributed linearly over the chose
     === "Example"
 
         ```python
-        >>> ChildGauge.reward_tokens(0)
-        todo
+        >>> soon
         ```
 
 
@@ -682,8 +689,7 @@ External rewards are not boostable! They are distributed linearly over the chose
     === "Example"
 
         ```python
-        >>> ChildGauge.reward_count()
-        1
+        >>> soon
         ```
 
 
@@ -696,8 +702,8 @@ External rewards are not boostable! They are distributed linearly over the chose
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_reward_token` | `address` | The reward token to get the reward integral for. |
-    | `_claiming_address` | `address` | The address to get the reward integral for. |
+    | `_reward_token` | `address` | The reward token to get the reward integral for |
+    | `_claiming_address` | `address` | The address to get the reward integral for |
 
     ??? quote "Source code"
 
@@ -711,7 +717,7 @@ External rewards are not boostable! They are distributed linearly over the chose
     === "Example"
 
         ```python
-        >>> ChildGauge.reward_integral_for(todo)
+        >>> soon
         ```
 
 
@@ -724,7 +730,7 @@ External rewards are not boostable! They are distributed linearly over the chose
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_reward_token` | `address` | The reward token to get the remaining reward for. |
+    | `_reward_token` | `address` | The reward token to get the remaining reward for |
 
     ??? quote "Source code"
 
@@ -737,7 +743,7 @@ External rewards are not boostable! They are distributed linearly over the chose
     === "Example"
 
         ```python
-        >>> ChildGauge.reward_remaining(todo)
+        >>> soon
         ```
 
 
@@ -748,7 +754,7 @@ External rewards are not boostable! They are distributed linearly over the chose
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_user` | `address` | The user address to get the integrate checkpoint for. |
+    | `_user` | `address` | The user address to get the integrate checkpoint for |
 
     ??? quote "Source code"
 
@@ -839,20 +845,29 @@ External rewards are not boostable! They are distributed linearly over the chose
     === "Example"
 
         ```py
-        >>> ChildGauge.recover_remaining(todo)
-        todo
+        >>> soon
         ```
-
 
 ---
 
-
 ## **Depositing Rewards**
 
-flow for adding reward tokens:
+The process for adding external reward tokens follows two steps:
 
-1. add_reward: add a reward token for distribution. When calling this function, a distributor address must be set for the reward token. Only this distributor can deposit the reward token via the `deposit_reward_token` function. The data for the reward token is stored in the `reward_data` mapping.
-2. deposit_reward_token: deposit a reward token for distribution. This function can only be called by the distributor of the reward token. The reward token data is stored in the `reward_data` mapping.
+1. **Add Reward Token** (`add_reward`)
+    - Registers a new reward token in the gauge
+    - Sets an authorized distributor address
+    - Only callable by gauge manager or factory admin
+    - Stores token data in `reward_data` mapping
+
+2. **Deposit Rewards** (`deposit_reward_token`) 
+    - Deposits reward tokens for distribution
+    - Only callable by the authorized distributor
+    - Distributes rewards linearly over specified period
+    - Updates reward data in storage
+
+!!!warning "External Rewards are not boostable!"
+    External rewards are separate from CRV emissions and are not subject to boost multipliers.
 
 
 ### `add_reward`
@@ -862,8 +877,8 @@ flow for adding reward tokens:
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_reward_token` | `address` | The reward token to add. |
-    | `_distributor` | `address` | The distributor of the reward token. |
+    | `_reward_token` | `address` | The reward token to add |
+    | `_distributor` | `address` | The distributor of the reward token |
 
     ??? quote "Source code"
 
@@ -903,8 +918,10 @@ flow for adding reward tokens:
 
     === "Example"
 
+        This example sets the distributor for the `crvUSD` reward token to `0x1234567890123456789012345678901234567890`. Only this address can deposit `crvUSD` to the gauge using the `deposit_reward_token` function.
+
         ```py
-        >>> ChildGauge.add_reward(todo)
+        >>> ChildGauge.add_reward('0x498Bf2B1e120FeD3ad3D42EA2165E9b73f99C1e5', '0x1234567890123456789012345678901234567890')
         ```
 
 
@@ -918,8 +935,8 @@ flow for adding reward tokens:
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_reward_token` | `address` | The reward token to reassign the distributor for. |
-    | `_distributor` | `address` | The address of the new distributor. |
+    | `_reward_token` | `address` | The reward token to reassign the distributor for |
+    | `_distributor` | `address` | The address of the new distributor |
 
     ??? quote "Source code"
 
@@ -949,8 +966,28 @@ flow for adding reward tokens:
 
     === "Example"
 
+        This example changes the distributor for the `crvUSD` reward token from `0x1234567890123456789012345678901234567890` to `0x9876543210987654321098765432109876543210`.
+
         ```py
-        >>> ChildGauge.set_reward_distributor(todo)
+        >>> ChildGauge.reward_data('0x498Bf2B1e120FeD3ad3D42EA2165E9b73f99C1e5')
+        {
+            'distributor': '0x1234567890123456789012345678901234567890',
+            'rate': 0,
+            'last_update': 0,
+            'period_finish': 0,
+            'integral': 0
+        }
+
+        >>> ChildGauge.set_reward_distributor('0x498Bf2B1e120FeD3ad3D42EA2165E9b73f99C1e5', '0x9876543210987654321098765432109876543210')
+
+        >>> ChildGauge.reward_data('0x498Bf2B1e120FeD3ad3D42EA2165E9b73f99C1e5')
+        {
+            'distributor': '0x9876543210987654321098765432109876543210',
+            'rate': 0,
+            'last_update': 0,
+            'period_finish': 0,
+            'integral': 0
+        }
         ```
 
 
@@ -961,9 +998,9 @@ flow for adding reward tokens:
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_reward_token` | `address` | The reward token to deposit. |
-    | `_amount` | `uint256` | The amount of the reward token to deposit. |
-    | `_epoch` | `uint256` | The duration the rewards are distributed across. Between 3 days and a year, week by default. |
+    | `_reward_token` | `address` | The reward token to deposit |
+    | `_amount` | `uint256` | The amount of the reward token to deposit |
+    | `_epoch` | `uint256` | The duration the rewards are distributed across. Between 3 days and a year, week by default |
 
     ??? quote "Source code"
 
@@ -1009,15 +1046,17 @@ flow for adding reward tokens:
 
     === "Example"
 
+        This example deposits `10,000` `crvUSD` tokens as rewards over `7` days.
+
         ```python
-        >>> ChildGauge.deposit_reward_token(todo)
+        >>> ChildGauge.deposit_reward_token('0x498Bf2B1e120FeD3ad3D42EA2165E9b73f99C1e5', 10000000000000000000000, 604800)
         ```
 
 
 ### `manager`
 !!! description "`ChildGauge.manager() -> address: view`"
 
-    Getter for the gauge manager address. The manager address is set during initialization and can be changed by the owner of the factory.
+    Getter for the gauge manager address. The manager address is set during initialization and can be changed by the `owner` of the factory.
 
     Returns: the gauge manager address (`address`).
 
@@ -1031,22 +1070,27 @@ flow for adding reward tokens:
 
     === "Example"
 
+        This example returns the manager of the gauge, which is `0x1234567890123456789012345678901234567890`.
+
         ```py
         >>> ChildGauge.manager()
-        todo
+        '0x1234567890123456789012345678901234567890'
         ```
 
 
 ### `set_gauge_manager`
-!!! description "`ChildGauge.initialize(_lp_token: address, _root: address, _manager: address)`"
+!!! description "`ChildGauge.set_gauge_manager(_gauge_manager: address)`"
 
-    Function to initialize the gauge.
+    !!!guard "Guarded Method"
+        This function is only callable by the `manager` of the gauge or the `owner` of the `ChildGaugeFactory`.
+
+    Function to set the gauge manager.
+
+    Emits: `SetGaugeManager` event.
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_bridger` | `Bridger` | The bridger contract. |
-    | `_chain_id` | `uint256` | The chain ID. |
-    | `_child` | `address` | The child gauge address. |
+    | `_gauge_manager` | `address` | The address to set as the new manager of the gauge |
 
     ??? quote "Source code"
 
@@ -1055,6 +1099,9 @@ flow for adding reward tokens:
             ```python
             interface Factory:
                 def owner() -> address: view
+
+            event SetGaugeManager:
+                _gauge_manager: address
 
             manager: public(address)
 
@@ -1075,9 +1122,18 @@ flow for adding reward tokens:
 
     === "Example"
 
+        This example changes the manager of the gauge from `0x1234567890123456789012345678901234567890` to `0x9876543210987654321098765432109876543210`.
+
         ```py
-        >>> ChildGauge.set_gauge_manager(todo)
+        >>> ChildGauge.manager()
+        '0x1234567890123456789012345678901234567890'
+
+        >>> ChildGauge.set_gauge_manager('0x9876543210987654321098765432109876543210')
+
+        >>> ChildGauge.manager()
+        '0x9876543210987654321098765432109876543210'
         ```
+
 
 ### `set_manager`
 !!! description "`ChildGauge.set_manager(_gauge_manager: address)`"
@@ -1091,7 +1147,7 @@ flow for adding reward tokens:
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_gauge_manager` | `address` | The address to set as the new manager of the gauge. |
+    | `_gauge_manager` | `address` | The address to set as the new manager of the gauge |
 
     ??? quote "Source code"
 
@@ -1121,13 +1177,19 @@ flow for adding reward tokens:
 
     === "Example"
 
+        This example changes the manager of the gauge from `0x1234567890123456789012345678901234567890` to `0x9876543210987654321098765432109876543210`. It has the same effect as the `set_gauge_manager` function.
+
         ```py
-        >>> ChildGauge.set_manager(todo)
+        >>> ChildGauge.manager()
+        '0x1234567890123456789012345678901234567890'
+
+        >>> ChildGauge.set_manager('0x9876543210987654321098765432109876543210')
+
+        >>> ChildGauge.manager()
+        '0x9876543210987654321098765432109876543210'
         ```
 
-
 ---
-
 
 # **Checkpoints and Boosting**
 
@@ -1138,9 +1200,11 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
     Function to record a checkpoint for a user.
 
+    Returns: `True` if the checkpoint was recorded successfully (`bool`).
+
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_user` | `address` | The user address to record a checkpoint for. |
+    | `_user` | `address` | The user address to record a checkpoint for |
 
     ??? quote "Source code"
 
@@ -1238,7 +1302,8 @@ For more information on how boosting works, please refer to the [Boosting Explai
     === "Example"
 
         ```py
-        >>> ChildGauge.user_checkpoint(todo)
+        >>> ChildGauge.user_checkpoint('0x20a440aECf78c73d484B652C46d582B4D70906A8')
+        True
         ```
 
 
@@ -1286,7 +1351,7 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_user` | `address` | The user address to get the integrate checkpoint for. |
+    | `_user` | `address` | The user address to get the integrate checkpoint for |
 
     ??? quote "Source code"
 
@@ -1321,7 +1386,7 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_user` | `address` | The user address to get the working balance for. |
+    | `_user` | `address` | The user address to get the working balance for |
 
     ??? quote "Source code"
 
@@ -1356,7 +1421,7 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
     === "Example"
 
-        The working supply in our example is equal to the working_balance of 0x20a440aECf78c73d484B652C46d582B4D70906A8 because its the only user that has provided liquidity so far.
+        The working supply in our example is equal to the working_balance of `0x20a440aECf78c73d484B652C46d582B4D70906A8` because its the only user that has provided liquidity so far.
 
         ```py
         >>> ChildGauge.working_supply()
@@ -1403,7 +1468,7 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_period` | `int128` | The period to get the timestamp for. |
+    | `_period` | `int128` | The period to get the timestamp for |
 
     ??? quote "Source code"
 
@@ -1414,6 +1479,8 @@ For more information on how boosting works, please refer to the [Boosting Explai
             ```
 
     === "Example"
+
+        This example returns the timestamp of the first period, which is the timestamp of the first checkpoint (when depositing liquidity).
 
         ```python
         >>> ChildGauge.period_timestamp(1)
@@ -1430,7 +1497,7 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_user` | `address` | The user address to get the integrate fraction for. |
+    | `_user` | `address` | The user address to get the integrate fraction for |
 
     ??? quote "Source code"
 
@@ -1459,7 +1526,7 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `addr` | `address` | The address to get the number of claimable CRV emissions for. |
+    | `addr` | `address` | The address to get the number of claimable CRV emissions for |
 
     ??? quote "Source code"
 
@@ -1532,8 +1599,11 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
     === "Example"
 
+        This example returns the number of claimable CRV emissions for `0x20a440aECf78c73d484B652C46d582B4D70906A8`, which currently is `0`.
+
         ```python
-        >>> ChildGauge.claimable_tokens(todo)
+        >>> ChildGauge.claimable_tokens('0x20a440aECf78c73d484B652C46d582B4D70906A8')
+        0
         ```
 
 
@@ -1544,7 +1614,7 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_period` | `uint256` | The week to get the inflation rate for. |
+    | `_period` | `uint256` | The week to get the inflation rate for |
 
     ??? quote "Source code"
 
@@ -1556,8 +1626,11 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
     === "Example"
 
+        This example returns the CRV emission inflation rate for the first week, which is `0`.
+
         ```python
-        >>> ChildGauge.inflation_rate(todo)
+        >>> ChildGauge.inflation_rate(1)
+        0
         ```
 
 
@@ -1570,7 +1643,7 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_period` | `int128` | The period to get the inverse supply for. |
+    | `_period` | `int128` | The period to get the inverse supply for |
 
     ??? quote "Source code"
 
@@ -1583,9 +1656,11 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
     === "Example"
 
+        This example returns the inverse supply of CRV at the first period, which is `0`.
+
         ```py
-        >>> ChildGauge.integrate_inv_supply(todo)
-        todo
+        >>> ChildGauge.integrate_inv_supply(1)
+        0
         ```
 
 
@@ -1598,7 +1673,7 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_user` | `address` | The user address to get the inverse supply for. |
+    | `_user` | `address` | The user address to get the inverse supply for |
 
     ??? quote "Source code"
 
@@ -1612,14 +1687,14 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
     === "Example"
 
+        This example returns the inverse supply of CRV at the first period for `0x20a440aECf78c73d484B652C46d582B4D70906A8`, which is `0`.
+
         ```py
-        >>> ChildGauge.integrate_inv_supply_of(todo)
-        todo
+        >>> ChildGauge.integrate_inv_supply_of('0x20a440aECf78c73d484B652C46d582B4D70906A8')
+        0
         ```
 
-
 ---
-
 
 # **RootGauge and VotingEscrow**
 
@@ -1653,7 +1728,7 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_root` | `address` | The root gauge address to set. |
+    | `_root` | `address` | The root gauge address to set |
 
     ??? quote "Source code"
 
@@ -1745,9 +1820,7 @@ For more information on how boosting works, please refer to the [Boosting Explai
         '0xc73e8d8f7A68Fc9d67e989250484E57Ae03a5Da3'
         ```
 
-
 ---
-
 
 # **Killing Gauges**
 
@@ -1782,9 +1855,9 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
     Function to set the killed status for the gauge.
 
-    | Parameter | Type | Description |
-    | --------- | ---- | ------------ |
-    | `_is_killed` | `bool` | The killed status to set. |
+    | Parameter    | Type   | Description |
+    | ------------ | ------ | ----------- |
+    | `_is_killed` | `bool` | The killed status to set |
 
     ??? quote "Source code"
 
@@ -1821,7 +1894,10 @@ For more information on how boosting works, please refer to the [Boosting Explai
 ---
 
 
-# **Other Methods**
+# **ERC20 and Other Methods**
+
+The contract inherits the ERC20 interface and follows the standard ERC20 methods. These methods are not further documented here. Some notable methods are documented below.
+
 
 ### `totalSupply`
 !!! description "`ChildGauge.totalSupply() -> uint256: view`"
@@ -1958,25 +2034,3 @@ For more information on how boosting works, please refer to the [Boosting Explai
         >>> ChildGauge.version()
         "1.0.0"
         ```
-
----
-
-# **ERC20 Methods**
-
-The contract inherits the ERC20 interface and follows the standard ERC20 methods. These methods are not further documented here.
-
-
-### `transferFrom`
-### `transfer`
-### `approve`
-### `permit`
-### `increaseAllowance`
-### `decreaseAllowance`
-
-### `balanceOf`
-### `allowance`
-### `name`
-### `symbol`
-### `DOMAIN_SEPARATOR`
-### `nonces`
-### `decimals`

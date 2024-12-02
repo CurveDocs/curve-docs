@@ -3,12 +3,8 @@
 The `L2VotingEscrowOracle` contract is used to fetch information from the `VotingEscrow` from Ethereum. This data can then be used to calculate boost rates for providing liquidity.
 
 ???+ vyper "`L2VotingEscrowOracle.vy`"
-    The source code for the `L2VotingEscrowOracle.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/blob/master/contracts/RootGaugeFactory.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10` 
+    The source code for the `L2VotingEscrowOracle.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/blob/master/contracts/L2VotingEscrowOracle.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10` 
 
-    
-
-
-fraxtal as example: https://fraxscan.com/address/0xc73e8d8f7A68Fc9d67e989250484E57Ae03a5Da3#readContract
 
 
 ---
@@ -162,12 +158,11 @@ fraxtal as example: https://fraxscan.com/address/0xc73e8d8f7A68Fc9d67e989250484E
 ### `point_history`
 !!! description "`L2VotingEscrowOracle.update(_user: address = msg.sender, _gas_limit: uint32 = 0)`"
 
-    todo
+    Getter for the point history.
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_user` | `address` | The user to update the voting escrow information for. Defaults to the caller of the function. |
-    | `_gas_limit` | `uint32` | The gas limit for the transaction. If 0, the function will attempt to retrieve the gas limit from the alternate chain. |
+    | `_idx` | `uint256` | The index of the point history to retrieve. |
 
     ??? quote "Source code"
 

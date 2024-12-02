@@ -11,9 +11,7 @@ The `RootGauge` is a simplified liquidity gauge contract on Ethereum used for br
 
 Root gauges are deployed from the `RootGaugeFactory` and makes use of Vyper's built-in [create_minimal_proxy_to](https://docs.vyperlang.org/en/stable/built-in-functions.html#create_minimal_proxy_to) function to create a EIP1167-compliant "minimal proxy contract" that duplicates the logic of the contract at target.
 
-
 ---
-
 
 # **Initialization**
 
@@ -25,10 +23,10 @@ Because the root gauges are deployed using a proxy pattern, they are automatical
     Function to initialize the root gauge. Initializes the child gauge address, chain ID, bridger contract, and factory, aswell as sets the `inflation_params` and `last_period`. The function also sets the CRV token approval of the bridger contract to `max_value(uint256)`.
 
     | Parameter | Type | Description |
-    | --------- | ---- | ------------ |
-    | `_bridger` | `Bridger` | The bridger contract. |
-    | `_chain_id` | `uint256` | The chain ID. |
-    | `_child` | `address` | The child gauge address. |
+    | --------- | ---- | ----------- |
+    | `_bridger` | `Bridger` | The bridger contract |
+    | `_chain_id` | `uint256` | The chain ID |
+    | `_child` | `address` | The child gauge address |
 
     ??? quote "Source code"
 
@@ -68,9 +66,7 @@ Because the root gauges are deployed using a proxy pattern, they are automatical
         >>> RootGauge.initialize('0xceda55279fe22d256c4e6a6F2174C1588e94B2BB', 42161, '0x1234567890123456789012345678901234567896')
         ```
 
-
 ---
-
 
 # **Checkpointing & CRV Emissions**
 
@@ -80,8 +76,8 @@ Because the root gauges are deployed using a proxy pattern, they are automatical
     Function to checkpoint a gauge and update the total emissions.
 
     | Parameter | Type | Description |
-    | --------- | ---- | ------------ |
-    | `_user` | `address` | The user address. This parameter is vestigial and has no impact on the function. |
+    | --------- | ---- | ----------- |
+    | `_user` | `address` | The user address. This parameter is vestigial and has no impact on the function |
 
     ??? quote "Source code"
 
@@ -149,7 +145,6 @@ Because the root gauges are deployed using a proxy pattern, they are automatical
         ```py
         >>> RootGauge.user_checkpoint('0x1234567890123456789012345678901234567896')
         ```
-
 
 ### `transmit_emissions`
 !!! description "`RootGauge.transmit_emissions()`"
@@ -239,7 +234,6 @@ Because the root gauges are deployed using a proxy pattern, they are automatical
         >>> RootGauge.transmit_emissions()
         ```
 
-
 ### `integrate_fraction`
 !!! description "`RootGauge.integrate_fraction(_user: address) -> uint256`"
 
@@ -249,7 +243,7 @@ Because the root gauges are deployed using a proxy pattern, they are automatical
 
     | Parameter | Type      | Description |
     | --------- | --------- | ------------ |
-    | `_user`   | `address` | Address of the user. |
+    | `_user`   | `address` | Address of the user |
 
     ??? quote "Source code"
 
@@ -277,7 +271,6 @@ Because the root gauges are deployed using a proxy pattern, they are automatical
         0
         ```
 
-
 ### `inflation_params`
 !!! description "`RootGauge.inflation_params() -> InflationParams: view`"
 
@@ -304,7 +297,6 @@ Because the root gauges are deployed using a proxy pattern, they are automatical
         {'rate': 1000000000000000000, 'finish_time': 1735689600}
         ```
 
-
 ### `last_period`
 !!! description "`RootGauge.last_period() -> uint256: view`"
 
@@ -326,7 +318,6 @@ Because the root gauges are deployed using a proxy pattern, they are automatical
         >>> RootGauge.last_period()
         1735689600
         ```
-
 
 ### `total_emissions`
 !!! description "`RootGauge.total_emissions() -> uint256: view`"
@@ -350,9 +341,7 @@ Because the root gauges are deployed using a proxy pattern, they are automatical
         0
         ```
 
-
 ---
-
 
 # **Bridger Contracts**
 
@@ -419,7 +408,6 @@ If a bridger contract needs to be updated for whatever reason, this can only be 
         >>> RootGauge.bridger(42161)
         '0xceda55279fe22d256c4e6a6F2174C1588e94B2BB'
         ```
-
 
 ### `update_bridger`
 !!! description "`RootGauge.update_bridger()`"
@@ -495,9 +483,7 @@ If a bridger contract needs to be updated for whatever reason, this can only be 
         '0x1234567890123456789012345678901234567896'
         ```
 
-
 ---
-
 
 # **Child Gauge**
 
@@ -525,7 +511,6 @@ If a according child gauge is deployed with the same salt as the root gauge, the
         '0xcde3Cdf332E35653A7595bA555c9fDBA3c78Ec04'
         ```
 
-
 ### `set_child_gauge`
 !!! description "`RootGauge.set_child_gauge(_child: address)`"
 
@@ -536,7 +521,7 @@ If a according child gauge is deployed with the same salt as the root gauge, the
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_child` | `address` | The child gauge address. |
+    | `_child` | `address` | The child gauge address |
 
     ??? quote "Source code"
 
@@ -572,7 +557,6 @@ If a according child gauge is deployed with the same salt as the root gauge, the
         '0x1234567890123456789012345678901234567890'
         ```
 
-
 ### `chain_id`
 !!! description "`RootGauge.chain_id() -> uint256: view`"
 
@@ -597,14 +581,11 @@ If a according child gauge is deployed with the same salt as the root gauge, the
         42161
         ```
 
-
 ---
-
 
 # **Killing Root Gauges**
 
 Root gauges can be killed by the `owner` of the `RootGaugeFactory` to disable emissions of the specific gauge. Killed gauges will have their inflation rate be set to 0 and therefor restrict any minting of CRV emissions.
-
 
 ### `is_killed`
 !!! description "`RootGauge.is_killed() -> bool: view`"
@@ -628,7 +609,6 @@ Root gauges can be killed by the `owner` of the `RootGaugeFactory` to disable em
         False
         ```
 
-
 ### `set_killed`
 !!! description "`RootGauge.set_killed(_is_killed: bool)`"
 
@@ -639,7 +619,7 @@ Root gauges can be killed by the `owner` of the `RootGaugeFactory` to disable em
 
     | Parameter | Type | Description |
     | --------- | ---- | ------------ |
-    | `_is_killed` | `bool` | The kill status. |
+    | `_is_killed` | `bool` | The kill status |
 
     ??? quote "Source code"
 
@@ -692,12 +672,9 @@ Root gauges can be killed by the `owner` of the `RootGaugeFactory` to disable em
         {'rate': 0, 'finish_time': 0}
         ```
 
-
 ---
 
-
 # **Other Methods**
-
 
 ### `factory`
 !!! description "`RootGauge.factory() -> Factory: view`"
@@ -720,8 +697,6 @@ Root gauges can be killed by the `owner` of the `RootGaugeFactory` to disable em
         >>> RootGauge.factory()
         '0x306A45a1478A000dC701A6e1f7a569afb8D9DCD6'
         ```
-
-
 
 ### `version`
 !!! description "`RootGauge.version() -> String[8]: view`"
