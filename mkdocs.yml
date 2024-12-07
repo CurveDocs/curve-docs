@@ -75,6 +75,7 @@ theme:
     repo: simple/github
     annotation: material/skull-outline
   features:
+    - content.action.edit
     - content.tooltips
     - content.code.annotate
     - content.footnote.tooltips
