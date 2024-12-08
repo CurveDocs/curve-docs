@@ -117,9 +117,7 @@ The Emergency DAO is deployed at:
 | :---------: | :---------------: | 
 | `eDAO` | [0x467947EE34aF926cF1DCac093870f613C96B1E0c](https://etherscan.io/address/0x467947EE34aF926cF1DCac093870f613C96B1E0c) |
 
-
 ---
-
 
 # **Fee Receiver**
 
@@ -164,6 +162,7 @@ The Emergency DAO is deployed at:
 | `Hooker`         | [0x9A9DF35cd8E88565694CA6AD5093c236C7f6f69D](https://etherscan.io/address/0x9A9DF35cd8E88565694CA6AD5093c236C7f6f69D) |
 | `CowSwapBurner`  | [0xC0fC3dDfec95ca45A0D2393F518D3EA1ccF44f8b](https://etherscan.io/address/0xC0fC3dDfec95ca45A0D2393F518D3EA1ccF44f8b) |
 | `FeeDistributor` | [0xD16d5eC345Dd86Fb63C6a9C43c517210F1027914](https://etherscan.io/address/0xD16d5eC345Dd86Fb63C6a9C43c517210F1027914) |
+| `FeeSplitter`   | [0x2dFd89449faff8a532790667baB21cF733C064f2](https://etherscan.io/address/0x2dFd89449faff8a532790667baB21cF733C064f2) |
 
 
 
