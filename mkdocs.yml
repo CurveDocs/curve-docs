@@ -347,7 +347,7 @@ nav:
     - Contract Ownership: references/curve-practices.md
     - Notebooks: references/notebooks.md
 
-  - Security: security/security.md
+  - Bug Bounty & Audits: security/security.md
 
   - Deployment Addresses:
     - Curve DAO: deployments/dao.md
