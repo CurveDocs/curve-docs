@@ -4,7 +4,7 @@ Curve Finance prioritizes the security of its protocols and user funds above all
 
 !!!github "Security Contact & Disclosure Reports"
     For security-related inquiries and vulnerability reports: security@curve.fi
-    
+
     Security audits and disclosure reports are available on [:material-github:GitHub](https://github.com/curvefi/security-incident-reports)
     
 ---
@@ -37,9 +37,7 @@ Provide enough information about the vulnerability
 | Unlikely | $250 | $1,000 | $5,000 |
 </div>
 
-
 ---
-
 
 # **Security Audits**
 
@@ -95,9 +93,7 @@ Provide enough information about the vulnerability
 
 </div>
 
-
 ---
-
 
 ## **DEX**
 
@@ -153,9 +149,7 @@ Provide enough information about the vulnerability
 
 </div>
 
-
 ---
-
 
 ## **Stablecoin and Lending**
 
@@ -201,5 +195,15 @@ Provide enough information about the vulnerability
     Date: 2. February, 2024
 
     [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/StateMind_Curve_Lending.pdf)
+
+-   [:octicons-link-external-24: Docs](../scrvusd/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
+    **Savings-crvUSD (scrvUSD)**
+
+    ---
+
+    Auditor: [ChainSecurity](https://www.chainsecurity.com/)  
+    Date: 03. December, 2024
+
+    [:material-github: Audit Report](https://github.com/curvefi/scrvusd/blob/main/audits/ChainSecurity_Curve_scrvUSD_audit.pdf)
 
 </div>
