@@ -37,6 +37,14 @@ The documentation of the `FeeSplitter` contract can be found [here](https://docs
 
     [:octicons-arrow-right-24: Read more](./StablecoinLens.md)
 
+-   :fontawesome-solid-chart-line: `scrvUSD Crosschain Oracle`
+
+    ---
+
+    System of contracts to provide the price of `scrvUSD` on other chains.
+
+    [:octicons-arrow-right-24: Read more](./crosschain-oracle.md)
+
 </div>
 
 ---
@@ -50,11 +58,14 @@ The main `scrvUSD` contracts are deployed on :logos-ethereum: Ethereum at the fo
 - `StablecoinLens` at [0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7](https://etherscan.io/address/0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7)
 
 
-Additionally, the `scrvUSD` token is bridged using the [x-dao](crosschain.md#curve-x-dao) system to the following chains:
-
-- :logos-fantom: Fantom at [`0x5191946500e75f0A74476F146dF7d386e52961d9`](https://ftmscan.com/address/0x5191946500e75f0A74476F146dF7d386e52961d9)
-- :logos-bsc: BinanceSmartChain at [`0x0094Ad026643994c8fB2136ec912D508B15fe0E5`](https://bscscan.com/address/0x0094Ad026643994c8fB2136ec912D508B15fe0E5)
-- :logos-avalanche: Avalanche at [`0xA3ea433509F7941df3e33857D9c9f212Ad4A4e64`](https://snowscan.xyz/address/0xA3ea433509F7941df3e33857D9c9f212Ad4A4e64)
+Additionally, the following cross-chain versions of the `scrvUSD` token are deployed:
+ 
+- :logos-optimism: `Optimism` at [0x289f635106d5b822a505b39ac237a0ae9189335b](https://optimistic.etherscan.io/address/0x289f635106d5b822a505b39ac237a0ae9189335b)
+- :logos-base: `Base` at [0x646a737b9b6024e49f5908762b3ff73e65b5160c](https://basescan.org/address/0x646a737b9b6024e49f5908762b3ff73e65b5160c)
+- :logos-fraxtal: `Fraxtal` at [0xaB94C721040b33aA8b0b4D159Da9878e2a836Ed0](https://fraxscan.com/address/0xaB94C721040b33aA8b0b4D159Da9878e2a836Ed0)
+- :logos-fantom: `Fantom` at [`0x5191946500e75f0A74476F146dF7d386e52961d9`](https://ftmscan.com/address/0x5191946500e75f0A74476F146dF7d386e52961d9)
+- :logos-bsc: `BinanceSmartChain` at [`0x0094Ad026643994c8fB2136ec912D508B15fe0E5`](https://bscscan.com/address/0x0094Ad026643994c8fB2136ec912D508B15fe0E5)
+- :logos-avalanche: `Avalanche` at [`0xA3ea433509F7941df3e33857D9c9f212Ad4A4e64`](https://snowscan.xyz/address/0xA3ea433509F7941df3e33857D9c9f212Ad4A4e64)
 
 
 ---
