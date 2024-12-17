@@ -8,13 +8,10 @@ The deployment of plain pools is permissionless and can be done via the [**`depl
 !!!warning "Examples"
     The examples following each code block of the corresponding functions provide a basic illustration of input/output values. **When using the function in production, ensure not to set `_min_dy`, `_min_amount`, etc., to zero or other arbitrary numbers**. Otherwise, MEV bots may frontrun or sandwich your transaction, leading to a potential loss of funds.
 
-    The examples are based on the crvUSD-USDV pool: [0xe1e77de32fb301ce55871ba095fd6b8e5d9abad8](https://etherscan.io/address/0xe1e77de32fb301ce55871ba095fd6b8e5d9abad8#code)
-
 !!!info "**Oracle Methods Documentation**"
     Comprehensive documentation for Oracle Methods is available on a dedicated page, accessible [here](./oracles.md).
 
 ---
-
 
 *The AMM contract utilizes two internal functions to transfer tokens/coins in and out of the pool and then accordingly update `stored_balances`:*
 
