@@ -2,8 +2,10 @@
 
 This Zap contract is specifically designed to **create or repay leveraged loans** using the [**1inch router**](https://1inch.io/aggregation-protocol/).
 
-!!!github "GitHub"
-    The source code for `LeverageZap1inch.vy` is available on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/zaps/LeverageZap1inch.vy).
+???+ vyper "`LeverageZap1inch.vy`"
+    The source code for the `LeverageZap1inch.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/zaps/LeverageZap1inch.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`.
+
+    The contract is deployed on :logos-ethereum: Ethereum at [`0x3294514B78Df4Bb90132567fcf8E5e99f390B687`](https://etherscan.io/address/0x3294514B78Df4Bb90132567fcf8E5e99f390B687).
 
     An accompanying JavaScript library for Curve Lending can be found here: [:material-github: GitHub](https://github.com/curvefi/curve-lending-js).
 
@@ -11,10 +13,7 @@ Previously, building leverage for crvUSD markets relied solely on predefined rou
 
 [^1]: The premise is that these liquidity sources are integrated within the 1inch router.
 
-
 ---
-
-
 
 Leverage is built using a **callback method**. The function to execute callbacks is located in the `Controller.vy` contract:
 
