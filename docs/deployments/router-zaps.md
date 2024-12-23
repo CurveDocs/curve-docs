@@ -30,9 +30,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-xlayer: `X-Layer`          | [0xBFab8ebc836E1c4D81837798FC076D219C9a1855](https://www.oklink.com/xlayer/address/0xBFab8ebc836E1c4D81837798FC076D219C9a1855) |
 | :logos-zksync: `zk-Sync`          | [0x7C915390e109CA66934f1eB285854375D1B127FA](https://era.zksync.network/address/0x7C915390e109CA66934f1eB285854375D1B127FA) |
 
-
 ---
-
 
 # **StableCalcZap**
 
@@ -40,7 +38,6 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 !!!github
     The source code for `StableCalcZaps.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/curve-zaps/tree/master/contracts).
-
 
 | Chain | Contract Address |
 | ----- | :--------------: |
@@ -59,9 +56,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-kava: `Kava` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://kavascan.com/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#contracts) |
 | :logos-aurora: `Aurora` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](ttps://explorer.aurora.dev/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4/contracts) |
 
-
 ---
-
 
 # **CryptoCalcZap**
 
@@ -116,9 +111,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-kava: `Kava` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://kavascan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#contracts) |
 | :logos-zksync: `zk-Sync` | [0x253548e98C769aD2850da8DB3E4c2b2cE46E3839](https://era.zksync.network/address/0x253548e98C769aD2850da8DB3E4c2b2cE46E3839#contract) |
 
-
 ---
-
 
 # **MetaZap-NG**
 
@@ -126,7 +119,6 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 !!!github
     The source code for `MetaZapNG.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/stableswap-ng/blob/main/contracts/main/MetaZapNG.vy).
-
 
 | Chain | Contract Address |
 | ----- | :--------------: |
@@ -149,3 +141,14 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-aurora: `Aurora`| [0x9293f068912bae932843a1bA01806c54f416019D](https://explorer.aurora.dev/address/0x9293f068912bae932843a1bA01806c54f416019D) |
 | :logos-xlayer: `X-Layer`| [0x604388bb1159afd21eb5191ce22b4decdee2ae22](https://www.okx.com/web3/explorer/xlayer/address/0x604388bb1159afd21eb5191ce22b4decdee2ae22) |
 | :logos-zksync: `zk-Sync` | [0x4232Dcc6D31543A2431079BdE2082C69eA3A771E](https://era.zksync.network/address/0x4232Dcc6D31543A2431079BdE2082C69eA3A771E) |
+
+---
+
+# **LlamaLend LeverageZap**
+
+*Zap to create leverage for lending markets.*
+
+| Contract Type | Contract Address |
+| ----- | :--------------: |
+| `LeverageZap1inch` | [0x3294514B78Df4Bb90132567fcf8E5e99f390B687](https://etherscan.io/address/0x3294514B78Df4Bb90132567fcf8E5e99f390B687) |
+| `LlamaLendOdosLeverageZap` | [0xc5898606bdb494a994578453b92e7910a90aa873](https://etherscan.io/address/0xc5898606bdb494a994578453b92e7910a90aa873) |
