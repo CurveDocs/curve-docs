@@ -4,6 +4,6 @@ hide:
   - toc
 ---
 
-<h1>Curve API</h1>
+<h1></h1>
 
 <swagger-ui src="https://api.curve.fi/v1/openapi.json"></swagger-ui>
