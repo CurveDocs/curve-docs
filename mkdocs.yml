@@ -132,11 +132,8 @@ nav:
   - Liquidity Gauges and Minting CRV:
 
     - Overview & Implementation: liquidity-gauges-and-minting-crv/overview.md
-
     - GaugeController: liquidity-gauges-and-minting-crv/gauge-controller/GaugeController.md
-
     - Minter: liquidity-gauges-and-minting-crv/minter/Minter.md 
-
     - Gauges:
       - Overview: liquidity-gauges-and-minting-crv/gauges/overview.md
       - LiquidityGaugeV6: liquidity-gauges-and-minting-crv/gauges/LiquidityGaugeV6.md
@@ -154,13 +151,14 @@ nav:
       #  - L2 VotingEscrow Oracle: liquidity-gauges-and-minting-crv/xchain-gauges/L2VotingEscrowOracle.md
 
   - Governance and Voting:  
-    - Overview: curve_dao/governance/overview.md
-    - Crosschain Governance:
-      - Overview: curve_dao/governance/curve-xgov/overview.md
-      - Broadcaster.vy: curve_dao/governance/curve-xgov/broadcaster.md
-      - Relayer.vy: curve_dao/governance/curve-xgov/relayer.md
-      - Agent.vy: curve_dao/governance/curve-xgov/agents.md
-      - Vault.vy: curve_dao/governance/curve-xgov/vault.md
+    - Overview: governance/overview.md
+    - Curve-DAO Tool: governance/curve-dao.md
+    - L2 Governance (x-gov):
+      - Overview: governance/x-gov/overview.md
+      - Broadcaster: governance/x-gov/broadcaster.md
+      - Relayer: governance/x-gov/relayer.md
+      - Agents: governance/x-gov/agents.md
+      - Vault: governance/x-gov/vault.md
 
 
   - Fee Collection & Distribution:

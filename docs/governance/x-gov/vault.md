@@ -1,29 +1,27 @@
 <h1>L2 Vault</h1>
 
+The `Vault` is a simple smart contract designed to enable the DAO to manage chain-native assets and ERC-20 tokens across chains other than Ethereum.
 
-The `Vault` contract is a straightforward smart contract designed to enable the DAO to **manage chain-native assets and ERC-20 tokens** across blockchains other than Ethereum.
-
-This contract is directly controlled by the `owner`, which is the ownership agent ([more here](./agents.md)) of the respective chain.
-
-!!!github "GitHub"
+!!!vyper "`Vault.vy`"
     The source code of the `Vault.vy` contract can be found on [GitHub :material-github:](https://github.com/curvefi/curve-xgov/blob/master/contracts/Vault.vy).
 
+    A comprehensive list of all deployed contracts is available [here :material-arrow-up-right:](../../deployments/crosschain.md#curve-x-gov).
+
+This contract is directly controlled by its `owner`, which is the `OwnershipAgent` of the respective chain.
 
 ---
 
+## Transferring Assets
 
-## **Transferring Assets**
-
-The contract features a simple **transfer function** that allows the owner to transfer tokens out of the Vault.
-
+The contract features a transfer function that allows the `owner` to transfer tokens out of the Vault to a specified receiver address.
 
 `transfer`
 !!! description "`Vault.transfer(_token: address, _to: address, _value: uint256):`"
 
     !!!guard "Guarded Method"
-        This function can only be called by the `owner` of the contract, which is the L2 Ownership Agent.
+        This function can only be called by the `owner` of the contract, which is the respective chain's `OwnershipAgent`.
 
-    Function to transfer a specific amount of tokens from the vault to another address. 
+    Function to transfer a specific amount of tokens from the vault to another address.
 
     | Input     | Type       | Description                  |
     | --------- | ---------- | ---------------------------- |
@@ -57,17 +55,15 @@ The contract features a simple **transfer function** that allows the owner to tr
             ```
 
     === "Example"
+
+        This example transfers 1 ARB token from the vault to `0x0000000000000000000000000000000000000000` on Arbitrum.
+
         ```shell
         >>> Vault.transfer('0x912CE59144191C1204E64559FE8253a0e49E6548', '0x0000000000000000000000000000000000000000', 1000000000000000000)
         ```
 
-
 ---
 
+## Contract Ownership
 
-## **Contract Ownership**
-
-Ownership of the Vault contract follows the classic model of contract ownership. It includes an `owner` address, which can be updated by first committing a future owner and then applying the changes.
-
-!!!notebook "Jupyter Notebook"
-    For a basic demonstration of how to change the ownership of the Vault, please refer to the following example: https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/basic/ownership.ipynb
+Ownership of the Vault contract follows the classic model of contract ownership. It includes an `owner` address, which can be updated by first committing a future owner and then applying the changes. More on transfering ownership can be found [here](../../references/curve-practices.md#commit--apply).
