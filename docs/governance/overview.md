@@ -1,11 +1,11 @@
-<h1>Curve DAO: Governance and Voting</h1>
+<h1>Governance and Voting</h1>
 
 Curve governance and voting is a integral part of the protocol as all relevant contract are in full control of the DAO. Curve uses [Aragon](https://aragon.org/) for governance and control of the protocol admin functionality. Interaction with Aragon occurs through a [modified implementation](https://github.com/curvefi/curve-aragon-voting) of the Aragon [Voting App](https://github.com/aragon/aragon-apps/tree/master/apps/voting).
 
 Curve's governance system is fully controlled by the DAO and extends to all deployed chains. Not only the Ethereum mainnet, but also all EVM sidechains. Due to the limitation of veCRV being on Ethereum only, all votes (also crosschain ones) are voted on Ethereum.
 
-!!!example "CurveDAO Package"
-    A Python package for interacting with the Curve DAO is available [here](CurveDAO_package.md).
+!!!info "CurveDAO Package"
+    Curve developed a Python package to help make the process of creating and decoding proposals easier. For more information, see the [here](curve-dao.md).
 
 ---
 
