@@ -1,69 +1,23 @@
 <h1>Curve DAO Token (CRV)</h1>
 
-Curve DAO Token is based on the ERC-20 token standard as defined at [EIP-20](https://eips.ethereum.org/EIPS/eip-20).
+<script src="/assets/javascripts/contracts/crv/crv.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
 
-!!!deploy "Contract Source & Deployment"
-    The **`Curve DAO Token`** contract is [deployed](https://etherscan.io/tx/0x5dc4a688b63cea09bf4d73a695175b77572792a2e2b3656297809ad3596d4bfe) to the Ethereum mainnet at: [0xD533a949740bb3306d119CC777fa900bA034cd52](https://etherscan.io/address/0xD533a949740bb3306d119CC777fa900bA034cd52#code).
+The Curve DAO Token (CRV) is the protocol's governance token. It is based on the ERC-20 token standard as defined at [EIP-20](https://eips.ethereum.org/EIPS/eip-20).
 
-    Source code is available on [:material-github: Github](https://github.com/curvefi/curve-dao-contracts/blob/567927551903f71ce5a73049e077be87111963cc/contracts/ERC20CRV.vy). 
+???+ vyper "`CRV.vy`"
+    The source code for the `CRV.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts/blob/567927551903f71ce5a73049e077be87111963cc/contracts/ERC20CRV.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.2.4`.
 
-For a broader understanding of the use case of the CRV token, check out [**Understanding CRV**](https://resources.curve.fi/crv-token/overview/).
+    The token is deployed on Ethereum at [`0xD533a949740bb3306d119CC777fa900bA034cd52`](https://etherscan.io/address/0xD533a949740bb3306d119CC777fa900bA034cd52#code).
 
-
----
-
-## **Tokenomics**
-
-
-<div id="highcharts-790fd468-1065-4292-97a0-953f69e6d14f"></div>  
-<script>
-(function(){ var files = ["https://code.highcharts.com/stock/highstock.js","https://code.highcharts.com/highcharts-more.js","https://code.highcharts.com/highcharts-3d.js","https://code.highcharts.com/modules/data.js","https://code.highcharts.com/modules/exporting.js","https://code.highcharts.com/modules/funnel.js","https://code.highcharts.com/modules/annotations.js","https://code.highcharts.com/modules/accessibility.js","https://code.highcharts.com/modules/solid-gauge.js"],loaded = 0; if (typeof window["HighchartsEditor"] === "undefined") {window.HighchartsEditor = {ondone: [cl],hasWrapped: false,hasLoaded: false};include(files[0]);} else {if (window.HighchartsEditor.hasLoaded) {cl();} else {window.HighchartsEditor.ondone.push(cl);}}function isScriptAlreadyIncluded(src){var scripts = document.getElementsByTagName("script");for (var i = 0; i < scripts.length; i++) {if (scripts[i].hasAttribute("src")) {if ((scripts[i].getAttribute("src") || "").indexOf(src) >= 0 || (scripts[i].getAttribute("src") === "http://code.highcharts.com/highcharts.js" && src === "https://code.highcharts.com/stock/highstock.js")) {return true;}}}return false;}function check() {if (loaded === files.length) {for (var i = 0; i < window.HighchartsEditor.ondone.length; i++) {try {window.HighchartsEditor.ondone[i]();} catch(e) {console.error(e);}}window.HighchartsEditor.hasLoaded = true;}}function include(script) {function next() {++loaded;if (loaded < files.length) {include(files[loaded]);}check();}if (isScriptAlreadyIncluded(script)) {return next();}var sc=document.createElement("script");sc.src = script;sc.type="text/javascript";sc.onload=function() { next(); };document.head.appendChild(sc);}function each(a, fn){if (typeof a.forEach !== "undefined"){a.forEach(fn);}else{for (var i = 0; i < a.length; i++){if (fn) {fn(a[i]);}}}}var inc = {},incl=[]; each(document.querySelectorAll("script"), function(t) {inc[t.src.substr(0, t.src.indexOf("?"))] = 1; }); function cl() {if(typeof window["Highcharts"] !== "undefined"){Highcharts.setOptions({lang:{}});var options={"title":{"text":"CRV Distribution"},"subtitle":{"text":""},"exporting":{},"chart":{"type":"pie","polar":false,"width":null,"height":null,"borderWidth":0,"borderRadius":0,"inverted":false,"style":{"fontFamily":"\"Lucida Grande\", \"Lucida Sans Unicode\", Verdana, Arial, Helvetica, sans-serif","color":"#333","fontSize":"12px","fontWeight":"normal","fontStyle":"normal"}},"plotOptions":{"pie":{"allowPointSelect":true,"cursor":true,"showInLegend":true,"dataLabels":{"enabled":false}},"series":{"animation":false,"dataLabels":{"enabled":false}}},"series":[{"lineWidth":2,"allowPointSelect":false,"crisp":true,"showCheckbox":false,"animation":false,"enableMouseTracking":true,"events":{},"point":{"events":{}},"dataLabels":{"animation":{},"align":"center","borderWidth":0,"defer":true,"formatter":"function(){let{numberFormatter:t}=this.series.chart;return\"number\"!=typeof this.y?\"\":t(this.y,-1)}","padding":5,"style":{"fontSize":"0.7em","fontWeight":"bold","color":"contrast","textOutline":"1px contrast"},"verticalAlign":"bottom","x":0,"y":0,"connectorPadding":5,"connectorShape":"crookedLine","distance":30,"enabled":false,"softConnector":true},"cropThreshold":300,"opacity":1,"pointRange":0,"softThreshold":true,"states":{"normal":{"animation":true},"hover":{"animation":{"duration":150},"lineWidthPlus":1,"marker":{},"halo":{"size":10,"opacity":0.25},"brightness":0.1},"select":{"animation":{"duration":0}},"inactive":{"animation":{"duration":150},"opacity":0.2}},"stickyTracking":true,"turboThreshold":0,"findNearestPointBy":"x","borderRadius":3,"center":[null,null],"clip":false,"colorByPoint":true,"ignoreHiddenPoint":true,"inactiveOtherPoints":true,"legendType":"point","size":null,"showInLegend":true,"slicedOffset":10,"tooltip":{"followPointer":true},"borderColor":"#ffffff","borderWidth":1,"cursor":true,"name":"Allocation in %","legendSymbol":"rectangle","threshold":0,"stacking":"normal","dataGrouping":{"groupPixelWidth":2,"dateTimeLabelFormats":{"millisecond":["%A, %e %b, %H:%M:%S.%L","%A, %e %b, %H:%M:%S.%L","-%H:%M:%S.%L"],"second":["%A, %e %b, %H:%M:%S","%A, %e %b, %H:%M:%S","-%H:%M:%S"],"minute":["%A, %e %b, %H:%M","%A, %e %b, %H:%M","-%H:%M"],"hour":["%A, %e %b, %H:%M","%A, %e %b, %H:%M","-%H:%M"],"day":["%A, %e %b %Y","%A, %e %b","-%A, %e %b %Y"],"week":["Week from %A, %e %b %Y","%A, %e %b","-%A, %e %b %Y"],"month":["%B %Y","%B","-%B %Y"],"year":["%Y","%Y","-%Y"]}},"marker":{"enabled":false,"symbol":"circle"},"type":"pie"}],"data":{"csv":"\"Column 1\";\"Allocation in %\"\n\"Community Liquidity Providers\";62\n\"Shareholders\";30\n\"Community Reserve\";5\n\"Employees\";3","googleSpreadsheetKey":false,"googleSpreadsheetWorksheet":false},"legend":{"layout":"horizontal","enabled":true,"align":"center","x":0,"verticalAlign":"bottom","floating":false},"tooltip":{"shared":false},"yAxis":[{"title":{"text":""},"labels":{}}],"colors":["#a34aa1","#688cbb","#aa4c48","#57a050"],"xAxis":[{"title":{"text":""},"labels":{}}],"lang":{},"credits":{"text":"","href":""}};/*
-// Sample of extending options:
-Highcharts.merge(true, options, {
-    chart: {
-        backgroundColor: "#bada55"
-    },
-    plotOptions: {
-        series: {
-            cursor: "pointer",
-            events: {
-                click: function(event) {
-                    alert(this.name + " clicked\n" +
-                          "Alt: " + event.altKey + "\n" +
-                          "Control: " + event.ctrlKey + "\n" +
-                          "Shift: " + event.shiftKey + "\n");
-                }
-            }
-        }
-    }
-});
-*/new Highcharts.Chart("highcharts-790fd468-1065-4292-97a0-953f69e6d14f", options);}}})();
-</script>
-
-
-
-*The total supply of 3.03 billion is distributed as follows:*
-
-- **62% to community liquidity providers**
-- **30% to shareholders (team and investors)** with a vesting period of 2-4 years
-- **5% to the community reserve**
-- **3% to employees** with a 2-year vesting period
-
-*The initial supply of approximately 1.3 billion (~43%) is distributed as follows:*
-
-- **5% to pre-CRV liquidity providers** with a 1-year vesting
-- **30% to shareholders (team and investors)** with a vesting period of 2-4 years
-- **3% to employees** with a 2-year vesting period
-- **5% to the community reserve**
-
+For a broader understanding of the use case of the CRV token, check out [Understanding CRV](https://resources.curve.fi/crv-token/overview/).
 
 ---
 
-
-## **Transfer and Allowance**
+## Transfer and Allowance
 
 ### `approve`
-!!! description "`CRV.approve(_spender: address, _value: uint256) -> bool:`"
+!!! description "`CRV.approve(_spender: address, _value: uint256) -> bool`"
 
     !!!warning 
         Approval may only be from `zero -> nonzero` or from `nonzero -> zero` in order to mitigate the potential race condition described here: https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
@@ -72,12 +26,12 @@ Highcharts.merge(true, options, {
 
     Returns: true (`bool`).
 
-    Emits: `Approval`
+    Emits: `Approval` event.
 
-    | Input      | Type      | Description        |
-    | ---------- | --------- | ------------------ |
-    | `_spender` | `address` | Spender address.   |
-    | `_value`   | `uint256` | Amount to approve. |
+    | Input      | Type      | Description       |
+    | ---------- | --------- | ----------------- |
+    | `_spender` | `address` | Spender address   |
+    | `_value`   | `uint256` | Amount to approve |
 
     ??? quote "Source code"
 
@@ -107,10 +61,13 @@ Highcharts.merge(true, options, {
         ```
 
     === "Example"
-        ```shell
-        >>> soon
-        ```
 
+        This example approves the `0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045` address to transfer 1 CRV tokens on behalf of the caller (`msg.sender`).
+
+        ```shell
+        >>> CRV.approve('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', 1000000000000000000)
+        'True'
+        ```
 
 ### `allowance`
 !!! description "`CRV.allowance(_owner: address, _spender: address) -> uint256`"
@@ -119,10 +76,10 @@ Highcharts.merge(true, options, {
 
     Returns: amount of tokens (`uint256`) that `_owner` has allowed `_spender` to use.
 
-    | Input      | Type      | Description      |
-    |------------|-----------|----------------- |
-    | `_owner`   | `address` | Owner address.   |
-    | `_spender` | `address` | Spender address. |
+    | Input      | Type      | Description     |
+    |------------|-----------|---------------- |
+    | `_owner`   | `address` | Owner address   |
+    | `_spender` | `address` | Spender address |
 
     ??? quote "Source code"
 
@@ -142,11 +99,36 @@ Highcharts.merge(true, options, {
         ```
 
     === "Example"
-        ```shell
-        >>> CRV.allowance(0x7a16fF8270133F063aAb6C9977183D9e72835428 ,0x68BEDE1d0bc6BE6d215f8f8Ee4ee8F9faB97fE7a)
-        0
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the allowance of two addresses.
+
+        <div class="highlight">
+        <pre><code>>>> CRV.allowance(<input id="allowanceOwner" 
+        type="text" 
+        value="0xd061D61a4d941c39E5453435B6345Dc261C2fcE0" 
+        style="width: 300px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
+        <input id="allowanceSpender" 
+        type="text" 
+        value="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045" 
+        style="width: 300px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>)
+        <span id="allowanceOutput"></span></code></pre>
+        </div>
 
 ### `transfer`
 !!! description "`CRV.transfer(_to: address, _value: uint256) -> bool`"
@@ -160,12 +142,12 @@ Highcharts.merge(true, options, {
 
     Returns: true (`bool`).
 
-    Emits: `Transfer`
+    Emits: `Transfer` event.
 
-    | Input    | Type      | Description                     |
-    | -------- | --------- | ------------------------------- |
-    | `_to`    | `address` | Receiver address of the tokens. |
-    | `_value` | `uint256` | Amount of tokens to transfer.   |
+    | Input    | Type      | Description                    |
+    | -------- | --------- | ------------------------------ |
+    | `_to`    | `address` | Receiver address of the tokens |
+    | `_value` | `uint256` | Amount of tokens to transfer   |
 
     ??? quote "Source code"
 
@@ -193,14 +175,16 @@ Highcharts.merge(true, options, {
         ```
 
     === "Example"
+
+        This example transfers 1 CRV token from the `msg.sender` to `0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045`.
+
         ```shell
-        >>> CRV.transfer('0x7a16fF8270133F063aAb6C9977183D9e72835428', 1)
+        >>> CRV.transfer('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', 1000000000000000000)
         'True'
         ```
 
-
 ### `transferFrom`
-!!! description "`CRV.transferFrom(_from: address, _to: address, _value: uint256) -> bool:`"
+!!! description "`CRV.transferFrom(_from: address, _to: address, _value: uint256) -> bool`"
 
     !!!warning
         Vyper does not allow underflows; thus, any subtraction in this function will revert if there is an insufficient balance.
@@ -211,13 +195,13 @@ Highcharts.merge(true, options, {
 
     Returns: true (`bool`).
 
-    Emits: `Transfer`
+    Emits: `Transfer` event.
 
-    | Input    | Type      | Description                     |
-    | -------- | --------- | ------------------------------- |
-    | `_from`  | `address` | Address to send tokens from.    |
-    | `_to`    | `address` | Receiver address of the tokens. |
-    | `_value` | `uint256` | Amount of tokens to transfer.   |
+    | Input    | Type      | Description                    |
+    | -------- | --------- | ------------------------------ |
+    | `_from`  | `address` | Address to send tokens from    |
+    | `_to`    | `address` | Receiver address of the tokens |
+    | `_value` | `uint256` | Amount of tokens to transfer   |
 
     ??? quote "Source code"
 
@@ -247,25 +231,41 @@ Highcharts.merge(true, options, {
         ```
 
     === "Example"
+
+        This example transfers 1 CRV token from the `0x7a16fF8270133F063aAb6C9977183D9e72835428` address to the `0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045` address.
+
         ```shell
-        >>> CRV.transferFrom('0x7a16fF8270133F063aAb6C9977183D9e72835428', '0x68BEDE1d0bc6BE6d215f8f8Ee4ee8F9faB97fE7a', 1)
+        >>> CRV.transferFrom('0x7a16fF8270133F063aAb6C9977183D9e72835428', '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', 1000000000000000000)
         'True'
         ```
 
-
 ---
 
+## Emissions, Minting and Burning
 
-## **Minting and Burning**
+Curve has a strict minting mechanism of new CRV tokens. New tokens are minted based on the gauge weights of an epoch. For more information, see [Gauge Weight Voting](../liquidity-gauges-and-minting-crv/overview.md#gauge-weight-voting)
 
-New CRV tokens can only be minted by the `minter` contract.
+!!!info "Minting New CRV"
+    New `CRV` tokens can only be minted by the `minter` contract.
+
+Mining parameters are used to determine token emissions, which are based on epochs (one year). With each passing epoch, the `rate` will be reduced, consequently decreasing the overall CRV emissions.
+
+The rate can be adjusted by invoking the `update_mining_parameters()` function. Although this function is accessible to anyone, attempts to call it will be reverted if a year has not elapsed since the last update. When successfully executed, the `mining_epoch` increments by 1, and the `start_epoch_time` updates to the timestamp of the function call. Furthermore, the `update_mining_parameters()` function will automatically trigger if someone attempts to mint CRV before a scheduled rate reduction.
+
+*Effectively, each rate reduction decreases CRV inflation by approximately 15.9%. The future rate is calculated as follows:*
+
+$$\text{rate}_\text{future} = \text{rate}_\text{current} * \frac{10^{18}}{2^{\frac{1}{4}} * 10^{18}}$$
+
+with $\text{rate}_\text{current}$ fetched from the [`rate()`](#rate) function.
+
+---
 
 ### `minter`
 !!! description "`CRV.minter() -> address: view`"
 
-    Getter for the minter contract address. The minter address can only be set once (at deployment) and not altered after.
+    Getter for the `Minter` contract address. The minter address can only be set once (at deployment) and not altered after.
 
-    Returns: minter contract (`address`).
+    Returns: `Minter` contract (`address`).
 
     ??? quote "Source code"
 
@@ -274,26 +274,30 @@ New CRV tokens can only be minted by the `minter` contract.
         ```
 
     === "Example"
-        ```shell
-        >>> CRV.minter()
-        '0xd061D61a4d941c39E5453435B6345Dc261C2fcE0'
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `Minter` contract address.
 
+        <div class="highlight">
+        <pre><code>>>> CRV.minter()
+        <span id="minterOutput"></span></code></pre>
+        </div>
 
 ### `mint`
 !!! description "`CRV.mint(_to: address, _value: uint256) -> bool:`"
 
-    Function to mint `_value` and assign them to `_to`.
+    !!!guard "Guarded Method"
+        This function is only callable by the `Minter` contract.
+
+    Function to mint `_value` tokens and assign them to `_to`.
 
     Returns: true (`bool`)
 
-    Emits: `Transfer`
+    Emits: `Transfer` event.
 
-    | Input    | Type      | Description                    |
-    | -------- | --------- | ------------------------------ |
-    | `_to`    | `address` | Receiver of the minted tokens. |
-    | `_value` | `uint256` | Amount to mint.                |
+    | Input    | Type      | Description                   |
+    | -------- | --------- | ----------------------------- |
+    | `_to`    | `address` | Receiver of the minted tokens |
+    | `_value` | `uint256` | Amount to mint                |
 
     ??? quote "Source code"
 
@@ -329,10 +333,13 @@ New CRV tokens can only be minted by the `minter` contract.
         ```
 
     === "Example"
-        ```shell
-        >>> soon
-        ```
 
+        This example mints 1 CRV token to the `0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045` address.
+
+        ```shell
+        >>> CRV.mint('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', 1000000000000000000)
+        'True'
+        ```
 
 ### `mintable_in_timeframe`
 !!! description "`CRV.mintable_in_timeframe(start: uint256, end: uint256) -> uint256`"
@@ -341,10 +348,10 @@ New CRV tokens can only be minted by the `minter` contract.
 
     Returns: mintable tokens (`uint256`).
 
-    | Input   | Type      | Description      |
-    |-------- | --------- | ---------------- |
-    | `start` | `uint256` | Start timestamp. |
-    | `end`   | `uint256` | End timestamp.   |
+    | Input   | Type      | Description     |
+    |-------- | --------- | --------------- |
+    | `start` | `uint256` | Start timestamp |
+    | `end`   | `uint256` | End timestamp   |
 
     ??? quote "Source code"
 
@@ -395,24 +402,49 @@ New CRV tokens can only be minted by the `minter` contract.
         ```
 
     === "Example"
-        ```shell
-        >>> CRV.mintable_in_timeframe(1682892000, 1683496800)
-        3726756852824660365468800
-        ``` 
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the mintable supply between two timestamps.
+
+        <div class="highlight">
+        <pre><code>>>> CRV.mintable_in_timeframe(<input id="mintableStart" 
+        type="text" 
+        value="1682892000" 
+        style="width: 70px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
+        <input id="mintableEnd" 
+        type="text" 
+        value="1683496800" 
+        style="width: 70px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>)
+        <span id="mintableOutput"></span></code></pre>
+        </div>
 
 ### `burn`
 !!! description "`CRV.burn(_value: uint256) -> bool`"
-    
-    Function to burn `_value` tokens of the function caller by sending them to [`ZERO_ADDRESS`](https://etherscan.io/address/0x0000000000000000000000000000000000000000).
 
-    Retruns: true (`bool`).
+    Function to burn `_value` tokens of the function caller by sending them to `ZERO_ADDRESS`.
 
-    Emits: `Transfer`
+    Returns: true (`bool`).
 
-    | Input    | Type      | Description               |
-    | -------- | --------- | ------------------------- |
-    | `_value` | `uint256` | Amount of tokens to burn. |
+    Emits: `Transfer` event.
+
+    | Input    | Type      | Description              |
+    | -------- | --------- | ------------------------ |
+    | `_value` | `uint256` | Amount of tokens to burn |
 
     ??? quote "Source code"
 
@@ -437,34 +469,14 @@ New CRV tokens can only be minted by the `minter` contract.
             return True
         ```
 
-    === "Example"   
+    === "Example"
+
+        This example burns 1 CRV token from `msg.sender`.
+
         ```shell
         >>> CRV.burn(1000000000000000000)
         'True'
         ```
-
-
----
-
-
-## **CRV Emissions**
-
-Mining parameters are used to determine token emissions, which are based on epochs (one year). With each passing epoch, the `rate` will be reduced, consequently decreasing the overall CRV emissions.
-
-The rate can be adjusted by invoking the `update_mining_parameters()` function. Although this function is accessible to anyone, attempts to call it will be reverted if a year has not elapsed since the last update. When successfully executed, the `mining_epoch` increments by 1, and the `start_epoch_time` updates to the timestamp of the function call. Furthermore, the `update_mining_parameters()` function will automatically trigger if someone attempts to mint CRV before a scheduled rate reduction.
-
-*The future rate is calculated as follows:*
-
-$$\text{rate}_\text{future} = \text{rate}_\text{current} * \frac{10^{18}}{2^{\frac{1}{4}} * 10^{18}}$$
-
-with $\text{rate}_\text{current}$ fetched from [`CRV.rate()`](#rate).
-
-!!!info "Yearly Inflation Reduction"
-    **Effectively, each rate reduction decreases CRV inflation by approximately 15.9%.**
-
-
----
-
 
 ### `mining_epoch`
 !!! description "`CRV.mining_epoch() -> int128: view`"
@@ -514,12 +526,14 @@ with $\text{rate}_\text{current}$ fetched from [`CRV.rate()`](#rate).
             log UpdateMiningParameters(block.timestamp, _rate, _start_epoch_supply)
         ```
 
-    === "Example" 
-        ```shell
-        >>> CRV.mining_epoch()
-        3
-        ```
+    === "Example"
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current mining epoch.
+
+        <div class="highlight">
+        <pre><code>>>> CRV.mining_epoch()
+        <span id="miningEpochOutput"></span></code></pre>
+        </div>
 
 ### `start_epoch_time`
 !!! description "`CRV.start_epoch_time() -> uint256: view`"
@@ -549,11 +563,13 @@ with $\text{rate}_\text{current}$ fetched from [`CRV.rate()`](#rate).
         ```
 
     === "Example"
-        ```shell
-        >>> CRV.start_epoch_time()
-        1691965048                              # 'Sun Aug 13 2023 22:17:28 GMT+0000'
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the start timestamp of the current mining epoch.
+
+        <div class="highlight">
+        <pre><code>>>> CRV.start_epoch_time()
+        <span id="startEpochTimeOutput"></span></code></pre>
+        </div>
 
 ### `rate`
 !!! description "`CRV.rate() -> uint256: view`"
@@ -562,11 +578,11 @@ with $\text{rate}_\text{current}$ fetched from [`CRV.rate()`](#rate).
     
     To calculate the CRV emission per day:
 
-    $$\text{daily_emission} = \text{rate} * 86400$$
+    - $\text{daily_emission} = \text{rate} * 86400$
 
-    $$\text{weekly_emission} = \text{rate} * 86400 * 7$$
+    - $\text{weekly_emission} = \text{rate} * 86400 * 7$
     
-    $$\text{yearly_emission} = \text{rate} * 86400 * 365$$
+    - $\text{yearly_emission} = \text{rate} * 86400 * 365$
 
     Returns: current inflation rate (`uint256`).
 
@@ -577,21 +593,20 @@ with $\text{rate}_\text{current}$ fetched from [`CRV.rate()`](#rate).
         ```
 
     === "Example"
-        ```shell
-        >>> CRV.rate()
-        5181574864521283150     
-        ```
 
-    !!!note "Calculating Daily Emissions"
-        $\text{daily_emission} = \frac{5181574864521283150}{10^{18}} * 86400 = 447688.07$
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current inflation rate of the CRV token emission.
 
+        <div class="highlight">
+        <pre><code>>>> CRV.rate()
+        <span id="rateOutput"></span></code></pre>
+        </div>
 
 ### `update_mining_parameters` 
-!!! description "`update_mining_parameters()`"
+!!! description "`CRV.update_mining_parameters()`"
 
     Function to update the mining parameters for the token. By updating, the newly decreased inflation rate is applied. This function is callable by anyone. However, the call will revert if `block.timestamp` is less than or equal to `start_epoch_time` + `RATE_REDUCTION_TIME`, indicating that one year has not yet passed and therefore the rate cannot be updated yet.
 
-    Emits: `UpdateMiningParameters`
+    Emits: `UpdateMiningParameters` event.
 
     ??? quote "Source code"
 
@@ -653,10 +668,12 @@ with $\text{rate}_\text{current}$ fetched from [`CRV.rate()`](#rate).
         ```
 
     === "Example"
+
+        This example updates the mining parameters for the CRV token.
+
         ```shell
         >>> CRV.update_mining_parameters()
         ```
-
 
 ### `start_epoch_time_write`
 !!! description "`CRV.start_epoch_time_write() -> uint256`"
@@ -686,10 +703,13 @@ with $\text{rate}_\text{current}$ fetched from [`CRV.rate()`](#rate).
         ```
 
     === "Example"
-        ```shell
-        >>> CRV.start_epoch_time_write()
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the start timestamp of the current mining epoch.
+
+        <div class="highlight">
+        <pre><code>>>> CRV.start_epoch_time_write()
+        <span id="startEpochTimeOutput"></span></code></pre>
+        </div>
 
 ### `future_epoch_time_write`
 !!! description "`CRV.future_epoch_time_write() -> uint256`"
@@ -717,23 +737,23 @@ with $\text{rate}_\text{current}$ fetched from [`CRV.rate()`](#rate).
         ```
 
     === "Example"
-        ```shell
-        >>> CRV.future_epoch_time_write()
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the start timestamp of the current mining epoch.
+
+        <div class="highlight">
+        <pre><code>>>> CRV.future_epoch_time_write()
+        <span id="futureEpochTimeOutput"></span></code></pre>
+        </div>
 
 ---
 
-
-## **Admin Controls**
+## Admin Controls and Other Methods
 
 The controls over the Curve DAO Token are strictly limited. The `admin` of the contract can only modify the `name`, `admin`, or `minter`[^1]. 
 
 Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65c637785e8f8B742ae6b0b9968) is the current admin of the contract, any changes to these parameters would require a successfully passed DAO vote.
 
 [^1]: Although `set_minter` is technically an admin-guarded function, there is **no actual way to change the minter address** because the code checks if the current minter is set to `ZERO_ADDRESS`, which was only true when the contract was initially deployed.
-
-
 
 ### `admin`
 !!! description "`CRV.admin() -> address: view`"
@@ -761,11 +781,13 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
         ```
 
     === "Example" 
-        ```shell
-        >>> CRV.admin()
-        '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current `admin` of the contract.
+
+        <div class="highlight">
+        <pre><code>>>> CRV.admin()
+        <span id="adminOutput"></span></code></pre>
+        </div>
 
 ### `set_admin`
 !!! description "`CRV.set_admin(_admin: address)`"
@@ -775,11 +797,11 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
 
     Function to change the admin of the contract.
 
-    Emits: `SetAdmin`
+    Emits: `SetAdmin` event.
 
-    | Input      | Type   | Description |
-    | ----------- | -------| ----|
-    | `_admin` |  `address` | New Admin Address |
+    | Input    | Type      | Description       |
+    | -------- | --------- | ----------------- |
+    | `_admin` | `address` | New Admin Address |
 
     ??? quote "Source code"
 
@@ -805,7 +827,6 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
         ```shell
         >>> CRV.set_admin("0x0000000000000000000000000000000000000000")
         ```
-
 
 ### `name`
 !!! description "`CRV.name() -> String[64]`"
@@ -834,11 +855,13 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
         ```
 
     === "Example"
-        ```shell
-        >>> CRV.name()
-        'Curve DAO Token'
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the name of the token.
+
+        <div class="highlight">
+        <pre><code>>>> CRV.name()
+        <span id="nameOutput"></span></code></pre>
+        </div>
 
 ### `symbol`
 !!! description "`CRV.symbol() -> String[32]`"
@@ -868,12 +891,13 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
         ```
 
     === "Example"
-        ```shell
-        >>> CRV.symbol()
-        'CRV'
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the symbol of the token.
 
+        <div class="highlight">
+        <pre><code>>>> CRV.symbol()
+        <span id="symbolOutput"></span></code></pre>
+        </div>
 
 ### `set_name`
 !!! description "`CRV.set_name(_name: String[64], _symbol: String[32])`"
@@ -907,10 +931,16 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
             self.symbol = _symbol
         ```
 
+    === "Example"
+
+        This example changes the name and symbol of the token.
+
+        ```shell
+        >>> CRV.set_name("New Name", "New Symbol")
+        ```
 
 ### `set_minter`
 !!! description "`CRV.set_minter(_minter: address):`"
-
 
     !!!warning "Changing the `minter` contract is not possible anymore!"
         This function was only utilized during the initial deployment of the Curve DAO Token. The code permits setting the `minter` exclusively when the current minter is `ZERO_ADDRESS`, a condition met solely at the time of deployment. Consequently, the `minter` variable could only be set once and cannot be changed thereafter.
@@ -920,7 +950,7 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
 
     Function to set the minter contract for the token.
 
-    Emits: `SetMinter`
+    Emits: `SetMinter` event.
 
     | Input     | Type      | Description             |
     | --------- | --------- | ----------------------- |
@@ -947,12 +977,13 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
             log SetMinter(_minter)
         ```
 
+    === "Example"
 
----
+        This example tries to change the `minter` contract address of the token. Because the `minter` is already set, the function will revert.
 
-
-## **Contract Info Methods** 
-
+        ```shell
+        >>> CRV.set_minter("0x0000000000000000000000000000000000000000")
+        ```
 
 ### `avaliable_supply`
 !!! description "`CRV.avaliably_supply() -> uint256`"
@@ -978,11 +1009,13 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
             return self._available_supply()
         ```
     === "Example"
-        ```shell
-        >>> CRV.avaliable_supply()
-        1953676805157446496269106603
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the number of CRV tokens in existence.
+
+        <div class="highlight">
+        <pre><code>>>> CRV.available_supply()
+        <span id="availableSupplyOutput"></span></code></pre>
+        </div>
 
 ### `totalSupply`
 !!! description "`CRV.totalSupply() -> uint256`"
@@ -1004,11 +1037,13 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
         ```
 
     === "Example"
-        ```shell
-        >>> CRV.totalSupply()
-        1950555367872773429287303134
-        ```
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the total supply of the token.
+
+        <div class="highlight">
+        <pre><code>>>> CRV.totalSupply()
+        <span id="totalSupplyOutput"></span></code></pre>
+        </div>
 
 ### `decimals`
 !!! description "`CRV.decimals() -> uint256: view`"
@@ -1031,18 +1066,18 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
             @param _decimals Number of decimals for token
             """
             ...
-
             self.decimals = _decimals
-
             ...
         ```
 
-    === "Example"  
-        ```shell
-        >>> CRV.decimals()
-        18
-        ```
+    === "Example"
 
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the decimals of the token.
+
+        <div class="highlight">
+        <pre><code>>>> CRV.decimals()
+        <span id="decimalsOutput"></span></code></pre>
+        </div>
 
 ### `balanceOf`
 !!! description "`CRV.balanceOf(arg0: address) -> address: view`"
@@ -1055,7 +1090,6 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
     | ----------- | -------| ----|
     | `arg0` |  `address` | wallet to check CRV balance for |
 
-
     ??? quote "Source code"
 
         ```vyper
@@ -1063,7 +1097,21 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
         ```
 
     === "Example"
-        ```shell
-        >>> CRV.balanceOf('0xd061D61a4d941c39E5453435B6345Dc261C2fcE0')
-        2187980063734121847368
-        ```
+
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This ex
+
+        <div class="highlight">
+        <pre><code>>>> CRV.balanceOf(<input id="balanceOfAddress" 
+        type="text" 
+        value="0xd061D61a4d941c39E5453435B6345Dc261C2fcE0" 
+        style="width: 300px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #ccc; 
+            color: inherit; 
+            font-family: inherit; 
+            font-size: inherit; 
+            -moz-appearance: textfield;" 
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>)
+        <span id="balanceOfOutput">>>> Loading...</span></code></pre>
+        </div>
