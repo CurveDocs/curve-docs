@@ -1,13 +1,13 @@
 <h1>Pool Factory Overview</h1>
 
-A Pool Facotry enables the permissionless deployment of liquidity pools, gauge and, and LP tokens.
+A Pool Factory enables the permissionless deployment of liquidity pools, gauges, and LP tokens.
 
 !!!deploy "Contract Source & Deployment"
     Factories are deployed on the Ethereum Mainnet, as well as on sidechains and Layer-2 networks. Note that some pool types may not yet be supported on these networks. A comprehensive list of all deployed contracts is available [here](../references/deployed-contracts.md).
     The source code for each specific Factory contract can be found on GitHub in the respective section.
 
 
-Each Factory contract includes **built-in functions designed to populate the [MetaRegistry](../registry/MetaRegistryAPI.md)** with details about the created pools. These functions are not documented in this section. For more information, please refer to the [MetaRegistry documenataion](../registry/overview.md).
+Each Factory contract includes **built-in functions designed to populate the [MetaRegistry](../registry/MetaRegistryAPI.md)** with details about the created pools. These functions are not documented in this section. For more information, please refer to the [MetaRegistry documentation](../registry/overview.md).
 
 
 *Note: The methods described below may vary slightly depending on the specific Factory contract. Any anomalies or noteworthy features will be detailed as accurately as possible in the relevant section.*
@@ -16,7 +16,7 @@ Each Factory contract includes **built-in functions designed to populate the [Me
 ---
 
 
-## **Avaliable Factories**
+## **Available Factories**
 
 Curve Factories facilitate the deployment of pools containing almost any combination of assets, whether they are stable or volatile, rebasing or not. Note that some variations (e.g., cryptoswap pool) might not yet be supported on sidechains or Layer 2 networks.
 
