@@ -248,18 +248,49 @@ search:
 | `Plain AMM` | [0x04D0095a1A4Ae881a078ae61F36945E85464e6d7](https://era.zksync.network/address/0x04D0095a1A4Ae881a078ae61F36945E85464e6d7) |
 | `Meta AMM`  | [0xC5d5402481aefec461Ab86b1051AC26dF05BeE3B](https://era.zksync.network/address/0xC5d5402481aefec461Ab86b1051AC26dF05BeE3B) |
 
-views: 0x1F280a5CFd3220b95819674a635B0D12a32F0E6a
 
-**:logos-tron: Tron**
+**:logos-sonic: Sonic**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | *soon*             |
-| `Views`     | *soon*             |
-| `Factory`   | *soon*             |
-| `Plain AMM` | *soon*             |
-| `Meta AMM`  | *soon*             |
+| `Math`      | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://sonicscan.org/address/0xd2002373543Ce3527023C75e7518C274A51ce712) |
+| `Views`     | [0x686bdb3D24Bc6F3ED89ed3d3B659765c54aC78B4](https://sonicscan.org/address/0x686bdb3D24Bc6F3ED89ed3d3B659765c54aC78B4) |
+| `Factory`   | [0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8](https://sonicscan.org/address/0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8) |
+| `Plain AMM` | [0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b](https://sonicscan.org/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b) |
+| `Meta AMM`  | [0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2](https://sonicscan.org/address/0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2) |
 
+
+**:logos-taiko: Taiko**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+| `Math`      | [0x686bdb3D24Bc6F3ED89ed3d3B659765c54aC78B4](https://taikoscan.io/address/0x686bdb3D24Bc6F3ED89ed3d3B659765c54aC78B4) |
+| `Views`     | [0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b](https://taikoscan.io/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b) |
+| `Factory`   | [0x06452f9c013fc37169B57Eab8F50A7A48c9198A3](https://taikoscan.io/address/0x06452f9c013fc37169B57Eab8F50A7A48c9198A3) |
+| `Plain AMM` | [0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2](https://taikoscan.io/address/0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2) |
+| `Meta AMM`  | [0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22](https://taikoscan.io/address/0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22) |
+
+
+**:logos-corn: Corn**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+| `Math`      | [0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2](https://cornscan.io/address/0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2) |
+| `Views`     | [0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8](https://cornscan.io/address/0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8) |
+| `Factory`   | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://cornscan.io/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B) |
+| `Plain AMM` | [0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22](https://cornscan.io/address/0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22) |
+| `Meta AMM`  | [0x06452f9c013fc37169B57Eab8F50A7A48c9198A3](https://cornscan.io/address/0x06452f9c013fc37169B57Eab8F50A7A48c9198A3) |
+
+
+**:logos-ink: Ink**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+| `Math`      | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://explorer.inkonchain.com/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8) |
+| `Views`     | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://explorer.inkonchain.com/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3) |
+| `Factory`   | [0x046207cB759F527b6c10C2D61DBaca45513685CC](https://explorer.inkonchain.com/address/0x046207cB759F527b6c10C2D61DBaca45513685CC) |
+| `Plain AMM` | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://explorer.inkonchain.com/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26) |
+| `Meta AMM`  | [0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499](https://explorer.inkonchain.com/address/0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499) |
 
 ---
 
@@ -485,14 +516,45 @@ views: 0x1F280a5CFd3220b95819674a635B0D12a32F0E6a
 | `AMM`       | [0x0d74e4315AC9Ea0CE299CF1238481e9311574e48](https://era.zksync.network/address/0x0d74e4315AC9Ea0CE299CF1238481e9311574e48) |
 
 
-**:logos-tron: Tron**
+**:logos-sonic: Sonic**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
-| `Math`      | *soon*             |
-| `Views`     | *soon*             |
-| `Factory`   | *soon*             |
-| `AMM`       | *soon*             |
+| :---------: | :----------------: | 
+| `Math`      | [0x0C9D8c7e486e822C29488Ff51BFf0167B4650953](https://sonicscan.org/address/0x0C9D8c7e486e822C29488Ff51BFf0167B4650953) |
+| `Views`     | [0x64379C265Fc6595065D7d835AAaa731c0584dB80](https://sonicscan.org/address/0x64379C265Fc6595065D7d835AAaa731c0584dB80) |
+| `Factory`   | [0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495](https://sonicscan.org/address/0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495) |
+| `AMM`       | [0xd3B17f862956464ae4403cCF829CE69199856e1e](https://sonicscan.org/address/0xd3B17f862956464ae4403cCF829CE69199856e1e) |
+
+
+
+**:logos-taiko: Taiko**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+| `Math`      | [0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5](https://taikoscan.io/address/0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5) |
+| `Views`     | [0x5Ea9DD3b6f042A34Df818C6c1324BC5A7c61427a](https://taikoscan.io/address/0x5Ea9DD3b6f042A34Df818C6c1324BC5A7c61427a) |
+| `Factory`   | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://taikoscan.io/address/0xFAbC421e3368D158d802684A217a83c083c94CeB) |
+| `AMM`       | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://taikoscan.io/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC) |
+
+
+**:logos-corn: Corn**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+| `Math`      | [0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495](https://cornscan.io/address/0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495) |
+| `Views`     | [0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F](https://cornscan.io/address/0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F) |
+| `Factory`   | [0x5Ea9DD3b6f042A34Df818C6c1324BC5A7c61427a](https://cornscan.io/address/0x5Ea9DD3b6f042A34Df818C6c1324BC5A7c61427a) |
+| `AMM` | [0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5](https://cornscan.io/address/0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5) |
+
+
+**:logos-ink: Ink**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+| `Math`      | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://explorer.inkonchain.com/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf) |
+| `Views`     | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://explorer.inkonchain.com/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a) |
+| `Factory`   | [0xd125E7a0cEddF89c6473412d85835450897be6Dc](https://explorer.inkonchain.com/address/0xd125E7a0cEddF89c6473412d85835450897be6Dc) |
+| `AMM` | [0x76303e4fDcA0AbF28aB3ee42Ce086E6503431F1D](https://explorer.inkonchain.com/address/0x76303e4fDcA0AbF28aB3ee42Ce086E6503431F1D) |
 
 
 ---
@@ -743,12 +805,41 @@ views: 0x1F280a5CFd3220b95819674a635B0D12a32F0E6a
 | `AMM native enabled` | [0x18d01726FeDaBd91579A9368DFB2F8A24f905280](https://era.zksync.network/address/0x18d01726FeDaBd91579A9368DFB2F8A24f905280) |
 
 
-**:logos-tron: Tron**
+**:logos-sonic: Sonic**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | *soon*             |
-| `Views`     | *soon*             |
-| `Factory`   | *soon*             |
-| `AMM native disable` | *soon*    |
-| `AMM native enabled` | *soon*    |
+| `Math`      | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://sonicscan.org/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3) |
+| `Views`     | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://sonicscan.org/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26) |
+| `Factory`   | [0x635742dCC8313DCf8c904206037d962c042EAfBd](https://sonicscan.org/address/0x635742dCC8313DCf8c904206037d962c042EAfBd) |
+| `AMM native disable` | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://sonicscan.org/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a) |
+
+
+**:logos-taiko: Taiko**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+| `Math`      | [0x635742dCC8313DCf8c904206037d962c042EAfBd](https://taikoscan.io/address/0x635742dCC8313DCf8c904206037d962c042EAfBd) |
+| `Views`     | [0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499](https://taikoscan.io/address/0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499) |
+| `Factory`   | [0x0C9D8c7e486e822C29488Ff51BFf0167B4650953](https://taikoscan.io/address/0x0C9D8c7e486e822C29488Ff51BFf0167B4650953) |
+| `AMM native disable` | [0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a](https://taikoscan.io/address/0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a) |
+
+
+**:logos-corn: Corn**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+| `Math`      | [0x635742dCC8313DCf8c904206037d962c042EAfBd](https://cornscan.io/address/0x635742dCC8313DCf8c904206037d962c042EAfBd) |
+| `Views`     | [0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499](https://cornscan.io/address/0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499) |
+| `Factory`   | [0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a](https://cornscan.io/address/0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a) |
+| `AMM native disable` | [0x046207cB759F527b6c10C2D61DBaca45513685CC](https://cornscan.io/address/0x046207cB759F527b6c10C2D61DBaca45513685CC) |
+
+
+**:logos-ink: Ink**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+| `Math`      | [0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495](https://explorer.inkonchain.com/address/0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495) |
+| `Views`     | [0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F](https://explorer.inkonchain.com/address/0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F) |
+| `Factory`   | [0x5Ea9DD3b6f042A34Df818C6c1324BC5A7c61427a](https://explorer.inkonchain.com/address/0x5Ea9DD3b6f042A34Df818C6c1324BC5A7c61427a) |
+| `AMM native disable` | [0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5](https://explorer.inkonchain.com/address/0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5) |
