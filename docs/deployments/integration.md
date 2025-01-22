@@ -35,6 +35,10 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | :logos-kava: `Kava`             | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://kavascan.io/search?q=0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
 | :logos-xlayer: `X-Layer`        | [0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98](https://www.okx.com/web3/explorer/xlayer/address/0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98) |
 | :logos-zksync: `zk-Sync`        | [0x960C90aE833af0fd699dBc2503468A07cC28FA4F](https://era.zksync.network/address/0x960C90aE833af0fd699dBc2503468A07cC28FA4F) |
+| :logos-sonic: `Sonic` | [0x87FE17697D0f14A222e8bEf386a0860eCffDD617](https://sonicscan.org/address/0x87FE17697D0f14A222e8bEf386a0860eCffDD617) |
+| :logos-sonic: `Taiko` | [0x87FE17697D0f14A222e8bEf386a0860eCffDD617](https://taikoscan.io/address/0x87FE17697D0f14A222e8bEf386a0860eCffDD617) |
+| :logos-sonic: `Corn` | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://cornscan.io/address/0xd2002373543Ce3527023C75e7518C274A51ce712) |
+| :logos-sonic: `Ink` | [0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22](https://explorer.inkonchain.com/address/0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22) |
 
 
 ---
