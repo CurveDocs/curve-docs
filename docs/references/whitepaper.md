@@ -38,6 +38,6 @@ hide:
 
     Whitepaper on the workings of the Curve Stablecoin and Linear-Liquidation Automated Market Maker Algorithm (LLAMMA).
 
-    [:octicons-arrow-right-24: PDF](../assets/pdf/whitepaper_curve-stablecoin.pdf)
+    [:octicons-arrow-right-24: PDF](../assets/pdf/whitepaper_curve_stablecoin.pdf)
 
 </div>
