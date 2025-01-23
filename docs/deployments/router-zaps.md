@@ -34,9 +34,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-sonic: `Corn` | [0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b](https://cornscan.io/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b) |
 | :logos-sonic: `Ink` | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://explorer.inkonchain.com/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B) |
 
-
 ---
-
 
 # **StableCalcZap**
 
@@ -44,7 +42,6 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 !!!github
     The source code for `StableCalcZaps.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/curve-zaps/tree/master/contracts).
-
 
 | Chain | Contract Address |
 | ----- | :--------------: |
@@ -63,9 +60,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-kava: `Kava` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://kavascan.com/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#contracts) |
 | :logos-aurora: `Aurora` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](ttps://explorer.aurora.dev/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4/contracts) |
 
-
 ---
-
 
 # **CryptoCalcZap**
 
@@ -124,9 +119,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-sonic: `Corn` | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://cornscan.io/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf) |
 | :logos-sonic: `Ink` | [0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD](https://explorer.inkonchain.com/address/0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD) |
 
-
 ---
-
 
 # **MetaZap-NG**
 
@@ -134,7 +127,6 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 !!!github
     The source code for `MetaZapNG.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/stableswap-ng/blob/main/contracts/main/MetaZapNG.vy).
-
 
 | Chain | Contract Address |
 | ----- | :--------------: |
@@ -161,3 +153,14 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-sonic: `Taiko` | [0x9AF14D26075f142eb3F292D5065EB3faa646167b](https://taikoscan.io/address/0x9AF14D26075f142eb3F292D5065EB3faa646167b) |
 | :logos-sonic: `Corn` | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://cornscan.io/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a) |
 | :logos-sonic: `Ink` | [0x3E3B5F27bbf5CC967E074b70E9f4046e31663181](https://explorer.inkonchain.com/address/0x3E3B5F27bbf5CC967E074b70E9f4046e31663181) |
+
+---
+
+# **LlamaLend LeverageZap**
+
+*Zap to create leverage for lending markets.*
+
+| Contract Type | Contract Address |
+| ----- | :--------------: |
+| `LeverageZap1inch` | [0x3294514B78Df4Bb90132567fcf8E5e99f390B687](https://etherscan.io/address/0x3294514B78Df4Bb90132567fcf8E5e99f390B687) |
+| `LlamaLendOdosLeverageZap` | [0xc5898606bdb494a994578453b92e7910a90aa873](https://etherscan.io/address/0xc5898606bdb494a994578453b92e7910a90aa873) |

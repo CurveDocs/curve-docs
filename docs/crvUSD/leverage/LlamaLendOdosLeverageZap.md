@@ -1,17 +1,17 @@
-<h1>LeverageZap1inch.vy</h1>
+<h1>LeverageZapOdos</h1>
 
-This Zap contract is specifically designed to **create or repay leveraged loans** using the [**1inch router**](https://1inch.io/aggregation-protocol/).
+This Zap contract is specifically designed to **create or repay leveraged loans** using the [**Odos router**](https://odos.xyz/).
 
-???+ vyper "`LeverageZap1inch.vy`"
-    The source code for the `LeverageZap1inch.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/zaps/LeverageZap1inch.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`.
+???+ vyper "`LeverageZapOdos.vy`"
+    The source code for the `LlamaLendOdosLeverageZap.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/zaps/LeverageZapOdos.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`.
 
-    The contract is deployed on :logos-ethereum: Ethereum at [`0x3294514B78Df4Bb90132567fcf8E5e99f390B687`](https://etherscan.io/address/0x3294514B78Df4Bb90132567fcf8E5e99f390B687).
+    The contract is deployed on :logos-ethereum: Ethereum at [`0xc5898606bdb494a994578453b92e7910a90aa873`](https://etherscan.io/address/0xc5898606bdb494a994578453b92e7910a90aa873).
 
     An accompanying JavaScript library for Curve Lending can be found here: [:material-github: GitHub](https://github.com/curvefi/curve-lending-js).
 
-Previously, building leverage for crvUSD markets relied solely on predefined routes using only Curve pools. Leveraging large positions often led to significant price impact due to the exclusive use of Curve liquidity pools. This new Zap contract allows users to leverage loans for crvUSD and lending markets using the 1inch router, which considers liquidity sources across DeFi.[^1]
+Previously, building leverage for crvUSD markets relied solely on predefined routes using only Curve pools. Leveraging large positions often led to significant price impact due to the exclusive use of Curve liquidity pools. This new Zap contract allows users to leverage loans for crvUSD and lending markets using the Odos router, which considers liquidity sources across DeFi.[^1]
 
-[^1]: The premise is that these liquidity sources are integrated within the 1inch router.
+[^1]: The premise is that these liquidity sources are integrated within the Odos router.
 
 ---
 
@@ -20,7 +20,7 @@ Leverage is built using a **callback method**. The function to execute callbacks
 ???quote "`execute_callback`"
 
     !!!bug 
-        `callback_sig` is the `method_id` of the function from the `LeverageZap1inch.vy` contract which needs to be called. While this value is obtained by using Vyper's built-in [`method_id`](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=raw_call#method_id) function for the `callback_deposit` function, it does not work for the `callback_repay` function due to a bug. The reason for the bug is a `0` at the beginning of the method_id. That's why the method ID for `CALLBACK_REPAY_WITH_BYTES` is hardcoded to `0x008ae188`.
+        `callback_sig` is the `method_id` of the function from the `LlamaLendOdosLeverageZap.vy` contract which needs to be called. While this value is obtained by using Vyper's built-in [`method_id`](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=raw_call#method_id) function for the `callback_deposit` function, it does not work for the `callback_repay` function due to a bug. The reason for the bug is a `0` at the beginning of the method_id. That's why the method ID for `CALLBACK_REPAY_WITH_BYTES` is hardcoded to `0x008ae188`.
 
 
     === "Controller.vy"
@@ -68,25 +68,21 @@ Leverage is built using a **callback method**. The function to execute callbacks
             return data
         ```
 
-
 !!!info "Required Changes to `Controller.vy`"
     This zap only works for crvUSD and lending markets which were deployed using the blueprint implementation at [`0x4c5d4F542765B66154B2E789abd8E69ed4504112`](https://etherscan.io/address/0x4c5d4F542765B66154B2E789abd8E69ed4504112). Markets deployed prior to that can only make use of the regular [`LeverageZap.vy`](./LeverageZap.md).
 
     To enable the functionality of such Zap contracts, minor modifications were necessary in the `Controller.vy` contract. Functions such as `create_loan_extended`, `borrow_more_extended`, `repay_extended`, `_liquidity`, and `liquidate_extended` were enhanced with an additional constructor argument `callback_bytes: Bytes[10**4]`. This allows users to pass bytes to the Zap contract. Additionally, the internal `execute_callback` function, which manages the callbacks, was also updated.
 
-
 ---
-
 
 ## **Building Leverage**
 
-To build up leverage, the `LeverageZap1inch.vy` contract uses the `callback_deposit` function. Additionally, there is a `max_borrowable` function that calculates the maximum borrowable amount when using leverage. For an accompanying JavaScript library, see [:material-github: GitHub](https://github.com/curvefi/curve-lending-js?tab=readme-ov-file#leverage-createloan-borrowmore-repay).
-
+To build up leverage, the `LlamaLendOdosLeverageZap.vy` contract uses the `callback_deposit` function. Additionally, there is a `max_borrowable` function that calculates the maximum borrowable amount when using leverage.
 
 *Flow of building leverage:*
 
 1. User calls [`create_loan_extended`](../controller.md#create_loan_extended) or [`borrow_more_extended`](../controller.md#borrow_more_extended) and passes `collateral`, `debt`, `N`, `callbacker`, `callback_args`, and `callback_bytes` into the function.[^2]
-2. The debt which is taken on by the user is then transferred to the `callbacker`, in our case the `LeverageZap1inch.vy` contract.
+2. The debt which is taken on by the user is then transferred to the `callbacker`, in our case the `LlamaLendOdosLeverageZap.vy` contract.
 3. After the transfer, the callback is executed using the internal `execute_callback` in the `Controller.vy` contract. This step builds up the leverage.
 
     ???quote "`execute_callback`"
@@ -140,12 +136,10 @@ To build up leverage, the `LeverageZap1inch.vy` contract uses the `callback_depo
 
 4. After executing the callback, the Controller either creates a new loan or adds the additional collateral borrowed to the already existing loan and deposits the collateral into the AMM.
 
-
 [^2]: `collateral` is the amount of collateral tokens used, `debt` is the amount of debt to take on, `N` represents the number of bands, `callbacker` is the callback contract, `callback_args` are some extra arguments passed to the callbacker, and `callback_bytes`.
 
-
 ### `callback_deposit`
-!!! description "`LeverageZap1inch.callback_deposit(user: address, stablecoins: uint256, user_collateral: uint256, d_debt: uint256, callback_args: DynArray[uint256, 10], callback_bytes: Bytes[10**4] = b"") -> uint256[2]`"
+!!! description "`LlamaLendOdosLeverageZap.callback_deposit(user: address, stablecoins: uint256, user_collateral: uint256, d_debt: uint256, callback_args: DynArray[uint256, 10], callback_bytes: Bytes[10**4] = b"") -> uint256[2]`"
 
     !!!guard "Guarded Method"
         This function is only callable by the `Controller` from where tokens are borrowed from.
@@ -173,7 +167,7 @@ To build up leverage, the `LeverageZap1inch.vy` contract uses the `callback_depo
 
     ??? quote "Source code"
 
-        === "LeverageZap1inch.vy"
+        === "LlamaLendOdosLeverageZap.vy"
 
             ```python
             event Deposit:
@@ -196,7 +190,7 @@ To build up leverage, the `LeverageZap1inch.vy` contract uses the `callback_depo
                 @param d_debt The amount to be borrowed (in addition to what has already been borrowed)
                 @param callback_args [factory_id, controller_id, user_borrowed]
                                     0-1. factory_id, controller_id are needed to check that msg.sender is the one of our controllers
-                                    1. user_borrowed - the amount of borrowed token provided by user (needs to be exchanged for collateral)
+                                    2. user_borrowed - the amount of borrowed token provided by user (needs to be exchanged for collateral)
                 return [0, user_collateral_from_borrowed + leverage_collateral]
                 """
                 controller: address = Factory(self.FACTORIES[callback_args[0]]).controllers(callback_args[1])
@@ -205,12 +199,12 @@ To build up leverage, the `LeverageZap1inch.vy` contract uses the `callback_depo
                 borrowed_token: address = amm.coins(0)
                 collateral_token: address = amm.coins(1)
 
-                self._approve(borrowed_token, ROUTER_1INCH)
+                self._approve(borrowed_token, ROUTER)
                 self._approve(collateral_token, controller)
 
                 user_borrowed: uint256 = callback_args[2]
                 self._transferFrom(borrowed_token, user, self, user_borrowed)
-                raw_call(ROUTER_1INCH, callback_bytes)  # buys leverage_collateral for user_borrowed + dDebt
+                raw_call(ROUTER, callback_bytes)  # buys leverage_collateral for user_borrowed + dDebt
                 additional_collateral: uint256 = ERC20(collateral_token).balanceOf(self)
                 leverage_collateral: uint256 = d_debt * 10**18 / (d_debt + user_borrowed) * additional_collateral / 10**18
                 user_collateral_from_borrowed: uint256 = additional_collateral - leverage_collateral
@@ -220,14 +214,15 @@ To build up leverage, the `LeverageZap1inch.vy` contract uses the `callback_depo
                 return [0, additional_collateral]
 
             @internal
-            def _approve(coin: address, spender: address):
-                if ERC20(coin).allowance(self, spender) == 0:
-                    ERC20(coin).approve(spender, max_value(uint256))
-
-            @internal
             def _transferFrom(token: address, _from: address, _to: address, amount: uint256):
                 if amount > 0:
                     assert ERC20(token).transferFrom(_from, _to, amount, default_return_value=True)
+
+
+            @internal
+            def _approve(coin: address, spender: address):
+                if ERC20(coin).allowance(self, spender) == 0:
+                    assert ERC20(coin).approve(spender, max_value(uint256), default_return_value=True)
             ```
 
         === "Controller.vy"
@@ -290,15 +285,8 @@ To build up leverage, the `LeverageZap1inch.vy` contract uses the `callback_depo
                 return data
             ```
 
-    === "Example"
-        ```shell
-        >>> soon
-        ```
-
-
-
 ### `max_borrowable`
-!!! description "`LeverageZap1inch.max_borrowable(controller: address, _user_collateral: uint256, _leverage_collateral: uint256, N: uint256, p_avg: uint256) -> uint256`"
+!!! description "`LlamaLendOdosLeverageZap.max_borrowable(controller: address, _user_collateral: uint256, _leverage_collateral: uint256, N: uint256, p_avg: uint256) -> uint256`"
 
     Function to calculate the maximum borrowable using leverage. The maximum borrowable amount essentially comes down to:
 
@@ -319,18 +307,19 @@ To build up leverage, the `LeverageZap1inch.vy` contract uses the `callback_depo
 
     ??? quote "Source code"
 
-        === "LeverageZap1inch.vy"
+        === "LlamaLendOdosLeverageZap.vy"
 
             ```python
+            DEAD_SHARES: constant(uint256) = 1000
+            MAX_TICKS_UINT: constant(uint256) = 50
+            MAX_P_BASE_BANDS: constant(int256) = 5
+            MAX_SKIP_TICKS: constant(uint256) = 1024
+
             @external
             @view
             def max_borrowable(controller: address, _user_collateral: uint256, _leverage_collateral: uint256, N: uint256, p_avg: uint256) -> uint256:
                 """
                 @notice Calculation of maximum which can be borrowed with leverage
-                @param collateral Amount of collateral (at its native precision)
-                @param N Number of bands to deposit into
-                @param route_idx Index of the route which should be use for exchange stablecoin to collateral
-                @return Maximum amount of stablecoin to borrow with leverage
                 """
                 # max_borrowable = collateral / (1 / (k_effective * max_p_base) - 1 / p_avg)
                 AMM: LLAMMA = LLAMMA(Controller(controller).amm())
@@ -410,20 +399,11 @@ To build up leverage, the `LeverageZap1inch.vy` contract uses the `callback_depo
                 return p_base
             ```
 
-    === "Example"
-        ```shell
-        >>> soon
-        ```
-
-
 ---
-
 
 ## **Unwinding Leverage**
 
-To deleverage loans, the `LeverageZap1inch.vy` contract uses the `callback_repay` function.
-
-For an accompanying JavaScript library, see [:material-github: GitHub](https://github.com/curvefi/curve-lending-js?tab=readme-ov-file#leverage-createloan-borrowmore-repay).
+To deleverage loans, the `LlamaLendOdosLeverageZap.vy` contract uses the `callback_repay` function.
 
 *Flow of deleveraging:*
 
@@ -482,9 +462,8 @@ For an accompanying JavaScript library, see [:material-github: GitHub](https://g
 
 4. After executing the callback, the Controller checks and does a full repayment and closes the position when possible. Else, it does a partial repayment (deleverage).
 
-
 ### `callback_repay`
-!!! description "`LeverageZap1inch.callback_repay(user: address, stablecoins: uint256, collateral: uint256, debt: uint256, callback_args: DynArray[uint256,10], callback_bytes: Bytes[10 ** 4] = b"") -> uint256[2]:`"
+!!! description "`LlamaLendOdosLeverageZap.callback_repay(user: address, stablecoins: uint256, collateral: uint256, debt: uint256, callback_args: DynArray[uint256,10], callback_bytes: Bytes[10 ** 4] = b"") -> uint256[2]`"
 
     !!!guard "Guarded Method"
         This function is only callable by the `Controller` from where tokens were borrowed from.
@@ -513,7 +492,7 @@ For an accompanying JavaScript library, see [:material-github: GitHub](https://g
 
     ??? quote "Source code"
 
-        === "LeverageZap1inch.vy"
+        === "LlamaLendOdosLeverageZap.vy"
 
             ```python
             event Repay:
@@ -537,8 +516,8 @@ For an accompanying JavaScript library, see [:material-github: GitHub](https://g
                 @param debt The value from user_state
                 @param callback_args [factory_id, controller_id, user_collateral, user_borrowed]
                                     0-1. factory_id, controller_id are needed to check that msg.sender is the one of our controllers
-                                    1. user_collateral - the amount of collateral token provided by user (needs to be exchanged for borrowed)
-                                    2. user_borrowed - the amount of borrowed token to repay from user's wallet
+                                    2. user_collateral - the amount of collateral token provided by user (needs to be exchanged for borrowed)
+                                    3. user_borrowed - the amount of borrowed token to repay from user's wallet
                 return [user_borrowed + borrowed_from_collateral, remaining_collateral]
                 """
                 controller: address = Factory(self.FACTORIES[callback_args[0]]).controllers(callback_args[1])
@@ -547,7 +526,7 @@ For an accompanying JavaScript library, see [:material-github: GitHub](https://g
                 borrowed_token: address = amm.coins(0)
                 collateral_token: address = amm.coins(1)
 
-                self._approve(collateral_token, ROUTER_1INCH)
+                self._approve(collateral_token, ROUTER)
                 self._approve(borrowed_token, controller)
                 self._approve(collateral_token, controller)
 
@@ -557,7 +536,7 @@ For an accompanying JavaScript library, see [:material-github: GitHub](https://g
                     self._transferFrom(collateral_token, user, self, user_collateral)
                     # Buys borrowed token for collateral from user's position + from user's wallet.
                     # The amount to be spent is specified inside callback_bytes.
-                    raw_call(ROUTER_1INCH, callback_bytes)
+                    raw_call(ROUTER, callback_bytes)
                 else:
                     assert user_collateral == 0
                 remaining_collateral: uint256 = ERC20(collateral_token).balanceOf(self)
@@ -580,60 +559,57 @@ For an accompanying JavaScript library, see [:material-github: GitHub](https://g
                 return [borrowed_from_state_collateral + borrowed_from_user_collateral + user_borrowed, remaining_collateral]
 
             @internal
-            def _approve(coin: address, spender: address):
-                if ERC20(coin).allowance(self, spender) == 0:
-                    ERC20(coin).approve(spender, max_value(uint256))
-
-            @internal
             def _transferFrom(token: address, _from: address, _to: address, amount: uint256):
                 if amount > 0:
                     assert ERC20(token).transferFrom(_from, _to, amount, default_return_value=True)
+
+
+            @internal
+            def _approve(coin: address, spender: address):
+                if ERC20(coin).allowance(self, spender) == 0:
+                    assert ERC20(coin).approve(spender, max_value(uint256), default_return_value=True)
             ```
-
-    === "Example"
-        ```shell
-        >>> soon
-        ```
-
 
 ---
 
-
 ## **Contract Info Methods**
 
-The contract has two public getters, one for the 1inch router contract and one for the two factory contracts for crvUSD and lending markets.
+The contract has two public getters, one for the [Odos Router](https://docs.odos.xyz/build/quickstart/sor) contract and one for the two factory contracts for crvUSD and lending markets.
 
-### `ROUTER_1INCH`
-!!! description "`LeverageZap1inch.ROUTER_1INCH() -> address: view`"
+### `ROUTER`
+!!! description "`LlamaLendOdosLeverageZap.ROUTER() -> address: view`"
 
-    Getter method for the 1inch router contract. This variable is immutable and can not be changed.
+    Getter method for the [Odos Router](https://docs.odos.xyz/build/quickstart/sor) contract. This variable is immutable, set at initialization and can not be changed.
 
-    Returns: 1inch router (`address`).
+    Returns: Odos Router (`address`).
 
     ??? quote "Source code"
 
-        === "LeverageZap1inch.vy"
+        === "LlamaLendOdosLeverageZap.vy"
 
             ```python
-            ROUTER_1INCH: public(immutable(address))
+            ROUTER: public(immutable(address))
 
             @external
-            def __init__(_router_1inch: address, _factories: DynArray[address, 2]):
-                ROUTER_1INCH = _router_1inch
+            def __init__(_router: address, _factories: DynArray[address, 2]):
+                ROUTER = _router
                 self.FACTORIES = _factories
             ```
 
     === "Example"
+
+        This example returns the contract address of the Odos Router.
+
         ```shell
-        >>> LeverageZap1inch.ROUTER_1INCH()
-        'todo'
+        >>> LlamaLendOdosLeverageZap.ROUTER()
+        '0xCf5540fFFCdC3d510B18bFcA6d2b9987b0772559'
         ```
 
 
 ### `FACTORIES`
-!!! description "`LeverageZap1inch.FACTORIES(arg0: uint256) -> address: view`"
+!!! description "`LlamaLendOdosLeverageZap.FACTORIES(arg0: uint256) -> address: view`"
 
-    Getter method for the factory contract at index `arg0`. 
+    Getter method for the `Factory` contract at index `arg0`. 
 
     Returns: Factory contract (`address`).
 
@@ -643,23 +619,25 @@ The contract has two public getters, one for the 1inch router contract and one f
 
     ??? quote "Source code"
 
-        === "LeverageZap1inch.vy"
+        === "LlamaLendOdosLeverageZap.vy"
 
             ```python
             FACTORIES: public(DynArray[address, 2])
 
             @external
-            def __init__(_router_1inch: address, _factories: DynArray[address, 2]):
-                ROUTER_1INCH = _router_1inch
+            def __init__(_router: address, _factories: DynArray[address, 2]):
+                ROUTER = _router
                 self.FACTORIES = _factories
             ```
 
     === "Example"
+
+        This example returns the contract address of the `Factory` contract at a specific index.
+
         ```shell
-        >>> LeverageZap1inch.FACTORIES(0)
-        'todo'
+        >>> LlamaLendOdosLeverageZap.FACTORIES(0)
+        '0xeA6876DDE9e3467564acBeE1Ed5bac88783205E0'
 
-        >>> LeverageZap1inch.FACTORIES(0)
-        'todo'
+        >>> LlamaLendOdosLeverageZap.FACTORIES(1)
+        '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
         ```
-

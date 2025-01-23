@@ -1,0 +1,53 @@
+{% if not page.meta.hide_feature_button %}
+  <div class="md-content__button md-icon">
+    <a href="https://github.com/CurveDocs/curve-docs/issues/new?title=[Feature/Change Request]&body=**Description**%0AProvide a detailed description of the feature or change you would like.%0A%0A**Use Case**%0ADescribe the use case or context for this request.%0A%0A**Additional Information**%0AInclude any other relevant details or references here." 
+       title="Suggest changes or request new features"
+       class="feature-request-link">
+      {% include ".icons/material/lightbulb-on.svg" %}
+      <span>Suggest changes</span>
+    </a>
+  </div>
+  <style>
+    .feature-request-link {
+      text-decoration: none !important;
+      border-bottom: none !important;
+      color: var(--md-default-fg-color) !important;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.5rem;
+      border-radius: 15px;
+      background-color: #f0f0f0;
+      border: 1px solid #e0e0e0;
+      line-height: 1;
+    }
+    .feature-request-link:hover {
+      color: var(--md-accent-fg-color) !important;
+      background-color: #e8e8e8;
+      border-color: #d0d0d0;
+    }
+    .feature-request-link span {
+      font-size: 0.7rem;
+      margin-left: 0.3rem;
+      display: inline-block;
+      line-height: 1.2rem; /* Match SVG height */
+    }
+    .feature-request-link svg {
+      fill: #e8c500;
+      width: 1.2rem;
+      height: 1.2rem;
+      flex-shrink: 0;
+      display: block;
+    }
+
+    /* Dark mode adjustments */
+    [data-md-color-scheme="slate"] .feature-request-link {
+      background-color: #2a2a2a;
+      border-color: #3a3a3a;
+    }
+    [data-md-color-scheme="slate"] .feature-request-link:hover {
+      background-color: #333333;
+      border-color: #444444;
+    }
+  </style>
+{% endif %}

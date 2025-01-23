@@ -192,3 +192,22 @@ hide:
     [:octicons-arrow-right-24: PDF](../assets/pdf/StateMind_Curve_Lending.pdf)
 
 </div>
+
+---
+
+## **scrvUSD**
+
+<div class="grid cards" markdown>
+
+- **scrvUSD**
+
+    ---
+
+    Savings-crvUSD Security Audit Report.
+
+    *Auditor: ChainSecurity*  
+    *Date: 03. December, 2024*
+
+    [:octicons-arrow-right-24: PDF](../assets/pdf/ChainSecurity_Curve_scrvUSD_audit.pdf)
+
+</div>

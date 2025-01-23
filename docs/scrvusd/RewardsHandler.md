@@ -11,7 +11,7 @@ The `RewardsHandler` contract manages the distribution of crvUSD rewards to `Sav
 
     The contract is deployed on :logos-ethereum: Ethereum at [`0xe8d1e2531761406af1615a6764b0d5ff52736f56`](https://etherscan.io/address/0xe8d1e2531761406af1615a6764b0d5ff52736f56).
 
-    The source code was audited by [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/). The audit report will be available soon.
+    The source code was audited by [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/). The audit report is available on [:material-github: GitHub](https://github.com/curvefi/scrvusd/blob/main/audits/ChainSecurity_Curve_scrvUSD_audit.pdf).
 
 
 ---

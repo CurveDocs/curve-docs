@@ -11,7 +11,7 @@ The `StablecoinLens` contract calculates the accurate circulating supply of crvU
 
     The contract is deployed on :logos-ethereum: Ethereum at [`0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7`](https://etherscan.io/address/0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7).
 
-    The source code was audited by [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/). Audit report coming soon.
+    The source code was audited by [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/). The audit report is available on [:material-github: GitHub](https://github.com/curvefi/scrvusd/blob/main/audits/ChainSecurity_Curve_scrvUSD_audit.pdf).
 
 
 !!!danger "Warning: Usage of `StablecoinLens.vy` contract"

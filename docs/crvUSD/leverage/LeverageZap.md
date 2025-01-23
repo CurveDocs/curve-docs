@@ -2,16 +2,18 @@
 
 This Zap contract is specifically designed to **create leveraged loans** using **predetermined routes that only utilize Curve pools**.
 
-
-
 !!!github "GitHub"
     The source code for `LeverageZap.vy` is available on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/zaps/LeverageZap.vy).
 
     JavaScript library for Curve Lending can be found here: [:material-github: GitHub](https://github.com/curvefi/curve-lending-js?tab=readme-ov-file#leverage-createloan-borrowmore-repay)
 
 
----
+???+ vyper "`LeverageZap.vy`"
+    The source code for the `LeverageZap.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/zaps/LeverageZap.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`.
 
+    An accompanying JavaScript library for Curve Lending can be found here: [:material-github: GitHub](https://github.com/curvefi/curve-lending-js).
+
+---
 
 ## **Callback**
 
@@ -20,11 +22,8 @@ This leverage zap allows up to five values to be passed for `callback_args`, but
 - `callback_args[0]` represents the route used for leveraging.
 - `callback_args[1]` is the minimum amount of collateral tokens to receive.
 
-
 !!!notebook "Jupyter Notebook"
     A simple Jupyter notebook on how to create a leveraged position using this zap contract can be found here: [https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/curve%20lending/loans/create_loan_extended.ipynb](https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/curve%20lending/loans/create_loan_extended.ipynb)
-
-
 
 ### `callback_deposit`
 !!! description "`LeverageZap.callback_deposit(user: address, stablecoins: uint256, collateral: uint256, debt: uint256, callback_args: DynArray[uint256, 5]) -> uint256[2]`"
@@ -68,7 +67,6 @@ This leverage zap allows up to five values to be passed for `callback_args`, but
                 leverage_collateral: uint256 = ROUTER.exchange_multiple(self.routes[route_idx], self.route_params[route_idx], debt, min_recv, self.route_pools[route_idx])
 
                 return [0, leverage_collateral]
-
             ```
 
         === "CurveRouter.vy"
@@ -251,14 +249,11 @@ This leverage zap allows up to five values to be passed for `callback_args`, but
                 return amount
             ```
 
-
 ---
-
 
 ## **Helper Functions**
 
 *The contract indludes various helper functions:*
-
 
 ### `get_collateral`
 !!! description "`LeverageZap.get_collateral(stablecoin: uint256, route_idx: uint256) -> uint256`"
@@ -397,7 +392,6 @@ This leverage zap allows up to five values to be passed for `callback_args`, but
         >>> LeverageZap.get_collateral(100000000000000000000000, 1)        # 100,000 crvUSD using route 1
         155160443                                                          # 1.55 wBTC
         ```
-
 
 ### `get_collateral_underlying`
 !!! description "`LeverageZap.get_collateral_underlying(stablecoin: uint256, route_idx: uint256) -> uint256`"
@@ -539,7 +533,6 @@ This leverage zap allows up to five values to be passed for `callback_args`, but
         31551027792084938361                                                        # 31.55 ETH
         ```
 
-
 ### `max_borrowable`
 !!! description "`LeverageZap.max_borrowable(collateral: uint256, N: uint256, route_idx: uint256) -> uint256`"
 
@@ -620,7 +613,6 @@ This leverage zap allows up to five values to be passed for `callback_args`, but
         >>> LeverageZap.max_borrowable(100000000, 4, 2)     # 1 wBTC with 4 bands using route id 2
         72242814877726777613187                             # 72242.81 crvUSD max borrowable
         ```
-
 
 ### `max_collateral`
 !!! description "`LeverageZap.max_collateral(collateral: uint256, N: uint256, route_idx: uint256) -> uint256`"
@@ -788,6 +780,7 @@ This leverage zap allows up to five values to be passed for `callback_args`, but
             ```
 
     === "Example"
+
         ```shell
         >>> LeverageZap.max_collateral(100000000, 4, 0)     # 1 wBTC with 4 bands using route id 0
         645147830                                           # 6.45 wBTC as max collateral
@@ -798,7 +791,6 @@ This leverage zap allows up to five values to be passed for `callback_args`, but
         >>> LeverageZap.max_collateral(100000000, 50, 0)    # 1 wBTC with 50 bands using route id 0
         322177677                                           # 3.22 wBTC as max collateral
         ```
-
 
 ### `max_borrowable_and_collateral`
 !!! description "`LeverageZap.max_borrowable_and_collateral(collateral: uint256, N: uint256, route_idx: uint256) -> uint256[2]`"
@@ -847,7 +839,6 @@ This leverage zap allows up to five values to be passed for `callback_args`, but
         >>> LeverageZap.max_borrowable_and_collateral(100000000, 50, 0)
         144607094555240096128757, 321798242
         ```
-
 
 ### `calculate_debt_n1`
 !!! description "`LeverageZap.calculate_debt_n1(collateral: uint256, debt: uint256, N: uint256, route_idx: uint256) -> int256`"
@@ -959,14 +950,11 @@ This leverage zap allows up to five values to be passed for `callback_args`, but
         -60
         ```
 
-
 ---
-
 
 ## **Routes**
 
 Routes are predetermined paths for token exchanges. These routes are added when initializing the contract. Additional routes cannot be added after the contract's deployment.
-
 
 ### `routes`
 !!! description "`LeverageZap.routes(arg0: uint256, arg1: uint256) -> address: view`"
@@ -1051,7 +1039,6 @@ Routes are predetermined paths for token exchanges. These routes are added when 
         >>> LeverageZap.routes(0, 6)
         '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599'    # wBTC
         ```
-
 
 ### `route_params`
 !!! description "`LeverageZap.route_params(arg0: uint256, arg1: uint256, arg2: uint256) -> uint256: view`"
@@ -1139,7 +1126,6 @@ Routes are predetermined paths for token exchanges. These routes are added when 
 
         ```
 
-
 ### `route_pools`
 !!! description "`LeverageZap.route_pools(arg0: uint256, arg1: uint256) -> address: view`"
 
@@ -1203,7 +1189,6 @@ Routes are predetermined paths for token exchanges. These routes are added when 
         '0x0000000000000000000000000000000000000000'
         ```
 
-
 ### `route_names`
 !!! description "`LeverageZap.route_names(arg0: uint256) -> String[64]: view`"
 
@@ -1252,7 +1237,6 @@ Routes are predetermined paths for token exchanges. These routes are added when 
         >>> LeverageZap.route_names(1)
         'crvUSD/USDT --> tricrypto2'
         ```
-
 
 ### `route_count`
 !!! description "`LeverageZap.route_count() -> uint256: view`"
