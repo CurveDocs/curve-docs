@@ -50,10 +50,9 @@ search:
     There is no confirmed resume time.  
     **Please don’t use the Multichain bridging service now.**
 
-
-| Chain                           | Contract Address                                                         | Bridge                                   |
-| ------------------------------- | ------------------------------------------------------------------------ | ---------------------------------------- |
-| :logos-ethereum: `CRV Token`    | [0xD533a949740bb3306d119CC777fa900bA034cd52](https://etherscan.io/token/0xD533a949740bb3306d119CC777fa900bA034cd52)   | |
+| Chain | Contract Address | Bridge |
+| ----- | ---------------- | ------ |
+| :logos-ethereum: `Ethereum`    | [0xD533a949740bb3306d119CC777fa900bA034cd52](https://etherscan.io/token/0xD533a949740bb3306d119CC777fa900bA034cd52)   | |
 | :logos-arbitrum: `Arbitrum`     | [0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978](https://arbiscan.io/address/0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978) | [**Arbitrum Bridge**](https://bridge.arbitrum.io/)​ |
 | :logos-base: `Base`             | [0x8Ee73c484A26e0A5df2Ee2a4960B789967dd0415](https://basescan.org/address/0x8Ee73c484A26e0A5df2Ee2a4960B789967dd0415) | [**Base Bridge**](https://bridge.base.org/deposit) |
 | :logos-optimism: `Optimism`     | [0x0994206dfE8De6Ec6920FF4D779B0d950605Fb53](https://optimistic.etherscan.io/address/0x0994206dfe8de6ec6920ff4d779b0d950605fb53) | [**Optimism Bridge**](https://app.optimism.io/bridge) |
@@ -64,6 +63,10 @@ search:
 | :logos-mantle: `Mantle` | [0xE265FC71d45fd791c9ebf3EE0a53FBB220Eb8f75](https://mantlescan.xyz/address/0xE265FC71d45fd791c9ebf3EE0a53FBB220Eb8f75) |  |
 | :logos-fraxtal: `Fraxtal` | [0x331b9182088e2a7d6d3fe4742aba1fb231aecc56](https://fraxscan.com/token/0x331b9182088e2a7d6d3fe4742aba1fb231aecc56) |  |
 | :logos-zksync: `zk-Sync` | [0x5945932099f124194452a4c62d34bb37f16183b2](https://era.zksync.network/token/0x5945932099f124194452a4c62d34bb37f16183b2) |  |
+| :logos-sonic: `Sonic` | [tbd](https://sonicscan.org/address/) |
+| :logos-sonic: `Taiko` | [0x09413312b263fD252C16e592A45f4689F26cb79d](https://taikoscan.io/address/0x09413312b263fD252C16e592A45f4689F26cb79d) |
+| :logos-sonic: `Corn` | [0x1b3757d5EE281Eaf6a9c8E5D9b8488b4475Aa955](https://cornscan.io/address/0x1b3757d5EE281Eaf6a9c8E5D9b8488b4475Aa955) |
+| :logos-sonic: `Ink` | [0xAC73671a1762FE835208Fb93b7aE7490d1c2cCb3](https://explorer.inkonchain.com/address/0xAC73671a1762FE835208Fb93b7aE7490d1c2cCb3) |
 | :logos-avalanche: `Avalanche`​ | [0xEEbC562d445F4bC13aC75c8caABb438DFae42A1B](https://snowscan.xyz/address/0xEEbC562d445F4bC13aC75c8caABb438DFae42A1B) | [**<mark style="background-color: #ffff00; color: black">x-dao (BETA)</mark>**](../deployments/crosschain.md#curve-x-dao)​ |
 | :logos-fantom: `Fantom`         | [0xE6c259bc0FCE25b71fE95A00361D3878E16232C3](https://ftmscan.com/address/0xE6c259bc0FCE25b71fE95A00361D3878E16232C3) | [**<mark style="background-color: #ffff00; color: black">x-dao (BETA)</mark>**](../deployments/crosschain.md#curve-x-dao)​ |
 | :logos-bsc: `Binance Smart Chain`         | [0x9996D0276612d23b35f90C51EE935520B3d7355B](https://bscscan.com/token/0x9996D0276612d23b35f90C51EE935520B3d7355B) | [**<mark style="background-color: #ffff00; color: black">x-dao (BETA)</mark>**](../deployments/crosschain.md#curve-x-dao)​ |
