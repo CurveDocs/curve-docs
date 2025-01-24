@@ -334,20 +334,13 @@ nav:
     - Meta Registry: integration/metaregistry.md
     - Rate Provider: integration/rate-provider.md
 
+  - Bug Bounty & Audits: security/security.md
 
   - References:
-    - Audits: references/audits.md
-    - Whitepapers: 
-      - Overview: references/whitepapers/overview.md
-      - DAO: references/whitepapers/dao.md
-      - StableSwap: references/whitepapers/stableswap.md
-      - CryptoSwap: references/whitepapers/cryptoswap.md
-      - Curve Stablecoin: references/whitepapers/curve-stablecoin.md
+    - Whitepapers: references/whitepaper.md
     - Useful Resources: references/useful.md
     - Contract Ownership: references/curve-practices.md
     - Notebooks: references/notebooks.md
-
-  - Bug Bounty & Audits: security/security.md
 
   - Deployment Addresses:
     - Curve DAO: deployments/dao.md
