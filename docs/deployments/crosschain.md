@@ -6,7 +6,7 @@ search:
 
 # **Curve X-GOV**
 
-Full `x-gov` documentation can be found here: [Cross-Chain Governance](../curve_dao/governance/curve-xgov/overview.md)
+Full `x-gov` documentation can be found here: [Cross-Chain Governance](../governance/overview.md)
 
 !!!github "GitHub"
     Source code for cross-chain governance contracts is available on [:material-github: GitHub](https://github.com/curvefi/curve-xgov).
@@ -411,6 +411,6 @@ The `RootLiquidityGaugeFactory` contract on Ethereum is utilized across a majori
 | `2222` | :logos-kava: Kava | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://explorer.kava.io/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
 | `1284` | Moonbeam | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://moonbeam.moonscan.io/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
 | `146` | :logos-sonic: Sonic | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://sonicscan.org/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef) |
-| `167000` | :logos-sonic: Taiko | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://taikoscan.io/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef) |
-| `21000000` | :logos-sonic: Corn | [0x87FE17697D0f14A222e8bEf386a0860eCffDD617](https://cornscan.io/address/0x87FE17697D0f14A222e8bEf386a0860eCffDD617) |
-| `57073` | :logos-sonic: Ink | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://explorer.inkonchain.com/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b) |
+| `167000` | :logos-taiko: Taiko | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://taikoscan.io/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef) |
+| `21000000` | :logos-corn: Corn | [0x87FE17697D0f14A222e8bEf386a0860eCffDD617](https://cornscan.io/address/0x87FE17697D0f14A222e8bEf386a0860eCffDD617) |
+| `57073` | :logos-ink: Ink | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://explorer.inkonchain.com/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b) |

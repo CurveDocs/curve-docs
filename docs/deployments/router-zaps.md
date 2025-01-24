@@ -30,9 +30,9 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-xlayer: `X-Layer`          | [0xBFab8ebc836E1c4D81837798FC076D219C9a1855](https://www.oklink.com/xlayer/address/0xBFab8ebc836E1c4D81837798FC076D219C9a1855) |
 | :logos-zksync: `zk-Sync`          | [0x7C915390e109CA66934f1eB285854375D1B127FA](https://era.zksync.network/address/0x7C915390e109CA66934f1eB285854375D1B127FA) |
 | :logos-sonic: `Sonic` | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://sonicscan.org/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E) |
-| :logos-sonic: `Taiko` | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://taikoscan.io/address/0xd2002373543Ce3527023C75e7518C274A51ce712) |
-| :logos-sonic: `Corn` | [0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b](https://cornscan.io/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b) |
-| :logos-sonic: `Ink` | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://explorer.inkonchain.com/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B) |
+| :logos-taiko: `Taiko` | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://taikoscan.io/address/0xd2002373543Ce3527023C75e7518C274A51ce712) |
+| :logos-corn: `Corn` | [0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b](https://cornscan.io/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b) |
+| :logos-ink: `Ink` | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://explorer.inkonchain.com/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B) |
 
 ---
 
@@ -115,9 +115,9 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-kava: `Kava` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://kavascan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#contracts) |
 | :logos-zksync: `zk-Sync` | [0x253548e98C769aD2850da8DB3E4c2b2cE46E3839](https://era.zksync.network/address/0x253548e98C769aD2850da8DB3E4c2b2cE46E3839#contract) |
 | :logos-sonic: `Sonic` | [0x505d666E4DD174DcDD7FA090ed95554486d2Be44](https://sonicscan.org/address/0x505d666E4DD174DcDD7FA090ed95554486d2Be44) |
-| :logos-sonic: `Taiko` | [0xd125E7a0cEddF89c6473412d85835450897be6Dc](https://taikoscan.io/address/0xd125E7a0cEddF89c6473412d85835450897be6Dc) |
-| :logos-sonic: `Corn` | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://cornscan.io/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf) |
-| :logos-sonic: `Ink` | [0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD](https://explorer.inkonchain.com/address/0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD) |
+| :logos-taiko: `Taiko` | [0xd125E7a0cEddF89c6473412d85835450897be6Dc](https://taikoscan.io/address/0xd125E7a0cEddF89c6473412d85835450897be6Dc) |
+| :logos-corn: `Corn` | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://cornscan.io/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf) |
+| :logos-ink: `Ink` | [0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD](https://explorer.inkonchain.com/address/0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD) |
 
 ---
 
