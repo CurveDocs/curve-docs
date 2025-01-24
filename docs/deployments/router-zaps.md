@@ -150,9 +150,9 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-xlayer: `X-Layer`| [0x604388bb1159afd21eb5191ce22b4decdee2ae22](https://www.okx.com/web3/explorer/xlayer/address/0x604388bb1159afd21eb5191ce22b4decdee2ae22) |
 | :logos-zksync: `zk-Sync` | [0x4232Dcc6D31543A2431079BdE2082C69eA3A771E](https://era.zksync.network/address/0x4232Dcc6D31543A2431079BdE2082C69eA3A771E) |
 | :logos-sonic: `Sonic` | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://sonicscan.org/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC) |
-| :logos-sonic: `Taiko` | [0x9AF14D26075f142eb3F292D5065EB3faa646167b](https://taikoscan.io/address/0x9AF14D26075f142eb3F292D5065EB3faa646167b) |
-| :logos-sonic: `Corn` | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://cornscan.io/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a) |
-| :logos-sonic: `Ink` | [0x3E3B5F27bbf5CC967E074b70E9f4046e31663181](https://explorer.inkonchain.com/address/0x3E3B5F27bbf5CC967E074b70E9f4046e31663181) |
+| :logos-taiko: `Taiko` | [0x9AF14D26075f142eb3F292D5065EB3faa646167b](https://taikoscan.io/address/0x9AF14D26075f142eb3F292D5065EB3faa646167b) |
+| :logos-corn: `Corn` | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://cornscan.io/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a) |
+| :logos-ink: `Ink` | [0x3E3B5F27bbf5CC967E074b70E9f4046e31663181](https://explorer.inkonchain.com/address/0x3E3B5F27bbf5CC967E074b70E9f4046e31663181) |
 
 ---
 
