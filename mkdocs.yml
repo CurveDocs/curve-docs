@@ -169,11 +169,11 @@ nav:
       - Hooker: fees/Hooker.md
       - FeeDistributor: fees/FeeDistributor.md
       - Original Architecture:
-        - Overview: fees/old-architecture/overview.md
-        - Burner: fees/old-architecture/burner.md
-        - FeeDistributor: fees/old-architecture/distributor.md
-        - Sidechains: fees/old-architecture/sidechains.md
-        - Withdraw and Burn: fees/old-architecture/withdraw-and-burn.md
+        - Overview: fees/original-architecture/overview.md
+        - Burner: fees/original-architecture/burner.md
+        - FeeDistributor: fees/original-architecture/distributor.md
+        - Sidechains: fees/original-architecture/sidechains.md
+        - Withdraw and Burn: fees/original-architecture/withdraw-and-burn.md
 
 
   - Registry:
