@@ -118,6 +118,16 @@ Provide enough information about the vulnerability
 
     [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/ChainSecurity_Curve_Finance_Curve_ETH_sETH_Smart_contract_audit.pdf)
 
+-   [:octicons-link-external-24: Docs](../stableswap-exchange/stableswap-ng/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
+    **Stableswap-NG**
+
+    ---
+
+    Auditor: [:logos-mixbytes: MixBytes](https://mixbytes.io/)  
+    Date: 27. September, 2021
+
+    [:material-github: Audit Report](https://github.com/mixbytes/audits_public/blob/master/Curve%20Finance/StableSwapNG/Curve%20Finance%20StableSwapNG%20Security%20Audit%20Report.pdf)
+
 -   **Tricrypto**
 
     ---
