@@ -11,7 +11,7 @@ LLAMMA (Lending Liquidating Automated Market Maker Algorithm) is the **market-ma
 | `ticks`, `bands`     | Price ranges where liquidity is deposited.                                   |
 | `x`                  | Coin which is being borrowed, typically a stablecoin.                        |
 | `y`                  | Collateral coin.                                                             |
-| `A`                  | Amplification, the measure of how concentrated the tick is.                  |
+| `band_width_factor`  | Parameter which controls the width of each band.  Sometimes denoted `A`      |
 | `rate`               | Interest rate.                                                               |
 | `rate_mul`           | Rate multiplier, 1 + integral(rate * dt).                                    |
 | `active_band`        | Current band. Other bands are either in one or the other coin, but not both. |
@@ -1773,9 +1773,9 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 ### `A`
 !!! description "`AMM.A() -> uint256: view`"
 
-    Getter for A (amplicitation coefficient). The amplication defines the density of the liquidty and band size. The higher `A`, the smaller are the upper and lower prices of the bands an therefor the more leveraged the AMM within each band. The relative band size is $\frac{1}{A}$.
+    Getter for A (band width factor). This parameter defines the density of the liquidty and band size. The higher `A`, the smaller are the upper and lower prices of the bands an therefor the more leveraged the AMM within each band. The relative band size is $\frac{1}{A}$.
 
-    Returns: amplification coefficient (`uint256`).
+    Returns: band width factor (`uint256`).
 
     ??? quote "Source code"
 
@@ -1805,7 +1805,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
                 @param _borrowed_token Token which is being borrowed
                 @param _collateral_token Token used as collateral
                 @param _collateral_precision Precision of collateral: we pass it because we want the blueprint to fit into bytecode
-                @param _A "Amplification coefficient" which also defines density of liquidity and band size. Relative band size is 1/_A
+                @param _A "Band width factor" which also defines density of liquidity and band size. Relative band size is 1/_A
                 @param _sqrt_band_ratio Precomputed int(sqrt(A / (A - 1)) * 1e18)
                 @param _log_A_ratio Precomputed int(ln(A / (A - 1)) * 1e18)
                 @param _base_price Typically the initial crypto price at which AMM is deployed. Will correspond to band 0

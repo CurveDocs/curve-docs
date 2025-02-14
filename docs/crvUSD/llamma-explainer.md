@@ -181,7 +181,7 @@ Arbitrage traders should observe `get_p` and `price_oracle` inside the AMM. The 
 
 ## **Maximum LTV**
 
-The loan-to-value (LTV) ratio depends on the number of bands (`N`) and the parameter `A`. The higher the number of bands, the lower the LTV. The maximum LTV can be approximated using the following function:
+The loan-to-value (LTV) ratio depends on the number of bands (`N`) and the band width factor (`A`). The higher the number of bands, the lower the LTV. The maximum LTV can be approximated using the following function:
 
 $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
