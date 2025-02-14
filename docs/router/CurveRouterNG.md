@@ -218,7 +218,7 @@ The array structure includes the following elements: **`[i, j, swap_type, pool_t
     ]
     ```
 
-*Let's take a closer look at the first array, which represents the swap parameters for the first exchange (wETH -> USDC). `i = 2` because the coin index value of wETH in the tricryptoUSDC pool is 2. This can be obtained by calling `tricryptoUSDC.coins(n)`. Similarly, `j = 0` because USDC has the coin index value of 0. The swap type is a regular exchange, represented by `0`. The `pool_type` is 3, as it is a tricrypto pool (a cryptoswap algorithm consisting of three coins: USDC, wBTC, and wETH). The last value in the array represents the number of coins in the pool, which is 3.*
+*Let's take a closer look at the first array, which represents the swap parameters for the first exchange (wETH -> USDC). `i = 2` because the coin index value of wETH in the tricryptoUSDC pool is 2. This can be obtained by calling `tricryptoUSDC.coins(n)`. Similarly, `j = 0` because USDC has the coin index value of 0. The swap type is a regular exchange, represented by `1`. The `pool_type` is 3, as it is a tricrypto pool (a cryptoswap algorithm consisting of three coins: USDC, wBTC, and wETH). The last value in the array represents the number of coins in the pool, which is 3.*
 
 *The values of the second array should be set according to the crvUSD/USDC pool.*
 
