@@ -1805,7 +1805,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
                 @param _borrowed_token Token which is being borrowed
                 @param _collateral_token Token used as collateral
                 @param _collateral_precision Precision of collateral: we pass it because we want the blueprint to fit into bytecode
-                @param _A "Band width factor" which also defines density of liquidity and band size. Relative band size is 1/_A
+                @param _A "Amplification coefficient" which also defines density of liquidity and band size. Relative band size is 1/_A
                 @param _sqrt_band_ratio Precomputed int(sqrt(A / (A - 1)) * 1e18)
                 @param _log_A_ratio Precomputed int(ln(A / (A - 1)) * 1e18)
                 @param _base_price Typically the initial crypto price at which AMM is deployed. Will correspond to band 0
