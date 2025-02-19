@@ -105,12 +105,12 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../govern
 | Contract Type      | Contract Address |
 | :----------------: | :--------------: |
 | L1 Broadcaster     | [0x5786696bB5bE7fCDb9997E7f89355d9e97FF8d89](https://etherscan.io/address/0x5786696bB5bE7fCDb9997E7f89355d9e97FF8d89) |
-| L2 Relayer         | [0x002599c7D4299A268b332B3240d60308f93C99eC](https://explorer.fantom.network/address/0x002599c7D4299A268b332B3240d60308f93C99eC) |
-| L2 Ownership Agent | [0xd62Ade30F740de7ef766008258B4b2F574A084F7](https://explorer.fantom.network/address/0xd62Ade30F740de7ef766008258B4b2F574A084F7) |
-| L2 Parameter Agent | [0x837814ba42c6f3B39f0A5060168F7027695DDAb1](https://explorer.fantom.network/address/0x837814ba42c6f3B39f0A5060168F7027695DDAb1) |
-| L2 Emergency Agent | [0x42113C6818ACb87ca3CaFDbBc6a6ae396f1548E6](https://explorer.fantom.network/address/0x42113C6818ACb87ca3CaFDbBc6a6ae396f1548E6) |
-| L2 Vault           | [0x49C8De2D10C9A56DD9A59ab5Ca1216111276394C](https://explorer.fantom.network/address/0x49C8De2D10C9A56DD9A59ab5Ca1216111276394C) |
-| Agent Blueprint    | [0x0732539C8aD556594FDa6A50fA8E976cA6D514B9](https://explorer.fantom.network/address/0x0732539C8aD556594FDa6A50fA8E976cA6D514B9) |
+| L2 Relayer         | [0x002599c7D4299A268b332B3240d60308f93C99eC](https://ftmscout.com/address/0x002599c7D4299A268b332B3240d60308f93C99eC) |
+| L2 Ownership Agent | [0xd62Ade30F740de7ef766008258B4b2F574A084F7](https://ftmscout.com/address/0xd62Ade30F740de7ef766008258B4b2F574A084F7) |
+| L2 Parameter Agent | [0x837814ba42c6f3B39f0A5060168F7027695DDAb1](https://ftmscout.com/address/0x837814ba42c6f3B39f0A5060168F7027695DDAb1) |
+| L2 Emergency Agent | [0x42113C6818ACb87ca3CaFDbBc6a6ae396f1548E6](https://ftmscout.com/address/0x42113C6818ACb87ca3CaFDbBc6a6ae396f1548E6) |
+| L2 Vault           | [0x49C8De2D10C9A56DD9A59ab5Ca1216111276394C](https://ftmscout.com/address/0x49C8De2D10C9A56DD9A59ab5Ca1216111276394C) |
+| Agent Blueprint    | [0x0732539C8aD556594FDa6A50fA8E976cA6D514B9](https://ftmscout.com/address/0x0732539C8aD556594FDa6A50fA8E976cA6D514B9) |
 
 **:logos-fantom: Fantom**
 
@@ -267,19 +267,19 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../govern
 
 | Contract Type | Contract Address |
 | :------------ | :--------------- |
-| CRV ETH Bridge (LayerZero) | [`0x7ce8aF75A9180B602445bE230860DDcb4cAc3E42`](https://explorer.fantom.network/address/0x7ce8aF75A9180B602445bE230860DDcb4cAc3E42#code) |
-| CRVUSD ETH Bridge (LayerZero) | [`0x76EAfda658C54548B460B3f190386699DE3827d8`](https://explorer.fantom.network/address/0x76EAfda658C54548B460B3f190386699DE3827d8#code) |
-| SCRVUSD ETH Bridge (LayerZero) | [`0x08132eA9b02750E118cF5F5C640B7c46A8E638E8`](https://explorer.fantom.network/address/0x08132eA9b02750E118cF5F5C640B7c46A8E638E8#code) |
-| Block Hash Oracle | [`0xF179D410C710e3c35A17468B2624dCFCC7DB8267`](https://explorer.fantom.network/address/0xF179D410C710e3c35A17468B2624dCFCC7DB8267#code) |
-| CRV Minter | [`0x444D6B4d7Ad9521FbFB563B4f896ace22DDB70c6`](https://explorer.fantom.network/address/0x444D6B4d7Ad9521FbFB563B4f896ace22DDB70c6#code) |
-| CRVUSD Minter | [`0x01689FE734D0aA98be3A9a761aE11a20Dd968E41`](https://explorer.fantom.network/address/0x01689FE734D0aA98be3A9a761aE11a20Dd968E41#code) |
-| SCRVUSD Minter | [`0xF830b9E88f994BbB069aC884d40fA2E09d050BB8`](https://explorer.fantom.network/address/0xF830b9E88f994BbB069aC884d40fA2E09d050BB8#code) |
-| Token (CRV) | [`0xE6c259bc0FCE25b71fE95A00361D3878E16232C3`](https://explorer.fantom.network/address/0xE6c259bc0FCE25b71fE95A00361D3878E16232C3#code) |
-| Token (CRVUSD) | [`0xD823D2a2B5AF77835e972A0D5B77f5F5A9a003A6`](https://explorer.fantom.network/address/0xD823D2a2B5AF77835e972A0D5B77f5F5A9a003A6#code) |
-| Token (SCRVUSD) | [`0x5191946500e75f0A74476F146dF7d386e52961d9`](https://explorer.fantom.network/address/0x5191946500e75f0A74476F146dF7d386e52961d9#code) |
-| Gauge Type Oracle | [`0x898Cd2cCE27CE3eb7eACBDD85FEd8181379f0F46`](https://explorer.fantom.network/address/0x898Cd2cCE27CE3eb7eACBDD85FEd8181379f0F46#code) |
-| Gauge Type Prover | [`0x7FA0a0E2820b7B12aeFb3A2A3c0C6F83aAD87054`](https://explorer.fantom.network/address/0x7FA0a0E2820b7B12aeFb3A2A3c0C6F83aAD87054#code) |
-| Message Digest Prover | [`0xAb0ab357a10c0161002A91426912933750082A9d`](https://explorer.fantom.network/address/0xAb0ab357a10c0161002A91426912933750082A9d#code) |
+| CRV ETH Bridge (LayerZero) | [`0x7ce8aF75A9180B602445bE230860DDcb4cAc3E42`](https://ftmscout.com/address/0x7ce8aF75A9180B602445bE230860DDcb4cAc3E42#code) |
+| CRVUSD ETH Bridge (LayerZero) | [`0x76EAfda658C54548B460B3f190386699DE3827d8`](https://ftmscout.com/address/0x76EAfda658C54548B460B3f190386699DE3827d8#code) |
+| SCRVUSD ETH Bridge (LayerZero) | [`0x08132eA9b02750E118cF5F5C640B7c46A8E638E8`](https://ftmscout.com/address/0x08132eA9b02750E118cF5F5C640B7c46A8E638E8#code) |
+| Block Hash Oracle | [`0xF179D410C710e3c35A17468B2624dCFCC7DB8267`](https://ftmscout.com/address/0xF179D410C710e3c35A17468B2624dCFCC7DB8267#code) |
+| CRV Minter | [`0x444D6B4d7Ad9521FbFB563B4f896ace22DDB70c6`](https://ftmscout.com/address/0x444D6B4d7Ad9521FbFB563B4f896ace22DDB70c6#code) |
+| CRVUSD Minter | [`0x01689FE734D0aA98be3A9a761aE11a20Dd968E41`](https://ftmscout.com/address/0x01689FE734D0aA98be3A9a761aE11a20Dd968E41#code) |
+| SCRVUSD Minter | [`0xF830b9E88f994BbB069aC884d40fA2E09d050BB8`](https://ftmscout.com/address/0xF830b9E88f994BbB069aC884d40fA2E09d050BB8#code) |
+| Token (CRV) | [`0xE6c259bc0FCE25b71fE95A00361D3878E16232C3`](https://ftmscout.com/address/0xE6c259bc0FCE25b71fE95A00361D3878E16232C3#code) |
+| Token (CRVUSD) | [`0xD823D2a2B5AF77835e972A0D5B77f5F5A9a003A6`](https://ftmscout.com/address/0xD823D2a2B5AF77835e972A0D5B77f5F5A9a003A6#code) |
+| Token (SCRVUSD) | [`0x5191946500e75f0A74476F146dF7d386e52961d9`](https://ftmscout.com/address/0x5191946500e75f0A74476F146dF7d386e52961d9#code) |
+| Gauge Type Oracle | [`0x898Cd2cCE27CE3eb7eACBDD85FEd8181379f0F46`](https://ftmscout.com/address/0x898Cd2cCE27CE3eb7eACBDD85FEd8181379f0F46#code) |
+| Gauge Type Prover | [`0x7FA0a0E2820b7B12aeFb3A2A3c0C6F83aAD87054`](https://ftmscout.com/address/0x7FA0a0E2820b7B12aeFb3A2A3c0C6F83aAD87054#code) |
+| Message Digest Prover | [`0xAb0ab357a10c0161002A91426912933750082A9d`](https://ftmscout.com/address/0xAb0ab357a10c0161002A91426912933750082A9d#code) |
 
 **:logos-bsc: Binance Smart Chain**
 
@@ -407,7 +407,7 @@ The `RootLiquidityGaugeFactory` contract on Ethereum is utilized across a majori
 | `43114` | :logos-avalanche: Avalanche | [0x97aDC08FA1D849D2C48C5dcC1DaB568B169b0267](https://snowscan.xyz/address/0x97aDC08FA1D849D2C48C5dcC1DaB568B169b0267) |
 | `56` | :logos-bsc: Binance Smart Chain | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://bscscan.com/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
 | `42220` | :logos-celo: Celo | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://explorer.celo.org/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
-| `250` | :logos-fantom: Fantom | [0x004A476B5B76738E34c86C7144554B9d34402F13](https://explorer.fantom.network/address/0x004A476B5B76738E34c86C7144554B9d34402F13) |
+| `250` | :logos-fantom: Fantom | [0x004A476B5B76738E34c86C7144554B9d34402F13](https://ftmscout.com/address/0x004A476B5B76738E34c86C7144554B9d34402F13) |
 | `2222` | :logos-kava: Kava | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://explorer.kava.io/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
 | `1284` | Moonbeam | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://moonbeam.moonscan.io/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
 | `146` | :logos-sonic: Sonic | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://sonicscan.org/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef) |
