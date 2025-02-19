@@ -23,7 +23,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-polygon: `Polygon`         | [0x0DCDED3545D565bA3B19E683431381007245d983](https://polygonscan.com/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
 | :logos-gnosis: `Gnosis (xDAI)`    | [0x0DCDED3545D565bA3B19E683431381007245d983](https://gnosisscan.io/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
 | :logos-avalanche: `Avalanche`     | [0x0DCDED3545D565bA3B19E683431381007245d983](https://snowscan.xyz/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
-| :logos-fantom: `Fantom`           | [0x0DCDED3545D565bA3B19E683431381007245d983](https://ftmscan.com/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
+| :logos-fantom: `Fantom`           | [0x0DCDED3545D565bA3B19E683431381007245d983](https://ftmscout.com/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
 | :logos-bsc: `Binance Smart Chain` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://bscscan.com/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC) |
 | :logos-mantle: `Mantle`           | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://mantlescan.xyz/address/0x4f37A9d177470499A2dD084621020b023fcffc1F) |
 | :logos-kava: `Kava`               | [0x0DCDED3545D565bA3B19E683431381007245d983](https://kavascan.com/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
@@ -53,7 +53,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-polygon: `Polygon` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://polygonscan.com/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-gnosis: `Gnosis` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://gnosisscan.io/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-avalanche: `Avalanche` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://snowscan.xyz/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
-| :logos-fantom: `Fantom` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://ftmscan.com/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
+| :logos-fantom: `Fantom` | [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://ftmscout.com/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
 | :logos-bsc: `Binance Smart Chain` | [0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF](https://bscscan.com/address/0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF#code) |
 | :logos-mantle: `Mantle` | [0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF](https://mantlescan.xyz/address/0x0fe38dcc905ec14f6099a83ac5c93bf2601300cf#code) |
 | :logos-celo: `Celo`| [0xCA8d0747B5573D69653C3aC22242e6341C36e4b4](https://celoscan.io/address/0xCA8d0747B5573D69653C3aC22242e6341C36e4b4#code) |
@@ -80,7 +80,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-polygon: `Polygon` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://polygonscan.com/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-gnosis: `Gnosis` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://gnosisscan.io/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-avalanche: `Avalanche` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://snowscan.xyz/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
-| :logos-fantom: `Fantom` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://ftmscan.com/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
+| :logos-fantom: `Fantom` | [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://ftmscout.com/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
 | :logos-bsc: `Binance Smart Chain` | [0xd6681e74eEA20d196c15038C580f721EF2aB6320](https://bscscan.com/address/0xd6681e74eEA20d196c15038C580f721EF2aB6320#code) |
 | :logos-mantle: `Mantle` | [0xd6681e74eEA20d196c15038C580f721EF2aB6320](https://mantlescan.xyz/address/0xd6681e74eEA20d196c15038C580f721EF2aB6320#code) |
 | :logos-celo: `Celo`| [0xA72C85C258A81761433B4e8da60505Fe3Dd551CC](https://celoscan.io/address/0xA72C85C258A81761433B4e8da60505Fe3Dd551CC#code) |
@@ -109,7 +109,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-polygon: `Polygon` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://polygonscan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-gnosis: `Gnosis` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://gnosisscan.io/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-avalanche: `Avalanche` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://snowscan.xyz/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
-| :logos-fantom: `Fantom` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://ftmscan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
+| :logos-fantom: `Fantom` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://ftmscout.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#code) |
 | :logos-bsc: `Binance Smart Chain` | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://bscscan.com/address/0x4f37A9d177470499A2dD084621020b023fcffc1F#code) |
 | :logos-mantle: `Mantle` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://mantlescan.xyz/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D#code) |
 | :logos-kava: `Kava` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://kavascan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD#contracts) |
@@ -139,7 +139,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-polygon: `Polygon zk-EVM`| [0xf2eff2Cd0d9C82b7b2f17FbBed703fA7931dB1da](https://zkevm.polygonscan.com/address/0xf2eff2Cd0d9C82b7b2f17FbBed703fA7931dB1da) |
 | :logos-gnosis: `Gnosis` | [0x08390C76DFDaB74249754C8e71cC2747351bd388](https://gnosisscan.io/address/0x08390C76DFDaB74249754C8e71cC2747351bd388) |
 | :logos-avalanche: `Avalanche` | [0xA54f3c1DFa5f7DbF2564829d14b3B74a65d26Ae2](https://snowscan.xyz/address/0xA54f3c1DFa5f7DbF2564829d14b3B74a65d26Ae2#code) |
-| :logos-fantom: `Fantom` | [0x21688e843a99B0a47E750e7dDD2b5dAFd9269d30](https://ftmscan.com/address/0x21688e843a99B0a47E750e7dDD2b5dAFd9269d30#code) |
+| :logos-fantom: `Fantom` | [0x21688e843a99B0a47E750e7dDD2b5dAFd9269d30](https://ftmscout.com/address/0x21688e843a99B0a47E750e7dDD2b5dAFd9269d30#code) |
 | :logos-bsc: `Binance Smart Chain` | [0x07920e98a66e462c2aa4c8fa6200bc68ca161ea0](https://bscscan.com/address/0x07920e98a66e462c2aa4c8fa6200bc68ca161ea0#code) |
 |:logos-linea: `Linea` | [0xf2eff2Cd0d9C82b7b2f17FbBed703fA7931dB1da](https://lineascan.build/address/0xf2eff2Cd0d9C82b7b2f17FbBed703fA7931dB1da) |
 | :logos-scroll: `Scroll`| [0xb47988aD49DCE8D909c6f9Cf7B26caF04e1445c8](https://scroll.l2scan.co/address/0xb47988aD49DCE8D909c6f9Cf7B26caF04e1445c8) |

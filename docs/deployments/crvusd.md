@@ -158,4 +158,4 @@ For testing in production purposes, several contract deployments have taken plac
 | :logos-fraxtal: `Fraxtal` | [0xaB94C721040b33aA8b0b4D159Da9878e2a836Ed0](https://fraxscan.com/address/0xaB94C721040b33aA8b0b4D159Da9878e2a836Ed0) |
 | :logos-avalanche: `Avalanche` | [0xA3ea433509F7941df3e33857D9c9f212Ad4A4e64](https://snowscan.xyz/address/0xA3ea433509F7941df3e33857D9c9f212Ad4A4e64#code) |
 | :logos-bsc: `BinanceSmartChain` | [0xAE0666C978500f2C05784242B79B08C478Dd999c](https://bscscan.com/address/0x0094Ad026643994c8fB2136ec912D508B15fe0E5#code) |
-| :logos-fantom: `Fantom` | [0x5191946500e75f0A74476F146dF7d386e52961d9](https://ftmscan.com/address/0x5191946500e75f0A74476F146dF7d386e52961d9#code) |
+| :logos-fantom: `Fantom` | [0x5191946500e75f0A74476F146dF7d386e52961d9](https://ftmscout.com/address/0x5191946500e75f0A74476F146dF7d386e52961d9#code) |

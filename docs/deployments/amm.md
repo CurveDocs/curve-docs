@@ -143,11 +143,11 @@ search:
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://ftmscan.com/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a) |
-| `Views`     | [0x33e72383472f77B0C6d8F791D1613C75aE2C5915](https://ftmscan.com/address/0x33e72383472f77B0C6d8F791D1613C75aE2C5915) |
-| `Factory`   | [0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b](https://ftmscan.com/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b) |
-| `Plain AMM` | [0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499](https://ftmscan.com/address/0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499) |
-| `Meta AMM`  | [0x046207cB759F527b6c10C2D61DBaca45513685CC](https://ftmscan.com/address/0x046207cB759F527b6c10C2D61DBaca45513685CC) |
+| `Math`      | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://ftmscout.com/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a) |
+| `Views`     | [0x33e72383472f77B0C6d8F791D1613C75aE2C5915](https://ftmscout.com/address/0x33e72383472f77B0C6d8F791D1613C75aE2C5915) |
+| `Factory`   | [0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b](https://ftmscout.com/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b) |
+| `Plain AMM` | [0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499](https://ftmscout.com/address/0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499) |
+| `Meta AMM`  | [0x046207cB759F527b6c10C2D61DBaca45513685CC](https://ftmscout.com/address/0x046207cB759F527b6c10C2D61DBaca45513685CC) |
 
 
 **:logos-bsc: Binance Smart Chain**
@@ -419,10 +419,10 @@ search:
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |  
-| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://ftmscan.com/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
-| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://ftmscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
-| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://ftmscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
-| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://ftmscan.com/address/0x934791f7F391727db92BFF94cd789c4623d14c52) |
+| `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://ftmscout.com/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
+| `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://ftmscout.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
+| `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://ftmscout.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
+| `AMM`       | [0x934791f7F391727db92BFF94cd789c4623d14c52](https://ftmscout.com/address/0x934791f7F391727db92BFF94cd789c4623d14c52) |
 
 
 **:logos-bsc: Binance Smart Chain**
@@ -698,11 +698,11 @@ search:
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: | 
-| `Math`      | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://ftmscan.com/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a) |
-| `Views`     | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://ftmscan.com/address/0xC1b393EfEF38140662b91441C6710Aa704973228) |
-| `Factory`   | [0x9AF14D26075f142eb3F292D5065EB3faa646167b](https://ftmscan.com/address/0x9AF14D26075f142eb3F292D5065EB3faa646167b) |
-| `AMM native disable` | [0xd125E7a0cEddF89c6473412d85835450897be6Dc](https://ftmscan.com/address/0xd125E7a0cEddF89c6473412d85835450897be6Dc) |
-| `AMM native enabled` | [0x76303e4fDcA0AbF28aB3ee42Ce086E6503431F1D](https://ftmscan.com/address/0x76303e4fDcA0AbF28aB3ee42Ce086E6503431F1D) |
+| `Math`      | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://ftmscout.com/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a) |
+| `Views`     | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://ftmscout.com/address/0xC1b393EfEF38140662b91441C6710Aa704973228) |
+| `Factory`   | [0x9AF14D26075f142eb3F292D5065EB3faa646167b](https://ftmscout.com/address/0x9AF14D26075f142eb3F292D5065EB3faa646167b) |
+| `AMM native disable` | [0xd125E7a0cEddF89c6473412d85835450897be6Dc](https://ftmscout.com/address/0xd125E7a0cEddF89c6473412d85835450897be6Dc) |
+| `AMM native enabled` | [0x76303e4fDcA0AbF28aB3ee42Ce086E6503431F1D](https://ftmscout.com/address/0x76303e4fDcA0AbF28aB3ee42Ce086E6503431F1D) |
 
 
 

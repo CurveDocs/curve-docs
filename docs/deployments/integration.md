@@ -22,7 +22,7 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | :logos-base: `Base`             | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://basescan.org/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
 | :logos-bsc: `BinanceSmartChain` | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://bscscan.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
 | :logos-polygon: `Polygon`       | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://polygonscan.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
-| :logos-fantom: `Fantom`         | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://ftmscan.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
+| :logos-fantom: `Fantom`         | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://ftmscout.com/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
 | :logos-gnosis: `Gnosis`         | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://gnosisscan.io/address/0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98) |
 | :logos-aurora: `Aurora`         | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://explorer.aurora.dev/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
 | :logos-celo: `Celo`             | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://celoscan.io/address/0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
