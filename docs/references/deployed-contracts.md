@@ -129,7 +129,7 @@ The Emergency DAO is deployed at:
 ## **Fee Burner**
 
 !!!info "New Fee-Burning Architecture"
-    Curve has developed and deployed a new fee-burning architecture. For detailed documentation, please see here: [Curve Burner Documentation](../curve_dao/fee-collection-distribution/curve-burner/overview.md).
+    Curve has developed and deployed a new fee-burning architecture. For detailed documentation, please see here: [Curve Burner Documentation](../fees/original-architecture/overview.md).
 
 
 Burners are a crucial element of the fee payout system in Curve. They convert the collected pool fees into an asset that is later exchanged for USDC. Eventually, the USDC is deposited into the 3Pool, and the fees are distributed to veCRV holders in 3CRV. The type of burner used depends on the tokens present in the pool.
@@ -226,7 +226,7 @@ Burners are a crucial element of the fee payout system in Curve. They convert th
 ## **New Curve Burner System**
 
 !!!info "New Fee-Burning Architecture"
-    Curve has developed and deployed a new fee-burning architecture. For detailed documentation, please see here: [Curve Burner Documentation](../curve_dao/fee-collection-distribution/curve-burner/overview.md).
+    Curve has developed and deployed a new fee-burning architecture. For detailed documentation, please see here: [Curve Burner Documentation](../fees/overview.md).
 
 **:logos-ethereum: Ethereum**
 

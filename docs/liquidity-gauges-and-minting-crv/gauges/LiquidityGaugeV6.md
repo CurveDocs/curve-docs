@@ -147,7 +147,7 @@ Reward tokens can be claimed using the `claim_rewards` function. This function c
 !!! warning "Which rewards does `claim_rewards` claim?"
     The `claim_rewards` function only claims ["permissionless rewards"](#permissionless-rewards), not CRV emissions directed to the gauge. If there are multiple reward tokens, calling the function will result in a claim of all reward tokens at once.
 
-    CRV emissions directed to the gauge are claimable from the [`Minter.vy`](../minter.md) contract using the [`mint`](../minter.md#mint) function.
+    CRV emissions directed to the gauge are claimable from the [`Minter.vy`](../minter/Minter.md) contract using the [`mint`](../minter/Minter.md#mint) function.
 
 The liquidity gauge records checkpoints to determine how much external rewards each user is entitled to claim. 
 

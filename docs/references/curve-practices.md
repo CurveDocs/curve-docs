@@ -6,7 +6,7 @@ Smart contracts often have owner-guarded functions which only allow specific add
 
     To make ownership work along with the DAO governance, Curve makes use of `OwnershipAgents` on Ethereum, aswell as on other L1 or L2s to handle governance actions.
 
-    The main `OwnershipAgent` is deployed at [`0x40907540d8a6C65c637785e8f8B742ae6b0b9968`](https://etherscan.io/address/0x40907540d8a6C65c637785e8f8B742ae6b0b9968) on Ethereum. Deployments on other chains can be found [here](./deployments/crosschain.md).
+    The main `OwnershipAgent` is deployed at [`0x40907540d8a6C65c637785e8f8B742ae6b0b9968`](https://etherscan.io/address/0x40907540d8a6C65c637785e8f8B742ae6b0b9968) on Ethereum. Deployments on other chains can be found [here](../deployments/crosschain.md).
 
 Curve strives to remain as decentralized as possible, with most administrative operations controlled by the DAO. However, there are some exceptions where DAO control may not be optimal:
 

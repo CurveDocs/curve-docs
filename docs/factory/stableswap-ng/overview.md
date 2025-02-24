@@ -214,7 +214,7 @@ The StableSwap-NG Factory makes use of **blueprint contracts** to deploy its con
 - **`gauge_implementation`**, containing a blueprint contract that is used when deploying gauges for pools.[^1]
 - **`views_implementation`**, containing a view methods contract relevant for integrators and users looking to interact with the AMMs.
  
-[^1]: The `gauge_implementation` is only relevant on Ethereum mainnet. Liquidity gauges on sidechains need to be deployed through the [RootChainGaugeFactory](../../curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md).
+[^1]: The `gauge_implementation` is only relevant on Ethereum mainnet. Liquidity gauges on sidechains need to be deployed through the `RootChainGaugeFactory`.
 
 *More on the [**Math Implementation**](../../stableswap-exchange/stableswap-ng/utility_contracts/math.md) and [**Views Implementation**](../../stableswap-exchange/stableswap-ng/utility_contracts/views.md).* 
 

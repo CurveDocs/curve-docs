@@ -9,7 +9,7 @@ Key features include the use of **transformed pegged invariants**, a method for 
 The algorithm also incorporates a **dynamic fee structure** that responds to changing market conditions. This approach seeks to enhance liquidity provision and optimize returns for liquidity providers.
 
 !!!pdf "Whitepaper"
-    For a detailed overview of the design, please read the official [whitepaper](../assets/pdf/crypto-pools-paper.pdf).
+    For a detailed overview of the design, please read the official [whitepaper](../assets/pdf/whitepaper_cryptoswap.pdf).
 
 
 ---

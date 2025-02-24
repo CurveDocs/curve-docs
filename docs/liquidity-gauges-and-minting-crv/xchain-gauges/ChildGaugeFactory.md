@@ -6,7 +6,7 @@ The `ChildGaugeFactory` contract is used to deploy liquidity gauges on the child
 ???+ vyper "`ChildGaugeFactory.vy`"
     The source code for the `ChildGaugeFactory.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/blob/master/contracts/ChildGaugeFactory.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10` 
 
-    A full list of all deployed `ChildGaugeFactory` contracts can be found [here](../deployments/crosschain.md#childgaugefactory).
+    A full list of all deployed `ChildGaugeFactory` contracts can be found [here](../../deployments/crosschain.md#childgauge-factory).
 
 ---
 
