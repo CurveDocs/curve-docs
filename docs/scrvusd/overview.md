@@ -37,13 +37,13 @@ The documentation of the `FeeSplitter` contract can be found [here](https://docs
 
     [:octicons-arrow-right-24: Read more](./StablecoinLens.md)
 
--   :fontawesome-solid-chart-line: `scrvUSD Crosschain Oracle`
+-   :fontawesome-solid-chart-line: `scrvUSD Crosschain Oracles`
 
     ---
 
     System of contracts to provide the price of `scrvUSD` on other chains.
 
-    [:octicons-arrow-right-24: Read more](./crosschain-oracle.md)
+    [:octicons-arrow-right-24: Read more](./crosschain/)
 
 </div>
 
@@ -58,7 +58,7 @@ The main `scrvUSD` contracts are deployed on :logos-ethereum: Ethereum at the fo
 - `StablecoinLens` at [0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7](https://etherscan.io/address/0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7)
 
 
-Additionally, the following cross-chain versions of the `scrvUSD` token are deployed:
+Additionally, the following cross-chain versions (using [Oracle V0](./crosschain/oracle-v0/oracle.md)) of the `scrvUSD` token are deployed:
  
 - :logos-optimism: `Optimism` at [0x289f635106d5b822a505b39ac237a0ae9189335b](https://optimistic.etherscan.io/address/0x289f635106d5b822a505b39ac237a0ae9189335b)
 - :logos-base: `Base` at [0x646a737b9b6024e49f5908762b3ff73e65b5160c](https://basescan.org/address/0x646a737b9b6024e49f5908762b3ff73e65b5160c)

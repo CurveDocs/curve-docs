@@ -1,18 +1,13 @@
 <h1>scrvUSD Crosschain Oracle</h1>
 
-`scrvUSD` on Ethereum is an ERC-4626 compatible token. While the contract provides a price through various methods, such as `pricePerShare` or `pricePerAsset`, it is not treated as an ERC-4626 token when bridged to other chains. Consequently, it will lack methods to return its continuously updating price. To address this, Curve uses a system to commit to and verify the price of `scrvUSD` on other chains.
-
 ???+ vyper "`ScrvusdOracleV2.vy`"
     The source code for the `ScrvusdOracleV2` contract is available on [:material-github: GitHub](https://github.com/curvefi/storage-proofs/blob/main/contracts/scrvusd/oracles/ScrvusdOracleV2.vy). The contract is written in [Vyper](https://vyperlang.org/) version `0.4.0`.
 
-    The oracle contracts are deployed on various chains at:
-
-    | Chain | Contract Address |
-    | ----- | ---------------- |
-    | :logos-arbitrum: Arbitrum | `tbd`|
+    The oracle contracts are deployed on various chains at: *soon*
     
 
 ---
+
 
 ## **Price Methods**
 
@@ -144,7 +139,7 @@ The contract has three different functions for the scrvUSD share price (or its i
 
     === "Example"
 
-        This example updates the price of the scrvUSD token.
+        This example updates the price of scrvUSD.
 
         ```py
         >>> ScrvusdOracleV2.update_price()
@@ -259,10 +254,14 @@ The contract has three different functions for the scrvUSD share price (or its i
 
     === "Example"
 
-        This example todo
+        This example returns the raw share or asset price of scrvUSD.
 
         ```py
-        >>> ScrvusdOracleV2.todo
+        ScrvusdOracleV2.raw_price(0)
+        # returns pricePerShare()
+
+        ScrvusdOracleV2.raw_price(1)
+        # returns pricePerAsset()
         ```
 
 
@@ -350,10 +349,14 @@ The contract has three different functions for the scrvUSD share price (or its i
 
     === "Example"
 
-        This example returns the lower bound of `pricePerShare()`.
+        This example returns the lower bound of `pricePerShare()` or `pricePerAsset()`.
 
         ```py
-        todo
+        ScrvusdOracleV2.price_v0(0)
+        # returns pricePerShare()
+
+        ScrvusdOracleV2.price_v0(1)
+        # returns pricePerAsset()
         ```
 
 
@@ -441,10 +444,14 @@ The contract has three different functions for the scrvUSD share price (or its i
 
     === "Example"
 
-        This example returns the approximate `pricePerShare()`.
+        This example returns the approximate `pricePerShare()` or `pricePerAsset()`.
 
         ```py
-        todo
+        ScrvusdOracleV2.price_v1(0)
+        # returns pricePerShare()
+
+        ScrvusdOracleV2.price_v1(1)
+        # returns pricePerAsset()
         ```
 
 
@@ -531,10 +538,14 @@ The contract has three different functions for the scrvUSD share price (or its i
 
     === "Example"
 
-        This example returns the approximate `pricePerShare()` using the assumption that crvUSD gains same rewards.
+        This example returns the approximate `pricePerShare()` or `pricePerAsset()` using the assumption that crvUSD gains same rewards.
 
         ```py
-        todo
+        ScrvusdOracleV2.price_v2(0)
+        # returns pricePerShare()
+
+        ScrvusdOracleV2.price_v2(1)
+        # returns pricePerAsset()
         ```
 
 
@@ -555,11 +566,11 @@ The contract has three different functions for the scrvUSD share price (or its i
 
     === "Example"
 
-        This example updates the price of the scrvUSD token.
+        This example returns the block number of the most recent update.
 
         ```py
         >>> ScrvusdOracleV2.last_block_number()
-        todo
+        17153668
         ```
 
 
@@ -579,7 +590,7 @@ To guard the respective functions which can change the parameters, the contract 
 ### `profit_max_unlock_time`
 !!! description "`ScrvusdOracleV2.profit_max_unlock_time() -> uint256: view`"
 
-    Getter for the duration in seconds over which rewards are gradually unlocked, thereby smoothing out share price adjustments. It is initially set to one week (7 * 86400 seconds) to align with the current Yearn Vault setting and can be updated via the [`update_profit_max_unlock_time`](#update_profit_max_unlock_time) function.
+    Getter for the duration in seconds over which rewards are gradually unlocked, thereby smoothing out share price adjustments. It is initially set to one week (7 * 86400 seconds) to align with the current Yearn Vault setting and can only be updated by the `VERIFIER` role using the [`update_profit_max_unlock_time`](#update_profit_max_unlock_time) function.
 
     Returns: `profit_max_unlock_time`.
 
@@ -616,7 +627,7 @@ To guard the respective functions which can change the parameters, the contract 
     !!!guard "Guarded Method by [Snekmate 🐍](https://github.com/pcaversaccio/snekmate)"
         This contract makes use of a Snekmate module to manage roles and permissions. This specific function can only be called by the `UNLOCK_TIME_VERIFIER` role.
 
-    Function to set a new value for `profit_max_unlock_time`.
+    Function to set a new value for `profit_max_unlock_time`. This happens within the [`ScrvUSDVeriferV2`](../crosschain/verifier.md#scrvusd-verifier-v2) contract when a period is verified using a block hash ([`verifyPeriodByBlockHash()`](../crosschain/verifier.md#verifyperiodbyblockhash)).
 
     Returns: boolean wether the value changed.
 
@@ -682,7 +693,7 @@ To guard the respective functions which can change the parameters, the contract 
 ### `max_price_increment`
 !!! description "`ScrvusdOracleV2.max_price_increment() -> uint256: view`"
 
-    Getter for the maximum allowed price increment per second for scrvusd, measured with a precision of $10^18$. It is initially set to `2 * 1012` — corresponding to 0.02 bps per second (or approximately 0.24 bps per block on Ethereum) and linearly approximated to a maximum of 63% APY — and can be updated via the [`set_max_price_increment`](#set_max_price_increment) function.
+    Getter for the maximum allowed price increment per second for scrvusd, measured with a precision of $10^{18}$. It is initially set to `2 * 1012` — corresponding to 0.02 bps per second (or approximately 0.24 bps per block on Ethereum) and linearly approximated to a maximum of 63% APY — and can be updated via the [`set_max_price_increment`](#set_max_price_increment) function.
 
     Returns: `max_price_increment`.
 
