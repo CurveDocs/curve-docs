@@ -206,7 +206,7 @@
 !!! description "`Factory.deploy_gauge(_pool: address) -> address:`"
 
     !!!warning
-        Deploying a liquidity gauge through the Factory is only possible on Ethereum Mainnet. Gauge deployments on sidechains must be done via the [`RootChainGaugeFactory`](../../curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md).
+        Deploying a liquidity gauge through the Factory is only possible on Ethereum Mainnet. Gauge deployments on sidechains must be done via the [`RootChainGaugeFactory`](../../liquidity-gauges-and-minting-crv/xchain-gauges/RootGaugeFactory.md).
 
     Function to deploy a liquidity gauge on Ethereum mainnet. This function can only be used on pools deployed from this Factory contract.
 

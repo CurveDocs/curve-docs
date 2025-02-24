@@ -61,7 +61,7 @@ It utilizes four different implementations:
 ### `gauge_implementation`
 !!! description "`Factory.gauge_implementation() -> address: view`"
 
-    Getter for the current gauge implementation. Only Ethereum mainnet has a valid gauge implementation; on other chains, the implementation is set to `ZERO_ADDRESS`, as sidechain gauges need to be deployed via the [`RootChainGaugeFactory`](../../curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md).
+    Getter for the current gauge implementation. Only Ethereum mainnet has a valid gauge implementation; on other chains, the implementation is set to `ZERO_ADDRESS`, as sidechain gauges need to be deployed via the `RootChainGaugeFactory`.
 
     Returns: Gauge implementation (`address`).
 
@@ -194,7 +194,7 @@ It utilizes four different implementations:
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to set a new gauge implementation (blueprint contract). This implementation is only available on Ethereum mainnet. To deploy a gauge on a sidechain, this needs to be done through the [`RootChainGaugeFactory`](../../curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md).
+    Function to set a new gauge implementation (blueprint contract). This implementation is only available on Ethereum mainnet. To deploy a gauge on a sidechain, this needs to be done through the `RootChainGaugeFactory`.
 
     Emits: `UpdateGaugeImplementation`
 

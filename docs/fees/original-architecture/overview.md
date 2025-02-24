@@ -6,7 +6,7 @@ search:
 <h1>Curve DAO: Fee Collection and Distribution</h1>
 
 !!!danger "PARTLY OUTDATED: New Fee Collection, Burn, and Distribution System"
-    In June 2024, Curve deployed a new system to collect, burn, and distribute fees in a much more efficient manner. For full documentation of this system, please read here: [Fee Collection & Distribution](./curve-burner/overview.md).
+    In June 2024, Curve deployed a new system to collect, burn, and distribute fees in a much more efficient manner. For full documentation of this system, please read here: [Fee Collection & Distribution](../overview.md).
 
 
 Curve exchange contracts have the capability to charge an **admin fee**, claimable by the contract owner. The admin fee is represented as a percentage of the total fee collected on a swap.

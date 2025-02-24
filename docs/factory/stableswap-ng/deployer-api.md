@@ -552,7 +552,7 @@ _oracles = ["0x0000000000000000000000000000000000000000", "0xae78736cd615f374d30
 
 ## **Deploying Liquidity Gauges**
 
-Liquidity gauges for pools can also be deployed from this contract, but deploying gauges through a factory contract is only possible using the same factory contract that was used for deploying the pool. This feature is only available on the Ethereum mainnet, as liquidity gauges on sidechains need to be deployed through the [RootChainGaugeFactory](../../curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md).
+Liquidity gauges for pools can also be deployed from this contract, but deploying gauges through a factory contract is only possible using the same factory contract that was used for deploying the pool. This feature is only available on the Ethereum mainnet, as liquidity gauges on sidechains need to be deployed through the [RootChainGaugeFactory](../../liquidity-gauges-and-minting-crv/xchain-gauges/RootGaugeFactory.md).
 
 
 ### `deploy_gauge`

@@ -276,7 +276,7 @@ Because the root gauges are deployed using a proxy pattern, they are automatical
 
     Getter for the inflation parameters.
 
-    Returns: `InflationParams` struct containing the CRV emission [`rate`](../curve_dao/crv-token.md#rate) and [`future_epoch_time_write()`](../curve_dao/crv-token.md#future_epoch_time_write).
+    Returns: `InflationParams` struct containing the CRV emission [`rate`](../../curve_dao/crv-token.md#rate) and [`future_epoch_time_write()`](../../curve_dao/crv-token.md#future_epoch_time_write).
 
     ??? quote "Source code"
 

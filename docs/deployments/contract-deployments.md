@@ -240,8 +240,6 @@ Curve has developed and deployed a new fee-burning architecture which is current
 
 ## Curve X-GOV
 
-Full `x-gov` documentation can be found here: [Cross-Chain Governance](../curve_dao/governance/curve-xgov/overview.md)
-
 !!!github "GitHub"
     Source code for cross-chain governance contracts is available on [:material-github: GitHub](https://github.com/curvefi/curve-xgov).
 

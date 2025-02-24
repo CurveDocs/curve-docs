@@ -1,7 +1,7 @@
 <h1> Curve StableSwap Exchange: Overview </h1>
 
 !!!pdf "Whitepaper"
-    The StableSwap algorithm integrates features of both the constant sum and constant product formulas, adjusting between these models based on the balance of assets in the pool. For a detailed overview of the StableSwap invariant design, please read the official [whitepaper](../assets/pdf/stableswap-paper.pdf).
+    The StableSwap algorithm integrates features of both the constant sum and constant product formulas, adjusting between these models based on the balance of assets in the pool. For a detailed overview of the StableSwap invariant design, please read the official [whitepaper](../assets/pdf/whitepaper_stableswap.pdf).
 
 The Curve StableSwap exchange utilizes a specific algorithm known as the **StableSwap invariant to facilitate the trading of stablecoins and other stable assets**. This method is designed to offer lower slippage in stablecoin transactions compared to other common algorithms like the constant-product invariant. In this context, "stablecoins" refer to digital assets that aim to maintain a stable value relative to another asset, including fiat-pegged stablecoins (e.g., DAI, USDC), synthetic versions of cryptocurrencies (e.g., synthetic ETH), or various forms of wrapped BTC.
 

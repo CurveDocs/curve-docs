@@ -13,7 +13,7 @@ hide:
     All stableswap-ng deployments can be found in the "Deployment Addresses" section. [:material-arrow-up-right:](../../references/deployed-contracts.md#stableswap-ng)
 
 
-For an in-depth understanding of the StableSwap invariant design, please refer to the official [StableSwap whitepaper](../../assets/pdf/stableswap-paper.pdf).
+For an in-depth understanding of the StableSwap invariant design, please refer to the official [StableSwap whitepaper](../../assets/pdf/whitepaper_stableswap.pdf).
 
 
 ---
@@ -63,10 +63,7 @@ For an in-depth understanding of the StableSwap invariant design, please refer t
 
     ---
 
-    A liquidity gauge blueprint implementation which deploys a liquidity gauge of a pool on Ethereum. Gauges on sidechains must be deployed via the [`RootChainGaugeFactory`](./../../curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md).
-
-    `LiquidityGauge.vy` :octicons-arrow-right-24: soon
-
+    A liquidity gauge blueprint implementation which deploys a liquidity gauge of a pool on Ethereum. Gauges on sidechains must be deployed via the `RootChainGaugeFactory`.
 
 -   :octicons-code-16: **Oracles**
 

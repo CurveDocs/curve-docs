@@ -11,7 +11,7 @@ hide:
     All stableswap-ng deployments can be found in the "Deployment Addresses" section. [:material-arrow-up-right:](../../references/deployed-contracts.md#tricrypto-ng).
 
 
-For an in-depth understanding of the Cryptoswap invariant design, please refer to the official [Cryptoswap whitepaper](../../assets/pdf/crypto-pools-paper.pdf).
+For an in-depth understanding of the Cryptoswap invariant design, please refer to the official [Cryptoswap whitepaper](../../assets/pdf/whitepaper_cryptoswap.pdf).
 
 ---
 
@@ -59,7 +59,7 @@ For an in-depth understanding of the Cryptoswap invariant design, please refer t
 
     ---
 
-    A liquidity gauge blueprint implementation which deploys a liquidity gauge of a pool on Ethereum. Gauges on sidechains must be deployed via the [RootChainGaugeFactory](./../../curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md).
+    A liquidity gauge blueprint implementation which deploys a liquidity gauge of a pool on Ethereum. Gauges on sidechains must be deployed via the [RootChainGaugeFactory](../../liquidity-gauges-and-minting-crv/xchain-gauges/RootGaugeFactory.md).
 
     `LiquidityGauge.vy` :octicons-arrow-right-24: soon
 
@@ -67,7 +67,7 @@ For an in-depth understanding of the Cryptoswap invariant design, please refer t
 
     ---
 
-    A liquidity gauge blueprint implementation which deploys a liquidity gauge of a pool on Ethereum. Gauges on sidechains must be deployed via the [RootChainGaugeFactory](./../../curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md).
+    A liquidity gauge blueprint implementation which deploys a liquidity gauge of a pool on Ethereum. Gauges on sidechains must be deployed via the [RootChainGaugeFactory](../../liquidity-gauges-and-minting-crv/xchain-gauges/RootGaugeFactory.md).
 
     [:octicons-arrow-right-24: `Price Oracles`](./pools/oracles.md)
 
