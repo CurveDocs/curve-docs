@@ -35,7 +35,7 @@ AMM, Controller, and Price Oracle contracts and other variables of a vault can s
 ---
 
 
-### **:logos-ethereum: Ethereum**
+### **Ethereum**
 
 | Contract Type                      | Contract Address                                                         |
 | :--------------------------------: | :----------------------------------------------------------------------: |
@@ -51,7 +51,7 @@ AMM, Controller, and Price Oracle contracts and other variables of a vault can s
 ---
 
 
-### **:logos-arbitrum: Arbitrum**
+### **Arbitrum**
 
 | Contract Type                      | Contract Address                                                         |
 | :--------------------------------: | :----------------------------------------------------------------------: |
@@ -66,7 +66,7 @@ AMM, Controller, and Price Oracle contracts and other variables of a vault can s
 ---
 
 
-### **:logos-optimism: Optimism**
+### **Optimism**
 
 The deployments on Optimism were done using a new implementation of the `Controller.vy` contract and a slightly modified `Vault.vy` contract. Commit [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721) contains the changes.
 
@@ -83,7 +83,7 @@ The deployments on Optimism were done using a new implementation of the `Control
 ---
 
 
-### **:logos-fraxtal: Fraxtal**
+### **Fraxtal**
 
 The deployments on Fraxtal were done using a new implementation of the `Controller.vy` contract and a slightly modified `Vault.vy` contract. Commit [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721) contains the changes.
 
@@ -95,3 +95,20 @@ The deployments on Fraxtal were done using a new implementation of the `Controll
 | `Pool price oracle implementation` | [0x0cD5A1e9E19Af1f1b910Ac3C3452A16B2B37155b](https://fraxscan.com/address/0x0cD5A1e9E19Af1f1b910Ac3C3452A16B2B37155b) |
 | `Monetary Policy Implementation`   | [0x86D347cE5f1E6f7Ef4Da00FB7c8d31fBD16996F0](https://fraxscan.com/address/0x86D347cE5f1E6f7Ef4Da00FB7c8d31fBD16996F0) |
 | `OneWay Lending Factory`           | [0xf3c9bdAB17B7016fBE3B77D17b1602A7db93ac66](https://fraxscan.com/address/0xf3c9bdAB17B7016fBE3B77D17b1602A7db93ac66) |
+
+
+---
+
+
+### **Sonic**
+
+Deployments were done at commit height [`e7727d1`](https://github.com/curvefi/curve-stablecoin/commit/e7727d13e0ed636412e785db61059546885b575b).
+
+| Contract Type                      | Contract Address                                                         |
+| :--------------------------------: | :----------------------------------------------------------------------: |
+| `AMM implementation`               | [0x2631F1942FEB5C6407f98Ca0a50053031d7510c3](https://sonicscan.org/address/0x2631F1942FEB5C6407f98Ca0a50053031d7510c3) |
+| `Controller implementation`        | [0xD603a7ff6e6213aC86750A2B84D3b15Ed210e392](https://sonicscan.org/address/0xD603a7ff6e6213aC86750A2B84D3b15Ed210e392) |
+| `Vault implementation`             | [0x2287b7b2bF3d82c3ecC11ca176F4B4F35f920775](https://sonicscan.org/address/0x2287b7b2bF3d82c3ecC11ca176F4B4F35f920775) |
+| `Pool price oracle implementation` | [0x5404ef006ea4d340A954fA392333509654E3C950](https://sonicscan.org/address/0x5404ef006ea4d340A954fA392333509654E3C950) |
+| `Monetary Policy Implementation`   | [0x8fA5B216031797E163a40c17c709777C1669AbEd](https://sonicscan.org/address/0x8fA5B216031797E163a40c17c709777C1669AbEd) |
+| `OneWay Lending Factory`           | [0x096c40d7CE44a981B6d74F2d6B3D5bC7CbD02bB1](https://sonicscan.org/address/0x096c40d7CE44a981B6d74F2d6B3D5bC7CbD02bB1) |

@@ -63,7 +63,7 @@ search:
 | :logos-mantle: `Mantle` | [0xE265FC71d45fd791c9ebf3EE0a53FBB220Eb8f75](https://mantlescan.xyz/address/0xE265FC71d45fd791c9ebf3EE0a53FBB220Eb8f75) |  |
 | :logos-fraxtal: `Fraxtal` | [0x331b9182088e2a7d6d3fe4742aba1fb231aecc56](https://fraxscan.com/token/0x331b9182088e2a7d6d3fe4742aba1fb231aecc56) |  |
 | :logos-zksync: `zk-Sync` | [0x5945932099f124194452a4c62d34bb37f16183b2](https://era.zksync.network/token/0x5945932099f124194452a4c62d34bb37f16183b2) |  |
-| :logos-sonic: `Sonic` | [tbd](https://sonicscan.org/address/) |
+| :logos-sonic: `Sonic` | [tbd](https://sonicscan.org/address/0x5Af79133999f7908953E94b7A5CF367740Ebee35) |
 | :logos-taiko: `Taiko` | [0x09413312b263fD252C16e592A45f4689F26cb79d](https://taikoscan.io/address/0x09413312b263fD252C16e592A45f4689F26cb79d) |
 | :logos-corn: `Corn` | [0x1b3757d5EE281Eaf6a9c8E5D9b8488b4475Aa955](https://cornscan.io/address/0x1b3757d5EE281Eaf6a9c8E5D9b8488b4475Aa955) |
 | :logos-ink: `Ink` | [0xAC73671a1762FE835208Fb93b7aE7490d1c2cCb3](https://explorer.inkonchain.com/address/0xAC73671a1762FE835208Fb93b7aE7490d1c2cCb3) |
