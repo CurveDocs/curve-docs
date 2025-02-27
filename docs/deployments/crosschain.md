@@ -112,7 +112,7 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../govern
 | L2 Vault           | [0x49C8De2D10C9A56DD9A59ab5Ca1216111276394C](https://ftmscout.com/address/0x49C8De2D10C9A56DD9A59ab5Ca1216111276394C) |
 | Agent Blueprint    | [0x0732539C8aD556594FDa6A50fA8E976cA6D514B9](https://ftmscout.com/address/0x0732539C8aD556594FDa6A50fA8E976cA6D514B9) |
 
-**:logos-fantom: Fantom**
+**:logos-sonic: Sonic**
 
 | Contract Type      | Contract Address |
 | :----------------: | :--------------: |
