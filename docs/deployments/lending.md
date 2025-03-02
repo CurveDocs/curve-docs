@@ -102,13 +102,13 @@ The deployments on Fraxtal were done using a new implementation of the `Controll
 
 ### **Sonic**
 
-Deployments were done at commit height [`e7727d1`](https://github.com/curvefi/curve-stablecoin/commit/e7727d13e0ed636412e785db61059546885b575b).
+Deployments were done at commit height [`0f49419`](https://github.com/curvefi/curve-stablecoin/commit/0f49419e714cbf56b280f448cb0607d0adc77185).
 
 | Contract Type                      | Contract Address                                                         |
 | :--------------------------------: | :----------------------------------------------------------------------: |
-| `AMM implementation`               | [0x2631F1942FEB5C6407f98Ca0a50053031d7510c3](https://sonicscan.org/address/0x2631F1942FEB5C6407f98Ca0a50053031d7510c3) |
-| `Controller implementation`        | [0xD603a7ff6e6213aC86750A2B84D3b15Ed210e392](https://sonicscan.org/address/0xD603a7ff6e6213aC86750A2B84D3b15Ed210e392) |
-| `Vault implementation`             | [0x2287b7b2bF3d82c3ecC11ca176F4B4F35f920775](https://sonicscan.org/address/0x2287b7b2bF3d82c3ecC11ca176F4B4F35f920775) |
-| `Pool price oracle implementation` | [0x5404ef006ea4d340A954fA392333509654E3C950](https://sonicscan.org/address/0x5404ef006ea4d340A954fA392333509654E3C950) |
-| `Monetary Policy Implementation`   | [0x8fA5B216031797E163a40c17c709777C1669AbEd](https://sonicscan.org/address/0x8fA5B216031797E163a40c17c709777C1669AbEd) |
-| `OneWay Lending Factory`           | [0x096c40d7CE44a981B6d74F2d6B3D5bC7CbD02bB1](https://sonicscan.org/address/0x096c40d7CE44a981B6d74F2d6B3D5bC7CbD02bB1) |
+| `AMM implementation`               | [0x98C391EC9D4b8e6a25A6F375d316e82506efBcF7](https://sonicscan.org/address/0x98C391EC9D4b8e6a25A6F375d316e82506efBcF7) |
+| `Controller implementation`        | [0x97223D110fbBa277155E0eF869900DeBb7FE1B6e](https://sonicscan.org/address/0x97223D110fbBa277155E0eF869900DeBb7FE1B6e) |
+| `Vault implementation`             | [0x837fD0c38792620aC871055B2f43D3F61809e0f2](https://sonicscan.org/address/0x837fD0c38792620aC871055B2f43D3F61809e0f2) |
+| `Pool price oracle implementation` | [0x271eA597a95aF4f20FA61B0D77cB38E2fBBe8Ed9](https://sonicscan.org/address/0x271eA597a95aF4f20FA61B0D77cB38E2fBBe8Ed9) |
+| `Monetary Policy Implementation`   | [0xDa39894132ADC64E7d3B5Ca20B85C9bfb2b494db](https://sonicscan.org/address/0xDa39894132ADC64E7d3B5Ca20B85C9bfb2b494db) |
+| `OneWay Lending Factory`           | [0x30D1859DaD5A52aE03B6e259d1b48c4b12933993](https://sonicscan.org/address/0x30D1859DaD5A52aE03B6e259d1b48c4b12933993) |
