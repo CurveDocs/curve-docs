@@ -112,3 +112,4 @@ Deployments were done at commit height [`0f49419`](https://github.com/curvefi/cu
 | `Pool price oracle implementation` | [0x271eA597a95aF4f20FA61B0D77cB38E2fBBe8Ed9](https://sonicscan.org/address/0x271eA597a95aF4f20FA61B0D77cB38E2fBBe8Ed9) |
 | `Monetary Policy Implementation`   | [0xDa39894132ADC64E7d3B5Ca20B85C9bfb2b494db](https://sonicscan.org/address/0xDa39894132ADC64E7d3B5Ca20B85C9bfb2b494db) |
 | `OneWay Lending Factory`           | [0x30D1859DaD5A52aE03B6e259d1b48c4b12933993](https://sonicscan.org/address/0x30D1859DaD5A52aE03B6e259d1b48c4b12933993) |
+| `LlamaLendLeverageZap`           | [0x5552b631e2aD801fAa129Aacf4B701071cC9D1f7](https://sonicscan.org/address/0x5552b631e2aD801fAa129Aacf4B701071cC9D1f7) |
