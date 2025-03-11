@@ -107,7 +107,7 @@ Provide enough information about the vulnerability
     Auditor: [:logos-quantstamp: Quantstamp](https://quantstamp.com/)  
     Date: 15. October, 2020
 
-    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/CurveMetapoolAudit.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/dex/CurveMetapoolAudit.pdf)
 
 -   **ETH/sETH Pool**
 
@@ -224,6 +224,6 @@ Provide enough information about the vulnerability
     Auditor: [ChainSecurity](https://www.chainsecurity.com/)  
     Date: 03. December, 2024
 
-    [:material-github: Audit Report](https://github.com/curvefi/scrvusd/blob/main/audits/crvusd/ChainSecurity_Curve_scrvUSD_audit.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/crvusd/ChainSecurity_Curve_scrvUSD_audit.pdf)
 
 </div>
