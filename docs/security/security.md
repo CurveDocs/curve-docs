@@ -186,6 +186,16 @@ Provide enough information about the vulnerability
 
     [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/ChainSecurity_Curve_Curve_Stablecoin_audit-1.pdf)
 
+-   [:octicons-link-external-24: Docs](../crvUSD/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
+    **Curve Stablecoin**
+
+    ---
+
+    Auditor: [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/)  
+    Date: 21. February, 2025
+
+    [:material-github: Audit Report](https://cdn.prod.website-files.com/65d35b01a4034b72499019e8/67ba05bd4e6213f1816eb452_ChainSecurity_Curve_Curve_Stablecoin_audit_250221.pdf)
+
 -   [:octicons-link-external-24: Docs](../crvUSD/pegkeepers/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
     **crvUSD PegKeeperV2**
 
