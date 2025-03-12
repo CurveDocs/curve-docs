@@ -24,7 +24,7 @@ For testing in production purposes, several contract deployments have taken plac
 | `PriceAggregator`       | [0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7](https://etherscan.io/address/0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7) |
 | `PriceAggregatorV3`     | [0x18672b1b0c623a30089A280Ed9256379fb0E4E62](https://etherscan.io/address/0x18672b1b0c623a30089A280Ed9256379fb0E4E62) |
 | `PriceAggregator (Arbitrum)` | [0x44a4FdFb626Ce98e36396d491833606309520330](https://arbiscan.io/address/0x44a4FdFb626Ce98e36396d491833606309520330) |
-| `FlashLender` | [0xa7a4bb50af91f90b6feb3388e7f8286af45b299b](https://etherscan.io/address/0xa7a4bb50af91f90b6feb3388e7f8286af45b299b) |
+| `FlashLender` | [0x26dE7861e213A5351F6ED767d00e0839930e9eE1](https://etherscan.io/address/0x26dE7861e213A5351F6ED767d00e0839930e9eE1) |
 | `LeverageZap1inch` | [0x3294514B78Df4Bb90132567fcf8E5e99f390B687](https://etherscan.io/address/0x3294514B78Df4Bb90132567fcf8E5e99f390B687) |
 | `LlamaLendOdosLeverageZap` | [0xc5898606bdb494a994578453b92e7910a90aa873](https://etherscan.io/address/0xc5898606bdb494a994578453b92e7910a90aa873) |
 

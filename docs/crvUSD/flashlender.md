@@ -5,7 +5,7 @@ The `FlashLender.vy` contract is an [`ERC-3156`](https://eips.ethereum.org/EIPS/
 !!!github "GitHub"
     The source code for the `FlashLender.vy` contract can be found on [GitHub :material-github:](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/flashloan/FlashLender.vy). Additionally, a `DummyFlashBorrower.vy` contract showcasing a potential usage of a flash loan can also be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/testing/DummyFlashBorrower.vy).
 
-    The `FlashLender.vy` is deployed at [`0xa7a4bb50af91f90b6feb3388e7f8286af45b299b`](https://etherscan.io/address/0xa7a4bb50af91f90b6feb3388e7f8286af45b299b) on Ethereum.
+    The `FlashLender.vy` is deployed at [`0x26dE7861e213A5351F6ED767d00e0839930e9eE1`](https://etherscan.io/address/0x26dE7861e213A5351F6ED767d00e0839930e9eE1) on Ethereum.
 
 The contract does not charge any fees on flash loans. The `fee` and `flashFee` methods are implemented to comply with the `ERC-3156` standard.
 
@@ -31,12 +31,16 @@ The contract does not charge any fees on flash loans. The `fee` and `flashFee` m
 
     ??? quote "Source code"
 
-        The following source code includes all changes up to commit hash [`53b7086`](https://github.com/curvefi/curve-stablecoin/tree/53b70869af3552dd1c61a7f5e1e86c718d440953); any changes made after this commit are not included.
+        The following source code includes all changes up to commit hash [`e771f43`](https://github.com/curvefi/curve-stablecoin/tree/e771f437f42fbc5ab73990866000f610bffe1df2); any changes made after this commit are not included.
 
         === "FlashLender.vy"
 
             ```py
             from vyper.interfaces import ERC20
+
+            interface Factory:
+                def stablecoin() -> address: view
+                def debt_ceiling_residual(_to: address) -> uint256: view
 
             event FlashLoan:
                 caller: indexed(address)
@@ -58,21 +62,14 @@ The contract does not charge any fees on flash loans. The `fee` and `flashFee` m
                 @param data A data parameter to be passed on to the `receiver` for any custom use.
                 """
                 assert token == CRVUSD, "FlashLender: Unsupported currency"
-                crvusd_balance: uint256 = ERC20(CRVUSD).balanceOf(self)
                 ERC20(CRVUSD).transfer(receiver.address, amount)
                 receiver.onFlashLoan(msg.sender, CRVUSD, amount, 0, data)
-                assert ERC20(CRVUSD).balanceOf(self) == crvusd_balance, "FlashLender: Repay failed"
+                assert ERC20(CRVUSD).balanceOf(self) >= FACTORY.debt_ceiling_residual(self), "FlashLender: Repay failed"
 
                 log FlashLoan(msg.sender, receiver.address, amount)
 
                 return True
             ```
-
-    === "Example"
-
-        ```shell
-        >>> soon
-        ```
 
 
 ### `maxFlashLoan`
@@ -88,13 +85,11 @@ The contract does not charge any fees on flash loans. The `fee` and `flashFee` m
 
     ??? quote "Source code"
 
-        The following source code includes all changes up to commit hash [`53b7086`](https://github.com/curvefi/curve-stablecoin/tree/53b70869af3552dd1c61a7f5e1e86c718d440953); any changes made after this commit are not included.
+        The following source code includes all changes up to commit hash [`e771f43`](https://github.com/curvefi/curve-stablecoin/tree/e771f437f42fbc5ab73990866000f610bffe1df2); any changes made after this commit are not included.
 
         === "FlashLender.vy"
 
             ```py
-            from vyper.interfaces import ERC20
-
             CRVUSD: immutable(address)
             fee: public(constant(uint256)) = 0  # 1 == 0.01 %
 
@@ -131,7 +126,7 @@ The contract does not charge any fees on flash loans. The `fee` and `flashFee` m
 
     ??? quote "Source code"
 
-        The following source code includes all changes up to commit hash [`53b7086`](https://github.com/curvefi/curve-stablecoin/tree/53b70869af3552dd1c61a7f5e1e86c718d440953); any changes made after this commit are not included.
+        The following source code includes all changes up to commit hash [`e771f43`](https://github.com/curvefi/curve-stablecoin/tree/e771f437f42fbc5ab73990866000f610bffe1df2); any changes made after this commit are not included.
 
         === "FlashLender.vy"
 
@@ -150,7 +145,7 @@ The contract does not charge any fees on flash loans. The `fee` and `flashFee` m
 ### `flashFee`
 !!! description "`FlashLender.flashFee(token: address, amount: uint256) -> uint256`"
 
-    Getter for the flash fee when taking out a flash loan of `amount` of `token`. This method will always return `0`.
+    Getter for the flash fee when taking out a flash loan of `amount` of `token`. This method will always return `0` and will always revert if `token != CRVUSD`.
 
     Returns: total fee charged on the flashloan (`uint256`).
 
@@ -161,7 +156,7 @@ The contract does not charge any fees on flash loans. The `fee` and `flashFee` m
 
     ??? quote "Source code"
 
-        The following source code includes all changes up to commit hash [`53b7086`](https://github.com/curvefi/curve-stablecoin/tree/53b70869af3552dd1c61a7f5e1e86c718d440953); any changes made after this commit are not included.
+        The following source code includes all changes up to commit hash [`e771f43`](https://github.com/curvefi/curve-stablecoin/tree/e771f437f42fbc5ab73990866000f610bffe1df2); any changes made after this commit are not included.
 
         === "FlashLender.vy"
 
@@ -207,7 +202,7 @@ The contract does not charge any fees on flash loans. The `fee` and `flashFee` m
 
     ??? quote "Source code"
 
-        The following source code includes all changes up to commit hash [`53b7086`](https://github.com/curvefi/curve-stablecoin/tree/53b70869af3552dd1c61a7f5e1e86c718d440953); any changes made after this commit are not included.
+        The following source code includes all changes up to commit hash [`e771f43`](https://github.com/curvefi/curve-stablecoin/tree/e771f437f42fbc5ab73990866000f610bffe1df2); any changes made after this commit are not included.
 
         === "FlashLender.vy"
 
@@ -222,9 +217,14 @@ The contract does not charge any fees on flash loans. The `fee` and `flashFee` m
 
     === "Example"
 
+        This method returns a `bool` based on whether the token is supported or not.
+
         ```shell
-        >>> FlashLender.supportedTokens('0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E')
+        >>> FlashLender.supportedTokens('0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E')   # crvusd
         'true'
+
+        >>> FlashLender.supportedTokens('0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E')   # usdc
+        'false'
         ```
 
 
@@ -237,7 +237,7 @@ The contract does not charge any fees on flash loans. The `fee` and `flashFee` m
 
     ??? quote "Source code"
 
-        The following source code includes all changes up to commit hash [`53b7086`](https://github.com/curvefi/curve-stablecoin/tree/53b70869af3552dd1c61a7f5e1e86c718d440953); any changes made after this commit are not included.
+        The following source code includes all changes up to commit hash [`e771f43`](https://github.com/curvefi/curve-stablecoin/tree/e771f437f42fbc5ab73990866000f610bffe1df2); any changes made after this commit are not included.
 
         === "FlashLender.vy"
 
