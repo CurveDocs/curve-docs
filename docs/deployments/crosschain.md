@@ -193,7 +193,6 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../curve_
 
 | Contract Type      | Contract Address |
 | :----------------: | :--------------: |
-| L1 Broadcaster     | [0x5786696bB5bE7fCDb9997E7f89355d9e97FF8d89](https://taikoscan.io/address/0xA73EdCf18421B56D9AF1cE08A34E102E23b2C4B6) |
 | L2 Relayer         | [0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69](https://taikoscan.io/address/0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69) |
 | L2 Ownership Agent | [0x6c9578402A3ace046A12839f45F84Aa5448E9c30](https://taikoscan.io/address/0x6c9578402A3ace046A12839f45F84Aa5448E9c30) |
 | L2 Parameter Agent | [0xEC5AFc9590964f2fA0FeED54f0fBB2A34480908D](https://taikoscan.io/address/0xEC5AFc9590964f2fA0FeED54f0fBB2A34480908D) |
