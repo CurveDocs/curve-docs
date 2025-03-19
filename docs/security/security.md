@@ -50,6 +50,15 @@ Provide enough information about the vulnerability
     ---
 
     Auditor: [TrailOfBits](https://trailofbits.com/)  
+    Date: 31. January, 2020
+
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/dao/00-ToB.pdf)
+
+-   **Curve DAO Contracts**
+
+    ---
+
+    Auditor: [TrailOfBits](https://trailofbits.com/)  
     Date: 10. July, 2020
 
     [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/dao/curve-dao-ToB-final.pdf)
