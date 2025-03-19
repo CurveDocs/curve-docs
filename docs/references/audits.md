@@ -5,209 +5,182 @@ hide:
 
 <h1>Curve Finance Audits</h1>
 
-[**:octicons-arrow-left-24: Back**](../documentation-overview.md)
-
-!!!deploy "GitHub"
+!!!github "GitHub"
     All audits and security disclosures are hosted on the [`security-incident-reports` repository on GitHub](https://github.com/curvefi/security-incident-reports).
 
 
----
-
-## **Curve DAO**
+## **DAO**
 
 <div class="grid cards" markdown>
 
--   **Curve DAO**
+-   **Curve DAO Contracts**
 
     ---
 
-    Audit report of core Curve DAO contracts.
+    Auditor: [TrailOfBits](https://trailofbits.com/)  
+    Date: 31. January, 2020
 
-    *Auditor: TrailOfBits*  
-    *Date: 10. July, 2020*
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/dao/00-ToB.pdf)
 
-    [:octicons-arrow-right-24: PDF](../assets/pdf/curve-dao-ToB-final.pdf)
-
--   **Curve Voting Forwarder**
+-   **Curve DAO Contracts**
 
     ---
 
-    Audit report on Curve Voting Forwarder.
+    Auditor: [TrailOfBits](https://trailofbits.com/)  
+    Date: 10. July, 2020
 
-    *Auditor: MixBytes()*  
-    *Date: 13. July, 2020*
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/curve-dao-ToB-final.pdf)
 
-    [:octicons-arrow-right-24: PDF](../assets/pdf/Curve%20Finance%20DAO%20Voting%20Forwarder%20Security%20Audit%20Report.pdf)
-
--   **Curve Voting**
+-   :logos-solidity: **`BalanceTimeForwarder.sol`**
 
     ---
 
-    Audit report on Curve Voting (Aragon Voting Fork).
+    Auditor: [:logos-mixbytes: MixBytes](https://mixbytes.io/)  
+    Date: 13. July, 2020
 
-    *Auditor: MixBytes()*  
-    *Date: 22. July, 2020*
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/Curve%20Finance%20DAO%20Voting%20Forwarder%20Security%20Audit%20Report.pdf)
 
-    [:octicons-arrow-right-24: PDF](../assets/pdf/Curve%20Finance%20DAO%20Voting%20Security%20Audit%20Report.pdf)
-
--   **Curve DAO**
+-   :logos-solidity: **`Voting.sol` (Aragon Voting Fork)**
 
     ---
 
-    Audit report of core Curve DAO contracts.
+    Auditor: [:logos-mixbytes: MixBytes](https://mixbytes.io/)  
+    Date: 22. July, 2020
 
-    *Auditor: Quantstamp*  
-    *Date: 5. August, 2020*
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/Curve%20Finance%20DAO%20Voting%20Security%20Audit%20Report.pdf)
 
-    [:octicons-arrow-right-24: PDF](../assets/pdf/curve-dao-quantstamp.pdf)
+-   **Curve DAO Contracts**
 
--   **FeeSplitter**
+    ---
 
-    Code Assessment of the Fee Splitter Smart Contracts.
+    Auditor: [:logos-quantstamp: Quantstamp](https://quantstamp.com/)  
+    Date: 5. August, 2020
 
-    *Auditor: ChainSecurity*  
-    *Date: 25. September, 2024*
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/curve-dao-quantstamp.pdf)
 
-    [:material-github: GitHub](https://github.com/curvefi/fee-splitter/blob/main/audits/ChainSecurity.pdf)
+-   [:octicons-link-external-24: Docs](../fees/FeeSplitter.md/){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
+    :logos-vyper: **`FeeSplitter.vy`**
+
+    --- 
+
+    Auditor: [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/)  
+    Date: 25. September, 2024
+
+    [:material-github: Audit Report](https://github.com/curvefi/fee-splitter/blob/main/audits/ChainSecurity.pdf)
 
 </div>
 
-
 ---
 
-
-## **Liquidity Pools**
+## **DEX**
 
 <div class="grid cards" markdown>
 
--   **Metapools**
+-   [:octicons-link-external-24: Docs](../stableswap-exchange/stableswap/pools/metapools.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
+    **Metapools**
 
     ---
 
-    Audit report on Curve Finance Metapools.
+    Auditor: [:logos-quantstamp: Quantstamp](https://quantstamp.com/)  
+    Date: 15. October, 2020
 
-    *Auditor: Quantstamp*  
-    *Date: 15. October, 2020*
-
-    [:octicons-arrow-right-24: PDF](../assets/pdf/CurveMetapoolAudit.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/CurveMetapoolAudit.pdf)
 
 -   **ETH/sETH Pool**
 
     ---
 
-    Code Asessment of the ETH/sETH Pool.
+    Auditor: [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/)  
+    Date: 27. September, 2021
 
-    *Auditor: Chainsecurity*  
-    *Date: 27. September, 2021*
-
-    [:octicons-arrow-right-24: PDF](../assets/pdf/ChainSecurity_Curve_Finance_Curve_ETH_sETH_Smart-contract-audit_September-27th-2021.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/ChainSecurity_Curve_Finance_Curve_ETH_sETH_Smart_contract_audit.pdf)
 
 -   **Tricrypto**
 
     ---
 
-    Code Asessment of the Tricrypto Smart Contracts.
+    Auditor: [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/)  
+    Date: 29. September, 2021
 
-    *Auditor: Chainsecurity*  
-    *Date: 29. September, 2021*
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/ChainSecurity_Curve_Finance_Tricrypto_smart_contract_audit_September.pdf)
 
-    [:octicons-arrow-right-24: PDF](../assets/pdf/ChainSecurity_Curve-Finance-_-Tricrypto_smart-contract-audit_-September-2021.pdf)
-
--   **Tricrypto-NG**
-
-    ---
-
-    Code Asessment of the Tricrypto-ng Smart Contracts.
-
-    *Auditor: ChainSecurity*  
-    *Date: 23. June, 2023*
-
-    [:octicons-arrow-right-24: PDF](../assets/pdf/ChainSecurity_Curve_tricrypto-ng_audit.pdf)
-
--   **CurveCryptoSwap2ETH**
+-   [:octicons-link-external-24: Docs](../cryptoswap-exchange/tricrypto-ng/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
+    **Tricrypto-NG**
 
     ---
 
-    Code Asessment of the CurveCryptoSwap2ETH Smart Contracts.
+    Auditor: [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/)  
+    Date: 23. June, 2023
 
-    *Auditor: ChainSecurity*  
-    *Date: 1. April, 2022*
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/ChainSecurity_Curve_tricrypto-ng_audit.pdf)
 
-    [:octicons-arrow-right-24: PDF](../assets/pdf/private_ChainSecurity_Curve_CurveCryptoSwap2ETH_audit_draft.pdf)
-
-
-
-</div>
-
-
----
-
-
-## **crvUSD and Lending**
-
-<div class="grid cards" markdown>
-
--   **Curve Stablecoin**
+-   [:octicons-link-external-24: Docs](../cryptoswap-exchange/cryptoswap/pools/crypto-pool.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
+    **Twocrypto**
 
     ---
 
-    Curve Stablecoin Security Audit Report.
+    Auditor: [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/)  
+    Date: 1. April, 2022
 
-    *Auditor: MixBytes()*  
-    *Date: 5. June, 2023*
-
-    [:octicons-arrow-right-24: PDF](../assets/pdf/Curve%20Stablecoin%20(crvUSD)%20Security%20Audit%20Report.pdf)
-
--   **Curve Stablecoin**
-
-    ---
-
-    Code Asessment of the Curve Stablecoin Smart Contracts.
-
-    *Auditor: ChainSecurity*  
-    *Date: 24. January, 2024*
-
-    [:octicons-arrow-right-24: PDF](../assets/pdf/ChainSecurity_Curve_Curve_Stablecoin_audit-1.pdf)
-
--   **crvUSD PegKeeper v2**
-
-    ---
-
-    Code Asessment of the PegKeeper V2 Smart Contracts.
-
-    *Auditor: ChainSecurity*  
-    *Date: 12. December, 2023*
-
-    [:octicons-arrow-right-24: PDF](../assets/pdf/ChainSecurity_Curve_PegKeeperV2_audit.pdf)
-
--   **Curve Lending**
-
-    ---
-
-    Code Asessment of Curve Lending Infrastructure.
-
-    *Auditor: StateMind*  
-    *Date: 2. February, 2024*
-
-    [:octicons-arrow-right-24: PDF](../assets/pdf/StateMind_Curve_Lending.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/private_ChainSecurity_Curve_CurveCryptoSwap2ETH_audit_draft.pdf)
 
 </div>
 
 ---
 
-## **scrvUSD**
+## **Stablecoin and Lending**
+
 
 <div class="grid cards" markdown>
 
-- **scrvUSD**
+-   [:octicons-link-external-24: Docs](../crvUSD/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
+    **Curve Stablecoin**
 
     ---
 
-    Savings-crvUSD Security Audit Report.
+    Auditor: [:logos-mixbytes: MixBytes](https://mixbytes.io/)  
+    Date: 5. June, 2023
 
-    *Auditor: ChainSecurity*  
-    *Date: 03. December, 2024*
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/Curve%20Stablecoin%20(crvUSD)%20Security%20Audit%20Report.pdf)
 
-    [:octicons-arrow-right-24: PDF](../assets/pdf/ChainSecurity_Curve_scrvUSD_audit.pdf)
+-   [:octicons-link-external-24: Docs](../crvUSD/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
+    **Curve Stablecoin**
+
+    ---
+
+    Auditor: [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/)  
+    Date: 24. January, 2024
+
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/ChainSecurity_Curve_Curve_Stablecoin_audit-1.pdf)
+
+-   [:octicons-link-external-24: Docs](../crvUSD/pegkeepers/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
+    **crvUSD PegKeeperV2**
+
+    ---
+
+    Auditor: [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/)  
+    Date: 12. December, 2023
+
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/ChainSecurity_Curve_PegKeeperV2_audit.pdf)
+
+-   [:octicons-link-external-24: Docs](../lending/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
+    **Curve Lending**
+
+    ---
+
+    Auditor: [StateMind](https://statemind.io/)  
+    Date: 2. February, 2024
+
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/StateMind_Curve_Lending.pdf)
+
+-   [:octicons-link-external-24: Docs](../scrvusd/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
+    **Savings-crvUSD (scrvUSD)**
+
+    ---
+
+    Auditor: [ChainSecurity](https://www.chainsecurity.com/)  
+    Date: 03. December, 2024
+
+    [:material-github: Audit Report](https://github.com/curvefi/scrvusd/blob/main/audits/ChainSecurity_Curve_scrvUSD_audit.pdf)
 
 </div>
