@@ -64,10 +64,10 @@ For testing in production purposes, several contract deployments have taken plac
 | :logos-bsc: `BinanceSmartChain`     | [0xe2fb3F127f5450DeE44afe054385d74C392BdeF4](https://bscscan.com/address/0xe2fb3F127f5450DeE44afe054385d74C392BdeF4) |
 | :logos-mantle: `Mantle`     | [0x0994206dfe8de6ec6920ff4d779b0d950605fb53](https://mantlescan.xyz/address/0x0994206dfe8de6ec6920ff4d779b0d950605fb53) | 
 | :logos-zksync: `zk-Sync`     | [0x43cd37cc4b9ec54833c8ac362dd55e58bfd62b86](https://era.zksync.network/address/0x43cd37cc4b9ec54833c8ac362dd55e58bfd62b86) |
-| :logos-sonic: `Sonic` | [tbd](https://sonicscan.org/address/) |
-| :logos-taiko: `Taiko` | [0xc8F4518ed4bAB9a972808a493107926cE8237068](https://taikoscan.io/address/0xc8F4518ed4bAB9a972808a493107926cE8237068) |
-| :logos-corn: `Corn` | [0xEAEdD2B1b3F0fEC6388A4d6b2fE500B59Fd9f755](https://cornscan.io/address/0xEAEdD2B1b3F0fEC6388A4d6b2fE500B59Fd9f755) |
-| :logos-ink: `Ink` | [0x39fec550CC6DDCEd810eCCfA9B2931b4B5f2344D](https://explorer.inkonchain.com/address/0x39fec550CC6DDCEd810eCCfA9B2931b4B5f2344D) |
+| :logos-sonic: `Sonic` | [0x7FFf4C4a827C84E32c5E175052834111B2ccd270](https://sonicscan.org/address/0x7FFf4C4a827C84E32c5E175052834111B2ccd270) |
+| :logos-sonic: `Taiko` | [0xc8F4518ed4bAB9a972808a493107926cE8237068](https://taikoscan.io/address/0xc8F4518ed4bAB9a972808a493107926cE8237068) |
+| :logos-sonic: `Corn` | [0xEAEdD2B1b3F0fEC6388A4d6b2fE500B59Fd9f755](https://cornscan.io/address/0xEAEdD2B1b3F0fEC6388A4d6b2fE500B59Fd9f755) |
+| :logos-sonic: `Ink` | [0x39fec550CC6DDCEd810eCCfA9B2931b4B5f2344D](https://explorer.inkonchain.com/address/0x39fec550CC6DDCEd810eCCfA9B2931b4B5f2344D) |
 
 ---
 
@@ -172,8 +172,7 @@ For testing in production purposes, several contract deployments have taken plac
 
 ---
 
-
-# ![](../assets/images/scrvusd/scrvusd_round.png){ width="20" height="20" .middle } **Savings crvUSD**
+# **Savings crvUSD**
 
 | Contract Type           | Contract Address |
 | :---------------------: | :----------------: |
@@ -190,4 +189,6 @@ For testing in production purposes, several contract deployments have taken plac
 | :logos-fraxtal: `Fraxtal` | [0xaB94C721040b33aA8b0b4D159Da9878e2a836Ed0](https://fraxscan.com/address/0xaB94C721040b33aA8b0b4D159Da9878e2a836Ed0) |
 | :logos-avalanche: `Avalanche` | [0xA3ea433509F7941df3e33857D9c9f212Ad4A4e64](https://snowscan.xyz/address/0xA3ea433509F7941df3e33857D9c9f212Ad4A4e64#code) |
 | :logos-bsc: `BinanceSmartChain` | [0xAE0666C978500f2C05784242B79B08C478Dd999c](https://bscscan.com/address/0x0094Ad026643994c8fB2136ec912D508B15fe0E5#code) |
-| :logos-fantom: `Fantom` | [0x5191946500e75f0A74476F146dF7d386e52961d9](https://ftmscout.com/address/0x5191946500e75f0A74476F146dF7d386e52961d9#code) |
+| :logos-fantom: `Fantom` | [0x5191946500e75f0A74476F146dF7d386e52961d9](https://ftmscan.com/address/0x5191946500e75f0A74476F146dF7d386e52961d9#code) |
+| :logos-sonic: `Sonic` | [0xb5f0edecff09081354db252ceec000b213186fac](https://sonicscan.org/address/0xb5f0edecff09081354db252ceec000b213186fac) |
+| :logos-sonic: `Taiko` | [0x8c74d11da5E6cE0498cd280F9209dFB0C5e048A7](https://taikoscan.io/address/0x8c74d11da5E6cE0498cd280F9209dFB0C5e048A7) |
