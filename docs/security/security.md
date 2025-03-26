@@ -61,7 +61,7 @@ Provide enough information about the vulnerability
     Auditor: [TrailOfBits](https://trailofbits.com/)  
     Date: 10. July, 2020
 
-    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/curve-dao-ToB-final.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/dao/curve-dao-ToB-final.pdf)
 
 -   :logos-solidity: **`BalanceTimeForwarder.sol`**
 
@@ -70,7 +70,7 @@ Provide enough information about the vulnerability
     Auditor: [:logos-mixbytes: MixBytes](https://mixbytes.io/)  
     Date: 13. July, 2020
 
-    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/Curve%20Finance%20DAO%20Voting%20Forwarder%20Security%20Audit%20Report.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/dao/Curve%20Finance%20DAO%20Voting%20Forwarder%20Security%20Audit%20Report.pdf)
 
 -   :logos-solidity: **`Voting.sol` (Aragon Voting Fork)**
 
@@ -79,7 +79,7 @@ Provide enough information about the vulnerability
     Auditor: [:logos-mixbytes: MixBytes](https://mixbytes.io/)  
     Date: 22. July, 2020
 
-    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/Curve%20Finance%20DAO%20Voting%20Security%20Audit%20Report.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/dao/Curve%20Finance%20DAO%20Voting%20Security%20Audit%20Report.pdf)
 
 -   **Curve DAO Contracts**
 
@@ -88,7 +88,7 @@ Provide enough information about the vulnerability
     Auditor: [:logos-quantstamp: Quantstamp](https://quantstamp.com/)  
     Date: 5. August, 2020
 
-    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/curve-dao-quantstamp.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/dao/curve-dao-quantstamp.pdf)
 
 -   [:octicons-link-external-24: Docs](../fees/FeeSplitter.md/){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
     :logos-vyper: **`FeeSplitter.vy`**
@@ -98,7 +98,7 @@ Provide enough information about the vulnerability
     Auditor: [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/)  
     Date: 25. September, 2024
 
-    [:material-github: Audit Report](https://github.com/curvefi/fee-splitter/blob/main/audits/ChainSecurity.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/dao/ChainSecurity_FeeSplitter.pdf)
 
 </div>
 
@@ -116,7 +116,7 @@ Provide enough information about the vulnerability
     Auditor: [:logos-quantstamp: Quantstamp](https://quantstamp.com/)  
     Date: 15. October, 2020
 
-    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/CurveMetapoolAudit.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/dex/CurveMetapoolAudit.pdf)
 
 -   **ETH/sETH Pool**
 
@@ -125,7 +125,17 @@ Provide enough information about the vulnerability
     Auditor: [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/)  
     Date: 27. September, 2021
 
-    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/ChainSecurity_Curve_Finance_Curve_ETH_sETH_Smart_contract_audit.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/dex/ChainSecurity_Curve_Finance_Curve_ETH_sETH_Smart_contract_audit.pdf)
+
+-   [:octicons-link-external-24: Docs](../stableswap-exchange/stableswap-ng/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
+    **Stableswap-NG**
+
+    ---
+
+    Auditor: [:logos-mixbytes: MixBytes](https://mixbytes.io/)  
+    Date: 27. September, 2021
+
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/dex/Curve%20Finance%20StableSwapNG%20Security%20Audit%20Report.pdf)
 
 -   **Tricrypto**
 
@@ -134,7 +144,7 @@ Provide enough information about the vulnerability
     Auditor: [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/)  
     Date: 29. September, 2021
 
-    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/ChainSecurity_Curve_Finance_Tricrypto_smart_contract_audit_September.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/dex/ChainSecurity_Curve_Finance_Tricrypto_smart_contract_audit_September.pdf)
 
 -   [:octicons-link-external-24: Docs](../cryptoswap-exchange/tricrypto-ng/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
     **Tricrypto-NG**
@@ -144,7 +154,7 @@ Provide enough information about the vulnerability
     Auditor: [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/)  
     Date: 23. June, 2023
 
-    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/ChainSecurity_Curve_tricrypto-ng_audit.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/dex/ChainSecurity_Curve_tricrypto-ng_audit.pdf)
 
 -   [:octicons-link-external-24: Docs](../cryptoswap-exchange/cryptoswap/pools/crypto-pool.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
     **Twocrypto**
@@ -154,7 +164,7 @@ Provide enough information about the vulnerability
     Auditor: [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/)  
     Date: 1. April, 2022
 
-    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/private_ChainSecurity_Curve_CurveCryptoSwap2ETH_audit_draft.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/dex/private_ChainSecurity_Curve_CurveCryptoSwap2ETH_audit_draft.pdf)
 
 </div>
 
@@ -173,7 +183,7 @@ Provide enough information about the vulnerability
     Auditor: [:logos-mixbytes: MixBytes](https://mixbytes.io/)  
     Date: 5. June, 2023
 
-    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/Curve%20Stablecoin%20(crvUSD)%20Security%20Audit%20Report.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/crvusd/Curve%20Stablecoin%20(crvUSD)%20Security%20Audit%20Report.pdf)
 
 -   [:octicons-link-external-24: Docs](../crvUSD/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
     **Curve Stablecoin**
@@ -183,7 +193,17 @@ Provide enough information about the vulnerability
     Auditor: [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/)  
     Date: 24. January, 2024
 
-    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/ChainSecurity_Curve_Curve_Stablecoin_audit-1.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/crvusd/ChainSecurity_Curve_Curve_Stablecoin_audit-1.pdf)
+
+-   [:octicons-link-external-24: Docs](../crvUSD/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
+    **Curve Stablecoin**
+
+    ---
+
+    Auditor: [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/)  
+    Date: 21. February, 2025
+
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/crvusd/ChainSecurity_Curve_Curve_Stablecoin_audit_250221.pdf)
 
 -   [:octicons-link-external-24: Docs](../crvUSD/pegkeepers/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
     **crvUSD PegKeeperV2**
@@ -193,7 +213,7 @@ Provide enough information about the vulnerability
     Auditor: [:logos-chainsecurity: ChainSecurity](https://www.chainsecurity.com/)  
     Date: 12. December, 2023
 
-    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/ChainSecurity_Curve_PegKeeperV2_audit.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/crvusd/ChainSecurity_Curve_PegKeeperV2_audit.pdf)
 
 -   [:octicons-link-external-24: Docs](../lending/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
     **Curve Lending**
@@ -203,7 +223,7 @@ Provide enough information about the vulnerability
     Auditor: [StateMind](https://statemind.io/)  
     Date: 2. February, 2024
 
-    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/StateMind_Curve_Lending.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/crvusd/StateMind_Curve_Lending.pdf)
 
 -   [:octicons-link-external-24: Docs](../scrvusd/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
     **Savings-crvUSD (scrvUSD)**
@@ -213,6 +233,6 @@ Provide enough information about the vulnerability
     Auditor: [ChainSecurity](https://www.chainsecurity.com/)  
     Date: 03. December, 2024
 
-    [:material-github: Audit Report](https://github.com/curvefi/scrvusd/blob/main/audits/ChainSecurity_Curve_scrvUSD_audit.pdf)
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/crvusd/ChainSecurity_Curve_scrvUSD_audit.pdf)
 
 </div>

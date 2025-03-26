@@ -1589,7 +1589,7 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
 
 ## **Contract Ownership** 
 
-Admin ownership can be commited by calling [`commit_transfer_ownership`](../gauge-controller/admin-controls.md#commit_transfer_ownership). Changes then need to be [applied](../gauge-controller/admin-controls.md#apply_transfer_ownership). The current `admin` is the OwnershipAgent, which would require a DAO vote to change it.
+Admin ownership can be commited by calling `commit_transfer_ownership`. Changes then need to be applied. The current `admin` is the OwnershipAgent, which would require a DAO vote to change it.
 
 ### `admin`
 !!! description "`GaugeController.admin() -> address: view`"

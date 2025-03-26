@@ -6,12 +6,10 @@ CRV inflation is directed to users who provide liquidity within the protocol, me
 !!!github "GitHub"
     There are several versions of liquidity gauge contracts in use. Source code for all the liquidity gauges can be found on [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges).
 
-    Easiest way to obtain the gauge address of a liquidity pool is by querying `get_gauge` on the [MetaRegistry](../../../registry/MetaRegistryAPI.md#get_gauge).
-
+    Easiest way to obtain the gauge address of a liquidity pool is by querying [`get_gauge`](../../integration/metaregistry.md#get_gauge) on the [MetaRegistry](../../integration/metaregistry.md).
 
 
 ---
-
 
 
 *Liquidity gauges have two types of rewards:*

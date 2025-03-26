@@ -3,7 +3,7 @@
 A Pool Factory enables the permissionless deployment of liquidity pools, gauges, and LP tokens.
 
 !!!deploy "Contract Source & Deployment"
-    Factories are deployed on the Ethereum Mainnet, as well as on sidechains and Layer-2 networks. Note that some pool types may not yet be supported on these networks. A comprehensive list of all deployed contracts is available [here](../references/deployed-contracts.md).
+    Factories are deployed on the Ethereum Mainnet, as well as on sidechains and Layer-2 networks. Note that some pool types may not yet be supported on these networks. A comprehensive list of all deployed contracts is available [here](../deployments/amm.md).
     The source code for each specific Factory contract can be found on GitHub in the respective section.
 
 
@@ -20,7 +20,7 @@ Each Factory contract includes **built-in functions designed to populate the [Me
 
 Curve Factories facilitate the deployment of pools containing almost any combination of assets, whether they are stable or volatile, rebasing or not. Note that some variations (e.g., cryptoswap pool) might not yet be supported on sidechains or Layer 2 networks.
 
-*For a straightforward, non-technical explanation of pool variations, visit: https://resources.curve.fi/lp/pools/*
+*For a straightforward, non-technical explanation of pool variations, visit: https://resources.curve.fi/pools/overview/*
 
 <div class="grid cards" markdown>
 

@@ -81,7 +81,7 @@ The cross-chain gauge factory requires components to be deployed both on Ethereu
 
 # **Boosting on Sidechains**
 
-Before reading this section, it is recommended to understand how boosting works in general. For a basic understanding of how boosting works, see [Boosting](./boosting.md).
+Before reading this section, it is recommended to understand how boosting works in general.
 
 !!!warning "Crosschain Boosts"
     This system is farily new and is not rolled out on every chain yet. Crosschain boosts only work if there is a `L2 VotingEscrow Oracle` set in the `ChildGaugeFactory` for the child chain.

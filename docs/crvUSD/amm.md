@@ -11,7 +11,7 @@ LLAMMA (Lending Liquidating Automated Market Maker Algorithm) is the **market-ma
 | `ticks`, `bands`     | Price ranges where liquidity is deposited.                                   |
 | `x`                  | Coin which is being borrowed, typically a stablecoin.                        |
 | `y`                  | Collateral coin.                                                             |
-| `A`                  | Amplification, the measure of how concentrated the tick is.                  |
+| `band_width_factor`  | Parameter which controls the width of each band.  Sometimes denoted `A`      |
 | `rate`               | Interest rate.                                                               |
 | `rate_mul`           | Rate multiplier, 1 + integral(rate * dt).                                    |
 | `active_band`        | Current band. Other bands are either in one or the other coin, but not both. |
@@ -1773,9 +1773,9 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 ### `A`
 !!! description "`AMM.A() -> uint256: view`"
 
-    Getter for A (amplicitation coefficient). The amplication defines the density of the liquidty and band size. The higher `A`, the smaller are the upper and lower prices of the bands an therefor the more leveraged the AMM within each band. The relative band size is $\frac{1}{A}$.
+    Getter for A (band width factor). This parameter defines the density of the liquidty and band size. The higher `A`, the smaller are the upper and lower prices of the bands an therefor the more leveraged the AMM within each band. The relative band size is $\frac{1}{A}$.
 
-    Returns: amplification coefficient (`uint256`).
+    Returns: band width factor (`uint256`).
 
     ??? quote "Source code"
 

@@ -55,7 +55,7 @@ This documentation outlines the technical implementation of the core Curve proto
 
     ---
 
-    Implementation of the Stableswap algorithm, as detailed in the [whitepaper](./assets/pdf/stableswap-paper.pdf), into on-chain exchange contracts to facilitate trades between multiple relatively stable assets in comparison to each other (e.g., USDC<>USDT).
+    Implementation of the Stableswap algorithm, as detailed in the [whitepaper](./assets/pdf/whitepaper_stableswap.pdf), into on-chain exchange contracts to facilitate trades between multiple relatively stable assets in comparison to each other (e.g., USDC<>USDT).
 
     [**:octicons-arrow-right-24: Getting started**](./stableswap-exchange/overview.md)
 
@@ -63,7 +63,7 @@ This documentation outlines the technical implementation of the core Curve proto
 
     ---
 
-    Implementation of the Cryptoswap algorithm, as detailed in the [whitepaper](./assets/pdf/crypto-pools-paper.pdf), into on-chain exchange contracts to facilitate trades between multiple volatile assets (e.g. CRV<>ETH).
+    Implementation of the Cryptoswap algorithm, as detailed in the [whitepaper](./assets/pdf/whitepaper_cryptoswap.pdf), into on-chain exchange contracts to facilitate trades between multiple volatile assets (e.g. CRV<>ETH).
 
     [**:octicons-arrow-right-24: Getting started**](./cryptoswap-exchange/overview.md)
 

@@ -19,12 +19,12 @@ For testing in production purposes, several contract deployments have taken plac
 | :---------------------: | :----------------------------------------------------------------------: |
 | :logos-crvusd: `crvUSD` | [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/address/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E) |
 | `Controller Factory`               | [0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC) |
-| `Controller Implementation` | [0x6340678b2bab22a37d781Cd8da958a3cD1d97cdD](https://etherscan.io/address/0x6340678b2bab22a37d781Cd8da958a3cD1d97cdD) |
-| `AMM Implementation`    | [0x3da7fF6C15C0c97D9C2dF4AF82a9910384b372FD](https://etherscan.io/address/0x3da7fF6C15C0c97D9C2dF4AF82a9910384b372FD) |
+| `Controller Implementation` | [0xe3e3Fb7E9f48d26817b7210C9bD6B22744790415](https://etherscan.io/address/0xe3e3Fb7E9f48d26817b7210C9bD6B22744790415) |
+| `AMM Implementation`    | [0x2B7e624bdb839975d56D8428d9f6A4cf1160D3e9](https://etherscan.io/address/0x2B7e624bdb839975d56D8428d9f6A4cf1160D3e9) |
 | `PriceAggregator`       | [0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7](https://etherscan.io/address/0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7) |
 | `PriceAggregatorV3`     | [0x18672b1b0c623a30089A280Ed9256379fb0E4E62](https://etherscan.io/address/0x18672b1b0c623a30089A280Ed9256379fb0E4E62) |
 | `PriceAggregator (Arbitrum)` | [0x44a4FdFb626Ce98e36396d491833606309520330](https://arbiscan.io/address/0x44a4FdFb626Ce98e36396d491833606309520330) |
-| `FlashLender` | [0xa7a4bb50af91f90b6feb3388e7f8286af45b299b](https://etherscan.io/address/0xa7a4bb50af91f90b6feb3388e7f8286af45b299b) |
+| `FlashLender` | [0x26dE7861e213A5351F6ED767d00e0839930e9eE1](https://etherscan.io/address/0x26dE7861e213A5351F6ED767d00e0839930e9eE1) |
 | `LeverageZap1inch` | [0x3294514B78Df4Bb90132567fcf8E5e99f390B687](https://etherscan.io/address/0x3294514B78Df4Bb90132567fcf8E5e99f390B687) |
 | `LlamaLendOdosLeverageZap` | [0xc5898606bdb494a994578453b92e7910a90aa873](https://etherscan.io/address/0xc5898606bdb494a994578453b92e7910a90aa873) |
 
@@ -138,6 +138,37 @@ For testing in production purposes, several contract deployments have taken plac
 |`CollateralToken (tBTC)`|[0x18084fba666a33d37592fa2633fd49a74dd93a88](https://etherscan.io/address/0x18084fba666a33d37592fa2633fd49a74dd93a88)|
 |`PriceOracle`|[0xbeF434E2aCF0FBaD1f0579d2376fED0d1CfC4217](https://etherscan.io/address/0xbeF434E2aCF0FBaD1f0579d2376fED0d1CfC4217#code)|
 |`Leverage Zap`|[0xD79964C70Cb06224FdA4c48387B53E9819bcB71c](https://etherscan.io/address/0xD79964C70Cb06224FdA4c48387B53E9819bcB71c#code)|
+
+**cbBTC**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+|`AMM`|[0xB6E62Aa178a5421d0A51D17E720A05de78D3137A](https://etherscan.io/address/0xB6E62Aa178a5421d0A51D17E720A05de78D3137A#code)|
+|`Controller`|[0xf8C786b1064889fFd3c8A08B48D5e0c159F4cBe3](https://etherscan.io/address/0xf8C786b1064889fFd3c8A08B48D5e0c159F4cBe3#code)|
+|`MonetaryPolicy`|[0x8c5A7F011f733fBb0A6c969c058716d5CE9bc933](https://etherscan.io/address/0x8c5A7F011f733fBb0A6c969c058716d5CE9bc933#code)|
+|`CollateralToken (cbBTC)`|[0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf](https://etherscan.io/address/0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf)|
+|`PriceOracle`|[0x4710A77a0E0f4c7b0E11CDeB74acB042e62B8d22](https://etherscan.io/address/0x4710A77a0E0f4c7b0E11CDeB74acB042e62B8d22#code)|
+
+**LBTC**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+|`AMM`|[0x9a2e6bb3114B1EEB5492D97188A3ECB09E39fac8](https://etherscan.io/address/0x9a2e6bb3114B1EEB5492D97188A3ECB09E39fac8#code)|
+|`Controller`|[0x8aca5A776a878Ea1F8967e70a23b8563008f58Ef](https://etherscan.io/address/0x8aca5A776a878Ea1F8967e70a23b8563008f58Ef#code)|
+|`MonetaryPolicy`|[0x8c5A7F011f733fBb0A6c969c058716d5CE9bc933](https://etherscan.io/address/0x8c5A7F011f733fBb0A6c969c058716d5CE9bc933#code)|
+|`CollateralToken (LBTC)`|[0x8236a87084f8B84306f72007F36F2618A5634494](https://etherscan.io/address/0x8236a87084f8B84306f72007F36F2618A5634494)|
+|`PriceOracle`|[0x2eF4b38A128eCc1aC06B43055553F95af59523de](https://etherscan.io/address/0x2eF4b38A128eCc1aC06B43055553F95af59523de#code)|
+
+**weETH**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: | 
+|`AMM`|[0xEd325262f54b2987e74436f4556a27f748146da1](https://etherscan.io/address/0xEd325262f54b2987e74436f4556a27f748146da1#code)|
+|`Controller`|[0x652aEa6B22310C89DCc506710CaD24d2Dba56B11](https://etherscan.io/address/0x652aEa6B22310C89DCc506710CaD24d2Dba56B11#code)|
+|`MonetaryPolicy`|[0x8c5A7F011f733fBb0A6c969c058716d5CE9bc933](https://etherscan.io/address/0x8c5A7F011f733fBb0A6c969c058716d5CE9bc933#code)|
+|`CollateralToken (weETH)`|[0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee](https://etherscan.io/address/0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee)|
+|`PriceOracle`|[0x0a9aE947495034C0bBBAB845Fd75b5BBAfc91aAb](https://etherscan.io/address/0x0a9aE947495034C0bBBAB845Fd75b5BBAfc91aAb#code)|
+
 
 ---
 

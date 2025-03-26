@@ -20,7 +20,7 @@ Usually, admin fees of liquidity pools are collected just as the tokens in the p
 The state of the system can be roughly summarized as follows:
 
 <figure markdown="span">
-  ![Fee Structure Overview](../../../assets/images/fees/fee_structure_light.svg){ width="1100" }
+  ![Fee Structure Overview](../assets/images/fees/fee_structure_light.svg){ width="1100" }
   <figcaption>Overview of Curve's fee collection, burning, and distribution system</figcaption>
 </figure>
 
@@ -107,7 +107,7 @@ This system ensures efficient fee collection, conversion, and distribution acros
 
     An older system using multiple burner contracts with manually added and hardcoded exchange routes. This architecture is still in use on some sidechains where the CowSwap system hasn't been implemented yet.
 
-    [:octicons-arrow-right-24: Original Architecture](./old-architecture/overview.md)
+    [:octicons-arrow-right-24: Original Architecture](./original-architecture/overview.md)
 
 </div>
 
@@ -132,19 +132,19 @@ This system ensures that all types of fees can be efficiently processed **withou
 !!!warning "Current Limitation"
     It's important to note that this new fee system is currently only available on Ethereum and Gnosis Chain, with plans to deploy on Arbitrum soon. Other chains where Curve is deployed still use the previous fee burning architecture.
 
-    For chains not yet using this new system, admin fees are burned using the [original architecture](./old-architecture/sidechains.md) and then transferred via a bridging contract to Ethereum.
+    For chains not yet using this new system, admin fees are burned using the [original architecture](./original-architecture/sidechains.md) and then transferred via a bridging contract to Ethereum.
 
 
 ## **Previous Architecture**
 
 Prior to this system, Curve used multiple different kinds of burners where the **exchange routes for the to-be-burned coins had to be manually added**. Additionally, exchange routes were hardcoded, which often led to semi-efficient fee burning. If coins were not manually added to the burners, they could not be burned, which resulted in unburned (but obviously not lost) fees. The old burner contracts required lots of maintenance and dev resources.
 
-The new system can and is deployed on other chains besides Ethereum but is **partly dependent on, e.g., CoWSwap deployments** if the `CowSwapBurner` is used. **If the CowSwap protocol is deployed on a sidechain, fees can be burned there. For chains where this is not the case, the admin fees are still being burned using the [original architecture](./old-architecture.md) and then transfered via a bridging contract to Ethereum.**
+The new system can and is deployed on other chains besides Ethereum but is **partly dependent on, e.g., CoWSwap deployments** if the `CowSwapBurner` is used. **If the CowSwap protocol is deployed on a sidechain, fees can be burned there. For chains where this is not the case, the admin fees are still being burned using the [original architecture](./original-architecture/sidechains.md) and then transfered via a bridging contract to Ethereum.**
 
 ---
 
 # **Further Reading**
 
-- [Old Fee Burning Architecture](./old-architecture.md)
+- [Old Fee Burning Architecture](./original-architecture/overview.md)
 - [CowSwap Protocol Documentation](https://docs.cow.fi/)
-- [veCRV Documentation](../vecrv)
+- [veCRV Documentation](../curve_dao/voting-escrow/voting-escrow.md)

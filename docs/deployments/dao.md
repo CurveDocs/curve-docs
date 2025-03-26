@@ -16,11 +16,11 @@ search:
 | Contract Type            | Contract Address |
 | :----------------------: | :--------------: |
 | `CRV Token`              | [0xD533a949740bb3306d119CC777fa900bA034cd52](https://etherscan.io/token/0xD533a949740bb3306d119CC777fa900bA034cd52)   |
+| `veCRV (Voting Escrow)`          | [0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2](https://etherscan.io/address/0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2) |
 | `CRV Circulating Supply` | [0x14139EB676342b6bC8E41E0d419969f23A49881e](https://etherscan.io/address/0x14139EB676342b6bC8E41E0d419969f23A49881e) |
 | `Fee Distributor`        | [0xa464e6dcda8ac41e03616f95f4bc98a13b8922dc](https://etherscan.io/address/0xa464e6dcda8ac41e03616f95f4bc98a13b8922dc) |
 | `Gauge Controller`       | [0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB](https://etherscan.io/address/0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB) |
 | `Minter`                 | [0xd061D61a4d941c39E5453435B6345Dc261C2fcE0](https://etherscan.io/address/0xd061D61a4d941c39E5453435B6345Dc261C2fcE0) |
-| `Voting Escrow`          | [0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2](https://etherscan.io/address/0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2) |
 
 
 *Vesting contracts for the Curve DAO token:*
@@ -63,16 +63,16 @@ search:
 | :logos-mantle: `Mantle` | [0xE265FC71d45fd791c9ebf3EE0a53FBB220Eb8f75](https://mantlescan.xyz/address/0xE265FC71d45fd791c9ebf3EE0a53FBB220Eb8f75) |  |
 | :logos-fraxtal: `Fraxtal` | [0x331b9182088e2a7d6d3fe4742aba1fb231aecc56](https://fraxscan.com/token/0x331b9182088e2a7d6d3fe4742aba1fb231aecc56) |  |
 | :logos-zksync: `zk-Sync` | [0x5945932099f124194452a4c62d34bb37f16183b2](https://era.zksync.network/token/0x5945932099f124194452a4c62d34bb37f16183b2) |  |
-| :logos-sonic: `Sonic` | [tbd](https://sonicscan.org/address/) |
-| :logos-sonic: `Taiko` | [0x09413312b263fD252C16e592A45f4689F26cb79d](https://taikoscan.io/address/0x09413312b263fD252C16e592A45f4689F26cb79d) |
-| :logos-sonic: `Corn` | [0x1b3757d5EE281Eaf6a9c8E5D9b8488b4475Aa955](https://cornscan.io/address/0x1b3757d5EE281Eaf6a9c8E5D9b8488b4475Aa955) |
-| :logos-sonic: `Ink` | [0xAC73671a1762FE835208Fb93b7aE7490d1c2cCb3](https://explorer.inkonchain.com/address/0xAC73671a1762FE835208Fb93b7aE7490d1c2cCb3) |
+| :logos-sonic: `Sonic` | [tbd](https://sonicscan.org/address/0x5Af79133999f7908953E94b7A5CF367740Ebee35) |
+| :logos-taiko: `Taiko` | [0x09413312b263fD252C16e592A45f4689F26cb79d](https://taikoscan.io/address/0x09413312b263fD252C16e592A45f4689F26cb79d) |
+| :logos-corn: `Corn` | [0x1b3757d5EE281Eaf6a9c8E5D9b8488b4475Aa955](https://cornscan.io/address/0x1b3757d5EE281Eaf6a9c8E5D9b8488b4475Aa955) |
+| :logos-ink: `Ink` | [0xAC73671a1762FE835208Fb93b7aE7490d1c2cCb3](https://explorer.inkonchain.com/address/0xAC73671a1762FE835208Fb93b7aE7490d1c2cCb3) |
 | :logos-avalanche: `Avalanche`​ | [0xEEbC562d445F4bC13aC75c8caABb438DFae42A1B](https://snowscan.xyz/address/0xEEbC562d445F4bC13aC75c8caABb438DFae42A1B) | [**<mark style="background-color: #ffff00; color: black">x-dao (BETA)</mark>**](../deployments/crosschain.md#curve-x-dao)​ |
-| :logos-fantom: `Fantom`         | [0xE6c259bc0FCE25b71fE95A00361D3878E16232C3](https://ftmscan.com/address/0xE6c259bc0FCE25b71fE95A00361D3878E16232C3) | [**<mark style="background-color: #ffff00; color: black">x-dao (BETA)</mark>**](../deployments/crosschain.md#curve-x-dao)​ |
+| :logos-fantom: `Fantom`         | [0xE6c259bc0FCE25b71fE95A00361D3878E16232C3](https://ftmscout.com/address/0xE6c259bc0FCE25b71fE95A00361D3878E16232C3) | [**<mark style="background-color: #ffff00; color: black">x-dao (BETA)</mark>**](../deployments/crosschain.md#curve-x-dao)​ |
 | :logos-bsc: `Binance Smart Chain`         | [0x9996D0276612d23b35f90C51EE935520B3d7355B](https://bscscan.com/token/0x9996D0276612d23b35f90C51EE935520B3d7355B) | [**<mark style="background-color: #ffff00; color: black">x-dao (BETA)</mark>**](../deployments/crosschain.md#curve-x-dao)​ |
 | :logos-kava: `Kava`             | [0x7736C61F00c72e868AA9904c9063e8445A1eF5DD](https://kavascan.com/address/0x7736C61F00c72e868AA9904c9063e8445A1eF5DD) | [**<mark style="background-color: #ffff00; color: black">x-dao (BETA)</mark>**](../deployments/crosschain.md#curve-x-dao)​ |
 | :logos-avalanche: `Avalanche`​ | [0x47536F17F4fF30e64A96a7555826b8f9e66ec468](https://snowscan.xyz/address/0x47536F17F4fF30e64A96a7555826b8f9e66ec468) | [**<mark style="background-color: #f31743; color: black">Multichain</mark>**](https://multichain.org/)​ |
-| :logos-fantom: `Fantom`         | [0x1E4F97b9f9F913c46F1632781732927B9019C68b](https://ftmscan.com/address/0x1e4f97b9f9f913c46f1632781732927b9019c68b) | [**<mark style="background-color: #f31743; color: black">Multichain</mark>**](https://multichain.org/)​ |
+| :logos-fantom: `Fantom`         | [0x1E4F97b9f9F913c46F1632781732927B9019C68b](https://ftmscout.com/address/0x1e4f97b9f9f913c46f1632781732927b9019c68b) | [**<mark style="background-color: #f31743; color: black">Multichain</mark>**](https://multichain.org/)​ |
 | :logos-celo: `Celo`             | [0x173fd7434B8B50dF08e3298f173487ebDB35FD14](https://explorer.celo.org/mainnet/address/0x173fd7434B8B50dF08e3298f173487ebDB35FD14) | [**<mark style="background-color: #f31743; color: black">Multichain</mark>**](https://multichain.org/)​ |
 
 
@@ -137,7 +137,7 @@ The Emergency DAO is deployed at:
 | :logos-gnosis: `Gnosis` | [0xB055EbbAcc8Eefc166c169e9Ce2886D0406aB49b](https://gnosisscan.io/address/0xB055EbbAcc8Eefc166c169e9Ce2886D0406aB49b) |
 | :logos-gnosis: `Gnosis` | [0xBb7404F9965487a9DdE721B3A5F0F3CcfA9aa4C5](https://gnosisscan.io/address/0xBb7404F9965487a9DdE721B3A5F0F3CcfA9aa4C5) |
 | :logos-avalanche: `Avalanche` | [0x06534b0BF7Ff378F162d4F348390BDA53b15fA35](https://snowscan.xyz/address/0x06534b0BF7Ff378F162d4F348390BDA53b15fA35) |
-| :logos-fantom: `Fantom` | [0x2B039565B2b7a1A9192D4847fbd33B25b836B950](https://ftmscan.com/address/0x2B039565B2b7a1A9192D4847fbd33B25b836B950) |
+| :logos-fantom: `Fantom` | [0x2B039565B2b7a1A9192D4847fbd33B25b836B950](https://ftmscout.com/address/0x2B039565B2b7a1A9192D4847fbd33B25b836B950) |
 | :logos-bsc: `Binance Smart Chain` | [0x98B4029CaBEf7Fd525A36B0BF8555EC1d42ec0B6](https://bscscan.com/address/0x98B4029CaBEf7Fd525A36B0BF8555EC1d42ec0B6) |
 | :logos-linea: `Linea` | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://lineascan.build/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef) |
 | :logos-scroll: `Scroll` | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://scrollscan.com/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef) |
@@ -154,7 +154,7 @@ The Emergency DAO is deployed at:
 # **New Curve Burner System**
 
 !!!info "New Fee-Burning Architecture"
-    Curve has developed and deployed a new fee-burning architecture. For detailed documentation, please see here: [Curve Burner Documentation](../curve_dao/fee-collection-distribution/curve-burner/overview.md).
+    Curve has developed and deployed a new fee-burning architecture. For detailed documentation, please see here: [Curve Burner Documentation](../fees/overview.md).
 
 
 **:logos-ethereum: Ethereum**
@@ -185,7 +185,7 @@ The Emergency DAO is deployed at:
 # **Fee Burner**
 
 !!!info "New Fee-Burning Architecture"
-    Curve has developed and deployed a new fee-burning architecture. For detailed documentation, please see here: [Curve Burner Documentation](../curve_dao/fee-collection-distribution/curve-burner/overview.md).
+    Curve has developed and deployed a new fee-burning architecture. For detailed documentation, please see here: [Curve Burner Documentation](../fees/original-architecture/overview.md).
 
 Burners are a crucial element of the fee payout system in Curve. They convert the collected pool fees into an asset that is later exchanged for USDC. Eventually, the USDC is deposited into the 3Pool, and the fees are distributed to veCRV holders in 3CRV. The type of burner used depends on the tokens present in the pool.
 
@@ -267,10 +267,10 @@ Burners are a crucial element of the fee payout system in Curve. They convert th
 
 | Burner Type         | Contract Address                                       |
 | :-----------------: | :----------------------------------------------------: |
-| `UnderlyingBurner`  | [0x423f26eb44d4be89072eecfc81b95065ce43bf4b](https://ftmscan.com/address/0x423f26eb44d4be89072eecfc81b95065ce43bf4b#code) |
-| `BTCBurner`         | [0xFa18A0385610b560f3041C40E23fB319e24658f1](https://ftmscan.com/address/0xFa18A0385610b560f3041C40E23fB319e24658f1#code) |
-| `gToken Burner`     | [0xDE5331AC4B3630f94853Ff322B66407e0D6331E8](https://ftmscan.com/address/0xDE5331AC4B3630f94853Ff322B66407e0D6331E8#code) |
-| `cToken Burner`     | [0x11137B10C210b579405c21A07489e28F3c040AB1](https://ftmscan.com/address/0x11137B10C210b579405c21A07489e28F3c040AB1#code) |
-| `Tricrypto Burner`  | [0x337e9d5A2DeE10Fdd30E67236667E1dE5b0c085F](https://ftmscan.com/address/0x337e9d5A2DeE10Fdd30E67236667E1dE5b0c085F#code) |
-| `Swap Burner`       | [0x959c1BA175e04F7164EB749f4E88f10fe4Bac8a6](https://ftmscan.com/address/0x959c1BA175e04F7164EB749f4E88f10fe4Bac8a6#code) |
-| `BridgeContract`    | [0x993ff6dd3851ab11af751277e419c2aa2697a288](https://ftmscan.com/address/0x993ff6dd3851ab11af751277e419c2aa2697a288#code) |
+| `UnderlyingBurner`  | [0x423f26eb44d4be89072eecfc81b95065ce43bf4b](https://ftmscout.com/address/0x423f26eb44d4be89072eecfc81b95065ce43bf4b#code) |
+| `BTCBurner`         | [0xFa18A0385610b560f3041C40E23fB319e24658f1](https://ftmscout.com/address/0xFa18A0385610b560f3041C40E23fB319e24658f1#code) |
+| `gToken Burner`     | [0xDE5331AC4B3630f94853Ff322B66407e0D6331E8](https://ftmscout.com/address/0xDE5331AC4B3630f94853Ff322B66407e0D6331E8#code) |
+| `cToken Burner`     | [0x11137B10C210b579405c21A07489e28F3c040AB1](https://ftmscout.com/address/0x11137B10C210b579405c21A07489e28F3c040AB1#code) |
+| `Tricrypto Burner`  | [0x337e9d5A2DeE10Fdd30E67236667E1dE5b0c085F](https://ftmscout.com/address/0x337e9d5A2DeE10Fdd30E67236667E1dE5b0c085F#code) |
+| `Swap Burner`       | [0x959c1BA175e04F7164EB749f4E88f10fe4Bac8a6](https://ftmscout.com/address/0x959c1BA175e04F7164EB749f4E88f10fe4Bac8a6#code) |
+| `BridgeContract`    | [0x993ff6dd3851ab11af751277e419c2aa2697a288](https://ftmscout.com/address/0x993ff6dd3851ab11af751277e419c2aa2697a288#code) |

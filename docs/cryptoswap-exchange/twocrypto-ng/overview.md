@@ -7,8 +7,6 @@ The **TwoCrypto-NG contract infrastructure** represents an **optimized version o
 
 !!!deploy "Contract Source & Deployment"
     Source code is available on [GitHub](https://github.com/curvefi/twocrypto-ng).
-    
-    A full list of all deployments can be found [here](../../references/deployed-contracts.md#twocrypto-ng).
  
 
 ---
@@ -54,6 +52,6 @@ The **TwoCrypto-NG contract infrastructure** represents an **optimized version o
 
     A liquidity gauge blueprint contract which deploys a liquidiy gauge of a pool on Ethereum.
 
-    Even though Factories on sidechains and L2s also have a gauge blueprint implementation variable, this one is set to `ZERO_ADDRESS` as those gauges work a bit differently than the gauge on the Ethereum mainnet. On sidechains, gauges need to be deployed via the [`RootChainGaugeFactory`](../../curve_dao/liquidity-gauge-and-minting-crv/evm-sidechains/RootChainGaugeFactory.md).
+    Even though Factories on sidechains and L2s also have a gauge blueprint implementation variable, this one is set to `ZERO_ADDRESS` as those gauges work a bit differently than the gauge on the Ethereum mainnet. On sidechains, gauges need to be deployed via the [`RootChainGaugeFactory`](../../liquidity-gauges-and-minting-crv/xchain-gauges/RootGaugeFactory.md).
 
 </div>

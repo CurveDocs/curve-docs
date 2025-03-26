@@ -9,7 +9,7 @@ The `Relayer` contract acts as a middleman, receiving messages from the `Broadca
     - [:material-github: `OptimismRelayer.vy`](https://github.com/curvefi/curve-xgov/blob/master/contracts/optimism/OptimismRelayer.vy) for Optimism and Optimistic Rollups
     - [:material-github: `XYZRelayer.vy`](https://github.com/curvefi/curve-xgov/blob/master/contracts/xyz/XYZRelayer.vy) for all other chains
 
-    A comprehensive list of all deployed contracts is available [here :material-arrow-up-right:](../../../references/deployed-contracts.md#curve-x-gov).
+    A comprehensive list of all deployed contracts is available [here :material-arrow-up-right:](../../deployments/crosschain.md#curve-x-gov).
 
 The `Relayer` receives the broadcasted message and forwards the message to the appropriate agent. The `Agents` are then responsible for executing the `calldata` of the message.
 

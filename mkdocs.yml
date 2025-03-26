@@ -169,11 +169,11 @@ nav:
       - Hooker: fees/Hooker.md
       - FeeDistributor: fees/FeeDistributor.md
       - Original Architecture:
-        - Overview: fees/old-architecture/overview.md
-        - Burner: fees/old-architecture/burner.md
-        - FeeDistributor: fees/old-architecture/distributor.md
-        - Sidechains: fees/old-architecture/sidechains.md
-        - Withdraw and Burn: fees/old-architecture/withdraw-and-burn.md
+        - Overview: fees/original-architecture/overview.md
+        - Burner: fees/original-architecture/burner.md
+        - FeeDistributor: fees/original-architecture/distributor.md
+        - Sidechains: fees/original-architecture/sidechains.md
+        - Withdraw and Burn: fees/original-architecture/withdraw-and-burn.md
 
 
   - Registry:
@@ -220,7 +220,13 @@ nav:
     - Overview: scrvusd/overview.md
     - RewardsHandler: scrvusd/RewardsHandler.md
     - StablecoinLens: scrvusd/StablecoinLens.md
-    - Crosschain scrvUSD Oracle: scrvusd/crosschain-oracle.md
+    - Crosschain Oracles:
+      - Oracle V0: scrvusd/crosschain/oracle-v0/oracle.md
+      - Oracle V1/V2:
+        - Overview: scrvusd/crosschain/oracle-v2/overview.md
+        - Oracle: scrvusd/crosschain/oracle-v2/oracle.md
+        - Verifier: scrvusd/crosschain/oracle-v2/verifier.md
+        - BlockHash: scrvusd/crosschain/oracle-v2/blockhash.md
 
   - Curve Lending:
     - Overview: lending/overview.md
