@@ -1,23 +1,4 @@
-Our testing stack is based on Python and the following tools:
-- `pytest` as a test runner
-- `xdist` for parallel test execution
-- `titanoboa` for testing vyper contracts
-- `hypothesis` for fuzzing or stateful testing
-
-
-# Test Directory Structure
-
-```
-tests/
-├── unitary/
-├── fork/
-├── fuzzing/
-├── stateful/
-├── utils/
-├── conftest.py
-```
-
-## `utils` directory
+# `utils` Directory
 
 This directory contains:
 - `strategies.py` to be used as strategies for `hypothesis` both in `fuzzing` and `stateful` tests.
@@ -76,6 +57,23 @@ from deployers import POOL_DEPLOYER
 N_COINS = POOL_DEPLOYER._constants.N_COINS
 ```
 
+### `god_mode.py`
+
+God Mode is just a wrapper class that can be used to test a contract while minimizing the amount of boilerplate code.
+
+#### Understanding the problem
+
+Let's say we want to test a liquidity pool implementation. 
+
+A common pattern when testing is creating a new user, giving them some amount of tokens so that it can interact with the pool. The problem is that often these users have generic names like `alice` or `bob`, `big_depositor` or `small_depositor` or even worse `user_1`, `user_2`, `user_3`. Often these users are shared across multiple tests and it becomes a pain to keep track of them, who has what amount of tokens, who is allowed to do what, etc. On top of this the ERC20 token standard adds some extra overhead because we need to manage approvals for each user.
+
+#### The solution
+
+```python
+class GodMode
+```
+
+
 ## Global `conftest.py`
 
 This file contains global settings and fixtures used across all tests.
@@ -88,3 +86,10 @@ TODO example
 ```
 
 This profile can then be enabled from the cli using the flag `--hypothesis-profile=no-shrink`.
+
+Furthermore this section can contain global fixtures that are shared across unitary and fork tests.
+
+## FAQ
+- Why does this folder not contain a `fixtures.py` file to store global fixtures? 
+
+    If we were to create a `fixtures.py` file, it would quickly become unwieldy as the number of fixtures grows.autocomplet However some IDEs like PyCharm do not support this and will not be able to resolve the fixtures.conftest.py file`` anyways by adding `pytest_plugins = ["tests.utils.fixtures"]` in the `conftest.py` fileneed to connect this towe
