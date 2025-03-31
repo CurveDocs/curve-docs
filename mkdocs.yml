@@ -356,3 +356,16 @@ nav:
     - crvUSD & scrvUSD: deployments/crvusd.md
     - Lending: deployments/lending.md
     - Integration: deployments/integration.md
+
+  - Contributor Guidelines:
+    - Overview: contributing/overview.md
+    - Git and CI: contributing/git-ci.md
+    - Python Style: contributing/python-style.md
+    - Vyper Style: contributing/vyper-style.md
+    - UV: contributing/uv.md
+    - Testing:
+      - Overview: contributing/testing/overview.md
+      - Unitary: contributing/testing/unitary.md
+      - Fork: contributing/testing/fork.md
+      - Utils: contributing/testing/utils.md
+
