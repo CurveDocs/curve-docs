@@ -83,9 +83,9 @@ theme:
     - navigation.path
     - navigation.top
     - navigation.tracking
-    - search.highlight
-    - search.share
-    - search.suggest
+#    - search.highlight
+#    - search.share
+#    - search.suggest
     - toc.follow
     - content.code.copy
     - announce.dismiss
