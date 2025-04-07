@@ -1,7 +1,6 @@
 <h1> Curve StableSwap Exchange: Overview </h1>
 
-!!!pdf "Whitepaper"
-    The StableSwap algorithm integrates features of both the constant sum and constant product formulas, adjusting between these models based on the balance of assets in the pool. For a detailed overview of the StableSwap invariant design, please read the official [whitepaper](../assets/pdf/whitepaper_stableswap.pdf).
+The StableSwap algorithm integrates features of both the constant sum and constant product formulas, adjusting between these models based on the balance of assets in the pool. For a detailed overview of the StableSwap invariant design, please read the official [whitepaper](../assets/pdf/whitepaper_stableswap.pdf).
 
 The Curve StableSwap exchange utilizes a specific algorithm known as the **StableSwap invariant to facilitate the trading of stablecoins and other stable assets**. This method is designed to offer lower slippage in stablecoin transactions compared to other common algorithms like the constant-product invariant. In this context, "stablecoins" refer to digital assets that aim to maintain a stable value relative to another asset, including fiat-pegged stablecoins (e.g., DAI, USDC), synthetic versions of cryptocurrencies (e.g., synthetic ETH), or various forms of wrapped BTC.
 
@@ -9,15 +8,13 @@ A Curve pool, at its core, is a smart contract that implements the StableSwap in
 
 For technical implementations, the **StableSwap algorithm combines a constant sum invariant with a constant product invariant**, represented mathematically in the form of equations that account for the total amount of tokens in a pool at equilibrium. This model adjusts as the pool's balance shifts, moving towards a constant product model when significant imbalances occur.
 
-
 ---
-
 
 ## **Implementations**
 
 !!!github "GitHub"
 
-    *The source code for the Curve Finance StableSwap contracts is openly accessible on GitHub:*
+    The source code for the Curve Finance StableSwap contracts is openly accessible on GitHub:
     
     - Genesis Contracts: The initial set of smart contracts for Curve pools can be found at [Curve's contracts repository](https://github.com/curvefi/curve-contract/tree/master/contracts/pools).
     - StableSwap-ng: An updated version of the StableSwap algorithm, known as StableSwap-ng (next generation), is available at [Curve's StableSwap-ng repository](https://github.com/curvefi/stableswap-ng).
