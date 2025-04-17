@@ -342,8 +342,7 @@ nav:
   - Bug Bounty & Audits: security/security.md
 
   - References:
-    - Whitepapers: references/whitepaper.md
-    - Useful Resources: references/useful.md
+    - Whitepapers, Derivations and Useful Resources: references/whitepaper.md
     - Contract Ownership: references/curve-practices.md
     - Notebooks: references/notebooks.md
 
