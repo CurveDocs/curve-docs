@@ -378,7 +378,7 @@ D_{k+1} = D_+ - D_-
 
 ---
 
-# Useful Resources
+# **Useful Resources**
 
 ## **Stableswap**
 - https://atulagarwal.dev/posts/curveamm/stableswap/
