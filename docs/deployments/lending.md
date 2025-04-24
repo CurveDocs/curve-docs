@@ -61,6 +61,7 @@ AMM, Controller, and Price Oracle contracts and other variables of a vault can s
 | `Pool price oracle implementation` | [0x57390a776A2312eF8BFc25e8624483303Dd8DfF8](https://arbiscan.io/address/0x57390a776A2312eF8BFc25e8624483303Dd8DfF8) |
 | `Monetary Policy Implementation`   | [0x0b3536245faDABCF091778C4289caEbDc2c8f5C1](https://arbiscan.io/address/0x0b3536245faDABCF091778C4289caEbDc2c8f5C1) |
 | `OneWay Lending Factory`           | [0xcaEC110C784c9DF37240a8Ce096D352A75922DeA](https://arbiscan.io/address/0xcaEC110C784c9DF37240a8Ce096D352A75922DeA) |
+| `LlamaLendLeverageZap`           | [0xb7b240cfa985306563a301bc417bc9715059a117](https://arbiscan.io/address/0xb7b240cfa985306563a301bc417bc9715059a117) |
 
 
 ---
@@ -78,6 +79,7 @@ The deployments on Optimism were done using a new implementation of the `Control
 | `Pool price oracle implementation` | [0x227c9AD884e0E32a698FB38ba0511eE36fA92b7d](https://optimistic.etherscan.io/address/0x227c9AD884e0E32a698FB38ba0511eE36fA92b7d) |
 | `Monetary Policy Implementation`   | [0xa2294769e9CFA9Fd029030F7be94E2602821677B](https://optimistic.etherscan.io/address/0xa2294769e9CFA9Fd029030F7be94E2602821677B) |
 | `OneWay Lending Factory`           | [0x5EA8f3D674C70b020586933A0a5b250734798BeF](https://optimistic.etherscan.io/address/0x5EA8f3D674C70b020586933A0a5b250734798BeF) |
+| `LlamaLendLeverageZap`           | [0x273e44B9a1841857d9360e8792bB59f9e1FfE9Da](https://optimistic.etherscan.io/address/0x273e44B9a1841857d9360e8792bB59f9e1FfE9Da) |
 
 
 ---
@@ -95,6 +97,7 @@ The deployments on Fraxtal were done using a new implementation of the `Controll
 | `Pool price oracle implementation` | [0x0cD5A1e9E19Af1f1b910Ac3C3452A16B2B37155b](https://fraxscan.com/address/0x0cD5A1e9E19Af1f1b910Ac3C3452A16B2B37155b) |
 | `Monetary Policy Implementation`   | [0x86D347cE5f1E6f7Ef4Da00FB7c8d31fBD16996F0](https://fraxscan.com/address/0x86D347cE5f1E6f7Ef4Da00FB7c8d31fBD16996F0) |
 | `OneWay Lending Factory`           | [0xf3c9bdAB17B7016fBE3B77D17b1602A7db93ac66](https://fraxscan.com/address/0xf3c9bdAB17B7016fBE3B77D17b1602A7db93ac66) |
+| `LlamaLendLeverageZap`           | [0x37c5ab57af7100bdc9b668d766e193ccbf6614fd](https://fraxscan.com/address/0x37c5ab57af7100bdc9b668d766e193ccbf6614fd) |
 
 
 ---
