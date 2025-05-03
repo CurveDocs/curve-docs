@@ -19,7 +19,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-arbitrum: `Arbitrum`       | [0x2191718CD32d02B8E60BAdFFeA33E4B5DD9A0A0D](https://arbiscan.io/address/0x2191718CD32d02B8E60BAdFFeA33E4B5DD9A0A0D) |
 | :logos-optimism: `Optimism`       | [0x0DCDED3545D565bA3B19E683431381007245d983](https://optimistic.etherscan.io/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
 | :logos-base: `Base`               | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://basescan.org/address/0x4f37A9d177470499A2dD084621020b023fcffc1F) |
-| :logos-fraxtal: `Fraxtal`         | [0x9f2Fa7709B30c75047980a0d70A106728f0Ef2db](https://fraxscan.com/address/0x9f2Fa7709B30c75047980a0d70A106728f0Ef2db) |
+| :logos-fraxtal: `Fraxtal (old)`   | [0x9f2Fa7709B30c75047980a0d70A106728f0Ef2db](https://fraxscan.com/address/0x9f2Fa7709B30c75047980a0d70A106728f0Ef2db) |
+| :logos-fraxtal: `Fraxtal (new)`   | [0x56C526b0159a258887e0d79ec3a80dfb940d0cD7](https://fraxscan.com/address/0x56C526b0159a258887e0d79ec3a80dfb940d0cD7) |
 | :logos-polygon: `Polygon`         | [0x0DCDED3545D565bA3B19E683431381007245d983](https://polygonscan.com/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
 | :logos-gnosis: `Gnosis (xDAI)`    | [0x0DCDED3545D565bA3B19E683431381007245d983](https://gnosisscan.io/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
 | :logos-avalanche: `Avalanche`     | [0x0DCDED3545D565bA3B19E683431381007245d983](https://snowscan.xyz/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
@@ -133,6 +134,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-ethereum: `Ethereum` | [0xDfeF1725Ab767f165171709C6d1E1A6247425fE0](https://etherscan.io/address/0xDfeF1725Ab767f165171709C6d1E1A6247425fE0) |
 | :logos-arbitrum: `Arbitrum` | [0x59AfCD3e931018dc493AA1d833B11bb5A0744906](https://arbiscan.io/address/0x59AfCD3e931018dc493AA1d833B11bb5A0744906) |
 | :logos-optimism: `Optimism` | [0x07920E98a66e462C2Aa4c8fa6200bc68CA161ea0](https://optimistic.etherscan.io/address/0x07920E98a66e462C2Aa4c8fa6200bc68CA161ea0) |
+| :logos-optimism: `Optimism` | [0x167e42a1C7ab4Be03764A2222aAC57F5f6754411](https://optimistic.etherscan.io/address/0x167e42a1C7ab4Be03764A2222aAC57F5f6754411) |
 | :logos-base: `Base` | [0x3f445D38E820c010a7A6E33c5F80cBEBE6930f61](https://basescan.org/address/0x3f445D38E820c010a7A6E33c5F80cBEBE6930f61) |
 | :logos-fraxtal: `Fraxtal` | [0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b](https://fraxscan.com/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b) |
 | :logos-polygon: `Polygon` | [0x4c7a5a5d57f98d362f1c00d7135f0da5b6f82227](https://polygonscan.com/address/0x4c7a5a5d57f98d362f1c00d7135f0da5b6f82227) |
