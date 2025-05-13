@@ -6,19 +6,19 @@ the underlying token itself, but a **wrapped** representation of it.
 
 Currently, Curve supports the following lending pools:
 
-``aave``: [Aave pool](https://www.curve.fi/aave), with lending on [Aave](https://www.aave.com)
+``aave``: [Aave pool](https://www.curve.finance/aave), with lending on [Aave](https://www.aave.com)
 
-``busd``: [BUSD](https://www.curve.fi/busd) pool, with lending on [yearn.finance](https://www.yearn.finance)
+``busd``: [BUSD](https://www.curve.finance/busd) pool, with lending on [yearn.finance](https://www.yearn.finance)
 
-``compound``: [Compound](https://www.curve.fi/compound) pool, with lending on [Compound](https://compound.finance/)
+``compound``: [Compound](https://www.curve.finance/compound) pool, with lending on [Compound](https://compound.finance/)
 
-``ib``: [Iron Bank pool](https://curve.fi/ib), with lending on [Cream](https://v1.yearn.finance/lending)
+``ib``: [Iron Bank pool](https://curve.finance/ib), with lending on [Cream](https://v1.yearn.finance/lending)
 
-``pax``: [PAX](https://curve.fi/pax) pool, with lending on [yearn.finance](https://www.yearn.finance)
+``pax``: [PAX](https://curve.finance/pax) pool, with lending on [yearn.finance](https://www.yearn.finance)
 
-``usdt``: [USDT pool](https://curve.fi/usdt), with lending on [Compound](https://www.curve.fi/compound)
+``usdt``: [USDT pool](https://curve.finance/usdt), with lending on [Compound](https://www.curve.finance/compound)
 
-``y``: [Y pool](https://curve.fi/y), with lending on [yearn.finance](https://www.yearn.finance)
+``y``: [Y pool](https://curve.finance/y), with lending on [yearn.finance](https://www.yearn.finance)
 
 An example of a Curve lending pool is 
 [Compound Pool](https://github.com/curvefi/curve-contract/tree/master/contracts/pools/compound), 
