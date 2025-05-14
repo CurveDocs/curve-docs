@@ -1,8 +1,8 @@
 # Curve Finance Technical Documentation
 
-[curve.fi](https://curve.fi) protocol documentation.
+[curve.fi](https://curve.finance) protocol documentation.
 
-`master` branch is auto-deployed at https://docs.curve.fi/.
+`master` branch is auto-deployed at https://docs.curve.finance/.
 
 ## Contributing
 
