@@ -6,4 +6,4 @@ hide:
 
 <h1></h1>
 
-<swagger-ui src="https://api.curve.fi/v1/openapi.json"></swagger-ui>
+<swagger-ui src="https://api.curve.finance/v1/openapi.json"></swagger-ui>
