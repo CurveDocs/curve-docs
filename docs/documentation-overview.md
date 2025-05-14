@@ -12,7 +12,7 @@ Additionally, Curve has launched its own stablecoin, **crvUSD**, and **Curve Len
 This documentation outlines the technical implementation of the core Curve protocol and related smart contracts. It may be useful for contributors to the Curve codebase, third-party integrators, or technically proficient users of the protocol.
 
 !!!tip "Resources for Non-Technical Users"
-    Non-technical users might prefer the **[Resources](https://resources.curve.fi/)** site as it offers more general insights and information.
+    Non-technical users might prefer the **[Resources](https://resources.curve.finance/)** site as it offers more general insights and information.
 
 
 ---------
