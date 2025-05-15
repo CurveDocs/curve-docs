@@ -323,7 +323,7 @@ This burner unwraps wstETH to stETH and sends it back to 0xECB.
 
 
 ### **UnderlyingBurner**
-The underlying burner handles assets that can be directly swapped to USDC and deposits DAI/USDC/USDT into [3pool](https://curve.fi/#/ethereum/pools/3pool/deposit/) to obtain 3CRV. This is the **final step of the burn process** for many assets that require multiple intermediate swaps.
+The underlying burner handles assets that can be directly swapped to USDC and deposits DAI/USDC/USDT into [3pool](https://curve.finance/#/ethereum/pools/3pool/deposit/) to obtain 3CRV. This is the **final step of the burn process** for many assets that require multiple intermediate swaps.
 
 !!!note
     Prior to burning any assets with the UnderlyingBurner, you should have completed the entire burn process with `SynthBurner`, `UniswapBurner` and `all of the lending burners`.

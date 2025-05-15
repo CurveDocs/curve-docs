@@ -20,7 +20,7 @@ Each Factory contract includes **built-in functions designed to populate the [Me
 
 Curve Factories facilitate the deployment of pools containing almost any combination of assets, whether they are stable or volatile, rebasing or not. Note that some variations (e.g., cryptoswap pool) might not yet be supported on sidechains or Layer 2 networks.
 
-*For a straightforward, non-technical explanation of pool variations, visit: https://resources.curve.fi/pools/overview/*
+*For a straightforward, non-technical explanation of pool variations, visit: https://resources.curve.finance/pools/overview/*
 
 <div class="grid cards" markdown>
 

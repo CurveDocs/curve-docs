@@ -95,4 +95,4 @@ Liquidity gauges for liquidity pools can be deployed using the Factory contract.
 
 To make a liquidity gauge eligible to receive CRV emissions, it needs to be added to the `GaugeController.vy` contract. This is accomplished through an on-chain vote in which veCRV holders vote on.
 
-The on-chain vote can be created using the classic Curve UI: https://classic.curve.fi/factory/create_gauge.
+The on-chain vote can be created using the classic Curve UI: https://classic.curve.finance/factory/create_gauge.

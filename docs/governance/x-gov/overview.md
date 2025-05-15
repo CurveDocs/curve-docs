@@ -71,7 +71,7 @@ Voting for governance proposals is exclusively conducted on the Ethereum mainnet
 
 Best way to showcase how a system works is to show an example. Shortly after the launch of Optimism, a airdrop of `OP` tokens to projects that built infrastructure on Optimism was conducted. As Curve deployed their market-making infrastructure there, they were allocated `500,000 OP` tokens. The airdrop could be claimed by simply calling the `transferFrom` on the `OP` token contract as the Vault contract was granted allowance.
 
-Due to Curve's voting mechanism being only on Ethereum, a [proposal to claim the 500,000+ OP tokens](https://dao.curve.fi/#/ethereum/proposals/522-OWNERSHIP) was made.
+Due to Curve's voting mechanism being only on Ethereum, a [proposal to claim the 500,000+ OP tokens](https://curve.finance/dao/ethereum/proposals/522-OWNERSHIP) was made.
 
 The proposal initiated a call to the `broadcast` function of the [`Optimism Broadcaster`](https://etherscan.io/address/0x8e1e5001C7B8920196c7E3EdF2BCf47B2B6153ff) with the following calldata:
 

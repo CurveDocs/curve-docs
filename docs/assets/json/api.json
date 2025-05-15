@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": { "title": "Curve.fi API", "version": "1.0.0" },
-  "servers": [{ "url": "https://api.curve.fi/v1" }],
+  "servers": [{ "url": "https://api.curve.finance/v1" }],
   "components": {
     "parameters": {
       "blockchainId": {
@@ -101,7 +101,7 @@
     "/getFactoryAPYs/{blockchainId}/{version}": {
       "get": {
         "tags": ["Volumes and APYs"],
-        "description": "Returns *inaccurate* volume and base APY data for Curve pools on chains that aren’t indexed by either the [Curve Prices API](https://prices.curve.fi/feeds-docs) or the [Curve subgraphs](https://github.com/curvefi/volume-subgraphs).\nData returned by this endpoint is necessarily inaccurate due to the manual chain-walking involved, coupled with the limitations of RPC endpoints available for this subset of chains. Using this endpoint should be considered an imperfect last resort.\nIf the chain for which you want to retrieve volume and base APY data is available through either [`/getVolumes/{blockchainId}`](#/default/get_getVolumes__blockchainId_) or [`getSubgraphData/[blockchainId]`](#/default/get_getSubgraphData__blockchainId_), please use these.\n",
+        "description": "Returns *inaccurate* volume and base APY data for Curve pools on chains that aren’t indexed by either the [Curve Prices API](https://prices.curve.finance/feeds-docs) or the [Curve subgraphs](https://github.com/curvefi/volume-subgraphs).\nData returned by this endpoint is necessarily inaccurate due to the manual chain-walking involved, coupled with the limitations of RPC endpoints available for this subset of chains. Using this endpoint should be considered an imperfect last resort.\nIf the chain for which you want to retrieve volume and base APY data is available through either [`/getVolumes/{blockchainId}`](#/default/get_getVolumes__blockchainId_) or [`getSubgraphData/[blockchainId]`](#/default/get_getSubgraphData__blockchainId_), please use these.\n",
         "parameters": [
           {
             "in": "path",
@@ -240,7 +240,7 @@
     "/getVolumes/{blockchainId}": {
       "get": {
         "tags": ["Volumes and APYs"],
-        "description": "Returns all 24h volume and base APY data for Curve pools on each chain.\nIt relies on the [Curve Prices API](https://prices.curve.fi/feeds-docs), and is meant as a more reliable replacement to the [`getSubgraphData/[blockchainId]`](#/default/get_getSubgraphData__blockchainId_) endpoints.\n\nNote: Not all chains are currently available on the Curve Prices API. Currently available chains: `ethereum | polygon | arbitrum | base | optimism | fantom`\n",
+        "description": "Returns all 24h volume and base APY data for Curve pools on each chain.\nIt relies on the [Curve Prices API](https://prices.curve.finance/feeds-docs), and is meant as a more reliable replacement to the [`getSubgraphData/[blockchainId]`](#/default/get_getSubgraphData__blockchainId_) endpoints.\n\nNote: Not all chains are currently available on the Curve Prices API. Currently available chains: `ethereum | polygon | arbitrum | base | optimism | fantom`\n",
         "parameters": [{ "$ref": "#/components/parameters/blockchainId" }],
         "responses": { "200": { "description": null } }
       }
@@ -248,7 +248,7 @@
     "/getVolumes/ethereum/crvusd-amms": {
       "get": {
         "tags": ["Volumes and APYs", "crvUSD"],
-        "description": "Returns last daily volume for each [crvUSD AMM](https://docs.curve.fi/crvUSD/amm/)\n",
+        "description": "Returns last daily volume for each [crvUSD AMM](https://docs.curve.finance/crvUSD/amm/)\n",
         "responses": { "200": { "description": null } }
       }
     },
@@ -314,7 +314,7 @@
       "get": {
         "deprecated": true,
         "tags": ["Deprecated"],
-        "description": "Returns *inaccurate* volume and base APY data for `main` registry pools on chains that aren’t indexed by either the [Curve Prices API](https://prices.curve.fi/feeds-docs) or the [Curve subgraphs](https://github.com/curvefi/volume-subgraphs).\nData returned by this endpoint is necessarily inaccurate due to the manual chain-walking involved, coupled with the limitations of RPC endpoints available for this subset of chains. Using this endpoint should be considered an imperfect last resort.\nIf the chain for which you want to retrieve volume and base APY data is available through either [`/getVolumes/{blockchainId}`](#/default/get_getVolumes__blockchainId_) or [`getSubgraphData/[blockchainId]`](#/default/get_getSubgraphData__blockchainId_), please use these.\n\nNote: At the moment, all chains with a `main` registry have support in one of the endpoints mentioned above. This endpoint will not return data for any chain anymore.\n",
+        "description": "Returns *inaccurate* volume and base APY data for `main` registry pools on chains that aren’t indexed by either the [Curve Prices API](https://prices.curve.finance/feeds-docs) or the [Curve subgraphs](https://github.com/curvefi/volume-subgraphs).\nData returned by this endpoint is necessarily inaccurate due to the manual chain-walking involved, coupled with the limitations of RPC endpoints available for this subset of chains. Using this endpoint should be considered an imperfect last resort.\nIf the chain for which you want to retrieve volume and base APY data is available through either [`/getVolumes/{blockchainId}`](#/default/get_getVolumes__blockchainId_) or [`getSubgraphData/[blockchainId]`](#/default/get_getSubgraphData__blockchainId_), please use these.\n\nNote: At the moment, all chains with a `main` registry have support in one of the endpoints mentioned above. This endpoint will not return data for any chain anymore.\n",
         "parameters": [
           {
             "in": "path",

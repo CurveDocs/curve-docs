@@ -182,7 +182,7 @@ The `ChildGauge` is the liquidity gauge contract on the sidechain. It is used to
             def _update_liquidity_limit(_user: address, _user_balance: uint256, _total_supply: uint256):
                 """
                 @notice Calculate working balances to apply amplification of CRV production.
-                @dev https://resources.curve.fi/guides/boosting-your-crv-rewards#formula
+                @dev https://resources.curve.finance/guides/boosting-your-crv-rewards#formula
                 @param _user The user address
                 @param _user_balance User's amount of liquidity (LP tokens)
                 @param _total_supply Total amount of liquidity (LP tokens)
@@ -1276,7 +1276,7 @@ For more information on how boosting works, please refer to the [Boosting Explai
             def _update_liquidity_limit(_user: address, _user_balance: uint256, _total_supply: uint256):
                 """
                 @notice Calculate working balances to apply amplification of CRV production.
-                @dev https://resources.curve.fi/guides/boosting-your-crv-rewards#formula
+                @dev https://resources.curve.finance/guides/boosting-your-crv-rewards#formula
                 @param _user The user address
                 @param _user_balance User's amount of liquidity (LP tokens)
                 @param _total_supply Total amount of liquidity (LP tokens)

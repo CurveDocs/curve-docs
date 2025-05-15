@@ -10,7 +10,7 @@ The Curve DAO Token (CRV) is the protocol's governance token. It is based on the
 
     The token is deployed on Ethereum at [`0xD533a949740bb3306d119CC777fa900bA034cd52`](https://etherscan.io/address/0xD533a949740bb3306d119CC777fa900bA034cd52#code).
 
-For a broader understanding of the use case of the CRV token, check out [Understanding CRV](https://resources.curve.fi/crv-token/overview/).
+For a broader understanding of the use case of the CRV token, check out [Understanding CRV](https://resources.curve.finance/crv-token/overview/).
 
 ---
 

@@ -1314,7 +1314,7 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
 
 *The `emergency_owner`[^2] has limited power, intended for emergency situations. They can call:*
 
-[^2]: The `emergency_owner` is a [5 of 9 multisig](https://resources.curve.fi/governance/understanding-governance/?h=multis#emergency-dao).
+[^2]: The `emergency_owner` is a [5 of 9 multisig](https://resources.curve.finance/governance/overview/#emergency-dao).
 
 - `recover`: Recover ERC20 tokens or ETH from the contract.
 - `set_killed`: Mark certain coins as killed to prevent them from being burnt.

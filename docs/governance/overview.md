@@ -70,7 +70,7 @@ Voting power **starts decaying halfway through the voting period**. If a user st
 
 After a vote has reached support and quorum, it can be executed. Execution of votes is fully permissionless (anyone can execute a vote; no minimum veCRV required; only some ETH for gas required) and once done, the `executionScript` passed in when creating the vote is executed.
 
-Execution can either be done through the [Curve UI](https://dao.curve.fi/#/ethereum) or directly from the according Voting Contract.
+Execution can either be done through the [Curve UI](https://curve.finance/dao/ethereum) or directly from the according Voting Contract.
 
 ```python
 VotingContract.executeVote()

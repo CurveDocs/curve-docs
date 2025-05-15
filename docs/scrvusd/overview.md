@@ -8,7 +8,7 @@ Savings crvUSD, in short scrvUSD, is a savings version of crvUSD.
 
 # **Smart Contracts**
 
-The documentation of the `FeeSplitter` contract can be found [here](https://docs.curve.fi/fees/FeeSplitter/).
+The documentation of the `FeeSplitter` contract can be found [here](https://docs.curve.finance/fees/FeeSplitter/).
 
 <div class="grid cards" markdown>
 
@@ -24,7 +24,7 @@ The documentation of the `FeeSplitter` contract can be found [here](https://docs
 
     ---
 
-    The `RewardsHandler` is a peripheral contract that implements the `weight` function needed by the [`FeeSplitter`](https://docs.curve.fi/fees/FeeSplitter/). This function enables the Vault to receive rewards to depositors based on the proportion of crvUSD deposited in the Vault.
+    The `RewardsHandler` is a peripheral contract that implements the `weight` function needed by the [`FeeSplitter`](https://docs.curve.finance/fees/FeeSplitter/). This function enables the Vault to receive rewards to depositors based on the proportion of crvUSD deposited in the Vault.
     
 
     [:octicons-arrow-right-24: Read more](./RewardsHandler.md)
