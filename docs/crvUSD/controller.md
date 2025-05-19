@@ -48,7 +48,7 @@ The Controller contract acts as a on-chain interface for **creating loans and fu
 
 ## **Creating and Repaying Loans**
 
-New loans are created via the **`ceate_loan`** function. When creating a loan the user needs to specify the **amount of collateral**, **debt** and the **number of bands** to deposit the collateral into. 
+New loans are created via the **`create_loan`** function. When creating a loan the user needs to specify the **amount of collateral**, **debt** and the **number of bands** to deposit the collateral into. 
 
 The maximum amount of borrowable debt is determined by the number of bands, the amount of collateral, and the oracle price.
 
