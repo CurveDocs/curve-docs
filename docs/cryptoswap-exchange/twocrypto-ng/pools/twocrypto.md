@@ -1,8 +1,8 @@
 A Twocrypto-NG pool consists of **two non-pegged assets**. The LP token is a ERC-20 token integrated directly into the liquidity pool.
 
 !!!info "Liquidity Pool (LP) Token"
-    The LP token is directly integrated into the exchange contract. Pool and LP token share the same address. 
-    
+    The LP token is directly integrated into the exchange contract. Pool and LP token share the same address.
+
     The token has the regular ERC-20 methods, which will not be further documented.
 
 
@@ -13,7 +13,7 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
 
     This internal function packs two or three integers into a single uint256.
 
-        ```vyper 
+        ```vyper
         @pure
         @internal
         def _pack_2(p1: uint256, p2: uint256) -> uint256:
@@ -559,7 +559,7 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
     === "Example"
 
         ```shell
-        >>> soon  
+        >>> soon
         ```
 
 
@@ -951,7 +951,7 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
     === "Example"
 
         ```shell
-        >>> soon  
+        >>> soon
         ```
 
 
@@ -1194,7 +1194,7 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
     === "Example"
 
         ```shell
-        >>> soon  
+        >>> soon
         ```
 
 
@@ -1492,7 +1492,7 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
     === "Example"
 
         ```shell
-        >>> soon  
+        >>> soon
         ```
 
 
@@ -1656,7 +1656,7 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
                 )
 
                 return d_token
-            ``` 
+            ```
 
         === "CurveCryptoMathOptimized2.vy"
 
@@ -1753,7 +1753,7 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
     === "Example"
 
         ```shell
-        >>> soon  
+        >>> soon
         ```
 
 
@@ -1815,7 +1815,7 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
     === "Example"
 
         ```shell
-        >>> soon  
+        >>> soon
         ```
 
 
@@ -2019,7 +2019,7 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
     === "Example"
 
         ```shell
-        >>> soon  
+        >>> soon
         ```
 
 
@@ -2206,7 +2206,7 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
 
                 return [A1, gamma1]
             ```
-    
+
         === "CurveCryptoMathOptimized2.vy"
 
             ```vyper
@@ -2440,11 +2440,11 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
 
                 return y_out
             ```
-    
+
     === "Example"
 
         ```shell
-        >>> soon  
+        >>> soon
         ```
 
 
@@ -2518,7 +2518,7 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
                     else:
                         Sdiff += unsafe_sub(avg, _x)
 
-                return fee * Sdiff / S + NOISE_FEE                
+                return fee * Sdiff / S + NOISE_FEE
             ```
 
         === "CurveCryptoViews2Optimized.vy"
@@ -2586,7 +2586,7 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
 
                 return d_token, amountsp, xp
             ```
-    
+
     === "Example"
 
         ```shell
@@ -3328,7 +3328,7 @@ Curve v2 pools automatically adjust liquidity to optimize depth close to the pre
                 """
                 return self.cached_price_scale
             ```
-    
+
     === "Example"
 
         ```shell
@@ -3361,7 +3361,7 @@ Curve v2 pools automatically adjust liquidity to optimize depth close to the pre
                 """
                 return self._unpack_3(self.packed_rebalancing_params)[0]
             ```
-    
+
     === "Example"
 
         ```shell
@@ -3394,7 +3394,7 @@ Curve v2 pools automatically adjust liquidity to optimize depth close to the pre
                 """
                 return self._unpack_3(self.packed_rebalancing_params)[1]
             ```
-    
+
     === "Example"
 
         ```shell
@@ -3418,7 +3418,7 @@ Curve v2 pools automatically adjust liquidity to optimize depth close to the pre
             packed_rebalancing_params: public(uint256)  # <---------- Contains rebalancing
             #               parameters allowed_extra_profit, adjustment_step, and ma_time.
             ```
-    
+
     === "Example"
 
         ```shell
@@ -3482,7 +3482,7 @@ Bonding curve parameters `A` and `gamma` values are [upgradable](./admin-control
 
                 return [A1, gamma1]
             ```
-    
+
     === "Example"
 
         ```shell
@@ -3537,7 +3537,7 @@ Bonding curve parameters `A` and `gamma` values are [upgradable](./admin-control
 
                 return [A1, gamma1]
             ```
-    
+
     === "Example"
 
         ```shell
@@ -3916,7 +3916,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
                 return convert(unsafe_mul(convert(convert(r, bytes32), uint256), 3_822_833_074_963_236_453_042_738_258_902_158_003_155_416_615_667) >>\
                     convert(unsafe_sub(195, k), uint256), int256)
             ```
-    
+
     === "Example"
 
         ```shell
@@ -4018,7 +4018,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
 
                 return price_oracle
             ```
-    
+
     === "Example"
 
         ```shell
@@ -4045,7 +4045,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
             virtual_price: public(uint256)  # <------ Cached (fast to read) virtual price.
             #                          The cached `virtual_price` is also used internally.
             ```
-    
+
     === "Example"
 
         ```shell
@@ -4081,7 +4081,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
                 """
                 return 10**18 * self.get_xcp(self.D, self.cached_price_scale) / self.totalSupply
             ```
-    
+
     === "Example"
 
         ```shell
@@ -4134,7 +4134,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
 
                 ...
             ```
-    
+
     === "Example"
 
         ```shell
@@ -4315,7 +4315,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
                 """
                 return factory.admin()
             ```
-    
+
     === "Example"
 
         ```shell
@@ -4348,7 +4348,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
                 """
                 return PRECISIONS
             ```
-    
+
     === "Example"
 
         ```shell
@@ -4388,7 +4388,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
                 MATH = Math(_math)
                 ...
             ```
-    
+
     === "Example"
 
         ```shell
@@ -4437,7 +4437,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
                 coins = _coins
                 ...
             ```
-    
+
     === "Example"
 
         ```shell
@@ -4480,7 +4480,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
                 factory = Factory(msg.sender)
                 ...
             ```
-    
+
     === "Example"
 
         ```shell
@@ -4507,7 +4507,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
             ```vyper
             balances: public(uint256[N_COINS])
             ```
-    
+
     === "Example"
 
         ```shell

@@ -1,6 +1,6 @@
 <h1>Vault</h1>
 
-The vault is an **implementation of a [ERC-4626](https://ethereum.org/developers/docs/standards/tokens/erc-4626)** vault which **deposits the underlying asset into the controller** and **tracks the progress of the fees earned**. 
+The vault is an **implementation of a [ERC-4626](https://ethereum.org/developers/docs/standards/tokens/erc-4626)** vault which **deposits the underlying asset into the controller** and **tracks the progress of the fees earned**.
 
 !!!github "GitHub"
     The source code of the `Vault.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/lending/Vault.vy).
@@ -248,7 +248,7 @@ Because shares are transferable, a user can also acquire shares by means other t
                     log_max_rate: int256 = self.log_max_rate
                     return self.exp(total_debt * (log_max_rate - log_min_rate) / total_reserves + log_min_rate)
             ```
-            
+
         === "AMM.vy"
 
             ```vyper
@@ -372,7 +372,7 @@ Because shares are transferable, a user can also acquire shares by means other t
 
     === "Example"
         ```shell
-        >>> Vault.previewDeposit(1000000000000000000):      # depositing 1 crvusd 
+        >>> Vault.previewDeposit(1000000000000000000):      # depositing 1 crvusd
         998709265069121019738                               # shares to receive
         ```
 
@@ -380,7 +380,7 @@ Because shares are transferable, a user can also acquire shares by means other t
 ### `mint`
 !!! description "`Vault.mint(shares: uint256, receiver: address = msg.sender) -> uint256:`"
 
-    Function to mint a specific amount of shares (`shares`) to `receiver` by depositing the necessary number of assets into the vault. 
+    Function to mint a specific amount of shares (`shares`) to `receiver` by depositing the necessary number of assets into the vault.
 
     Returns: amount of assets deposited (`uint256`).
 
@@ -505,7 +505,7 @@ Because shares are transferable, a user can also acquire shares by means other t
                     log_max_rate: int256 = self.log_max_rate
                     return self.exp(total_debt * (log_max_rate - log_min_rate) / total_reserves + log_min_rate)
             ```
-            
+
         === "AMM.vy"
 
             ```vyper
@@ -595,7 +595,7 @@ Because shares are transferable, a user can also acquire shares by means other t
 
     === "Example"
         ```shell
-        >>> Vault.maxMint("0x7a16fF8270133F063aAb6C9977183D9e72835428"):    
+        >>> Vault.maxMint("0x7a16fF8270133F063aAb6C9977183D9e72835428"):
         119831204184300884951118160092
         ```
 
@@ -931,7 +931,7 @@ Because shares are transferable, a user can also acquire shares by means other t
                     log_max_rate: int256 = self.log_max_rate
                     return self.exp(total_debt * (log_max_rate - log_min_rate) / total_reserves + log_min_rate)
             ```
-            
+
         === "AMM.vy"
 
             ```vyper
@@ -1293,7 +1293,7 @@ Because shares are transferable, a user can also acquire shares by means other t
         === "Vault.vy"
 
             ```vyper
-            @external   
+            @external
             @view
             @nonreentrant('lock')
             def maxRedeem(owner: address) -> uint256:
@@ -1833,7 +1833,7 @@ $$\text{utilization} = \frac{\text{debt}}{\text{totalAssets}}$$
     === "Example"
         ```shell
         >>> Vault.controller():
-        '0x7443944962D04720f8c220C0D25f56F869d6EfD4'        
+        '0x7443944962D04720f8c220C0D25f56F869d6EfD4'
         ```
 
 

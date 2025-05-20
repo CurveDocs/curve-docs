@@ -1,4 +1,4 @@
-The Curve Token V3 is more gas efficient than versions 1 and 2. The implementation for a Curve Token V3 may be viewed on 
+The Curve Token V3 is more gas efficient than versions 1 and 2. The implementation for a Curve Token V3 may be viewed on
 [GitHub](https://github.com/curvefi/curve-contract/blob/master/contracts/tokens/CurveTokenV3.vy).
 
 !!! note
@@ -13,7 +13,7 @@ The Curve Token V3 is more gas efficient than versions 1 and 2. The implementati
 
     Increase the allowance granted to `_spender` by the `msg.sender`.
 
-    This is alternative to `approve` that can be used as a mitigation for the potential race condition. Returns `True` 
+    This is alternative to `approve` that can be used as a mitigation for the potential race condition. Returns `True`
     if success.
 
     | Input      | Type   | Description |
@@ -41,11 +41,11 @@ The Curve Token V3 is more gas efficient than versions 1 and 2. The implementati
             @return bool success
             """
             self.allowance[msg.sender][_spender] = _value
-        
+
             log Approval(msg.sender, _spender, _value)
             return True
-        
-        
+
+
         @external
         def increaseAllowance(_spender: address, _added_value: uint256) -> bool:
             """
@@ -58,13 +58,13 @@ The Curve Token V3 is more gas efficient than versions 1 and 2. The implementati
             """
             allowance: uint256 = self.allowance[msg.sender][_spender] + _added_value
             self.allowance[msg.sender][_spender] = allowance
-        
+
             log Approval(msg.sender, _spender, allowance)
             return True
         ```
-        
+
     === "Example"
-    
+
         ```shell
         >>> lp_token.increaseAllowance()
         todo: ""
@@ -76,7 +76,7 @@ The Curve Token V3 is more gas efficient than versions 1 and 2. The implementati
 
     Decrease the allowance granted to `_spender` by the `msg.sender`.
 
-    This is alternative to `approve` that can be used as a mitigation for the potential race condition. Returns `True` 
+    This is alternative to `approve` that can be used as a mitigation for the potential race condition. Returns `True`
     if success.
 
     | Input      | Type   | Description |
@@ -104,11 +104,11 @@ The Curve Token V3 is more gas efficient than versions 1 and 2. The implementati
             @return bool success
             """
             self.allowance[msg.sender][_spender] = _value
-        
+
             log Approval(msg.sender, _spender, _value)
             return True
-        
-        
+
+
         @external
         def decreaseAllowance(_spender: address, _subtracted_value: uint256) -> bool:
             """
@@ -121,13 +121,13 @@ The Curve Token V3 is more gas efficient than versions 1 and 2. The implementati
             """
             allowance: uint256 = self.allowance[msg.sender][_spender] - _subtracted_value
             self.allowance[msg.sender][_spender] = allowance
-        
+
             log Approval(msg.sender, _spender, allowance)
             return True
         ```
-        
+
     === "Example"
-    
+
         ```shell
         >>> lp_token.decreaseAllowance()
         todo: ""

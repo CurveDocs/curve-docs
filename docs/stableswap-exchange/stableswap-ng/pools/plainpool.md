@@ -1,7 +1,7 @@
-Plain pools are liquidity **exchange contracts which contain at least 2 and up to 8 coins.** 
+Plain pools are liquidity **exchange contracts which contain at least 2 and up to 8 coins.**
 
 !!!deploy "Contract Source & Deployment"
-    Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNG.vy).  
+    Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNG.vy).
 
 The deployment of plain pools is permissionless and can be done via the [**`deploy_plain_pool`**](../../../factory/stableswap-ng/deployer-api.md#deploy_plain_pool) function within the StableSwap-NG Factory.
 
@@ -119,7 +119,7 @@ The deployment of plain pools is permissionless and can be done via the [**`depl
 ## **Exchange Methods**
 
 *Two functions for token exchanges:*
- 
+
 - The regular `exchange` function.
 - A novel `exchange_received` function that executes a token exchange based on the internal balances of the pool.
 
@@ -763,7 +763,7 @@ There are no restrictions on how liquidity can be added or removed. Liquidity ca
 
         ```shell
         >>> StableSwap.add_liquidity([10000000000000000000, 0], 0)
-        9997967030080774869        
+        9997967030080774869
         ```
 
 
@@ -771,7 +771,7 @@ There are no restrictions on how liquidity can be added or removed. Liquidity ca
 !!! description "`StableSwap.remove_liquidity(_burn_amount: uint256, _min_amounts: DynArray[uint256, MAX_COINS], _receiver: address = msg.sender, _claim_admin_fees: bool = True) -> DynArray[uint256, MAX_COINS]:`"
 
     !!!info
-        When removing liquidity in a balanced ratio, there is no need to update the price oracle, as this function does not alter the balance ratio within the pool. Calling this function only updates `D_oracle`.    
+        When removing liquidity in a balanced ratio, there is no need to update the price oracle, as this function does not alter the balance ratio within the pool. Calling this function only updates `D_oracle`.
         The calculation of `D` does not use Newton methods, ensuring that `remove_liquidity` should always work, even if the pool gets borked.
 
     Function to remove `_min_amount` coins from the liquidity pool based on the pools current ratios by burning `_burn_amount` of LP tokens. Admin fees might be claimed after liquidity is removed.
@@ -1375,7 +1375,7 @@ There are no restrictions on how liquidity can be added or removed. Liquidity ca
         >>> StableSwap.calc_withdraw_one_coin(10**18, 1)
         999915
         >>> StableSwap.get_balances()
-        [1156160050449617680048138, 1052703857609] 
+        [1156160050449617680048138, 1052703857609]
         ```
 
 
@@ -2087,7 +2087,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 ---
 
 
-## **Contract Info Methods** 
+## **Contract Info Methods**
 
 ### `coins`
 !!! description "`StableSwap.coins(arg0: uint256) -> addresss: view`"
@@ -2288,7 +2288,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
             __n_coins: uint256 = len(_coins)
             N_COINS = __n_coins
             N_COINS_128 = convert(__n_coins, int128)
-            
+
             ...
         ```
 

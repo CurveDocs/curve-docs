@@ -18,7 +18,7 @@ CRV inflation is directed to users who provide liquidity within the protocol, me
 
 ### CRV Emissions
 
-Curve operates such that veCRV holders can decide where future CRV emissions are directed to. Typically, these emissions are allocated to a liquidity gauge. However, before gauges are eligible to receive CRV emissions, they must be added to the `GaugeController.vy` contract. This addition requires a successfully passed DAO vote. Once added, the gauge becomes eligible for gauge weight voting. When a gauge receives gauge weight through user votes, it starts to receive CRV emissions. Changes in weight take effect every Thursday at 00:00 UTC. 
+Curve operates such that veCRV holders can decide where future CRV emissions are directed to. Typically, these emissions are allocated to a liquidity gauge. However, before gauges are eligible to receive CRV emissions, they must be added to the `GaugeController.vy` contract. This addition requires a successfully passed DAO vote. Once added, the gauge becomes eligible for gauge weight voting. When a gauge receives gauge weight through user votes, it starts to receive CRV emissions. Changes in weight take effect every Thursday at 00:00 UTC.
 
 Gauges contain logic that enables users to boost their provided liquidity up to 2.5x by locking CRV for veCRV.
 
@@ -36,7 +36,7 @@ Unlike native CRV rewards, these kinds of rewards cannot be boosted.
 
 ## **Versions**
 
-Over time, several improvements and enhancements were made to the liquidity gauges. This documentation will mainly cover the most recent one, `LiquidityGaugeV6`. Source code for all other gauges can be found on [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges). 
+Over time, several improvements and enhancements were made to the liquidity gauges. This documentation will mainly cover the most recent one, `LiquidityGaugeV6`. Source code for all other gauges can be found on [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/gauges).
 
 
 ---

@@ -1,8 +1,8 @@
 **Tricrypto-NG pool contains of three non-pegged assets.**
 
 !!!info "Liquidity Pool (LP) Token"
-    The LP token is directly integrated into the exchange contract. Pool and LP token share the same address. 
-    
+    The LP token is directly integrated into the exchange contract. Pool and LP token share the same address.
+
     The token has the regular ERC-20 methods, which will not be further documented.
 
 For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored as a single unsigned integer. This consolidation reduces storage read and write operations, leading to more cost-efficient calls. When these parameters are accessed, they are subsequently unpacked.
@@ -57,7 +57,7 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
     Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`.
 
     Returns: amount of output coin `j` received (`uint256`).
-    
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `i` | `uint256` | Index value for the input coin |
@@ -251,7 +251,7 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
             tokens_bought: uint256
             fee: uint256
             packed_price_scale: uint256
-    
+
         @payable
         @external
         @nonreentrant('lock')
@@ -1255,7 +1255,7 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
 ### `remove_liquidity`
 !!! description "`TriCrypto.remove_liquidity(_amount: uint256, min_amounts: uint256[N_COINS], use_eth: bool = False, receiver: address = msg.sender, claim_admin_fees: bool = True) -> uint256[N_COINS]:`"
 
-    Function to remove liquidity from the pool and burn the LP tokens. When removing liquidity with this function, no fees are charged as the coins are withdrawn in balanced proportions.  
+    Function to remove liquidity from the pool and burn the LP tokens. When removing liquidity with this function, no fees are charged as the coins are withdrawn in balanced proportions.
     If admin fees are claimed, they are claimed before withdrawing liquidity, ensuring the DAO gets paid first.
 
     Returns: withdrawn balances (`uint256[N_COINS]`).

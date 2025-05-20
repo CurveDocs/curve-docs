@@ -149,7 +149,7 @@ Reward tokens can be claimed using the `claim_rewards` function. This function c
 
     CRV emissions directed to the gauge are claimable from the [`Minter.vy`](../minter/Minter.md) contract using the [`mint`](../minter/Minter.md#mint) function.
 
-The liquidity gauge records checkpoints to determine how much external rewards each user is entitled to claim. 
+The liquidity gauge records checkpoints to determine how much external rewards each user is entitled to claim.
 
 ???quote "`_checkpoint_rewards`"
 
@@ -220,7 +220,7 @@ The liquidity gauge records checkpoints to determine how much external rewards e
 
     !!!warning "Claiming for another user"
         When claiming for another user, the rewards can not be redirected to another wallet.
-    
+
     Function to claim rewards from the gauge.
 
     | Input       | Type      | Description                        |
@@ -346,7 +346,7 @@ The liquidity gauge records checkpoints to determine how much external rewards e
 ### `claimable_reward`
 !!! description "`LiquidityGaugeV6.claimable_reward(_user: address, _reward_token: address) -> uint256`"
 
-    Function to check the claimable amount of `_reward_token` for `_user`. 
+    Function to check the claimable amount of `_reward_token` for `_user`.
 
     Returns: claimable tokens (`uint256`).
 
@@ -656,7 +656,7 @@ To add rewards to a gauge, a reward token and a distributor must be set by calli
 
             ```python
             event SetGaugeManager:
-                _gauge_manager: address 
+                _gauge_manager: address
 
             manager: public(address)
 
@@ -992,7 +992,7 @@ $\text{boost factor} = \frac{1000}{400} = 2.5$
         === "LiquidityGaugeV6.vy"
 
             ```python
-            working_supply: public(uint256) 
+            working_supply: public(uint256)
 
             @internal
             def _update_liquidity_limit(addr: address, l: uint256, L: uint256):
@@ -1521,7 +1521,7 @@ Liquidity gauges have a "killed status" stored in the `is_killed` variable. This
     === "Example"
         ```shell
         >>> LiquidityGaugeV6.inflation_rate()
-        5181574864521283150             # 5.18157486452 CRV per second    
+        5181574864521283150             # 5.18157486452 CRV per second
         ```
 
 
@@ -1619,4 +1619,3 @@ Liquidity gauges have a "killed status" stored in the `is_killed` variable. This
         >>> LiquidityGaugeV6.lp_token()
         '0x86EA1191a219989d2dA3a85c949a12A92f8ED3Db'
         ```
-    

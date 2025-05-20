@@ -3,7 +3,7 @@
 **The Math Contract provides AMM Math for 2-coin Curve Twocrypto-NG Pools.**
 
 !!!deploy "Contract Source & Deployment"
-    Source code for this contract is available on [Github](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/CurveCryptoMathOptimized2.vy). 
+    Source code for this contract is available on [Github](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/CurveCryptoMathOptimized2.vy).
     Full list of all deployments can be found [here](../../../references/deployed-contracts.md#twocrypto-ng).
 
 
@@ -16,7 +16,7 @@
 !!! description "`Math._snekmate_log_2(x: uint256, roundup: bool) -> uint256:`"
 
     !!!info
-        This implementation is derived from Snekmate, which is authored by pcaversaccio ([Snekmate](https://github.com/pcaversaccio/snekmate)), distributed under the AGPL-3.0 license.  
+        This implementation is derived from Snekmate, which is authored by pcaversaccio ([Snekmate](https://github.com/pcaversaccio/snekmate)), distributed under the AGPL-3.0 license.
         Note that it returns 0 if given 0. The implementation is inspired by OpenZeppelin's implementation here: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/math/Math.sol.
 
     Function to calculate the logarithm base 2 of `x`, following the selected rounding direction.
@@ -637,7 +637,7 @@
             ```vyper
             version: public(constant(String[8])) = "v2.0.0"
             ```
-    
+
     === "Example"
 
         ```shell

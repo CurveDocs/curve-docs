@@ -12,7 +12,7 @@ Curve Factory contracts, which allow the permissionless deployment of pools and 
 
 !!!deploy "Contract Source & Deployment"
     The MetaRegistry is deployed across multiple networks. A full list of deployments can be found [here](../references/deployed-contracts.md#metaregistry).
-    
+
     The source code is available on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/mainnet/MetaRegistry.vy).
 
 
@@ -40,7 +40,7 @@ flowchart BT
 
 ## **Who should use the MetaRegistry?**
 
-Integrators often find it challenging to incorporate a protocol into their dapp when multiple on-chain registries are stored in separate contracts. They lack intrinsic, protocol-level knowledge to handle edge cases and onboard various registries. A single source that aggregates all registries can simplify integrations significantly.  
+Integrators often find it challenging to incorporate a protocol into their dapp when multiple on-chain registries are stored in separate contracts. They lack intrinsic, protocol-level knowledge to handle edge cases and onboard various registries. A single source that aggregates all registries can simplify integrations significantly.
 
 *If you're an integrator looking to integrate Curve, the MetaRegistry is an invaluable resource.*
 
@@ -57,11 +57,11 @@ Set up the python environment using the following steps: Please visit [Github](h
 
 This project uses **`eth-ape >= 0.5.2`** developed at [Apeworx](https://apeworx.io/). The various plugins used are:
 
-- **`ape-vyper`**  
-- **`ape-hardhat`**  
-- **`ape-alchemy`**  
-- **`ape-ledger`**  
-- **`ape-etherscan`**  
+- **`ape-vyper`**
+- **`ape-hardhat`**
+- **`ape-alchemy`**
+- **`ape-ledger`**
+- **`ape-etherscan`**
 
 To install these, please follow the instructions in their respective Github repositories.
 
@@ -80,7 +80,7 @@ To install these, please follow the instructions in their respective Github repo
 
 ## **Testing**
 
-To run tests in interactive mode, please do the following:  
+To run tests in interactive mode, please do the following:
 
 ```shell
 > ape test -I -s

@@ -4,7 +4,7 @@ Applying new parameters or transferring the ownership of the factory involves a 
 
 
 ## **Pool Ownership**
-All pools created through the Factory are "owned" by the admin of the Factory, which is the Curve DAO. Ownership can only be changed within the factory contract via `commit_transfer_ownership` and `accept_transfer_ownership`. 
+All pools created through the Factory are "owned" by the admin of the Factory, which is the Curve DAO. Ownership can only be changed within the factory contract via `commit_transfer_ownership` and `accept_transfer_ownership`.
 
 
 ---
@@ -280,7 +280,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
         ```
 
 
-### `apply_new_parameters` 
+### `apply_new_parameters`
 !!! description "`CryptoSwap.apply_new_parameters()`"
 
     Function to apply the parameters from [`commit_new_parameters`](#commit_new_parameters).

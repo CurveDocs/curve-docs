@@ -1,14 +1,14 @@
-While Curve metapools support swaps between base pool coins, the base pool LP token and metapool coins, 
+While Curve metapools support swaps between base pool coins, the base pool LP token and metapool coins,
 they do not allow liquidity providers to deposit and/or withdraw base pool coins.
 
-For example, the `GUSD` metapool is a pool consisting of `GUSD` and `3CRV` (the LP token of the `3Pool`) and allows 
-for swaps between `GUSD`, `DAI`, `USDC`, `USDT` and `3CRV`. However, liquidity providers are not able to deposit 
+For example, the `GUSD` metapool is a pool consisting of `GUSD` and `3CRV` (the LP token of the `3Pool`) and allows
+for swaps between `GUSD`, `DAI`, `USDC`, `USDT` and `3CRV`. However, liquidity providers are not able to deposit
 `DAI`, `USDC` or `USDT` to the pool directly. The main reason why this is not possible lies in the maximum byte
-code size of contracts. Metapools are complex and can therefore end up being very close to the contract 
-byte code size limit. In order to overcome this restriction, liquidity can be added and removed to and 
+code size of contracts. Metapools are complex and can therefore end up being very close to the contract
+byte code size limit. In order to overcome this restriction, liquidity can be added and removed to and
 from a metapool in the base pool’s coins through a metapool deposit zap.
 
-The template source code for a metapool deposit “zap” may be viewed on 
+The template source code for a metapool deposit “zap” may be viewed on
 [GitHub](https://github.com/curvefi/curve-contract/blob/master/contracts/pool-templates/meta/DepositTemplateMeta.vy).
 
 !!! note
@@ -32,8 +32,8 @@ The template source code for a metapool deposit “zap” may be viewed on
         ```vyper hl_lines="1 12"
         pool: public(address)
 
-        ...        
-        
+        ...
+
         @external
         def __init__(_pool: address, _token: address):
             """
@@ -42,12 +42,12 @@ The template source code for a metapool deposit “zap” may be viewed on
             @param _token Pool LP token address
             """
             self.pool = _pool
-            
+
         ...
         ```
 
     === "Example"
-    
+
         ```shell
         >>> todo:
         ```
@@ -63,8 +63,8 @@ The template source code for a metapool deposit “zap” may be viewed on
         ```vyper hl_lines="1 15"
         base_pool: public(address)
 
-        ...        
-        
+        ...
+
         @external
         def __init__(_pool: address, _token: address):
             """
@@ -81,7 +81,7 @@ The template source code for a metapool deposit “zap” may be viewed on
         ```
 
     === "Example"
-    
+
         ```shell
         >>> todo:
         ```
@@ -101,8 +101,8 @@ The template source code for a metapool deposit “zap” may be viewed on
         ```vyper hl_lines="1 35"
         base_coins: public(address[BASE_N_COINS])
 
-        ...        
-        
+        ...
+
         @external
         def __init__(_pool: address, _token: address):
             """
@@ -114,7 +114,7 @@ The template source code for a metapool deposit “zap” may be viewed on
             self.token = _token
             base_pool: address = CurveMeta(_pool).base_pool()
             self.base_pool = base_pool
-        
+
             for i in range(N_COINS):
                 coin: address = CurveMeta(_pool).coins(i)
                 self.coins[i] = coin
@@ -130,7 +130,7 @@ The template source code for a metapool deposit “zap” may be viewed on
                 )
                 if len(_response) > 0:
                     assert convert(_response, bool)
-        
+
             for i in range(BASE_N_COINS):
                 coin: address = CurveBase(base_pool).coins(i)
                 self.base_coins[i] = coin
@@ -150,7 +150,7 @@ The template source code for a metapool deposit “zap” may be viewed on
         ```
 
     === "Example"
-    
+
         ```shell
         >>> todo:
         ```
@@ -166,8 +166,8 @@ The template source code for a metapool deposit “zap” may be viewed on
         ```vyper hl_lines="1 13"
         token: public(address)
 
-        ...        
-        
+        ...
+
         @external
         def __init__(_pool: address, _token: address):
             """
@@ -182,7 +182,7 @@ The template source code for a metapool deposit “zap” may be viewed on
         ```
 
     === "Example"
-    
+
         ```shell
         >>> todo:
         ```
@@ -191,14 +191,14 @@ The template source code for a metapool deposit “zap” may be viewed on
 
 !!! note
 
-    For methods taking the index argument `i`, a number in the range from `0` to `N_ALL_COINS - 1` is valid. 
+    For methods taking the index argument `i`, a number in the range from `0` to `N_ALL_COINS - 1` is valid.
     This refers to all coins apart from the base pool LP token.
 
 ### `DepositZap.add_liquidity`
 
 !!! description "`DepositZap.add_liquidity(_amounts: uint256[N_ALL_COINS], _min_mint_amount: uint256) → uint256`"
 
-    Wrap underlying coins and deposit them in the pool. Returns the amount of LP token received in exchange for 
+    Wrap underlying coins and deposit them in the pool. Returns the amount of LP token received in exchange for
     depositing.
 
     | Input      | Type   | Description |
@@ -223,7 +223,7 @@ The template source code for a metapool deposit “zap” may be viewed on
             meta_amounts: uint256[N_COINS] = empty(uint256[N_COINS])
             base_amounts: uint256[BASE_N_COINS] = empty(uint256[BASE_N_COINS])
             deposit_base: bool = False
-        
+
             # Transfer all coins in
             for i in range(N_ALL_COINS):
                 amount: uint256 = _amounts[i]
@@ -259,20 +259,20 @@ The template source code for a metapool deposit “zap” may be viewed on
                         meta_amounts[i] = amount
                     else:
                         base_amounts[i - MAX_COIN] = amount
-        
+
             # Deposit to the base pool
             if deposit_base:
                 CurveBase(self.base_pool).add_liquidity(base_amounts, 0)
                 meta_amounts[MAX_COIN] = ERC20(self.coins[MAX_COIN]).balanceOf(self)
-        
+
             # Deposit to the meta pool
             CurveMeta(self.pool).add_liquidity(meta_amounts, _min_mint_amount)
-        
+
             # Transfer meta token back
             lp_token: address = self.token
             lp_amount: uint256 = ERC20(lp_token).balanceOf(self)
             assert ERC20(lp_token).transfer(msg.sender, lp_amount)
-        
+
             return lp_amount
         ```
 
@@ -293,7 +293,7 @@ The template source code for a metapool deposit “zap” may be viewed on
     | ----------- | -------| ----|
     | `_amount`       |  `uint256` | Quantity of LP tokens to burn in the withdrawal |
     | `_min_amounts`       |  `uint256[N_ALL_COINS]` | Minimum amounts of underlying coins to receive |
-    
+
     Emits: <mark style="background-color: #FFD580; color: black">RemoveLiquidity</mark>
     <mark style="background-color: #FFD580; color: black">Transfer</mark>
 
@@ -311,22 +311,22 @@ The template source code for a metapool deposit “zap” may be viewed on
             """
             _token: address = self.token
             assert ERC20(_token).transferFrom(msg.sender, self, _amount)
-        
+
             min_amounts_meta: uint256[N_COINS] = empty(uint256[N_COINS])
             min_amounts_base: uint256[BASE_N_COINS] = empty(uint256[BASE_N_COINS])
             amounts: uint256[N_ALL_COINS] = empty(uint256[N_ALL_COINS])
-        
+
             # Withdraw from meta
             for i in range(MAX_COIN):
                 min_amounts_meta[i] = _min_amounts[i]
             CurveMeta(self.pool).remove_liquidity(_amount, min_amounts_meta)
-        
+
             # Withdraw from base
             _base_amount: uint256 = ERC20(self.coins[MAX_COIN]).balanceOf(self)
             for i in range(BASE_N_COINS):
                 min_amounts_base[i] = _min_amounts[MAX_COIN+i]
             CurveBase(self.base_pool).remove_liquidity(_base_amount, min_amounts_base)
-        
+
             # Transfer all coins out
             for i in range(N_ALL_COINS):
                 coin: address = ZERO_ADDRESS
@@ -348,7 +348,7 @@ The template source code for a metapool deposit “zap” may be viewed on
                 if len(_response) > 0:
                     assert convert(_response, bool)  # dev: failed transfer
                 # end "safeTransfer"
-        
+
             return amounts
         ```
 
@@ -369,7 +369,7 @@ The template source code for a metapool deposit “zap” may be viewed on
     | `_token_amount`       |  `uint256` | Amount of LP tokens to burn in the withdrawal |
     | `i`       |  `int128` | Index value of the coin to withdraw |
     | `_min_amount`       |  `uint256` | Minimum amount of underlying coin to receive |
-    
+
     Emits: <mark style="background-color: #FFD580; color: black">RemoveLiquidityOne</mark>
     <mark style="background-color: #FFD580; color: black">Transfer</mark>
 
@@ -386,7 +386,7 @@ The template source code for a metapool deposit “zap” may be viewed on
             @return Amount of underlying coin received
             """
             assert ERC20(self.token).transferFrom(msg.sender, self, _token_amount)
-        
+
             coin: address = ZERO_ADDRESS
             if i < MAX_COIN:
                 coin = self.coins[i]
@@ -399,7 +399,7 @@ The template source code for a metapool deposit “zap” may be viewed on
                 CurveBase(self.base_pool).remove_liquidity_one_coin(
                     ERC20(self.coins[MAX_COIN]).balanceOf(self), i-MAX_COIN, _min_amount
                 )
-        
+
             # Tranfer the coin out
             coin_amount: uint256 = ERC20(coin).balanceOf(self)
             # "safeTransfer" which works for ERC20s which return bool or not
@@ -415,7 +415,7 @@ The template source code for a metapool deposit “zap” may be viewed on
             if len(_response) > 0:
                 assert convert(_response, bool)  # dev: failed transfer
             # end "safeTransfer"
-        
+
             return coin_amount
         ```
 
@@ -429,14 +429,14 @@ The template source code for a metapool deposit “zap” may be viewed on
 
 !!! description "`DepositZap.remove_liquidity_imbalance(_amounts: uint256[N_ALL_COINS], _max_burn_amount: uint256) → uint256`"
 
-    Withdraw coins from the pool in an imbalanced amount. Returns the actual amount of the LP token burned in the 
+    Withdraw coins from the pool in an imbalanced amount. Returns the actual amount of the LP token burned in the
     withdrawal.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_amounts`       |  `uint256[N_ALL_COINS]` | List of amounts of underlying coins to withdraw |
     | `_max_burn_amount`       |  `uint256` | Maximum amount of LP token to burn in the withdrawal |
-    
+
     Emits: <mark style="background-color: #FFD580; color: black">RemoveLiquidityImbalance</mark>
     <mark style="background-color: #FFD580; color: black">Transfer</mark>
 
@@ -456,32 +456,32 @@ The template source code for a metapool deposit “zap” may be viewed on
             base_coins: address[BASE_N_COINS] = self.base_coins
             meta_coins: address[N_COINS] = self.coins
             lp_token: address = self.token
-        
+
             fee: uint256 = CurveBase(base_pool).fee() * BASE_N_COINS / (4 * (BASE_N_COINS - 1))
             fee += fee * FEE_IMPRECISION / FEE_DENOMINATOR  # Overcharge to account for imprecision
-        
+
             # Transfer the LP token in
             assert ERC20(lp_token).transferFrom(msg.sender, self, _max_burn_amount)
-        
+
             withdraw_base: bool = False
             amounts_base: uint256[BASE_N_COINS] = empty(uint256[BASE_N_COINS])
             amounts_meta: uint256[N_COINS] = empty(uint256[N_COINS])
             leftover_amounts: uint256[N_COINS] = empty(uint256[N_COINS])
-        
+
             # Prepare quantities
             for i in range(MAX_COIN):
                 amounts_meta[i] = _amounts[i]
-        
+
             for i in range(BASE_N_COINS):
                 amount: uint256 = _amounts[MAX_COIN + i]
                 if amount != 0:
                     amounts_base[i] = amount
                     withdraw_base = True
-        
+
             if withdraw_base:
                 amounts_meta[MAX_COIN] = CurveBase(self.base_pool).calc_token_amount(amounts_base, False)
                 amounts_meta[MAX_COIN] += amounts_meta[MAX_COIN] * fee / FEE_DENOMINATOR + 1
-        
+
             # Remove liquidity and deposit leftovers back
             CurveMeta(meta_pool).remove_liquidity_imbalance(amounts_meta, _max_burn_amount)
             if withdraw_base:
@@ -489,7 +489,7 @@ The template source code for a metapool deposit “zap” may be viewed on
                 leftover_amounts[MAX_COIN] = ERC20(meta_coins[MAX_COIN]).balanceOf(self)
                 if leftover_amounts[MAX_COIN] > 0:
                     CurveMeta(meta_pool).add_liquidity(leftover_amounts, 0)
-        
+
             # Transfer all coins out
             for i in range(N_ALL_COINS):
                 coin: address = ZERO_ADDRESS
@@ -514,12 +514,12 @@ The template source code for a metapool deposit “zap” may be viewed on
                     if len(_response) > 0:
                         assert convert(_response, bool)  # dev: failed transfer
                     # end "safeTransfer"
-        
+
             # Transfer the leftover LP token out
             leftover: uint256 = ERC20(lp_token).balanceOf(self)
             if leftover > 0:
                 assert ERC20(lp_token).transfer(msg.sender, leftover)
-        
+
             return _max_burn_amount - leftover
         ```
 
@@ -593,16 +593,16 @@ The template source code for a metapool deposit “zap” may be viewed on
             """
             meta_amounts: uint256[N_COINS] = empty(uint256[N_COINS])
             base_amounts: uint256[BASE_N_COINS] = empty(uint256[BASE_N_COINS])
-        
+
             for i in range(MAX_COIN):
                 meta_amounts[i] = _amounts[i]
-        
+
             for i in range(BASE_N_COINS):
                 base_amounts[i] = _amounts[i + MAX_COIN]
-        
+
             base_tokens: uint256 = CurveBase(self.base_pool).calc_token_amount(base_amounts, _is_deposit)
             meta_amounts[MAX_COIN] = base_tokens
-        
+
             return CurveMeta(self.pool).calc_token_amount(meta_amounts, _is_deposit)
         ```
 

@@ -7,7 +7,7 @@ The `CowSwapBurner` is an essential component of the fee burning architecture, d
 
     The `CowSwapBurner` is only deployed on Ethereum and Gnosis so far, as CowSwap is only deployed on these chains.[^1]
 
-    - :logos-ethereum: Ethereum at [`0xC0fC3dDfec95ca45A0D2393F518D3EA1ccF44f8b`](https://etherscan.io/address/0xC0fC3dDfec95ca45A0D2393F518D3EA1ccF44f8b) 
+    - :logos-ethereum: Ethereum at [`0xC0fC3dDfec95ca45A0D2393F518D3EA1ccF44f8b`](https://etherscan.io/address/0xC0fC3dDfec95ca45A0D2393F518D3EA1ccF44f8b)
     - :logos-gnosis: Gnosis at [`0x566b9F24200A9B51b76792D4e81B569AF27eda83`](https://gnosisscan.io/address/0x566b9F24200A9B51b76792D4e81B569AF27eda83)
 
     [^1]: CowSwap recently deployed on Arbitrum. In the future, a new burner contract will be deployed on Arbitrum as well.
@@ -107,8 +107,8 @@ composable_cow.create(ConditionalOrderParams({
     Getter for the current order parameters of a token.
 
     Returns: GPv2Order_Data consisting of:
-    
-    - sellToken: `ERC20` 
+
+    - sellToken: `ERC20`
     - buyToken: `ERC20`
     - receiver: `address`
     - sellAmount: `uint256`
@@ -468,7 +468,7 @@ composable_cow.create(ConditionalOrderParams({
 
     Getter for the minimum amount of target token to be bought in an order. This value ensure that each executed order meets a certain minimum value. This variable can be changed by the `owner` of the `FeeCollector` using the [`set_target_threshold`](#set_target_threshold) function. Due to the gas efficiency of L2's, the value can be set much lower e.g. on Gnosis than on Ethereum.[^3]
 
-    [^3]: The minimum target threshold value on Gnosis is `1 (1e18)`, on Ethereum `50 (50 * 1e18)`. 
+    [^3]: The minimum target threshold value on Gnosis is `1 (1e18)`, on Ethereum `50 (50 * 1e18)`.
 
     Returns: target threshold (`uint256`).
 
@@ -851,7 +851,7 @@ SUPPORTED_INTERFACES: constant(bytes4[4]) = [
 ### `VERSION`
 !!! description "`CowSwapBurner.VERSION() -> String[20]: view`"
 
-    Getter for the burner version. 
+    Getter for the burner version.
 
     Returns: version (`String[20]`)
 

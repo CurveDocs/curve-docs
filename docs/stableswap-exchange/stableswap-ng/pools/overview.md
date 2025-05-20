@@ -5,7 +5,7 @@ A Curve pool is essentially a smart contract that implements the StableSwap inva
 In its simplest form, a Curve pool is an implementation of the StableSwap invariant involving two or more tokens, often referred to as a 'plain pool.' Alternatively, Curve offers more complex pool variants, including pools with rebasing tokens and metapools. Metapools facilitate the exchange of one or more tokens with those from one or more underlying tokens.
 
 
-**New features:**   
+**New features:**
 
 - price and D oracles
 - dynamic fees
@@ -30,17 +30,17 @@ Stableswap-NG pools supports the following asset types:
 
 *Consequently, supported tokens include:*
 
-- ERC20 support for return True/revert, return True/False, return None  
-- ERC20 tokens can have arbitrary decimals (<=18)  
-- ERC20 tokens that rebase (either positive or fee on transfer)  
-- ERC20 tokens that have a rate oracle (e.g. wstETH, cbETH, sDAI, etc.) Oracle precision *must* be 10^18  
+- ERC20 support for return True/revert, return True/False, return None
+- ERC20 tokens can have arbitrary decimals (<=18)
+- ERC20 tokens that rebase (either positive or fee on transfer)
+- ERC20 tokens that have a rate oracle (e.g. wstETH, cbETH, sDAI, etc.) Oracle precision *must* be 10^18
 - ERC4626 tokens with arbitrary percision (<=18) of Vault token and underlying asset
 
 
 ### **Rebasing Tokens**
 
 !!!warning "Rebasing Tokens"
-    Pools including rebasing tokens work a bit differently compared to others. 
+    Pools including rebasing tokens work a bit differently compared to others.
     The internal `**_balance()**` function - which is used to calculate the coin balances within the pool - makes sure that **LP's keep all rebases**.
 
 ??? quote "`_balances()`"
@@ -81,7 +81,7 @@ Stableswap-NG pools supports the following asset types:
 
 ## **Dynamic Fees**
 
-Stableswap-NG introduces dynamic fees. The use of the **`offpeg_fee_multiplier`** allows the system to dynamically adjust fees based on the pool's state. 
+Stableswap-NG introduces dynamic fees. The use of the **`offpeg_fee_multiplier`** allows the system to dynamically adjust fees based on the pool's state.
 
 The internal **`_dynamic_fee()`** function calculates the fee **based on the balances and rates** of the tokens being exchanged. If the balances of the tokens being exchanged are highly imbalanced or significantly differ from its peg, the fee is adjusted using the **`offpeg_fee_multiplier`**.
 
@@ -96,7 +96,7 @@ The internal **`_dynamic_fee()`** function calculates the fee **based on the bal
 - Let $fee$ represent the fee, as retrieved by the method **`StableSwap.fee()`**
 - Let $fee_m$ denote the off-peg fee multiplier, sourced from **`StableSwap.offpeg_fee_multiplier()`**
 - **`FEE_DENOMINATOR`** is a constant with a value of $10^{10}$, representing the precision of the fee
-- The terms $rate_{i}$ and $balance{i}$ refer to the specific rate and balance for coin $i$, respectively, and similarly, $rate_j$ and $balance_j$ for coin $j$ 
+- The terms $rate_{i}$ and $balance{i}$ refer to the specific rate and balance for coin $i$, respectively, and similarly, $rate_j$ and $balance_j$ for coin $j$
 - $PRECISION_{i}$ and $PRECISION_{j}$ are the precision constants for the respective coins
 
 *Given these, we define:*

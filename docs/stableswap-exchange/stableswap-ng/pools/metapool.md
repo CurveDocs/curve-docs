@@ -20,7 +20,7 @@ The deployment of metapools is permissionless and can be done via the [**`deploy
 
 *These function slightly differ to the ones from plain pools, as there needs to be some additional logic because of the basepools:*
 
-- **`_transfer_in()`**  
+- **`_transfer_in()`**
 
     ??? quote "`_transfer_in(coin_metapool_idx: int128, coin_basepool_idx: int128, dx: uint256, sender: address, expect_optimistic_transfer: bool, is_base_pool_swap: bool = False) -> uint256:`"
 
@@ -133,7 +133,7 @@ The deployment of metapools is permissionless and can be done via the [**`deploy
         | `_amount`  | `uint256` | Amount to transfer out.                   |
         | `receiver` | `address` | Address to send the tokens to.            |
 
-        ```vyper 
+        ```vyper
         stored_balances: DynArray[uint256, MAX_COINS]
 
         @internal
@@ -159,7 +159,7 @@ The deployment of metapools is permissionless and can be done via the [**`deploy
 
             self.stored_balances[_coin_idx] = coin_balance - _amount
         ```
-        
+
 
 !!!info "Methods with underlying coins"
     In metapools, `coin[0]` is always the metapool token, and `coin[1]` is always the basepool token. When working with the basepool underlying tokens such as `exchange_underlying` and others, the coin indices of the basepool are appended after `coin[0]`, which is the metapool token.
@@ -1355,7 +1355,7 @@ There are no restrictions on how liquidity can be added or removed. Liquidity ca
 !!! description "`StableSwap.remove_liquidity(_burn_amount: uint256, _min_amounts: DynArray[uint256, MAX_COINS], _receiver: address = msg.sender, _claim_admin_fees: bool = True) -> DynArray[uint256, MAX_COINS]:`"
 
     !!!info
-        When removing liquidity in a balanced ratio, there is no need to update the price oracle, as this function does not alter the balance ratio within the pool. Calling this function only updates `D_oracle`.    
+        When removing liquidity in a balanced ratio, there is no need to update the price oracle, as this function does not alter the balance ratio within the pool. Calling this function only updates `D_oracle`.
         The calculation of `D` does not use Newton methods, ensuring that `remove_liquidity` should always work, even if the pool gets borked.
 
     Function to remove `_min_amount` coins from the liquidity pool based on the pools current ratios by burning `_burn_amount` of LP tokens. Admin fees might be claimed after liquidity is removed.
@@ -2011,7 +2011,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
             ...
 
             self.fee = _fee
-            
+
             ...
         ```
 
@@ -2641,7 +2641,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 ---
 
 
-## **Contract Info Methods** 
+## **Contract Info Methods**
 
 ### `BASE_POOL`
 !!! description "`StableSwap.BASE_POOL() -> address: view`"
@@ -2675,7 +2675,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
             ...
 
             BASE_POOL = _base_pool
-            
+
             ...
         ```
 
@@ -2721,7 +2721,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
             ...
 
             BASE_N_COINS = len(_base_coins)
-            
+
             ...
         ```
 
@@ -2769,7 +2769,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
             ...
 
             BASE_COINS = _base_coins
-            
+
             ...
         ```
 
@@ -2817,7 +2817,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
             ...
 
             coins = _coins  # <---------------- coins[1] is always base pool LP token.
-            
+
             ...
         ```
 
@@ -2838,7 +2838,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 ### `balances`
 !!! description "`StableSwap.balances(i: uint256) -> uint256: view`"
 
-    Getter for the current balance of coin `i` within the pool. 
+    Getter for the current balance of coin `i` within the pool.
 
     Returns: coin balance (`uint256`).
 
@@ -2904,7 +2904,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
     Returns: coin balances (`DynArray[uint256, MAX_COINS]`).
 
     !!!info
-        This getter method does not account for admin fees. 
+        This getter method does not account for admin fees.
 
     ??? quote "Source code"
 

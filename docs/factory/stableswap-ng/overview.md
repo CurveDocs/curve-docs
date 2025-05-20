@@ -1,10 +1,10 @@
 <h1>StableSwap-NG Factory: Overview</h1>
 
-The `CurveStableswapFactoryNG.vy` allows the permissionless deployment of up to eight-coin plain- and metapools, as well as gauges. **Liquidity pool and LP token share the same contract.** For more details, see here: [StableSwap-NG Documentation](../../stableswap-exchange/stableswap-ng/overview.md). 
+The `CurveStableswapFactoryNG.vy` allows the permissionless deployment of up to eight-coin plain- and metapools, as well as gauges. **Liquidity pool and LP token share the same contract.** For more details, see here: [StableSwap-NG Documentation](../../stableswap-exchange/stableswap-ng/overview.md).
 
 
 !!!github "GitHub"
-    The source code of the `CurveStableSwapFactoryNG.vy` can be found on [GitHub :material-github:](https://github.com/curvefi/stableswap-ng/blob/main/contracts/main/CurveStableSwapFactoryNG.vy).  
+    The source code of the `CurveStableSwapFactoryNG.vy` can be found on [GitHub :material-github:](https://github.com/curvefi/stableswap-ng/blob/main/contracts/main/CurveStableSwapFactoryNG.vy).
     A list of all deployments can be found [here](../../references/deployed-contracts.md#stableswap-ng).
 
 
@@ -213,10 +213,10 @@ The StableSwap-NG Factory makes use of **blueprint contracts** to deploy its con
 - **`math_implementation`**, containing math functions used in the AMM.
 - **`gauge_implementation`**, containing a blueprint contract that is used when deploying gauges for pools.[^1]
 - **`views_implementation`**, containing a view methods contract relevant for integrators and users looking to interact with the AMMs.
- 
+
 [^1]: The `gauge_implementation` is only relevant on Ethereum mainnet. Liquidity gauges on sidechains need to be deployed through the `RootChainGaugeFactory`.
 
-*More on the [**Math Implementation**](../../stableswap-exchange/stableswap-ng/utility_contracts/math.md) and [**Views Implementation**](../../stableswap-exchange/stableswap-ng/utility_contracts/views.md).* 
+*More on the [**Math Implementation**](../../stableswap-exchange/stableswap-ng/utility_contracts/math.md) and [**Views Implementation**](../../stableswap-exchange/stableswap-ng/utility_contracts/views.md).*
 
 
 ## **Query Implementations**
@@ -224,7 +224,7 @@ The StableSwap-NG Factory makes use of **blueprint contracts** to deploy its con
 ### `pool_implementations`
 !!! description "`CurveStableSwapFactoryNG.pool_implementations(arg0: uint256) -> address: view`"
 
-    Getter for the pool implementations. There might be multiple pool implementations base on various circumstances. 
+    Getter for the pool implementations. There might be multiple pool implementations base on various circumstances.
 
     Returns: implementation (`address`).
 
@@ -252,7 +252,7 @@ The StableSwap-NG Factory makes use of **blueprint contracts** to deploy its con
 ### `metapool_implementations`
 !!! description "`CurveStableSwapFactoryNG.metapool_implementations(arg0: uint256) -> address: view`"
 
-    Getter for the pool implementations at index `arg0`. This variable can hold multiple implementations which may be tailored for specific setups. 
+    Getter for the pool implementations at index `arg0`. This variable can hold multiple implementations which may be tailored for specific setups.
 
     Returns: pool implementation (`address`).
 
@@ -345,7 +345,7 @@ The StableSwap-NG Factory makes use of **blueprint contracts** to deploy its con
 
         ```shell
         >>> CurveStableSwapFactoryNG.views_implementation()
-        '0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD' 
+        '0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD'
         ```
 
 
@@ -457,7 +457,7 @@ New implementation can be by the `admin` of the contract using the following fun
     Function to set a new math implementation. There can only be one math implementation.
 
     | Input                  | Type      | Description                              |
-    | ---------------------- | --------- | ---------------------------------------- | 
+    | ---------------------- | --------- | ---------------------------------------- |
     | `_math_implementation` | `address` | New math implementation contract address |
 
     ??? quote "Source code"
@@ -499,7 +499,7 @@ New implementation can be by the `admin` of the contract using the following fun
     Function to set a new gauge implementation.
 
     | Input                   | Type      | Description                               |
-    | ----------------------- | --------- | ----------------------------------------- | 
+    | ----------------------- | --------- | ----------------------------------------- |
     | `_gauge_implementation` | `address` | New gauge implementation contract address |
 
     ??? quote "Source code"
@@ -541,7 +541,7 @@ New implementation can be by the `admin` of the contract using the following fun
     Function to set a new views implementation.
 
     | Input                   | Type      | Description                               |
-    | ----------------------- | --------- | ----------------------------------------- | 
+    | ----------------------- | --------- | ----------------------------------------- |
     | `_views_implementation` | `address` | New views implementation contract address |
 
     ??? quote "Source code"

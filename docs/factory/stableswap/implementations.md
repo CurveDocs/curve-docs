@@ -3,7 +3,7 @@
 !!!warning
     **Implementation contracts are upgradable.** They can either be replaced, or additional implementation contracts can be added. Therefore, please always make sure to check the most recent ones.
 
-It utilizes three different implementations: 
+It utilizes three different implementations:
 
 - **`metapool_implementations`**, containing multiple contracts that are used to deploy metapools.
 - **`plain_implementations`**, containing multiple contracts that are used to deploy plain pools.

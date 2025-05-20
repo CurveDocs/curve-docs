@@ -1,0 +1,27 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+
+  - repo: local
+    hooks:
+      - id: lychee
+        name: lychee link checker
+        entry: lychee
+        language: system
+        types: [markdown]
+        pass_filenames: false
+        always_run: true
+        args: ["--no-progress", "./docs/**/*.md", "mkdocs.yml"]
+        stages: [post-commit]
+
+  - repo: https://github.com/errata-ai/vale
+    rev: v3.3.0
+    hooks:
+      - id: vale
+        args: ["--config=.vale.ini"]
+        files: \.md$

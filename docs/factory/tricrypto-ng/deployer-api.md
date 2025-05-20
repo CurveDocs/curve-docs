@@ -34,7 +34,7 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
 | gamma_max        | 5 * 10^16 = 50000000000000000            |
 | fee_max          | 10 * 10^9 = 10000000000                  |
 
-!!! description "`Factory.deploy_pool(_name: String[64], _symbol: String[32], _coins: address[N_COINS], _weth: address, implementation_id: uint256, A: uint256, gamma: uint256, mid_fee: uint256, out_fee: uint256, fee_gamma: uint256, allowed_extra_profit: uint256, adjustment_step: uint256, ma_exp_time: uint256, initial_prices: uint256[N_COINS-1],) -> address:`"   
+!!! description "`Factory.deploy_pool(_name: String[64], _symbol: String[32], _coins: address[N_COINS], _weth: address, implementation_id: uint256, A: uint256, gamma: uint256, mid_fee: uint256, out_fee: uint256, fee_gamma: uint256, allowed_extra_profit: uint256, adjustment_step: uint256, ma_exp_time: uint256, initial_prices: uint256[N_COINS-1],) -> address:`"
 
     Function to deploy a tricrypto pool.
 
@@ -282,11 +282,11 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
             assert self.pool_data[_pool].liquidity_gauge == ZERO_ADDRESS, "Gauge already deployed"
             implementation: address = self.gauge_implementation
             assert implementation != ZERO_ADDRESS, "Gauge implementation not set"
-        
+
             gauge: address = create_forwarder_to(implementation)
             LiquidityGauge(gauge).initialize(_pool)
             self.pool_data[_pool].liquidity_gauge = gauge
-        
+
             log LiquidityGaugeDeployed(_pool, gauge)
             return gauge
         ```
@@ -296,5 +296,5 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
         ```shell
         >>> Factory.deploy_gauge('0x...')
 
-        'returns address of the deployed gauge' 
+        'returns address of the deployed gauge'
         ```

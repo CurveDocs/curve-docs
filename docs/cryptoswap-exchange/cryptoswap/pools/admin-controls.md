@@ -227,7 +227,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
         ```
 
 
-### `apply_new_parameters` 
+### `apply_new_parameters`
 !!! description "`CryptoSwap.apply_new_parameters()`"
 
     !!!guard "Guarded Method"

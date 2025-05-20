@@ -578,7 +578,7 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
     ??? quote "Source code"
 
         The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
-        
+
         === "CryptoFromPoolWAgg.vy"
 
             ```python

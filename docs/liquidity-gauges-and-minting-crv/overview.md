@@ -59,7 +59,7 @@ CRV follows a piecewise linear inflation schedule. The inflation is reduced by a
 </figure>
 
 The initial supply of CRV is 1.273 billion tokens, which is 42% of the eventual t -> $\infty$ supply of $\approx$ 3.03 billion tokens. All of these initial tokens are gradually vested (with every block). The initial inflation rate which supports the above inflation schedule is $r = 22.0$% (279.6 millions per year).
-All of the inflation is distributed to Curve liquidity providers, according to measurements taken by the gauges. During the first year, the approximate inflow into circulating supply is 2 million CRV per day. The initial circulating supply is 0.  
+All of the inflation is distributed to Curve liquidity providers, according to measurements taken by the gauges. During the first year, the approximate inflow into circulating supply is 2 million CRV per day. The initial circulating supply is 0.
 
 ---
 
@@ -70,7 +70,7 @@ To measure liquidity over time, the user deposits their LP tokens into the liqui
 
 Suppose we have the inflation rate $r$ changing with every epoch (1 year), gauge weight $w_{g}$ and gauge type weight $w_{t}$. Then, all the gauge handles the stream of inflation with the rate $r' = w_{g}w_{t}r$ which it can update every time $w_{g}$, $w_{t}$ or mining epoch changes.
 
-To calculate a user’s share of $r'$, we must calculate the integral: 
+To calculate a user’s share of $r'$, we must calculate the integral:
 $I_{u} = \int \frac{r'(t)b_{u}(t)}{S(t)}dt,$ where $b_{u}(t)$ is the balance supplied by the user (measured in LP tokens) and $S(t)$ is total liquidity supplied by users, depending on the time $t$; the value $I_{u}$ gives the amount of tokens which the user has to have minted to them. The user’s balance $b_{u}$ changes every time the user $u$ makes a deposit or withdrawal, and $S$ changes every time _any_ user makes a deposit or withdrawal so $S$ can change many times in between two events for the user $u''$. In the liquidity gauge contract, the vaule of $I_{u}$ is recorded per-user in the public `integrate_fraction` mapping.
 
 To avoid requiring that all users to checkpoint periodically, we keep recording values of the following integral (named `integrate_inv_supply` in the contract):

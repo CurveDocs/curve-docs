@@ -354,8 +354,8 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
     !!!warning "Revert"
         This function reverts if `i >= 2`.
 
-    Function to calculate the exponential moving average (EMA) price for the coin at index `k` with regard to the coin at index 0. The oracle is an exponential moving average, with a periodicity determined by `ma_time`. The aggregated prices are cached state prices (dy/dx) calculated AFTER the latest trade. 
-    
+    Function to calculate the exponential moving average (EMA) price for the coin at index `k` with regard to the coin at index 0. The oracle is an exponential moving average, with a periodicity determined by `ma_time`. The aggregated prices are cached state prices (dy/dx) calculated AFTER the latest trade.
+
     The moving average price oracle is calculated using the last_price of the trade at the previous block, and the price oracle logged before that trade. This can happen only once per block.
 
     Returns: EMA price of coin `k` (`uint256`).
@@ -535,7 +535,7 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
 ### `last_prices_timestamp`
 !!! description "`CurveTricryptoOptimizedWETH.last_prices_timestamp() -> uint256: view`"
 
-    Getter for the timestamp when the EMA price oracle was updated the last time. 
+    Getter for the timestamp when the EMA price oracle was updated the last time.
 
     Returns: timestamp (`uint256`).
 
@@ -559,7 +559,7 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
 
     Getter for the exponential moving average time for the price oracle. This value can be adjusted via `commit_new_parameters()`, as detailed in the [admin controls](./admin-controls.md#commit_new_parameters) section.
 
-    Returns: periodicity of the EMA (`uint256`) 
+    Returns: periodicity of the EMA (`uint256`)
 
     ??? quote "Source code"
 
@@ -603,7 +603,7 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
 
             ```vyper
             price_oracle_packed: uint256  # <------- Price target given by moving average.
-                        
+
             @external
             @view
             @nonreentrant("lock")

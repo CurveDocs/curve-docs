@@ -54,7 +54,7 @@ The [oracle contract](https://etherscan.io/address/0xE0a4C53408f5ACf3246c83b9b8b
 ## **Chained Oracles without Rates (FXN)**
 
 This [oracle contract](https://arbiscan.io/address/0xbB82bf9a0C6739c0bacFdFFbcE3D2Ec4AA97970E) utilizes two Curve pool oracles to derive the price of the [FXN token](https://arbiscan.io/address/0x179F38f78346F5942E95C5C59CB1da7F55Cf7CAd) relative to the crvUSD token. Importantly, this oracle does not apply any conversion rates; it strictly uses the raw prices provided by the oracles.
- 
+
 *The `CryptoFromPoolsRate.vy` contract is specifically designed for these types of oracles. Full documentation is available [here](../contracts/cryptofrompoolsrate.md).*
 
 *To obtain the FXN token price, we use the following two Curve pool oracles:*
@@ -73,7 +73,7 @@ The price oracle from the first pool determines the price of FXN relative to ETH
 
 *Calculating the final price:*
 
-$$\text{price} = \frac{\text{FXN/ETH} \times \text{ETH/crvUSD}}{10^{18}}$$ 
+$$\text{price} = \frac{\text{FXN/ETH} \times \text{ETH/crvUSD}}{10^{18}}$$
 
 $$\text{price} = \frac{43130436331749331 \times 3011786169374663706441}{10^{18}} = 129899651623057139817$$
 

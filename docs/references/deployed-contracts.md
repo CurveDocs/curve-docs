@@ -42,9 +42,9 @@ Curve DAO consists of multiple smart contracts connected by [Aragon](https://git
 *Despite being launched on Ethereum, the Curve DAO Token can be bridged to various chains:*
 
 !!!danger "MULTICHAIN WARNING"
-    Multichain statement: https://twitter.com/MultichainOrg/status/1677180114227056641  
-    The Multichain service stopped currently, and all bridge transactions will be stuck on the source chains. 
-    There is no confirmed resume time.  
+    Multichain statement: https://twitter.com/MultichainOrg/status/1677180114227056641
+    The Multichain service stopped currently, and all bridge transactions will be stuck on the source chains.
+    There is no confirmed resume time.
     **Please don’t use the Multichain bridging service now.**
 
 
@@ -67,15 +67,15 @@ Curve DAO consists of multiple smart contracts connected by [Aragon](https://git
 Aragon [Voting App](https://wiki.aragon.org/archive/dev/apps/voting/) deployments are the main entry points used to create new votes, vote, check the status of a vote, and execute a successful vote.
 
 | Voting Type | Contract Address |
-| :---------: | :--------------: | 
+| :---------: | :--------------: |
 | `Ownership` | [0xe478de485ad2fe566d49342cbd03e49ed7db3356](https://etherscan.io/address/0xe478de485ad2fe566d49342cbd03e49ed7db3356) |
-| `Parameter` | [0xbcff8b0b9419b9a88c44546519b1e909cf330399](https://etherscan.io/address/0xbcff8b0b9419b9a88c44546519b1e909cf330399) | 
+| `Parameter` | [0xbcff8b0b9419b9a88c44546519b1e909cf330399](https://etherscan.io/address/0xbcff8b0b9419b9a88c44546519b1e909cf330399) |
 
 
 Aragon [Agent](https://hack.aragon.org/docs/guides-use-agent) deployments correspond to the different owner accounts within the DAO. Contract calls made due to a successful vote will be executed from these addresses. When deploying new contracts, these addresses should be given appropriate access to admin functionality.
 
 | Agent Type  | Contract Address  |
-| :---------: | :---------------: | 
+| :---------: | :---------------: |
 | `Ownership` | [0x40907540d8a6C65c637785e8f8B742ae6b0b9968](https://etherscan.io/address/0x40907540d8a6C65c637785e8f8B742ae6b0b9968) |
 | `Parameter` | [0x4EEb3bA4f221cA16ed4A0cC7254E2E32DF948c5f](https://etherscan.io/address/0x4EEb3bA4f221cA16ed4A0cC7254E2E32DF948c5f) |
 
@@ -83,14 +83,14 @@ Aragon [Agent](https://hack.aragon.org/docs/guides-use-agent) deployments corres
 The following token addresses are used for determining voter weights within Curve’s Aragon DAOs.
 
 | Vote Type   | Contract Address  |
-| :---------: | :---------------: | 
+| :---------: | :---------------: |
 | `Ownership / Parameter` | [0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2](https://etherscan.io/address/0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2) |
 
 
 The Emergency DAO is deployed at:
 
 | Vote Type   | Contract Address  |
-| :---------: | :---------------: | 
+| :---------: | :---------------: |
 | `eDAO` | [0x467947EE34aF926cF1DCac093870f613C96B1E0c](https://etherscan.io/address/0x467947EE34aF926cF1DCac093870f613C96B1E0c) |
 
 
@@ -136,7 +136,7 @@ Burners are a crucial element of the fee payout system in Curve. They convert th
 
 *Here is a list of burner contracts currently in use:*
 
-**:logos-ethereum: Ethereum** 
+**:logos-ethereum: Ethereum**
 
 | Burner Type       | Contract Address |
 | :---------------: | :--------------: |
@@ -154,7 +154,7 @@ Burners are a crucial element of the fee payout system in Curve. They convert th
 
 
 
-**:logos-arbitrum: Arbitrum** 
+**:logos-arbitrum: Arbitrum**
 
 | Burner Type       | Contract Address                                       |
 | :---------------: | :----------------------------------------------------: |
@@ -282,8 +282,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 ## **EVM Sidechain Gauges**
 
 !!!danger "MULTICHAIN WARNING"
-    At the time of writing (13.11.2023), sidechain gauges on Celo, Avalanche and Fantom are disabled due to issues with Multichain.    
-    The Multichain service stopped currently, and all bridge transactions will be stuck on the source chains. There is no confirmed resume time.  
+    At the time of writing (13.11.2023), sidechain gauges on Celo, Avalanche and Fantom are disabled due to issues with Multichain.
+    The Multichain service stopped currently, and all bridge transactions will be stuck on the source chains. There is no confirmed resume time.
     Multichain statement: https://twitter.com/MultichainOrg/status/1677180114227056641
 
 !!!deploy "Source Code"
@@ -492,7 +492,7 @@ Contract functionality is documented here: [`MetaRegistry`](../registry/overview
 !!!github
     The source code for `MetaRegistry.vy` and `MetaRegistryL2.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/tree/main/contracts).
 
-Each `MetaRegistry` is integrated into the chain-specific [`AddressProvider`](#address-provider) at `ID = 7`. To get the **most recent contract, users are advised to fetch it directly from the `AddressProvider` contract**. 
+Each `MetaRegistry` is integrated into the chain-specific [`AddressProvider`](#address-provider) at `ID = 7`. To get the **most recent contract, users are advised to fetch it directly from the `AddressProvider` contract**.
 
 *For example, to query the `MetaRegistry` contract on Ethereum, one can call `get_address(7)` on the `AddressProvider`:*
 
@@ -510,9 +510,9 @@ Each `MetaRegistry` is integrated into the chain-specific [`AddressProvider`](#a
 Contract functionality is documented here: [`RateProvider`](../integration/rate-provider.md)
 
 !!!github
-    The source code for the `RateProvider.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).  
+    The source code for the `RateProvider.vy` can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).
 
-Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#address-provider) at `ID = 18`.  
+Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#address-provider) at `ID = 18`.
 
 *For example, to query the `RateProvider` contract on Ethereum, one can call `get_address(18)` on the `AddressProvider`:*
 
@@ -540,7 +540,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
     '0xDCc91f930b42619377C200BA05b7513f2958b202'
     >>> Factory.metapool_implementation(0)
     '0xede71F77d7c900dCA5892720E76316C6E575F0F7'
-    >>> Factory.gauge_implementation() # ethereum mainnet only! 
+    >>> Factory.gauge_implementation() # ethereum mainnet only!
     '0x38D9BdA812da2C68dFC6aDE85A7F7a54E77F8325'
     ```
 
@@ -548,7 +548,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-ethereum: Ethereum Mainnet**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0xc9CBC565A9F4120a2740ec6f64CC24AeB2bB3E5E](https://etherscan.io/address/0xc9CBC565A9F4120a2740ec6f64CC24AeB2bB3E5E) |
 | `Views`     | [0xFF53042865dF617de4bB871bD0988E7B93439cCF](https://etherscan.io/address/0xFF53042865dF617de4bB871bD0988E7B93439cCF) |
 | `Factory`   | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://etherscan.io/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf) |
@@ -560,7 +560,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-ethereum: Ethereum Sepolia**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x2cad7b3e78e10bcbf2cc443ddd69ca8bcc09a758](https://sepolia.etherscan.io/address/0x2cad7b3e78e10bcbf2cc443ddd69ca8bcc09a758) |
 | `Views`     | - |
 | `Factory`   | [0xfb37b8D939FFa77114005e61CFc2e543d6F49A81](https://sepolia.etherscan.io/address/0xfb37b8D939FFa77114005e61CFc2e543d6F49A81) |
@@ -571,7 +571,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-arbitrum: Arbitrum**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0xD4a8bd4d59d65869E99f20b642023a5015619B34](https://arbiscan.io/address/0xD4a8bd4d59d65869E99f20b642023a5015619B34) |
 | `Views`     | [0xDD7EBB1C49780519dD9755B8B1A23a6f42CE099E](https://arbiscan.io/address/0xDD7EBB1C49780519dD9755B8B1A23a6f42CE099E) |
 | `Factory`   | [0x9AF14D26075f142eb3F292D5065EB3faa646167b](https://arbiscan.io/address/0x9AF14D26075f142eb3F292D5065EB3faa646167b) |
@@ -582,7 +582,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-optimism: Optimism**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://optimistic.etherscan.io/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26) |
 | `Views`     | [0xbC7654d2DD901AaAa3BE4Cb5Bc0f10dEA9f96443](https://optimistic.etherscan.io/address/0xbC7654d2DD901AaAa3BE4Cb5Bc0f10dEA9f96443) |
 | `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://optimistic.etherscan.io/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E) |
@@ -593,7 +593,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-base: Base**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://basescan.org/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3) |
 | `Views`     | [0xA54f3c1DFa5f7DbF2564829d14b3B74a65d26Ae2](https://basescan.org/address/0xA54f3c1DFa5f7DbF2564829d14b3B74a65d26Ae2) |
 | `Factory`   | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://basescan.org/address/0xd2002373543Ce3527023C75e7518C274A51ce712) |
@@ -604,7 +604,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-fraxtal: Fraxtal**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x506F594ceb4E33F5161139bAe3Ee911014df9f7f](https://fraxscan.com/address/0x506F594ceb4E33F5161139bAe3Ee911014df9f7f) |
 | `Views`     | [0xeEcCd039d7228530D5F0c3ce7291Dd9677CCFFb1](https://fraxscan.com/address/0xeEcCd039d7228530D5F0c3ce7291Dd9677CCFFb1) |
 | `Factory`   | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://fraxscan.com/address/0xd2002373543Ce3527023C75e7518C274A51ce712) |
@@ -615,7 +615,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-polygon: Polygon**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://polygonscan.com/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B) |
 | `Views`     | [0xf2eff2Cd0d9C82b7b2f17FbBed703fA7931dB1da](https://polygonscan.com/address/0xf2eff2Cd0d9C82b7b2f17FbBed703fA7931dB1da) |
 | `Factory`   | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://polygonscan.com/address/0x1764ee18e8B3ccA4787249Ceb249356192594585) |
@@ -626,7 +626,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-polygon: Polygon zk-EVM**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3](https://zkevm.polygonscan.com/address/0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3) |
 | `Views`     | [0xB6845b562F01eB02ef20CBB63553d2a768e5a1Cb](https://zkevm.polygonscan.com/address/0xB6845b562F01eB02ef20CBB63553d2a768e5a1Cb) |
 | `Factory`   | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://zkevm.polygonscan.com/address/0xd2002373543Ce3527023C75e7518C274A51ce712) |
@@ -637,7 +637,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-gnosis: Gnosis**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://gnosisscan.io/address/0xFAbC421e3368D158d802684A217a83c083c94CeB) |
 | `Views`     | [0xa0EC67a3C483674f77915893346A8CA3AbE2b785](https://gnosisscan.io/address/0xa0EC67a3C483674f77915893346A8CA3AbE2b785) |
 | `Factory`   | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://gnosisscan.io/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8) |
@@ -648,7 +648,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-avalanche: Avalanche**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://snowscan.xyz/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B) |
 | `Views`     | [0xe548590f9fAe7a23EA6501b144B0D58b74Fc4B53](https://snowscan.xyz/address/0xe548590f9fAe7a23EA6501b144B0D58b74Fc4B53) |
 | `Factory`   | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://snowscan.xyz/address/0x1764ee18e8B3ccA4787249Ceb249356192594585) |
@@ -659,7 +659,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-fantom: Fantom**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://ftmscout.com/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a) |
 | `Views`     | [0x33e72383472f77B0C6d8F791D1613C75aE2C5915](https://ftmscout.com/address/0x33e72383472f77B0C6d8F791D1613C75aE2C5915) |
 | `Factory`   | [0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b](https://ftmscout.com/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b) |
@@ -670,7 +670,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-bsc: Binance Smart Chain**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5](https://bscscan.com/address/0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5) |
 | `Views`     | [0xbC7654d2DD901AaAa3BE4Cb5Bc0f10dEA9f96443](https://bscscan.com/address/0xbC7654d2DD901AaAa3BE4Cb5Bc0f10dEA9f96443) |
 | `Factory`   | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://bscscan.com/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B) |
@@ -681,7 +681,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-linea: Linea**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://lineascan.build/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8) |
 | `Views`     | [0xB6845b562F01eB02ef20CBB63553d2a768e5a1Cb](https://lineascan.build/address/0xB6845b562F01eB02ef20CBB63553d2a768e5a1Cb) |
 | `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://lineascan.build/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E) |
@@ -692,7 +692,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-scroll: Scroll**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://scrollscan.com/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8) |
 | `Views`     | [0x3f445D38E820c010a7A6E33c5F80cBEBE6930f61](https://scrollscan.com/address/0x3f445D38E820c010a7A6E33c5F80cBEBE6930f61) |
 | `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://scrollscan.com/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E) |
@@ -703,7 +703,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-mantle: Mantle**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://mantlescan.xyz/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6) |
 | `Views`     | [0xFf02cBD91F57A778Bab7218DA562594a680B8B61](https://mantlescan.xyz/address/0xFf02cBD91F57A778Bab7218DA562594a680B8B61) |
 | `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://mantlescan.xyz/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E) |
@@ -714,7 +714,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-celo: Celo**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://celoscan.io/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B) |
 | `Views`     | [0xA54f3c1DFa5f7DbF2564829d14b3B74a65d26Ae2](https://celoscan.io/address/0xA54f3c1DFa5f7DbF2564829d14b3B74a65d26Ae2) |
 | `Factory`   | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://celoscan.io/address/0x1764ee18e8B3ccA4787249Ceb249356192594585) |
@@ -725,7 +725,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-kava: Kava**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://kavascan.com/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B) |
 | `Views`     | [0xB6845b562F01eB02ef20CBB63553d2a768e5a1Cb](https://kavascan.com/address/0xB6845b562F01eB02ef20CBB63553d2a768e5a1Cb) |
 | `Factory`   | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://kavascan.com/address/0x1764ee18e8B3ccA4787249Ceb249356192594585) |
@@ -736,7 +736,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-aurora: Aurora**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://explorer.aurora.dev/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8) |
 | `Views`     | [0xD4a8bd4d59d65869E99f20b642023a5015619B34](https://explorer.aurora.dev/address/0xD4a8bd4d59d65869E99f20b642023a5015619B34) |
 | `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://explorer.aurora.dev/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E) |
@@ -747,7 +747,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-xlayer: X-Layer**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x8b3efbefa6ed222077455d6f0dcda3bf4f3f57a6](https://www.oklink.com/xlayer/address/0x8b3efbefa6ed222077455d6f0dcda3bf4f3f57a6) |
 | `Views`     | [0xb47988aD49DCE8D909c6f9Cf7B26caF04e1445c8](https://www.oklink.com/xlayer/address/0xb47988aD49DCE8D909c6f9Cf7B26caF04e1445c8) |
 | `Factory`   | [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://www.oklink.com/xlayer/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E) |
@@ -758,7 +758,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-zksync: zk-Sync**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0xcf19236e85000901dE2Fad3199aA4A1F74a78B6C](https://era.zksync.network/address/0xcf19236e85000901dE2Fad3199aA4A1F74a78B6C) |
 | `Views`     | [0xeF62cD5CBa8B040827B648dBc6a755ddeeb84E65](https://era.zksync.network/address/0xeF62cD5CBa8B040827B648dBc6a755ddeeb84E65) |
 | `Factory`   | [0x375444aeDEb6C3db897f293E1DBa85D7422A6859](https://era.zksync.network/address/0x375444aeDEb6C3db897f293E1DBa85D7422A6859) |
@@ -769,7 +769,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-tron: Tron**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | *soon*             |
 | `Views`     | *soon*             |
 | `Factory`   | *soon*             |
@@ -793,7 +793,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
     ```shell
     >>> Factory.pool_implementation(0)
     '0x04Fd6beC7D45EFA99a27D29FB94b55c56dD07223'
-    >>> Factory.gauge_implementation() # ethereum mainnet only! 
+    >>> Factory.gauge_implementation() # ethereum mainnet only!
     '0x38D9BdA812da2C68dFC6aDE85A7F7a54E77F8325'
     ```
 
@@ -801,7 +801,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-ethereum: Ethereum Mainnet**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://etherscan.io/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1#code) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://etherscan.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80#code) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://etherscan.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F#code) |
@@ -812,7 +812,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-ethereum: Ethereum Sepolia**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x2005995a71243be9FB995DaB4742327dc76564Df](https://sepolia.etherscan.io/address/0x2005995a71243be9FB995DaB4742327dc76564Df) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://sepolia.etherscan.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://sepolia.etherscan.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
@@ -822,7 +822,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-arbitrum: Arbitrum**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://arbiscan.io/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://arbiscan.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://arbiscan.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
@@ -832,7 +832,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-optimism: Optimism**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://optimistic.etherscan.io/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://optimistic.etherscan.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://optimistic.etherscan.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
@@ -842,7 +842,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-base: Base**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://basescan.org/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0xd3B17f862956464ae4403cCF829CE69199856e1e](https://basescan.org/address/0xd3B17f862956464ae4403cCF829CE69199856e1e) |
 | `Factory`   | [0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F](https://basescan.org/address/0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F) |
@@ -852,7 +852,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-fraxtal: Fraxtal**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://fraxscan.com/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://fraxscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://fraxscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
@@ -862,7 +862,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-polygon: Polygon**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://polygonscan.com//address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://polygonscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://polygonscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
@@ -872,7 +872,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-polygon: Polygon zk-EVM**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://zkevm.polygonscan.com/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://zkevm.polygonscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://zkevm.polygonscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
@@ -882,7 +882,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-gnosis: Gnosis**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://gnosisscan.io/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://gnosisscan.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://gnosisscan.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
@@ -892,7 +892,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-avalanche: Avalanche**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://snowscan.xyz/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://snowscan.xyz/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://snowscan.xyz/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
@@ -902,7 +902,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-fantom: Fantom**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://ftmscout.com/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://ftmscout.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://ftmscout.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
@@ -912,7 +912,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-bsc: Binance Smart Chain**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://bscscan.com/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://bscscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://bscscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
@@ -923,7 +923,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-linea: Linea**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://lineascan.build/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://lineascan.build/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://lineascan.build/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
@@ -933,7 +933,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-scroll: Scroll**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://scrollscan.com/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://scrollscan.com/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://scrollscan.com/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
@@ -943,7 +943,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-mantle: Mantle**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://mantlescan.xyz/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://mantlescan.xyz/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://mantlescan.xyz/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
@@ -953,7 +953,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-celo: Celo**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://celoscan.io/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://celoscan.io/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://celoscan.io/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
@@ -963,7 +963,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-kava: Kava**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://kavascan.com/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x0C9D8c7e486e822C29488Ff51BFf0167B4650953](https://kavascan.com/address/0x0C9D8c7e486e822C29488Ff51BFf0167B4650953) |
 | `Factory`   | [0xd3B17f862956464ae4403cCF829CE69199856e1e](https://kavascan.com/address/0xd3B17f862956464ae4403cCF829CE69199856e1e) |
@@ -973,7 +973,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-aurora: Aurora**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://explorer.aurora.dev/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x07CdEBF81977E111B08C126DEFA07818d0045b80](https://explorer.aurora.dev/address/0x07CdEBF81977E111B08C126DEFA07818d0045b80) |
 | `Factory`   | [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://explorer.aurora.dev/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
@@ -983,7 +983,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-xlayer: X-Layer**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1](https://www.oklink.com/xlayer/address/0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1) |
 | `Views`     | [0x5a8c93ee12a8df4455ba111647ada41f29d5cfcc](https://www.oklink.com/xlayer/address/0x5a8c93ee12a8df4455ba111647ada41f29d5cfcc) |
 | `Factory`   | [0x0c59d36b23f809f8b6c7cb4c8c590a0ac103baef](https://www.oklink.com/xlayer/address/0x0c59d36b23f809f8b6c7cb4c8c590a0ac103baef) |
@@ -993,7 +993,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-zksync: zk-Sync**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x5AF4Fa25F76491F949C648AC439b1953df78f594](https://era.zksync.network/address/0x5AF4Fa25F76491F949C648AC439b1953df78f594) |
 | `Views`     | [0xfe30c516c23504B6CF740de513390DC6943888d8](https://era.zksync.network/address/0xfe30c516c23504B6CF740de513390DC6943888d8) |
 | `Factory`   | [0x24992A09E2257AF325102Cefa1F09E80E9062d49](https://era.zksync.network/address/0x24992A09E2257AF325102Cefa1F09E80E9062d49) |
@@ -1003,7 +1003,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-tron: Tron**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | *soon*             |
 | `Views`     | *soon*             |
 | `Factory`   | *soon*             |
@@ -1032,14 +1032,14 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
     '0x064253915b8449fdEFac2c4A74aA9fdF56691a31'
     >>> Factory.math_implementation()
     '0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE'
-    >>> Factory.gauge_implementation() # ethereum mainnet only! 
+    >>> Factory.gauge_implementation() # ethereum mainnet only!
     '0x5fC124a161d888893529f67580ef94C2784e9233'
     ```
 
 **:logos-ethereum: Ethereum Mainnet**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE](https://etherscan.io/address/0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE) |
 | `Views`     | [0x064253915b8449fdEFac2c4A74aA9fdF56691a31](https://etherscan.io/address/0x064253915b8449fdEFac2c4A74aA9fdF56691a31) |
 | `Factory`   | [0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963) |
@@ -1050,7 +1050,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-ethereum: Ethereum Sepolia**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x550574E33b81C45D3D69250b46Ae30c7bC40d330](https://sepolia.etherscan.io/address/0x550574E33b81C45D3D69250b46Ae30c7bC40d330) |
 | `Views`     | [0x59AfCD3e931018dc493AA1d833B11bb5A0744906](https://sepolia.etherscan.io/address/0x59AfCD3e931018dc493AA1d833B11bb5A0744906) |
 | `Factory`   | [0x4b00E8c997AeBACeEf6B8c6F89eE2bf99b2CA846](https://sepolia.etherscan.io/address/0x4b00E8c997AeBACeEf6B8c6F89eE2bf99b2CA846) |
@@ -1061,7 +1061,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-arbitrum: Arbitrum**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22](https://arbiscan.io/address/0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22) |
 | `Views`     | [0x06452f9c013fc37169B57Eab8F50A7A48c9198A3](https://arbiscan.io/address/0x06452f9c013fc37169B57Eab8F50A7A48c9198A3) |
 | `Factory`   | [0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8](https://arbiscan.io/address/0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8) |
@@ -1072,7 +1072,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-optimism: Optimism**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x19bd1AB34d6ABB584b9C1D5519093bfAA7f6c7d2](https://optimistic.etherscan.io/address/0x19bd1AB34d6ABB584b9C1D5519093bfAA7f6c7d2) |
 | `Views`     | [0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf](https://optimistic.etherscan.io/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf) |
 | `Factory`   | [0xc6C09471Ee39C7E30a067952FcC89c8922f9Ab53](https://optimistic.etherscan.io/address/0xc6C09471Ee39C7E30a067952FcC89c8922f9Ab53) |
@@ -1084,7 +1084,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-base: Base**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x5373E1B9f2781099f6796DFe5D68DE59ac2F18E3](https://basescan.org/address/0x5373E1B9f2781099f6796DFe5D68DE59ac2F18E3) |
 | `Views`     | [0x05d4E2Ed7216A204e5FB4e3F5187eCfaa5eF3Ef7](https://basescan.org/address/0x05d4E2Ed7216A204e5FB4e3F5187eCfaa5eF3Ef7) |
 | `Factory`   | [0xA5961898870943c68037F6848d2D866Ed2016bcB](https://basescan.org/address/0xA5961898870943c68037F6848d2D866Ed2016bcB) |
@@ -1095,7 +1095,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-fraxtal: Fraxtal**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x0C9D8c7e486e822C29488Ff51BFf0167B4650953](https://fraxscan.com/address/0x0C9D8c7e486e822C29488Ff51BFf0167B4650953) |
 | `Views`     | [0x64379C265Fc6595065D7d835AAaa731c0584dB80](https://fraxscan.com/address/0x64379C265Fc6595065D7d835AAaa731c0584dB80) |
 | `Factory`   | [0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F](https://fraxscan.com/address/0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F) |
@@ -1106,7 +1106,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-polygon: Polygon**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://polygonscan.com//address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC) |
 | `Views`     | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://polygonscan.com/address/0xFAbC421e3368D158d802684A217a83c083c94CeB) |
 | `Factory`   | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://polygonscan.com/address/0xC1b393EfEF38140662b91441C6710Aa704973228) |
@@ -1117,7 +1117,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-polygon: Polygon zk-EVM**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://zkevm.polygonscan.com/address/0xFAbC421e3368D158d802684A217a83c083c94CeB) |
 | `Views`     | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://zkevm.polygonscan.com/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf) |
 | `Factory`   | [0x76303e4fDcA0AbF28aB3ee42Ce086E6503431F1D](https://zkevm.polygonscan.com/address/0x76303e4fDcA0AbF28aB3ee42Ce086E6503431F1D) |
@@ -1128,7 +1128,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-gnosis: Gnosis**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0xff02cbd91f57a778bab7218da562594a680b8b61](https://gnosisscan.io/address/0xff02cbd91f57a778bab7218da562594a680b8b61) |
 | `Views`     | [0xe548590f9fAe7a23EA6501b144B0D58b74Fc4B53](https://gnosisscan.io/address/0xe548590f9fAe7a23EA6501b144B0D58b74Fc4B53) |
 | `Factory`   | [0xb47988ad49dce8d909c6f9cf7b26caf04e1445c8](https://gnosisscan.io/address/0xb47988ad49dce8d909c6f9cf7b26caf04e1445c8) |
@@ -1139,7 +1139,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-avalanche: Avalanche**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x505d666E4DD174DcDD7FA090ed95554486d2Be44](https://snowscan.xyz/address/0x505d666E4DD174DcDD7FA090ed95554486d2Be44) |
 | `Views`     | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://snowscan.xyz/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC) |
 | `Factory`   | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://snowscan.xyz/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a) |
@@ -1150,7 +1150,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-fantom: Fantom**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://ftmscout.com/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a) |
 | `Views`     | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://ftmscout.com/address/0xC1b393EfEF38140662b91441C6710Aa704973228) |
 | `Factory`   | [0x9AF14D26075f142eb3F292D5065EB3faa646167b](https://ftmscout.com/address/0x9AF14D26075f142eb3F292D5065EB3faa646167b) |
@@ -1162,7 +1162,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-bsc: Binance Smart Chain**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x0cE651Df1418a1fBA98517483102E042533Ade05](https://bscscan.com/address/0x0cE651Df1418a1fBA98517483102E042533Ade05) |
 | `Views`     | [0x645E12f3cf5504C8a08e01706e79d3D0f32EcE15](https://bscscan.com/address/0x645E12f3cf5504C8a08e01706e79d3D0f32EcE15) |
 | `Factory`   | [0xc55837710bc500F1E3c7bb9dd1d51F7c5647E657](https://bscscan.com/address/0xc55837710bc500F1E3c7bb9dd1d51F7c5647E657) |
@@ -1173,7 +1173,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-linea: Linea**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x0C9D8c7e486e822C29488Ff51BFf0167B4650953](https://lineascan.build/address/0x0C9D8c7e486e822C29488Ff51BFf0167B4650953) |
 | `Views`     | [0x64379c265fc6595065d7d835aaaa731c0584db80](https://lineascan.build/address/0x64379c265fc6595065d7d835aaaa731c0584db80) |
 | `Factory`   | [0xd125E7a0cEddF89c6473412d85835450897be6Dc](https://lineascan.build/address/0xd125E7a0cEddF89c6473412d85835450897be6Dc) |
@@ -1184,7 +1184,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-scroll: Scroll**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://scrollscan.com/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC) |
 | `Views`     | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://scrollscan.com/address/0xFAbC421e3368D158d802684A217a83c083c94CeB) |
 | `Factory`   | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://scrollscan.com/address/0xC1b393EfEF38140662b91441C6710Aa704973228) |
@@ -1195,7 +1195,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-mantle: Mantle**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x635742dCC8313DCf8c904206037d962c042EAfBd](https://mantlescan.xyz/address/0x635742dCC8313DCf8c904206037d962c042EAfBd) |
 | `Views`     | [0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499](https://mantlescan.xyz/address/0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499) |
 | `Factory`   | [0x0C9D8c7e486e822C29488Ff51BFf0167B4650953](https://mantlescan.xyz/address/0x0C9D8c7e486e822C29488Ff51BFf0167B4650953) |
@@ -1206,7 +1206,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-celo: Celo**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x505d666E4DD174DcDD7FA090ed95554486d2Be44](https://celoscan.io/address/0x505d666E4DD174DcDD7FA090ed95554486d2Be44) |
 | `Views`     | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://celoscan.io/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC) |
 | `Factory`   | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://celoscan.io/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a) |
@@ -1217,7 +1217,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-kava: Kava**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x505d666E4DD174DcDD7FA090ed95554486d2Be44](https://kavascan.com/address/0x505d666E4DD174DcDD7FA090ed95554486d2Be44) |
 | `Views`     | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://kavascan.com/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC) |
 | `Factory`   | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://kavascan.com/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a) |
@@ -1228,7 +1228,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-aurora: Aurora**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://explorer.aurora.dev/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC) |
 | `Views`     | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://explorer.aurora.dev/address/0xFAbC421e3368D158d802684A217a83c083c94CeB) |
 | `Factory`   | [0xC1b393EfEF38140662b91441C6710Aa704973228](https://explorer.aurora.dev/address/0xC1b393EfEF38140662b91441C6710Aa704973228) |
@@ -1239,7 +1239,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-xlayer: X-Layer**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | [0x046207cb759f527b6c10c2d61dbaca45513685cc](https://www.oklink.com/xlayer/address/0x046207cb759f527b6c10c2d61dbaca45513685cc) |
 | `Views`     | [0x7ca46a636b02d4abc66883d7ff164bde506dc66a](https://www.oklink.com/xlayer/address/0x7ca46a636b02d4abc66883d7ff164bde506dc66a) |
 | `Factory`   | [0xd3b17f862956464ae4403ccf829ce69199856e1e](https://www.oklink.com/xlayer/address/0xd3b17f862956464ae4403ccf829ce69199856e1e) |
@@ -1250,7 +1250,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-zksync: zk-Sync**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: |  
+| :---------: | :----------------: |
 | `Math`      | [0x07a1684378324825F67D92d944a713E2b8666DEb](https://era.zksync.network/address/0x07a1684378324825F67D92d944a713E2b8666DEb) |
 | `Views`     | [0x30E9b9b8449056d17B33D5F42e1fdd5600A2397F](https://era.zksync.network/address/0x30E9b9b8449056d17B33D5F42e1fdd5600A2397F) |
 | `Factory`   | [0x5044112fDf6c8DCc788a669c17345cfDB06549fa](https://era.zksync.network/address/0x5044112fDf6c8DCc788a669c17345cfDB06549fa) |
@@ -1261,7 +1261,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 **:logos-tron: Tron**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 | `Math`      | *soon*             |
 | `Views`     | *soon*             |
 | `Factory`   | *soon*             |
@@ -1450,7 +1450,7 @@ For testing in production purposes, several contract deployments have taken plac
 **:logos-sfrxeth: sfrxETH**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 |`AMM`|[0x136e783846ef68c8bd00a3369f787df8d683a696](https://etherscan.io/address/0x136e783846ef68c8bd00a3369f787df8d683a696#code)|
 |`Controller`|[0x8472a9a7632b173c8cf3a86d3afec50c35548e76](https://etherscan.io/address/0x8472a9a7632b173c8cf3a86d3afec50c35548e76#code)|
 |`MonetaryPolicy`|[0xd8f49c747aed8d394f6f1841546e2b83e09a357d](https://etherscan.io/address/0xd8f49c747aed8d394f6f1841546e2b83e09a357d#code)|
@@ -1462,7 +1462,7 @@ For testing in production purposes, several contract deployments have taken plac
 **:logos-wsteth: wstETH**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 |`AMM`|[0x37417b2238aa52d0dd2d6252d989e728e8f706e4](https://etherscan.io/address/0x37417b2238aa52d0dd2d6252d989e728e8f706e4#code)|
 |`Controller`|[0x100daa78fc509db39ef7d04de0c1abd299f4c6ce](https://etherscan.io/address/0x100daa78fc509db39ef7d04de0c1abd299f4c6ce#code)|
 |`MonetaryPolicy`|[0xD8F49c747AED8D394F6f1841546E2B83E09A357D](https://etherscan.io/address/0xD8F49c747AED8D394F6f1841546E2B83E09A357D#code)|
@@ -1475,7 +1475,7 @@ For testing in production purposes, several contract deployments have taken plac
 **:logos-wbtc: wBTC**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 |`AMM`|[0xe0438eb3703bf871e31ce639bd351109c88666ea](https://etherscan.io/address/0xe0438eb3703bf871e31ce639bd351109c88666ea#code)|
 |`Controller`|[0x4e59541306910ad6dc1dac0ac9dfb29bd9f15c67](https://etherscan.io/address/0x4e59541306910ad6dc1dac0ac9dfb29bd9f15c67#code)|
 |`MonetaryPolicy`|[0x8c5a7f011f733fbb0a6c969c058716d5ce9bc933](https://etherscan.io/address/0x8c5a7f011f733fbb0a6c969c058716d5ce9bc933#code)|
@@ -1488,7 +1488,7 @@ For testing in production purposes, several contract deployments have taken plac
 **:logos-eth: ETH**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 |`AMM`|[0x1681195c176239ac5e72d9aebacf5b2492e0c4ee](https://etherscan.io/address/0x1681195c176239ac5e72d9aebacf5b2492e0c4ee#code)|
 |`Controller`|[0xa920de414ea4ab66b97da1bfe9e6eca7d4219635](https://etherscan.io/address/0xa920de414ea4ab66b97da1bfe9e6eca7d4219635#code)|
 |`MonetaryPolicy`|[0x8c5a7f011f733fbb0a6c969c058716d5ce9bc933](https://etherscan.io/address/0x8c5a7f011f733fbb0a6c969c058716d5ce9bc933#code)|
@@ -1501,7 +1501,7 @@ For testing in production purposes, several contract deployments have taken plac
 **:logos-sfrxeth: sfrxeth v2**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 |`AMM`|[0xfa96ad0a9e64261db86950e2da362f5572c5c6fd](https://etherscan.io/address/0xfa96ad0a9e64261db86950e2da362f5572c5c6fd#code)|
 |`Controller`|[0xec0820efafc41d8943ee8de495fc9ba8495b15cf](https://etherscan.io/address/0xec0820efafc41d8943ee8de495fc9ba8495b15cf#code)|
 |`MonetaryPolicy`|[0xd8f49c747aed8d394f6f1841546e2b83e09a357d](https://etherscan.io/address/0xd8f49c747aed8d394f6f1841546e2b83e09a357d#code)|
@@ -1514,7 +1514,7 @@ For testing in production purposes, several contract deployments have taken plac
 **tBTC**
 
 | Contract Type | Contract Address |
-| :---------: | :----------------: | 
+| :---------: | :----------------: |
 |`AMM`|[0xf9bd9da2427a50908c4c6d1599d8e62837c2bcb0](https://etherscan.io/address/0xf9bd9da2427a50908c4c6d1599d8e62837c2bcb0#code)|
 |`Controller`|[0x1c91da0223c763d2e0173243eadaa0a2ea47e704](https://etherscan.io/address/0x1c91da0223c763d2e0173243eadaa0a2ea47e704#code)|
 |`MonetaryPolicy`|[0x8c5a7f011f733fbb0a6c969c058716d5ce9bc933](https://etherscan.io/address/0x8c5a7f011f733fbb0a6c969c058716d5ce9bc933#code)|

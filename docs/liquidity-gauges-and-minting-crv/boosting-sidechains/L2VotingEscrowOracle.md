@@ -3,7 +3,7 @@
 The `L2VotingEscrowOracle` contract is used to fetch information from the `VotingEscrow` from Ethereum. This data can then be used to calculate boost rates for providing liquidity.
 
 ???+ vyper "`L2VotingEscrowOracle.vy`"
-    The source code for the `L2VotingEscrowOracle.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/blob/master/contracts/L2VotingEscrowOracle.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10` 
+    The source code for the `L2VotingEscrowOracle.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/blob/master/contracts/L2VotingEscrowOracle.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`
 
 
 
@@ -69,7 +69,7 @@ The `L2VotingEscrowOracle` contract is used to fetch information from the `Votin
                 if self.user_point_epoch[_user] < _user_point_epoch:
                     self.locked[_user] = _locked
                     self.user_point_epoch[_user] = _user_point_epoch
-                
+
                 self.user_point_history[_user][_user_point_epoch] = _user_point_history
             ```
 

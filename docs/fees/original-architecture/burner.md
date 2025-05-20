@@ -7,17 +7,17 @@ search:
 
 Burning is handled on a per-coin basis. The process is initiated by calling the `PoolProxy.burn` or `PoolProxy.burn_many` functions. Calling to burn a coin transfers that coin into the burner and then calls the `burn` function on the burner.
 
-Each `burn` action typically performs one conversion into another asset; either 3CRV itself, or something that is a step closer to reaching 3CRV. As an example, here is the sequence of conversions required to burn wstETH:  
+Each `burn` action typically performs one conversion into another asset; either 3CRV itself, or something that is a step closer to reaching 3CRV. As an example, here is the sequence of conversions required to burn wstETH:
 
 **`wstETH -> stETH -> ETH -> USDT`**
 
-1. `wstETH` to `stETH` via *unwrapping (wstETH Burner)*  
-2. `stETH` to `ETH` via *swap through stETH/ETH curve pool (SwapStableBurner)*  
-3. `ETH` to `USDT` via *swap through tricrypto pool (CryptoSwapBurner)*  
-4. `USDT` to `3CRV` via *depositing into 3pool (StableDepositBurner)*  
+1. `wstETH` to `stETH` via *unwrapping (wstETH Burner)*
+2. `stETH` to `ETH` via *swap through stETH/ETH curve pool (SwapStableBurner)*
+3. `ETH` to `USDT` via *swap through tricrypto pool (CryptoSwapBurner)*
+4. `USDT` to `3CRV` via *depositing into 3pool (StableDepositBurner)*
 
 
-**Simplified  burn pattern:**  
+**Simplified  burn pattern:**
 
 ```mermaid
 flowchart LR
@@ -42,7 +42,7 @@ flowchart LR
     Efficiency within the intermediate conversions is the reason it is important to run the burn process in a specific order. For example, if you burn stETH prior to burning wstETH, you will have to burn stETH a second time!
 
 
-**There are multiple burner contracts, each of which handles a different category of fee coin.** 
+**There are multiple burner contracts, each of which handles a different category of fee coin.**
 
 ## **Deployed Burner Contracts**
 
@@ -211,7 +211,7 @@ The MetaBurner converts Metapool-paried coins to 3CRV and transfers to the FeeDi
 *There is no configuration required for this burner.*
 
 
-### **SynthBurner** 
+### **SynthBurner**
 Swaps non-USD denominated assets for synths, converts synths to sUSD and transfers to `UnderlyingBurner`.
 The synth burner is used to convert non-USD denominated assets into sUSD. This is accomplished via synth conversion, the same mechanism used in cross-asset swaps.
 
@@ -219,11 +219,11 @@ When the synth burner is called to burn a non-synthetic asset, it uses `Registry
 
 For synths, the burner first transfers to the [Underlying](#underlyingburner). Then it calls `UnderlyingBurner.convert_synth`, performing the cross-asset swap within the underlying burner. This is done to avoid requiring another transfer call after the settlement period has passed.
 
-The optimal sequence when burning assets using the synth burner is thus: 
+The optimal sequence when burning assets using the synth burner is thus:
 
-1. Coins that cannot directly swap to synths  
-2. Coins that can directly swap to synths  
-3. Synthetic assets  
+1. Coins that cannot directly swap to synths
+2. Coins that can directly swap to synths
+3. Synthetic assets
 
 *The burner is configurable via the following functions:*
 
@@ -240,7 +240,7 @@ The optimal sequence when burning assets using the synth burner is thus:
     | `_targets` |  `address[10]` | list of coins to be swapped for |
 
     !!!tip
-        If you wish to set less than 10 `_coins`, fill the remaining array slots with `ZERO_ADDRESS`.    
+        If you wish to set less than 10 `_coins`, fill the remaining array slots with `ZERO_ADDRESS`.
         The address as index `n` within this list corresponds to the address at index `n` within `coins`.
 
     ??? quote "Source code"
@@ -289,7 +289,7 @@ The optimal sequence when burning assets using the synth burner is thus:
     | `_synths` |  `address[10]` | list of synth tokens to register |
 
     !!!note
-        If you wish to set less than 10 `_coins`, fill the remaining array slots with `ZERO_ADDRESS`.    
+        If you wish to set less than 10 `_coins`, fill the remaining array slots with `ZERO_ADDRESS`.
         The address as index `n` within this list corresponds to the address at index `n` within `coins`.
 
     ??? quote "Source code"
@@ -318,7 +318,7 @@ The optimal sequence when burning assets using the synth burner is thus:
         'true'
         ```
 
-### **Wrapped stETH Burner** 
+### **Wrapped stETH Burner**
 This burner unwraps wstETH to stETH and sends it back to 0xECB.
 
 
@@ -328,11 +328,11 @@ The underlying burner handles assets that can be directly swapped to USDC and de
 !!!note
     Prior to burning any assets with the UnderlyingBurner, you should have completed the entire burn process with `SynthBurner`, `UniswapBurner` and `all of the lending burners`.
 
-The burn process consists of: 
+The burn process consists of:
 
-- For sUSD: First call settles to complete any pending synth conversions. Then swaps into USDC. 
-- For all other assets that are not DAI/USDC/USDT: Swap into USDC.  
-- For DAI/USDC/USDT: Only transfer the assets into the burner.  
+- For sUSD: First call settles to complete any pending synth conversions. Then swaps into USDC.
+- For all other assets that are not DAI/USDC/USDT: Swap into USDC.
+- For DAI/USDC/USDT: Only transfer the assets into the burner.
 
 *Once the entire burn process has been completed you must call **`execute`** as the final action:*
 
@@ -378,7 +378,7 @@ This burner converts DAI, USDC and USDT into 3CRV by adding liquidity to the 3po
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         def burn(_coin: ERC20) -> bool:
             """
@@ -575,7 +575,7 @@ This is not a burner contract in itself. Some metapools transfer *coin 0* of the
     !!!guard "Guarded Method"
         This function is only callable by the `ownership_admin` of the contract.
 
-    Function to set many burner for multiple coins at once. 
+    Function to set many burner for multiple coins at once.
 
     Emits: `AddBurner`
 
@@ -684,4 +684,3 @@ This is not a burner contract in itself. Some metapools transfer *coin 0* of the
         ```shell
         >>> GaugeController.set_burner_kill("False")
         ```
-

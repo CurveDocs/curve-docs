@@ -697,7 +697,7 @@ The logic for both minting and burning the tokens resides in the pool contract.
 ### `initialize`
 !!! description "`LPTokenV5.initialize(_name: String[64], _symbol: String[32], _pool: address):`"
 
-    Function to initialize the LP Token and setting name (`_name`), symbol (`_symbol`) and the corresponding liquidity pool (`_pool`).  
+    Function to initialize the LP Token and setting name (`_name`), symbol (`_symbol`) and the corresponding liquidity pool (`_pool`).
     This function triggers a transfer event, enabling block explorers to recognize the contract as an ERC20.
 
     Emits: `Transfer`

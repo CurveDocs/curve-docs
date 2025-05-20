@@ -140,7 +140,7 @@ Admin fees of a Curve pool are usually claimed through an external function, cal
 
 ## **`exchange_received`**
 
-This new function **allows the exchange of tokens without actually transfering tokens in**, as the exchange is based on the change of the coins balances within the pool (see code below).    
+This new function **allows the exchange of tokens without actually transfering tokens in**, as the exchange is based on the change of the coins balances within the pool (see code below).
 Users of this method are dex aggregators, arbitrageurs, or other users who **do not wish to grant approvals to the contract**. They can instead send tokens directly to the contract and call **`exchange_received()`**.
 
 ??? quote "Transfer logic when using `exchange_received()`"
@@ -215,12 +215,12 @@ graph LR
 ```
 
 1. User gives approval the `AGGREGATOR`, which then transfers tokens into the aggregator contract
-2. Aggregator exchanges `GOV-TOKEN` for `USDT` using Uniswap  
+2. Aggregator exchanges `GOV-TOKEN` for `USDT` using Uniswap
 3. Transfers the `USDT` directly from Uniswap into the Curve pool
 4. Perform a swap on the Curve pool (`USDT<>USDC`) via **`exchange_received`**
 5. Transfer `USDC` to the user
 
 
-!!!info 
+!!!info
     This method saves aggregators one redundant ERC-20 transfer and eliminates the need to grant approval to a curve pool. Without this function, the aggregator would have to conduct an additional transaction, transferring USDT from the Uniswap pool to their aggregator contract after the exchange, and then sending it to the Curve pool for another exchange (USDT<>USDC).
     However, with this method in place, the aggregator can transfer the output tokens directly into the next pool and perform an exchange.

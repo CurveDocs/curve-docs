@@ -75,7 +75,7 @@ Liquidity pools, gauges, and LP token contracts are created based on their respe
     Traditional Factories such as the regular [stableswap](./stableswap/deployer-api.md) or [cryptoswap](./cryptoswap/deployer-api.md) utilize Vyper's [`create_forwarder_to`](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=create_forwarder_to#chain-interaction) function (renamed to `create_minimal_proxy_to` in Vyper version 0.3.4) to deploy liquidity pools, LP tokens, and gauges.
 
 - **`Blueprint Contracts`**
-    
+
     Newer factories utilize blueprint contracts as outlined in [EIP-5202](https://eips.ethereum.org/EIPS/eip-5202). The corresponding contracts are directly created from their blueprint implementations, which has become the preferred method for all newly deployed factories.
 
 

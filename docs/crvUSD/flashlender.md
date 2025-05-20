@@ -109,7 +109,7 @@ The contract does not charge any fees on flash loans. The `fee` and `flashFee` m
 
     === "Example"
 
-        Calling the function with the `crvUSD` address as input will return the flash-loanable amount. Calling the function with any other token than `crvUSD` will return `0`. 
+        Calling the function with the `crvUSD` address as input will return the flash-loanable amount. Calling the function with any other token than `crvUSD` will return `0`.
 
         ```shell
         >>> FlashLender.maxFlashLoan('0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E')

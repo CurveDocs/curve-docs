@@ -3,7 +3,7 @@
 The AggregatorStablePrice contract is designed to **aggregate the prices of crvUSD based on multiple Curve Stableswap pools**. This price is primarily used as an oracle for calculating the interest rate but also for [PegKeepers](../crvUSD/pegkeepers/overview.md) to determine whether to mint and deposit or withdraw and burn.
 
 !!!deploy "Contract Source & Deployment"
-    Source code is available on [:material-github: Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/price_oracles/AggregateStablePrice2.vy). 
+    Source code is available on [:material-github: Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/price_oracles/AggregateStablePrice2.vy).
     Relevant contract deployments can be found [here](../references/deployed-contracts.md#curve-stablecoin).
 
 
@@ -17,8 +17,8 @@ The `PriceAggregator` contract calculates the weighted average price of crvUSD a
 
 The price calculation begins with determining the EMA of the TVL from different Curve Stableswap liquidity pools using the `_ema_tvl` function. This internal function computes the EMA TVLs based on the following formula, which adjusts for the time since the last update to smooth out short-term volatility in the TVL data, providing a more stable and representative average value over the specified time window (`TVL_MA_TIME` set to 50,000 seconds):
 
-$$\alpha = 
-    \begin{cases} 
+$$\alpha =
+    \begin{cases}
     1 & \text{if last_timestamp} = \text{current_timestamp}, \\
     e^{-\frac{(\text{current_timestamp} - \text{last_timestamp}) * 10^{18}}{\text{TVL_MA_TIME}}} & \text{otherwise}.
     \end{cases}
@@ -129,7 +129,7 @@ The `_price` function then uses these EMA TVLs to calculate the aggregated price
     $$\text{e}_{min} = \min(\text{e}_i, \text{max_value(uint256)})$$
 
 - Applies an exponential decay based on these variance measures to weigh each pool's contribution to the final average price, reducing the influence of prices far from the minimum variance.
-  
+
     $$w = \frac{\text{D}_i * e^\left({\text{e}_i - e_{min}}\right)}{10^{18}}$$
 
 - Sums up all `w` to store it in `w_sum` and calculates the product of `w * prices[i]`, which is stored in `wp_sum`.
@@ -145,8 +145,8 @@ The `_price` function then uses these EMA TVLs to calculate the aggregated price
 !!! description "`PriceAggregator.price() -> uint256:`"
 
     Function to calculate the weighted price of crvUSD.
-    
-    Returns: price (`uint256`). 
+
+    Returns: price (`uint256`).
 
 
     ??? quote "Source code"
@@ -222,7 +222,7 @@ The `_price` function then uses these EMA TVLs to calculate the aggregated price
 !!! description "`PriceAggregator.last_price() -> uint256: view`"
 
     Getter for the last price. This variable was set to $10^{18}$ (1.00) when initializing the contract and is now updated every time [`price_w`](#price_w) is called.
-    
+
     Returns: last price of crvUSD (`uint256`).
 
     ??? quote "Source code"
@@ -321,7 +321,7 @@ The `_price` function then uses these EMA TVLs to calculate the aggregated price
 !!! description "`PriceAggregator.last_tvl(arg0: uint256) -> uint256:`"
 
     Getter for the total value locked of price pair (pool).
-    
+
     Returns: total value locked (`uint256`).
 
     | Input      | Type   | Description |
@@ -348,7 +348,7 @@ The `_price` function then uses these EMA TVLs to calculate the aggregated price
 !!! description "`PriceAggregator.price_w() -> uint256:`"
 
     Function to calculate and write the price. If called successfully, updates `last_tvl`, `last_price` and `last_timestamp`.
-    
+
     Returns: price (`uint256`).
 
     ??? quote "Source code"
@@ -435,7 +435,7 @@ All price pairs added to the contract are considered when calculating the `price
 !!! description "`PriceAggregator.price_pairs(arg0: uint256) -> tuple: view`"
 
     Getter for the price pair at index `arg0` and whether the price pair is inverse.
-    
+
     Returns: price pair (`address`) and true or false (`bool`).
 
     | Input      | Type   | Description |
@@ -461,7 +461,7 @@ All price pairs added to the contract are considered when calculating the `price
 ### `add_price_pair`
 !!! description "`PriceAggregator.add_price_pair(_pool: Stableswap):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
     Function to add a price pair to the PriceAggregator.
@@ -509,7 +509,7 @@ All price pairs added to the contract are considered when calculating the `price
 ### `remove_price_pair`
 !!! description "`PriceAggregator.remove_price_pair(n: uint256):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
     Function to remove a price pair from the contract. If a prior pool than the latest added one gets removed, the function will move the latest added price pair to the removed pair pairs index to not mess up `price_pairs`.
@@ -562,7 +562,7 @@ All price pairs added to the contract are considered when calculating the `price
 !!! description "`PriceAggregator.admin() -> address: view`"
 
     Getter for the admin of the contract, which is the Curve DAO OwnershipAgent.
-    
+
     Returns: admin (`address`).
 
     ??? quote "Source code"
@@ -590,7 +590,7 @@ All price pairs added to the contract are considered when calculating the `price
 ### `set_admin`
 !!! description "`PriceAggregator.set_admin(_admin: address):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
     Function to set a new admin.
@@ -636,7 +636,7 @@ All price pairs added to the contract are considered when calculating the `price
 !!! description "`PriceAggregator.SIGMA() -> uint256: view`"
 
     Getter for the sigma value. SIGMA is a predefined constant that influences the adjustment of price deviations, affecting how variations in individual stablecoin prices contribute to the overall average stablecoin price.
-    
+
     Returns: sigma (`uint256`).
 
     ??? quote "Source code"
@@ -664,7 +664,7 @@ All price pairs added to the contract are considered when calculating the `price
 !!! description "`PriceAggregator.STABLECOIN() -> address: view`"
 
     Getter for the stablecoin contract address.
-    
+
     Returns: crvUSD contract (`address`).
 
     ??? quote "Source code"
@@ -692,7 +692,7 @@ All price pairs added to the contract are considered when calculating the `price
 !!! description "`PriceAggregator.last_timestamp() -> uint256:`"
 
     Getter for the latest timestamp. Variable is updated when [`price_w`](#price_w) is called.
-    
+
     Returns: timestamp (`uint256`).
 
     ??? quote "Source code"
@@ -715,7 +715,7 @@ All price pairs added to the contract are considered when calculating the `price
 !!! description "`PriceAggregator.TVL_MA_TIME() -> uint256: view`"
 
     Getter for the time period for the calculation of the EMA prices.
-    
+
     Returns: timestamp (`uint256`).
 
     ??? quote "Source code"

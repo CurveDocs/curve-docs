@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     const FeeDistributorContract = new web3.eth.Contract(FeeDistributorABI, FeeDistributorAddress);
     const Multicall3Contract = new web3.eth.Contract(Multicall3ABI, Multicall3Address);
-    
+
     async function updateValues() {
         const calls = [
             { target: FeeDistributorAddress, allowFailure: false, callData: web3.eth.abi.encodeFunctionSignature('token_last_balance()') },

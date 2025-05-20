@@ -1,7 +1,7 @@
-In exchange for depositing coins into a Curve pool, liquidity providers receive pool LP (liquidity pool) tokens. 
-A Curve pool LP token is an ERC20 contract specific to the Curve pool. Hence, LP tokens are transferrable. 
-Holders of pool LP tokens may deposit and stake the token into a pool’s liquidity gauge in order to receive ``CRV`` token rewards. 
-Alternatively, if the LP token is supported by a metapool, the token may be deposited into the respective metapool 
+In exchange for depositing coins into a Curve pool, liquidity providers receive pool LP (liquidity pool) tokens.
+A Curve pool LP token is an ERC20 contract specific to the Curve pool. Hence, LP tokens are transferrable.
+Holders of pool LP tokens may deposit and stake the token into a pool’s liquidity gauge in order to receive ``CRV`` token rewards.
+Alternatively, if the LP token is supported by a metapool, the token may be deposited into the respective metapool
 in exchange for the metapool’s LP token (see here).
 
 Currently, the following versions of Curve StableSwap LP tokens exist:

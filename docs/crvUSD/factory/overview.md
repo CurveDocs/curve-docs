@@ -3,7 +3,7 @@ The crvUSD Factory enables the **creation of new markets** and adjustments, incl
 Other than the pool factory, this factory **does not allow permissionless deployment of new markets**. Only its **`admin`**, the CurveOwnershipAgent, can call to add a market. Therefore, adding a new market requires a successfully passed DAO vote.
 
 !!!deploy "Contract Source & Deployment"
-    **crvUSD Market Factory** contract is deployed to the Ethereum mainnet at: [0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC#code).  
+    **crvUSD Market Factory** contract is deployed to the Ethereum mainnet at: [0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC#code).
     Source code available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/ControllerFactory.vy).
 
 
@@ -207,7 +207,7 @@ Implementations are blueprint contracts used to deploy new markets. When calling
 
     Getter for the stablecoin address.
 
-    Returns: stablecoin (`address`). 
+    Returns: stablecoin (`address`).
 
     ??? quote "Source code"
 
@@ -244,7 +244,7 @@ Implementations are blueprint contracts used to deploy new markets. When calling
 
     Getter for the sum of all debts across the controllers.
 
-    Returns: total amount of debt (`uint256`). 
+    Returns: total amount of debt (`uint256`).
 
     ??? quote "Source code"
 
@@ -276,7 +276,7 @@ Implementations are blueprint contracts used to deploy new markets. When calling
 
     Getter for the controller address for `collateral`.
 
-    Returns: controller `address`. 
+    Returns: controller `address`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -309,7 +309,7 @@ Implementations are blueprint contracts used to deploy new markets. When calling
 
     Getter for the amm address for `collateral`.
 
-    Returns: amm `address`. 
+    Returns: amm `address`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -342,7 +342,7 @@ Implementations are blueprint contracts used to deploy new markets. When calling
 
     Getter for the controller address at index `arg0`.
 
-    Returns: controller `address` at specific index. 
+    Returns: controller `address` at specific index.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -367,7 +367,7 @@ Implementations are blueprint contracts used to deploy new markets. When calling
 
     Getter for the amm address at index `arg0`.
 
-    Returns: AMM `address` at specific index. 
+    Returns: AMM `address` at specific index.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|

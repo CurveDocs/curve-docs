@@ -226,7 +226,7 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../govern
 | Sonic Bridge (LayerZero) | [`0x5A537a46D780B1C70138aB98eDce69e7a53177ba`](https://etherscan.io/address/0x5A537a46D780B1C70138aB98eDce69e7a53177ba#code) |
 
 **:logos-crvusd: crvUSD Bridges**
- 
+
 | Chain | Contract Address |
 | :---- | :--------------- |
 | AVAX Bridge (LayerZero) | [`0x26D01ce989037befd7Ff63837A86e2da32E7D7e2`](https://etherscan.io/address/0x26D01ce989037befd7Ff63837A86e2da32E7D7e2#code) |
@@ -361,8 +361,8 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../govern
     The old implementation of sidechain gauges is deprecated and will be removed in the future.
 
 !!!danger "MULTICHAIN WARNING"
-    At the time of writing (13.11.2023), sidechain gauges on Celo, Avalanche and Fantom are disabled due to issues with Multichain.    
-    The Multichain service stopped currently, and all bridge transactions will be stuck on the source chains. There is no confirmed resume time.  
+    At the time of writing (13.11.2023), sidechain gauges on Celo, Avalanche and Fantom are disabled due to issues with Multichain.
+    The Multichain service stopped currently, and all bridge transactions will be stuck on the source chains. There is no confirmed resume time.
     Multichain statement: https://twitter.com/MultichainOrg/status/1677180114227056641
 
 !!!github "GitHub"

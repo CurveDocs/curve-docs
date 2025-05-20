@@ -177,7 +177,7 @@
                 return pool
             ```
 
-    
+
     === "Example"
 
         ```shell
@@ -244,11 +244,11 @@
                 log LiquidityGaugeDeployed(_pool, gauge)
                 return gauge
             ```
-    
+
     === "Example"
 
         ```shell
         >>> Factory.deploy_gauge('pool address')
 
-        'returns address of the deployed gauge' 
+        'returns address of the deployed gauge'
         ```

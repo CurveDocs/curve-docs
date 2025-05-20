@@ -48,7 +48,7 @@ _ma_exp_time = 866                                      # ~600 seconds
 ```
 
 !!!note "Parameter Precision"
-    The precision of `_fee` and `_offpeg_fee_multiplier` is 1e10.  
+    The precision of `_fee` and `_offpeg_fee_multiplier` is 1e10.
     The time window of the moving average exponential oracle is calculated using `time_in_seconds / ln(2)`.
 
 ---
@@ -58,11 +58,11 @@ _ma_exp_time = 866                                      # ~600 seconds
 Pools are **created from implementation contracts** (blueprints). These contracts are added to the Factory and must be choosen when deploying a pool.
 
 !!!warning
-    The Factory can have **multiple plain- and meta-pool implementations**. If there are multiple implementations for a plain or meta-pool, it's important to understand the differences and determine which one is suitable.  
+    The Factory can have **multiple plain- and meta-pool implementations**. If there are multiple implementations for a plain or meta-pool, it's important to understand the differences and determine which one is suitable.
     Additionally, implementation contracts are **upgradable**. They can either be replaced or have additional implementation contracts set. Please always make sure to check the most recent ones.
 
     To query the factory-specific implementations:
-    
+
     ```shell
     >>> Factory.pool_implementation(0)
     '0xDCc91f930b42619377C200BA05b7513f2958b202'
@@ -86,13 +86,13 @@ Stableswap-NG infrastructure supports pools with the following asset types:
 
 *Consequently, supported tokens include:*
 
-- ERC-20 support for return `True/revert`, `True/False` or `None`  
-- ERC-20 tokens can have *arbitrary decimals (≤18)*  
-- ERC-20 tokens that *rebase* (either positive or fee on transfer)  
+- ERC-20 support for return `True/revert`, `True/False` or `None`
+- ERC-20 tokens can have *arbitrary decimals (≤18)*
+- ERC-20 tokens that *rebase* (either positive or fee on transfer)
 - ERC-20 tokens that have a *rate oracle* (e.g. wstETH, cbETH) Oracle precision must be $10^{18}$
 - ERC-4626 tokens with *arbitrary percision* (≤18) of Vault token and underlying asset
 
-!!!warning 
+!!!warning
     - **`ERC20:`** Users are advised to do careful due-diligence on ERC20 tokens that they interact with, as this contract **cannot differentiate between harmless and malicious** ERC20 tokens.
     - **`Oracle:`** When using tokens with oracles, its important to know that they **may be controlled externally by an EOA**.
     - **`Rebasing:`** Users and Integrators are advised to understand how the AMM contract works with rebasing balances.
@@ -119,7 +119,7 @@ _asset_types = [0, 2]   # coin(0) = asset type 0; coin(1) = asset type 2
 `method_ids` and `_oracles` are required for rate oracles to function. ERC-4626 does not need either of these. The sole requirement for those is to have a `convertToAssets` method.
 
 
-!!!info 
+!!!info
     When deploying pools that include coins not requiring a rate oracle, **`b""`** or **`0x00000000`** should be included in the `_methods_id` array and the **`ZERO_ADDRESS`** should be used in the `_oracles` array as placeholders for each coin.
 
 - `_method_ids` is the first four bytes of the Keccak-256 hash of the function signatures of the oracle addresses that give rate oracles.
@@ -147,10 +147,10 @@ _oracles = ["0x0000000000000000000000000000000000000000", "0xae78736cd615f374d30
 
 | Pool | Asset Types | Method ID's | Rate Oracle |
 | :---: | :--------: | :---------: | :---------: |
-| [mkUSD/USDC](https://etherscan.io/tx/0xf980b4a4194694913af231de69ab4593f5e0fcdc) | `[0, 0]` | `['0x00000000', '0x00000000']` | `['0x0000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000']` | 
-| [FRAX/sDAI](https://etherscan.io/tx/0xce6431d21e3fb1036ce9973a3312368ed96f5ce7) | `[0, 3]` | `['0x00000000', '0x00000000']` | `['0x0000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000']` | 
-| [wETH/rETH](https://etherscan.io/tx/0x9efe1a1cbd6ca51ee8319afc4573d253c3b732af) | `[0 , 1]` | `['0x00000000', '0xe6aa216c']` | `['0x0000000000000000000000000000000000000000', '0xae78736Cd615f374D3085123A210448E74Fc6393']` | 
-| [rmETH/mETH](https://etherscan.io/address/0xdd4316c777a2295d899ba7ad92e0efa699865f43) | `[2 , 0]` | `['0x00000000', '0x00000000']` | `['0x0000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000']` | 
+| [mkUSD/USDC](https://etherscan.io/tx/0xf980b4a4194694913af231de69ab4593f5e0fcdc) | `[0, 0]` | `['0x00000000', '0x00000000']` | `['0x0000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000']` |
+| [FRAX/sDAI](https://etherscan.io/tx/0xce6431d21e3fb1036ce9973a3312368ed96f5ce7) | `[0, 3]` | `['0x00000000', '0x00000000']` | `['0x0000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000']` |
+| [wETH/rETH](https://etherscan.io/tx/0x9efe1a1cbd6ca51ee8319afc4573d253c3b732af) | `[0 , 1]` | `['0x00000000', '0xe6aa216c']` | `['0x0000000000000000000000000000000000000000', '0xae78736Cd615f374D3085123A210448E74Fc6393']` |
+| [rmETH/mETH](https://etherscan.io/address/0xdd4316c777a2295d899ba7ad92e0efa699865f43) | `[2 , 0]` | `['0x00000000', '0x00000000']` | `['0x0000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000']` |
 
 
 ---
@@ -332,7 +332,7 @@ _oracles = ["0x0000000000000000000000000000000000000000", "0xae78736cd615f374d30
             "crvUSD/USDT",  # _name
             "crvusd-usdt",  # _symbol
             [ # coins:
-                "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E", # crvusd 
+                "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E", # crvusd
                 "0xdAC17F958D2ee523a2206206994597C13D831ec7" # usdt
             ],
             1500 # _A
@@ -345,7 +345,7 @@ _oracles = ["0x0000000000000000000000000000000000000000", "0xae78736cd615f374d30
             ["0x0000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000"] # _oracles
         )
 
-        'returns address of the deployed plain pool'  
+        'returns address of the deployed plain pool'
         ```
 
 
@@ -544,7 +544,7 @@ _oracles = ["0x0000000000000000000000000000000000000000", "0xae78736cd615f374d30
             "0x0000000000000000000000000000000000000000" # _oracle
         )
 
-        'returns address of the deployed metapool'   
+        'returns address of the deployed metapool'
         ```
 
 

@@ -4,7 +4,7 @@
     The source code for the `ScrvusdOracleV2` contract is available on [:material-github: GitHub](https://github.com/curvefi/storage-proofs/blob/main/contracts/scrvusd/oracles/ScrvusdOracleV2.vy). The contract is written in [Vyper](https://vyperlang.org/) version `0.4.0`.
 
     The oracle contracts are deployed on various chains at: *soon*
-    
+
 
 ---
 
@@ -733,7 +733,7 @@ To guard the respective functions which can change the parameters, the contract 
     !!!guard "Guarded Method by [Snekmate 🐍](https://github.com/pcaversaccio/snekmate)"
         This contract makes use of a Snekmate module to manage roles and permissions. This specific function can only be called by the `DEFAULT_ADMIN_ROLE` role.
 
-    Function to set a new value for `max_price_increment`. The new value must be less than the stableswaps minimum fee.  
+    Function to set a new value for `max_price_increment`. The new value must be less than the stableswaps minimum fee.
     $\frac{fee}{2 * \text{block_time}}$ is considered to be safe.
 
     Emits: `SetMaxPriceIncrement` event.
@@ -899,4 +899,3 @@ To guard the respective functions which can change the parameters, the contract 
 ## **Snekmate Access Control**
 
 The contract makes use of the `access_control.vy` module for access control. More [here](https://github.com/pcaversaccio/snekmate/blob/main/src/snekmate/auth/access_control.vy).
-

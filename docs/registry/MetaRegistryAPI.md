@@ -1,6 +1,6 @@
 <h1>MetaRegistry: API </h1>
 
-The MetaRegistry offers an **on-chain API** for various properties of Curve pools.  
+The MetaRegistry offers an **on-chain API** for various properties of Curve pools.
 
 A full list of all deployment addresses can be found [here](../references/deployed-contracts.md#metaregistry).
 
@@ -89,7 +89,7 @@ A full list of all deployment addresses can be found [here](../references/deploy
     | `_to`   | `address` | Address of coin to be received |
     | `i`     | `uint256` | Index of the pool to return    |
 
-    ??? quote "Source code" 
+    ??? quote "Source code"
 
         ```vyper
         @view
@@ -288,7 +288,7 @@ The factory has a similar API to that of the main Registry, which can be used to
     === "Example"
         ```shell
         >>> MetaRegistry.is_meta("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA")
-        'true'        
+        'true'
         ```
 
 
@@ -419,16 +419,16 @@ The factory has a similar API to that of the main Registry, which can be used to
         ```
 
     ---
-    
+
     For **CryptoSwap**, the getter returns:
 
-    1. Amplification coefficient (A)  
-    2. Invariant (D)  
-    3. Gamma coefficient (gamma)  
-    4. Allowed extra profit  
-    5. Fee gamma  
-    6. Adjustment step  
-    7. MA (moving average) half time  
+    1. Amplification coefficient (A)
+    2. Invariant (D)
+    3. Gamma coefficient (gamma)
+    4. Allowed extra profit
+    5. Fee gamma
+    6. Adjustment step
+    7. MA (moving average) half time
 
     === "Example"
         ```shell
@@ -837,7 +837,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         >>> MetaRegistry.get_balances("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7")
         147006104035945155794243533, 141336760960804, 94869577680718, 0, 0, 0, 0, 0
 
-        >>> MetaRegistry.get_balances("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA") 
+        >>> MetaRegistry.get_balances("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA")
         6781730641038140101957300, 5934556341193690490470482, 0, 0, 0, 0, 0, 0
         ```
 
@@ -846,7 +846,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 !!! description "`MetaRegistry.get_underlying_coins(_pool: address, _handler_id: uint256 = 0) -> address[MAX_COINS]:`"
 
     Getter for the underlying coins in a metapool. For non-metapools it returns the same value as **`get_coins`**.
-    
+
     Returns: underlying coins (`address[MAX_COINS]`).
 
     | Input         | Type      | Description |
@@ -1281,7 +1281,7 @@ New registries can be added by the `owner` of the contract using the [`add_regis
 
 ### `add_registry_handler`
 !!! description "`MetaRegistry.add_registry_handler(_registry_handler: address):`"
- 
+
     !!!guard "Guarded Method"
         This function is only callable by the `owner` of the contract.
 

@@ -6,7 +6,7 @@
 The `RootGaugeFactory` contract is used to deploy liquidity gauges on the Ethereum mainnet. These gauges can then be voted on to be added to the `GaugeController`. If successful, the gauges will be able to receive CRV emissions, which then can be bridged via a `Bridger` contract to the child chains `ChildGauge`.
 
 ???+ vyper "`RootGaugeFactory.vy`"
-    The source code for the `RootGaugeFactory.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/blob/master/contracts/RootGaugeFactory.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10` 
+    The source code for the `RootGaugeFactory.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/blob/master/contracts/RootGaugeFactory.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`
 
     The contract is deployed on :logos-ethereum: Ethereum at [`0x306A45a1478A000dC701A6e1f7a569afb8D9DCD6`](https://etherscan.io/address/0x306A45a1478A000dC701A6e1f7a569afb8D9DCD6).
 
@@ -201,7 +201,7 @@ The `RootGaugeFactory` allows the deployment of root gauges on Ethereum and chil
 
 ## **Transmitting Emissions**
 
-Once a root gauge has received emissions, they can be transmitted to the child gauge. This is done by calling the `transmit_emissions` function. Emissions can only be transmitted from the `RootGaugeFactory`. 
+Once a root gauge has received emissions, they can be transmitted to the child gauge. This is done by calling the `transmit_emissions` function. Emissions can only be transmitted from the `RootGaugeFactory`.
 
 Transmitting emissions is permissionless. Anyone can do it.
 
@@ -329,15 +329,15 @@ Transmitting emissions is permissionless. Anyone can do it.
 
         <div class="highlight">
         <pre><code>>>> RootGaugeFactory.get_bridger(
-        <input id="getBridgerInput" type="text" value="252" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <input id="getBridgerInput" type="text" value="252"
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchGetBridger()"/>)
         <span id="getBridgerOutput"></span></code></pre>
         </div>
@@ -374,25 +374,25 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
         <div class="highlight">
         <pre><code>>>> RootGaugeFactory.get_gauge(
-        Chain ID: <input id="getGaugeChainIdInput" 
-        type="text" 
+        Chain ID: <input id="getGaugeChainIdInput"
+        type="text"
         value="252"
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>
-        Gauge: <input id="getGaugeIndexInput" 
+        Gauge: <input id="getGaugeIndexInput"
         type="text"
         value="0"
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>)
         <span id="getGaugeOutput"></span></code></pre>
         </div>
@@ -422,15 +422,15 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
         <div class="highlight">
         <pre><code>>>> RootGaugeFactory.get_gauge_count(
-        <input id="getGaugeCountInput" type="text" value="252" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <input id="getGaugeCountInput" type="text" value="252"
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchGetGaugeCount()"/>)
         <span id="getGaugeCountOutput"></span></code></pre>
         </div>
@@ -460,15 +460,15 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
         <div class="highlight">
         <pre><code>>>> RootGaugeFactory.is_valid_gauge(
-        <input id="isValidGaugeInput" type="text" value="0x6233394c3C466A45A505EFA4857489743168E9Fa" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <input id="isValidGaugeInput" type="text" value="0x6233394c3C466A45A505EFA4857489743168E9Fa"
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchIsValidGauge()"/>)
         <span id="isValidGaugeOutput"></span></code></pre>
         </div>
@@ -482,7 +482,7 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 ### `get_implementation`
 !!! description "`RootGaugeFactory.get_implementation() -> address: view`"
 
-    Getter for the `RootGauge` implementation contract. This implementation contract is used to deploy new `RootGauge` contracts using 
+    Getter for the `RootGauge` implementation contract. This implementation contract is used to deploy new `RootGauge` contracts using
 
     Returns: implementation address (`address`).
 
@@ -555,7 +555,7 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
         '0x0000000000000000000000000000000000000000'
 
         >>> RootGaugeFactory.set_implementation('0x6233394c3C466A45A505EFA4857489743168E9Fa')
-        
+
         >>> RootGaugeFactory.get_implementation()
         '0x6233394c3C466A45A505EFA4857489743168E9Fa'
         ```
@@ -585,15 +585,15 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
         <div class="highlight">
         <pre><code>>>> RootGaugeFactory.get_child_factory(
-        <input id="getChildFactoryInput" type="text" value="252" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <input id="getChildFactoryInput" type="text" value="252"
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchGetChildFactory()"/>)
         <span id="getChildFactoryOutput"></span></code></pre>
         </div>
@@ -624,15 +624,15 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
         <div class="highlight">
         <pre><code>>>> RootGaugeFactory.get_child_implementation(
-        <input id="getChildImplementationInput" type="text" value="252" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <input id="getChildImplementationInput" type="text" value="252"
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchGetChildImplementation()"/>)
         <span id="getChildImplementationOutput"></span></code></pre>
         </div>

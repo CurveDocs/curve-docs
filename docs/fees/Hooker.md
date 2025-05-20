@@ -10,7 +10,7 @@ The `Hooker` contract is a versatile and essential component within the Curve Fi
 
     The `Hooker` contract is deployed on the following chains:
 
-    - :logos-ethereum: Ethereum at [`0x9A9DF35cd8E88565694CA6AD5093c236C7f6f69D`](https://etherscan.io/address/0x9A9DF35cd8E88565694CA6AD5093c236C7f6f69D) 
+    - :logos-ethereum: Ethereum at [`0x9A9DF35cd8E88565694CA6AD5093c236C7f6f69D`](https://etherscan.io/address/0x9A9DF35cd8E88565694CA6AD5093c236C7f6f69D)
     - :logos-gnosis: Gnosis at [`0xE898893ebAe7b75dc4cAB0fb16e24137309ff178`](https://gnosisscan.io/address/0xE898893ebAe7b75dc4cAB0fb16e24137309ff178)
 
 
@@ -102,21 +102,21 @@ Before hooks can be executed, they need to be added via `set_hooks`. These hooks
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns a `Hook` struct at a specific index.
 
         <div class="highlight">
-        <pre><code>>>> Hooker.hooks(<input id="hookIndex" type="number" value="0" min="0" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> Hooker.hooks(<input id="hookIndex" type="number" value="0" min="0"
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="handleInputQuery('hookIndex', 'hooksOutput', 'hooks')"/>)
         <span id="hooksOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -581,7 +581,7 @@ struct CompensationCooldown:
         ```shell
         >>> Hooker.calc_compensation([Hooker.HookInput(hook_id=0, value=1000000000000000000, data=b"")], _duty=True, _ts=1717286400)
         1000000000000000000
-        ``` 
+        ```
 
 
 ### `one_time_hooks`
@@ -667,7 +667,7 @@ struct CompensationCooldown:
 ### `buffer_amount`
 !!! description "`Hooker.buffer_amount() -> uint256: view`"
 
-    Getter for the buffer amount which represents the total potential compensation amount that might be required to execute all the hooks under their respective compensation strategies. 
+    Getter for the buffer amount which represents the total potential compensation amount that might be required to execute all the hooks under their respective compensation strategies.
 
     Returns: buffer amount (`uint256`).
 
@@ -747,21 +747,21 @@ SUPPORTED_INTERFACES: constant(bytes4[2]) = [
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns a boolean value whether the Hooker contract supports a specific interface.
 
         <div class="highlight">
-        <pre><code>>>> Hooker.supportsInterface(<input id="interfaceId" type="bytes4" value="0x01ffc9a7" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> Hooker.supportsInterface(<input id="interfaceId" type="bytes4" value="0x01ffc9a7"
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="handleInputQuery('interfaceId', 'interfaceIdOutput', 'supportsInterface')"/>)
         <span id="interfaceIdOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;

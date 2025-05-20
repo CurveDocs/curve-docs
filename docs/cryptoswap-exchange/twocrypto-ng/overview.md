@@ -7,7 +7,7 @@ The **TwoCrypto-NG contract infrastructure** represents an **optimized version o
 
 !!!deploy "Contract Source & Deployment"
     Source code is available on [GitHub](https://github.com/curvefi/twocrypto-ng).
- 
+
 
 ---
 
@@ -16,12 +16,12 @@ The **TwoCrypto-NG contract infrastructure** represents an **optimized version o
 
 <div class="grid cards" markdown>
 
--   :octicons-code-16: **`AMM blueprint contracts`** 
+-   :octicons-code-16: **`AMM blueprint contracts`**
 
     ---
 
     The **`AMM`** is a **2-coin, auto-rebalancing Cryptoswap implementation**. The contract is version 2.0.0, with several optimizations that make the contract more cost-effective for the end user. Additionally, unlike the older version, the pool contract is an ERC20-compliant LP token.
-    
+
     Also, unlike the older version, the **pool contract is an ERC20-compliant LP token** as well.
 
     The AMMs have a hardcoded `ADMIN_FEE`, set to 50% of the earned profits.

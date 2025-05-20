@@ -2,9 +2,9 @@
 
 The *Automatic Market-Making with Dynamic Peg (CryptoSwap)* algorithm introduces a new approach for creating liquidity for assets which are not necessarily pegged to each other.
 
-The core of this algorithm lies in its ability to **concentrate liquidity around a price point determined by an internal oracle**, adjusting this price in a way that balances potential losses and system profits. 
+The core of this algorithm lies in its ability to **concentrate liquidity around a price point determined by an internal oracle**, adjusting this price in a way that balances potential losses and system profits.
 
-Key features include the use of **transformed pegged invariants**, a method for quantifying profits and losses, and the **CurveCrypto invariant**, specifically designed for efficient execution on the EVM. 
+Key features include the use of **transformed pegged invariants**, a method for quantifying profits and losses, and the **CurveCrypto invariant**, specifically designed for efficient execution on the EVM.
 
 The algorithm also incorporates a **dynamic fee structure** that responds to changing market conditions. This approach seeks to enhance liquidity provision and optimize returns for liquidity providers.
 
@@ -22,7 +22,7 @@ The algorithm also incorporates a **dynamic fee structure** that responds to cha
 !!!deploy "Contract Source"
 
     *Source code is available on GitHub:*
-    
+
     - genesis contracts: [https://github.com/curvefi/curve-crypto-contract](https://github.com/curvefi/curve-crypto-contract)
     - twocrypto-ng: [https://github.com/curvefi/twocrypto-ng](https://github.com/curvefi/twocrypto-ng)
     - tricrypto-ng: [https://github.com/curvefi/tricrypto-ng](https://github.com/curvefi/tricrypto-ng)
@@ -45,8 +45,8 @@ Because different trading pairs can exhibit drastically different price dynamics
 
 **The CryptoSwap market-making algorithm contains of three different classes of parameters:**
 
-- *Bonding Curve:* `A` and `gamma`  
-- *Price Scaling:* `ma_time`, `allowed_extra_profit` and `adjustment_step`  
+- *Bonding Curve:* `A` and `gamma`
+- *Price Scaling:* `ma_time`, `allowed_extra_profit` and `adjustment_step`
 - *Fees:* `mid_fee`, `out_fee` and `fee_gamma`
 
 !!!tip "Explainer for Parameters"
@@ -73,7 +73,7 @@ Fees are charged based on the balance/imbalance of the pool. Fee is low when the
 
 *There are three different kind of fees:*
 
-- **`fee_mid`**: charged fee when pool is perfectly balanced (minimum possible fee).  
+- **`fee_mid`**: charged fee when pool is perfectly balanced (minimum possible fee).
 - **`out_fee`**: charged fee when pools is completely imbalanced (maximum possible fee).
 - **`fee_gamma`**: determines the speed at which the fee increases when the pool becomes imbalanced. A low value leads to a more rapid fee increase, while a high value causes the fee to rise more gradually.
 

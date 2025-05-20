@@ -60,7 +60,7 @@ Voting for governance proposals is exclusively conducted on the Ethereum mainnet
 
 !!!colab "Notebook for Creating a Cross-Chain Vote"
 
-    Creating a cross-chain vote is very similar to creating a vote on Ethereum. The only difference is that the `executionScript` is a bit more complex. Here is an example of a cross-chain vote which modifes the minimum and maximum interest rate for lending markets on Arbitrum.  
+    Creating a cross-chain vote is very similar to creating a vote on Ethereum. The only difference is that the `executionScript` is a bit more complex. Here is an example of a cross-chain vote which modifes the minimum and maximum interest rate for lending markets on Arbitrum.
     https://colab.research.google.com/drive/1SEmqdBgY3Pcg7q4XWGIoQOc1q5GEVGR6?usp=sharing
 
     The notebook can easily be modified to create votes for any other chain.

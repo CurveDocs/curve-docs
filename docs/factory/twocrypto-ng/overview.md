@@ -5,7 +5,7 @@ The TwoCrypto-NG Factory allows the permissionless deployment of two-coin volati
 Additionally, the Factory contract is the direct admin and fee receiver of all pools. In turn, the Factory is controlled by the CurveDAO.
 
 !!!deploy "Contract Source & Deployment"
-    Source code for the Factory is available on [Github](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/CurveTwocryptoFactory.vy).   
+    Source code for the Factory is available on [Github](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/CurveTwocryptoFactory.vy).
     A full list of all deployments can be found [here](../../references/deployed-contracts.md#twocrypto-ng).
 
 
@@ -30,7 +30,7 @@ It utilizes four different implementations:
 
 
 ## **Query Implementations**
- 
+
 ### `pool_implementations`
 !!! description "`Factory.pool_implementations(arg0: uint256) -> address: view`"
 
@@ -49,7 +49,7 @@ It utilizes four different implementations:
             ```vyper
             pool_implementations: public(HashMap[uint256, address])
             ```
-    
+
     === "Example"
 
         ```shell
@@ -72,7 +72,7 @@ It utilizes four different implementations:
             ```vyper
             gauge_implementation: public(address)
             ```
-    
+
     === "Example"
 
         ```shell
@@ -95,7 +95,7 @@ It utilizes four different implementations:
             ```vyper
             views_implementation: public(address)
             ```
-    
+
     === "Example"
 
         ```shell
@@ -118,7 +118,7 @@ It utilizes four different implementations:
             ```vyper
             math_implementation: public(address)
             ```
-    
+
     === "Example"
 
         ```shell
@@ -128,7 +128,7 @@ It utilizes four different implementations:
 
 
 
-## **Set New Implementations** 
+## **Set New Implementations**
 
 *New implementations can be set via the following admin-only functions:*
 
@@ -180,7 +180,7 @@ It utilizes four different implementations:
 
                 self.pool_implementations[_implementation_index] = _pool_implementation
             ```
-    
+
     === "Example"
 
         ```shell
@@ -225,7 +225,7 @@ It utilizes four different implementations:
                 log UpdateGaugeImplementation(self.gauge_implementation, _gauge_implementation)
                 self.gauge_implementation = _gauge_implementation
             ```
-    
+
     === "Example"
 
         ```shell
@@ -270,7 +270,7 @@ It utilizes four different implementations:
                 log UpdateViewsImplementation(self.views_implementation, _views_implementation)
                 self.views_implementation = _views_implementation
             ```
-    
+
     === "Example"
 
         ```shell
@@ -314,7 +314,7 @@ It utilizes four different implementations:
                 log UpdateMathImplementation(self.math_implementation, _math_implementation)
                 self.math_implementation = _math_implementation
             ```
-    
+
     === "Example"
 
         ```shell
@@ -350,7 +350,7 @@ It utilizes four different implementations:
                 log UpdateFeeReceiver(empty(address), _fee_receiver)
                 log TransferOwnership(empty(address), _admin)
             ```
-    
+
     === "Example"
 
         ```shell
@@ -395,7 +395,7 @@ It utilizes four different implementations:
                 log UpdateFeeReceiver(self.fee_receiver, _fee_receiver)
                 self.fee_receiver = _fee_receiver
             ```
-    
+
     === "Example"
 
         ```shell

@@ -51,7 +51,7 @@ Contract functionality is documented here: [`MetaRegistry`](../registry/overview
 !!!github
     The source code for the `MetaRegistry.vy` and `MetaRegistryL2.vy` contracts can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/tree/main/contracts).
 
-Each `MetaRegistry` is integrated into the chain-specific [`AddressProvider`](#address-provider) at `ID = 7`. To get the **most recent contract, users are advised to fetch it directly from the `AddressProvider` contract**. 
+Each `MetaRegistry` is integrated into the chain-specific [`AddressProvider`](#address-provider) at `ID = 7`. To get the **most recent contract, users are advised to fetch it directly from the `AddressProvider` contract**.
 
 *For example, to query the `MetaRegistry` contract on Ethereum, one can call `get_address(7)` on the `AddressProvider`:*
 
@@ -69,9 +69,9 @@ Each `MetaRegistry` is integrated into the chain-specific [`AddressProvider`](#a
 Contract functionality is documented here: [`RateProvider`](../integration/rate-provider.md)
 
 !!!github
-    The source code for the `RateProvider.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).  
+    The source code for the `RateProvider.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).
 
-Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#address-provider) at `ID = 18`.  
+Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#address-provider) at `ID = 18`.
 
 *For example, to query the `RateProvider` contract on Ethereum, one can call `get_address(18)` on the `AddressProvider`:*
 

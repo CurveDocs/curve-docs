@@ -42,7 +42,7 @@ Fees are usually claimed via the **`withdraw_many`** function of the PoolProxy. 
         ```shell
         >>> Pool.admin_balances(0)
         466943482298782278664
-        ```   
+        ```
 
 
 ### `withdraw_admin_fees`
@@ -51,7 +51,7 @@ Fees are usually claimed via the **`withdraw_many`** function of the PoolProxy. 
     !!!info
         This function is called from the PoolProxy.
 
-    Function to claim admin fees from `pool` into this contract. This is the first step in the fee burning process. 
+    Function to claim admin fees from `pool` into this contract. This is the first step in the fee burning process.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -132,7 +132,7 @@ Fees are mostly claimed directly from the pool.
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         event ClaimAdminFee:
             admin: indexed(address)
             tokens: uint256
@@ -235,7 +235,7 @@ crvUSD fees are based on the borrow rate of the corresponding markets. Fees are 
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         @view
         def admin_fees() -> uint256:
@@ -264,7 +264,7 @@ crvUSD fees are based on the borrow rate of the corresponding markets. Fees are 
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         @nonreentrant('lock')
         def collect_fees() -> uint256:
@@ -312,7 +312,7 @@ crvUSD fees are based on the borrow rate of the corresponding markets. Fees are 
 
 # **Burning Admin Fees**
 
-All admin fees are accumulated in the [0xECB](https://etherscan.io/address/0xeCb456EA5365865EbAb8a2661B0c503410e9B347) :material-information-outline:{ title="shhhh!! don't tell Christine Lagarde!" } contract and are burned according to the fee-burner settings designated for each specific coin.   
+All admin fees are accumulated in the [0xECB](https://etherscan.io/address/0xeCb456EA5365865EbAb8a2661B0c503410e9B347) :material-information-outline:{ title="shhhh!! don't tell Christine Lagarde!" } contract and are burned according to the fee-burner settings designated for each specific coin.
 *These functions need to be called from the 0xECB contract.*
 
 
@@ -322,15 +322,15 @@ All admin fees are accumulated in the [0xECB](https://etherscan.io/address/0xeCb
     !!!guard "Guarded Method"
         This function is only callable by EOA to prevent flashloan exploits.
 
-    Transfer the contract’s balance of `coin` into the according burner and execute the burn process.  
-    
+    Transfer the contract’s balance of `coin` into the according burner and execute the burn process.
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_coin` |  `address` | Token Address |
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         interface Burner:
             def burn(_coin: address) -> bool: payable
 
@@ -365,8 +365,8 @@ All admin fees are accumulated in the [0xECB](https://etherscan.io/address/0xeCb
     !!!guard "Guarded Method"
         This function is only callable by EOA to prevent flashloan exploits.
 
-    Executes the burn process on many coins at once. 
-    
+    Executes the burn process on many coins at once.
+
     !!!note
     Burning can be very gas intensive. In some cases burning 20 coins at once is not possible due to the block gas limit.
 

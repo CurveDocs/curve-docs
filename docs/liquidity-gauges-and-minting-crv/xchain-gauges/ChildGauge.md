@@ -3,7 +3,7 @@
 The `ChildGauge` is the liquidity gauge contract on the sidechain. It is used to track the balance of liquidity providers and distribute CRV emissions to them. It is pretty much the same as the `Gauge` contract on Ethereum mainnet.
 
 ???+ vyper "`ChildGauge.vy`"
-    The source code for the `ChildGauge.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/blob/master/contracts/implementations/ChildGauge.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10` 
+    The source code for the `ChildGauge.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/blob/master/contracts/implementations/ChildGauge.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`
 
 ---
 
@@ -860,7 +860,7 @@ The process for adding external reward tokens follows two steps:
     - Only callable by gauge manager or factory admin
     - Stores token data in `reward_data` mapping
 
-2. **Deposit Rewards** (`deposit_reward_token`) 
+2. **Deposit Rewards** (`deposit_reward_token`)
     - Deposits reward tokens for distribution
     - Only callable by the authorized distributor
     - Distributes rewards linearly over specified period
@@ -1787,7 +1787,7 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
 ### `update_voting_escrow`
 !!! description "`ChildGauge.update_voting_escrow()`"
-    
+
     Function to update the voting escrow contract to the voting escrow contract set in the factory. This function is callable by anyone.
 
     ??? quote "Source code"

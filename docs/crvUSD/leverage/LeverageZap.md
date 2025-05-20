@@ -37,11 +37,11 @@ This leverage zap allows up to five values to be passed for `callback_args`, but
 
     | Input           | Type                   | Description  |
     | --------------- | ---------------------- | ------------ |
-    | `user`          | `address`              | User address to create a leveraged position. | 
-    | `stablecoins`   | `uint256`              | Amount of stablecoins. Always 0 when calling this method. | 
-    | `collateral`    | `uint256`              | Amount of collateral tokens provided by the user. | 
-    | `debt`          | `uint256`              | Amount of be borrowed. | 
-    | `callback_args` | `DynArray[uint256, 5]` | Array of callback arguments consisting of `[route_idx, min_recv]` | 
+    | `user`          | `address`              | User address to create a leveraged position. |
+    | `stablecoins`   | `uint256`              | Amount of stablecoins. Always 0 when calling this method. |
+    | `collateral`    | `uint256`              | Amount of collateral tokens provided by the user. |
+    | `debt`          | `uint256`              | Amount of be borrowed. |
+    | `callback_args` | `DynArray[uint256, 5]` | Array of callback arguments consisting of `[route_idx, min_recv]` |
 
     ??? quote "Source code"
 
@@ -264,7 +264,7 @@ This leverage zap allows up to five values to be passed for `callback_args`, but
 
     | Input        | Type      | Description                        |
     | ------------ | --------- | ---------------------------------- |
-    | `stablecoin` | `uint256` | Amount of stablecoins to exchange. | 
+    | `stablecoin` | `uint256` | Amount of stablecoins to exchange. |
     | `route_idx`  | `uint256` | Index of the route to use.         |
 
     ??? quote "Source code"
@@ -402,7 +402,7 @@ This leverage zap allows up to five values to be passed for `callback_args`, but
 
     | Input        | Type      | Description                        |
     | ------------ | --------- | ---------------------------------- |
-    | `stablecoin` | `uint256` | Amount of stablecoins to exchange. | 
+    | `stablecoin` | `uint256` | Amount of stablecoins to exchange. |
     | `route_idx`  | `uint256` | Index of the route to use.         |
 
     ??? quote "Source code"
@@ -1015,7 +1015,7 @@ Routes are predetermined paths for token exchanges. These routes are added when 
         *This example shows the route for the route at index 0 `'crvUSD/USDC --> 3pool --> tricrypto2'`.*
 
         ```shell
-        >>> LeverageZap.route_name(0) 
+        >>> LeverageZap.route_name(0)
         'crvUSD/USDC --> 3pool --> tricrypto2'
 
         >>> LeverageZap.routes(0, 0)
@@ -1099,7 +1099,7 @@ Routes are predetermined paths for token exchanges. These routes are added when 
 
         ```shell
         # first exchange: exchanging crvUSD for USDC using crvUSD/USDC pool
-        >>> LeverageZap.route_params(0, 0, 0)   # route 0, first exchange (index 0), fist parameter value (index 0) 
+        >>> LeverageZap.route_params(0, 0, 0)   # route 0, first exchange (index 0), fist parameter value (index 0)
         1                                       # i = crvUSD
         >>> LeverageZap.route_params(0, 0, 1)   # route 0, first exchange (index 0), second parameter value (index 1)
         0                                       # j = USDC
@@ -1108,16 +1108,16 @@ Routes are predetermined paths for token exchanges. These routes are added when 
 
 
         # second exchange: exchanging USDC for USDT using threepool
-        >>> LeverageZap.route_params(0, 1, 0)   # route 0, second exchange (index 1), fist parameter value (index 0) 
+        >>> LeverageZap.route_params(0, 1, 0)   # route 0, second exchange (index 1), fist parameter value (index 0)
         1                                       # i = USDC
-        >>> LeverageZap.route_params(0, 1, 1)   # route 0, second exchange (index 1), second parameter value (index 1) 
+        >>> LeverageZap.route_params(0, 1, 1)   # route 0, second exchange (index 1), second parameter value (index 1)
         2                                       # j = USDT
-        >>> LeverageZap.route_params(0, 1, 2)   # route 0, second exchange (index 1), third parameter value (index 2) 
+        >>> LeverageZap.route_params(0, 1, 2)   # route 0, second exchange (index 1), third parameter value (index 2)
         1                                       # swap type 1 = stableswap exchange
 
 
         # third exchange: exchanging USDT for BTC using tricrypto2 pool
-        >>> LeverageZap.route_params(0, 2, 0)   # route 0, third exchange (index 2), fist parameter value (index 0) 
+        >>> LeverageZap.route_params(0, 2, 0)   # route 0, third exchange (index 2), fist parameter value (index 0)
         0                                       # i = USDT
         >>> LeverageZap.route_params(0, 2, 1)   # route 0, third exchange (index 2), second parameter value (index 1)
         1                                       # j = wBTC

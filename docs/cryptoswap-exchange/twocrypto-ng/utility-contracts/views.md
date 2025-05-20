@@ -3,14 +3,14 @@
 The Views Contract contains **view-only external methods**, which **may be gas-inefficient when called from within smart contracts**. However, it can be highly useful for searches, aggregators, or other entities looking to integrate with twocrypto-ng pools.
 
 !!!deploy "Contract Source & Deployment"
-    Source code for this contract is available on [Github](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/CurveCryptoViews2Optimized.vy). 
+    Source code for this contract is available on [Github](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/CurveCryptoViews2Optimized.vy).
     Full list of all deployments can be found [here](../../../references/deployed-contracts.md#twocrypto-ng).
 
 
 ---
 
 
-## **Exchange Methods** 
+## **Exchange Methods**
 
 ### `get_dy`
 !!! description "`Views.get_dy(i: uint256, j: uint256, dx: uint256, swap: address) -> uint256: view`"
@@ -84,7 +84,7 @@ The Views Contract contains **view-only external methods**, which **may be gas-i
 
                 return dy, xp
             ```
-    
+
         === "CurveTwocryptoOptimized.vy"
 
             ```vyper
@@ -260,7 +260,7 @@ The Views Contract contains **view-only external methods**, which **may be gas-i
 
                 return y_out
             ```
-    
+
     === "Example"
 
         ```shell
@@ -345,7 +345,7 @@ The Views Contract contains **view-only external methods**, which **may be gas-i
 
                 return dx, xp
             ```
-    
+
         === "CurveTwocryptoOptimized.vy"
 
             ```vyper
@@ -521,7 +521,7 @@ The Views Contract contains **view-only external methods**, which **may be gas-i
 
                 return y_out
             ```
-    
+
     === "Example"
 
         ```shell
@@ -599,7 +599,7 @@ The Views Contract contains **view-only external methods**, which **may be gas-i
 
                 return dy, xp
             ```
-    
+
         === "CurveTwocryptoOptimized.vy"
 
             ```vyper
@@ -775,12 +775,12 @@ The Views Contract contains **view-only external methods**, which **may be gas-i
 
                 return y_out
             ```
-    
+
     === "Example"
 
         ```shell
         >>> Views.calc_fee_get_dy(0, 1, 100, pool)      # calculate fees for swapping 100 of coin 0 for coin 1
-        returns approx_fee                              
+        returns approx_fee
         ```
 
 
@@ -1012,7 +1012,7 @@ The Views Contract contains **view-only external methods**, which **may be gas-i
 
                 return y_out
             ```
-    
+
     === "Example"
 
         ```shell
@@ -1283,7 +1283,7 @@ The Views Contract contains **view-only external methods**, which **may be gas-i
 
                 raise "Did not converge"
             ```
-    
+
     === "Example"
 
         ```shell
@@ -1607,12 +1607,12 @@ The Views Contract contains **view-only external methods**, which **may be gas-i
 
                 raise "Did not converge"
             ```
-    
+
     === "Example"
 
         ```shell
         >>> Views.calc_fee_withdraw_one_coin(100, 0, pool)      # withdrawing 100 lp tokens in coin(0)
-        returns apporx_fee                                      # approx fee 
+        returns apporx_fee                                      # approx fee
         ```
 
 
@@ -1692,7 +1692,7 @@ The Views Contract contains **view-only external methods**, which **may be gas-i
 
                 return d_token, amountsp, xp
             ```
-    
+
         === "CurveTwocryptoOptimized.vy"
 
             ```vyper
@@ -1825,7 +1825,7 @@ The Views Contract contains **view-only external methods**, which **may be gas-i
 
                 raise "Did not converge"
             ```
-    
+
     === "Example"
 
         ```shell

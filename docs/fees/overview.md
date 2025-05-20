@@ -40,7 +40,7 @@ The fee collection, burning, and distribution system of Curve involves the follo
 
     ---
     Contract which acts as the entry point for the fee burning system. All admin fees in various kinds of tokens are collected here.
-    
+
     [:octicons-arrow-right-24: `FeeCollector.vy`](FeeCollector.md)
 
 - **:material-call-split: Fee Splitter**

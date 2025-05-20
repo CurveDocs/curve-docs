@@ -3,8 +3,8 @@
 This contract contains **view-only external methods** which can be gas-inefficient when called from smart contracts.
 
 !!!deploy "Contract Source & Deployment"
-    Source code available on [GitHub](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNGViews.vy).  
-    All Views contract deployments can be found in the [Deployment Addresses](../../../references/deployed-contracts.md#stableswap-ng) section.  
+    Source code available on [GitHub](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNGViews.vy).
+    All Views contract deployments can be found in the [Deployment Addresses](../../../references/deployed-contracts.md#stableswap-ng) section.
 
 
 ## **Token Exchange Methods**
@@ -595,7 +595,7 @@ This contract contains **view-only external methods** which can be gas-inefficie
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @view
         @external
         def calc_withdraw_one_coin(_burn_amount: uint256, i: int128, pool: address) -> uint256:

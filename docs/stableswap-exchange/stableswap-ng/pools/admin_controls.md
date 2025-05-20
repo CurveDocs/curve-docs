@@ -11,9 +11,9 @@ The following methods are guarded and may only be called by the **`admin`** of t
 
     *Limitations when ramping A:*
 
-    - `block.timestamp` >= `initial_A_time` + `MIN_RAMP_TIME`  
-    - `_future_time` >= `block.timestamp` + `MIN_RAMP_TIME`   
-    - `future_A` > 0  
+    - `block.timestamp` >= `initial_A_time` + `MIN_RAMP_TIME`
+    - `_future_time` >= `block.timestamp` + `MIN_RAMP_TIME`
+    - `future_A` > 0
     - `future_A` < `MAX_A (1000000)`
 
     Emits: `RampA`
@@ -25,7 +25,7 @@ The following methods are guarded and may only be called by the **`admin`** of t
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         A_PRECISION: constant(uint256) = 100
         MAX_A: constant(uint256) = 10 ** 6
         MAX_A_CHANGE: constant(uint256) = 10
@@ -112,13 +112,13 @@ The following methods are guarded and may only be called by the **`admin`** of t
 
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the Factory.
-    
+
     Function to set new values for `fee` and `offpeg_fee_multiplier`.
 
-    *Limitations when setting new parameters:*  
+    *Limitations when setting new parameters:*
 
-    - `_new_fee` <= `MAX_FEE` (5000000000)  
-    - `_new_offpeg_fee_multiplier` * `_new_fee` <= `MAX_FEE` * `FEE_DENOMINATOR`  
+    - `_new_fee` <= `MAX_FEE` (5000000000)
+    - `_new_offpeg_fee_multiplier` * `_new_fee` <= `MAX_FEE` * `FEE_DENOMINATOR`
 
     Emits: `ApplyNewFee`
 
@@ -129,7 +129,7 @@ The following methods are guarded and may only be called by the **`admin`** of t
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         MAX_FEE: constant(uint256) = 5 * 10 ** 9
         FEE_DENOMINATOR: constant(uint256) = 10 ** 10
 
@@ -169,7 +169,7 @@ The following methods are guarded and may only be called by the **`admin`** of t
 
     Function to set the moving average window for `ma_exp_time` and `D_ma_time`.
 
-    *Limitations when setting new fee parameters:*  
+    *Limitations when setting new fee parameters:*
 
     - `_ma_exp_time` and `_D_ma_time` > 0
 
@@ -180,7 +180,7 @@ The following methods are guarded and may only be called by the **`admin`** of t
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         def set_ma_exp_time(_ma_exp_time: uint256, _D_ma_time: uint256):
             """
@@ -199,4 +199,4 @@ The following methods are guarded and may only be called by the **`admin`** of t
         ```shell
         >>> StableSwap.set_ma_exp_time('todo')
         'todo'
-        ``` 
+        ```

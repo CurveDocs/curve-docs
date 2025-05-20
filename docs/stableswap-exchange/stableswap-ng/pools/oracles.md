@@ -1,4 +1,4 @@
-<h1>StableSwap-NG Oracles</h1> 
+<h1>StableSwap-NG Oracles</h1>
 
 
 !!!danger "WARNING: Oracle Vulnerability"
@@ -15,7 +15,7 @@
         ```py hl_lines="2 6"
         ### ----- old code (bugged) ----- ###
         self.upkeep_oracles(new_balances, amp, D1)
-        
+
 
         ### ----- new code (bug fixed) ----- ###
         self.upkeep_oracles(self._xp_mem(rates, new_balances), amp, D1)
@@ -66,7 +66,7 @@
 
     The [`crvUSD/USDC`](https://etherscan.io/address/0x4dece678ceceb27446b35c672dc7d61f30bad69e) pool consists of `crvUSD <> USDC`.
 
-    Because `USDC` is the coin at index 0, `price_oracle()` returns the price of `crvUSD` with regard to `USDC`. 
+    Because `USDC` is the coin at index 0, `price_oracle()` returns the price of `crvUSD` with regard to `USDC`.
 
     ```vyper
     >>> price_oracle() = 999043303185591283
@@ -146,8 +146,8 @@ If this is the case, `last_price` is updated at every action, so there will be t
 
 
 !!!notebook "Jupyter Notebook"
-    For a practical **demonstration of how individual variables behave during the upkeep of the oracle**, a Jupyter notebook is available for reference. This notebook provides a plot showcasing the dynamics in the process. 
-    
+    For a practical **demonstration of how individual variables behave during the upkeep of the oracle**, a Jupyter notebook is available for reference. This notebook provides a plot showcasing the dynamics in the process.
+
     It can be accessed here: https://try.vyperlang.org/hub/user-redirect/lab/tree/shared/mo-anon/stableswap-ng/oracles/ema_oracle.ipynb.
 
 ---
@@ -157,7 +157,7 @@ If this is the case, `last_price` is updated at every action, so there will be t
 !!! description "`StableSwap.price_oracle(i: uint256) -> uint256:`"
 
     Function to calculate the exponential moving average (EMA) price for the coin at index `i` with regard to the coin at index 0. The calculation is based on the last spot value (`last_price`), the last ma value (`ema_price`), the moving average time window (`ma_exp_time`), and on the difference between the current timestamp (`block.timestamp`) and the timestamp when the ma oracle was last updated (unpacks from the first value of `ma_last_time`).
-    
+
     `i = 0` will return the price oracle of `coin[1]`, `i = 1` the price oracle of `coin[2]`, and so on.
 
     Returns: EMA price of coin `i` (`uint256`).
@@ -313,7 +313,7 @@ If this is the case, `last_price` is updated at every action, so there will be t
         This function will revert if `i >= MAX_COINS`.
 
     Getter method for the last stored exponential moving-average (EMA) price of the coin at index value `i`, retrieved from `last_prices_packed`. The EMA price is obtained by shifting the value in `last_prices_packed` to the right by 128 bits. This value is updated whenever the `upkeep_oracles()` function is internally called.
-    
+
     `i = 0` will return the last EMA price of `coin[1]`, `i = 1` of `coin[2]`, and so on.
 
     Returns: the last stored EMA price of coin `i` (`uint256`).
@@ -324,7 +324,7 @@ If this is the case, `last_price` is updated at every action, so there will be t
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         last_prices_packed: DynArray[uint256, MAX_COINS]  #  packing: last_price, ma_price
 
         @view
@@ -344,8 +344,8 @@ If this is the case, `last_price` is updated at every action, so there will be t
 ### `get_p`
 !!! description "`StableSwap.get_p(i: uint256) -> uint256:`"
 
-    Function to calculate the current AMM spot price of coin `i` based on the coin balances in the pool, the amplification coefficient `A`, and the `D` invariant. 
-    
+    Function to calculate the current AMM spot price of coin `i` based on the coin balances in the pool, the amplification coefficient `A`, and the `D` invariant.
+
     `i = 0` will return the price of `coin[1]`, `i = 1` the price of `coin[2]`, and so on.
 
     Returns: current spot price (`uint256`).
@@ -356,7 +356,7 @@ If this is the case, `last_price` is updated at every action, so there will be t
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         @view
         def get_p(i: uint256) -> uint256:
@@ -464,7 +464,7 @@ If this is the case, `last_price` is updated at every action, so there will be t
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         ma_exp_time: public(uint256)
         ```
 
@@ -485,7 +485,7 @@ If this is the case, `last_price` is updated at every action, so there will be t
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         D_ma_time: public(uint256)
         ```
 
@@ -509,7 +509,7 @@ If this is the case, `last_price` is updated at every action, so there will be t
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         ma_last_time: public(uint256)                     # packing: ma_last_time_p, ma_last_time_D
         ```
 
@@ -521,10 +521,10 @@ If this is the case, `last_price` is updated at every action, so there will be t
         ```
 
     !!!note "Unpacking values"
-        The value needs to be unpacked, as it contains two values, **ma_last_time_p** and **ma_last_time_D**.  
+        The value needs to be unpacked, as it contains two values, **ma_last_time_p** and **ma_last_time_D**.
 
-        For example, 579359617954437487117250992339883299967854142015 is unpacked into two uint256 numbers. First, its lower 128 bits are isolated using a bitwise AND with 2**128 − 1, and then the value is shifted right by 128 bits to extract the upper 128 bits.  
-        It returns: [1702584895, 1702584895], meaning both moving-average oracles were updated at the same time. 
+        For example, 579359617954437487117250992339883299967854142015 is unpacked into two uint256 numbers. First, its lower 128 bits are isolated using a bitwise AND with 2**128 − 1, and then the value is shifted right by 128 bits to extract the upper 128 bits.
+        It returns: [1702584895, 1702584895], meaning both moving-average oracles were updated at the same time.
 
 
 ---

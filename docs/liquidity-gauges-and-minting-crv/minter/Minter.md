@@ -88,7 +88,7 @@ CRV tokens can be minted in several ways:
 !!! description "`Minter.mint_for(gauge_addr: address, _for: address)`"
 
     Function to mint CRV for a different address and transfer it to them. In order to do this, the caller must have been previously approved by `for` using [`toggle_approve_mint`](#toggle_approve_mint).
-    
+
     Emits: `Minted` event.
 
     | Input        | Type      | Description     |
@@ -218,7 +218,7 @@ CRV tokens can be minted in several ways:
             ```
 
     === "Example"
-    
+
         This example mints all CRV for the caller from three gauges at once.
 
         ```shell
@@ -252,25 +252,25 @@ CRV tokens can be minted in several ways:
 
         <div class="highlight">
         <pre><code>>>> Minter.minted(
-        Minter: <input id="mintedInput1" 
-        type="text" 
+        Minter: <input id="mintedInput1"
+        type="text"
         value="0x989AEb4d175e16225E39E87d0D97A3360524AD80"
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>
-        Gauge: <input id="mintedInput2" 
+        Gauge: <input id="mintedInput2"
         type="text"
         value="0xbfcf63294ad7105dea65aa58f8ae5be2d9d0952a"
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>)
         <span id="mintedOutput"></span></code></pre>
         </div>
@@ -302,25 +302,25 @@ CRV tokens can be minted in several ways:
 
         <div class="highlight">
         <pre><code>>>> Minter.allowed_to_mint_for(
-        Minter: <input id="allowedToMintForInput1" 
-        type="text" 
+        Minter: <input id="allowedToMintForInput1"
+        type="text"
         value="0x989AEb4d175e16225E39E87d0D97A3360524AD80"
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>
-        User: <input id="allowedToMintForInput2" 
+        User: <input id="allowedToMintForInput2"
         type="text"
         value="0x0000000000000000000000000000000000000000"
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>)
         <span id="allowedToMintForOutput"></span></code></pre>
         </div>
@@ -401,7 +401,7 @@ CRV tokens can be minted in several ways:
 ### `controller`
 !!! description "`Minter.controller() -> address: view`"
 
-    Getter for the `GaugeController`. 
+    Getter for the `GaugeController`.
 
     Returns: `GaugeController` contract (`address`).
 

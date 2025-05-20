@@ -25,7 +25,7 @@ The documentation of the `FeeSplitter` contract can be found [here](https://docs
     ---
 
     The `RewardsHandler` is a peripheral contract that implements the `weight` function needed by the [`FeeSplitter`](https://docs.curve.finance/fees/FeeSplitter/). This function enables the Vault to receive rewards to depositors based on the proportion of crvUSD deposited in the Vault.
-    
+
 
     [:octicons-arrow-right-24: Read more](./RewardsHandler.md)
 
@@ -59,7 +59,7 @@ The main `scrvUSD` contracts are deployed on :logos-ethereum: Ethereum at the fo
 
 
 Additionally, the following cross-chain versions (using [Oracle V0](./crosschain/oracle-v0/oracle.md)) of the `scrvUSD` token are deployed:
- 
+
 - :logos-optimism: `Optimism` at [0x289f635106d5b822a505b39ac237a0ae9189335b](https://optimistic.etherscan.io/address/0x289f635106d5b822a505b39ac237a0ae9189335b)
 - :logos-base: `Base` at [0x646a737b9b6024e49f5908762b3ff73e65b5160c](https://basescan.org/address/0x646a737b9b6024e49f5908762b3ff73e65b5160c)
 - :logos-fraxtal: `Fraxtal` at [0xaB94C721040b33aA8b0b4D159Da9878e2a836Ed0](https://fraxscan.com/address/0xaB94C721040b33aA8b0b4D159Da9878e2a836Ed0)

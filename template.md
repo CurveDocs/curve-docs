@@ -6,7 +6,7 @@
 
     Returns:
 
-    Emits: 
+    Emits:
 
     ??? quote "Source code"
 

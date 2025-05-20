@@ -19,7 +19,7 @@ This documentation outlines the technical implementation of the core Curve proto
 
 <div class="grid cards" markdown>
 
--   **:logos-crv: Curve DAO** 
+-   **:logos-crv: Curve DAO**
 
     ---
 
@@ -96,7 +96,7 @@ This documentation outlines the technical implementation of the core Curve proto
     ---
 
     Section targeted at integrators covering contracts like `AddressProvider` or `MetaRegistry`.
-    
+
     [**:octicons-arrow-right-24: Getting started**](./integration/overview.md)
 
 -   :logos-googlecolab: **Notebooks**

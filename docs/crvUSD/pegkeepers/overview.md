@@ -42,8 +42,8 @@ For a comprehensive understanding of the factors influencing the interest rate, 
 The initial version of `PegKeeper.vy` encountered two significant problems:
 
 ## **Spam Attack Issue**
-A notable challenge in the first version of PegKeepers was its **susceptibility to spam attacks**.  
-This issue stemmed from the ability of an attacker to manipulate the price of crvUSD very close to 1, followed by executing the `update` function to make a minimal deposit (or withdrawal), before moving the price back. With a mandatory **15-minute cooldown** before the `update` function could be called again, an attacker could exploit this interval to periodically disrupt the PegKeepers' capacity for peg stabilization.  
+A notable challenge in the first version of PegKeepers was its **susceptibility to spam attacks**.
+This issue stemmed from the ability of an attacker to manipulate the price of crvUSD very close to 1, followed by executing the `update` function to make a minimal deposit (or withdrawal), before moving the price back. With a mandatory **15-minute cooldown** before the `update` function could be called again, an attacker could exploit this interval to periodically disrupt the PegKeepers' capacity for peg stabilization.
 Although executing such an attack would entail **significant costs for the attacker**, resulting in **substantial revenue for the liquidity pool**, the potential for continuous exploitation was still present. This issue highlighted the need for a refined approach to prevent such manipulative activities and ensure the effective stabilization of the peg.
 
 

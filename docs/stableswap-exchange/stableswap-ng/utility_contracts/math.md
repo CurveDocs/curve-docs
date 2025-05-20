@@ -3,7 +3,7 @@
 The Math Contract provides **AMM Math** for StableSwap-NG Pools.
 
 !!!deploy "Contract Source & Deployment"
-    Source code available on [GitHub](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNGMath.vy).  
+    Source code available on [GitHub](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNGMath.vy).
     All Math contract deployments can be found in the [Deployment Addresses](../../../references/deployed-contracts.md#stableswap-ng) section.
 
 
@@ -26,7 +26,7 @@ The Math Contract provides **AMM Math** for StableSwap-NG Pools.
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         MAX_COINS: constant(uint256) = 8
         MAX_COINS_128: constant(int128) = 8
         A_PRECISION: constant(uint256) = 100
@@ -127,7 +127,7 @@ The Math Contract provides **AMM Math** for StableSwap-NG Pools.
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         @pure
         def get_D(
@@ -290,7 +290,7 @@ The Math Contract provides **AMM Math** for StableSwap-NG Pools.
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         @pure
         def exp(x: int256) -> uint256:

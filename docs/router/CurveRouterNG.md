@@ -151,7 +151,7 @@ The route input is an array of up to 11 addresses. When calling the function, th
 
 === "Example"
 
-    ```py 
+    ```py
     [
         '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',   # initial token: wETH
         '0x7f86bf177dd4f3494b841a37e810a34dd56c829b',   # pool1: TricryptoUSDC (USDC, wBTC, wETH)
@@ -228,7 +228,7 @@ The array structure includes the following elements: **`[i, j, swap_type, pool_t
 
 ## **Exchanging Tokens**
 
-The router has a single `exchange` function, which allows up to 5 swaps in a single transaction. 
+The router has a single `exchange` function, which allows up to 5 swaps in a single transaction.
 
 Routing and swap parameters need to be determined off-chain. The exchange functionality of the router is designed for gas efficiency over ease-of-use. An accompanying JavaScript library can be found on [:material-github: GitHub](https://github.com/curvefi/curve-router-js), which is used in the Curve UI to determine route and swap parameters.
 
@@ -686,11 +686,11 @@ There are two function to estimate input and output token amounts:
             '0xdA47862a83dac0c112BA89c6abC2159b95afd71C',   # PRISMA
             '0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B',   # PRISMA/ETH pool
             '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',   # ETH
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
             '0x0000000000000000000000000000000000000000'],
             [[1, 0, 1, 1, 2],   # first swap: cvxPRISMA <> PRISMA
             [1, 0, 1, 2, 2],    # second swap: PRISMA <> ETH
@@ -700,8 +700,8 @@ There are two function to estimate input and output token amounts:
             100000000000000000000,  # _amount
             ['0x3b21C2868B6028CfB38Ff86127eF22E68d16d53B',  # cvxPRISMA/PRISMA pool
             '0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B',   # PRISMA/ETH pool
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
             '0x0000000000000000000000000000000000000000'])
         18597416260226417   # expected output
         ```
@@ -911,22 +911,22 @@ There are two function to estimate input and output token amounts:
             '0xdA47862a83dac0c112BA89c6abC2159b95afd71C',   # PRISMA
             '0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B',   # PRISMA/ETH pool
             '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',   # ETH
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000'], 
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000'],
             [[1, 0, 1, 1, 2],   # first swap: cvxPRISMA <> PRISMA
             [1, 0, 1, 2, 2],    # second swap: PRISMA <> ETH
             [0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0]], 
+            [0, 0, 0, 0, 0]],
             100000000000000000000,  # _out_amount
             ['0x3b21C2868B6028CfB38Ff86127eF22E68d16d53B',  # cvxPRISMA/PRISMA pool
             '0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B',   # PRISMA/ETH pool
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
             '0x0000000000000000000000000000000000000000'])
         18597416260226417 # expected input
         ```

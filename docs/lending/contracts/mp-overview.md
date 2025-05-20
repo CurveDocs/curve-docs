@@ -28,4 +28,3 @@ Lending markets use monetary policies to determine interest rates. Each market h
     [:octicons-arrow-right-24: `SecondaryMonetaryPolicy.vy`](./secondary-mp.md)
 
 </div>
-

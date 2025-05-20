@@ -174,7 +174,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     Getter for the stablecoin address.
 
-    Returns: stablecoin (`address`). 
+    Returns: stablecoin (`address`).
 
     ??? quote "Source code"
 
@@ -211,7 +211,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     Getter for the sum of all debts across the controllers.
 
-    Returns: total amount of debt (`uint256`). 
+    Returns: total amount of debt (`uint256`).
 
     ??? quote "Source code"
 
@@ -243,7 +243,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     Getter for the controller address for `collateral`.
 
-    Returns: controller `address`. 
+    Returns: controller `address`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -277,7 +277,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     Getter for the amm address for `collateral`.
 
-    Returns: amm `address`. 
+    Returns: amm `address`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -311,7 +311,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     Getter for the controller address at index `arg0`.
 
-    Returns: controller `address` at specific index. 
+    Returns: controller `address` at specific index.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -337,7 +337,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     Getter for the amm address at index `arg0`.
 
-    Returns: AMM `address` at specific index. 
+    Returns: AMM `address` at specific index.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|

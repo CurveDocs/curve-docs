@@ -1,6 +1,6 @@
 **Crypto-Pools are exchange contracts containing two volatile (non-pegged) assets.**
 
-These exchange contracts are deployed via the [CryptoSwap Factory](../../../factory/cryptoswap/overview.md). Unlike newer Factory contracts, which utilize blueprint contracts, the earlier versions did not have this feature at the time of their deployments. Instead, in these earlier versions, the exchange contract is created using the Vyper built-in **`create_forwarder_to()`** function. 
+These exchange contracts are deployed via the [CryptoSwap Factory](../../../factory/cryptoswap/overview.md). Unlike newer Factory contracts, which utilize blueprint contracts, the earlier versions did not have this feature at the time of their deployments. Instead, in these earlier versions, the exchange contract is created using the Vyper built-in **`create_forwarder_to()`** function.
 
 The pool is then initialized via the **`initialize()`** function of the pool implementation contract, which sets all the relevant variables, such as paired tokens, prices, and parameters.
 
@@ -227,7 +227,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 ### `exchange_underlying`
 !!! description "`CryptoSwap.exchange_underlying(i: uint256, j: uint256, dx: uint256, min_dy: uint256, receiver: address = msg.sender) -> uint256:`"
 
-    !!!note 
+    !!!note
         `exchange_underlying` exchanges tokens by using the 'underlying' ETH instead of wETH.
 
     Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`.
@@ -395,7 +395,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 ### `exchange_extended`
 !!! description "`CryptoSwap.exchange_extended(i: uint256, j: uint256, dx: uint256, min_dy: uint256, use_eth: bool, sender: address, receiver: address, cb: bytes32) -> uint256:`"
 
-    !!!note 
+    !!!note
         This method does not allow swapping in native token, but does allow swaps that transfer out native token from the pool.
 
     Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy` with using a callback method.
@@ -562,7 +562,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 ### `get_dy`
 !!! description "`CryptoSwap.get_dy(i: uint256, j: uint256, dx: uint256) -> uint256:`"
 
-    Getter for the received amount of coin `j` for swapping in `dx` amount of coin `i`. 
+    Getter for the received amount of coin `j` for swapping in `dx` amount of coin `i`.
 
     Returns: output amount (`uint256`).
 
@@ -1207,7 +1207,7 @@ Oracle prices are updated whenever the `tweak_price` function is called. This oc
 ### `price_oracle`
 !!! description "`CryptoSwap.price_oracle() -> uint256:`"
 
-    Getter for the oracle price of the coin at index `k` with regard to coin at index 0. 
+    Getter for the oracle price of the coin at index `k` with regard to coin at index 0.
 
     Returns: oracle price (`uint256`).
 
@@ -1549,7 +1549,7 @@ Fees are charged based on the balance/imbalance of the pool. Fee is low when the
 ### `claim_admin_fees`
 !!! description "`CryptoSwap.admin_fee() -> uint256:`"
 
-    Function to claim admin fees from the pool and send them to the fee receiver. `fee_receiver` is set within the [Factory](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99). 
+    Function to claim admin fees from the pool and send them to the fee receiver. `fee_receiver` is set within the [Factory](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99).
 
     Emits: `ClaimAdminFee`
 
@@ -1876,7 +1876,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 ### `factory`
 !!! description "`CryptoSwap.factory()`"
 
-    Getter for the factory contract. 
+    Getter for the factory contract.
 
     Returns: factory (`address`).
 

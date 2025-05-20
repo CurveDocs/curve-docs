@@ -1,10 +1,10 @@
 <h1>Price Aggregator</h1>
 
-The `AggregateStablePrice.vy` contract is designed to **get an aggregated price of crvUSD based on multiple multiple stableswap pools weighted by their TVL**. 
+The `AggregateStablePrice.vy` contract is designed to **get an aggregated price of crvUSD based on multiple multiple stableswap pools weighted by their TVL**.
 
 !!!github "GitHub"
-    There are three iterations of the `AggregateStablePrice` contract. Source code for the contracts can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/price_oracles). 
-    
+    There are three iterations of the `AggregateStablePrice` contract. Source code for the contracts can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/price_oracles).
+
     The `AggregateStablePrice.vy` contract has been deployed on [Ethereum](https://etherscan.io/address/0x18672b1b0c623a30089A280Ed9256379fb0E4E62) and [Arbitrum](https://arbiscan.io/address/0x44a4FdFb626Ce98e36396d491833606309520330).
 
 This aggregated price of crvUSD is used in multiple different components in the system such as in [monetary policy contracts](./monetarypolicy.md), [PegKeepers](../crvUSD/pegkeepers/overview.md) or [oracles for lending markets](../lending/contracts/oracle-overview.md).
@@ -22,8 +22,8 @@ The `AggregateStablePrice` contract calculates the **weighted average price of c
 
 The price calculation starts with determining the EMA of the TVL from different Curve Stableswap liquidity pools using the `_ema_tvl` function. This internal function computes the EMA TVLs based on the formula below, which adjusts for the time since the last update to smooth out short-term volatility in the TVL data, providing a more stable and representative average value over the specified time window (`TVL_MA_TIME = 50000`):
 
-$$\alpha = 
-    \begin{cases} 
+$$\alpha =
+    \begin{cases}
     1 & \text{if last_timestamp} = \text{current_timestamp}, \\
     e^{-\frac{(\text{current_timestamp} - \text{last_timestamp}) * 10^{18}}{\text{TVL_MA_TIME}}} & \text{otherwise}.
     \end{cases}
@@ -129,7 +129,7 @@ $$\text{e}_i = \frac{(\max(p, p_{\text{avg}}) - \min(p, p_{\text{avg}}))^2}{\fra
 
 $$\text{e}_{min} = \min(\text{e}_i, \text{max_value(uint256)})$$
 
-Applying an exponential decay based on these variance measures to weigh each pool's contribution to the final average price, reducing the influence of prices far from the minimum variance. 
+Applying an exponential decay based on these variance measures to weigh each pool's contribution to the final average price, reducing the influence of prices far from the minimum variance.
 
 $$w = \frac{\text{D}_i * e^\left({\text{e}_i - e_{min}}\right)}{10^{18}}$$
 
@@ -149,7 +149,7 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
 !!! description "`PriceAggregator3.price() -> uint256`"
 
     Getter for the aggregated price of crvUSD based on the prices of crvUSD within different `price_pairs`.
-    
+
     Returns: aggregated crvUSD price (`uint256`).
 
     ??? quote "Source code"
@@ -166,7 +166,7 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
             SIGMA: immutable(uint256)
             price_pairs: public(PricePair[MAX_PAIRS])
             n_price_pairs: uint256
-            
+
             last_timestamp: public(uint256)
             last_tvl: public(uint256[MAX_PAIRS])
             TVL_MA_TIME: public(constant(uint256)) = 50000  # s
@@ -259,7 +259,7 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
 !!! description "`PriceAggregator3.price_w() -> uint256`"
 
     Function to calculate the aggregated price of crvUSD based on the prices of crvUSD within different `price_pairs`. This function writes the price on the blockchain and additionally updates `last_timestamp`, `last_tvl` and `last_price`.
-    
+
     Returns: aggregated crvUSD price (`uint256`).
 
     ??? quote "Source code"
@@ -276,7 +276,7 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
             SIGMA: immutable(uint256)
             price_pairs: public(PricePair[MAX_PAIRS])
             n_price_pairs: uint256
-            
+
             last_timestamp: public(uint256)
             last_tvl: public(uint256[MAX_PAIRS])
             TVL_MA_TIME: public(constant(uint256)) = 50000  # s
@@ -379,8 +379,8 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
 !!! description "`PriceAggregator3.last_price() -> uint256: view`"
 
     Getter for the last aggregated price of crvUSD. This variable was set to $10^{18}$ (1.00) when initializing the contract and is updated to the current aggreagated crvUSD price every time [`price_w`](#price_w) is called.
-    
-    Returns: last aggregated price of crvUSD (`uint256`). 
+
+    Returns: last aggregated price of crvUSD (`uint256`).
 
     ??? quote "Source code"
 
@@ -412,7 +412,7 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
 !!! description "`PriceAggregator3.last_timestamp() -> uint256: view`"
 
     Getter for the last timestamp when the aggregated price of crvUSD was updated. This variable was populated with `block.timestamp` when initializing the contract and is updated to the current timestamp every time [`price_w`](#price_w) is called. When adding a new price pair, its value is set to the `totalSupply` of the pair.
-    
+
     Returns: timestamp of the last price write (`uint256`).
 
     ??? quote "Source code"
@@ -437,7 +437,7 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
 !!! description "`PriceAggregator3.ema_tvl() -> DynArray[uint256, MAX_PAIRS]`"
 
     Getter for the exponential moving-average value of TVL across all `price_pairs`.
-    
+
     Returns: array of ema tvls (`DynArray[uint256, MAX_PAIRS]`).
 
     ??? quote "Source code"
@@ -452,7 +452,7 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
 
             price_pairs: public(PricePair[MAX_PAIRS])
             n_price_pairs: uint256
-            
+
             last_timestamp: public(uint256)
             last_tvl: public(uint256[MAX_PAIRS])
             TVL_MA_TIME: public(constant(uint256)) = 50000  # s
@@ -498,7 +498,7 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
 !!! description "`PriceAggregator3.last_tvl(arg0: uint256) -> uint256: view`"
 
     Getter for the last ema tvl value of a `price_pair`. This variable is updated to the current ema tvl of the pool every time [`price_w`](#price_w) is called. When adding a new price pair, its value is set to the `totalSupply` of the pair.
-    
+
     Returns: last ema tvl (`uint256`).
 
     | Input  | Type      | Description             |
@@ -530,7 +530,7 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
 !!! description "`PriceAggregator3.TVL_MA_TIME() -> uint256: view`"
 
     Getter for the time periodicity used to calculate the exponential moving-average of TVL.
-    
+
     Returns: ema periodicity (`uint256`).
 
     ??? quote "Source code"
@@ -560,7 +560,7 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
 !!! description "`PriceAggregator3.SIGMA() -> uint256: view`"
 
     Getter for the sigma value. SIGMA is a predefined constant that influences the adjustment of price deviations, affecting how variations in individual stablecoin prices contribute to the overall average stablecoin price. The value of `sigma` was set to `1000000000000000` when initializing the contract and the variable is immutale, meaning it can not be adjusted.
-    
+
     Returns: sigma value (`uint256`).
 
     ??? quote "Source code"
@@ -593,7 +593,7 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
 !!! description "`PriceAggregator3.STABLECOIN() -> uint256: view`"
 
     Getter for the crvUSD contract address.
-    
+
     Returns: crvUSD contract (`address`).
 
     ??? quote "Source code"
@@ -633,7 +633,7 @@ All liquidity pools used to calculate the aggregated price are stored in `price_
 !!! description "`PriceAggregator3.price_pairs(arg0: uint256) -> PricePair`"
 
     Getter for the price pairs added to the `PriceAggregator` contract. New pairs can be added using the [`add_price_pair`](#add_price_pair) function.
-    
+
     Returns: `PricePair` struct consisting of the pool (`address`) amd of it is inverse (`bool`).
 
     | Input  | Type      | Description             |
@@ -684,7 +684,7 @@ All liquidity pools used to calculate the aggregated price are stored in `price_
         This function is only callable by the `admin` of the contract.
 
     Function to add a new price pair to the `PriceAggregator`.
-    
+
     Emits: `AddPricePair`
 
     | Input   | Type      | Description               |
@@ -737,7 +737,7 @@ All liquidity pools used to calculate the aggregated price are stored in `price_
         This function is only callable by the `admin` of the contract.
 
     Function to remove the price pair at index `n` from the `PriceAggregator`.
-    
+
     Emits: `RemovePricePair` and conditionally `MovePricePair`[^1].
 
     [^1]: `MovePricePair` event is emitted when the removed price pair is not the last one which was added. In this case, price pairs need to be adjusted accordingly.
@@ -794,7 +794,7 @@ The contract follows the classical two-step ownership model used in various othe
 !!! description "`PriceAggregator3.admin() -> address: view`"
 
     Getter for the current admin of the contract.
-    
+
     Returns: current admin (`address`).
 
     ??? quote "Source code"
@@ -829,7 +829,7 @@ The contract follows the classical two-step ownership model used in various othe
         This function is only callable by the `admin` of the contract.
 
     Function to set a new adderss as the `admin` of the contract.
-    
+
     Emits: `SetAdmin`
 
     | Input    | Type      | Description                     |

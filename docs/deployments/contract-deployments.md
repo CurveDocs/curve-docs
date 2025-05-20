@@ -40,9 +40,9 @@ This section aims to provide a comprehensive list of all the contracts deployed 
 *Despite being launched on Ethereum, the Curve DAO Token can be bridged to various chains:*
 
 !!!danger "MULTICHAIN WARNING"
-    Multichain statement: https://twitter.com/MultichainOrg/status/1677180114227056641  
+    Multichain statement: https://twitter.com/MultichainOrg/status/1677180114227056641
     The Multichain service stopped currently, and all bridge transactions will be stuck on the source chains.
-    There is no confirmed resume time.  
+    There is no confirmed resume time.
     **Please don't use the Multichain bridging service now.**
 
 | Chain | Contract Address | Bridge |
@@ -438,7 +438,7 @@ Curve has developed and deployed a new fee-burning architecture which is current
 
 
 **crvUSD Bridges**
- 
+
 | Chain | Contract Address |
 | :---- | :--------------- |
 | AVAX Bridge (LayerZero) | [`0x26D01ce989037befd7Ff63837A86e2da32E7D7e2`](https://etherscan.io/address/0x26D01ce989037befd7Ff63837A86e2da32E7D7e2#code) |
@@ -551,8 +551,8 @@ Curve has developed and deployed a new fee-burning architecture which is current
     The old implementation of sidechain gauges is deprecated and will be removed in the future.
 
 !!!danger "MULTICHAIN WARNING"
-    At the time of writing (13.11.2023), sidechain gauges on Celo, Avalanche and Fantom are disabled due to issues with Multichain.    
-    The Multichain service stopped currently, and all bridge transactions will be stuck on the source chains. There is no confirmed resume time.  
+    At the time of writing (13.11.2023), sidechain gauges on Celo, Avalanche and Fantom are disabled due to issues with Multichain.
+    The Multichain service stopped currently, and all bridge transactions will be stuck on the source chains. There is no confirmed resume time.
     Multichain statement: https://twitter.com/MultichainOrg/status/1677180114227056641
 
 !!!github "GitHub"
@@ -644,7 +644,7 @@ The full documentation for the `AddressProvider` contracts can be found [here](.
 
 The full documentation for the `MetaRegistry` contracts can be found [here](../registry/overview.md). Source code for the `MetaRegistry` and `MetaRegistryL2` contracts is available on [:material-github: GitHub](https://github.com/curvefi/metaregistry/tree/main/contracts).
 
-Each `MetaRegistry` is integrated into the chain-specific [`AddressProvider`](#address-provider) at `ID = 7`. To get the **most recent contract, users are advised to fetch it directly from the `AddressProvider` contract**. 
+Each `MetaRegistry` is integrated into the chain-specific [`AddressProvider`](#address-provider) at `ID = 7`. To get the **most recent contract, users are advised to fetch it directly from the `AddressProvider` contract**.
 
 *For example, to query the `MetaRegistry` contract on Ethereum, one can call `get_address(7)` on the `AddressProvider`:*
 
@@ -659,7 +659,7 @@ Each `MetaRegistry` is integrated into the chain-specific [`AddressProvider`](#a
 
 The full documentation for the `RateProvider` contracts can be found [here](../integration/rate-provider.md). Source code for the `RateProvider` contracts is available on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).
 
-Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#address-provider) at `ID = 18`.  
+Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#address-provider) at `ID = 18`.
 
 *For example, to query the `RateProvider` contract on Ethereum, one can call `get_address(18)` on the `AddressProvider`:*
 
@@ -677,7 +677,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 The full documentation for the `stableswap-ng` contracts can be found [here](../stableswap-exchange/stableswap-ng/overview.md). Source code for the `stableswap-ng` contracts is available on [:material-github: GitHub](https://github.com/curvefi/stableswap-ng).
 
 !!!warning "Implementation Contracts"
-    Every `Factory` contract has different implementation contracts which are used for different purposes. For more information, please refer to the according part of the [documentation](../factory/twocrypto-ng/overview.md).  
+    Every `Factory` contract has different implementation contracts which are used for different purposes. For more information, please refer to the according part of the [documentation](../factory/twocrypto-ng/overview.md).
     **Implementation contracts are upgradeable.** They can either be replaced, or additional implementation contracts can be added. As a result, the deployment addresses of these implementations are not listed below. To query the implementation contracts, please fetch them directly from the respective `Factory`.
 
 | Chain | Contract Address |
@@ -710,7 +710,7 @@ The full documentation for the `stableswap-ng` contracts can be found [here](../
 The full documentation for the `twocrypto-ng` contracts can be found [here](../cryptoswap-exchange/twocrypto-ng/overview.md). Source code for the `twocrypto-ng` contracts is available on [:material-github: GitHub](https://github.com/curvefi/twocrypto-ng).
 
 !!!warning "Implementation Contracts"
-    Every `Factory` contract has different implementation contracts which are used for different purposes. For more information, please refer to the according part of the [documentation](../factory/twocrypto-ng/overview.md).  
+    Every `Factory` contract has different implementation contracts which are used for different purposes. For more information, please refer to the according part of the [documentation](../factory/twocrypto-ng/overview.md).
     **Implementation contracts are upgradeable.** They can either be replaced, or additional implementation contracts can be added. As a result, the deployment addresses of these implementations are not listed below. To query the implementation contracts, please fetch them directly from the respective `Factory`.
 
 | Chain | Contract Address |
@@ -743,7 +743,7 @@ The full documentation for the `twocrypto-ng` contracts can be found [here](../c
 The full documentation for the `tricrypto-ng` contracts can be found [here](../cryptoswap-exchange/tricrypto-ng/overview.md). Source code for the `tricrypto-ng` contracts is available on [:material-github: GitHub](https://github.com/curvefi/tricrypto-ng).
 
 !!!warning "Implementation Contracts"
-    Every `Factory` contract has different implementation contracts which are used for different purposes. For more information, please refer to the according part of the [documentation](../factory/tricrypto-ng/overview.md).  
+    Every `Factory` contract has different implementation contracts which are used for different purposes. For more information, please refer to the according part of the [documentation](../factory/tricrypto-ng/overview.md).
     **Implementation contracts are upgradeable.** They can either be replaced, or additional implementation contracts can be added. As a result, the deployment addresses of these implementations are not listed below. To query the implementation contracts, please fetch them directly from the respective `Factory`.
 
 | Chain | Contract Address |
@@ -916,7 +916,7 @@ The full documentation for the `crvUSD` contracts can be found [here](../crvUSD/
 
 | Chain                       | crvUSD Token Address |
 | --------------------------- | :------------------: |
-| :logos-ethereum: `Ethereum` | [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/token/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E) | 
+| :logos-ethereum: `Ethereum` | [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/token/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E) |
 | :logos-arbitrum: `Arbitrum` | [0x498Bf2B1e120FeD3ad3D42EA2165E9b73f99C1e5](https://arbiscan.io/address/0x498Bf2B1e120FeD3ad3D42EA2165E9b73f99C1e5) |
 | :logos-optimism: `Optimism` | [0xc52d7f23a2e460248db6ee192cb23dd12bddcbf6](https://optimistic.etherscan.io/address/0xc52d7f23a2e460248db6ee192cb23dd12bddcbf6) |
 | :logos-base: `Base`         | [0x417Ac0e078398C154EdFadD9Ef675d30Be60Af93](https://basescan.org/address/0x417Ac0e078398C154EdFadD9Ef675d30Be60Af93) |

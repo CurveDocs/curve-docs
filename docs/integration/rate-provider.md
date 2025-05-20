@@ -3,9 +3,9 @@
 The `RateProvider` contract is designed to provide rates for token swaps.
 
 !!!github "GitHub"
-    The source code of the `RateProvider.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).  
-    
-    Additionally, each `RateProvider` contract is **integrated into the chain-specific [`AddressProvider`](./address-provider.md) at `ID = 18`**. To get the **most recent contract, users are advised to fetch it directly from the `AddressProvider`**. 
+    The source code of the `RateProvider.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/blob/main/contracts/RateProvider.vy).
+
+    Additionally, each `RateProvider` contract is **integrated into the chain-specific [`AddressProvider`](./address-provider.md) at `ID = 18`**. To get the **most recent contract, users are advised to fetch it directly from the `AddressProvider`**.
 
     *For example, to query the `RateProvider` contract on Ethereum:*
 
@@ -149,10 +149,10 @@ The logic of the contract is to identify the pool type used to facilitate the de
             @view
             def _get_pool_quote(
                 i: int128,
-                j: int128, 
-                amount_in: uint256, 
-                pool: address, 
-                pool_type: uint8, 
+                j: int128,
+                amount_in: uint256,
+                pool: address,
+                pool_type: uint8,
                 is_underlying: bool
             ) -> uint256:
 
@@ -189,7 +189,7 @@ The logic of the contract is to identify the pool type used to facilitate the de
             @internal
             @view
             def _get_pool_type(pool: address, metaregistry: Metaregistry) -> uint8:
-                
+
                 # 0 for stableswap, 1 for cryptoswap, 2 for LLAMMA.
 
                 success: bool = False
@@ -260,19 +260,19 @@ The logic of the contract is to identify the pool type used to facilitate the de
                 quotes: DynArray[Quote, MAX_QUOTES] = self._get_quotes(source_token, destination_token, amount_in)
 
                 return self.weighted_average_quote(
-                    convert(ERC20Detailed(source_token).decimals(), uint256), 
+                    convert(ERC20Detailed(source_token).decimals(), uint256),
                     convert(ERC20Detailed(destination_token).decimals(), uint256),
-                    quotes, 
+                    quotes,
                 )
 
             @internal
             @pure
             def weighted_average_quote(
-                source_token_decimals: uint256, 
-                dest_token_decimals: uint256, 
+                source_token_decimals: uint256,
+                dest_token_decimals: uint256,
                 quotes: DynArray[Quote, MAX_QUOTES]
             ) -> uint256:
-                
+
                 num_quotes: uint256 = len(quotes)
 
                 # Calculate total balance with normalization

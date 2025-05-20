@@ -14,10 +14,3 @@ Source code for Curve pools may be viewed on [GitHub](https://github.com/curvefi
     Please **do not** assume for a Curve pool to implement the API outlined in this section but verify this before interacting with a pool contract.
 
 For information on code style please refer to the official [style guide](https://vyper.readthedocs.io/en/stable/style-guide.html).
-
-
-
-
-
-
-

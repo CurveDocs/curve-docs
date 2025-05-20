@@ -168,7 +168,7 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
     Returns: true (`bool`).
 
-    Emits: `Approval`        
+    Emits: `Approval`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|

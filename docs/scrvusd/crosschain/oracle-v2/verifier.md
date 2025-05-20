@@ -1,10 +1,10 @@
 <h1>scrvUSD Verifier</h1>
 
-The two verifier contracts work together to securely update and maintain the scrvUSD oracle using **on-chain state proofs**. 
+The two verifier contracts work together to securely update and maintain the scrvUSD oracle using **on-chain state proofs**.
 
 `ScrvusdVerifierV1` extracts scrvUSD vault parameters (such as total debt, idle funds, supply, and profit unlocking metrics) from state proofs. It validates these parameters by verifying the block header or state root against the `BlockHashOracle` and then updates the scrvUSD oracle’s price via its `update_price` (see oracle documentation) function.
 
-`ScrvusdVerifierV2` focuses specifically on updating the profit unlocking duration (`profit_max_unlock_time`). It uses similar state proof techniques—verifying either an RLP-encoded block header or a state root—to extract the period value. This period is then sent to the scrvUSD oracle via the `update_profit_max_unlock_time` function. 
+`ScrvusdVerifierV2` focuses specifically on updating the profit unlocking duration (`profit_max_unlock_time`). It uses similar state proof techniques—verifying either an RLP-encoded block header or a state root—to extract the period value. This period is then sent to the scrvUSD oracle via the `update_profit_max_unlock_time` function.
 
 *Together, these contracts ensure that the scrvUSD oracle remains accurate by securely integrating verified on-chain data.*
 

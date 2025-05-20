@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     const StablecoinLensAddress = '0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7';
 
     const StablecoinLensABI = [{"inputs":[],"name":"circulating_supply","outputs":[{"name":"","type":"uint256"}],"stateMutability":"view","type":"function"}];
-    
+
     const StablecoinLensContract = new web3.eth.Contract(StablecoinLensABI, StablecoinLensAddress);
-    
+
     async function updateValues() {
         try {
             const result = await StablecoinLensContract.methods.circulating_supply().call();

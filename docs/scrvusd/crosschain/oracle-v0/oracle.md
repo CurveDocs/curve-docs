@@ -10,7 +10,7 @@
 ???+abstract "Smart Contracts"
 
     The source code for the contracts is available on [:material-github: GitHub](https://github.com/curvefi/curve-xdao):
-  
+
     - [:logos-vyper: `scrvUSDOracle.vy`](https://github.com/curvefi/curve-xdao/blob/feat/scrvusd-oracle/contracts/oracles/scrvUSDOracle.vy) written in [Vyper](https://vyperlang.org/) version `0.4.0`
     - [:logos-vyper: `BlockHashOracle.vy`](https://github.com/curvefi/curve-xdao/blob/feat/scrvusd-oracle/contracts/oracles/BlockHashOracle.vy) written in [Vyper](https://vyperlang.org/) version `0.3.10`
     - [:logos-solidity: `ScrvusdProver.sol`](https://github.com/curvefi/curve-xdao/blob/feat/scrvusd-oracle/contracts/provers/ScrvusdProver.sol) written in [Solidity](https://soliditylang.org/) version `0.8.18`
@@ -56,7 +56,7 @@
 
 The cross-chain scrvUSD system operates through three main components working together:
 
-1. **Block Hash Oracle**: 
+1. **Block Hash Oracle**:
     - Provides Ethereum block hash values across different chains.
     - Maintains a record of the latest known Ethereum block hashes on L2s.
     - Implemented as a separate contract to handle uncertain block timing and enable reuse.
@@ -313,21 +313,21 @@ Contract that contains information about the price of scrvUSD. It uses a `max_ac
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the price per share of the scrvUSD token at a specific timestamp on Optimism.
 
         <div class="highlight">
-        <pre><code>>>> scrvUSDOracle.pricePerShare(<input id="pricePerShareTimestamp" type="number" 
-        style="width: 70px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> scrvUSDOracle.pricePerShare(<input id="pricePerShareTimestamp" type="number"
+        style="width: 70px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchPricePerShare()"/>)
         <span id="pricePerShareOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -390,21 +390,21 @@ Contract that contains information about the price of scrvUSD. It uses a `max_ac
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the price per asset of the scrvUSD token at a specific timestamp on Optimism.
 
         <div class="highlight">
-        <pre><code>>>> scrvUSDOracle.pricePerAsset(<input id="pricePerAssetTimestamp" type="number" 
-        style="width: 70px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> scrvUSDOracle.pricePerAsset(<input id="pricePerAssetTimestamp" type="number"
+        style="width: 70px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchPricePerAsset()"/>)
         <span id="pricePerAssetOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;

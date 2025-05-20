@@ -31,7 +31,7 @@ struct AddressInfo:
 
 !!!colab "Google Colab Notebook"
     A Google Colab notebook that provides a full mapping of IDs by iterating over all `ids` via calling the `get_id_info` can be found here: [:simple-googlecolab: Google Colab Notebook](https://colab.research.google.com/drive/1PnvfX5E_F7_VCsmkzHrN0_OiJNsUmx9w?usp=sharing)
-    
+
     *The notebook is compatible with querying IDs for different chains and returns a table as shown below:*
 
     <figure markdown="span">
@@ -51,7 +51,7 @@ struct AddressInfo:
 
         === "CurveAddressProvider.vy"
 
-            ```vyper 
+            ```vyper
             _ids: DynArray[uint256, 1000]
 
             @view
@@ -84,7 +84,7 @@ struct AddressInfo:
 
     Getter function to retrieve informations about a specific ID.
 
-    Returns: `AddressInfo` struct containing the addr (`address`), description (`String[256]`), version (`uint256`) and last_modified (`uint256`). 
+    Returns: `AddressInfo` struct containing the addr (`address`), description (`String[256]`), version (`uint256`) and last_modified (`uint256`).
 
     | Input  | Type      | Description                    |
     | ------ | --------- | ------------------------------ |
@@ -94,7 +94,7 @@ struct AddressInfo:
 
         === "CurveAddressProvider.vy"
 
-            ```vyper 
+            ```vyper
             struct AddressInfo:
                 addr: address
                 description: String[256]
@@ -132,7 +132,7 @@ struct AddressInfo:
 
         === "CurveAddressProvider.vy"
 
-            ```vyper 
+            ```vyper
             struct AddressInfo:
                 addr: address
                 description: String[256]
@@ -178,7 +178,7 @@ struct AddressInfo:
 
         === "CurveAddressProvider.vy"
 
-            ```vyper 
+            ```vyper
             check_id_exists: public(HashMap[uint256, bool])
             ```
 
@@ -205,7 +205,7 @@ struct AddressInfo:
 
         === "CurveAddressProvider.vy"
 
-            ```vyper 
+            ```vyper
             num_entries: public(uint256)
             ```
 
@@ -224,7 +224,7 @@ struct AddressInfo:
 
 ## **Adding, Removing and Updating IDs**
 
-IDs can be added, removed, or adjusted by the `admin` of the contract. 
+IDs can be added, removed, or adjusted by the `admin` of the contract.
 
 !!!warning "Contract Upgradability"
     The `AddressProvider` contract is managed by an `admin` who is currently an individual at Curve, rather than the Curve DAO[^1]. This **admin has the ability to update, add or remove new IDs** within the contract. When integrating this contract into systems or relying on it for critical components, it is essential to consider that these **IDs and their associated addresses can be modified at any time**.
@@ -252,7 +252,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
         === "CurveAddressProvider.vy"
 
-            ```vyper 
+            ```vyper
             event EntryModified:
                 id: indexed(uint256)
                 version: uint256
@@ -314,7 +314,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
         === "CurveAddressProvider.vy"
 
-            ```vyper 
+            ```vyper
             event EntryModified:
                 id: indexed(uint256)
                 version: uint256
@@ -364,7 +364,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
     Emits: `EntryModified`
 
-    | Input          | Type          | Description                      |    
+    | Input          | Type          | Description                      |
     | -------------- | ------------- | -------------------------------- |
     | `_id`          | `uint256`     | ID to change the description for |
     | `_description` | `String[256]` | New description                  |
@@ -373,7 +373,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
         === "CurveAddressProvider.vy"
 
-            ```vyper 
+            ```vyper
             event EntryModified:
                 id: indexed(uint256)
                 version: uint256
@@ -419,7 +419,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
 
-    Function to add a new registry item to the AddressProvider. 
+    Function to add a new registry item to the AddressProvider.
 
     Emits: `NewEntry`
 
@@ -433,7 +433,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
         === "CurveAddressProvider.vy"
 
-            ```vyper 
+            ```vyper
             event NewEntry:
                 id: indexed(uint256)
                 addr: address
@@ -452,7 +452,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
                 @param _description Human-readable description of the ID
                 """
                 assert msg.sender == self.admin  # dev: admin-only function
-                
+
                 self._add_new_id(_id, _address, _description)
 
             @internal
@@ -507,7 +507,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
         === "CurveAddressProvider.vy"
 
-            ```vyper 
+            ```vyper
             event NewEntry:
                 id: indexed(uint256)
                 addr: address
@@ -528,13 +528,13 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
                 assert msg.sender == self.admin  # dev: admin-only function
 
                 # Check lengths
-                assert len(_ids) == len(_addresses) 
+                assert len(_ids) == len(_addresses)
                 assert len(_addresses) == len(_descriptions)
 
                 for i in range(len(_ids), bound=20):
                     self._add_new_id(
-                        _ids[i], 
-                        _addresses[i], 
+                        _ids[i],
+                        _addresses[i],
                         _descriptions[i]
                     )
 
@@ -590,7 +590,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
         === "CurveAddressProvider.vy"
 
-            ```vyper 
+            ```vyper
             event EntryRemoved:
                 id: indexed(uint256)
 
@@ -607,7 +607,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
             @internal
             def _remove_id(_id: uint256) -> bool:
-                
+
                 assert self.check_id_exists[_id]  # dev: id does not exist
 
                 # Clear ID:
@@ -653,7 +653,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
         === "CurveAddressProvider.vy"
 
-            ```vyper 
+            ```vyper
             event EntryRemoved:
                 id: indexed(uint256)
 
@@ -673,7 +673,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
 
             @internal
             def _remove_id(_id: uint256) -> bool:
-                
+
                 assert self.check_id_exists[_id]  # dev: id does not exist
 
                 # Clear ID:
@@ -769,7 +769,7 @@ The ownership of the contract follows the classic two-step ownership model used 
 
     Events: `CommitNewAdmin`
 
-    | Input        | Type      | Description                          |    
+    | Input        | Type      | Description                          |
     | ------------ | --------- | ------------------------------------ |
     | `_new_admin` | `address` | Address to transfer the ownership to |
 
@@ -780,7 +780,7 @@ The ownership of the contract follows the classic two-step ownership model used 
             ```vyper
             event CommitNewAdmin:
                 admin: indexed(address)
-                        
+
             future_admin: public(address)
 
             @external

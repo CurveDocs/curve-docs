@@ -13,7 +13,7 @@ plugins:
   - swagger-ui-tag:
 
 
-# extension 
+# extension
 markdown_extensions:
   - footnotes
   - def_list
@@ -105,7 +105,7 @@ theme:
 
 
 extra_css:
-  - assets/stylesheets/extra.css  
+  - assets/stylesheets/extra.css
 
 extra_javascript:
   - assets/javascripts/extra.js
@@ -133,12 +133,12 @@ nav:
 
     - Overview & Implementation: liquidity-gauges-and-minting-crv/overview.md
     - GaugeController: liquidity-gauges-and-minting-crv/gauge-controller/GaugeController.md
-    - Minter: liquidity-gauges-and-minting-crv/minter/Minter.md 
+    - Minter: liquidity-gauges-and-minting-crv/minter/Minter.md
     - Gauges:
       - Overview: liquidity-gauges-and-minting-crv/gauges/overview.md
       - LiquidityGaugeV6: liquidity-gauges-and-minting-crv/gauges/LiquidityGaugeV6.md
 
-    - Gauges for EVM Sidechains: 
+    - Gauges for EVM Sidechains:
       - Overview: liquidity-gauges-and-minting-crv/xchain-gauges/overview.md
       - RootGaugeFactory: liquidity-gauges-and-minting-crv/xchain-gauges/RootGaugeFactory.md
       - ChildGaugeFactory: liquidity-gauges-and-minting-crv/xchain-gauges/ChildGaugeFactory.md
@@ -150,7 +150,7 @@ nav:
       #  - Updater: liquidity-gauges-and-minting-crv/xchain-gauges/Updater.md
       #  - L2 VotingEscrow Oracle: liquidity-gauges-and-minting-crv/xchain-gauges/L2VotingEscrowOracle.md
 
-  - Governance and Voting:  
+  - Governance and Voting:
     - Overview: governance/overview.md
     - Curve-DAO Tool: governance/curve-dao.md
     - L2 Governance (x-gov):
@@ -248,7 +248,7 @@ nav:
   - StableSwap Exchange:
     - Overview: stableswap-exchange/overview.md
 
-    - Stableswap:    
+    - Stableswap:
       - Pools:
         - Overview: stableswap-exchange/stableswap/pools/overview.md
         - Plain Pools: stableswap-exchange/stableswap/pools/plain_pools.md
@@ -273,7 +273,7 @@ nav:
         - Metapools: stableswap-exchange/stableswap-ng/pools/metapool.md
         - Oracles: stableswap-exchange/stableswap-ng/pools/oracles.md
         - Admin Controls: stableswap-exchange/stableswap-ng/pools/admin_controls.md
-      - Utility Contracts: 
+      - Utility Contracts:
           - Math: stableswap-exchange/stableswap-ng/utility_contracts/math.md
           - Views: stableswap-exchange/stableswap-ng/utility_contracts/views.md
       - Custom Implementations:
@@ -297,7 +297,7 @@ nav:
         - Overview: cryptoswap-exchange/twocrypto-ng/pools/overview.md
         - TwoCrypto Pool: cryptoswap-exchange/twocrypto-ng/pools/twocrypto.md
         - Admin Controls: cryptoswap-exchange/twocrypto-ng/pools/admin-controls.md
-      - Utility Contracts: 
+      - Utility Contracts:
         - Math: cryptoswap-exchange/twocrypto-ng/utility-contracts/math.md
         - Views: cryptoswap-exchange/twocrypto-ng/utility-contracts/views.md
 
@@ -307,7 +307,7 @@ nav:
         - TriCrypto Pool: cryptoswap-exchange/tricrypto-ng/pools/tricrypto.md
         - Oracles: cryptoswap-exchange/tricrypto-ng/pools/oracles.md
         - Admin Controls: cryptoswap-exchange/tricrypto-ng/pools/admin-controls.md
-      - Utility Contracts: 
+      - Utility Contracts:
         - Math: cryptoswap-exchange/tricrypto-ng/utility-contracts/math.md
         - Views: cryptoswap-exchange/tricrypto-ng/utility-contracts/views.md
 
@@ -323,7 +323,7 @@ nav:
     - TriCrypto-NG:
       - Overview: factory/tricrypto-ng/overview.md
       - Deployer API: factory/tricrypto-ng/deployer-api.md
-    - StableSwap: 
+    - StableSwap:
       - Overview: factory/stableswap/overview.md
       - Deployer API: factory/stableswap/deployer-api.md
       - Implementations: factory/stableswap/implementations.md
@@ -331,9 +331,9 @@ nav:
       - Overview: factory/cryptoswap/overview.md
       - Deployer API: factory/cryptoswap/deployer-api.md
       - Implementations: factory/cryptoswap/implementations.md
-    
 
-  - Integration & Guides: 
+
+  - Integration & Guides:
     - Overview: integration/overview.md
     - Address Provider: integration/address-provider.md
     - Meta Registry: integration/metaregistry.md

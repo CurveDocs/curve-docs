@@ -17,7 +17,7 @@
 
     ---
 
-    An exponential moving-average (EMA) oracle value of the estimated TVL in the pool with a periodicity determined by `xcp_ma_time`. 
+    An exponential moving-average (EMA) oracle value of the estimated TVL in the pool with a periodicity determined by `xcp_ma_time`.
 
 </div>
 
@@ -240,7 +240,7 @@
                 return convert(unsafe_mul(convert(convert(r, bytes32), uint256), 3_822_833_074_963_236_453_042_738_258_902_158_003_155_416_615_667) >>\
                     convert(unsafe_sub(195, k), uint256), int256)
             ```
-    
+
     === "Example"
 
         ```shell
@@ -607,7 +607,7 @@ To prevent oracle manipulation, `price_oracle` and `xcp_oracle` are only **updat
 
                 ...
             ```
-    
+
         === "CurveCryptoMathOptimized2.vy"
 
             ```py
@@ -674,7 +674,7 @@ To prevent oracle manipulation, `price_oracle` and `xcp_oracle` are only **updat
 ### `last_timestamp`
 !!! description "`CurveTwocryptoOptimized.last_timestamp() -> uint256: view`"
 
-    Getter for the last timestamps when price and xcp oracles were updated. Both timestamps are packed into a single variable. The lower 128 bits represent the timestamp of the price update, the upper 128 bits the timestamps of the xcp update. The distinction between price and xcp is neccessary because these values are not always updated in parallel. Usually they are, but when liquidity is removed in a balanced matter, the price oracle is not updated but the xcp one is. 
+    Getter for the last timestamps when price and xcp oracles were updated. Both timestamps are packed into a single variable. The lower 128 bits represent the timestamp of the price update, the upper 128 bits the timestamps of the xcp update. The distinction between price and xcp is neccessary because these values are not always updated in parallel. Usually they are, but when liquidity is removed in a balanced matter, the price oracle is not updated but the xcp one is.
 
     Returns: packed value of the timestamps of the most recent updated of the price and xcp oracle (`uint256`).
 
@@ -778,7 +778,7 @@ To prevent oracle manipulation, `price_oracle` and `xcp_oracle` are only **updat
 
 ### `lp_price`
 !!! description "`CurveTwocryptoOptimized.lp_price() -> uint256:`"
-    
+
     Function to calculate the price of the LP token with regard to the coin at `index 0` in the pool. The value is calculate the following:
 
     $$\text{lp_price} = \frac{2 \times \text{virtual_price} \times \sqrt{\text{price_oracle} \times 10^{18}}}{10^{18}}$$
@@ -836,7 +836,7 @@ To prevent oracle manipulation, `price_oracle` and `xcp_oracle` are only **updat
 
                 return price_oracle
             ```
-    
+
     === "Example"
 
         ```shell
@@ -863,7 +863,7 @@ To prevent oracle manipulation, `price_oracle` and `xcp_oracle` are only **updat
             virtual_price: public(uint256)  # <------ Cached (fast to read) virtual price.
             #                          The cached `virtual_price` is also used internally.
             ```
-    
+
     === "Example"
 
         ```shell
@@ -917,4 +917,3 @@ To prevent oracle manipulation, `price_oracle` and `xcp_oracle` are only **updat
         >>> CurveTwocryptoOptimized.get_virtual_price()
         1000270251060292804
         ```
-

@@ -11,7 +11,7 @@ It utilizes three different implementations:
 
 
 ## **Query Implementations**
- 
+
 ### `pool_implementations`
 !!! description "`Factory.pool_implementations() -> address: view`"
 

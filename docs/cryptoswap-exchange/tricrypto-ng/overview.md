@@ -7,7 +7,7 @@ hide:
 
 !!!deploy "Contract Source & Deployment"
     Source code is available on [:material-github: GitHub](https://github.com/curvefi/tricrypto-ng). The following documentation covers source code up until commit number [`33707fc`](https://github.com/curvefi/tricrypto-ng/commit/33707fc8b84e08786acf184fcfdb744eb4657a99).
-    
+
     All stableswap-ng deployments can be found in the "Deployment Addresses" section. [:material-arrow-up-right:](../../references/deployed-contracts.md#tricrypto-ng).
 
 
@@ -20,13 +20,13 @@ For an in-depth understanding of the Cryptoswap invariant design, please refer t
 
 <div class="grid cards" markdown>
 
--   :octicons-code-16: **AMM blueprint contracts** 
+-   :octicons-code-16: **AMM blueprint contracts**
 
     ---
 
     The `AMM` is a **3-coin, auto-rebalancing Cryptoswap implementation**. The contract is version 2.0.0, with several optimizations that make the contract cheaper for the end user.
-    Also, unlike the older version, the **pool contract is an ERC20-compliant LP token** as well. 
-    
+    Also, unlike the older version, the **pool contract is an ERC20-compliant LP token** as well.
+
     There are two different implementations, one with **native transfers enabled** and the other with native transfers **disabled**.
 
     [:octicons-arrow-right-24: `CurveTricryptoOptimized.vy`](./pools/tricrypto.md)

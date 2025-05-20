@@ -96,7 +96,7 @@ At contract initialization, the admin is set to `ZERO_ADDRESS`. This means assig
 
                 self.admin = _new_admin
                 log SetAdmin(_new_admin)
-            
+
             @view
             @internal
             def _check_admins():
@@ -159,7 +159,7 @@ At contract initialization, the admin is set to `ZERO_ADDRESS`. This means assig
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the `Pool` or the `Factory`.
 
-    Function to set the admin fee of the pool. 
+    Function to set the admin fee of the pool.
 
     Emits: `SetAdmin` event.
 

@@ -15,7 +15,7 @@ For technical implementations, the **StableSwap algorithm combines a constant su
 !!!github "GitHub"
 
     The source code for the Curve Finance StableSwap contracts is openly accessible on GitHub:
-    
+
     - Genesis Contracts: The initial set of smart contracts for Curve pools can be found at [Curve's contracts repository](https://github.com/curvefi/curve-contract/tree/master/contracts/pools).
     - StableSwap-ng: An updated version of the StableSwap algorithm, known as StableSwap-ng (next generation), is available at [Curve's StableSwap-ng repository](https://github.com/curvefi/stableswap-ng).
 
@@ -31,7 +31,7 @@ The original stableswap was the first on-chain implementation of the stableswap 
 
 ### StableSwap NG
 
-The Stableswap-NG AMM infrastructure marks a sophisticated evolution from its original implementation, delivering enhanced technical capabilities. This upgraded framework allows for the inclusion of up to eight tokens in standard pools and two in metapools. It extends support to a variety of token types, including rate-oracle tokens like wstETH, ERC4626 tokens such as sDAI, and rebasing tokens like stETH.  
+The Stableswap-NG AMM infrastructure marks a sophisticated evolution from its original implementation, delivering enhanced technical capabilities. This upgraded framework allows for the inclusion of up to eight tokens in standard pools and two in metapools. It extends support to a variety of token types, including rate-oracle tokens like wstETH, ERC4626 tokens such as sDAI, and rebasing tokens like stETH.
 
 However, native tokens like ETH are not directly supported within this implementation. For transactions involving ETH, its wrapped version, wETH, must be utilized. This decision is rooted in ensuring higher security standards.
 
