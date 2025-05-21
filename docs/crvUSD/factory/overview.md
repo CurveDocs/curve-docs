@@ -4,7 +4,7 @@ Other than the pool factory, this factory **does not allow permissionless deploy
 
 !!!deploy "Contract Source & Deployment"
     **crvUSD Market Factory** contract is deployed to the Ethereum mainnet at: [0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC#code).
-    Source code available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/ControllerFactory.vy).
+    Source code available on [GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/ControllerFactory.vy).
 
 
 ## **Debt Ceilings**

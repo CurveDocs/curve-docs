@@ -17,7 +17,7 @@ It is important to note that the LP tokens are not staked in the gauge (if there
 
 
 !!!deploy "Contract Source & Deployment"
-    Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/stabilizer/PegKeeper.vy).
+    Source code for this contract is available on [GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/stabilizer/PegKeeper.vy).
 
     | PegKeepers                | Deployment Address  |
     | ------------------------- | ------------------- |

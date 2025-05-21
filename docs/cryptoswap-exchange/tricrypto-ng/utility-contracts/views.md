@@ -1,7 +1,7 @@
 This contract contains **view-only external methods** which can be gas-inefficient when called from smart contracts.
 
 !!!deploy "Contract Source & Deployment"
-    Source code for this contract is available on [Github](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveCryptoViews3Optimized.vy).
+    Source code for this contract is available on [GitHub](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveCryptoViews3Optimized.vy).
     Full list of all deployments can be found [here](../../../references/deployed-contracts.md#twocrypto-ng).
 
 

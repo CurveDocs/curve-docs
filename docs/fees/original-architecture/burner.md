@@ -47,7 +47,7 @@ flowchart LR
 ## **Deployed Burner Contracts**
 
 !!!deploy "Contract Source & Deployment"
-    Source code for burners is available on [Github](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/burners).
+    Source code for burners is available on [GitHub](https://github.com/curvefi/curve-dao-contracts/tree/master/contracts/burners).
 
 
 | Burner Type   | Description | Address  |

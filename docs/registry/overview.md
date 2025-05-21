@@ -19,7 +19,7 @@ Curve Factory contracts, which allow the permissionless deployment of pools and 
 ---
 
 
-<div align="center">
+<div align="center" class="mermaid-diagram">
 ```mermaid
 flowchart BT
     mr[(MetaRegistry)]
@@ -46,7 +46,7 @@ Integrators often find it challenging to incorporate a protocol into their dapp 
 
 
 ## **Setup**
-Set up the python environment using the following steps: Please visit [Github](https://github.com/curvefi/metaregistry) for more details.
+Set up the python environment using the following steps: Please visit [GitHub](https://github.com/curvefi/metaregistry) for more details.
 
 ```
 > python -m venv venv
@@ -63,7 +63,7 @@ This project uses **`eth-ape >= 0.5.2`** developed at [Apeworx](https://apeworx.
 - **`ape-ledger`**
 - **`ape-etherscan`**
 
-To install these, please follow the instructions in their respective Github repositories.
+To install these, please follow the instructions in their respective GitHub repositories.
 
 !!!note
     If you choose to run tests using [**`Alchemy`**](https://www.alchemy.com/) as the upstream provider, please set up an Alchemy API key into an environment variable labeled **`WEB3_ALCHEMY_PROJECT_ID`** or **`WEB3_ALCHEMY_API_KEY`**. If you use a local node (**`geth`** or **`erigon`**), please change the hardhat upstream provider for mainnet-fork to **`geth`** in [ape-config.yaml](https://github.com/curvefi/metaregistry/blob/main/ape-config.yaml):

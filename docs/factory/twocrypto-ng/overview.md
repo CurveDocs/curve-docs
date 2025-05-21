@@ -5,7 +5,7 @@ The TwoCrypto-NG Factory allows the permissionless deployment of two-coin volati
 Additionally, the Factory contract is the direct admin and fee receiver of all pools. In turn, the Factory is controlled by the CurveDAO.
 
 !!!deploy "Contract Source & Deployment"
-    Source code for the Factory is available on [Github](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/CurveTwocryptoFactory.vy).
+    Source code for the Factory is available on [GitHub](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/CurveTwocryptoFactory.vy).
     A full list of all deployments can be found [here](../../references/deployed-contracts.md#twocrypto-ng).
 
 

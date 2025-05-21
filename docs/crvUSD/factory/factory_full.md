@@ -2,7 +2,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
 !!!deploy "Contract Source & Deployment"
     **crvUSD Factory** contract is deployed to the Ethereum mainnet at: [0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC#code).
-    Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/ControllerFactory.vy).
+    Source code for this contract is available on [GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/ControllerFactory.vy).
 
 
 ## **Adding Markets and Adjusting Debt Ceilings**

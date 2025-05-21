@@ -1,7 +1,7 @@
 MonetaryPolicy contracts are integrated into the crvUSD ecosystem, where they play a pivotal role in determining the interest rates for crvUSD markets.
 
 !!!deploy "Contract Source & Deployment"
-    Source code is available on [Github](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/mpolicies).
+    Source code is available on [GitHub](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/mpolicies).
     Relevant contract deployments can be found [here](../references/deployed-contracts.md#curve-stablecoin).
 
 ## **Interest Rate Mechanics**

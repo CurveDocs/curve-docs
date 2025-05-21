@@ -594,6 +594,8 @@ h3 {
   width: fit-content;
 }
 
+.mermaid-diagram { }
+
 /* Announcement Bar */
 .md-banner {
   background-color: var(--md-typeset-a-color);

@@ -1,7 +1,7 @@
 Plain pools are liquidity **exchange contracts which contain at least 2 and up to 8 coins.**
 
 !!!deploy "Contract Source & Deployment"
-    Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNG.vy).
+    Source code available on [GitHub](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNG.vy).
 
 The deployment of plain pools is permissionless and can be done via the [**`deploy_plain_pool`**](../../../factory/stableswap-ng/deployer-api.md#deploy_plain_pool) function within the StableSwap-NG Factory.
 

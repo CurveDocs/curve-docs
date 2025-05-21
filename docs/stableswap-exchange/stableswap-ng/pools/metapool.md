@@ -1,7 +1,7 @@
 A metapool is a pool where a stablecoin is paired against the LP token from another pool, a so-called base pool.
 
 !!!deploy "Contract Source & Deployment"
-    Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapMetaNG.vy).
+    Source code available on [GitHub](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapMetaNG.vy).
 
 The deployment of metapools is permissionless and can be done via the [**`deploy_metapool`**](../../../factory/stableswap-ng/deployer-api.md#deploy_metapool) function within the StableSwap-NG Factory.
 

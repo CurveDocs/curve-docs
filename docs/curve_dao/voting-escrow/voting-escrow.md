@@ -5,7 +5,7 @@ Participating in Curve DAO governance requires that an account have a balance of
 !!!deploy "Contract Source & Deployment"
     **veCRV** is represented by the **`VotingEscrow`** contract, deployed to the Ethereum mainnet at:
     [0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2](https://etherscan.io/address/0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2).
-    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/VotingEscrow.vy).
+    Source code available on [GitHub](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/VotingEscrow.vy).
 
 
 `locktime` is denominated in years. The *maximum lock duration is four years* and the *minimum is one week*.

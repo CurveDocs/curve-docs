@@ -12,7 +12,7 @@ Cross asset swaps are performed using the `SynthSwap` contract, deployed to the 
 [0x58A3c68e2D3aAf316239c003779F71aCb870Ee47](https://etherscan.io/address/0x58A3c68e2D3aAf316239c003779F71aCb870Ee47).
 
 Source code and information on the technical implementation are available on
-[Github](https://github.com/curvefi/curve-cross-asset-swaps).
+[GitHub](https://github.com/curvefi/curve-cross-asset-swaps).
 
 ## How `SynthSwap` works
 

@@ -1,7 +1,7 @@
 **The Math Contract provides AMM Math for 3-coin Curve Cryptoswap Pools.**
 
 !!!deploy "Contract Source & Deployment"
-    Source code for this contract is available on [Github](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveCryptoMathOptimized3.vy).
+    Source code for this contract is available on [GitHub](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveCryptoMathOptimized3.vy).
     Full list of all deployments can be found [here](../../../references/deployed-contracts.md#twocrypto-ng).
 
 
