@@ -6,7 +6,7 @@ search:
 
 # **Curve X-GOV**
 
-Full `x-gov` documentation can be found here: [Cross-Chain Governance](../governance/overview.md)
+Full `x-gov` documentation can be found here: [Cross-Chain Governance](../governance/x-gov/overview.md)
 
 !!!github "GitHub"
     Source code for cross-chain governance contracts is available on [:material-github: GitHub](https://github.com/curvefi/curve-xgov).
