@@ -549,7 +549,7 @@ The following Brownie console interaction examples are using the
                         amounts[i] = amounts[i] * LENDING_PRECISION / rate
                     # if not use_lending - all good already
 
-                # Transfrer max tokens in
+                # Transfer max tokens in
                 _tokens: uint256 = ERC20(_token).balanceOf(msg.sender)
                 if _tokens > max_burn_amount:
                     _tokens = max_burn_amount

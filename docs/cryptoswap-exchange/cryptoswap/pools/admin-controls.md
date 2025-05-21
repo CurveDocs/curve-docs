@@ -8,9 +8,9 @@ Pools created through the Factory are 'owned' by the factory **`admin`** (DAO). 
 
 ## **Parameter Controls**
 
-More informations about the parameters [here](../../overview.md).
+More information about the parameters [here](../../overview.md).
 
-The appropriate value for `A` and `gamma` is dependent upon the type of coin being used within the pool, and is subject to optimisation and pool-parameter update based on the market history of the trading pair. It is possible to modify the parameters for a pool after it has been deployed. However, it requires a vote within the Curve DAO and must reach a 15% quorum.
+The appropriate value for `A` and `gamma` is dependent upon the type of coin being used within the pool, and is subject to optimization and pool-parameter update based on the market history of the trading pair. It is possible to modify the parameters for a pool after it has been deployed. However, it requires a vote within the Curve DAO and must reach a 15% quorum.
 
 
 ### `ramp_A_gamma`
@@ -128,7 +128,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the factory contract.
 
-    Function to commit new parameters. The new parameters do not take immedaite effect, they need to be applied first.
+    Function to commit new parameters. The new parameters do not take immediate effect, they need to be applied first.
 
     Emits: `CommitNewParameters`
 

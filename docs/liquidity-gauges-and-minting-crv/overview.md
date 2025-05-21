@@ -1,6 +1,6 @@
 <h1>Curve DAO: Liquidity Gauges and Minting CRV</h1>
 
-Curve is built in a way to incentivise liquidity providers with CRV, the protocols governance token. The protocol works in a way that it directs the inflation of the CRV token to the liquidity providers based on the votes of the veCRV holders. This is done through a system of gauges, the `GaugeController` contract, and the `Minter` contract.
+Curve is built in a way to incentivize liquidity providers with CRV, the protocols governance token. The protocol works in a way that it directs the inflation of the CRV token to the liquidity providers based on the votes of the veCRV holders. This is done through a system of gauges, the `GaugeController` contract, and the `Minter` contract.
 
 Users who have veCRV, Curve's voting-escrowed token, can vote on DAO-approved gauges to receive CRV emissions.
 
@@ -71,7 +71,7 @@ To measure liquidity over time, the user deposits their LP tokens into the liqui
 Suppose we have the inflation rate $r$ changing with every epoch (1 year), gauge weight $w_{g}$ and gauge type weight $w_{t}$. Then, all the gauge handles the stream of inflation with the rate $r' = w_{g}w_{t}r$ which it can update every time $w_{g}$, $w_{t}$ or mining epoch changes.
 
 To calculate a user’s share of $r'$, we must calculate the integral:
-$I_{u} = \int \frac{r'(t)b_{u}(t)}{S(t)}dt,$ where $b_{u}(t)$ is the balance supplied by the user (measured in LP tokens) and $S(t)$ is total liquidity supplied by users, depending on the time $t$; the value $I_{u}$ gives the amount of tokens which the user has to have minted to them. The user’s balance $b_{u}$ changes every time the user $u$ makes a deposit or withdrawal, and $S$ changes every time _any_ user makes a deposit or withdrawal so $S$ can change many times in between two events for the user $u''$. In the liquidity gauge contract, the vaule of $I_{u}$ is recorded per-user in the public `integrate_fraction` mapping.
+$I_{u} = \int \frac{r'(t)b_{u}(t)}{S(t)}dt,$ where $b_{u}(t)$ is the balance supplied by the user (measured in LP tokens) and $S(t)$ is total liquidity supplied by users, depending on the time $t$; the value $I_{u}$ gives the amount of tokens which the user has to have minted to them. The user’s balance $b_{u}$ changes every time the user $u$ makes a deposit or withdrawal, and $S$ changes every time _any_ user makes a deposit or withdrawal so $S$ can change many times in between two events for the user $u''$. In the liquidity gauge contract, the value of $I_{u}$ is recorded per-user in the public `integrate_fraction` mapping.
 
 To avoid requiring that all users to checkpoint periodically, we keep recording values of the following integral (named `integrate_inv_supply` in the contract):
 
@@ -79,7 +79,7 @@ $$I_{is}(t) = \int_0^t \frac{r'(t)}{S(t)}dt$$
 
 The value of $I_{is}$ is recorded at any point any user deposits or withdraws, as well as every time the rate $r$ changes (either due to weight change or change of mining epoch).
 
-When a user deposits or withdraws, the change in $I_{u}$ can be calculated as the current (before user’s action) value of $I_{is}$ multiplied by the pre-action user’s balance, and sumed up across the user’s balances: $I_{u}(t_{k}) = \sum_{k} b_{u}(t_{k})[I_{is}(t_{k})-I_{is}(t_{k-1})]$. The per-user integral is possible to repalce with this sum because $b_{u}(t)$ changed for all times between $t_{k-1}$ and $t_{k}$.
+When a user deposits or withdraws, the change in $I_{u}$ can be calculated as the current (before user’s action) value of $I_{is}$ multiplied by the pre-action user’s balance, and summed up across the user’s balances: $I_{u}(t_{k}) = \sum_{k} b_{u}(t_{k})[I_{is}(t_{k})-I_{is}(t_{k-1})]$. The per-user integral is possible to replace with this sum because $b_{u}(t)$ changed for all times between $t_{k-1}$ and $t_{k}$.
 
 ---
 
@@ -91,14 +91,14 @@ If no users vote-lock any CRV (or simply don’t have any), the inflation will s
 
 Implementation details are such that a user gets the boost at the time of the last action or checkpoint. Since the voting power decreases with time, it is favorable for users to apply a boost and do no further actions until they vote-lock more tokens. However, once the vote-lock expires, everyone can “kick” the user by creating a checkpoint for that user and, essentially, resetting the user to no boost if they have no voting power at that point already.
 
-Finally, the gauge is supposed to not miss a full year of inflation (e.g. if there were no interactions with the guage for the full year). If that ever happens, the abandoned gauge gets less CRV.
+Finally, the gauge is supposed to not miss a full year of inflation (e.g. if there were no interactions with the gauge for the full year). If that ever happens, the abandoned gauge gets less CRV.
 
 ---
 
 ## Gauge Weight Voting
 Users can allocate their veCRV towards one or more liquidity gauges. Gauges receive a fraction of newly minted CRV tokens proportional to how much veCRV the gauge is allocated. Each user with a veCRV balance can change their preference at any time.
 
-When a user applies a new weight vote, it gets applied at the start of the next epoch week. The weight vote for any one gauge cannot be changed more often than once in 10 days. Adding more CRV to your lock or extending the locktime increases your veCRV balance. This increase is not automatically accounted for in your current gauge weight votes. If you want to allocate all of your newly acquired voting power, make sure to re-vote.
+When a user applies a new weight vote, it gets applied at the start of the next epoch week. The weight vote for any one gauge cannot be changed more often than once in 10 days. Adding more CRV to your lock or extending the lock time increases your veCRV balance. This increase is not automatically accounted for in your current gauge weight votes. If you want to allocate all of your newly acquired voting power, make sure to re-vote.
 
 !!!warning
     Resetting your gauge weight before re-voting means you'll need to wait 10 days to vote for the gauges whose weight you've reset. So, please ensure you simply re-vote; there is no need to reset your gauge weight votes before voting again.

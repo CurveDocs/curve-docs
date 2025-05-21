@@ -1,8 +1,8 @@
-<h1>StableSwap-NG Oracles</h1>
+<h1>Stableswap-NG Oracles</h1>
 
 
 !!!danger "WARNING: Oracle Vulnerability"
-    A specific AMM implementation of [stableswap-ng](https://github.com/curvefi/stableswap-ng) has a bug that can cause the price oracle to change sharply if the tokens within the AMM **do not all have the same token decimal precision of 18 or if the tokens use external rates**. For example, the [`USDe <> USDC`](https://etherscan.io/address/0x02950460e2b9529d0e00284a5fa2d7bdf3fa4d72) pool has this issue, as USDe has a precision of 18 and USDC of 6.
+    A specific AMM implementation of [Stableswap-NG](https://github.com/curvefi/stableswap-ng) has a bug that can cause the price oracle to change sharply if the tokens within the AMM **do not all have the same token decimal precision of 18 or if the tokens use external rates**. For example, the [`USDe <> USDC`](https://etherscan.io/address/0x02950460e2b9529d0e00284a5fa2d7bdf3fa4d72) pool has this issue, as USDe has a precision of 18 and USDC of 6.
 
     A list of identified affected pools can be found in this [:material-google-spreadsheet: Google Spreadsheet](https://docs.google.com/spreadsheets/d/130LPSQbAnMWTC1yVO23cqRSblrkYFfdHdRwYNpaaoYY/edit?usp=sharing).
 
@@ -43,7 +43,7 @@
 
 
 
-*StableSwap-NG pools have the following oracles:*
+*Stableswap-NG pools have the following oracles:*
 
 <div class="grid cards" markdown>
 
@@ -500,7 +500,7 @@ If this is the case, `last_price` is updated at every action, so there will be t
 ### `ma_last_time`
 !!! description "`StableSwap.ma_last_time() -> uint256: view`"
 
-    !!!warning "Destinction between price and D"
+    !!!warning "Distinction between price and D"
         This variable contains two packed values because there needs to be a distinction between prices and the D invariant. The reasoning behind this is that the **moving-average price oracle is not updated if users remove liquidity in a balanced proportion (`remove_liquidity`), but the D oracle is.**
 
     Getter for the last time the exponential moving-average oracle of coin prices or the D invariant was updated. This variable contains two packed values: **ma_last_time_p**, which represents the timestamp of the last update for prices, and **ma_last_time_D**, which represents the last timestamp of the oracle update for the D invariant.

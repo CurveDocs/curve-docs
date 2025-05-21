@@ -12,7 +12,7 @@ The `curve-dao` package is a Python tool designed to interact with CurveDAO gove
 This package simplifies the process of creating and testing CurveDAO proposals, making it easier for veCRV holders to participate in governance actions such as:
 
 - Managing Curve DAO gauges (creation, modification, or removal)
-- Whitelisting smartwallets for veCRV locking
+- Whitelisting smart wallets for veCRV locking
 - Adjusting liquidity pool parameters
 - Adding new gauge types
 - Other DAO-governed protocol changes

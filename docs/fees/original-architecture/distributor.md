@@ -9,7 +9,7 @@ Fees are distributed to veCRV holders through the FeeDistributor contract in the
     **FeeDistributor** contract is deployed to the Ethereum mainnet at: [0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc](https://etherscan.io/address/0xa464e6dcda8ac41e03616f95f4bc98a13b8922dc).
     Source code available on [GitHub](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/FeeDistributor.vy).
 
-**Fees are distributed on a  weekly basis.** The porportional amount of fees that each user is to receive is calculated based on their veCRV balance relative to the total veCRV supply.This amount is calculated at the start of the week.
+**Fees are distributed on a  weekly basis.** The proportional amount of fees that each user is to receive is calculated based on their veCRV balance relative to the total veCRV supply.This amount is calculated at the start of the week.
 The actual distribution occurs at the end of the week based on the fees that were collected. As such, a user that creates a new vote-lock should expect to receive their first fee payout at the end of the following epoch week.
 
 !!!info "Changing the Reward Token"
@@ -78,7 +78,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
     !!!note
         For off-chain integrators, this function can be called as though it were a view method in order to check the claimable amount.
 
-        Every veCRV related action (locking, extending a lock, increasing the locktime) increments a user’s veCRV epoch. A call to claim will consider at most 50 user epochs. For accounts that performed many veCRV actions, it may be required to call claim more than once to receive the fees. In such cases it can be more efficient to use `claim_many`.
+        Every veCRV related action (locking, extending a lock, increasing the lock time) increments a user’s veCRV epoch. A call to claim will consider at most 50 user epochs. For accounts that performed many veCRV actions, it may be required to call claim more than once to receive the fees. In such cases it can be more efficient to use `claim_many`.
 
     | Input   | Type   | Description |
     | ------- | ------- | ----|
@@ -345,7 +345,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
 
     Getter to check if tokens can be checkpointed.
 
-    Returns: true or flase (`bool`).
+    Returns: true or false (`bool`).
 
     ??? quote "Source code"
 
@@ -429,7 +429,7 @@ The available 3CRV balance to distribute is tracked via the “**token checkpoin
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Funtion to toggle permission for checkpointing by an account.
+    Function to toggle permission for checkpointing by an account.
 
     ??? quote "Source code"
 
@@ -553,9 +553,9 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 ### `is_killed`
 !!! description "`FeeDistributor.is_killed() -> bool: view`"
 
-    Getter method to check if the `FeeDistributor` contract is killed. When killed, the contract blocks `claim` and `burn` and the entire token balance is transfered to the `emergency_return` address.
+    Getter method to check if the `FeeDistributor` contract is killed. When killed, the contract blocks `claim` and `burn` and the entire token balance is transferred to the `emergency_return` address.
 
-    Returns: true or flase (`bool`).
+    Returns: true or false (`bool`).
 
     ??? quote "Source code"
 
@@ -807,7 +807,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 ---
 
 
-## **Query Contract Informations**
+## **Query Contract Information**
 
 ### `ve_for_at`
 !!! description "`FeeDistributor.ve_for_at(_user: address, _timestamp: uint256) -> uint256:`"

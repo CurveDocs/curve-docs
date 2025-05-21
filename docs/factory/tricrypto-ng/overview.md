@@ -1,6 +1,6 @@
 <h1>Pool Factory: Overview</h1>
 
-The TriCrypto-NG Factory allows the permissionless deployment of two-coin volatile asset pools, as well as gauges. **The liquidity pool and LP token share the same contract.**
+The Tricrypto-NG Factory allows the permissionless deployment of two-coin volatile asset pools, as well as gauges. **The liquidity pool and LP token share the same contract.**
 
 Additionally, the Factory contract is the direct admin and fee receiver of all pools. In turn, the Factory is controlled by the CurveDAO.
 
@@ -145,7 +145,7 @@ It utilizes four different implementations:
 
         ```vyper
         event UpdatePoolImplementation:
-            _implemention_id: uint256
+            _implementation_id: uint256
             _old_pool_implementation: address
             _new_pool_implementation: address
 

@@ -127,9 +127,9 @@ The Vault is an **implementation of the ERC4626 vault which deposits assets into
 
 The factory allows the **permissionless creation of borrowing/lending markets without rehypothecation**, meaning the collateral asset cannot be lent out. A distinctive feature is its ability to generate markets from Curve pools with a `price_oracle()` method, eliminating the need for a separate price oracle. Nonetheless, these pools must adhere to one of the following standards:
 
-- [`stableswap-ng`](../stableswap-exchange/stableswap-ng/overview.md)
-- [`tricrypto-ng`](../cryptoswap-exchange/tricrypto-ng/overview.md)
-- [`twocrypto-ng`](../cryptoswap-exchange/twocrypto-ng/overview.md)
+- [`Stableswap-NG`](../stableswap-exchange/stableswap-ng/overview.md)
+- [`Tricrypto-NG`](../cryptoswap-exchange/tricrypto-ng/overview.md)
+- [`Twocrypto-NG`](../cryptoswap-exchange/twocrypto-ng/overview.md)
 
 [:octicons-arrow-right-24: More here](./contracts/oneway-factory.md)
 

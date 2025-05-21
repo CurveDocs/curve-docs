@@ -4,22 +4,22 @@ hide:
 ---
 
 
-<h1>StableSwap-NG: Overview </h1>
+<h1>Stableswap-NG: Overview </h1>
 
 !!!deploy "Contract Source & Deployment"
 
     Source code is available on [:material-github: GitHub](https://github.com/curvefi/stableswap-ng). The following documentation covers source code up until commit number [`5f582a6`](https://github.com/curvefi/stableswap-ng/commit/5f582a6b8f709d863825c5fbe026cd3b4fa2d840).
 
-    All stableswap-ng deployments can be found in the "Deployment Addresses" section. [:material-arrow-up-right:](../../references/deployed-contracts.md#stableswap-ng)
+    All Stableswap-NG deployments can be found in the "Deployment Addresses" section. [:material-arrow-up-right:](../../references/deployed-contracts.md#stableswap-ng)
 
 
-For an in-depth understanding of the StableSwap invariant design, please refer to the official [StableSwap whitepaper](../../assets/pdf/whitepaper_stableswap.pdf).
+For an in-depth understanding of the Stableswap invariant design, please refer to the official [Stableswap Whitepaper](../../assets/pdf/whitepaper_stableswap.pdf).
 
 
 ---
 
 
-**The Stableswap-NG AMM infrastructure represents a technically enhanced iteration of the previous stableswap implementation. It comprises the following key components:**
+**The Stableswap-NG AMM infrastructure represents a technically enhanced iteration of the previous Stableswap implementation. It comprises the following key components:**
 
 <div class="grid cards" markdown>
 

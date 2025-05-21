@@ -36,7 +36,7 @@ The logic of the contract is to identify the pool type used to facilitate the de
 ### `get_quotes`
 !!! description "`CurveRateProvider.get_quotes(source_token: address, destination_token: address, amount_in: uint256) -> DynArray[Quote, MAX_QUOTES]`"
 
-    Getter method which returns quotes for a specified `source_token` compared to a `destination_token` based on the input ampount `amount_in`.
+    Getter method which returns quotes for a specified `source_token` compared to a `destination_token` based on the input amount `amount_in`.
 
     Returns: A dynamic array of `Quote` structs containing the following data:
 

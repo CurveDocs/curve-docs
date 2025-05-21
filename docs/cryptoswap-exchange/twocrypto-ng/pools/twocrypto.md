@@ -1501,7 +1501,7 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
 
 ## **Adding and Removing Liquidity**
 
-*The twocrypto-ng implementation utilizes the usual methods to add and remove liquidity.*
+*The Twocrypto-NG implementation utilizes the usual methods to add and remove liquidity.*
 
 **Adding liquidity** can be done via the `add_liquidity` method. The code uses a list of unsigned integers `uint256[N_COINS]` as input for the pools underlying tokens to add. **Any proportion is possible**. For example, adding fully single-sided can be done using `[0, 1e18]` or `[1e18, 0]`, but again, any variation is possible, e.g., `[1e18, 1e19]`.
 
@@ -2956,9 +2956,9 @@ In Twocrypto-NG pools, price scaling and fee **parameters are bundled and stored
 
 ## **Fees and Pool Profits**
 
-The cryptoswap algorithm uses different fees, such as `fee`, `mid_fee`, `out_fee`, or `fee_gamma` to determine the fees charged, more on that [here](../../overview.md#fees). All Fee values are denominated in 1e10 and [can be changed](./admin-controls.md#apply_new_parameters) by the admin.
+The Cryptoswap algorithm uses different fees, such as `fee`, `mid_fee`, `out_fee`, or `fee_gamma` to determine the fees charged, more on that [here](../../overview.md#fees). All Fee values are denominated in 1e10 and [can be changed](./admin-controls.md#apply_new_parameters) by the admin.
 
-Additionally, just as for other curve pools, there is an `ADMIN_FEE`, which is hardcoded to 50%. All twocrypto-ng pools share a universal `fee_receiver`, which is determined within the Factory contract. Unlike for most other Curve pools, there is no external method to claim the admin fees. They are claimed when removing liquidity single sided.
+Additionally, just as for other curve pools, there is an `ADMIN_FEE`, which is hardcoded to 50%. All Twocrypto-NG pools share a universal `fee_receiver`, which is determined within the Factory contract. Unlike for most other Curve pools, there is no external method to claim the admin fees. They are claimed when removing liquidity single sided.
 
 `xcp_profit`, `xcp_profit_a`, and `last_xcp` are used for tracking pool profits, which is necessary for the pool's rebalancing mechanism. These values are denominated in 1e18.
 
@@ -3177,7 +3177,7 @@ Additionally, just as for other curve pools, there is an `ADMIN_FEE`, which is h
 ### `fee_receiver`
 !!! description "`TwoCrypto.fee_receiver() -> address:`"
 
-    Getter for the fee receiver of the admin fees. This address is set within the [TwoCrypto-NG Factory](../../../factory/twocrypto-ng/overview.md). Every pool created through the Factory has the same fee receiver.
+    Getter for the fee receiver of the admin fees. This address is set within the [Twocrypto-NG Factory](../../../factory/twocrypto-ng/overview.md). Every pool created through the Factory has the same fee receiver.
 
     Returns: fee receiver (`address`).
 
@@ -3434,7 +3434,7 @@ Curve v2 pools automatically adjust liquidity to optimize depth close to the pre
 
 A bonding curve is used to determine asset prices according to the pool's supply of each asset, more [here](../../overview.md#bonding-curve-parameters).
 
-Bonding curve parameters `A` and `gamma` values are [upgradable](./admin-controls.md#parameter-changes) by the the pools admin.
+Bonding curve parameters `A` and `gamma` values are [upgradable](./admin-controls.md#parameter-changes) by the pools admin.
 
 ### `A`
 !!! description "`TwoCrypto.A() -> uint256:`"
@@ -3945,7 +3945,7 @@ It is not called when removing liquidity one sided with `remove_liquidity` as th
             def ma_time() -> uint256:
                 """
                 @notice Returns the current moving average time in seconds
-                @dev To get time in seconds, the parameter is multipled by ln(2)
+                @dev To get time in seconds, the parameter is multiplied by ln(2)
                     One can expect off-by-one errors here.
                 @return uint256 ma_time value.
                 """

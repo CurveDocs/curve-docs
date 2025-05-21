@@ -66,7 +66,7 @@ The `Broadcaster` contracts are managed by the following three admins, which are
             @external
             def broadcast(_messages: DynArray[Message, MAX_MESSAGES], _gas_limit: uint32 = 0):
                 """
-                @notice Broadcast a sequence of messeages.
+                @notice Broadcast a sequence of messages.
                 @param _messages The sequence of messages to broadcast.
                 @param _gas_limit The L2 gas limit required to execute the sequence of messages.
                 """
@@ -283,7 +283,7 @@ More on how L1 to L2 messaging on Arbitrum works can be found on the [official A
             @external
             def broadcast(_messages: DynArray[Message, MAX_MESSAGES], _gas_limit: uint256, _max_fee_per_gas: uint256):
                 """
-                @notice Broadcast a sequence of messeages.
+                @notice Broadcast a sequence of messages.
                 @param _messages The sequence of messages to broadcast.
                 @param _gas_limit The gas limit for the execution on L2.
                 @param _max_fee_per_gas The maximum gas price bid for the execution on L2.
@@ -487,7 +487,7 @@ This contract is responsible for broadcasting messages across several blockchain
             @external
             def broadcast(_chain_id: uint256, _messages: DynArray[Message, MAX_MESSAGES]):
                 """
-                @notice Broadcast a sequence of messeages.
+                @notice Broadcast a sequence of messages.
                 @param _chain_id The chain id to have messages executed on.
                 @param _messages The sequence of messages to broadcast.
                 """

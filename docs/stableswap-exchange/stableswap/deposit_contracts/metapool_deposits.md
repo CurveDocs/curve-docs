@@ -400,7 +400,7 @@ The template source code for a metapool deposit “zap” may be viewed on
                     ERC20(self.coins[MAX_COIN]).balanceOf(self), i-MAX_COIN, _min_amount
                 )
 
-            # Tranfer the coin out
+            # Transfer the coin out
             coin_amount: uint256 = ERC20(coin).balanceOf(self)
             # "safeTransfer" which works for ERC20s which return bool or not
             _response: Bytes[32] = raw_call(

@@ -1,4 +1,4 @@
-<h1>scrvUSD Crosschain Oracle</h1>
+<h1>scrvUSD Cross-chain Oracle</h1>
 
 ???+ vyper "`ScrvusdOracleV2.vy`"
     The source code for the `ScrvusdOracleV2` contract is available on [:material-github: GitHub](https://github.com/curvefi/storage-proofs/blob/main/contracts/scrvusd/oracles/ScrvusdOracleV2.vy). The contract is written in [Vyper](https://vyperlang.org/) version `0.4.0`.
@@ -26,7 +26,7 @@ The contract has three different functions for the scrvUSD share price (or its i
 
     Function to update the price using scrvUSD vault parameters.
 
-    Returns: absolute relative price change of the final price with 10^18 percision.
+    Returns: absolute relative price change of the final price with 10^18 precision.
 
     Emits: `PriceUpdate` event.
 
@@ -404,7 +404,7 @@ The contract has three different functions for the scrvUSD share price (or its i
             def price_v1(_i: uint256 = 0) -> uint256:
                 """
                 @notice Get approximate `scrvUSD.pricePerShare()`
-                @dev Price is simulated as if noone interacted to change `scrvUSD.pricePerShare()`,
+                @dev Price is simulated as if no one interacted to change `scrvUSD.pricePerShare()`,
                     need to adjust rate when too off.
                 @param _i 0 (default) for `pricePerShare()` and 1 for `pricePerAsset()`
                 """
@@ -585,7 +585,7 @@ The oracle has the following adjustable parameters:
 - [`max_price_increment`](#max_price_increment): caps the maximum rate at which the share price can change per second to prevent abrupt price fluctuations.
 - [`max_v2_duration`](#max_v2_duration): limits the number of periods used in the v2 price approximation, restricting how far future reward accrual is projected.
 
-To guard the respective functions which can change the parameters, the contract uses a snekmate module with different roles.
+To guard the respective functions which can change the parameters, the contract uses a Snekmate module with different roles.
 
 ### `profit_max_unlock_time`
 !!! description "`ScrvusdOracleV2.profit_max_unlock_time() -> uint256: view`"
@@ -627,7 +627,7 @@ To guard the respective functions which can change the parameters, the contract 
     !!!guard "Guarded Method by [Snekmate 🐍](https://github.com/pcaversaccio/snekmate)"
         This contract makes use of a Snekmate module to manage roles and permissions. This specific function can only be called by the `UNLOCK_TIME_VERIFIER` role.
 
-    Function to set a new value for `profit_max_unlock_time`. This happens within the [`ScrvUSDVeriferV2`](../crosschain/verifier.md#scrvusd-verifier-v2) contract when a period is verified using a block hash ([`verifyPeriodByBlockHash()`](../crosschain/verifier.md#verifyperiodbyblockhash)).
+    Function to set a new value for `profit_max_unlock_time`. This happens within the [`ScrvUSDVerifierV2`](../crosschain/verifier.md#scrvusd-verifier-v2) contract when a period is verified using a block hash ([`verifyPeriodByBlockHash()`](../crosschain/verifier.md#verifyperiodbyblockhash)).
 
     Returns: boolean wether the value changed.
 
@@ -733,7 +733,7 @@ To guard the respective functions which can change the parameters, the contract 
     !!!guard "Guarded Method by [Snekmate 🐍](https://github.com/pcaversaccio/snekmate)"
         This contract makes use of a Snekmate module to manage roles and permissions. This specific function can only be called by the `DEFAULT_ADMIN_ROLE` role.
 
-    Function to set a new value for `max_price_increment`. The new value must be less than the stableswaps minimum fee.
+    Function to set a new value for `max_price_increment`. The new value must be less than the Stableswap's minimum fee.
     $\frac{fee}{2 * \text{block_time}}$ is considered to be safe.
 
     Emits: `SetMaxPriceIncrement` event.

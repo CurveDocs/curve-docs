@@ -1,6 +1,6 @@
-<h1>CryptoSwap Exchange: Overview</h1>
+<h1>Cryptoswap Exchange: Overview</h1>
 
-The *Automatic Market-Making with Dynamic Peg (CryptoSwap)* algorithm introduces a new approach for creating liquidity for assets which are not necessarily pegged to each other.
+The *Automatic Market-Making with Dynamic Peg (Cryptoswap)* algorithm introduces a new approach for creating liquidity for assets which are not necessarily pegged to each other.
 
 The core of this algorithm lies in its ability to **concentrate liquidity around a price point determined by an internal oracle**, adjusting this price in a way that balances potential losses and system profits.
 
@@ -9,7 +9,7 @@ Key features include the use of **transformed pegged invariants**, a method for 
 The algorithm also incorporates a **dynamic fee structure** that responds to changing market conditions. This approach seeks to enhance liquidity provision and optimize returns for liquidity providers.
 
 !!!pdf "Whitepaper"
-    For a detailed overview of the design, please read the official [whitepaper](../assets/pdf/whitepaper_cryptoswap.pdf).
+    For a detailed overview of the design, please read the official [Whitepaper](../assets/pdf/whitepaper_cryptoswap.pdf).
 
 
 ---
@@ -17,22 +17,22 @@ The algorithm also incorporates a **dynamic fee structure** that responds to cha
 
 # **Implementations**
 
-*There have been several implementations of the CryptoSwap algorithm:*
+*There have been several implementations of the Cryptoswap algorithm:*
 
 !!!deploy "Contract Source"
 
     *Source code is available on GitHub:*
 
     - genesis contracts: [https://github.com/curvefi/curve-crypto-contract](https://github.com/curvefi/curve-crypto-contract)
-    - twocrypto-ng: [https://github.com/curvefi/twocrypto-ng](https://github.com/curvefi/twocrypto-ng)
-    - tricrypto-ng: [https://github.com/curvefi/tricrypto-ng](https://github.com/curvefi/tricrypto-ng)
+    - Twocrypto-NG: [https://github.com/curvefi/twocrypto-ng](https://github.com/curvefi/twocrypto-ng)
+    - Tricrypto-NG: [https://github.com/curvefi/tricrypto-ng](https://github.com/curvefi/tricrypto-ng)
 
 
 | Type               | Description                                                            |
 | :----------------: | ---------------------------------------------------------------------- |
-| **`CryptoSwap`**   | Genesis two-coin volatile asset pool integration.                      |
+| **`Cryptoswap`**   | Genesis two-coin volatile asset pool integration.                      |
 | **`Tricrypto`**    | Genesis three-coin volatile asset pool integration.                    |
-| **`TwoCrypto-NG`** | Improved version of `CryptoSwap`, more [here](./twocrypto-ng/overview.md). |
+| **`Twocrypto-NG`** | Improved version of `Cryptoswap`, more [here](./twocrypto-ng/overview.md). |
 | **`Tricrypto-NG`** | Improved version of `Tricrypto`, more [here](./tricrypto-ng/overview.md).  |
 
 
@@ -43,7 +43,7 @@ The algorithm also incorporates a **dynamic fee structure** that responds to cha
 
 Because different trading pairs can exhibit drastically different price dynamics, Curve v2 offers a variety of tunable parameters that can be used to optimize for different types of assets.
 
-**The CryptoSwap market-making algorithm contains of three different classes of parameters:**
+**The Cryptoswap market-making algorithm contains of three different classes of parameters:**
 
 - *Bonding Curve:* `A` and `gamma`
 - *Price Scaling:* `ma_time`, `allowed_extra_profit` and `adjustment_step`
@@ -54,7 +54,7 @@ Because different trading pairs can exhibit drastically different price dynamics
 
 
 ## **Bonding Curve Parameters**
-Similar to many AMMs, Curve v2 employs a bonding curve to determine asset prices according to the pool's supply of each asset. To centralize liquidity around the midpoint of the bonding curve, Curve v2 adopts an invariant that falls between the StableSwap (Curve v1) approach and the constant-product method used by platforms like Uniswap and Balancer.
+Similar to many AMMs, Curve v2 employs a bonding curve to determine asset prices according to the pool's supply of each asset. To centralize liquidity around the midpoint of the bonding curve, Curve v2 adopts an invariant that falls between the Stableswap (Curve v1) approach and the constant-product method used by platforms like Uniswap and Balancer.
 
 - **`A`**: regulates the concentration of liquidity at the core of the bonding curve
 - **`gamma`**: regulates the overall breadth of the curve

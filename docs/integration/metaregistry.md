@@ -268,7 +268,7 @@ Because the deployment of liquidity pools is permissionless, a significant numbe
 ---
 
 
-## **Pool Specific Informations**
+## **Pool Specific information**
 
 All relevant pool and coin data for liquidity pools are stored in the `MetaRegistry`. This registry includes various functions that provide a wide range of data, such as pool balances, fees, decimals, and more.
 
@@ -827,7 +827,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 ### `get_pool_asset_type`
 !!! description "`MetaRegistry.get_pool_asset_type(_pool: address, _handler_id: uint256 = 0) -> uint256`"
 
-    Getter for the asset type of a pool according to: **`0 = USD`, `1 = ETH`, `2 = BTC`, `3 = Other`, `4 = CryptoPool`**. The asset type is only a property of StableSwap pools and is not enforced in CryptoSwap pools (which always return 4).
+    Getter for the asset type of a pool according to: **`0 = USD`, `1 = ETH`, `2 = BTC`, `3 = Other`, `4 = CryptoPool`**. The asset type is only a property of Stableswap pools and is not enforced in Cryptoswap pools (which always return 4).
 
     Returns: asset type (`uint256`).
 
@@ -953,7 +953,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 ### `get_virtual_price_from_lp_token`
 !!! description "`MetaRegistry.get_virtual_price_from_lp_token(_token: address, _handler_id: uint256 = 0) -> uint256`"
 
-    Getter for a token's virtual price. The virtual price of any pool starts with a value of `1.0` and increases as the pool accrues fees. This number constantly increases for StableSwap pools unless the pool's amplification coefficient changes. For CryptoSwap pools, there are moments when the virtual price can decrease (e.g., admin fee claims, changes to the pool's parameters, etc.).
+    Getter for a token's virtual price. The virtual price of any pool starts with a value of `1.0` and increases as the pool accrues fees. This number constantly increases for Stableswap pools unless the pool's amplification coefficient changes. For Cryptoswap pools, there are moments when the virtual price can decrease (e.g., admin fee claims, changes to the pool's parameters, etc.).
 
     Returns: virtual price of the LP token (`uint256`).
 
@@ -1262,7 +1262,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
     Getter method for the coins in a pool. If the pool is a metapool, the method returns the LP token of the base pool, not the underlying coins. To additionally return the underlying coins, see: [`get_underlying_coins`](#get_underlying_coins).
 
-    Retuns: coins (`address[MAX_COINS]`).
+    Returns: coins (`address[MAX_COINS]`).
 
     | Input         | Type      | Description                                |
     | ------------- | --------- | ------------------------------------------ |
@@ -2025,7 +2025,7 @@ The `MetaRegistry` makes use of `Handlers`, which are essentially wrappers aroun
 
 New handlers can be added or existing ones can be updated by the [`owner`](#owner) of the contract.
 
-*To fetch registry information from the contract, fhe following methods can be used:*
+*To fetch registry information from the contract, the following methods can be used:*
 
 - `get_registry_length`: Returns the total number of registries added.
 - `get_registry`: Fetches single registries.

@@ -1,4 +1,4 @@
-The simplest Curve pool is a plain pool, which is an implementation of the StableSwap invariant for two or more tokens.
+The simplest Curve pool is a plain pool, which is an implementation of the Stableswap invariant for two or more tokens.
 The key characteristic of a plain pool is that the pool contract holds all deposited assets at **all** times.
 
 An example of a Curve plain pool is [3Pool](https://github.com/curvefi/curve-contract/tree/master/contracts/pools/3pool),
@@ -277,7 +277,7 @@ pools may be viewed on
             """
             @notice Contract constructor
             @param _owner Contract owner address
-            @param _coins Addresses of ERC20 conracts of coins
+            @param _coins Addresses of ERC20 contacts of coins
             @param _pool_token Address of the token representing LP share
             @param _A Amplification coefficient multiplied by n * (n - 1)
             @param _fee Fee to charge for exchanges
@@ -331,7 +331,7 @@ pools may be viewed on
             """
             @notice Contract constructor
             @param _owner Contract owner address
-            @param _coins Addresses of ERC20 conracts of coins
+            @param _coins Addresses of ERC20 contacts of coins
             @param _pool_token Address of the token representing LP share
             @param _A Amplification coefficient multiplied by n * (n - 1)
             @param _fee Fee to charge for exchanges
@@ -433,7 +433,7 @@ pools may be viewed on
             @notice Perform an exchange between two coins
             @dev Index values can be found via the `coins` public getter method
             @param i Index value for the coin to send
-            @param j Index valie of the coin to recieve
+            @param j Index value of the coin to receive
             @param dx Amount of `i` being exchanged
             @param min_dy Minimum amount of `j` to receive
             @return Actual amount of `j` received

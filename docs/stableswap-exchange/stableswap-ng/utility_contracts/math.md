@@ -1,6 +1,6 @@
 <h1>Math Contract</h1>
 
-The Math Contract provides **AMM Math** for StableSwap-NG Pools.
+The Math Contract provides **AMM Math** for Stableswap-NG Pools.
 
 !!!deploy "Contract Source & Deployment"
     Source code available on [GitHub](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNGMath.vy).

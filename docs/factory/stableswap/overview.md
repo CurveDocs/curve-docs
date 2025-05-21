@@ -1,4 +1,4 @@
-The Metapool Factory, which was the first Curve Factory, allows the permissionless deployment of regular [stableswap](../../stableswap-exchange/stableswap/overview.md) plain and metapools, LP tokens, and liquidity gauges. **Liquidity pool and LP token DO NOT share the same contract.**
+The Metapool Factory, which was the first Curve Factory, allows the permissionless deployment of regular [Stableswap](../../stableswap-exchange/stableswap/overview.md) plain and metapools, LP tokens, and liquidity gauges. **Liquidity pool and LP token DO NOT share the same contract.**
 
 
 !!!deploy "Contract Source & Deployment"

@@ -139,7 +139,7 @@ Handling fees is a crucial part of Curve's operations. There are `FeeReceiver` c
 
 **New Curve Burner System**
 
-Curve has developed and deployed a new fee-burning architecture which is currently only avaliable on Ethereum and Gnosis. For detailed documentation, please see here: [Curve Burner Documentation](../fees/overview.md).
+Curve has developed and deployed a new fee-burning architecture which is currently only available on Ethereum and Gnosis. For detailed documentation, please see here: [Curve Burner Documentation](../fees/overview.md).
 
 **:logos-ethereum: Ethereum**
 
@@ -674,7 +674,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 
 ### Stableswap-NG
 
-The full documentation for the `stableswap-ng` contracts can be found [here](../stableswap-exchange/stableswap-ng/overview.md). Source code for the `stableswap-ng` contracts is available on [:material-github: GitHub](https://github.com/curvefi/stableswap-ng).
+The full documentation for the `Stableswap-NG` contracts can be found [here](../stableswap-exchange/stableswap-ng/overview.md). Source code for the `Stableswap-NG` contracts is available on [:material-github: GitHub](https://github.com/curvefi/stableswap-ng).
 
 !!!warning "Implementation Contracts"
     Every `Factory` contract has different implementation contracts which are used for different purposes. For more information, please refer to the according part of the [documentation](../factory/twocrypto-ng/overview.md).
@@ -707,7 +707,7 @@ The full documentation for the `stableswap-ng` contracts can be found [here](../
 
 ### Twocrypto-NG
 
-The full documentation for the `twocrypto-ng` contracts can be found [here](../cryptoswap-exchange/twocrypto-ng/overview.md). Source code for the `twocrypto-ng` contracts is available on [:material-github: GitHub](https://github.com/curvefi/twocrypto-ng).
+The full documentation for the `Twocrypto-NG` contracts can be found [here](../cryptoswap-exchange/twocrypto-ng/overview.md). Source code for the `Twocrypto-NG` contracts is available on [:material-github: GitHub](https://github.com/curvefi/twocrypto-ng).
 
 !!!warning "Implementation Contracts"
     Every `Factory` contract has different implementation contracts which are used for different purposes. For more information, please refer to the according part of the [documentation](../factory/twocrypto-ng/overview.md).
@@ -740,7 +740,7 @@ The full documentation for the `twocrypto-ng` contracts can be found [here](../c
 
 ### Tricrypto-NG
 
-The full documentation for the `tricrypto-ng` contracts can be found [here](../cryptoswap-exchange/tricrypto-ng/overview.md). Source code for the `tricrypto-ng` contracts is available on [:material-github: GitHub](https://github.com/curvefi/tricrypto-ng).
+The full documentation for the `Tricrypto-NG` contracts can be found [here](../cryptoswap-exchange/tricrypto-ng/overview.md). Source code for the `Tricrypto-NG` contracts is available on [:material-github: GitHub](https://github.com/curvefi/tricrypto-ng).
 
 !!!warning "Implementation Contracts"
     Every `Factory` contract has different implementation contracts which are used for different purposes. For more information, please refer to the according part of the [documentation](../factory/tricrypto-ng/overview.md).
@@ -955,9 +955,9 @@ The full documentation for the lending contracts can be found [here](../lending/
 !!!warning "Implementation contracts are upgradable"
     **Implementation contracts are upgradable.** They can be either replaced or additional implementation contracts can be set. Therefore, please **always make sure to check the most recent ones**.
 
-As the creation of lending markets is permissionless, listing all deployed vaults and their correpsonding contracts would exceed the scope of this section. The Factory contract has a [`market_count`](../lending/contracts/oneway-factory.md#market_count) variable which represents the total number of markets created, as well as a [`vaults(arg0: uint256)`](../lending/contracts/oneway-factory.md#vaults) which returns the vault address at a specific index.
+As the creation of lending markets is permissionless, listing all deployed vaults and their corresponding contracts would exceed the scope of this section. The Factory contract has a [`market_count`](../lending/contracts/oneway-factory.md#market_count) variable which represents the total number of markets created, as well as a [`vaults(arg0: uint256)`](../lending/contracts/oneway-factory.md#vaults) which returns the vault address at a specific index.
 
-*For more informations, please refer to the [Factory documentation](../lending/contracts/oneway-factory.md).*
+*For more information, please refer to the [Factory documentation](../lending/contracts/oneway-factory.md).*
 
 AMM, Controller, and Price Oracle contracts and other variables of a vault can simply be queried:
 

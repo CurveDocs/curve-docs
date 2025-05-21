@@ -13,16 +13,16 @@ LLAMMA (Lending Liquidating Automated Market Maker Algorithm) is the **market-ma
 | `y`                  | Collateral coin.                                                             |
 | `band_width_factor`  | Parameter which controls the width of each band.  Sometimes denoted `A`      |
 | `rate`               | Interest rate.                                                               |
-| `rate_mul`           | Rate multiplier, 1 + integral(rate * dt).                                    |
+| `rate_mul`           | Rate multiplier, 1 + integral(rate * `dt`).                                    |
 | `active_band`        | Current band. Other bands are either in one or the other coin, but not both. |
 | `min_band`           | Bands below this are definitely empty.                                       |
 | `max_band`           | Bands above this are definitely empty.                                       |
 | `bands_x[n]`, `bands_y[n]` | Amounts of coin x or y deposited in band n.                            |
-| `user_shares[user,n] / total_shares[n]` | Fraction of the n'th band owned by a user.                |
+| `user_shares[user,n] / total_shares[n]` | Fraction of the nth band owned by a user.                |
 | `p_oracle`           | External oracle price (can be from another AMM).                             |
-| `p (as in get_p)`    | Current price of AMM. It depends not only on the balances (x,y) in the band and active_band, but also on p_oracle. |
-| `p_current_up`, `p_current_down` | The value of p at constant p_oracle when y=0 or x=0 respectively for the band n. |
-| `p_oracle_up`, `p_oracle_down` | Edges of the band when p=p_oracle (steady state), happen when x=0 or y=0 respectively, for band n. |
+| `p (as in get_p)`    | Current price of AMM. It depends not only on the balances (x,y) in the band and `active_band`, but also on `p_oracle`. |
+| `p_current_up`, `p_current_down` | The value of p at constant `p_oracle` when `y=0` or `x=0` respectively for the band `n`. |
+| `p_oracle_up`, `p_oracle_down` | Edges of the band when `p=p_oracle` (steady state), happen when `x=0` or `y=0` respectively, for band `n`. |
 
 
 ---
@@ -327,7 +327,7 @@ Whenever a user performs a collateral-specific action such as creating a new loa
 
 # **Exchanging Tokens**
 
-The LLAMMA can be used to exchange tokens, just like any other AMM. This is crucial as arbitrage opportunities are created by the LLAMMA, which can be exploited by buying and selling tokens in the AMM. More information: TODO.
+The LLAMMA can be used to exchange tokens, just like any other AMM. This is crucial as arbitrage opportunities are created by the LLAMMA, which can be exploited by buying and selling tokens in the AMM.
 
 *There are two functions to exchange tokens:*
 
@@ -793,7 +793,7 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
     | ------------ | --------- | ---------------------------------------------------- |
     | `i`          | `uint256` | Input coin index.                                    |
     | `j`          | `uint256` | Output coin index.                                   |
-    | `out_amount` | `uint256` | Desired amout of output tokens to receive.           |
+    | `out_amount` | `uint256` | Desired amount of output tokens to receive.           |
     | `max_amount` | `uint256` | Maximum amount of input token to use.                |
     | `_for`       | `address` | Address to send coins to (defaults to `msg.sender`). |
 
@@ -1604,7 +1604,7 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
                 p_o: uint256[2] = self._price_oracle_ro()
                 p_o_up: uint256 = self._p_oracle_up(n)
                 p_down: uint256 = unsafe_div(unsafe_div(p_o[0]**2, p_o_up) * p_o[0], p_o_up)  # p_current_down
-                p_up: uint256 = unsafe_div(p_down * A2, Aminus12)  # p_crurrent_up
+                p_up: uint256 = unsafe_div(p_down * A2, Aminus12)  # p_current_up
                 amount: uint256 = 0
                 y0: uint256 = 0
                 f: uint256 = 0
@@ -1734,7 +1734,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
     The following sections assume that arbitrage traders are performing their role and arbitraging the bands. In theory, prices can move through bands without any action if arbitrage traders do not capitalize on the opportunity for free money. We assume that arbitrage traders are taking these opportunities and arbitraging the bands accordingly.
 
 
-*There are three possible scenarios for bands regarding their content of assets. The asset composition of the individual bands is dependant on the collateral price bzw. the "liquidation status" of the loan:*
+*There are three possible scenarios for bands regarding their content of assets. The asset composition of the individual bands is dependant on the collateral price and the "liquidation status" of the loan:*
 
 1. **Band contains both collateral and borrowable token:** This indicates that the band is currently in continuous liquidation mode (either being soft-liquidated because the collateral price is decreasing or de-liquidated because the collateral price is increasing). The band in which the collateral price is currently located is defined as the [`active_band`](amm.md#active_band).
 
@@ -1773,7 +1773,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 ### `A`
 !!! description "`AMM.A() -> uint256: view`"
 
-    Getter for A (band width factor). This parameter defines the density of the liquidty and band size. The higher `A`, the smaller are the upper and lower prices of the bands an therefor the more leveraged the AMM within each band. The relative band size is $\frac{1}{A}$.
+    Getter for A (band width factor). This parameter defines the density of the liquidity and band size. The higher `A`, the smaller are the upper and lower prices of the bands an therefor the more leveraged the AMM within each band. The relative band size is $\frac{1}{A}$.
 
     Returns: band width factor (`uint256`).
 
@@ -1970,7 +1970,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
     === "Example"
 
-        In this example, the `active_band` is `-40`, which consists both of the colltaral and borrowable token. All bands above do not hold any balances of the borrowable token as those bands fully consist of the collateral token. But all bands below are fully in the borrowable token.
+        In this example, the `active_band` is `-40`, which consists both of the collateral and borrowable token. All bands above do not hold any balances of the borrowable token as those bands fully consist of the collateral token. But all bands below are fully in the borrowable token.
 
         ```shell
         >>> AMM.bands_x(-39)
@@ -2007,7 +2007,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
     === "Example"
 
-        In this example, the `active_band` is `-40`, which consists both of the colltaral and borrowable token. All bands above do not hold any balances of the borrowable token as those bands fully consist of the collateral token. But all bands below are fully in the borrowable token.
+        In this example, the `active_band` is `-40`, which consists both of the collateral and borrowable token. All bands above do not hold any balances of the borrowable token as those bands fully consist of the collateral token. But all bands below are fully in the borrowable token.
 
         ```shell
         >>> AMM.bands_x(-39)
@@ -2093,7 +2093,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
         This user uses 4 bands for their loan. The function returns the collateral composition of all bands. In this case, the 4 bands do not hold any borrow token (the first four returned values), but they hold the collateral token (the last four return values). This signals, that user is not is soft-liquidation, as all his bands are still fully allocated in the collateral tokens.
 
-        **Fictive example:** E.g. if the first band of the loan would have been liquidated and the second band is currently undergoing liquidation, the returned values could look like the second example below. The first band would be fully in the borrow token (because the band as already been soft-liquidated), the second band would be in both, the borrow and collateral token (because the band is currently being liquidated) and the remaining two bands are still fully composited of the collteral token (because these bands have not been liquidated).
+        **Fictive example:** E.g. if the first band of the loan would have been liquidated and the second band is currently undergoing liquidation, the returned values could look like the second example below. The first band would be fully in the borrow token (because the band as already been soft-liquidated), the second band would be in both, the borrow and collateral token (because the band is currently being liquidated) and the remaining two bands are still fully composited of the collateral token (because these bands have not been liquidated).
 
         ```shell
         >>> AMM.get_xy('0x5A684c08261380B91D8976eDB0cabf87744650a5')
@@ -2648,10 +2648,10 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
 *The AMM relies on two different prices:*
 
-Soft- and de-liquidation of a loan only occurrs when the collateral price is within a band the user deposited liquidity into. The AMM creates an arbitrage opportunity by utilizing the following two prices:
+Soft- and de-liquidation of a loan only occurs when the collateral price is within a band the user deposited liquidity into. The AMM creates an arbitrage opportunity by utilizing the following two prices:
 
 - **`price_oracle`**: The collateral price fetched from a price oracle contract.
-- **`get_p`**: The price of colalteral in the AMM itself.
+- **`get_p`**: The price of collateral in the AMM itself.
 
 When `price_oracle` equals `get_p`, the external oracle price and the AMM price are identical, indicating no need for arbitrage. When the external oracle price diverges, the AMM price `get_p` is adjusted to be more sensitive than the regular `price_oracle`, creating arbitrage opportunities. Essentially, arbitrage traders are incentivized to maintain `get_p = price_oracle` within the AMM.
 
@@ -2664,7 +2664,7 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
 ### `get_p`
 !!! description "`AMM.get_p() -> uint256`"
 
-    Function to get the current collateral price within the AMM. `get_p` in always in the active band (`acitve_band`).
+    Function to get the current collateral price within the AMM. `get_p` in always in the active band (`active_band`).
 
     Returns: collateral price within the AMM (`uint256`).
 
@@ -3432,9 +3432,9 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 ### `admin_fees_x`
 !!! description "`AMM.admin_fees_x() -> uint256: view`"
 
-    Getter for the accured admin fees in form of the borrowed token since the last fee collection.
+    Getter for the accrued admin fees in form of the borrowed token since the last fee collection.
 
-    Returns: accured fees (`uint256`).
+    Returns: accrued fees (`uint256`).
 
     ??? quote "Source code"
 
@@ -3457,9 +3457,9 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 ### `admin_fees_y`
 !!! description "`AMM.admin_fees_y() -> uint256: view`"
 
-    Getter for the accured admin fees in form of the collateral token since the last fee collection.
+    Getter for the accrued admin fees in form of the collateral token since the last fee collection.
 
-    Returns: accured fees (`uint256`).
+    Returns: accrued fees (`uint256`).
 
     ??? quote "Source code"
 
@@ -3753,7 +3753,7 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
 ## **Admin Ownership**
 
-The `admin` of each AMM is usually set to the corresponding `Controller` contract of the according market. This variable can only be set once and not updated agian as the `set_admin` function checks the follwoing: `assert self.admin == empty(address)`.
+The `admin` of each AMM is usually set to the corresponding `Controller` contract of the according market. This variable can only be set once and not updated again as the `set_admin` function checks the following: `assert self.admin == empty(address)`.
 
 The admin can only be set once, which is done when deploying the AMM. Therefore, the `admin` cannot be changed.
 

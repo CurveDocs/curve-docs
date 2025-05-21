@@ -165,7 +165,7 @@ nav:
       - Overview: fees/overview.md
       - FeeSplitter: fees/FeeSplitter.md
       - FeeCollector: fees/FeeCollector.md
-      - CowSwapBurner: fees/CowSwapBurner.md
+      - CoWSwapBurner: fees/CowSwapBurner.md
       - Hooker: fees/Hooker.md
       - FeeDistributor: fees/FeeDistributor.md
       - Original Architecture:
@@ -236,7 +236,7 @@ nav:
     - Leverage: lending/contracts/leverage.md
     - Monetary Policies:
       - Overview: lending/contracts/mp-overview.md
-      - SemiLog Monetary Policy: lending/contracts/semilog-mp.md
+      - Semilog Monetary Policy: lending/contracts/semilog-mp.md
       - Secondary Monetary Policy: lending/contracts/secondary-mp.md
     - Oracles Contracts:
       - Overview & Examples: lending/contracts/oracle-overview.md
@@ -245,7 +245,7 @@ nav:
       - CryptoFromPoolVault.vy: lending/contracts/cryptofrompoolvault.md
 
 
-  - StableSwap Exchange:
+  - Stableswap Exchange:
     - Overview: stableswap-exchange/overview.md
 
     - Stableswap:
@@ -280,10 +280,10 @@ nav:
         - Custom Admin Controls (EYWA): stableswap-exchange/stableswap-ng/implementations/custom1.md
 
 
-  - CryptoSwap Exchange:
+  - Cryptoswap Exchange:
     - Overview: cryptoswap-exchange/overview.md
 
-    - CryptoSwap:
+    - Cryptoswap:
       - Pools:
         - Crypto Pool: cryptoswap-exchange/cryptoswap/pools/crypto-pool.md
         - Admin Controls: cryptoswap-exchange/cryptoswap/pools/admin-controls.md
@@ -291,20 +291,20 @@ nav:
         - Overview: cryptoswap-exchange/cryptoswap/lp_tokens/overview.md
         - Curve Token V5: cryptoswap-exchange/cryptoswap/lp_tokens/lp-token-V5.md
 
-    - TwoCrypto-NG:
+    - Twocrypto-NG:
       - Overview: cryptoswap-exchange/twocrypto-ng/overview.md
       - Pools:
         - Overview: cryptoswap-exchange/twocrypto-ng/pools/overview.md
-        - TwoCrypto Pool: cryptoswap-exchange/twocrypto-ng/pools/twocrypto.md
+        - Twocrypto Pool: cryptoswap-exchange/twocrypto-ng/pools/twocrypto.md
         - Admin Controls: cryptoswap-exchange/twocrypto-ng/pools/admin-controls.md
       - Utility Contracts:
         - Math: cryptoswap-exchange/twocrypto-ng/utility-contracts/math.md
         - Views: cryptoswap-exchange/twocrypto-ng/utility-contracts/views.md
 
-    - TriCrypto-NG:
+    - Tricrypto-NG:
       - Overview: cryptoswap-exchange/tricrypto-ng/overview.md
       - Pools:
-        - TriCrypto Pool: cryptoswap-exchange/tricrypto-ng/pools/tricrypto.md
+        - Tricrypto Pool: cryptoswap-exchange/tricrypto-ng/pools/tricrypto.md
         - Oracles: cryptoswap-exchange/tricrypto-ng/pools/oracles.md
         - Admin Controls: cryptoswap-exchange/tricrypto-ng/pools/admin-controls.md
       - Utility Contracts:
@@ -314,20 +314,20 @@ nav:
 
   - Pool Factory:
     - Overview: factory/overview.md
-    - StableSwap-NG:
+    - Stableswap-NG:
       - Overview: factory/stableswap-ng/overview.md
       - Deployer API: factory/stableswap-ng/deployer-api.md
-    - TwoCrypto-NG:
+    - Twocrypto-NG:
       - Overview: factory/twocrypto-ng/overview.md
       - Deployer API: factory/twocrypto-ng/deployer-api.md
-    - TriCrypto-NG:
+    - Tricrypto-NG:
       - Overview: factory/tricrypto-ng/overview.md
       - Deployer API: factory/tricrypto-ng/deployer-api.md
-    - StableSwap:
+    - Stableswap:
       - Overview: factory/stableswap/overview.md
       - Deployer API: factory/stableswap/deployer-api.md
       - Implementations: factory/stableswap/implementations.md
-    - CryptoSwap:
+    - Cryptoswap:
       - Overview: factory/cryptoswap/overview.md
       - Deployer API: factory/cryptoswap/deployer-api.md
       - Implementations: factory/cryptoswap/implementations.md

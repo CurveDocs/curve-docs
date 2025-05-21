@@ -12,7 +12,7 @@ hide_feature_button: true
 
     ---
 
-    Whitepaper on the general structure and workingsof the Curve DAO.
+    Whitepaper on the general structure and workings of the Curve DAO.
 
     [:octicons-arrow-right-24: PDF](../assets/pdf/whitepaper_curvedao.pdf)
 
@@ -45,9 +45,9 @@ hide_feature_button: true
 
 ---
 
-# **StableSwap Derivations**
+# **Stableswap Derivations**
 
-The StableSwap invariant is defined as:
+The Stableswap invariant is defined as:
 
 $$
 A n^n \sum x_i + D = A D n^n + \frac{D^{n+1}}{n^n \prod x_i}
@@ -180,7 +180,7 @@ Here’s a cleaned-up and well-structured version of your **Cryptoswap Derivatio
 
 ## Newton Step for `newton_D()` in Tricrypto and Twocrypto
 
-This derivation explains the mathematical logic behind the `newton_D()` function used in Curve’s tricrypto and twocrypto pools.
+This derivation explains the mathematical logic behind the `newton_D()` function used in Curve’s Tricrypto and Twocrypto pools.
 
 ---
 

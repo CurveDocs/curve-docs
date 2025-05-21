@@ -12,7 +12,7 @@ The interest rates in crvUSD markets are not static but fluctuate based on a set
 - The variables `sigma`, `rate0`, `TargetFraction`, and the `DebtFraction` specific to PegKeepers.
 
 !!! tip
-    A useful tool to explore and understand how the rate is affected by [0xreviews](https://twitter.com/0xreviews_xyz) is avaliable at: https://crvusd-rate.0xreviews.xyz/
+    A useful tool to explore and understand how the rate is affected by [0xreviews](https://twitter.com/0xreviews_xyz) is available at: https://crvusd-rate.0xreviews.xyz/
 
 The formula for calculating the interest rate (`r`) is as follows:
 
@@ -221,7 +221,7 @@ $$\text{annualRate} = (1 + \frac{rate}{10^{18}})^{365 \times 24 \times 60 \times
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract, which is the CurveOwnershipAgent.
 
-    Function to set a new sigma value. New value must be inbetween `MIN_SIGMA` and `MAX_SIGMA`.
+    Function to set a new sigma value. New value must be in-between `MIN_SIGMA` and `MAX_SIGMA`.
 
     Emits: `SetSigma`
 
@@ -598,8 +598,8 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
         ```
 
 
-### `CONTROLLER_FACOTRY`
-!!! description "`MonetaryPolicy.CONTROLLER_FACOTRY() -> address: view`"
+### `CONTROLLER_FACTORY`
+!!! description "`MonetaryPolicy.CONTROLLER_FACTORY() -> address: view`"
 
     Getter for the controller factory contract. immutable variable!
 
@@ -630,7 +630,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
     === "Example"
 
         ```shell
-        >>> MonetaryPolicy.CONTROLLER_FACOTRY()
+        >>> MonetaryPolicy.CONTROLLER_FACTORY()
         '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
         ```
 

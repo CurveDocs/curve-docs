@@ -1,4 +1,4 @@
-<h1>StableSwap-NG Factory: Deployer API</h1>
+<h1>Stableswap-NG Factory: Deployer API</h1>
 
 
 ## **Name and Symbol**
@@ -53,9 +53,9 @@ _ma_exp_time = 866                                      # ~600 seconds
 
 ---
 
-## **Implemention ID**
+## **Implementation ID**
 
-Pools are **created from implementation contracts** (blueprints). These contracts are added to the Factory and must be choosen when deploying a pool.
+Pools are **created from implementation contracts** (blueprints). These contracts are added to the Factory and must be chosen when deploying a pool.
 
 !!!warning
     The Factory can have **multiple plain- and meta-pool implementations**. If there are multiple implementations for a plain or meta-pool, it's important to understand the differences and determine which one is suitable.
@@ -90,7 +90,7 @@ Stableswap-NG infrastructure supports pools with the following asset types:
 - ERC-20 tokens can have *arbitrary decimals (≤18)*
 - ERC-20 tokens that *rebase* (either positive or fee on transfer)
 - ERC-20 tokens that have a *rate oracle* (e.g. wstETH, cbETH) Oracle precision must be $10^{18}$
-- ERC-4626 tokens with *arbitrary percision* (≤18) of Vault token and underlying asset
+- ERC-4626 tokens with *arbitrary precision* (≤18) of Vault token and underlying asset
 
 !!!warning
     - **`ERC20:`** Users are advised to do careful due-diligence on ERC20 tokens that they interact with, as this contract **cannot differentiate between harmless and malicious** ERC20 tokens.
@@ -173,7 +173,7 @@ _oracles = ["0x0000000000000000000000000000000000000000", "0xae78736cd615f374d30
 
 !!! description "`Factory.deploy_plain_pool(_name: String[32], _symbol: String[10], _coins: DynArray[address, MAX_COINS], _A: uint256, _fee: uint256, _offpeg_fee_multiplier: uint256, _ma_exp_time: uint256, _implementation_idx: uint256, _asset_types: DynArray[uint8, MAX_COINS], _method_ids: DynArray[bytes4, MAX_COINS], _oracles: DynArray[address, MAX_COINS], ) -> address:`"
 
-    Function to deploy a stableswap-ng plain pool. The pool is created from a blueprint contract.
+    Function to deploy a Stableswap-NG plain pool. The pool is created from a blueprint contract.
 
     Returns: Deployed pool (`address`).
 
@@ -361,7 +361,7 @@ _oracles = ["0x0000000000000000000000000000000000000000", "0xae78736cd615f374d30
 
 !!! description "`Factory.deploy_metapool(_base_pool: address, _name: String[32], _symbol: String[10], _coin: address, _A: uint256, _fee: uint256, _offpeg_fee_multiplier: uint256, _ma_exp_time: uint256, _implementation_idx: uint256, _asset_type: uint8, _method_id: bytes4, _oracle: address) -> address:`"
 
-    Function to deploy a stableswap-ng metapool.
+    Function to deploy a Stableswap-NG metapool.
 
     Returns: Deployed metapool (`address`).
 

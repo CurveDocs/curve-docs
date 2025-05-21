@@ -1,4 +1,4 @@
-**The CryptoSwap Factory makes use of the `create_forwarder_to` function to deploy its contracts from the implementations.**
+**The Cryptoswap Factory makes use of the `create_forwarder_to` function to deploy its contracts from the implementations.**
 
 !!!warning
     **Implementation contracts are upgradable.** They can either be replaced, or additional implementation contracts can be added. Therefore, please always make sure to check the most recent ones.

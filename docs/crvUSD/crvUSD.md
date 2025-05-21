@@ -4,7 +4,7 @@
 !!!github "GitHub"
     The source code of the `crvUSD` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/Stablecoin.vy).
 
-`crvUSD` has been [deployed](https://etherscan.io/tx/0x5f501b4e420485ac3a18be3b88ad73413ac17ee45c776bb48cfd26902585e9fd) on May, 14th 2024 on Ethereum Mainnet. Prior to the lauch, there have been several deployments for the stablecoin and its components. Please always make sure you are using the latest deployment. See [`deployment-logs/mainnet.log`](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
+`crvUSD` has been [deployed](https://etherscan.io/tx/0x5f501b4e420485ac3a18be3b88ad73413ac17ee45c776bb48cfd26902585e9fd) on May, 14th 2024 on Ethereum Mainnet. Prior to the launch, there have been several deployments for the stablecoin and its components. Please always make sure you are using the latest deployment. See [`deployment-logs/mainnet.log`](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
 
 Since the initial deployment of crvUSD, the token was bridged to several chains, including the following:
 
@@ -450,7 +450,7 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
 ### `approve`
 !!! description "`crvUSD.approve(_spender: address, _value: uint256) -> bool:`"
 
-    Fucntion to allow `_spender` to transfer up to `_value` amount of tokens from the caller's amount.
+    function to allow `_spender` to transfer up to `_value` amount of tokens from the caller's amount.
 
     Returns: true (`bool`).
 
@@ -510,7 +510,7 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_spender` |  `address` | Address to increase the allowance of |
-    | `_add_value` |  `uint256` | Amount to increase the allwance by |
+    | `_add_value` |  `uint256` | Amount to increase the allowance by |
 
     !!!note
         This function will never overflow, and instead will bind allowance to `MAX_UINT256`. This has the potential to grant infinite approval.
@@ -568,7 +568,7 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_spender` |  `address` | Address to decrease the allowance of |
-    | `_sub_value` |  `uint256` | Amount to decrease the allwance by |
+    | `_sub_value` |  `uint256` | Amount to decrease the allowance by |
 
     !!!note
         This function will never underflow, and instead will bound allowance to 0.

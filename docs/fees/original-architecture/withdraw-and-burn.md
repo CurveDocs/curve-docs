@@ -5,11 +5,11 @@ search:
 
 # **Withdrawing Admin Fees**
 
-In order to be able to burn admin fees into the fee token, those fees have to be claimed prior. **Admin fees can be claimed by anyone.** Somethimes, the function to claim the fees is guarded and therefore only called by the proxy contract (admin or owner of the pool). If thats the case, users can just call the claim function via the proxy contract (as the function is not guarded there).
+In order to be able to burn admin fees into the fee token, those fees have to be claimed prior. **Admin fees can be claimed by anyone.** Sometimes, the function to claim the fees is guarded and therefore only called by the proxy contract (admin or owner of the pool). If that's the case, users can just call the claim function via the proxy contract (as the function is not guarded there).
 
 Claiming fees can differ based on which source they are claimed from:
 
-## **StableSwap Pools**
+## **Stableswap Pools**
 Admin fees are stored within each exchange contract and viewable via the public getter method **`admin_balances`**. Users may call **`withdraw_admin_fees`** to claim the fees at any time.
 
 Fees are usually claimed via the **`withdraw_many`** function of the PoolProxy. This withdraws fees from multiple pools at once, pulling them into the [PoolProxy](https://etherscan.io/address/0xeCb456EA5365865EbAb8a2661B0c503410e9B347#writeContract) contract.
@@ -119,8 +119,8 @@ Fees are usually claimed via the **`withdraw_many`** function of the PoolProxy. 
 
 
 
-## **CryptoSwap Pools**
-Fees of crypto pools are a bit different from stableswap pools. These pools have an auto-rebalancing mechanism which uses parts of the admin fees for rebalancing purposes. After taking this into consideration, fees are claimed by minting the admin's share (which essentially is the admin fee) of the pool as LP tokens.
+## **Cryptoswap Pools**
+Fees of crypto pools are a bit different from Stableswap pools. These pools have an auto-rebalancing mechanism which uses parts of the admin fees for rebalancing purposes. After taking this into consideration, fees are claimed by minting the admin's share (which essentially is the admin fee) of the pool as LP tokens.
 
 Fees are mostly claimed directly from the pool.
 
@@ -226,7 +226,7 @@ Fees are mostly claimed directly from the pool.
 
 
 ## **Curve Stablecoin**
-crvUSD fees are based on the borrow rate of the corresponding markets. Fees are accurred in crvUSD token. They can be claimed from the according Controller.
+crvUSD fees are based on the borrow rate of the corresponding markets. Fees are accrued in crvUSD token. They can be claimed from the according Controller.
 
 ### `admin_fees`
 !!! description "`Controller.admin_fees() -> uint256:`"
@@ -475,7 +475,7 @@ All admin fees are accumulated in the [0xECB](https://etherscan.io/address/0xeCb
             """
             @notice Set approval of `_caller` to donate admin fees for `_pool`
             @param _pool Pool address
-            @param _caller Adddress to set approval for
+            @param _caller Address to set approval for
             @param _is_approved Approval status
             """
             assert msg.sender == self.ownership_admin, "Access denied"

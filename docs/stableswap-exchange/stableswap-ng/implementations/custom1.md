@@ -9,7 +9,7 @@ This implementation enables **arbitrary assignment of an `admin` and `admin_fee`
 !!!vyper "Contract Implementations"
     The source code for the implementation can be found on GitHub in the [admin-implementation branch](https://github.com/curvefi/stableswap-ng/tree/admin-implementation). This implementation is initially used by CrossCurve on Sonic.
 
-    The implementations were added to the StableSwapFactory on Sonic via [Vote ID #1010](https://curve.finance/dao/ethereum/proposals/1010-OWNERSHIP/) and are deployed at `index = 710420`.
+    The implementations were added to the Stableswap Factory on Sonic via [Vote ID #1010](https://curve.finance/dao/ethereum/proposals/1010-OWNERSHIP/) and are deployed at `index = 710420`.
 
     ```py
     >>> Factory.metapool_implementations(710420)

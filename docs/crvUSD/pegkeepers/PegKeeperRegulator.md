@@ -1054,7 +1054,7 @@ Both their ownerships can be transferred using the corresponding [`set_admin`](#
 ### `aggregator`
 !!! description "`PegKeeperRegulator.aggregator() -> address: view`"
 
-    Getter for the crvusd price aggregator contract. This address is set when intializing the contract and can be changed using [`set_aggregator`](#set_aggregator).
+    Getter for the crvusd price aggregator contract. This address is set when initializing the contract and can be changed using [`set_aggregator`](#set_aggregator).
 
     Returns: price aggregator contract (`address`).
 
@@ -1171,7 +1171,7 @@ Both their ownerships can be transferred using the corresponding [`set_admin`](#
 ### `stablecoin`
 !!! description "`PegKeeperRegulator.stablecoin() -> address: view`"
 
-    Getter for the stablecoin the PegKeeper stabilizes, which is crvUSD. This address is set when intializing the contract and can not be changed.
+    Getter for the stablecoin the PegKeeper stabilizes, which is crvUSD. This address is set when initializing the contract and can not be changed.
 
     Returns: stablecoin (`address`).
 

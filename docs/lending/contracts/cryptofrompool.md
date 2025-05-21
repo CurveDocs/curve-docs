@@ -8,7 +8,7 @@ Oracle contract for a collateral token that **fetches its price from a single Cu
     - [`CryptoFromPool.vy`](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/price_oracles/CryptoFromPool.vy)
     - [`CryptoFromPoolWAgg.vy`](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/price_oracles/CryptoFromPoolWAgg.vy)
 
-The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](./oneway-factory.md#create_from_pool) method which deploys the full lending market infrastucture along with a price oracle using a [`stableswap-ng`](../../stableswap-exchange/stableswap-ng/pools/oracles.md), [`twocrypto-ng`](../../cryptoswap-exchange/twocrypto-ng/overview.md) or [`tricrypto-ng`](../../cryptoswap-exchange/tricrypto-ng/pools/oracles.md) pool. These pools all have a suitable exponential moving-average (EMA) oracle, which can be used in lending markets.
+The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](./oneway-factory.md#create_from_pool) method which deploys the full lending market infrastructure along with a price oracle using a [`Stableswap-NG`](../../stableswap-exchange/stableswap-ng/pools/oracles.md), [`Twocrypto-ng`](../../cryptoswap-exchange/twocrypto-ng/overview.md) or [`Tricrypto-NG`](../../cryptoswap-exchange/tricrypto-ng/pools/oracles.md) pool. These pools all have a suitable exponential moving-average (EMA) oracle, which can be used in lending markets.
 
 !!!danger "Oracle Immutability"
     The oracle contracts are fully immutable. Once deployed, they cannot change any parameters, stop the price updates, or alter the pools used to calculate the prices. All relevant data required for the oracle to function is passed into the `__init__` function during the deployment of the contract.
@@ -17,7 +17,7 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
 
         The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
 
-        === "CrpyotFromPool.vy"
+        === "CryptoFromPool.vy"
 
             ```python
             @external
@@ -48,7 +48,7 @@ The [`OneWayLendingFactory.vy`](./oneway-factory.md) has a [`create_from_pool`](
                 NO_ARGUMENT = no_argument
             ```
 
-        === "CrpyotFromPoolWAgg.vy"
+        === "CryptoFromPoolWAgg.vy"
 
             ```python
             @external

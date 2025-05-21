@@ -253,7 +253,7 @@ This leverage zap allows up to five values to be passed for `callback_args`, but
 
 ## **Helper Functions**
 
-*The contract indludes various helper functions:*
+*The contract includes various helper functions:*
 
 ### `get_collateral`
 !!! description "`LeverageZap.get_collateral(stablecoin: uint256, route_idx: uint256) -> uint256`"
@@ -1028,7 +1028,7 @@ Routes are predetermined paths for token exchanges. These routes are added when 
         '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'    # USDC
 
         >>> LeverageZap.routes(0, 3)
-        '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7'    # threpool (DAI<>USDC<>USDT) pool
+        '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7'    # 3pool (DAI<>USDC<>USDT) pool
 
         >>> LeverageZap.routes(0, 4)
         '0xdAC17F958D2ee523a2206206994597C13D831ec7'    # USDT
@@ -1107,7 +1107,7 @@ Routes are predetermined paths for token exchanges. These routes are added when 
         1                                       # swap type 1 = stableswap exchange
 
 
-        # second exchange: exchanging USDC for USDT using threepool
+        # second exchange: exchanging USDC for USDT using 3pool
         >>> LeverageZap.route_params(0, 1, 0)   # route 0, second exchange (index 1), fist parameter value (index 0)
         1                                       # i = USDC
         >>> LeverageZap.route_params(0, 1, 1)   # route 0, second exchange (index 1), second parameter value (index 1)

@@ -16,8 +16,8 @@ The `Minter` is responsible for the **issuance and distribution of CRV tokens** 
 
 CRV tokens can be minted in several ways:
 
-- [`mint`](#mint): simple function which mints the elegible CRV tokens to `msg.sender` from a single gauge
-- [`mint_many`](#mint_many): function to mint the elegible CRV for `msg.sender` for multiple gauges at once
+- [`mint`](#mint): simple function which mints the eligible CRV tokens to `msg.sender` from a single gauge
+- [`mint_many`](#mint_many): function to mint the eligible CRV for `msg.sender` for multiple gauges at once
 - [`mint_for`](#mint_for): function to mint CRV for someone else and send it to them. Approval needs to be granted via [`toggle_approve_mint`](#toggle_approve_mint)
 
 ### `mint`

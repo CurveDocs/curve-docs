@@ -51,7 +51,7 @@
 ### `rug_debt_ceiling`
 !!! description "`ControllerFactory.rug_debt_ceiling(_to: address):`"
 
-    Function to remove stablecoins above the debt seiling from a controller and burn them.
+    Function to remove stablecoins above the debt ceiling from a controller and burn them.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -282,7 +282,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `collateral` |  `address` | Address of collateral token |
-    | `i` |  `uint256` | Index to iterate over several amms for the same collateral if needed |
+    | `i` |  `uint256` | Index to iterate over several AMMs for the same collateral if needed |
 
 
     ??? quote "Source code"

@@ -24,7 +24,7 @@ The old system used various kinds of burners with hardcoded routes, which often 
 
 ## **Conditional Orders**
 
-Conditional CowSwap orders are automatically created for each token to be burned using the `burn` function. This function is not directly externally callable by users through this contract; instead, it is called when the `collect` function within the `FeeCollector` contract is invoked. Additionally, there is a caller fee to incentivize this contract call.
+Conditional CoWSwap orders are automatically created for each token to be burned using the `burn` function. This function is not directly externally callable by users through this contract; instead, it is called when the `collect` function within the `FeeCollector` contract is invoked. Additionally, there is a caller fee to incentivize this contract call.
 
 
 ```vyper
@@ -260,7 +260,7 @@ composable_cow.create(ConditionalOrderParams({
     | `_sender`         | `address`                  | `msg.sender` context calling `isValidSignature` |
     | `_ctx`            | `bytes32`                  | Execution context                               |
     | `_static_input`   | `Bytes[STATIC_DATA_LEN]`   | `sellToken` encoded as `bytes(Bytes[20])`       |
-    | `_offchain_input` | `Bxtes[OFFCHAIN_DATA_LEN]` | Not used, zero-length bytes                     |
+    | `_offchain_input` | `Bytes[OFFCHAIN_DATA_LEN]` | Not used, zero-length bytes                     |
 
     ??? quote "Source code"
 
@@ -351,7 +351,7 @@ composable_cow.create(ConditionalOrderParams({
     | `_owner`            | `address`                  | Owner of conditional order (self)                      |
     | `_sender`           | `address`                  | `msg.sender` context calling `isValidSignature`        |
     | `_hash`             | `bytes32`                  | `EIP-712` order digest                                 |
-    | `_domain_seperator` | `bytes32`                  | `EIP-712` domain separator                             |
+    | `_domain_separator` | `bytes32`                  | `EIP-712` domain separator                             |
     | `_ctx`              | `bytes32`                  | Execution context                                      |
     | `_static_input`     | `Bytes[STATIC_DATA_LEN]`   | ConditionalOrder's staticData (coin address)           |
     | `_offchain_input`   | `Bytes[OFFCHAIN_DATA_LEN]` | Conditional order type-specific data NOT known at time of creation for a specific discrete order (or zero-length bytes if not applicable).  |
@@ -553,7 +553,7 @@ Additionally, there is a recover function which lets the `owner` or `emergency_o
 
     Function to push the entire balance of the target coin to the `FeeCollector`. This function can be called externally, but is also called directly by the `FeeCollector` before the target coins are forwarded to the hooker contract using the `forward` function.
 
-    Returns: amout of target coins pushed (`uint256`).
+    Returns: amount of target coins pushed (`uint256`).
 
     ??? quote "Source code"
 

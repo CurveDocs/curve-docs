@@ -780,7 +780,7 @@ Each `RateProvider` is integrated into the chain-specific [`AddressProvider`](#a
 ---
 
 
-## **TwoCrypto-NG**
+## **Twocrypto-NG**
 
 !!!deploy "Source Code"
     Source code available on [GitHub](https://github.com/curvefi/twocrypto-ng).
@@ -1498,7 +1498,7 @@ For testing in production purposes, several contract deployments have taken plac
 
 
 
-**:logos-sfrxeth: sfrxeth v2**
+**:logos-sfrxeth: sfrxETH v2**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |
@@ -1535,9 +1535,9 @@ For testing in production purposes, several contract deployments have taken plac
     **Implementation contracts are upgradable.** They can be either replaced or additional implementation contracts can be set. Therefore, please **always make sure to check the most recent ones**.
 
 
-As the creation of lending markets is permissionless, listing all deployed vaults and their correpsonding contracts would exceed the scope of this section. The Factory contract has a [`market_count`](../lending/contracts/oneway-factory.md#market_count) variable which represents the total number of markets created, as well as a [`vaults(arg0: uint256)`](../lending/contracts/oneway-factory.md#vaults) which returns the vault address at a specific index.
+As the creation of lending markets is permissionless, listing all deployed vaults and their corresponding contracts would exceed the scope of this section. The Factory contract has a [`market_count`](../lending/contracts/oneway-factory.md#market_count) variable which represents the total number of markets created, as well as a [`vaults(arg0: uint256)`](../lending/contracts/oneway-factory.md#vaults) which returns the vault address at a specific index.
 
-*For more informations, please refer to the [Factory documentation](../lending/contracts/oneway-factory.md).*
+*For more information, please refer to the [Factory documentation](../lending/contracts/oneway-factory.md).*
 
 ---
 
@@ -1552,7 +1552,7 @@ AMM, Controller, and Price Oracle contracts and other variables of a vault can s
 '0xE0a4C53408f5ACf3246c83b9b8bD8d36D5ee38B8'
 ```
 
-*For more informations, please refer to the [Vault documentation](../lending/contracts/vault.md#contract-info-methods).*
+*For more information, please refer to the [Vault documentation](../lending/contracts/vault.md#contract-info-methods).*
 
 
 ---

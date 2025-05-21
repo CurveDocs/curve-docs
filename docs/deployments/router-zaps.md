@@ -158,7 +158,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 
 ---
 
-# **LlamaLend LeverageZap**
+# **Llamalend LeverageZap**
 
 *Zap to create leverage for lending markets.*
 

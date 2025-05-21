@@ -507,7 +507,7 @@ The price is determined by combining two different oracle prices. When necessary
 
 ## **Rates**
 
-The oracle contract utilizes the `stored_rates` from a stableswap pool and considers these rates accordingly. The application of these rates is governed by the `USE_RATES` variable. If set to `true`, the rates are applied; if set to `false`, they are not.
+The oracle contract utilizes the `stored_rates` from a Stableswap pool and considers these rates accordingly. The application of these rates is governed by the `USE_RATES` variable. If set to `true`, the rates are applied; if set to `false`, they are not.
 
 ???quote "Source code"
 
@@ -551,7 +551,7 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 ### `stored_rate`
 !!! description "`CryptoFromPoolsRate.stored_rate() -> uint256`"
 
-    Getter for the stored rates fetched from a stableswap pool.
+    Getter for the stored rates fetched from a Stableswap pool.
 
     The `stored_rate` is calculated the following:
 

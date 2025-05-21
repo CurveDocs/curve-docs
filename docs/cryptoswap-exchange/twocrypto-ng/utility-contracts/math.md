@@ -470,7 +470,7 @@
 ### `get_p`
 !!! description "`Math.get_p(_xp: uint256[N_COINS], _D: uint256, _A_gamma: uint256[N_COINS]) -> uint256:`"
 
-    Function to calculate dx/dy. The output needs to be multiplied with `price_scale` to get the actual value. The function is externally called form a twocrypto-ng pools when prices are tweaked via [`tweak_price`](../pools/twocrypto.md#oracle-methods).
+    Function to calculate dx/dy. The output needs to be multiplied with `price_scale` to get the actual value. The function is externally called form a Twocrypto-NG pools when prices are tweaked via [`tweak_price`](../pools/twocrypto.md#oracle-methods).
 
     Returns: dx/dy (`uint256`).
 

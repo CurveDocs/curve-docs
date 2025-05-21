@@ -1,4 +1,4 @@
-<h1>Crosschain scrvUSD</h1>
+<h1>Cross-chain scrvUSD</h1>
 
 <script src="/assets/javascripts/contracts/scrvusd/scrvusd-crosschain-oracle.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
@@ -415,7 +415,7 @@ Contract that contains information about the price of scrvUSD. It uses a `max_ac
 ### `price_oracle`
 !!! description "`scrvUSDOracle.price_oracle() -> uint256: view`"
 
-    Getter for the price of the scrvUSD token. This function is an alias for `pricePerShare` and `pricePerAsset` and is made for compatability reasons.
+    Getter for the price of the scrvUSD token. This function is an alias for `pricePerShare` and `pricePerAsset` and is made for compatibility reasons.
 
     Returns: price of scrvUSD (`uint256`).
 
@@ -432,7 +432,7 @@ Contract that contains information about the price of scrvUSD. It uses a `max_ac
             @external
             def price_oracle(i: uint256=0) -> uint256:
                 """
-                @notice Alias of `pricePerShare` and `pricePerAsset` made for compatability
+                @notice Alias of `pricePerShare` and `pricePerAsset` made for compatibility
                 @param i 0 for scrvusd per crvusd, 1 for crvusd per scrvusd
                 @return Price with 10^18 precision
                 """
@@ -500,7 +500,7 @@ Because the rates are stored over time, the price can change suddenly and can le
 
     === "Example"
 
-        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the maximum acceleration of the oracleon Optimism.
+        :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the maximum acceleration of the oracle on Optimism.
 
         <div class="highlight">
         <pre><code>>>> scrvUSDOracle.max_acceleration() <span id="maxAccelerationOutput"></span></code></pre>

@@ -27,8 +27,8 @@ It is important to note that the LP tokens are not staked in the gauge (if there
     |`PegKeeper for crvUSD/TUSD`|[0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae](https://etherscan.io/address/0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae#code)|
 
 
-## **Stabilisation Method**
-The most important function in the PegKeeper contract is the `update()` function. When invoked, the PegKeeper either mints and single-sidedly deposits crvUSD into the StableSwap pool, or it withdraws crvUSD from the pool by redeeming the LP tokens received from previous deposits.
+## **Stabilization Method**
+The most important function in the PegKeeper contract is the `update()` function. When invoked, the PegKeeper either mints and single-sidedly deposits crvUSD into the Stableswap pool, or it withdraws crvUSD from the pool by redeeming the LP tokens received from previous deposits.
 
 - **Deposit and Mint:** This mechanism is triggered when the *price of crvUSD > 1*. Minting and depositing into the pool will increase the crvUSD supply and decrease its price. The LP tokens that the PegKeeper receives when depositing crvUSD into the pool are not staked in the gauge (if the pool has one), which means the PegKeeper does not receive CRV inflation rewards.
 
@@ -177,7 +177,7 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
     === "Example"
 
         ```shell
-        >>> PegKepper.update()
+        >>> PegKeeper.update()
         ```
 
 
@@ -197,7 +197,7 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
     === "Example"
 
         ```shell
-        >>> PegKepper.last_change()
+        >>> PegKeeper.last_change()
         1688794235
         ```
 
@@ -244,7 +244,7 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
     === "Example"
 
         ```shell
-        >>> PegKepper.calc_profit()
+        >>> PegKeeper.calc_profit()
         41173451286504149038
         ```
 
@@ -306,7 +306,7 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
     === "Example"
 
         ```shell
-        >>> PegKepper.estimate_caller_profit()
+        >>> PegKeeper.estimate_caller_profit()
         0
         ```
 
@@ -364,7 +364,7 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
     === "Example"
 
         ```shell
-        >>> PegKepper.caller_share()
+        >>> PegKeeper.caller_share()
         20000
         ```
 
@@ -411,7 +411,7 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
     === "Example"
 
         ```shell
-        >>> PegKepper.set_new_caller_share(30000)
+        >>> PegKeeper.set_new_caller_share(30000)
         ```
 
 
@@ -448,7 +448,7 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
     === "Example"
 
         ```shell
-        >>> PegKepper.withdraw_profit():
+        >>> PegKeeper.withdraw_profit():
         1222209056795882453168
         ```
 
@@ -493,7 +493,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.admin()
+        >>> PegKeeper.admin()
         '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
         ```
 
@@ -514,7 +514,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.future_admin()
+        >>> PegKeeper.future_admin()
         '0x0000000000000000000000000000000000000000'
         ```
 
@@ -559,7 +559,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.commit_new_admin("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045")
+        >>> PegKeeper.commit_new_admin("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045")
         ```
 
 
@@ -600,14 +600,14 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.apply_new_admin()
+        >>> PegKeeper.apply_new_admin()
         ```
 
 
 ### `new_admin_deadline`
 !!! description "`PegKeeper.new_admin_deadline() -> uint256: view`"
 
-    Getter for the timestamp indicating the deadline by which the `future_admin` can apply the admin change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a **timeperiod of three days**.
+    Getter for the timestamp indicating the deadline by which the `future_admin` can apply the admin change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a **time period of three days**.
 
     Returns: timestamp (`uint256`).
 
@@ -620,7 +620,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.new_admin_deadline()
+        >>> PegKeeper.new_admin_deadline()
         0
         ```
 
@@ -660,7 +660,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.receiver()
+        >>> PegKeeper.receiver()
         '0xeCb456EA5365865EbAb8a2661B0c503410e9B347'
         ```
 
@@ -681,7 +681,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.future_receiver()
+        >>> PegKeeper.future_receiver()
         '0x0000000000000000000000000000000000000000'
         ```
 
@@ -726,7 +726,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.commit_new_receiver("0x0000000000000000000000000000000000000000")
+        >>> PegKeeper.commit_new_receiver("0x0000000000000000000000000000000000000000")
         ```
 
 
@@ -762,14 +762,14 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.apply_new_receiver():
+        >>> PegKeeper.apply_new_receiver():
         ```
 
 
 ### `new_receiver_deadline`
 !!! description "`PegKeeper.new_receiver_deadline() -> uint256: view`"
 
-    Getter for the timestamp indicating the deadline by which the `future_receiver` can apply the receiver change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a **timeperiod of three days**.
+    Getter for the timestamp indicating the deadline by which the `future_receiver` can apply the receiver change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a **time period of three days**.
 
     Returns: timestamp (`uint256`).
 
@@ -782,7 +782,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.new_receiver_deadline()
+        >>> PegKeeper.new_receiver_deadline()
         0
         ```
 
@@ -825,7 +825,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.revert_new_options():
+        >>> PegKeeper.revert_new_options():
         ```
 
 
@@ -848,7 +848,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.debt()
+        >>> PegKeeper.debt()
         10569198033275719942044356
         ```
 
@@ -887,7 +887,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.FACTORY()
+        >>> PegKeeper.FACTORY()
         '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
         ```
 
@@ -926,7 +926,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.PEGGED()
+        >>> PegKeeper.PEGGED()
         '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
         ```
 
@@ -965,7 +965,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.POOL()
+        >>> PegKeeper.POOL()
         '0x4DEcE678ceceb27446b35C672dC7d61F30bAD69E'
         ```
 
@@ -1004,6 +1004,6 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.AGGREGATOR()
+        >>> PegKeeper.AGGREGATOR()
         '0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7'
         ```

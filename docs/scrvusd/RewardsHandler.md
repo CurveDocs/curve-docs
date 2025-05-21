@@ -52,7 +52,7 @@ To calculate this time-weighted average, the `RewardsHandler` uses a `TWA module
             ratio in the vault.
             """
             # get the circulating supply from a helper contract.
-            # supply in circulation = controllers' debt + peg keppers' debt
+            # supply in circulation = controllers' debt + peg keepers' debt
             circulating_supply: uint256 = staticcall self.stablecoin_lens.circulating_supply()
 
             # obtain the supply of crvUSD contained in the vault by checking its totalAssets.
@@ -197,7 +197,7 @@ Snapshots can only be taken once a minimum time interval ([`min_snapshot_dt_seco
 
     Function to take a snapshot of the current deposited supply ratio in the Vault. This function is fully permissionless and can be called by anyone. Snapshots are used to compute the time-weighted average of the TVL to decide on the amount of rewards to ask for (weight).
 
-    Minimum time inbetween snapshots is defined by `min_snapshot_dt_seconds`. The maximum number of snapshots is set to `10^18`, which is equivalent to 31.7 billion years if a snapshot were to be taken every second.
+    Minimum time in-between snapshots is defined by `min_snapshot_dt_seconds`. The maximum number of snapshots is set to `10^18`, which is equivalent to 31.7 billion years if a snapshot were to be taken every second.
 
     Emits: `SnapshotTaken` event.
 
@@ -227,7 +227,7 @@ Snapshots can only be taken once a minimum time interval ([`min_snapshot_dt_seco
                 ratio in the vault.
                 """
                 # get the circulating supply from a helper contract.
-                # supply in circulation = controllers' debt + peg keppers' debt
+                # supply in circulation = controllers' debt + peg keepers' debt
                 circulating_supply: uint256 = staticcall self.stablecoin_lens.circulating_supply()
 
                 # obtain the supply of crvUSD contained in the vault by checking its totalAssets.
@@ -850,7 +850,7 @@ The value is calculated over a specified time window defined by `twa_window` by 
 
 # **Reward Distribution**
 
-Rewards are distributed to the Vault thought the `RewardsHandler` contract using a simple `process_rewards` function. This function permnissionlessly lets anyone distribute rewards to the Savings Vault.
+Rewards are distributed to the Vault thought the `RewardsHandler` contract using a simple `process_rewards` function. This function permissionlessly lets anyone distribute rewards to the Savings Vault.
 
 ### `process_rewards`
 !!! description "`RewardsHandler.process_rewards()`"
@@ -876,7 +876,7 @@ Rewards are distributed to the Vault thought the `RewardsHandler` contract using
                 if take_snapshot:
                     self._take_snapshot()
 
-                # prevent the rewards from being distributed untill the distribution rate
+                # prevent the rewards from being distributed until the distribution rate
                 # has been set
                 assert (staticcall vault.profitMaxUnlockTime() != 0), "rewards should be distributed over time"
 
@@ -1804,7 +1804,7 @@ For a detailed explanation of how to use the access control module, please refer
             @external
             def set_minimum_weight(new_minimum_weight: uint256):
                 """
-                @notice Update the minimum weight that the the vault will ask for.
+                @notice Update the minimum weight that the vault will ask for.
 
                 @dev This function can be used to prevent the rewards requested from being
                 manipulated (i.e. MEV twa snapshots to obtain lower APR for the vault). Setting
@@ -2106,12 +2106,12 @@ For a detailed explanation of how to use the access control module, please refer
     !!!guard "Guarded Method by Snekmate 🐍"
         This contract makes use of a Snekmate module to manage roles and permissions. This specific function is restricted to the `RECOVERY_MANAGER` role.
 
-    Function to recover funds accidently sent to the contract. This function can not recover `crvUSD` tokens as any `crvUSD` tokens sent to the contract are considered as donations and will be distributed to stakers.
+    Function to recover funds accidentally sent to the contract. This function can not recover `crvUSD` tokens as any `crvUSD` tokens sent to the contract are considered as donations and will be distributed to stakers.
 
     | Input      | Type      | Description                            |
     | ---------- | --------- | -------------------------------------- |
     | `token`    | `IERC20`  | Address of the token to recover        |
-    | `receiver` | `address` | Receier address of the recovered funds |
+    | `receiver` | `address` | Receiver address of the recovered funds |
 
     ??? quote "Source code"
 

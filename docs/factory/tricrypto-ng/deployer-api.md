@@ -36,7 +36,7 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
 
 !!! description "`Factory.deploy_pool(_name: String[64], _symbol: String[32], _coins: address[N_COINS], _weth: address, implementation_id: uint256, A: uint256, gamma: uint256, mid_fee: uint256, out_fee: uint256, fee_gamma: uint256, allowed_extra_profit: uint256, adjustment_step: uint256, ma_exp_time: uint256, initial_prices: uint256[N_COINS-1],) -> address:`"
 
-    Function to deploy a tricrypto pool.
+    Function to deploy a Tricrypto pool.
 
     Returns: Deployed pool (`address`).
 

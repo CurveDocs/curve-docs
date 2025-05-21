@@ -17,7 +17,7 @@ The contract also **acts as a registry for the gauges**, storing information suc
 
 ## **Adding Gauges and Gauge Data**
 
-After a liquidity gauge was deployed, it can be added to the `GaugeController` for it to be elegible to recieve CRV emissions. Adding a gauge requires a successfully passed DAO vote.
+After a liquidity gauge was deployed, it can be added to the `GaugeController` for it to be eligible to receive CRV emissions. Adding a gauge requires a successfully passed DAO vote.
 
 !!!info "Check if a Gauge has been added to the GaugeController"
 
@@ -466,7 +466,7 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
 ### `vote_user_slopes`
 !!! description "`GaugeController.vote_user_slopes(arg0: address, arg1: address) -> slope: uint256, power: uint256, end: uint256`"
 
-    Getter method for informations about the current vote weight of a specific user for a specific gauge. In this variable, informations are stored at the time of voting.
+    Getter method for information about the current vote weight of a specific user for a specific gauge. In this variable, information are stored at the time of voting.
 
     Returns: slope (`uint256`), allocated voting-power (`uint256`) and veCRV lock end (`uint256`).
 
@@ -850,7 +850,7 @@ struct Point:
 ### `points_sum`
 !!! description "`GaugeController.points_sum(arg0: int128, arg1: uint256) -> bias: uint256, slope: uint256: view`"
 
-    Getter for informations from `Point` struct.
+    Getter for information from `Point` struct.
 
     Returns: bias (`uint256`) and slope (`uint256`).
 
@@ -946,7 +946,7 @@ struct Point:
 ### `points_total`
 !!! description "`GaugeController.points_total(arg0: uint256) -> uint256: view`"
 
-    Getter for the currennt future total weight at timestamp `arg0`.
+    Getter for the current future total weight at timestamp `arg0`.
 
     Returns: total points (`uin256`).
 
@@ -1019,7 +1019,7 @@ struct Point:
 
     Getter for the weight for gauge type `arg0` at the next update, which is at timestamp `arg1`.
 
-    Returns: type weigt (`uint256`).
+    Returns: type weight (`uint256`).
 
     | Input  | Type      | Description   |
     | ------ | --------- | ------------- |
@@ -1124,7 +1124,7 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
 | :logos-ethereum: `Ethereum (crypto pools)` |     `5`    |
 | :no_entry_sign: `deprecated`               |     `6`    |
 |        :logos-arbitrum: `Arbitrum`         |     `7`    |
-|       :logos-avalanche: `Avalance`         |     `8`    |
+|       :logos-avalanche: `Avalanche`         |     `8`    |
 |         :logos-harmony: `Harmony`          |     `9`    |
 |               :moneybag: `Fundraising`     |    `10`    |
 |       :logos-optimism: `Optimism`          |    `11`    |
@@ -1589,7 +1589,7 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
 
 ## **Contract Ownership**
 
-Admin ownership can be commited by calling `commit_transfer_ownership`. Changes then need to be applied. The current `admin` is the OwnershipAgent, which would require a DAO vote to change it.
+Admin ownership can be committed by calling `commit_transfer_ownership`. Changes then need to be applied. The current `admin` is the OwnershipAgent, which would require a DAO vote to change it.
 
 ### `admin`
 !!! description "`GaugeController.admin() -> address: view`"

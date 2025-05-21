@@ -1,4 +1,4 @@
-As crvusd markets use interal oracles, they utilizes in-house liquidity pools to aggregate the price of collateral. But there is a possibility to use Chainlink oracle prices as safety limits.
+As crvusd markets use internal oracles, they utilizes in-house liquidity pools to aggregate the price of collateral. But there is a possibility to use Chainlink oracle prices as safety limits.
 
 !!!warning
     Every market has its own price oracle contract, which can be fetched by calling `price_oracle_contract` within the controller of the market. The [wstETH oracle](https://etherscan.io/address/0xc1793A29609ffFF81f10139fa0A7A444c9e106Ad#code) will be used for the purpose of this documentation. Please be aware that oracle contracts can vary based on the collateral token.
@@ -94,7 +94,7 @@ $\text{last_tvl}_i = \text{smoothed TVL of i-th pool}$ in `TRICRYPTO[N_POOLS]`
 ### `last_tvl`
 !!! description "`Oracle.last_tvl(arg0: uint256) -> uint256:`"
 
-    Getter for the `last_tvl` of the tricrypto pool at index `arg0`.
+    Getter for the `last_tvl` of the Tricrypto pool at index `arg0`.
 
     Returns: `last_tvl` (`uint256[N_POOLS]`).
 
@@ -178,9 +178,9 @@ $$price = price_{stETH} * totalPrice_{weighted}$$
 
 $price_{weighted} =$ weighted price of ETH
 $totalPrice_{weighted} =$ total weighted price of ETH
-$price_{eth} =$ price oracle of eth in the tricrypto pools w.r.t usdc/usdt
-$price_{usd} =$ price oracle of stableswap pool
-$price_{crvusd} =$ price oracle of crvusd
+$price_{ETH} =$ price oracle of ETH in the Tricrypto pools w.r.t USDC/USDT
+$price_{USD} =$ price oracle of Stableswap pool
+$price_{crvUSD} =$ price oracle of crvUSD
 $price_{stETH} =$ price of stETH w.r.t ETH
 $rate_{wstETH} =$ amount of stETH for 1 wstETH
 
@@ -356,7 +356,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 ### `TRICRYPTO`
 !!! description "`Oracle.TRICRYPTO(arg0: uint256) -> uint256:`"
 
-    Getter for the tricrypto pool at index `arg0`.
+    Getter for the Tricrypto pool at index `arg0`.
 
     Returns: `last_tvl` (`uint256[N_POOLS]`).
 
@@ -381,12 +381,12 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 ### `TRICRYPTO_IX`
 !!! description "`Oracle.TRICRYPTO_IX(arg0: uint256) -> uint256:`"
 
-    Getter for the index of ETH in the tricrypto pool w.r.t the coin at index 0.
+    Getter for the index of ETH in the Tricrypto pool w.r.t the coin at index 0.
 
-    Returns: Index of ETH price oracle in the tricrypto pool (`uint256`).
+    Returns: Index of ETH price oracle in the Tricrypto pool (`uint256`).
 
     !!!tip
-        Returns 1, as ETH price oracle index in the tricrypto pool is 1. If the same index would be 0, it would return the price oracle of ETH. Their prices are all w.r.t the coin at index 0 (USDC or USDT).
+        Returns 1, as ETH price oracle index in the Tricrypto pool is 1. If the same index would be 0, it would return the price oracle of ETH. Their prices are all w.r.t the coin at index 0 (USDC or USDT).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -430,9 +430,9 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 ### `STABLESWAP`
 !!! description "`Oracle.STABLESWAP(arg0: uint256) -> address:`"
 
-    Getter for the stableswap pool at index `arg0`.,
+    Getter for the Stableswap pool at index `arg0`.,
 
-    Returns: stableswap pool (`address`).
+    Returns: Stableswap pool (`address`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -518,7 +518,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 ### `STAKEDSWAP`
 !!! description "`Oracle.STAKEDSWAP() -> address:`"
 
-    Getter for the stETH/ETH stableswap pool.
+    Getter for the stETH/ETH Stableswap pool.
 
     Returns: pool contract (`address`).
 
@@ -673,7 +673,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `uint256` | `last_tvl` of tricrypto pool at index `arg0` |
+    | `arg0` |  `uint256` | `last_tvl` of Tricrypto pool at index `arg0` |
 
     ??? quote "Source code"
 

@@ -53,7 +53,7 @@ MIM is then burnt on for 3CRV on Ethereum and sent to the FeeDistributor.
 !!!warning
     The methods to burn and bridge assets *might slightly vary based on the chain*. The examples down below are taken from [Optimism](https://www.optimism.io/).
 
-### `brigde`
+### `bridge`
 !!! description "`Bridge.bridge(coin: address) -> bool:`"
 
     !!!guard "Guarded Method"

@@ -412,7 +412,7 @@ Because shares are transferable, a user can also acquire shares by means other t
             def mint(shares: uint256, receiver: address = msg.sender) -> uint256:
                 """
                 @notice Mint given amount of shares taking whatever number of assets it requires
-                @param shares Number of sharess to mint
+                @param shares Number of shares to mint
                 @param receiver Optional receiver for the shares. If not specified - it's the sender
                 """
                 controller: Controller = self.controller
@@ -700,7 +700,7 @@ Because shares are transferable, a user can also acquire shares by means other t
 ### `maxSupply`
 !!! description "`Vault.maxSupply() -> uint256: view`"
 
-    Getter for the maximum amount of assets that can be supplied to the vault. This function is only avaliable in a newer version of the vault contract.
+    Getter for the maximum amount of assets that can be supplied to the vault. This function is only available in a newer version of the vault contract.
 
     Returns: maximum supply (`uint256`).
 
@@ -737,7 +737,7 @@ Because shares are transferable, a user can also acquire shares by means other t
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the factory.
 
-    Function to set the maximum amount of assets that can be supplied to the vault. This function is only avaliable in a newer version of the vault contract.
+    Function to set the maximum amount of assets that can be supplied to the vault. This function is only available in a newer version of the vault contract.
 
     Emits: `SetMaxSupply`
 
@@ -1453,7 +1453,7 @@ Out [2]: 248442280773618417                 # -> 0.248 -> 24.8%
 ```
 
 
-More on rates and when they are updated here: [SemiLog Monetary Policy](./semilog-mp.md)
+More on rates and when they are updated here: [Semilog Monetary Policy](./semilog-mp.md)
 
 ---
 

@@ -1,4 +1,4 @@
-The LP token and exchange contract for two-coin CryptoSwap pools are two separate contracts from each other. Newer versions, like Tricrypto-NG, combine both the LP token and exchange contract into a single contract.
+The LP token and exchange contract for two-coin Cryptoswap pools are two separate contracts from each other. Newer versions, like Tricrypto-NG, combine both the LP token and exchange contract into a single contract.
 
 The LP token contract is created from the **`token_implementation`** using the [**`create_forwarder_to()`**](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=create_forwarder_to#chain-interaction) function, which is a built-in function in Vyper.
 

@@ -24,19 +24,19 @@ Participating in Curve DAO governance requires that an account have a balance of
     Additionally, a user cannot have multiple locks with different expiry dates. However, a lock can be extended, or additional CRV can be added to it at any time.
 
 
-## **Implemention Details**
-User voting power $w_{i}$ is linearly decreasing since the moment of lock. So does the total voting power $W$. In order to avoid periodic check-ins, every time the user deposits, or withdraws, or changes the locktime, we record user’s slope and bias for the linear function $w_{i}(t)$ in the public mapping `user_point_history`. We also change slope and bias for the total voting power $W(t)$ and record it in `point_history`. In addition, when a user’s lock is scheduled to end, we schedule change of slopes of $W(t)$ in the future in `slope_changes`. Every change involves increasing the `epoch` by 1.
+## **Implementation Details**
+User voting power $w_{i}$ is linearly decreasing since the moment of lock. So does the total voting power $W$. In order to avoid periodic check-ins, every time the user deposits, or withdraws, or changes the lock time, we record user’s slope and bias for the linear function $w_{i}(t)$ in the public mapping `user_point_history`. We also change slope and bias for the total voting power $W(t)$ and record it in `point_history`. In addition, when a user’s lock is scheduled to end, we schedule change of slopes of $W(t)$ in the future in `slope_changes`. Every change involves increasing the `epoch` by 1.
 
 This way we don’t have to iterate over all users to figure out, how much should $W(t)$ change by, neither we require users to check in periodically. However, we limit the end of user locks to times rounded off by whole weeks.
 
-Slopes and biases change both when a user deposits and locks governance tokens, and when the locktime expires. All the possible expiration times are rounded to whole weeks to make number of reads from blockchain proportional to number of missed weeks at most, not number of users (which is potentially large).
+Slopes and biases change both when a user deposits and locks governance tokens, and when the lock time expires. All the possible expiration times are rounded to whole weeks to make number of reads from blockchain proportional to number of missed weeks at most, not number of users (which is potentially large).
 
 
 
 ## **SmartWalletChecker**
 The `SmartWalletChecker` is an **external contract which checks if certain contracts are whitelisted and therefore eligible to lock CRV** tokens. More [here](../voting-escrow/smartwalletchecker.md).
 
-This contract can be changed via a successfuly DAO vote and therefore potentially fully a
+This contract can be changed via a successfully DAO vote and therefore potentially fully a
 
 ### `smart_wallet_checker`
 !!! description "`VotingEscrow.smart_wallet_checker() -> address: view`"
@@ -349,7 +349,7 @@ CRV tokens can be locked by any Externally Owned Account (EOA). When a smart con
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_addr`       |  `address` | address to depoit for |
+    | `_addr`       |  `address` | address to deposit for |
     | `_value_` |  `uint256` | amount of tokens to lock |
 
     ??? quote "Source code"
@@ -361,7 +361,7 @@ CRV tokens can be locked by any Externally Owned Account (EOA). When a smart con
             """
             @notice Deposit `_value` tokens for `_addr` and add to the lock
             @dev Anyone (even a smart contract) can deposit for someone else, but
-                cannot extend their locktime and deposit for a brand new user
+                cannot extend their lock time and deposit for a brand new user
             @param _addr User's wallet address
             @param _value Amount to add to user's lock
             """
@@ -477,7 +477,7 @@ CRV tokens can be locked by any Externally Owned Account (EOA). When a smart con
             """
             @notice Record global and per-user data to checkpoint
             @param addr User's wallet address. No user checkpoint if 0x0
-            @param old_locked Pevious locked amount / end lock time for the user
+            @param old_locked Previous locked amount / end lock time for the user
             @param new_locked New locked amount / end lock time for the user
             """
             u_old: Point = empty(Point)
@@ -596,7 +596,7 @@ CRV tokens can be locked by any Externally Owned Account (EOA). When a smart con
 
 
 ## **Admin Ownership**
-Ownership of this contract can be transfered by the **`admin`** via the **`commit_tranfer_ownership()`** and **`apply_transfer_ownership()`** functions. See [here](../voting-escrow/admin-controls.md#admin-ownership).
+Ownership of this contract can be transferred by the **`admin`** via the **`commit_transfer_ownership()`** and **`apply_transfer_ownership()`** functions. See [here](../voting-escrow/admin-controls.md#admin-ownership).
 
 
 ### `admin`

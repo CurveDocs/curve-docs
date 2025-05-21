@@ -1,8 +1,8 @@
-<h1>StableSwap-NG Pools: Overview</h1>
+<h1>Stableswap-NG Pools: Overview</h1>
 
-A Curve pool is essentially a smart contract that implements the StableSwap invariant, housing the logic for exchanging stable tokens. While all Curve pools share this core implementation, they come in various pool flavors.
+A Curve pool is essentially a smart contract that implements the Stableswap invariant, housing the logic for exchanging stable tokens. While all Curve pools share this core implementation, they come in various pool flavors.
 
-In its simplest form, a Curve pool is an implementation of the StableSwap invariant involving two or more tokens, often referred to as a 'plain pool.' Alternatively, Curve offers more complex pool variants, including pools with rebasing tokens and metapools. Metapools facilitate the exchange of one or more tokens with those from one or more underlying tokens.
+In its simplest form, a Curve pool is an implementation of the Stableswap invariant involving two or more tokens, often referred to as a 'plain pool.' Alternatively, Curve offers more complex pool variants, including pools with rebasing tokens and metapools. Metapools facilitate the exchange of one or more tokens with those from one or more underlying tokens.
 
 
 **New features:**
@@ -34,7 +34,7 @@ Stableswap-NG pools supports the following asset types:
 - ERC20 tokens can have arbitrary decimals (<=18)
 - ERC20 tokens that rebase (either positive or fee on transfer)
 - ERC20 tokens that have a rate oracle (e.g. wstETH, cbETH, sDAI, etc.) Oracle precision *must* be 10^18
-- ERC4626 tokens with arbitrary percision (<=18) of Vault token and underlying asset
+- ERC4626 tokens with arbitrary precision (<=18) of Vault token and underlying asset
 
 
 ### **Rebasing Tokens**
@@ -130,7 +130,7 @@ $$\text{dynamic fee} = \frac{{fee_{m} \times fee}}{\frac{(fee_{m} - 10^{10}) \ti
         """
         @notice Return the fee for swapping between `i` and `j`
         @param i Index value for the coin to send
-        @param j Index value of the coin to recieve
+        @param j Index value of the coin to receive
         @return Swap fee expressed as an integer with 1e10 precision
         """
         N_COINS: uint256 = StableSwapNG(pool).N_COINS()
@@ -192,7 +192,7 @@ The embedded graph has limited features, such as the inability to modify the axi
 
 ## **Oracles**
 
-The new generation (NG) of stableswap introduces two new pool-built-in oracles:
+The new generation (NG) of Stableswap introduces two new pool-built-in oracles:
 
 - **price oracle** (spot and moving-average price)
 - moving average **D oracle**
@@ -205,9 +205,9 @@ More on oracles [here](./oracles.md).
 
 ## **`exchange_received`**
 
-This new function **allows the exchange of tokens without actually transfering tokens in**, as the exchange is based on the change of the coins balances within the pool.
+This new function **allows the exchange of tokens without actually transferring tokens in**, as the exchange is based on the change of the coins balances within the pool.
 
-Users of this method are dex aggregators, arbitrageurs, or other users who **do not wish to grant approvals to the contract**. They can instead send tokens directly to the contract and call **`exchange_received()`**.
+Users of this method are DEX aggregators, arbitrageurs, or other users who **do not wish to grant approvals to the contract**. They can instead send tokens directly to the contract and call **`exchange_received()`**.
 
 !!!abstract "Article"
     Explore the `exchange_received` function's role in streamlining swaps without approvals, its efficiency benefits, and security considerations in a succinct article. Learn more about this innovative feature for cost-effective, secure trading through Curve pools: [How to Do Cheaper, Approval-Free Swaps](https://blog.curvemonitor.com/posts/exchange-received/).

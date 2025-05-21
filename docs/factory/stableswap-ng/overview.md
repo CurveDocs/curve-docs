@@ -1,6 +1,6 @@
-<h1>StableSwap-NG Factory: Overview</h1>
+<h1>Stableswap-NG Factory: Overview</h1>
 
-The `CurveStableswapFactoryNG.vy` allows the permissionless deployment of up to eight-coin plain- and metapools, as well as gauges. **Liquidity pool and LP token share the same contract.** For more details, see here: [StableSwap-NG Documentation](../../stableswap-exchange/stableswap-ng/overview.md).
+The `CurveStableswapFactoryNG.vy` allows the permissionless deployment of up to eight-coin plain- and metapools, as well as gauges. **Liquidity pool and LP token share the same contract.** For more details, see here: [Stableswap-NG Documentation](../../stableswap-exchange/stableswap-ng/overview.md).
 
 
 !!!github "GitHub"
@@ -85,7 +85,7 @@ For a list of all supported assets, please see [Deployer API](deployer-api.md#as
 
 # **Base Pools**
 
-StableSwap pools also allow the deployment of metapools (an asset paired against a base pool). When deploying a new Factory, the existing base pools must be manually added to the contract for them to be used for metapools.
+Stableswap pools also allow the deployment of metapools (an asset paired against a base pool). When deploying a new Factory, the existing base pools must be manually added to the contract for them to be used for metapools.
 
 *Limitations when adding new base pools:*
 
@@ -200,7 +200,7 @@ StableSwap pools also allow the deployment of metapools (an asset paired against
 
 # **Implementations**
 
-The StableSwap-NG Factory makes use of **blueprint contracts** to deploy its contracts from the implementations.
+The Stableswap-NG Factory makes use of **blueprint contracts** to deploy its contracts from the implementations.
 
 !!!warning
     **Implementation contracts are upgradable.** They can either be replaced, or additional implementation contracts can be added. Therefore, please always make sure to check the most recent ones.
@@ -360,7 +360,7 @@ New implementation can be by the `admin` of the contract using the following fun
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to set/add a new pool implementation. Existing implementations can be overritten or additionly implementations at another (not set index) can be added.[^2]
+    Function to set/add a new pool implementation. Existing implementations can be overridden or additional implementations at another (not set index) can be added.[^2]
 
     [^2]: This only works for `pool_implementations` and `metapool_implementations`. For other the implementations, only a single contract can be set.
 
@@ -405,7 +405,7 @@ New implementation can be by the `admin` of the contract using the following fun
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to set/add a new metapool implementation. Existing implementations can be overritten or additionly implementations at another (not set index) can be added.[^3]
+    Function to set/add a new metapool implementation. Existing implementations can be overridden or additional implementations at another (not set index) can be added.[^3]
 
     [^3]: This only works for `pool_implementations` and `metapool_implementations`. For other the implementations, only a single contract can be set.
 

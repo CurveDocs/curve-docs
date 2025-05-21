@@ -381,7 +381,7 @@ struct CompensationCooldown:
 ### `duty_counter`
 !!! description "`Hooker.duty_counter() -> uint64: view`"
 
-    Getter for the duty counter value. This varaible is used to record the current week number and is used to manage and reset the cooldown periods for hook compensations, ensuring that hooks do not exceed their compensation limits within a given week.
+    Getter for the duty counter value. This variable is used to record the current week number and is used to manage and reset the cooldown periods for hook compensations, ensuring that hooks do not exceed their compensation limits within a given week.
 
     Returns: duty counter (`uint64`).
 
@@ -405,7 +405,7 @@ struct CompensationCooldown:
 ### `act`
 !!! description "`Hooker.act(_hook_inputs: DynArray[HookInput, MAX_HOOKS_LEN], _receiver: address=msg.sender) -> uint256`"
 
-    Function to execute hooks. Unlike, `duty_act` (which is specifically for the fee distribution process), this function allows the execuction of more general hooks.
+    Function to execute hooks. Unlike, `duty_act` (which is specifically for the fee distribution process), this function allows the execution of more general hooks.
 
     Returns: received compensation (`uint256`).
 

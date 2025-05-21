@@ -12,9 +12,9 @@ All pools created through the Factory are "owned" by the admin of the Factory, w
 
 ## **Amplification Coefficient and Gamma**
 
-More informations about the parameters [here](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).
+More information about the parameters [here](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).
 
-The appropriate value for `A` and `gamma` is dependent upon the type of coin being used within the pool, and is subject to optimisation and pool-parameter update based on the market history of the trading pair. It is possible to modify the parameters for a pool after it has been deployed. However, it requires a vote within the Curve DAO and must reach a 15% quorum.
+The appropriate value for `A` and `gamma` is dependent upon the type of coin being used within the pool, and is subject to optimization and pool-parameter update based on the market history of the trading pair. It is possible to modify the parameters for a pool after it has been deployed. However, it requires a vote within the Curve DAO and must reach a 15% quorum.
 
 
 ### `ramp_A_gamma`
@@ -156,7 +156,7 @@ The appropriate value for `A` and `gamma` is dependent upon the type of coin bei
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the Factory contract.
 
-    Function to commit new parameters. The new parameters do not take immedaite effect.
+    Function to commit new parameters. The new parameters do not take immediate effect.
 
     Emits: `CommitNewParameters`
 

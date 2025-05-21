@@ -208,7 +208,7 @@ Transmitting emissions is permissionless. Anyone can do it.
 ### `transmit_emissions`
 !!! description "`RootGaugeFactory.transmit_emissions(_gauge: RootGauge)`"
 
-    Function to mint and transmit emissions to the `ChildGauge` on the destination chain. This function is permissionsless and can be called by anyone.
+    Function to mint and transmit emissions to the `ChildGauge` on the destination chain. This function is permissionless and can be called by anyone.
 
     | Input    | Type      | Description |
     | -------- | --------- | ----------- |

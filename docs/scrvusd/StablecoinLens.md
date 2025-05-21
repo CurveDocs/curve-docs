@@ -19,7 +19,7 @@ The `StablecoinLens` contract calculates the accurate circulating supply of crvU
 
     Ultimately, as this calculation is a moving average, successful manipulation would require repeated MEV actions over multiple snapshots to have a substantial impact.
 
-    **Nontheless, the contract should not be used by third parties before consulting with the Curve team.**
+    **Nonetheless, the contract should not be used by third parties before consulting with the Curve team.**
 
 
 ---

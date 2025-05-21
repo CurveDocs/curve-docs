@@ -398,7 +398,7 @@ In general, any asset that is within a Curve pool also containing a Synth may be
                 # if no token ID is given we are initiating a new swap
                 count: uint256 = self.id_count
                 if count == 0:
-                    # if there are no availale settler contracts we must deploy a new one
+                    # if there are no available settler contracts we must deploy a new one
                     settler = create_forwarder_to(self.settler_implementation)
                     Settler(settler).initialize()
                     token_id = convert(settler, uint256)

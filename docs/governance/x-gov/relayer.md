@@ -14,7 +14,7 @@ The `Relayer` contract acts as a middleman, receiving messages from the `Broadca
 The `Relayer` receives the broadcasted message and forwards the message to the appropriate agent. The `Agents` are then responsible for executing the `calldata` of the message.
 
 !!!warning "Upgradability of Agents"
-    A Relayer's agent addresses cannot be altered. Once choosen, there is no way back. In the case of any issues, a new `Relayer` contract has to be deployed.
+    A Relayer's agent addresses cannot be altered. Once chosen, there is no way back. In the case of any issues, a new `Relayer` contract has to be deployed.
 
 ---
 

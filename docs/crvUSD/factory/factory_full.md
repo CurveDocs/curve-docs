@@ -384,7 +384,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 ### `rug_debt_ceiling`
 !!! description "`Factory.rug_debt_ceiling(_to: address):`"
 
-    Function to remove stablecoins above the debt seiling from a controller and burn them.
+    Function to remove stablecoins above the debt ceiling from a controller and burn them.
 
     Emits: `MintForMarket` or `RemoveFromMarket` and `SetDebtCeiling` (this event is not emitted when only residuals are burned)
 

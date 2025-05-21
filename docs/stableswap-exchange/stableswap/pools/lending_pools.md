@@ -32,7 +32,7 @@ of wrapped tokens that are used by lending pools:
 ``cToken-style tokens``: These are tokens, such as interest-bearing cTokens on Compound (e.g., ``cDAI``) or on yTokens
                          on Yearn, where interest accrues as the rate of the token increases.
 
-``aToken-style tokens``: These are tokens, such as aTokens on AAVE (e.g., ``aDAI``), where interest accrues as the
+``aToken-style tokens``: These are tokens, such as aTokens on Aave (e.g., ``aDAI``), where interest accrues as the
 balance of the token increases.
 
 The template source code for lending pools may be viewed on GitHub.
@@ -150,7 +150,7 @@ For example, calling ``exchange`` on the Compound Pool, would result in a swap b
             @notice Perform an exchange between two underlying coins
             @dev Index values can be found via the `underlying_coins` public getter method
             @param i Index value for the underlying coin to send
-            @param j Index valie of the underlying coin to recieve
+            @param j Index value of the underlying coin to receive
             @param dx Amount of `i` being exchanged
             @param min_dy Minimum amount of `j` to receive
             @return Actual amount of `j` received

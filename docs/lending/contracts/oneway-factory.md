@@ -178,7 +178,7 @@ A lending market **must always include crvUSD, either as collateral or as the bo
 !!! description "`OneWayLendingVaultFactory.create(borrowed_token: address, collateral_token: address, A: uint256, fee: uint256, loan_discount: uint256, liquidation_discount: uint256, price_oracle: address, name: String[64], min_borrow_rate: uint256 = 0, max_borrow_rate: uint256 = 0) -> Vault:`"
 
     !!!warning "Valid Pool Oracles"
-        Only oracles from stableswap-ng, twocrypto-ng, and tricrypto-ng pools are valid. Oracles from other pools may not be manipulation resistant and therefore should not be used.
+        Only oracles from Stableswap-NG, Twocrypto-NG, and Tricrypto-NG pools are valid. Oracles from other pools may not be manipulation resistant and therefore should not be used.
 
     Function to create a new vault using a existing oraclized Curve pool as the price oracle.
 
@@ -194,7 +194,7 @@ A lending market **must always include crvUSD, either as collateral or as the bo
     | `fee`                  | `uint256`     | Fee for swaps in the AMM. |
     | `loan_discount`        | `uint256`     | Maximum discount. LTV = sqrt(((A - 1) / A) ** 4) - loan_discount. |
     | `liquidation_discount` | `uint256`     | Liquidation discount. LT = sqrt(((A - 1) / A) ** 4) - liquidation_discount |
-    | `pool`                 | `address`     | Curve tricrypto-ng, twocrypto-ng or stableswap-ng pool which has non-manipulatable `price_oracle()`. Must contain both collateral_token and borrowed_token. |
+    | `pool`                 | `address`     | Curve Tricrypto-NG, Twocrypto-NG or Stableswap-NG pool which has non-manipulatable `price_oracle()`. Must contain both collateral_token and borrowed_token. |
     | `name`                 | `String[64]`  | Name of the vault. |
     | `min_borrow_rate`      | `uint256`     | Custom minimum borrow rate; if not set will default to `min_default_borrow_rate` |
     | `max_borrow_rate`      | `uint256`     | Custom maximum borrow rate; if not set will default to `max_default_borrow_rate` |
@@ -491,7 +491,7 @@ $$\text{Annualized Rate} = \text{rate} \times 86400 \times  365$$
                 """
                 @notice Change min and max default borrow rates for creating new markets
                 @param min_rate Minimal borrow rate (0 utilization)
-                @param max_rate Maxumum borrow rate (100% utilization)
+                @param max_rate Maximum borrow rate (100% utilization)
                 """
                 assert msg.sender == self.admin
 
@@ -532,7 +532,7 @@ $$\text{Annualized Rate} = \text{rate} \times 86400 \times  365$$
                 """
                 @notice Change min and max default borrow rates for creating new markets
                 @param min_rate Minimal borrow rate (0 utilization)
-                @param max_rate Maxumum borrow rate (100% utilization)
+                @param max_rate Maximum borrow rate (100% utilization)
                 """
                 assert msg.sender == self.admin
 
@@ -586,7 +586,7 @@ $$\text{Annualized Rate} = \text{rate} \times 86400 \times  365$$
                 """
                 @notice Change min and max default borrow rates for creating new markets
                 @param min_rate Minimal borrow rate (0 utilization)
-                @param max_rate Maxumum borrow rate (100% utilization)
+                @param max_rate Maximum borrow rate (100% utilization)
                 """
                 assert msg.sender == self.admin
 
@@ -806,7 +806,7 @@ The implementations of the Factory can be upgraded by the `admin`, which is the 
             def set_implementations(controller: address, amm: address, vault: address,
                                     pool_price_oracle: address, monetary_policy: address, gauge: address):
                 """
-                @notice Set new implementations (blueprints) for controller, amm, vault, pool price oracle and monetary polcy.
+                @notice Set new implementations (blueprints) for controller, amm, vault, pool price oracle and monetary policy.
                         Doesn't change existing ones
                 @param controller Address of the controller blueprint
                 @param amm Address of the AMM blueprint
@@ -925,7 +925,7 @@ The Factory contract is owned by the DAO ([CurveOwnershipAdmin](https://ethersca
 
 ## **Contract Info Methods**
 
-Most informations are queried based on vault indices. The first deployed vault is vault index 0, second one index 1, etc.
+Most information are queried based on vault indices. The first deployed vault is vault index 0, second one index 1, etc.
 
 *To get the index of a certain vault:*
 

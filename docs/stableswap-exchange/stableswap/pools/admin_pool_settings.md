@@ -119,7 +119,7 @@ A higher value means that trades will incur slippage sooner as the assets within
     Within the pools, ``A`` is in fact implemented as ``1 / A`` and therefore a higher value implies that the pool will
     be more tolerant to slippage when imbalanced.
 
-The appropriate value for A is dependent upon the type of coin being used within the pool, and is subject to optimisation
+The appropriate value for A is dependent upon the type of coin being used within the pool, and is subject to optimization
 and pool-parameter update based on the market history of the trading pair. It is possible to modify the amplification
 coefficient for a pool after it has been deployed. However, it requires a vote within the Curve DAO and must reach a
 15% quorum.
@@ -441,7 +441,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
             @notice Perform an exchange between two coins
             @dev Index values can be found via the `coins` public getter method
             @param i Index value for the coin to send
-            @param j Index valie of the coin to recieve
+            @param j Index value of the coin to receive
             @param dx Amount of `i` being exchanged
             @param min_dy Minimum amount of `j` to receive
             @return Actual amount of `j` received

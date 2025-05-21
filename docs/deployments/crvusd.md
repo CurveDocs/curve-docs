@@ -117,7 +117,7 @@ For testing in production purposes, several contract deployments have taken plac
 |`PriceOracle`|[0x966cBDeceFB60A289b0460F7638f4A75F432cA06](https://etherscan.io/address/0x966cBDeceFB60A289b0460F7638f4A75F432cA06#code)|
 |`Leverage Zap`|[0xd3e576B5DcDe3580420A5Ef78F3639BA9cd1B967](https://etherscan.io/address/0xd3e576B5DcDe3580420A5Ef78F3639BA9cd1B967#code)|
 
-**:logos-sfrxeth: sfrxeth v2**
+**:logos-sfrxeth: sfrxETH v2**
 
 | Contract Type | Contract Address |
 | :---------: | :----------------: |

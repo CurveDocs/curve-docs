@@ -104,7 +104,7 @@ The `ChildGauge` is the liquidity gauge contract on the sidechain. It is used to
             def deposit(_value: uint256, _addr: address = msg.sender, _claim_rewards: bool = False):
                 """
                 @notice Deposit `_value` LP tokens
-                @dev Depositting also claims pending reward tokens
+                @dev Depositing also claims pending reward tokens
                 @param _value Number of tokens to deposit
                 @param _addr Address to deposit for
                 """
@@ -1141,7 +1141,7 @@ The process for adding external reward tokens follows two steps:
     !!!guard "Guarded Method"
         This function is only callable by the `manager` of the gauge or the `owner` of the Factory.
 
-    Function to set the manager for the gauge. This function is a copy of the `set_gauge_manager` function for back-compatability.
+    Function to set the manager for the gauge. This function is a copy of the `set_gauge_manager` function for back-compatibility.
 
     Emits: `SetGaugeManager` event.
 
@@ -1163,7 +1163,7 @@ The process for adding external reward tokens follows two steps:
             def set_manager(_gauge_manager: address):
                 """
                 @notice Change the gauge manager for a gauge
-                @dev Copy of `set_gauge_manager` for back-compatability
+                @dev Copy of `set_gauge_manager` for back-compatibility
                 @dev The manager of this contract, or the ownership admin can outright modify gauge
                     managership. A gauge manager can also transfer managership to a new manager via this
                     method, but only for the gauge which they are the manager of.

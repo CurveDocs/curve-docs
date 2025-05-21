@@ -1,6 +1,6 @@
 <h1>Pool Factory: Overview</h1>
 
-The TwoCrypto-NG Factory allows the permissionless deployment of two-coin volatile asset pools, as well as gauges. **The liquidity pool and LP token share the same contract.**
+The Twocrypto-NG Factory allows the permissionless deployment of two-coin volatile asset pools, as well as gauges. **The liquidity pool and LP token share the same contract.**
 
 Additionally, the Factory contract is the direct admin and fee receiver of all pools. In turn, the Factory is controlled by the CurveDAO.
 
@@ -14,7 +14,7 @@ Additionally, the Factory contract is the direct admin and fee receiver of all p
 
 ## **Implementations**
 
-The TwoCrypto-NG Factory makes use of **blueprint contracts** ([EIP-5202](https://eips.ethereum.org/EIPS/eip-5202)) to deploy liquidity pools and gauges.
+The Twocrypto-NG Factory makes use of **blueprint contracts** ([EIP-5202](https://eips.ethereum.org/EIPS/eip-5202)) to deploy liquidity pools and gauges.
 
 !!!warning
     **Implementation contracts are upgradable.** They can either be replaced, or additional implementation contracts can be added. Therefore, always make sure to check the most recent ones.
@@ -154,7 +154,7 @@ It utilizes four different implementations:
 
             ```vyper
             event UpdatePoolImplementation:
-                _implemention_id: uint256
+                _implementation_id: uint256
                 _old_pool_implementation: address
                 _new_pool_implementation: address
 

@@ -8,15 +8,15 @@ hide:
 !!!deploy "Contract Source & Deployment"
     Source code is available on [:material-github: GitHub](https://github.com/curvefi/tricrypto-ng). The following documentation covers source code up until commit number [`33707fc`](https://github.com/curvefi/tricrypto-ng/commit/33707fc8b84e08786acf184fcfdb744eb4657a99).
 
-    All stableswap-ng deployments can be found in the "Deployment Addresses" section. [:material-arrow-up-right:](../../references/deployed-contracts.md#tricrypto-ng).
+    All Stableswap-NG deployments can be found in the "Deployment Addresses" section. [:material-arrow-up-right:](../../references/deployed-contracts.md#tricrypto-ng).
 
 
-For an in-depth understanding of the Cryptoswap invariant design, please refer to the official [Cryptoswap whitepaper](../../assets/pdf/whitepaper_cryptoswap.pdf).
+For an in-depth understanding of the Cryptoswap invariant design, please refer to the official [Cryptoswap Whitepaper](../../assets/pdf/whitepaper_cryptoswap.pdf).
 
 ---
 
 
-**The Tricrypto-NG AMM infrastructure represents a technically enhanced iteration of the previous cryptoswap implementations. It comprises the following key components:**
+**The Tricrypto-NG AMM infrastructure represents a technically enhanced iteration of the previous Cryptoswap implementations. It comprises the following key components:**
 
 <div class="grid cards" markdown>
 
@@ -51,7 +51,7 @@ For an in-depth understanding of the Cryptoswap invariant design, please refer t
 
     ---
 
-    The Views contract contains **view methods relevant for integrators** and users looking to interact with the AMMs. Unlike the older tricrypto contracts, the address of the deployed Views contract is stored in the Factory: users are advised to query the stored views contract since it is upgradeable by the Factory's admin.
+    The Views contract contains **view methods relevant for integrators** and users looking to interact with the AMMs. Unlike the older Tricrypto contracts, the address of the deployed Views contract is stored in the Factory: users are advised to query the stored views contract since it is upgradeable by the Factory's admin.
 
     [:octicons-arrow-right-24: `CurveCryptoViews3Optimized.vy`](./utility-contracts/views.md)
 

@@ -4,7 +4,7 @@ Holders of pool LP tokens may deposit and stake the token into a pool’s liquid
 Alternatively, if the LP token is supported by a metapool, the token may be deposited into the respective metapool
 in exchange for the metapool’s LP token (see here).
 
-Currently, the following versions of Curve StableSwap LP tokens exist:
+Currently, the following versions of Curve Stableswap LP tokens exist:
 
 - [CurveTokenV1](https://github.com/curvefi/curve-contract/blob/master/contracts/tokens/CurveTokenV1.vy): LP token targetting Vyper [^0.1.0-beta.16](https://vyper.readthedocs.io/en/stable/release-notes.html#v0-1-0-beta-16)
 - [CurveTokenV2](https://github.com/curvefi/curve-contract/blob/master/contracts/tokens/CurveTokenV2.vy): LP token targetting Vyper [^0.2.0](https://vyper.readthedocs.io/en/stable/release-notes.html#v0-2-1)

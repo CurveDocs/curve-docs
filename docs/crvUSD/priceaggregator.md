@@ -1,6 +1,6 @@
 <h1>Price Aggregator</h1>
 
-The `AggregateStablePrice.vy` contract is designed to **get an aggregated price of crvUSD based on multiple multiple stableswap pools weighted by their TVL**.
+The `AggregateStablePrice.vy` contract is designed to **get an aggregated price of crvUSD based on multiple Stableswap pools weighted by their TVL**.
 
 !!!github "GitHub"
     There are three iterations of the `AggregateStablePrice` contract. Source code for the contracts can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/price_oracles).
@@ -378,7 +378,7 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
 ### `last_price`
 !!! description "`PriceAggregator3.last_price() -> uint256: view`"
 
-    Getter for the last aggregated price of crvUSD. This variable was set to $10^{18}$ (1.00) when initializing the contract and is updated to the current aggreagated crvUSD price every time [`price_w`](#price_w) is called.
+    Getter for the last aggregated price of crvUSD. This variable was set to $10^{18}$ (1.00) when initializing the contract and is updated to the current aggregated crvUSD price every time [`price_w`](#price_w) is called.
 
     Returns: last aggregated price of crvUSD (`uint256`).
 
@@ -559,7 +559,7 @@ $$\text{final price} = \frac{\text{wp_sum}}{\text{w_sum}}$$
 ### `sigma`
 !!! description "`PriceAggregator3.SIGMA() -> uint256: view`"
 
-    Getter for the sigma value. SIGMA is a predefined constant that influences the adjustment of price deviations, affecting how variations in individual stablecoin prices contribute to the overall average stablecoin price. The value of `sigma` was set to `1000000000000000` when initializing the contract and the variable is immutale, meaning it can not be adjusted.
+    Getter for the sigma value. SIGMA is a predefined constant that influences the adjustment of price deviations, affecting how variations in individual stablecoin prices contribute to the overall average stablecoin price. The value of `sigma` was set to `1000000000000000` when initializing the contract and the variable is immutable, meaning it can not be adjusted.
 
     Returns: sigma value (`uint256`).
 
@@ -828,7 +828,7 @@ The contract follows the classical two-step ownership model used in various othe
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to set a new adderss as the `admin` of the contract.
+    Function to set a new address as the `admin` of the contract.
 
     Emits: `SetAdmin`
 

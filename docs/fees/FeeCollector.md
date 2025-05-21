@@ -8,7 +8,7 @@ The `FeeCollector` serves as an entry point for the fee burning and distribution
 ???+ vyper "`FeeCollector.vy`"
     The source code for the `FeeCollector.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/FeeCollector.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`.
 
-    This version of `FeeCollector` is only deployed on the following chains, as CowSwap is only deployed on these chains:
+    This version of `FeeCollector` is only deployed on the following chains, as CoWSwap is only deployed on these chains:
 
     - :logos-ethereum: Ethereum at [`0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00`](https://etherscan.io/address/0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00)
     - :logos-gnosis: Gnosis at [`0xBb7404F9965487a9DdE721B3A5F0F3CcfA9aa4C5`](https://gnosisscan.io/address/0xBb7404F9965487a9DdE721B3A5F0F3CcfA9aa4C5)
@@ -148,7 +148,7 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
     | Input    | Type      | Description                                                             |
     | -------- | --------- | ----------------------------------------------------------------------- |
     | `_epoch` | `uint256` | Index of the Epoch enum for which to check start and end for            |
-    | `_ts`    | `uint256` | Timestamp to anochr to. Defaults to the current one (`block.timestamp`) |
+    | `_ts`    | `uint256` | Timestamp to anchor to. Defaults to the current one (`block.timestamp`) |
 
     ??? quote "Source code"
 
@@ -433,7 +433,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 *The general flow of the fee burning process is the following:*
 
 1. Admin fees are collected from pools or other revenue sources using the `withdraw_many` function. While fees from older pools need to be claimed manually, the accrued fees from newer pools (mostly NG pools) are periodically claimed when removing liquidity from the pool.
-2. The accrued tokens can be burned by calling the `collect` function. This creates, if there isn't already one, a conditional order on CowSwap which automatically exchanges the fee tokens into the `target` coin. Admin fees can only be burned during the `EXCHANGE` epoch. If `collect` is called during the `COLLECT epoch, the coins are transferred to the CowSwapBurner, and a conditional order is created, but the order is not yet valid and is waiting for the WatchTower to place the order with the CowSwap API.
+2. The accrued tokens can be burned by calling the `collect` function. This creates, if there isn't already one, a conditional order on CoWSwap which automatically exchanges the fee tokens into the `target` coin. Admin fees can only be burned during the `EXCHANGE` epoch. If `collect` is called during the `COLLECT epoch, the coins are transferred to the CowSwapBurner, and a conditional order is created, but the order is not yet valid and is waiting for the WatchTower to place the order with the CoWSwap API.
 3. After burning the tokens, they can be forwarded to the `FeeDistributor` using the `forward` function.
 
 
@@ -580,7 +580,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 ### `collect`
 !!! description "`FeeCollector.collect(_coins: DynArray[ERC20, MAX_LEN], _receiver: address=msg.sender)`"
 
-    Function that is the primary mechanism for burning coins and can only be called during the `COLLECT` epoch. It calls the `burn` function of the burner contract, which creates a [conditional order](https://github.com/cowprotocol/composable-cow) on CowSwap if one has not already been created. This process effectively "burns" the collected coins by swapping them into the target coin. Additionally, the caller is awarded a [keeper fee](#keepers-fee) for their role in the process.
+    Function that is the primary mechanism for burning coins and can only be called during the `COLLECT` epoch. It calls the `burn` function of the burner contract, which creates a [conditional order](https://github.com/cowprotocol/composable-cow) on CoWSwap if one has not already been created. This process effectively "burns" the collected coins by swapping them into the target coin. Additionally, the caller is awarded a [keeper fee](#keepers-fee) for their role in the process.
 
     !!!colab "Google Colab Notebook"
         Coin addresses to collect are converted into `uint160` and sorted from small to big.
@@ -995,7 +995,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
     !!!guard "Guarded Method"
         This function is only callable by the `owner` of the contract.
 
-    Function to transfer coins from the contract with approval. This function is needed for back compatability along with dealing with raw ETH.
+    Function to transfer coins from the contract with approval. This function is needed for back compatibility along with dealing with raw ETH.
 
     | Input   | Type      | Description                          |
     | ------- | --------- | ------------------------------------ |
@@ -1011,9 +1011,9 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
             def burn(_coin: address) -> bool:
                 """
                 @notice Transfer coin from contract with approval
-                @dev Needed for back compatability along with dealing raw ETH
+                @dev Needed for back compatibility along with dealing raw ETH
                 @param _coin Coin to transfer
-                @return True if did not fail, back compatability
+                @return True if did not fail, back compatibility
                 """
                 if _coin == ETH_ADDRESS:  # Deposit
                     WETH.deposit(value=self.balance)

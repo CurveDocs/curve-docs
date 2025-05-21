@@ -3,7 +3,7 @@
 
 # **Pool Ownership**
 Liquidity pools are deployed via the [Factory](../../../factory/twocrypto-ng/deployer-api.md). All pools deployed **share the same admin** defined within the Factory contract.
-Transfering the ownership of a pool is only possible by changing the ownership of the Factory. Admin is the Curve DAO (OwnershipAdmin).
+Transferring the ownership of a pool is only possible by changing the ownership of the Factory. Admin is the Curve DAO (OwnershipAdmin).
 
 The same applies to the fee receiver of the pools.
 

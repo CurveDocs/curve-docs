@@ -14,7 +14,7 @@ Each `burn` action typically performs one conversion into another asset; either 
 1. `wstETH` to `stETH` via *unwrapping (wstETH Burner)*
 2. `stETH` to `ETH` via *swap through stETH/ETH curve pool (SwapStableBurner)*
 3. `ETH` to `USDT` via *swap through tricrypto pool (CryptoSwapBurner)*
-4. `USDT` to `3CRV` via *depositing into 3pool (StableDepositBurner)*
+4. `USDT` to `3CRV` via *depositing into 3Pool (StableDepositBurner)*
 
 
 **Simplified  burn pattern:**
@@ -23,8 +23,8 @@ Each `burn` action typically performs one conversion into another asset; either 
 flowchart LR
 
   p[(0xECB)]
-  v1(StableSwap) ..->|withdraw admin fees| p;
-  v2(CryptoSwap) ..-> |claim admin fees| p;
+  v1(Stableswap) ..->|withdraw admin fees| p;
+  v2(Cryptoswap) ..-> |claim admin fees| p;
   crvUSD(crvUSD Markets) ..-> |collect fees| p;
 
   p --->|burn| b1([Burner 1]);
@@ -61,9 +61,9 @@ flowchart LR
 |`MetaBurner`|`USD denominated assets that are directly swappable for 3CRV`|[0xE4b65889469ad896e866331f0AB5652C1EcfB3E6](https://etherscan.io/address/0xE4b65889469ad896e866331f0AB5652C1EcfB3E6#code)|
 |`SynthBurner`|`non-USD denominated assets that are synths or can be swapped into synths`|[0x67a0213310202dbc2cbe788f4349b72fba90f9fa](https://etherscan.io/address/0x67a0213310202dbc2cbe788f4349b72fba90f9fa#code)|
 |`UniswapBurner`|`Assets that must be swapped on Uniswap/Sushiswap`|[0xf3b64840b39121b40d8685f1576b64c157ce2e24](https://etherscan.io/address/0xf3b64840b39121b40d8685f1576b64c157ce2e24#code)|
-|`UnderlyingBurner`|`Assets that can be directly deposited into 3pool, or swapped for an asset that is deposited into 3pool`|[0x786b374b5eef874279f4b7b4de16940e57301a58](https://etherscan.io/address/0x786b374b5eef874279f4b7b4de16940e57301a58#code)|
+|`UnderlyingBurner`|`Assets that can be directly deposited into 3Pool, or swapped for an asset that is deposited into 3Pool`|[0x786b374b5eef874279f4b7b4de16940e57301a58](https://etherscan.io/address/0x786b374b5eef874279f4b7b4de16940e57301a58#code)|
 |`Wrapped stETH Burner`|`Unwraps wstETH into stETH` |[0x072C93f12dC274300c79E92Eb61a0feCFa8E8918](https://etherscan.io/address/0x072C93f12dC274300c79E92Eb61a0feCFa8E8918#code)|
-|`Stable Deposit Burner`| `Deposits stables into Threepool`|[0x1D56495c76d99435d10ecd5b0C3bd6a8EE7cC3bb](https://etherscan.io/address/0x1D56495c76d99435d10ecd5b0C3bd6a8EE7cC3bb#code)|
+|`Stable Deposit Burner`| `Deposits stables into 3Pool`|[0x1D56495c76d99435d10ecd5b0C3bd6a8EE7cC3bb](https://etherscan.io/address/0x1D56495c76d99435d10ecd5b0C3bd6a8EE7cC3bb#code)|
 |`Tricrypto Factory LP Burner`| `Withdraws LP Tokens`|[0xA6a0103f8F185786143f3EFe3Ddf268d8E070813](https://etherscan.io/address/0xA6a0103f8F185786143f3EFe3Ddf268d8E070813#code)|
 |`crvUSD Burner`| `Withdraws LP tokens from crvUSD pools and exchanges crvUSD`|[0xA6a0103f8F185786143f3EFe3Ddf268d8E070813](https://etherscan.io/address/0xA6a0103f8F185786143f3EFe3Ddf268d8E070813#code)|
 
@@ -76,10 +76,10 @@ flowchart LR
 
 *There is no configuration required for this burner.*
 
-### **CryptoSwap Burner**
+### **Cryptoswap Burner**
 The CryptoSwapBurner is used to burn fees from Crypto Pools.
 
-### **StableSwap Burner**
+### **Stableswap Burner**
 Swaps an asset into another asset using a Stable pool and forwards to another burner.
 
 ### **LP Burner**
@@ -88,11 +88,11 @@ The LP Burner handles non-3CRV LP tokens. This burner is primarily used for [FRA
 LP burner calls to **`StableSwap.remove_liquidity_one_coin`** to unwrap the LP token. The new asset is then transferred on to another burner.
 
 #### `swap_data`
-!!! description "`LPBurner.swap_data(arg0: adress) -> pool: address, coin: address, burner: address, i: int128`"
+!!! description "`LPBurner.swap_data(arg0: address) -> pool: address, coin: address, burner: address, i: int128`"
 
-    Getter method for informations about the LP Token burn process.
+    Getter method for information about the LP Token burn process.
 
-    Retuns: pool (`address`) of the LP token, coin (`address`) in which the LP token in withdrawn, burner (`address`) where the output token is forwarded to and i (`index`) of `coin` in the pool.
+    Returns: pool (`address`) of the LP token, coin (`address`) in which the LP token in withdrawn, burner (`address`) where the output token is forwarded to and i (`index`) of `coin` in the pool.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -206,7 +206,7 @@ LP burner calls to **`StableSwap.remove_liquidity_one_coin`** to unwrap the LP t
 
 
 ### **MetaBurner**
-The MetaBurner converts Metapool-paried coins to 3CRV and transfers to the FeeDistributor. It uses the registry’s **`exchange_with_best_rate`** and transfers 3CRV directly to the fee distributor.
+The MetaBurner converts Metapool-paired coins to 3CRV and transfers to the FeeDistributor. It uses the registry’s **`exchange_with_best_rate`** and transfers 3CRV directly to the fee distributor.
 
 *There is no configuration required for this burner.*
 
@@ -215,7 +215,7 @@ The MetaBurner converts Metapool-paried coins to 3CRV and transfers to the FeeDi
 Swaps non-USD denominated assets for synths, converts synths to sUSD and transfers to `UnderlyingBurner`.
 The synth burner is used to convert non-USD denominated assets into sUSD. This is accomplished via synth conversion, the same mechanism used in cross-asset swaps.
 
-When the synth burner is called to burn a non-synthetic asset, it uses `RegistrySwap.exchange_with_best_rate` to swap into a related synth. If no direct path to a synth is avaialble, a swap is made into an intermediate asset.
+When the synth burner is called to burn a non-synthetic asset, it uses `RegistrySwap.exchange_with_best_rate` to swap into a related synth. If no direct path to a synth is available, a swap is made into an intermediate asset.
 
 For synths, the burner first transfers to the [Underlying](#underlyingburner). Then it calls `UnderlyingBurner.convert_synth`, performing the cross-asset swap within the underlying burner. This is done to avoid requiring another transfer call after the settlement period has passed.
 
@@ -282,7 +282,7 @@ The optimal sequence when burning assets using the synth burner is thus:
 #### `add_synths`
 !!! description "`SynthBurner.add_synths(_synths: address[10]) -> bool:`"
 
-    Register synthetic assets within the burner. This function is unguarded. For each synth to be added, a call is made to Synth.currencyKey to validate the addresss and obtain the synth currency key.
+    Register synthetic assets within the burner. This function is unguarded. For each synth to be added, a call is made to Synth.currencyKey to validate the address and obtain the synth currency key.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -323,7 +323,7 @@ This burner unwraps wstETH to stETH and sends it back to 0xECB.
 
 
 ### **UnderlyingBurner**
-The underlying burner handles assets that can be directly swapped to USDC and deposits DAI/USDC/USDT into [3pool](https://curve.finance/#/ethereum/pools/3pool/deposit/) to obtain 3CRV. This is the **final step of the burn process** for many assets that require multiple intermediate swaps.
+The underlying burner handles assets that can be directly swapped to USDC and deposits DAI/USDC/USDT into [3Pool](https://curve.finance/#/ethereum/pools/3pool/deposit/) to obtain 3CRV. This is the **final step of the burn process** for many assets that require multiple intermediate swaps.
 
 !!!note
     Prior to burning any assets with the UnderlyingBurner, you should have completed the entire burn process with `SynthBurner`, `UniswapBurner` and `all of the lending burners`.
@@ -338,7 +338,7 @@ The burn process consists of:
 
 !!! description "`UnderlyingBurner.execute() -> bool:`"
 
-    Function to deposit all the tokens into 3pool and transfer the recieved 3CRV to the FeeDistributor contract.
+    Function to deposit all the tokens into 3Pool and transfer the received 3CRV to the FeeDistributor contract.
 
     ??? quote "Source code"
 
@@ -370,7 +370,7 @@ The burn process consists of:
 
 
 ### **Stable Deposit Burner**
-This burner converts DAI, USDC and USDT into 3CRV by adding liquidity to the 3pool and then transfers them to the FeeDistributor.
+This burner converts DAI, USDC and USDT into 3CRV by adding liquidity to the 3Pool and then transfers them to the FeeDistributor.
 
 !!! description "`StableDepositBurner.burn(_coin: ERC20) -> bool:`"
 
@@ -463,7 +463,7 @@ This is not a burner contract in itself. Some metapools transfer *coin 0* of the
 
 
 
-## **Configuring Fee Bruners**
+## **Configuring Fee Burners**
 
 **Burners are configured within the 0xECB contract.**
 

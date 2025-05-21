@@ -60,7 +60,7 @@ Other than the pool factory, this factory **does not allow permissionless deploy
 ### `rug_debt_ceiling`
 !!! description "`ControllerFactory.rug_debt_ceiling(_to: address):`"
 
-    Function to remove stablecoins above the debt seiling from a controller and burn them. This function is used to burn residual crvUSD when the debt ceiling was lowered.
+    Function to remove stablecoins above the debt ceiling from a controller and burn them. This function is used to burn residual crvUSD when the debt ceiling was lowered.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|

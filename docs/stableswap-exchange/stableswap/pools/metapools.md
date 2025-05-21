@@ -54,7 +54,7 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
             """
             @notice Contract constructor
             @param _owner Contract owner address
-            @param _coins Addresses of ERC20 conracts of coins
+            @param _coins Addresses of ERC20 contacts of coins
             @param _pool_token Address of the token representing LP share
             @param _base_pool Address of the base pool (which will have a virtual price)
             @param _A Amplification coefficient multiplied by n * (n - 1)
@@ -138,7 +138,7 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
             """
             @notice Contract constructor
             @param _owner Contract owner address
-            @param _coins Addresses of ERC20 conracts of coins
+            @param _coins Addresses of ERC20 contacts of coins
             @param _pool_token Address of the token representing LP share
             @param _base_pool Address of the base pool (which will have a virtual price)
             @param _A Amplification coefficient multiplied by n * (n - 1)
@@ -215,7 +215,7 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
             """
             @notice Contract constructor
             @param _owner Contract owner address
-            @param _coins Addresses of ERC20 conracts of coins
+            @param _coins Addresses of ERC20 contacts of coins
             @param _pool_token Address of the token representing LP share
             @param _base_pool Address of the base pool (which will have a virtual price)
             @param _A Amplification coefficient multiplied by n * (n - 1)
@@ -287,7 +287,7 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
             """
             @notice Contract constructor
             @param _owner Contract owner address
-            @param _coins Addresses of ERC20 conracts of coins
+            @param _coins Addresses of ERC20 contacts of coins
             @param _pool_token Address of the token representing LP share
             @param _base_pool Address of the base pool (which will have a virtual price)
             @param _A Amplification coefficient multiplied by n * (n - 1)
@@ -368,7 +368,7 @@ gauges and protocol rewards, please refer to Liquidity Gauges and Minting CRV.
             """
             @notice Contract constructor
             @param _owner Contract owner address
-            @param _coins Addresses of ERC20 conracts of coins
+            @param _coins Addresses of ERC20 contacts of coins
             @param _pool_token Address of the token representing LP share
             @param _base_pool Address of the base pool (which will have a virtual price)
             @param _A Amplification coefficient multiplied by n * (n - 1)
@@ -482,7 +482,7 @@ Underlying coins: ``GUSD``, ``DAI``, ``USDC``, ``USDT``
             @notice Perform an exchange between two coins
             @dev Index values can be found via the `coins` public getter method
             @param i Index value for the coin to send
-            @param j Index valie of the coin to recieve
+            @param j Index value of the coin to receive
             @param dx Amount of `i` being exchanged
             @param min_dy Minimum amount of `j` to receive
             @return Actual amount of `j` received
@@ -555,7 +555,7 @@ Underlying coins: ``GUSD``, ``DAI``, ``USDC``, ``USDT``
             @notice Perform an exchange between two underlying coins
             @dev Index values can be found via the `underlying_coins` public getter method
             @param i Index value for the underlying coin to send
-            @param j Index valie of the underlying coin to recieve
+            @param j Index value of the underlying coin to receive
             @param dx Amount of `i` being exchanged
             @param min_dy Minimum amount of `j` to receive
             @return Actual amount of `j` received

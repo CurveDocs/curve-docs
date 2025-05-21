@@ -3,7 +3,7 @@ Plain pools are liquidity **exchange contracts which contain at least 2 and up t
 !!!deploy "Contract Source & Deployment"
     Source code available on [GitHub](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNG.vy).
 
-The deployment of plain pools is permissionless and can be done via the [**`deploy_plain_pool`**](../../../factory/stableswap-ng/deployer-api.md#deploy_plain_pool) function within the StableSwap-NG Factory.
+The deployment of plain pools is permissionless and can be done via the [**`deploy_plain_pool`**](../../../factory/stableswap-ng/deployer-api.md#deploy_plain_pool) function within the Stableswap-NG Factory.
 
 !!!warning "Examples"
     The examples following each code block of the corresponding functions provide a basic illustration of input/output values. **When using the function in production, ensure not to set `_min_dy`, `_min_amount`, etc., to zero or other arbitrary numbers**. Otherwise, MEV bots may frontrun or sandwich your transaction, leading to a potential loss of funds.
@@ -1384,7 +1384,7 @@ There are no restrictions on how liquidity can be added or removed. Liquidity ca
 
 ## **Fee Methods**
 
-Stableswap-ng introduces a dynamic fee based on the imbalance of the coins within the pool and their pegs:
+Stableswap-NG introduces a dynamic fee based on the imbalance of the coins within the pool and their pegs:
 
 ??? quote "`_dynamic_fee`"
 
@@ -1772,7 +1772,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
 The amplification coefficient **`A`** determines a pool’s tolerance for imbalance between the assets within it. A higher value means that trades will incur slippage sooner as the assets within the pool become imbalanced.
 
-The appropriate value for A is dependent upon the type of coin being used within the pool, and is subject to optimisation and pool-parameter update based on the market history of the trading pair. It is possible to modify the amplification coefficient for a pool after it has been deployed. This can be done via the `ramp_A` function. See [admin controls](../pools/admin_controls.md#ramp_a).
+The appropriate value for A is dependent upon the type of coin being used within the pool, and is subject to optimization and pool-parameter update based on the market history of the trading pair. It is possible to modify the amplification coefficient for a pool after it has been deployed. This can be done via the `ramp_A` function. See [admin controls](../pools/admin_controls.md#ramp_a).
 
 When a ramping of A has been initialized, the process can be stopped by calling the function [`stop_ramp_A()`](../pools/admin_controls.md#stop_ramp_a).
 
@@ -2090,7 +2090,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 ## **Contract Info Methods**
 
 ### `coins`
-!!! description "`StableSwap.coins(arg0: uint256) -> addresss: view`"
+!!! description "`StableSwap.coins(arg0: uint256) -> address: view`"
 
     Getter for the coin at index `arg0` within the pool.
 

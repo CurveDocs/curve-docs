@@ -13,7 +13,7 @@ The Controller contract acts as a on-chain interface for **creating loans and fu
 
 - **Curve Stablecoin - minting crvUSD**
 
-    Minting crvUSD is only possible with whitelised collateral by the DAO and requires users to provide collateral against which they can mint[^1] crvUSD. Provided collateral is deposited into LLAMMA according to the number of bands chosen. Subsequently, **crvUSD is backed by the assets provided as collateral**.
+    Minting crvUSD is only possible with whitelisted collateral by the DAO and requires users to provide collateral against which they can mint[^1] crvUSD. Provided collateral is deposited into LLAMMA according to the number of bands chosen. Subsequently, **crvUSD is backed by the assets provided as collateral**.
 
     <figure markdown="span">
     ![](../assets/images/mint_controller1.svg){ width="500" }
@@ -67,7 +67,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 ### `create_loan`
 !!! description "`Controller.create_loan(collateral: uint256, debt: uint256, N: uint256, _for: address = msg.sender)`"
 
-    Function to create a new loan, requiring specification of the amount of `collateral` to be deposited into `N` bands and the amount of `debt` to be borrowed. The lower bands choosen, the higher the loss when the position is in soft-liquiation. Should there already be an existing loan, the function will revert. Before creating a loan, there is the option to set [`extra_health`](#extra_health) using [`set_extra_health`](#set_extra_health) which leads to a higher health when entering soft liquidation.
+    Function to create a new loan, requiring specification of the amount of `collateral` to be deposited into `N` bands and the amount of `debt` to be borrowed. Less bands mean the collateral is more concentrated into a smaller range, which can lead to higher losses in soft-liquidation. Should there already be an existing loan, the function will revert. Before creating a loan, there is the option to set [`extra_health`](#extra_health) using [`set_extra_health`](#set_extra_health) which leads to a higher health when entering soft liquidation.
 
     Emits: `UserState`, `Borrow`, `Deposit` and `Transfer`
 
@@ -903,7 +903,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
     !!!warning
         The mechanisms of setting `extra_health` were introduced in an improved version of LLAMMA. Earlier deployed crvUSD or lending markets might not have this.
 
-    Function to set `_value` as extra health for a user. Doing so will add a buffer to the loan a user creats which allows users to enter soft-liquidation with a higher health.
+    Function to set `_value` as extra health for a user. Doing so will add a buffer to the loan a user creates which allows users to enter soft-liquidation with a higher health.
 
     Emits: `SetExtraHealth`
 
@@ -1955,7 +1955,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
     | `callbacker`     | `address`             | Address of the callback contract                     |
     | `callback_args`  | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5), such as `min_amount` |
     | `callback_bytes` | `Bytes[10**4]`        | Callback bytes passed to the LeverageZap. Defaults to `b""` |
-    | `_for`       | `address` | Address to repay debt for (requires approval); only avaliable in new implementation |
+    | `_for`       | `address` | Address to repay debt for (requires approval); only available in new implementation |
 
     ??? quote "Source code"
 
@@ -2435,7 +2435,7 @@ An already existing loan can be managed in different ways:
                 @nonreentrant('lock')
                 def add_collateral(collateral: uint256, _for: address = msg.sender):
                     """
-                    @notice Add extra collateral to avoid bad liqidations
+                    @notice Add extra collateral to avoid bad liquidations
                     @param collateral Amount of collateral to add
                     @param _for Address to add collateral for
                     """
@@ -2609,7 +2609,7 @@ An already existing loan can be managed in different ways:
                 @nonreentrant('lock')
                 def add_collateral(collateral: uint256, _for: address = msg.sender):
                     """
-                    @notice Add extra collateral to avoid bad liqidations
+                    @notice Add extra collateral to avoid bad liquidations
                     @param collateral Amount of collateral to add
                     @param _for Address to add collateral for
                     """
@@ -3168,7 +3168,7 @@ An already existing loan can be managed in different ways:
     | ------------ | --------- | -------------------------------- |
     | `collateral` | `uint256` | Amount of collateral to add      |
     | `debt`       | `uint256` | Amount of debt to take           |
-    | `_for`       | `address` | Address to borrow for (requires approval); only avaliable in new implementation |
+    | `_for`       | `address` | Address to borrow for (requires approval); only available in new implementation |
 
     ??? quote "Source code"
 
@@ -3545,7 +3545,7 @@ An already existing loan can be managed in different ways:
 ### `borrow_more_extended`
 !!! description "`Controller.borrow_more_extended(collateral: uint256, debt: uint256, callbacker: address, callback_args: DynArray[uint256,5], callback_bytes: Bytes[10**4] = b"", _for: address = msg.sender)`"
 
-    Function to borrow more assets while adding more collateral. This method uses callacks to build up leverage. Earlier implementations of the contract did not have `callback_bytes` argument. This was added to enable [leveraging/de-leveraging using the 1inch router](./leverage/LeverageZap1inch.md#building-leverage).
+    Function to borrow more assets while adding more collateral. This method uses callbacks to build up leverage. Earlier implementations of the contract did not have `callback_bytes` argument. This was added to enable [leveraging/de-leveraging using the 1inch router](./leverage/LeverageZap1inch.md#building-leverage).
 
     Emits: `UserState` and `Borrow`
 
@@ -3553,11 +3553,11 @@ An already existing loan can be managed in different ways:
     | ---------------- | --------------------- | -------------------------------- |
     | `collateral`     | `uint256`             | Amount of collateral to add      |
     | `debt`           | `uint256`             | Amount of debt to take           |
-    | `callabacker`    | `address`             | Address of the callaback contract  |
+    | `callbacker`    | `address`             | Address of the callback contract  |
     | `debt`           | `DynArray[uint256,5]` | Amount of debt to take on  |
-    | `callback_args` | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5), such as `min_amount`, etc; see [`LeverageZap1inch.vy`](./leverage/LeverageZap1inch.md) for more informations |
+    | `callback_args` | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5), such as `min_amount`, etc; see [`LeverageZap1inch.vy`](./leverage/LeverageZap1inch.md) for more information |
     | `callback_bytes` | `Bytes[10**4]`        | Callback bytes passed to the LeverageZap. Defaults to `b""` |
-    | `_for`       | `address` | Address to borrow for (requires approval); only avaliable in new implementation |
+    | `_for`       | `address` | Address to borrow for (requires approval); only available in new implementation |
 
     ??? quote "Source code"
 
@@ -4216,7 +4216,7 @@ An already existing loan can be managed in different ways:
                 @nonreentrant('lock')
                 def liquidate(user: address, min_x: uint256, use_eth: bool = True):
                     """
-                    @notice Peform a bad liquidation (or self-liquidation) of user if health is not good
+                    @notice perform a bad liquidation (or self-liquidation) of user if health is not good
                     @param min_x Minimal amount of stablecoin to receive (to avoid liquidators being sandwiched)
                     @param use_eth Use wrapping/unwrapping if collateral is ETH
                     """
@@ -4300,7 +4300,7 @@ An already existing loan can be managed in different ways:
                     log Repay(user, xy[1], debt)
                     log Liquidate(msg.sender, user, xy[1], xy[0], debt)
                     if final_debt == 0:
-                        log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removeal b/c we have not enough info
+                        log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removal b/c we have not enough info
                         self._remove_from_list(user)
 
                     d: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul
@@ -4439,7 +4439,7 @@ An already existing loan can be managed in different ways:
                 @nonreentrant('lock')
                 def liquidate(user: address, min_x: uint256, use_eth: bool = True):
                     """
-                    @notice Peform a bad liquidation (or self-liquidation) of user if health is not good
+                    @notice Perform a bad liquidation (or self-liquidation) of user if health is not good
                     @param min_x Minimal amount of stablecoin to receive (to avoid liquidators being sandwiched)
                     @param use_eth Use wrapping/unwrapping if collateral is ETH
                     """
@@ -4523,7 +4523,7 @@ An already existing loan can be managed in different ways:
                     log Repay(user, xy[1], debt)
                     log Liquidate(msg.sender, user, xy[1], xy[0], debt)
                     if final_debt == 0:
-                        log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removeal b/c we have not enough info
+                        log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removal b/c we have not enough info
                         self._remove_from_list(user)
 
                     d: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul
@@ -4686,7 +4686,7 @@ An already existing loan can be managed in different ways:
                 def liquidate_extended(user: address, min_x: uint256, frac: uint256,
                                     callbacker: address, callback_args: DynArray[uint256,5], callback_bytes: Bytes[10**4] = b""):
                     """
-                    @notice Peform a bad liquidation (or self-liquidation) of user if health is not good
+                    @notice Perform a bad liquidation (or self-liquidation) of user if health is not good
                     @param min_x Minimal amount of stablecoin to receive (to avoid liquidators being sandwiched)
                     @param frac Fraction to liquidate; 100% = 10**18
                     @param callbacker Address of the callback contract
@@ -4772,7 +4772,7 @@ An already existing loan can be managed in different ways:
                     log Repay(user, xy[1], debt)
                     log Liquidate(msg.sender, user, xy[1], xy[0], debt)
                     if final_debt == 0:
-                        log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removeal b/c we have not enough info
+                        log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removal b/c we have not enough info
                         self._remove_from_list(user)
 
                     d: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul
@@ -4912,7 +4912,7 @@ An already existing loan can be managed in different ways:
                 def liquidate_extended(user: address, min_x: uint256, frac: uint256,
                                     callbacker: address, callback_args: DynArray[uint256,5], callback_bytes: Bytes[10**4] = b""):
                     """
-                    @notice Peform a bad liquidation (or self-liquidation) of user if health is not good
+                    @notice Perform a bad liquidation (or self-liquidation) of user if health is not good
                     @param min_x Minimal amount of stablecoin to receive (to avoid liquidators being sandwiched)
                     @param frac Fraction to liquidate; 100% = 10**18
                     @param callbacker Address of the callback contract
@@ -4998,7 +4998,7 @@ An already existing loan can be managed in different ways:
                     log Repay(user, xy[1], debt)
                     log Liquidate(msg.sender, user, xy[1], xy[0], debt)
                     if final_debt == 0:
-                        log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removeal b/c we have not enough info
+                        log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removal b/c we have not enough info
                         self._remove_from_list(user)
 
                     d: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul
@@ -6311,7 +6311,7 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 ### `admin_fees`
 !!! description "`Controller.admin_fees() -> uint256`"
 
-    Getter for the claimable admin fees. Claimable by calling [`colletct_fees`](#collect_fees).
+    Getter for the claimable admin fees. Claimable by calling [`collect_fees`](#collect_fees).
 
     Returns: admin fees (`uint256`).
 
@@ -6599,7 +6599,7 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 ### `collect_fees`
 !!! description "`Controller.collect_fees()`"
 
-    Function to collects all fees, including borrwing-based fees and AMM-based fees (if there are any). Collected fees are sent to the `fee_receiver` specified in the [Factory](./factory/overview.md#fee-receiver).
+    Function to collects all fees, including borrowing-based fees and AMM-based fees (if there are any). Collected fees are sent to the `fee_receiver` specified in the [Factory](./factory/overview.md#fee-receiver).
 
     Emits: `CollectFees`
 
@@ -6849,7 +6849,7 @@ The **liquidation discount** is used to discount the collateral for calculating 
 ### `liquidation_discount`
 !!! description "`Controller.liquidation_discount() -> uint256: view`"
 
-    Getter for the liquidation discount. This value is used to discount the collateral value when calculating the health for liquidation puroses in order to incentivize liquidators.
+    Getter for the liquidation discount. This value is used to discount the collateral value when calculating the health for liquidation purposes in order to incentivize liquidators.
 
     Returns: liquidation discount (`uint256`).
 
@@ -7057,7 +7057,7 @@ The **liquidation discount** is used to discount the collateral for calculating 
 
 Each controller has a monetary policy contract. This contract is responsible for the interest rates within the markets.
 
-While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depend on several factors such as the price of crvUSD, pegkeeper debt, etc., the monetary policy for lending markets is solely based on a [semi-log monetary policy](../lending/contracts/semilog-mp.md) which determines the rate based on the utilization of the assets.
+While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depend on several factors such as the price of crvUSD, PegKeeper debt, etc., the monetary policy for lending markets is solely based on a [semi-log monetary policy](../lending/contracts/semilog-mp.md) which determines the rate based on the utilization of the assets.
 
 
 ### `monetary_policy`
@@ -7643,7 +7643,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 ### `redeemed`
 !!! description "`Controller.redeemed() -> uint256: view`"
 
-    Getter for the total amount of crvUSD redeemed from this controller. Increments by the amount of debt that is repayed when calling `repay` or `repay_extended`.
+    Getter for the total amount of crvUSD redeemed from this controller. Increments by the amount of debt that is repaid when calling `repay` or `repay_extended`.
 
     Returns: total redeemed (`uint256`).
 

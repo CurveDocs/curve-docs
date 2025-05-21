@@ -350,7 +350,7 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
 ### `excess_receiver`
 !!! description "`FeeSplitter.excess_receiver() -> address`"
 
-    Getter for the excess receiver. That is the last receiver address in [`receivers`](#receivers) and is the one that receives additional weight ontop of his on weight, if prior receivers with a dynamic weight allocate less than their cap (see this example at the top).
+    Getter for the excess receiver. That is the last receiver address in [`receivers`](#receivers) and is the one that receives additional weight on top of his on weight, if prior receivers with a dynamic weight allocate less than their cap (see this example at the top).
 
     Returns: excess receiver (`address`)
 
@@ -392,7 +392,7 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
     !!!guard "Guarded Method by [Snekmate 🐍](https://github.com/pcaversaccio/snekmate)"
         This contract makes use of a Snekmate module to manage roles and permissions. This specific function can only be called by the current `owner` of the contract.
 
-    Function to set receivers and their respective weights. New receveivers can not simply be added or removed from the exisiting array of receivers. One must include the current receivers in the array of `Receiver` structs. The weight is based on a scale of 1e5, meaning e.g. 100% corresponds to a weight value of 10000, and 50% would be a weight value of 5000.
+    Function to set receivers and their respective weights. New receivers can not simply be added or removed from the existing array of receivers. One must include the current receivers in the array of `Receiver` structs. The weight is based on a scale of 1e5, meaning e.g. 100% corresponds to a weight value of 10000, and 50% would be a weight value of 5000.
 
     The function will revert if a receiver address is `ZERO_ADDRESS`, if the weight is `0` or greater than `10000` (`MAX_BPS`), or if the sum of the weights of all receivers does not equal `10000` (100%).
 
@@ -937,7 +937,7 @@ Ownership of the contract is managed using the [`ownable.vy`](https://github.com
 
     === "Example"
 
-        In this example, the ownership of the contract is transferred to a new address. The ownership is transfered from the Curve DAO to our overlord Vitalik Buterin.
+        In this example, the ownership of the contract is transferred to a new address. The ownership is transferred from the Curve DAO to our overlord Vitalik Buterin.
 
         ```shell
         >>> FeeSplitter.owner()

@@ -1,4 +1,4 @@
-<h1>scrvUSD Crosschain Oracle V2</h1>
+<h1>scrvUSD Cross-chain Oracle V2</h1>
 
 `scrvUSD` on Ethereum is an ERC-4626 compatible token. While the contract provides a price through various methods, such as `pricePerShare` or `pricePerAsset`, it is not treated as an ERC-4626 token when bridged to other chains. Consequently, it will lack methods to return its continuously updating price. To address this, Curve uses a system to commit to and verify the price of `scrvUSD` on other chains.
 
@@ -8,7 +8,7 @@
 
 - An offchain prover (from now on the prover), whose role is to fetch data from Ethereum that are useful to compute the growth rate of the vault, alongside with a proof that those data are valid.
 - A smart contract that will be called by the prover (from now on the verifier) that will verify that the data provided alongside their proof.
-- A smart contract that will provide the current price of scrvUSD, given the growth rate of the vault provided by the prover and verified by the verifier, to be used by the stableswap-ng pool on the target chain.
+- A smart contract that will provide the current price of scrvUSD, given the growth rate of the vault provided by the prover and verified by the verifier, to be used by the Stableswap-NG pool on the target chain.
 
 *Depending on the type of chain the proof (and hence its verification process) will be different:*
 
@@ -25,7 +25,7 @@ flowchart TD
     A[Prover] --> |Generates from L1 state| E[State Proof]
     E[State Proof] --> B[Verifier Contract]
     B -->|Push update price if proof is correct| C[Price Oracle Contract]
-    C -->|Provides scrvUSD price| D[stableswap-ng Pool]
+    C -->|Provides scrvUSD price| D[Stableswap-NG Pool]
 
     subgraph L2 Chain
         E2[Precompile] --> |Used to obtain| E1

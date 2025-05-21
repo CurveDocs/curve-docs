@@ -1,4 +1,4 @@
-A Curve pool is a smart contract that implements the StableSwap invariant and thereby allows for the exchange of two or more tokens.
+A Curve pool is a smart contract that implements the Stableswap invariant and thereby allows for the exchange of two or more tokens.
 
 More broadly, Curve pools can be split into three categories:
 

@@ -34,13 +34,13 @@ flowchart BT
 
 
 !!!info "Registries with Already Compliant ABI Standards"
-    If a ChildRegistry already meets these standards, it does not require a handler. Nonetheless, wrappers can be **useful for hotfixing bugs in production**, especially when direct modifications to the ChildRegistry would lead to significant breaking changes.
+    If a ChildRegistry already meets these standards, it does not require a handler. Nonetheless, wrappers can be **useful for hot-fixing bugs in production**, especially when direct modifications to the ChildRegistry would lead to significant breaking changes.
 
 ---
 
 ## **Who should use the MetaRegistry?**
 
-Integrators often find it challenging to incorporate a protocol into their dapp when multiple on-chain registries are stored in separate contracts. They lack intrinsic, protocol-level knowledge to handle edge cases and onboard various registries. A single source that aggregates all registries can simplify integrations significantly.
+Integrators often find it challenging to incorporate a protocol into their dApp when multiple on-chain registries are stored in separate contracts. They lack intrinsic, protocol-level knowledge to handle edge cases and onboard various registries. A single source that aggregates all registries can simplify integrations significantly.
 
 *If you're an integrator looking to integrate Curve, the MetaRegistry is an invaluable resource.*
 

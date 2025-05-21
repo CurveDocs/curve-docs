@@ -2,7 +2,7 @@
 
 Curve governance and voting is a integral part of the protocol as all relevant contract are in full control of the DAO. Curve uses [Aragon](https://aragon.org/) for governance and control of the protocol admin functionality. Interaction with Aragon occurs through a [modified implementation](https://github.com/curvefi/curve-aragon-voting) of the Aragon [Voting App](https://github.com/aragon/aragon-apps/tree/master/apps/voting).
 
-Curve's governance system is fully controlled by the DAO and extends to all deployed chains. Not only the Ethereum mainnet, but also all EVM sidechains. Due to the limitation of veCRV being on Ethereum only, all votes (also crosschain ones) are voted on Ethereum.
+Curve's governance system is fully controlled by the DAO and extends to all deployed chains. Not only the Ethereum mainnet, but also all EVM sidechains. Due to the limitation of veCRV being on Ethereum only, all votes (also cross-chain ones) are voted on Ethereum.
 
 !!!info "CurveDAO Package"
     Curve developed a Python package to help make the process of creating and decoding proposals easier. For more information, see the [here](curve-dao.md).
@@ -48,7 +48,7 @@ VotingContract.minAcceptQuorumPct()     # minimum quorum
 The VotingOwnership and VotingParameter contracts are the entry points for creating new votes. New votes are created by calling the `newVote` function and passing in the `executionScript` and `metadata` as arguments. New votes can only be created by wallets with at least 2500 veCRV. Voting duration, regardless of the vote type, is 7 days. Once created, proposals can not be deleted or altered.
 
 !!!colab "Notebook for Creating a Vote"
-    To simplify this process, a simple notebook is avaliable to create a new vote. It uses a GoogleColab with Titanoboa (which allows for the connection of a wallet like Rabby or MetaMask) which not only allows the simulation, but also the creation of the vote. One simply needs to modify the script accordingly and run it.
+    To simplify this process, a simple notebook is available to create a new vote. It uses a GoogleColab with Titanoboa (which allows for the connection of a wallet like Rabby or MetaMask) which not only allows the simulation, but also the creation of the vote. One simply needs to modify the script accordingly and run it.
 
     https://colab.research.google.com/drive/1SEmqdBgY3Pcg7q4XWGIoQOc1q5GEVGR6?usp=sharing
 
@@ -58,7 +58,7 @@ The VotingOwnership and VotingParameter contracts are the entry points for creat
 
 Any user with a veCRV balance can vote on a proposal. Vote duration is always 7 days and a vote can not be changed once it has been conducted.
 
-Voting power **starts decaying halfway through the voting period**. If a user starts with 1000 veCRV, and the voting period is 7 days, they will still have a voting power of 1000 veCRV after 3.5 days but its starting to decay linearly until the end of the voting period. So, after another 1.75 days, the user will have a voting power of 500 veCRV, etc. This precausion taken to avoid whales from manipulating votes voting at the last minute.
+Voting power **starts decaying halfway through the voting period**. If a user starts with 1000 veCRV, and the voting period is 7 days, they will still have a voting power of 1000 veCRV after 3.5 days but its starting to decay linearly until the end of the voting period. So, after another 1.75 days, the user will have a voting power of 500 veCRV, etc. This precaution taken to avoid whales from manipulating votes voting at the last minute.
 
 <figure markdown="span">
     ![Voting Power Decay](../assets/images/governance/decay_mid_vote.png){ width="500" }

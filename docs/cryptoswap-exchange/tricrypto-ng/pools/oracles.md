@@ -574,7 +574,7 @@ $$\text{EMA} = \frac{\min(\text{last_prices}, 2 \times \text{price_scale}) \time
             def ma_time() -> uint256:
                 """
                 @notice Returns the current moving average time in seconds
-                @dev To get time in seconds, the parameter is multipled by ln(2)
+                @dev To get time in seconds, the parameter is multiplied by ln(2)
                     One can expect off-by-one errors here.
                 @return uint256 ma_time value.
                 """

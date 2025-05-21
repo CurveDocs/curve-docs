@@ -985,8 +985,8 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
         >>> CRV.set_minter("0x0000000000000000000000000000000000000000")
         ```
 
-### `avaliable_supply`
-!!! description "`CRV.avaliably_supply() -> uint256`"
+### `available_supply`
+!!! description "`CRV.available_supply() -> uint256`"
 
     Getter for the current number of CRV tokens - claimed of unclaimed - in existence.
 

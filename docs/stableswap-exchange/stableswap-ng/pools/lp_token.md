@@ -472,11 +472,11 @@ When coins are deposited into a Curve pool, the depositor receives pool LP (liqu
 
 
 ### `DOMAIN_SEPARATOR`
-!!! description "`LPToken.DOMAIN_SEPERATOR() -> bytes32: view`"
+!!! description "`LPToken.DOMAIN_SEPARATOR() -> bytes32: view`"
 
-    Getter for the domain seperator.
+    Getter for the domain separator.
 
-    Returns: domain seperator (`bytes32`).
+    Returns: domain separator (`bytes32`).
 
     ??? quote "Source code"
 

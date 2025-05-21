@@ -4,7 +4,7 @@ Smart contracts often have owner-guarded functions which only allow specific add
 
 !!!info "Ownership Agents"
 
-    To make ownership work along with the DAO governance, Curve makes use of `OwnershipAgents` on Ethereum, aswell as on other L1 or L2s to handle governance actions.
+    To make ownership work along with the DAO governance, Curve makes use of `OwnershipAgents` on Ethereum, as well as on other L1 or L2s to handle governance actions.
 
     The main `OwnershipAgent` is deployed at [`0x40907540d8a6C65c637785e8f8B742ae6b0b9968`](https://etherscan.io/address/0x40907540d8a6C65c637785e8f8B742ae6b0b9968) on Ethereum. Deployments on other chains can be found [here](../deployments/crosschain.md).
 
@@ -28,7 +28,7 @@ Curve uses different ownership transfer patterns in its contracts. The most comm
 
 ??? quote "Source code"
 
-    The implementation of the commit + accept pattern might vary slightly. Nontheless, the general idea is the same.
+    The implementation of the commit + accept pattern might vary slightly. Nonetheless, the general idea is the same.
 
     ```python
     owner: public(address)
@@ -78,7 +78,7 @@ This two-step process provides several security benefits. First, it prevents own
 
 ??? quote "Source code"
 
-    The implementation of the commit + apply pattern might vary slightly. Nontheless, the general idea is the same.
+    The implementation of the commit + apply pattern might vary slightly. Nonetheless, the general idea is the same.
 
     ```python
     event CommitOwnership:

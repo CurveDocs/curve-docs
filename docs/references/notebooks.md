@@ -37,7 +37,7 @@ After setting up these two secrets, the notebook can successfully be run directl
 
 ### **Curve Lending**
 
-| Conatract | Description | Link    |
+| Contract | Description | Link    |
 | :-------: | ----------- | :-----: |
 | [`Vault`](../lending/contracts/vault.md) | Obtaining Vault Shares: `deposit` and `mint` | [:logos-googlecolab: here](https://colab.research.google.com/drive/1Qj9nOk5TYXp6j6go3VIh6--r5VILnoo9?usp=sharing)  |
 | [`Vault`](../lending/contracts/vault.md) | Withdrawing Assets: `withdraw` and `redeem`  | [:logos-googlecolab: here](https://colab.research.google.com/drive/1Ta69fsIc7zmtjFlQ94a8MDYYLeo4GJJI?usp=sharing)  |

@@ -82,13 +82,13 @@ struct AddressInfo:
 ### `get_id_info`
 !!! description "`AddressProvider.get_id_info(arg0: uint256) -> tuple: view`"
 
-    Getter function to retrieve informations about a specific ID.
+    Getter function to retrieve information about a specific ID.
 
     Returns: `AddressInfo` struct containing the addr (`address`), description (`String[256]`), version (`uint256`) and last_modified (`uint256`).
 
     | Input  | Type      | Description                    |
     | ------ | --------- | ------------------------------ |
-    | `arg0` | `uint256` | ID to get the informations for |
+    | `arg0` | `uint256` | ID to get the information for |
 
     ??? quote "Source code"
 
@@ -493,14 +493,14 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
 
-    Function to add mutiple new registry items to the AddressProvider at once.
+    Function to add multiple new registry items to the AddressProvider at once.
 
     Emits: `NewEntry`
 
     | Input           | Type                       | Description                                      |
     | --------------- | -------------------------- | ------------------------------------------------ |
     | `_ids`          | `DynArray[uint256, 25]`    | IDs to add; Reverts if ID number is already used |
-    | `_addresss`     | `DynArray[address, 25]`    | ID addresses                                     |
+    | `_address`     | `DynArray[address, 25]`    | ID addresses                                     |
     | `_descriptions` | `DynArray[String[64], 25]` | ID descriptions                                  |
 
     ??? quote "Source code"
@@ -639,7 +639,7 @@ IDs can be added, removed, or adjusted by the `admin` of the contract.
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of the contract.
 
-    Function to remove mutiple registry items from the AddressProvider at once.
+    Function to remove multiple registry items from the AddressProvider at once.
 
     Returns: true (`bool`).
 

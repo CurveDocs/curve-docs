@@ -96,12 +96,12 @@ These kinds of oracle contracts **need to be deployed manually**, as there is cu
 
 ## **Oracle Price**
 
-The oracle price is calculated by taking the `price_oracle` of a Curve pool and then adjusting it by the redemption rate of a vault, using methods such as `convertToAssets`, `pricePerShare` or really any other equvalent function which returns the rate of the vault token and the underlying asset.
+The oracle price is calculated by taking the `price_oracle` of a Curve pool and then adjusting it by the redemption rate of a vault, using methods such as `convertToAssets`, `pricePerShare` or really any other equivalent function which returns the rate of the vault token and the underlying asset.
 
 !!!example "Example"
     Let's take a look at the [sDOLA/crvUSD lending market](https://curve.finance/lend/ethereum/markets/one-way-market-17/create), which uses the `CryptoFromPoolVaultWAgg.vy` code.
 
-    The [oracle contract](https://etherscan.io/address/0x002688C4296A2C4d800F271fe6F01741111B09Be) fetches the `price_oracle` of the [DOLA <> crvUSD stableswap-ng pool](https://etherscan.io/address/0x8272E1A3dBef607C04AA6e5BD3a1A134c8ac063B#readContract#F9) and then adjusts this value by the redemption rate obtained from the [`convertToAssets`](https://etherscan.io/address/0xb45ad160634c528Cc3D2926d9807104FA3157305#readContract#F7) method of the [sDOLA vault](https://etherscan.io/address/0xb45ad160634c528Cc3D2926d9807104FA3157305).
+    The [oracle contract](https://etherscan.io/address/0x002688C4296A2C4d800F271fe6F01741111B09Be) fetches the `price_oracle` of the [DOLA <> crvUSD Stableswap-NG pool](https://etherscan.io/address/0x8272E1A3dBef607C04AA6e5BD3a1A134c8ac063B#readContract#F9) and then adjusts this value by the redemption rate obtained from the [`convertToAssets`](https://etherscan.io/address/0xb45ad160634c528Cc3D2926d9807104FA3157305#readContract#F7) method of the [sDOLA vault](https://etherscan.io/address/0xb45ad160634c528Cc3D2926d9807104FA3157305).
 
 Additionally, the `CryptoFromPoolVault.vy` contract has a **built-in mechanism that considers a certain maximum speed of price change within the vault** when calculating the oracle price. This feature is not included in the `CryptoFromPoolVaultWAgg.vy` oracle contract.
 
@@ -115,7 +115,7 @@ Additionally, the `CryptoFromPoolVault.vy` contract has a **built-in mechanism t
 
     `cached_price_per_share` and `cached_timestamp` are internal variables that are updated whenever the `price_w` function is called. The first value is set to the current redemption rate within the vault at the block when the function is called, and the second value to the current timestamp (`block.timestamp`).
 
-    === "CryptoFromPoolVaul.vy"
+    === "CryptoFromPoolVault.vy"
 
         ```py
         PPS_MAX_SPEED: constant(uint256) = 10**16 / 60  # Max speed of pricePerShare change

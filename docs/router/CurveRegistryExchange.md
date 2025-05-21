@@ -805,7 +805,7 @@ Additionally, there are helper functions available to retrieve essential data, s
     === "Example"
         ```shell
         >>> CurveRegistryExchange.get_exchange_amount('0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7', '0x6b175474e89094c44da98b954eedeac495271d0f', '0xdac17f958d2ee523a2206206994597c13d831ec7', 1000000000000000000000000)
-        1000242275074               # swapping DAI for USDT using threepool
+        1000242275074               # swapping DAI for USDT using 3Pool
 
         >>> CurveRegistryExchange.get_exchange_amount('0xd51a44d3fae010294c616388b506acda1bfaae46', '0xdac17f958d2ee523a2206206994597c13d831ec7', '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 10000000000)
         3315937652359468906         # swapping USDT for ETH using tricrypto2
@@ -1133,7 +1133,7 @@ Additionally, there are helper functions available to retrieve essential data, s
 ### `factory_registry`
 !!! description "`CurveRegistryExchange.factory_registry() -> address: view`"
 
-    Getter for the factory regstiry contract.
+    Getter for the factory registry contract.
 
     Returns: factory registry (`address`).
 
@@ -1203,7 +1203,7 @@ Additionally, there are helper functions available to retrieve essential data, s
 ### `update_registry_address`
 !!! description "`CurveRegistryExchange.update_registry_address() -> bool`"
 
-    Function to update `registry`, `factory_registry` and `crypto_registry`. This function is callable by anyone and sets the variables to the current vaules in the `AddressProvider` contract.
+    Function to update `registry`, `factory_registry` and `crypto_registry`. This function is callable by anyone and sets the variables to the current values in the `AddressProvider` contract.
 
     Returns: True (`bool`).
 
@@ -1407,7 +1407,7 @@ The `admin` of the `AddressProvider` contract has the ability to set the `is_kil
 
 
 ### `is_killed`
-!!! description "`CurveRegistryExchange.is_killed() -> boool: view`"
+!!! description "`CurveRegistryExchange.is_killed() -> bool: view`"
 
     !!!warning
         If the `is_killed` status is set to `true`, the contract will not allow any token exchanges and will revert when trying to exchange tokens.
@@ -1467,7 +1467,7 @@ The `admin` of the `AddressProvider` contract has the ability to set the `is_kil
 ---
 
 
-## **Transfering Funds**
+## **Transferring Funds**
 
 In the event that the contract holds an ERC20 or ETH balance, these tokens can be claimed by the `admin` of the `AddressProvider` contract. Although this should not occur at all, a possible scenario in which this could happen is when users mistakenly send their tokens directly to the contract address.
 
@@ -1478,7 +1478,7 @@ In the event that the contract holds an ERC20 or ETH balance, these tokens can b
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the `AddressProvider` contract.
 
-    Function to transfer an ERC20 or ETH balance held by this contract. When calling this function, the entire balance is transfered to the `admin` of the `AddressProvider`. This method can be used when tokens are mistakenly sent to the contract. Other than that, the contract does not hold any user assets.
+    Function to transfer an ERC20 or ETH balance held by this contract. When calling this function, the entire balance is transferred to the `admin` of the `AddressProvider`. This method can be used when tokens are mistakenly sent to the contract. Other than that, the contract does not hold any user assets.
 
     Returns: True (`bool`).
 
