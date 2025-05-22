@@ -10,7 +10,7 @@ Notebooks are easy-to-use notebooks written in Python aiming to showcase the usa
 
 ## **Google Colab and JupyterHub**
 
-The first notebooks were hosted on a [JupyterHub server from Vyper](https://try.vyperlang.org/hub/). Due to performance issues, hosting was switched to [Google Colab](https://colab.google/). Old notebooks remain hosted on the JupyterHub server, but all new ones will be hosted on Google Colab.
+The first notebooks were hosted on a JupyterHub server maintained by the Vyper team. As that service is now deprecated, hosting was switched to [Google Colab](https://colab.google/).
 
 ---
 

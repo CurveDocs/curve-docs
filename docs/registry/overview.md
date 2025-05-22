@@ -44,64 +44,8 @@ Integrators often find it challenging to incorporate a protocol into their dApp 
 
 *If you're an integrator looking to integrate Curve, the MetaRegistry is an invaluable resource.*
 
+## **MetaRegistry API GitHub Repository**
 
-## **Setup**
-Set up the python environment using the following steps: Please visit [GitHub](https://github.com/curvefi/metaregistry) for more details.
+A full MetaRegistry with Python API is available at the GitHub repository with setup instructions and examples: [:material-github: GitHub MetaRegistry](https://github.com/curvefi/metaregistry/)
 
-```
-> python -m venv venv
-> source ./venv/bin/active
-> pip install --upgrade pip
-> pip install -r ./requirements.txt
-```
-
-This project uses **`eth-ape >= 0.5.2`** developed at [Apeworx](https://apeworx.io/). The various plugins used are:
-
-- **`ape-vyper`**
-- **`ape-hardhat`**
-- **`ape-alchemy`**
-- **`ape-ledger`**
-- **`ape-etherscan`**
-
-To install these, please follow the instructions in their respective GitHub repositories.
-
-!!!note
-    If you choose to run tests using [**`Alchemy`**](https://www.alchemy.com/) as the upstream provider, please set up an Alchemy API key into an environment variable labeled **`WEB3_ALCHEMY_PROJECT_ID`** or **`WEB3_ALCHEMY_API_KEY`**. If you use a local node (**`geth`** or **`erigon`**), please change the hardhat upstream provider for mainnet-fork to **`geth`** in [ape-config.yaml](https://github.com/curvefi/metaregistry/blob/main/ape-config.yaml):
-
-    ```shell
-    hardhat:
-        port: auto
-        fork:
-            ethereum:
-                mainnet:
-                    upstream_provider: geth
-                    # upstream_provider: alchemy
-    ```
-
-## **Testing**
-
-To run tests in interactive mode, please do the following:
-
-```shell
-> ape test -I -s
-```
-
-## **Deployment**
-
-First, set up your account in Ape. If you're using an EOA that is a cold wallet, do:
-
-```shell
-> ape accounts import <alias>
-```
-
-This will prompt you for a private key. If your account is a ledger account, then follow:
-
-```shell
-> ape ledger add <alias>
-```
-
-To deploy, please use the following command (example deployment in mainnet-fork):
-
-```shell
-> ape run scripts/deploy.py main --network ethereum:mainnet-fork --account <your_account>
-```
+See the API Documentation for further help: [MetaRegistry API Documentation](./MetaRegistryAPI.md)

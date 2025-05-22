@@ -3,7 +3,7 @@
 The Views Contract contains **view-only external methods**, which **may be gas-inefficient when called from within smart contracts**. However, it can be highly useful for searches, aggregators, or other entities looking to integrate with Twocrypto-NG pools.
 
 !!!deploy "Contract Source & Deployment"
-    Source code for this contract is available on [GitHub](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/CurveCryptoViews2Optimized.vy).
+    Source code for this contract is available on [GitHub](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/TwocryptoView.vy).
     Full list of all deployments can be found [here](../../../references/deployed-contracts.md#twocrypto-ng).
 
 

@@ -3,7 +3,7 @@
 **The Math Contract provides AMM Math for 2-coin Curve Twocrypto-NG Pools.**
 
 !!!deploy "Contract Source & Deployment"
-    Source code for this contract is available on [GitHub](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/CurveCryptoMathOptimized2.vy).
+    Source code for this contract is available on [GitHub](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/TwocryptoMath.vy).
     Full list of all deployments can be found [here](../../../references/deployed-contracts.md#twocrypto-ng).
 
 

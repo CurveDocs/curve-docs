@@ -3,7 +3,7 @@
 This Zap contract is specifically designed to **create or repay leveraged loans** using the [**Odos router**](https://odos.xyz/).
 
 ???+ vyper "`LeverageZapOdos.vy`"
-    The source code for the `LlamaLendOdosLeverageZap.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/zaps/LeverageZapOdos.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`.
+    The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`.
 
     The contract is deployed on :logos-ethereum: Ethereum at [`0xc5898606bdb494a994578453b92e7910a90aa873`](https://etherscan.io/address/0xc5898606bdb494a994578453b92e7910a90aa873).
 

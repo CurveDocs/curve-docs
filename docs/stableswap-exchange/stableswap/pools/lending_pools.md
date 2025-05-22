@@ -4,21 +4,13 @@ Curve pools may contain lending functionality, whereby the underlying tokens are
 (e.g., Compound or Yearn). Hence, the main difference to a plain pool is that a lending pool does not hold
 the underlying token itself, but a **wrapped** representation of it.
 
-Currently, Curve supports the following lending pools:
+A few lending pools are given below:
 
-``aave``: [Aave pool](https://www.curve.finance/aave), with lending on [Aave](https://www.aave.com)
+``aave``: [Aave pool](https://www.curve.finance/dex/ethereum/pools/aave/deposit/), with lending on [Aave](https://aave.com)
 
-``busd``: [BUSD](https://www.curve.finance/busd) pool, with lending on [yearn.finance](https://www.yearn.finance)
+``compound``: [Compound](https://www.curve.finance/dex/ethereum/pools/compound/deposit/) pool, with lending on [Compound](https://compound.finance/)
 
-``compound``: [Compound](https://www.curve.finance/compound) pool, with lending on [Compound](https://compound.finance/)
-
-``ib``: [Iron Bank pool](https://curve.finance/ib), with lending on [Cream](https://v1.yearn.finance/lending)
-
-``pax``: [PAX](https://curve.finance/pax) pool, with lending on [yearn.finance](https://www.yearn.finance)
-
-``usdt``: [USDT pool](https://curve.finance/usdt), with lending on [Compound](https://www.curve.finance/compound)
-
-``y``: [Y pool](https://curve.finance/y), with lending on [yearn.finance](https://www.yearn.finance)
+``usdt``: [USDT pool](https://www.curve.finance/dex/ethereum/pools/usdt/deposit/), with lending on [Compound](https://www.curve.finance/dex/ethereum/pools/compound/deposit/)
 
 An example of a Curve lending pool is
 [Compound Pool](https://github.com/curvefi/curve-contract/tree/master/contracts/pools/compound),
