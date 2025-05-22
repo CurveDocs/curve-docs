@@ -101,7 +101,7 @@ D_{\text{new}} &= \frac{D \left(\frac{(n+1) D^n}{n^n \prod x_i} + A n^n - 1\righ
 \end{aligned}
 \]
 
-This corresponds to the `newton_D` function in `math.vy`.
+This corresponds to the [`get_D`](../stableswap-exchange/stableswap-ng/utility_contracts/math.md#get_D) function in `CurveStableSwapNGMath.vy`.
 
 ---
 
@@ -166,8 +166,7 @@ x_j^{\text{new}} &= \frac{x_j \left(2 x_j + \sum_{i \neq j} x_i + \frac{D}{A n^n
 \end{aligned}
 \]
 
-This corresponds to the `newton_x` function in `math.vy`.
-[](../stableswap-exchange/stableswap-ng/utility_contracts/math.md#get_d)
+This corresponds to the [`get_y`](../stableswap-exchange/stableswap-ng/utility_contracts/math.md#get_y) function in `CurveStableSwapNGMath.vy`.
 
 ---
 
