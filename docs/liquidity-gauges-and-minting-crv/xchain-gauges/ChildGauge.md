@@ -1193,7 +1193,7 @@ The process for adding external reward tokens follows two steps:
 
 # **Checkpoints and Boosting**
 
-For more information on how boosting works, please refer to the [Boosting Explainer](./overview.md#boosting) page.
+For more information on how boosting works, please refer to the [Boosting Explainer](../overview.md#boosting) page.
 
 ### `user_checkpoint`
 !!! description "`ChildGauge.user_checkpoint(_user: address) -> bool`"

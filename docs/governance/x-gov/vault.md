@@ -66,4 +66,4 @@ The contract features a transfer function that allows the `owner` to transfer to
 
 ## Contract Ownership
 
-Ownership of the Vault contract follows the classic model of contract ownership. It includes an `owner` address, which can be updated by first committing a future owner and then applying the changes. More on transferring ownership can be found [here](../../references/curve-practices.md#commit--apply).
+Ownership of the Vault contract follows the classic model of contract ownership. It includes an `owner` address, which can be updated by first committing a future owner and then applying the changes. More on transferring ownership can be found [here](../../references/curve-practices.md#commit-apply).

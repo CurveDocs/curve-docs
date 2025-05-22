@@ -1,6 +1,6 @@
 <h1>Root Gauge Implementation</h1>
 
-The `RootGauge` is a simplified liquidity gauge contract on Ethereum used for bridging CRV from Ethereum to a sidechain. This gauge can be, just like any other liquidity gauge, be added to the `GaugeController` and is then eligible to receive voting weight. If that is the case, it can [mint any new emissions and transmit](#checkpointing-emissions) them to the child gauge on another chain using a [bridger contract](#bridger).
+The `RootGauge` is a simplified liquidity gauge contract on Ethereum used for bridging CRV from Ethereum to a sidechain. This gauge can be, just like any other liquidity gauge, be added to the `GaugeController` and is then eligible to receive voting weight. If that is the case, it can [mint any new emissions and transmit](#checkpointing-crv-emissions) them to the child gauge on another chain using a [bridger contract](#bridger).
 
 
 ???+ vyper "`RootGauge.vy`"

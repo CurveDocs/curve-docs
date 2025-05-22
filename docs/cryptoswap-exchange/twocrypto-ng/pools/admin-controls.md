@@ -7,7 +7,7 @@ Transferring the ownership of a pool is only possible by changing the ownership 
 
 The same applies to the fee receiver of the pools.
 
-[Factory Ownership](../../../factory/overview.md#factory-contract-ownership)
+[Factory Ownership](../../../factory/overview.md#contract-ownership)
 
 
 ---

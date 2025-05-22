@@ -13,7 +13,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to add a new market and automatically deploy an AMM-Contract and a Controller-Contract from the implemented blueprint contracts (see [Implementations](#implementations-blueprint-contracts)). Calls `rate_write()` from the used MonetaryPolicy to check if it has a correct ABI. There are some limitation values for adding new markets regarding `fee`, `A` and `liquidation_discount`.
+    Function to add a new market and automatically deploy an AMM-Contract and a Controller-Contract from the implemented blueprint contracts (see [Implementations](#implementations)). Calls `rate_write()` from the used MonetaryPolicy to check if it has a correct ABI. There are some limitation values for adding new markets regarding `fee`, `A` and `liquidation_discount`.
 
     Returns: deployed Controller and AMM (`address`).
 

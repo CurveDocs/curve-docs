@@ -1148,4 +1148,4 @@ The `crv` and `voting_escrow` variables store the addresses of the CRV token and
 
 ## **Ownership**
 
-For contract ownership details, see [here](../../references/curve-practices.md#commit--accept).
+For contract ownership details, see [here](../../references/curve-practices.md#commit-accept).

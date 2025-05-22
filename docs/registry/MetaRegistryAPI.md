@@ -2,7 +2,7 @@
 
 The MetaRegistry offers an **on-chain API** for various properties of Curve pools.
 
-A full list of all deployment addresses can be found [here](../references/deployed-contracts.md#metaregistry).
+A full list of all deployment addresses can be found [here](../references/deployed-contracts.md#meta-registry).
 
 
 ---
@@ -11,7 +11,7 @@ A full list of all deployment addresses can be found [here](../references/deploy
 ## **Finding Pools**
 
 !!!colab "Google Colab Notebook"
-    A guide on how to find liquidity pools which hold specific coins can be found [here](../integration/metaregistry.md#fetching-liquidity-pools).
+    A guide on how to find liquidity pools which hold specific coins can be found [here](../integration/metaregistry.md#finding-pools).
 
     A Jupyter notebook showcasing how to fetch pools directly from the blockchain, which contain two specific assets, can be found [here](https://colab.research.google.com/drive/1QsxqxQu7Um8gYPda30304W8ZcYbnbr1b?usp=sharing).
 

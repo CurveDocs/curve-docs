@@ -22,7 +22,7 @@ The `Broadcaster` contracts are managed by the following three admins, which are
 - Emergency Admin: [`0x467947EE34aF926cF1DCac093870f613C96B1E0c`](https://etherscan.io/address/0x467947EE34aF926cF1DCac093870f613C96B1E0c)
 
 !!!warning "Upgradable Ownership"
-    The admins of the `Broadcaster` contracts are upgradable via a [commit-apply](../../references/curve-practices.md#commit--apply) process after a governance vote has passed.
+    The admins of the `Broadcaster` contracts are upgradable via a [commit-apply](../../references/curve-practices.md#commit-apply) process after a governance vote has passed.
 
 ---
 

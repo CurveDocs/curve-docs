@@ -105,21 +105,21 @@ A loan's health can be read directly from the `Controller.vy` contract of the co
 
 *Now that we know how the liquidation mechanism of LLAMMA works, we can define three possible scenarios for bands regarding their asset composition:*
 
-1. **Band contains both collateral and borrowable token:** Indicates continuous liquidation mode. The band in which the collateral price is currently located is defined as the [`active_band`](amm.md#active_band).
+1. **Band contains both collateral and borrowable token:** Indicates continuous liquidation mode. The band in which the collateral price is currently located is defined as the [`active_band`](./amm.md#active_band).
 
     <figure markdown="span">
     ![](../assets/images/llamma/one_band_final.svg){ width="260" }
     <figcaption></figcaption>
     </figure>
 
-2. **Band contains only the collateral token:** This band has not been soft-liquidated. The collateral price is higher than the upper price of the band and is therefore outside the band. These are the bands above the [`active_band`](amm.md#active_band).
+2. **Band contains only the collateral token:** This band has not been soft-liquidated. The collateral price is higher than the upper price of the band and is therefore outside the band. These are the bands above the [`active_band`](./amm.md#active_band).
 
     <figure markdown="span">
     ![](../assets/images/llamma/two_bands_eth_final.svg){ width="400" }
     <figcaption></figcaption>
     </figure>
 
-3. **Band contains only the borrowable token:** This band has already been soft-liquidated. The collateral price is below the band, and arbitrage trades have exchanged all the ETH for crvUSD in the band. These are the bands below the [`active_band`](amm.md#active_band).
+3. **Band contains only the borrowable token:** This band has already been soft-liquidated. The collateral price is below the band, and arbitrage trades have exchanged all the ETH for crvUSD in the band. These are the bands below the [`active_band`](./amm.md#active_band).
 
     <figure markdown="span">
     ![](../assets/images/llamma/two_bands_crvusd_final.svg){ width="400" }

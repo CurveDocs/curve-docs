@@ -245,7 +245,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#fraxtal) lending deployments.
 
             === "Controller.vy"
 
@@ -631,7 +631,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -873,7 +873,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -913,7 +913,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -962,7 +962,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -998,7 +998,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -1124,7 +1124,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -1291,7 +1291,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -1451,7 +1451,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -1745,7 +1745,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -2169,7 +2169,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -2587,7 +2587,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -2963,7 +2963,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -3350,7 +3350,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -3782,7 +3782,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -4094,7 +4094,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -4410,7 +4410,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -4882,7 +4882,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -5154,7 +5154,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Collateral.vy"
 
@@ -5249,7 +5249,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Collateral.vy"
 
@@ -5369,7 +5369,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -5460,7 +5460,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -5531,7 +5531,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -5708,7 +5708,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -5906,7 +5906,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -6042,7 +6042,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -6153,7 +6153,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
 
             === "Controller.vy"
@@ -6212,7 +6212,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -6263,7 +6263,7 @@ An already existing loan can be managed in different ways:
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -6367,7 +6367,7 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -6482,7 +6482,7 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -6679,7 +6679,7 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -6810,7 +6810,7 @@ The **liquidation discount** is used to discount the collateral for calculating 
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -6889,7 +6889,7 @@ The **liquidation discount** is used to discount the collateral for calculating 
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -6952,7 +6952,7 @@ The **liquidation discount** is used to discount the collateral for calculating 
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -7017,7 +7017,7 @@ The **liquidation discount** is used to discount the collateral for calculating 
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -7086,7 +7086,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -7160,7 +7160,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -7253,7 +7253,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -7337,7 +7337,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -7416,7 +7416,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -7530,7 +7530,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -7624,7 +7624,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -7663,7 +7663,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
@@ -7719,7 +7719,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
             The following source code includes all changes up to commit hash [`b0240d8`](https://github.com/curvefi/curve-stablecoin/tree/b0240d844c9e60fdab78b481a556a187ceee3721); any changes made after this commit are not included.
 
-            This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
+            This implementation was used for [Optimism](../deployments/lending.md#optimism) and [Fraxtal](../deployments/lending.md#optimism) lending deployments.
 
             === "Controller.vy"
 
