@@ -16,6 +16,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | Chain                             | Contract Address |
 | --------------------------------- | :--------------: |
 | :logos-ethereum: `Ethereum`       | [0x16C6521Dff6baB339122a0FE25a9116693265353](https://etherscan.io/address/0x16C6521Dff6baB339122a0FE25a9116693265353) |
+| :logos-ethereum: `Ethereum v1.2`  | [0x45312ea0eFf7E09C83CBE249fa1d7598c4C8cd4e](https://etherscan.io/address/0x45312ea0eFf7E09C83CBE249fa1d7598c4C8cd4e) |
 | :logos-arbitrum: `Arbitrum`       | [0x2191718CD32d02B8E60BAdFFeA33E4B5DD9A0A0D](https://arbiscan.io/address/0x2191718CD32d02B8E60BAdFFeA33E4B5DD9A0A0D) |
 | :logos-optimism: `Optimism`       | [0x0DCDED3545D565bA3B19E683431381007245d983](https://optimistic.etherscan.io/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
 | :logos-base: `Base`               | [0x4f37A9d177470499A2dD084621020b023fcffc1F](https://basescan.org/address/0x4f37A9d177470499A2dD084621020b023fcffc1F) |
