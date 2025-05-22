@@ -41,4 +41,4 @@ This section is targeted at external third parties interested in integrating Cur
 *Below are some basic guides and examples. More will be added soon.*
 
 ### **Fetching Pools**
-[:octicons-link-16:](./metaregistry.md#fetching-liquidity-pools) Discover how to check on-chain pools containing two specific assets.
+[:octicons-link-16:](./metaregistry.md#finding-pools) Discover how to check on-chain pools containing two specific assets.

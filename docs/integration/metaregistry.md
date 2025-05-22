@@ -103,7 +103,6 @@ Because the deployment of liquidity pools is permissionless, a significant numbe
 
 
 !!!colab "Google Colab Notebook"
-    A guide on how to find liquidity pools which hold specific coins can be found [here](../integration/metaregistry.md#fetching-liquidity-pools).
 
     A Jupyter notebook showcasing how to fetch pools directly from the blockchain, which contain two specific assets, can be found [here](https://colab.research.google.com/drive/1QsxqxQu7Um8gYPda30304W8ZcYbnbr1b?usp=sharing).
 

@@ -6,7 +6,7 @@ Additionally, the Factory contract is the direct admin and fee receiver of all p
 
 !!!deploy "Contract Source & Deployment"
     Source code for this contract is available on [GitHub](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveTricryptoFactory.vy).
-    A list of all deployed contracts can be found [here](../../references/deployed-contracts.md#pool-factory).
+    A list of all deployed contracts can be found [here](../../references/deployed-contracts.md#tricrypto-ng).
 
 
 ---

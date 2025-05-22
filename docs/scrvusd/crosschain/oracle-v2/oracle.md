@@ -627,7 +627,7 @@ To guard the respective functions which can change the parameters, the contract 
     !!!guard "Guarded Method by [Snekmate 🐍](https://github.com/pcaversaccio/snekmate)"
         This contract makes use of a Snekmate module to manage roles and permissions. This specific function can only be called by the `UNLOCK_TIME_VERIFIER` role.
 
-    Function to set a new value for `profit_max_unlock_time`. This happens within the [`ScrvUSDVerifierV2`](../crosschain/verifier.md#scrvusd-verifier-v2) contract when a period is verified using a block hash ([`verifyPeriodByBlockHash()`](../crosschain/verifier.md#verifyperiodbyblockhash)).
+    Function to set a new value for `profit_max_unlock_time`. This happens within the [`ScrvUSDVerifierV2`](./verifier.md#scrvusd-verifier-v2) contract when a period is verified using a block hash ([`verifyPeriodByBlockHash()`](./verifier.md#verifyperiodbyblockhash)).
 
     Returns: boolean wether the value changed.
 

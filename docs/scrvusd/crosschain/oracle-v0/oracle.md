@@ -473,7 +473,7 @@ Because the rates are stored over time, the price can change suddenly and can le
 ### `max_acceleration`
 !!! description "`scrvUSDOracle.max_acceleration() -> uint256: view`"
 
-    Getter for the maximum acceleration. The value is set at initialization and can be changed by the [`owner`](#owner) using the [`set_max_acceleration`](#set_max_acceleration) function.
+    Getter for the maximum acceleration. The value is set at initialization and can be changed by the `owner` using the [`set_max_acceleration`](#set_max_acceleration) function.
 
     Returns: maximum acceleration (`uint256`).
 

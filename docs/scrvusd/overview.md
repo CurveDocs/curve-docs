@@ -43,7 +43,7 @@ The documentation of the `FeeSplitter` contract can be found [here](https://docs
 
     System of contracts to provide the price of `scrvUSD` on other chains.
 
-    [:octicons-arrow-right-24: Read more](./crosschain/)
+    [:octicons-arrow-right-24: Read more](./crosschain/oracle-v2/overview.md)
 
 </div>
 

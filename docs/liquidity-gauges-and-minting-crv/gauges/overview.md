@@ -1,6 +1,6 @@
 <h1>Liquidity Gauges</h1>
 
-CRV inflation is directed to users who provide liquidity within the protocol, measured by "Liquidity Gauge" contracts. Each pool has its own liquidity gauge, maintained by the Gauge Controller, which lists gauges and their types along with the weights of each. These gauges not only measure the liquidity provided by users, distributing rewards based on each user's share of liquidity and [boost](#boosting-your-lp-tokens), but can also be implemented for a variety of use cases including liquidity pools, lending vaults, and even [fundraising gauges](https://github.com/vefunder/crvfunder). For more details on implementation, see [here](../overview.md#liquidity-gauges).
+CRV inflation is directed to users who provide liquidity within the protocol, measured by "Liquidity Gauge" contracts. Each pool has its own liquidity gauge, maintained by the Gauge Controller, which lists gauges and their types along with the weights of each. These gauges not only measure the liquidity provided by users, distributing rewards based on each user's share of liquidity and [boost](../overview.md#boosting), but can also be implemented for a variety of use cases including liquidity pools, lending vaults, and even [fundraising gauges](https://github.com/vefunder/crvfunder). For more details on implementation, see [here](../overview.md#liquidity-gauges).
 
 
 !!!github "GitHub"

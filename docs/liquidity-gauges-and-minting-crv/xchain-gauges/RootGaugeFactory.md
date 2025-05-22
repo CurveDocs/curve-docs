@@ -796,4 +796,4 @@ The `RootGaugeFactory` contract also provides a few getters to retrieve informat
 
 ## **Contract Ownership**
 
-For contract ownership details, see [here](../../references/curve-practices.md#commit--accept).
+For contract ownership details, see [here](../../references/curve-practices.md#commit-accept).
