@@ -68,7 +68,7 @@ hide:
 
     [:material-github: Audit Report](https://raw.githubusercontent.com/curvefi/security-incident-reports/refs/heads/main/audits/dao/ChainSecurity_FeeSplitter.pdf)
     :logos-vyper: **`FeeSplitter.vy`**
-    
+
 </div>
 
 ---
