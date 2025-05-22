@@ -4,8 +4,8 @@ Participating in Curve DAO governance requires that an account have a balance of
 
 !!!deploy "Contract Source & Deployment"
     **veCRV** is represented by the **`VotingEscrow`** contract, deployed to the Ethereum mainnet at:
-    [0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2](https://etherscan.io/address/0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2).  
-    Source code available on [Github](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/VotingEscrow.vy). 
+    [0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2](https://etherscan.io/address/0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2).
+    Source code available on [GitHub](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/VotingEscrow.vy).
 
 
 `locktime` is denominated in years. The *maximum lock duration is four years* and the *minimum is one week*.
@@ -24,30 +24,30 @@ Participating in Curve DAO governance requires that an account have a balance of
     Additionally, a user cannot have multiple locks with different expiry dates. However, a lock can be extended, or additional CRV can be added to it at any time.
 
 
-## **Implemention Details**
-User voting power $w_{i}$ is linearly decreasing since the moment of lock. So does the total voting power $W$. In order to avoid periodic check-ins, every time the user deposits, or withdraws, or changes the locktime, we record user’s slope and bias for the linear function $w_{i}(t)$ in the public mapping `user_point_history`. We also change slope and bias for the total voting power $W(t)$ and record it in `point_history`. In addition, when a user’s lock is scheduled to end, we schedule change of slopes of $W(t)$ in the future in `slope_changes`. Every change involves increasing the `epoch` by 1.
+## **Implementation Details**
+User voting power $w_{i}$ is linearly decreasing since the moment of lock. So does the total voting power $W$. In order to avoid periodic check-ins, every time the user deposits, or withdraws, or changes the lock time, we record user’s slope and bias for the linear function $w_{i}(t)$ in the public mapping `user_point_history`. We also change slope and bias for the total voting power $W(t)$ and record it in `point_history`. In addition, when a user’s lock is scheduled to end, we schedule change of slopes of $W(t)$ in the future in `slope_changes`. Every change involves increasing the `epoch` by 1.
 
 This way we don’t have to iterate over all users to figure out, how much should $W(t)$ change by, neither we require users to check in periodically. However, we limit the end of user locks to times rounded off by whole weeks.
 
-Slopes and biases change both when a user deposits and locks governance tokens, and when the locktime expires. All the possible expiration times are rounded to whole weeks to make number of reads from blockchain proportional to number of missed weeks at most, not number of users (which is potentially large).
+Slopes and biases change both when a user deposits and locks governance tokens, and when the lock time expires. All the possible expiration times are rounded to whole weeks to make number of reads from blockchain proportional to number of missed weeks at most, not number of users (which is potentially large).
 
 
 
 ## **SmartWalletChecker**
 The `SmartWalletChecker` is an **external contract which checks if certain contracts are whitelisted and therefore eligible to lock CRV** tokens. More [here](../voting-escrow/smartwalletchecker.md).
 
-This contract can be changed via a successfuly DAO vote and therefore potentially fully a 
+This contract can be changed via a successfully DAO vote and therefore potentially fully a
 
 ### `smart_wallet_checker`
 !!! description "`VotingEscrow.smart_wallet_checker() -> address: view`"
 
     Getter for the current SmartWalletChecker contract.
-    
+
     Returns: SmartWalletChecker (`address`).
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         smart_wallet_checker: public(address)
         ```
 
@@ -67,7 +67,7 @@ This contract can be changed via a successfuly DAO vote and therefore potentiall
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         future_smart_wallet_checker: public(address)
         ```
 
@@ -112,7 +112,7 @@ CRV tokens can be locked by any Externally Owned Account (EOA). When a smart con
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         event Deposit:
             provider: indexed(address)
             value: uint256
@@ -145,7 +145,7 @@ CRV tokens can be locked by any Externally Owned Account (EOA). When a smart con
             assert unlock_time > block.timestamp, "Can only lock until time in the future"
             assert unlock_time <= block.timestamp + MAXTIME, "Voting lock can be 4 years max"
 
-            self._deposit_for(msg.sender, _value, unlock_time, _locked, CREATE_LOCK_TYPE) 
+            self._deposit_for(msg.sender, _value, unlock_time, _locked, CREATE_LOCK_TYPE)
 
         @internal
         def _deposit_for(_addr: address, _value: uint256, unlock_time: uint256, locked_balance: LockedBalance, type: int128):
@@ -212,7 +212,7 @@ CRV tokens can be locked by any Externally Owned Account (EOA). When a smart con
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         @nonreentrant('lock')
         def increase_amount(_value: uint256):
@@ -282,7 +282,7 @@ CRV tokens can be locked by any Externally Owned Account (EOA). When a smart con
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         @nonreentrant('lock')
         def increase_unlock_time(_unlock_time: uint256):
@@ -345,23 +345,23 @@ CRV tokens can be locked by any Externally Owned Account (EOA). When a smart con
 
     Function to deposit `_value` tokens for `_addr` and add them to the lock.
 
-    Emits: `Deposit`, `Supply` and `Transfer`    
+    Emits: `Deposit`, `Supply` and `Transfer`
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_addr`       |  `address` | address to depoit for |
+    | `_addr`       |  `address` | address to deposit for |
     | `_value_` |  `uint256` | amount of tokens to lock |
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         @nonreentrant('lock')
         def deposit_for(_addr: address, _value: uint256):
             """
             @notice Deposit `_value` tokens for `_addr` and add to the lock
             @dev Anyone (even a smart contract) can deposit for someone else, but
-                cannot extend their locktime and deposit for a brand new user
+                cannot extend their lock time and deposit for a brand new user
             @param _addr User's wallet address
             @param _value Amount to add to user's lock
             """
@@ -421,7 +421,7 @@ CRV tokens can be locked by any Externally Owned Account (EOA). When a smart con
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         @nonreentrant('lock')
         def withdraw():
@@ -464,7 +464,7 @@ CRV tokens can be locked by any Externally Owned Account (EOA). When a smart con
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         def checkpoint():
             """
@@ -477,7 +477,7 @@ CRV tokens can be locked by any Externally Owned Account (EOA). When a smart con
             """
             @notice Record global and per-user data to checkpoint
             @param addr User's wallet address. No user checkpoint if 0x0
-            @param old_locked Pevious locked amount / end lock time for the user
+            @param old_locked Previous locked amount / end lock time for the user
             @param new_locked New locked amount / end lock time for the user
             """
             u_old: Point = empty(Point)
@@ -596,7 +596,7 @@ CRV tokens can be locked by any Externally Owned Account (EOA). When a smart con
 
 
 ## **Admin Ownership**
-Ownership of this contract can be transfered by the **`admin`** via the **`commit_tranfer_ownership()`** and **`apply_transfer_ownership()`** functions. See [here](../voting-escrow/admin-controls.md#admin-ownership).
+Ownership of this contract can be transferred by the **`admin`** via the **`commit_transfer_ownership()`** and **`apply_transfer_ownership()`** functions. See [here](../voting-escrow/admin-controls.md#admin-ownership).
 
 
 ### `admin`
@@ -608,14 +608,14 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         admin: public(address)  # Can and will be a smart contract
         future_admin: public(address)
 
         @external
-        def __init__(token_addr: address, 
-                    _name: String[64], 
-                    _symbol: String[32], 
+        def __init__(token_addr: address,
+                    _name: String[64],
+                    _symbol: String[32],
                     _version: String[32]
                 ):
             """
@@ -626,7 +626,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
             @param _version Contract version - required for Aragon compatibility
             """
             self.admin = msg.sender
-            
+
             ...
         ```
 
@@ -658,10 +658,10 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
             """
             assert msg.sender == self.admin  # dev: admin only
             self.future_admin = addr
-            log CommitOwnership(addr)   
+            log CommitOwnership(addr)
         ```
 
-    === "Example"  
+    === "Example"
         ```shell
         >>> VotingEscrow.future_admin()
         '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
@@ -718,7 +718,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         @view
         def user_point_history__ts(_addr: address, _idx: uint256) -> uint256:
@@ -766,7 +766,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
             return self.locked[_addr].end
         ```
 
-    === "Example"  
+    === "Example"
         ```shell
         >>> VotingEscrow.locked_end("0x7a16fF8270133F063aAb6C9977183D9e72835428")
         1808956800
@@ -787,7 +787,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         @view
         def balanceOf(addr: address, _t: uint256 = block.timestamp) -> uint256:
@@ -831,7 +831,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         @view
         def balanceOfAt(addr: address, _block: uint256) -> uint256:
@@ -894,7 +894,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 !!! description "`VotingEscrow.totalSupply(t: uint256 = block.timestamp) -> uint256:`"
 
     Getter for the current total supply of veCRV (= total voting power) at timestamp `t`.
-    
+
     Returns: supply (uint256) at a specific block height.
 
     | Input      | Type   | Description |
@@ -903,7 +903,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         @view
         def totalSupply(t: uint256 = block.timestamp) -> uint256:
@@ -929,7 +929,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     Getter for the current total supply of veCRV (= total voting power) at block `_block`.
 
-    Returns: total supply (`uint256`) at a certain block.  
+    Returns: total supply (`uint256`) at a certain block.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -937,7 +937,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         @view
         def totalSupplyAt(_block: uint256) -> uint256:
@@ -980,13 +980,13 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         token: public(address)
 
         @external
-        def __init__(token_addr: address, 
-                    _name: String[64], 
-                    _symbol: String[32], 
+        def __init__(token_addr: address,
+                    _name: String[64],
+                    _symbol: String[32],
                     _version: String[32]
                 ):
             """
@@ -1019,7 +1019,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         supply: public(uint256)
         ```
 
@@ -1046,7 +1046,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         struct LockedBalance:
             amount: int128
             end: uint256
@@ -1094,7 +1094,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         point_history: public(Point[100000000000000000000000000000])  # epoch -> unsigned point
 
         @external
@@ -1110,7 +1110,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
             self.point_history[0].blk = block.number
             self.point_history[0].ts = block.timestamp
-            
+
             ...
         ```
 
@@ -1130,13 +1130,13 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         name: public(String[64])
 
         @external
-        def __init__(token_addr: address, 
-                    _name: String[64], 
-                    _symbol: String[32], 
+        def __init__(token_addr: address,
+                    _name: String[64],
+                    _symbol: String[32],
                     _version: String[32]
                 ):
             """
@@ -1169,13 +1169,13 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         symbol: public(String[32])
 
         @external
-        def __init__(token_addr: address, 
-                    _name: String[64], 
-                    _symbol: String[32], 
+        def __init__(token_addr: address,
+                    _name: String[64],
+                    _symbol: String[32],
                     _version: String[32]
                 ):
             """
@@ -1188,7 +1188,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
             ...
 
             self.symbol = _symbol
-            
+
             ...
         ```
 
@@ -1208,13 +1208,13 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         version: public(String[32])
 
         @external
-        def __init__(token_addr: address, 
-                    _name: String[64], 
-                    _symbol: String[32], 
+        def __init__(token_addr: address,
+                    _name: String[64],
+                    _symbol: String[32],
                     _version: String[32]
                 ):
             """
@@ -1240,19 +1240,19 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 !!! description "`VotingEscrow.decimals() -> uint256: view`"
 
     Getter for the decimals of the token.
-    
+
     Returns: decimals (`uint256`).
 
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         decimals: public(uint256)
 
         @external
-        def __init__(token_addr: address, 
-                    _name: String[64], 
-                    _symbol: String[32], 
+        def __init__(token_addr: address,
+                    _name: String[64],
+                    _symbol: String[32],
                     _version: String[32]
                 ):
             """
@@ -1285,7 +1285,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         controller: public(address)
 
         @external
@@ -1311,7 +1311,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         def changeController(_newController: address):
             """
@@ -1320,7 +1320,7 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
             assert msg.sender == self.controller
             self.controller = _newController
         ```
-    
+
 
 
 ### `transfersEnabled`
@@ -1330,15 +1330,15 @@ Ownership of this contract can be transfered by the **`admin`** via the **`commi
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         # Aragon's view methods for compatibility
         controller: public(address)
         transfersEnabled: public(bool)
 
         @external
-        def __init__(token_addr: address, 
-                    _name: String[64], 
-                    _symbol: String[32], 
+        def __init__(token_addr: address,
+                    _name: String[64],
+                    _symbol: String[32],
                     _version: String[32]
                 ):
             """

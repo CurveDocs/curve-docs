@@ -12,7 +12,7 @@ The `curve-dao` package is a Python tool designed to interact with CurveDAO gove
 This package simplifies the process of creating and testing CurveDAO proposals, making it easier for veCRV holders to participate in governance actions such as:
 
 - Managing Curve DAO gauges (creation, modification, or removal)
-- Whitelisting smartwallets for veCRV locking
+- Whitelisting smart wallets for veCRV locking
 - Adjusting liquidity pool parameters
 - Adding new gauge types
 - Other DAO-governed protocol changes
@@ -38,8 +38,8 @@ import curve_dao
 
 # Load contract and set admins
 contract = boa.load("contracts/contract.vy",
-    curve_dao.get_address("ownership"), 
-    curve_dao.get_address("param"), 
+    curve_dao.get_address("ownership"),
+    curve_dao.get_address("param"),
     curve_dao.get_address("emergency")
 )
 
@@ -52,8 +52,8 @@ ACTIONS = [
 # Create and optionally simulate the proposal
 DESCRIPTION = "Enact something"
 vote_id = curve_dao.create_vote(
-    "ownership", 
-    ACTIONS, 
+    "ownership",
+    ACTIONS,
     DESCRIPTION,
     etherscan_api_key=os.environ["ETHERSCAN_API_KEY"],
     pinata_token=os.environ["PINATA_TOKEN"]
@@ -62,8 +62,8 @@ vote_id = curve_dao.create_vote(
 # Simulate in forked environment
 if is_simulation:
     curve_dao.simulate(
-        vote_id, 
-        "ownership", 
+        vote_id,
+        "ownership",
         etherscan_api_key=os.environ["ETHERSCAN_API_KEY"]
     )
 ```

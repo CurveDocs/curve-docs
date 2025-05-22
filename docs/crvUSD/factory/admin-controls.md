@@ -244,7 +244,7 @@ The following are methods that **may only be called by the owner of the contract
     === "Example"
         ```shell
         >>> ControllerFactory.set_implementation("new controller implementation, new amm implementation")
-        ``` 
+        ```
 
 
 

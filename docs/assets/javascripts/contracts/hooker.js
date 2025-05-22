@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     const HookerContract = new web3.eth.Contract(HookerABI, HookerAddress);
     const Multicall3Contract = new web3.eth.Contract(Multicall3ABI, Multicall3Address);
-    
+
     async function updateValues() {
         const calls = [
             { target: HookerAddress, allowFailure: false, callData: web3.eth.abi.encodeFunctionSignature('duty_counter()') },
@@ -66,16 +66,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     async function handleInputQuery(inputId, outputId, method) {
         const inputElement = document.getElementById(inputId);
         const outputElement = document.getElementById(outputId);
-        
+
         async function fetchData() {
             const input = inputElement.value.trim();
-            
+
             if (input === '') {
                 outputElement.textContent = 'Please enter a valid input';
                 outputElement.style.color = 'red';
                 return;
             }
-            
+
             try {
                 const result = await HookerContract.methods[method](input).call();
                 let formattedResult;

@@ -1,15 +1,15 @@
-The simplest Curve pool is a plain pool, which is an implementation of the StableSwap invariant for two or more tokens. 
+The simplest Curve pool is a plain pool, which is an implementation of the Stableswap invariant for two or more tokens.
 The key characteristic of a plain pool is that the pool contract holds all deposited assets at **all** times.
 
-An example of a Curve plain pool is [3Pool](https://github.com/curvefi/curve-contract/tree/master/contracts/pools/3pool), 
+An example of a Curve plain pool is [3Pool](https://github.com/curvefi/curve-contract/tree/master/contracts/pools/3pool),
 which contains the tokens ``DAI``, ``USDC`` and ``USDT``.
 
 !!! note
     The API of plain pools is also implemented by lending and metapools.
 
-The following Brownie console interaction examples are using 
+The following Brownie console interaction examples are using
 [EURS](https://etherscan.io/address/0x0Ce6a5fF5217e38315f87032CF90686C96627CAA) Pool. The template source code for plain
-pools may be viewed on 
+pools may be viewed on
 [GitHub](https://github.com/curvefi/curve-contract/blob/master/contracts/pool-templates/base/SwapTemplateBase.vy).
 
 
@@ -65,7 +65,7 @@ pools may be viewed on
         ```
 
     === "Example"
-        
+
         ```shell
         >>> pool.coin(0)
         '0xdB25f211AB05b1c97D595516F45794528a807ad8'
@@ -82,9 +82,9 @@ pools may be viewed on
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `i`       |  `uint256` | Coin index |
-        
+
     === "Example"
-    
+
         ```shell
         >>> pool.balances(0)
         2918187395
@@ -99,7 +99,7 @@ pools may be viewed on
     Returns: `address` of the admin of the pool contract.
 
     ??? quote "Source code"
-    
+
         ```vyper hl_lines="1 7 16 30"
         owner: public(address)
 
@@ -134,9 +134,9 @@ pools may be viewed on
             self.kill_deadline = block.timestamp + KILL_DEADLINE_DT
             self.lp_token = _pool_token
         ```
-        
+
     === "Example"
-    
+
         ```shell
         >>> pool.owner()
         '0xeCb456EA5365865EbAb8a2661B0c503410e9B347'
@@ -149,16 +149,16 @@ pools may be viewed on
     Getter for the LP token of the pool.
 
     Returns: `address` of the `lp_token`.
-        
+
     === "Example"
-    
+
         ```shell
         >>> pool.lp_token()
         '0x194eBd173F6cDacE046C53eACcE9B953F28411d1'
         ```
 
     !!! note
-    
+
         In older Curve pools ``lp_token`` may not be ``public`` and thus not visible.
 
 
@@ -172,7 +172,7 @@ pools may be viewed on
 
         ```vyper
         A_PRECISION: constant(uint256) = 100
-        
+
         ...
 
         @view
@@ -180,16 +180,16 @@ pools may be viewed on
         def A() -> uint256:
             return self._A() / A_PRECISION
         ```
-        
+
     === "Example"
-    
+
         ```shell
         >>> pool.A()
         100
         ```
 
     !!! note
-        
+
         The amplification coefficient is scaled by ``A_PRECISION`` (``=100``)
 
 
@@ -207,9 +207,9 @@ pools may be viewed on
         def A_precise() -> uint256:
             return self._A()
         ```
-        
+
     === "Example"
-    
+
         ```shell
         >>> pool.A()
         10000
@@ -240,12 +240,12 @@ pools may be viewed on
         ```
 
     === "Example"
-    
+
         ```shell
         >>> pool.get_virtual_price()
         1001692838188850782
         ```
-    
+
     !!! note
 
         - The method returns ``virtual_price`` as an integer with ``1e18`` precision.
@@ -264,7 +264,7 @@ pools may be viewed on
         fee: public(uint256)  # fee * 1e10
 
         ...
-    
+
         @external
         def __init__(
             _owner: address,
@@ -277,7 +277,7 @@ pools may be viewed on
             """
             @notice Contract constructor
             @param _owner Contract owner address
-            @param _coins Addresses of ERC20 conracts of coins
+            @param _coins Addresses of ERC20 contacts of coins
             @param _pool_token Address of the token representing LP share
             @param _A Amplification coefficient multiplied by n * (n - 1)
             @param _fee Fee to charge for exchanges
@@ -294,14 +294,14 @@ pools may be viewed on
             self.kill_deadline = block.timestamp + KILL_DEADLINE_DT
             self.lp_token = _pool_token
         ```
-        
+
     === "Example"
-    
+
         ```shell
         >>> pool.fee()
         4000000
         ```
-    
+
     !!! note
 
         The method returns ``fee`` as an integer with ``1e10`` precision.
@@ -318,7 +318,7 @@ pools may be viewed on
         admin_fee: public(uint256)  # admin_fee * 1e10
 
         ...
-    
+
         @external
         def __init__(
             _owner: address,
@@ -331,7 +331,7 @@ pools may be viewed on
             """
             @notice Contract constructor
             @param _owner Contract owner address
-            @param _coins Addresses of ERC20 conracts of coins
+            @param _coins Addresses of ERC20 contacts of coins
             @param _pool_token Address of the token representing LP share
             @param _A Amplification coefficient multiplied by n * (n - 1)
             @param _fee Fee to charge for exchanges
@@ -348,9 +348,9 @@ pools may be viewed on
             self.kill_deadline = block.timestamp + KILL_DEADLINE_DT
             self.lp_token = _pool_token
         ```
-        
+
     === "Example"
-    
+
         ```shell
         >>> pool.admin_fee()
         5000000000
@@ -384,16 +384,16 @@ pools may be viewed on
         def get_dy(i: int128, j: int128, dx: uint256) -> uint256:
             xp: uint256[N_COINS] = self._xp()
             rates: uint256[N_COINS] = RATES
-        
+
             x: uint256 = xp[i] + (dx * rates[i] / PRECISION)
             y: uint256 = self.get_y(i, j, x, xp)
             dy: uint256 = (xp[j] - y - 1)
             _fee: uint256 = self.fee * dy / FEE_DENOMINATOR
             return (dy - _fee) * PRECISION / rates[j]
         ```
- 
+
     === "Example"
-    
+
         ```shell
         >>> pool.get_dy(0, 1, 100)
         996307731416690125
@@ -401,7 +401,7 @@ pools may be viewed on
 
     !!! note
 
-        Note: In this example,  the ``EURS Pool`` coins decimals for ``coins(0)`` and ``coins(1)`` are 
+        Note: In this example,  the ``EURS Pool`` coins decimals for ``coins(0)`` and ``coins(1)`` are
         ``2`` and ``18``, respectively.
 
 
@@ -418,7 +418,7 @@ pools may be viewed on
     | `dx`       |  `uint256` | Amount of coin `i` to swap |
     | `min_dy`       |  `uint256` | Minimum amount of ``j`` to receive |
 
-    Returns the actual amount of coin ``j`` received. Index values can be found via the 
+    Returns the actual amount of coin ``j`` received. Index values can be found via the
     ``coins`` public getter method.
 
     Emits: <mark style="background-color: #FFD580; color: black">TokenExchange</mark>
@@ -433,35 +433,35 @@ pools may be viewed on
             @notice Perform an exchange between two coins
             @dev Index values can be found via the `coins` public getter method
             @param i Index value for the coin to send
-            @param j Index valie of the coin to recieve
+            @param j Index value of the coin to receive
             @param dx Amount of `i` being exchanged
             @param min_dy Minimum amount of `j` to receive
             @return Actual amount of `j` received
             """
             assert not self.is_killed  # dev: is killed
-        
+
             old_balances: uint256[N_COINS] = self.balances
             xp: uint256[N_COINS] = self._xp_mem(old_balances)
-        
+
             rates: uint256[N_COINS] = RATES
             x: uint256 = xp[i] + dx * rates[i] / PRECISION
             y: uint256 = self.get_y(i, j, x, xp)
-        
+
             dy: uint256 = xp[j] - y - 1  # -1 just in case there were some rounding errors
             dy_fee: uint256 = dy * self.fee / FEE_DENOMINATOR
-        
+
             # Convert all to real units
             dy = (dy - dy_fee) * PRECISION / rates[j]
             assert dy >= min_dy, "Exchange resulted in fewer coins than expected"
-        
+
             dy_admin_fee: uint256 = dy_fee * self.admin_fee / FEE_DENOMINATOR
             dy_admin_fee = dy_admin_fee * PRECISION / rates[j]
-        
+
             # Change balances exactly in same way as we change actual ERC20 coin amounts
             self.balances[i] = old_balances[i] + dx
             # When rounding errors happen, we undercharge admin fee in favor of LP
             self.balances[j] = old_balances[j] - dy - dy_admin_fee
-        
+
             # "safeTransferFrom" which works for ERC20s which return bool or not
             _response: Bytes[32] = raw_call(
                 self.coins[i],
@@ -475,7 +475,7 @@ pools may be viewed on
             )  # dev: failed transfer
             if len(_response) > 0:
                 assert convert(_response, bool)
-        
+
             _response = raw_call(
                 self.coins[j],
                 concat(
@@ -487,14 +487,14 @@ pools may be viewed on
             )  # dev: failed transfer
             if len(_response) > 0:
                 assert convert(_response, bool)
-        
+
             log TokenExchange(msg.sender, i, dx, j, dy)
-        
+
             return dy
         ```
 
     === "Example"
-    
+
         ```shell
         >>> expected = pool.get_dy(0, 1, 10**2) * 0.99
         >>> pool.exchange(0, 1, 10**2, expected, {"from": alice})
@@ -506,7 +506,7 @@ pools may be viewed on
 
 !!! description "`StableSwap.calc_token_amount(_amounts: uint256[N_COINS], _: bool) → uint256: view`"
 
-    Calculate addition or reduction in token supply from a deposit or withdrawal. Returns the expected amount of LP 
+    Calculate addition or reduction in token supply from a deposit or withdrawal. Returns the expected amount of LP
     tokens received. This calculation accounts for slippage, but not fees.
 
     `N_COINS`: Number of coins in the pool.
@@ -549,7 +549,7 @@ pools may be viewed on
         ```
 
     === "Example"
-    
+
         ```shell
         >>> pool.calc_token_amount([10**2, 10**18], True)
         1996887509167925969
@@ -581,9 +581,9 @@ pools may be viewed on
             @return Amount of LP tokens received by depositing
             """
             assert not self.is_killed  # dev: is killed
-        
+
             amp: uint256 = self._A()
-        
+
             _lp_token: address = self.lp_token
             token_supply: uint256 = ERC20(_lp_token).totalSupply()
             # Initial invariant
@@ -592,22 +592,22 @@ pools may be viewed on
             if token_supply > 0:
                 D0 = self.get_D_mem(old_balances, amp)
             new_balances: uint256[N_COINS] = old_balances
-        
+
             for i in range(N_COINS):
                 if token_supply == 0:
                     assert amounts[i] > 0  # dev: initial deposit requires all coins
                 # balances store amounts of c-tokens
                 new_balances[i] = old_balances[i] + amounts[i]
-        
+
             # Invariant after change
             D1: uint256 = self.get_D_mem(new_balances, amp)
             assert D1 > D0
-        
+
             # We need to recalculate the invariant accounting for fees
             # to calculate fair user's share
             D2: uint256 = D1
             fees: uint256[N_COINS] = empty(uint256[N_COINS])
-        
+
             if token_supply > 0:
                 # Only account for fees if we are not the first to deposit
                 _fee: uint256 = self.fee * N_COINS / (4 * (N_COINS - 1))
@@ -625,16 +625,16 @@ pools may be viewed on
                 D2 = self.get_D_mem(new_balances, amp)
             else:
                 self.balances = new_balances
-        
+
             # Calculate, how much pool tokens to mint
             mint_amount: uint256 = 0
             if token_supply == 0:
                 mint_amount = D1  # Take the dust if there was any
             else:
                 mint_amount = token_supply * (D2 - D0) / D0
-        
+
             assert mint_amount >= min_mint_amount, "Slippage screwed you"
-        
+
             # Take coins from the sender
             for i in range(N_COINS):
                 if amounts[i] > 0:
@@ -651,17 +651,17 @@ pools may be viewed on
                     )  # dev: failed transfer
                     if len(_response) > 0:
                         assert convert(_response, bool)
-        
+
             # Mint pool tokens
             CurveToken(_lp_token).mint(msg.sender, mint_amount)
-        
+
             log AddLiquidity(msg.sender, amounts, fees, D1, token_supply + mint_amount)
-        
+
             return mint_amount
         ```
-        
+
     === "Example"
-    
+
         ```shell
         >>> todo: add_liquidity console output example
         ```
@@ -696,7 +696,7 @@ pools may be viewed on
             total_supply: uint256 = ERC20(_lp_token).totalSupply()
             amounts: uint256[N_COINS] = empty(uint256[N_COINS])
             fees: uint256[N_COINS] = empty(uint256[N_COINS])  # Fees are unused but we've got them historically in event
-        
+
             for i in range(N_COINS):
                 value: uint256 = self.balances[i] * _amount / total_supply
                 assert value >= min_amounts[i], "Withdrawal resulted in fewer coins than expected"
@@ -713,16 +713,16 @@ pools may be viewed on
                 )  # dev: failed transfer
                 if len(_response) > 0:
                     assert convert(_response, bool)
-        
+
             CurveToken(_lp_token).burnFrom(msg.sender, _amount)  # dev: insufficient funds
-        
+
             log RemoveLiquidity(msg.sender, amounts, fees, total_supply - _amount)
-        
+
             return amounts
         ```
 
     === "Example"
-    
+
         ```shell
         >>> todo: remove_liquidity console output example
         ```
@@ -753,20 +753,20 @@ pools may be viewed on
             @return Actual amount of the LP token burned in the withdrawal
             """
             assert not self.is_killed  # dev: is killed
-        
+
             amp: uint256 = self._A()
-        
+
             old_balances: uint256[N_COINS] = self.balances
             new_balances: uint256[N_COINS] = old_balances
             D0: uint256 = self.get_D_mem(old_balances, amp)
             for i in range(N_COINS):
                 new_balances[i] -= amounts[i]
             D1: uint256 = self.get_D_mem(new_balances, amp)
-        
+
             _lp_token: address = self.lp_token
             token_supply: uint256 = ERC20(_lp_token).totalSupply()
             assert token_supply != 0  # dev: zero total supply
-        
+
             _fee: uint256 = self.fee * N_COINS / (4 * (N_COINS - 1))
             _admin_fee: uint256 = self.admin_fee
             fees: uint256[N_COINS] = empty(uint256[N_COINS])
@@ -781,12 +781,12 @@ pools may be viewed on
                 self.balances[i] = new_balances[i] - (fees[i] * _admin_fee / FEE_DENOMINATOR)
                 new_balances[i] -= fees[i]
             D2: uint256 = self.get_D_mem(new_balances, amp)
-        
+
             token_amount: uint256 = (D0 - D2) * token_supply / D0
             assert token_amount != 0  # dev: zero tokens burned
             token_amount += 1  # In case of rounding errors - make it unfavorable for the "attacker"
             assert token_amount <= max_burn_amount, "Slippage screwed you"
-        
+
             CurveToken(_lp_token).burnFrom(msg.sender, token_amount)  # dev: insufficient funds
             for i in range(N_COINS):
                 if amounts[i] != 0:
@@ -801,15 +801,15 @@ pools may be viewed on
                     )  # dev: failed transfer
                     if len(_response) > 0:
                         assert convert(_response, bool)
-        
-        
+
+
             log RemoveLiquidityImbalance(msg.sender, amounts, fees, D1, token_supply - token_amount)
-        
+
             return token_amount
         ```
-        
+
     === "Example"
-    
+
         ```shell
         >>> todo: remove_liquidity_imbalance console output example
         ```
@@ -826,7 +826,7 @@ pools may be viewed on
     | `i` | `int128` | Index value of the coin to withdraw |
 
     ??? quote "Source code"
-        
+
         ```vyper
         @view
         @internal
@@ -837,12 +837,12 @@ pools may be viewed on
             amp: uint256 = self._A()
             xp: uint256[N_COINS] = self._xp()
             D0: uint256 = self.get_D(xp, amp)
-        
+
             total_supply: uint256 = ERC20(self.lp_token).totalSupply()
             D1: uint256 = D0 - _token_amount * D0 / total_supply
             new_y: uint256 = self.get_y_D(amp, i, xp, D1)
             xp_reduced: uint256[N_COINS] = xp
-        
+
             _fee: uint256 = self.fee * N_COINS / (4 * (N_COINS - 1))
             for j in range(N_COINS):
                 dx_expected: uint256 = 0
@@ -851,15 +851,15 @@ pools may be viewed on
                 else:
                     dx_expected = xp[j] - xp[j] * D1 / D0
                 xp_reduced[j] -= _fee * dx_expected / FEE_DENOMINATOR
-        
+
             dy: uint256 = xp_reduced[i] - self.get_y_D(amp, i, xp_reduced, D1)
             precisions: uint256[N_COINS] = PRECISION_MUL
             dy = (dy - 1) / precisions[i]  # Withdraw less to account for rounding errors
             dy_0: uint256 = (xp[i] - new_y) / precisions[i]  # w/o fees
-        
+
             return dy, dy_0 - dy, total_supply
-        
-        
+
+
         @view
         @external
         def calc_withdraw_one_coin(_token_amount: uint256, i: int128) -> uint256:
@@ -871,9 +871,9 @@ pools may be viewed on
             """
             return self._calc_withdraw_one_coin(_token_amount, i)[0]
         ```
-        
+
     === "Example"
-    
+
         ```shell
         >>> todo: calculate_withdraw_one_coin console output example
         ```
@@ -906,17 +906,17 @@ pools may be viewed on
             @return Amount of coin received
             """
             assert not self.is_killed  # dev: is killed
-        
+
             dy: uint256 = 0
             dy_fee: uint256 = 0
             total_supply: uint256 = 0
             dy, dy_fee, total_supply = self._calc_withdraw_one_coin(_token_amount, i)
             assert dy >= _min_amount, "Not enough coins removed"
-        
+
             self.balances[i] -= (dy + dy_fee * self.admin_fee / FEE_DENOMINATOR)
             CurveToken(self.lp_token).burnFrom(msg.sender, _token_amount)  # dev: insufficient funds
-        
-        
+
+
             _response: Bytes[32] = raw_call(
                 self.coins[i],
                 concat(
@@ -928,14 +928,14 @@ pools may be viewed on
             )  # dev: failed transfer
             if len(_response) > 0:
                 assert convert(_response, bool)
-        
+
             log RemoveLiquidityOne(msg.sender, _token_amount, dy, total_supply - _token_amount)
-        
+
             return dy
         ```
-        
+
     === "Example"
-    
+
         ```shell
         >>> todo: remove_liquidity_one_coin console output example
         ```

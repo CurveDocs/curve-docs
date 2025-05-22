@@ -39,7 +39,7 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
 
 !!! description "`Factory.deploy_pool(_name: String[32], _symbol: String[10], _coins: address[2], A: uint256, gamma: uint256, mid_fee: uint256, out_fee: uint256, allowed_extra_profit: uint256, fee_gamma: uint256, adjustment_step: uint256, admin_fee: uint256, ma_half_time: uint256, initial_price: uint256) -> address:`"
 
-    Function to deploy a cryptoswap pool form the `pool_implementations`. This function will also deploy the according LP token from the `token_implementation`.
+    Function to deploy a Cryptoswap pool form the `pool_implementations`. This function will also deploy the according LP token from the `token_implementation`.
 
     Returns: Deployed pool (`address`).
 
@@ -194,7 +194,7 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
             admin_fee: 5000000000,
             ma_half_time: 600,
             initial_price: todo,
-            ) 
+            )
 
         'returns address of the deployed pool'
         ```
@@ -249,5 +249,5 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
         ```shell
         Factory.deploy_gauge('0x...')
 
-        'returns address of the deployed gauge' 
+        'returns address of the deployed gauge'
         ```

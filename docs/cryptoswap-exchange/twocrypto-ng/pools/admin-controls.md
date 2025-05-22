@@ -2,8 +2,8 @@
 
 
 # **Pool Ownership**
-Liquidity pools are deployed via the [Factory](../../../factory/twocrypto-ng/deployer-api.md). All pools deployed **share the same admin** defined within the Factory contract.  
-Transfering the ownership of a pool is only possible by changing the ownership of the Factory. Admin is the Curve DAO (OwnershipAdmin).
+Liquidity pools are deployed via the [Factory](../../../factory/twocrypto-ng/deployer-api.md). All pools deployed **share the same admin** defined within the Factory contract.
+Transferring the ownership of a pool is only possible by changing the ownership of the Factory. Admin is the Curve DAO (OwnershipAdmin).
 
 The same applies to the fee receiver of the pools.
 
@@ -17,7 +17,7 @@ The same applies to the fee receiver of the pools.
 
 For more information about parameters: [https://nagaking.substack.com/p/deep-dive-curve-v2-parameters](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).
 
-The appropriate value for `A` and `gamma` is dependent upon the type of coin being used within the pool, and is subject to optimization and pool-parameter update based on the market history of the trading pair. 
+The appropriate value for `A` and `gamma` is dependent upon the type of coin being used within the pool, and is subject to optimization and pool-parameter update based on the market history of the trading pair.
 
 It is possible to modify the parameters for a pool after it has been deployed. Again, only the admin of the pool (= Factory admin) can do so.
 
@@ -25,7 +25,7 @@ It is possible to modify the parameters for a pool after it has been deployed. A
 ### `ramp_A_gamma`
 !!! description "`TwoCrypto.ramp_A_gamma(future_A: uint256, future_gamma: uint256, future_time: uint256):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function can only be called by the `admin` of the Factory contract.
 
     Function to linearly ramp the values of `A` and `gamma`.
@@ -100,7 +100,7 @@ It is possible to modify the parameters for a pool after it has been deployed. A
                     future_time,
                 )
             ```
-    
+
     === "Example"
 
         ```shell
@@ -148,7 +148,7 @@ It is possible to modify the parameters for a pool after it has been deployed. A
 
                 log StopRampA(A_gamma[0], A_gamma[1], block.timestamp)
             ```
-    
+
     === "Example"
 
         ```shell
@@ -281,7 +281,7 @@ It is possible to modify the parameters for a pool after it has been deployed. A
                     _new_xcp_ma_time,
                 )
             ```
-    
+
     === "Example"
 
         ```shell
@@ -305,7 +305,7 @@ It is possible to modify the parameters for a pool after it has been deployed. A
             ```vyper
             initial_A_gamma: public(uint256)
             ```
-    
+
     === "Example"
 
         ```shell
@@ -327,7 +327,7 @@ It is possible to modify the parameters for a pool after it has been deployed. A
             ```vyper
             initial_A_gamma_time: public(uint256)
             ```
-    
+
     === "Example"
 
         ```shell
@@ -349,7 +349,7 @@ It is possible to modify the parameters for a pool after it has been deployed. A
             ```vyper
             future_A_gamma: public(uint256)
             ```
-    
+
     === "Example"
 
         ```shell
@@ -377,9 +377,9 @@ It is possible to modify the parameters for a pool after it has been deployed. A
             #        populated by block.timestamp + future_time in `ramp_A_gamma` when the
             #                      ramping process is initiated. After ramping is finished
             #      (i.e. self.future_A_gamma_time < block.timestamp), the variable is left
-            #                                                            and not set to 0.            
+            #                                                            and not set to 0.
             ```
-    
+
     === "Example"
 
         ```shell

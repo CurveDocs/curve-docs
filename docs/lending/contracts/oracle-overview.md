@@ -21,7 +21,7 @@ hide:
 
     ---
 
-    EMA oracle for collateral tokens using **multiple different Curve pool oracles chained together**. This oracle contract can also make use of `stored_rates` from `stableswap-ng` pools.
+    EMA oracle for collateral tokens using **multiple different Curve pool oracles chained together**. This oracle contract can also make use of `stored_rates` from `Stableswap-NG` pools.
 
     [:octicons-arrow-right-24: `CryptoFromPoolsRate`](./cryptofrompoolsrate.md)
 
@@ -54,7 +54,7 @@ The [oracle contract](https://etherscan.io/address/0xE0a4C53408f5ACf3246c83b9b8b
 ## **Chained Oracles without Rates (FXN)**
 
 This [oracle contract](https://arbiscan.io/address/0xbB82bf9a0C6739c0bacFdFFbcE3D2Ec4AA97970E) utilizes two Curve pool oracles to derive the price of the [FXN token](https://arbiscan.io/address/0x179F38f78346F5942E95C5C59CB1da7F55Cf7CAd) relative to the crvUSD token. Importantly, this oracle does not apply any conversion rates; it strictly uses the raw prices provided by the oracles.
- 
+
 *The `CryptoFromPoolsRate.vy` contract is specifically designed for these types of oracles. Full documentation is available [here](../contracts/cryptofrompoolsrate.md).*
 
 *To obtain the FXN token price, we use the following two Curve pool oracles:*
@@ -73,7 +73,7 @@ The price oracle from the first pool determines the price of FXN relative to ETH
 
 *Calculating the final price:*
 
-$$\text{price} = \frac{\text{FXN/ETH} \times \text{ETH/crvUSD}}{10^{18}}$$ 
+$$\text{price} = \frac{\text{FXN/ETH} \times \text{ETH/crvUSD}}{10^{18}}$$
 
 $$\text{price} = \frac{43130436331749331 \times 3011786169374663706441}{10^{18}} = 129899651623057139817$$
 
@@ -86,20 +86,20 @@ The [oracle contract](https://etherscan.io/address/0xb08eB288C57a37bC82238168ad9
 
 *The `CryptoFromPoolsRate.vy` contract is specifically designed for these types of oracles. Full documentation is available [here](../contracts/cryptofrompoolsrate.md).*
 
-The pufETH/wstETH exchange rate is nearly 1:1. We take this exchange rate and multiply it by the wstETH/crvUSD rate obtained from the tryLSD pool. This calculation provides the price of pufETH in terms of crvUSD. **Note:** This is not the actual price of pufETH due to the operational mechanics of stableswap-ng pools. To ascertain the accurate and final price of pufETH, we must apply the `stored_rates`.
+The pufETH/wstETH exchange rate is nearly 1:1. We take this exchange rate and multiply it by the wstETH/crvUSD rate obtained from the tryLSD pool. This calculation provides the price of pufETH in terms of crvUSD. **Note:** This is not the actual price of pufETH due to the operational mechanics of Stableswap-NG pools. To ascertain the accurate and final price of pufETH, we must apply the `stored_rates`.
 
 *The final price of pufETH is calculated as follows:*
 
 1. Retrieve the pufETH/wstETH exchange rate (e.g., 0.99, where 1 pufETH is equivalent to 0.99 wstETH).
 2. Obtain the wstETH price with respect to crvUSD from the tryLSD pool.
 3. Multiply these values to calculate the oracle price of pufETH in terms of crvUSD.
-4. To derive the complete price, apply the `stored_rates` from the stableswap pool, as provided by the oracle contract.
+4. To derive the complete price, apply the `stored_rates` from the Stableswap pool, as provided by the oracle contract.
 
 
 !!!info "`stored_rates`"
 
-    Specific tokens have a rate which is denominated against another asset. For example, wstETH has a rate against stETH as the token can always be redeemed for a certain amount of stETH based on the rate. At origin, wstETH and stETH were 1:1, but as time passed and wstETH earned yield, the underlying amount of stETH increased. So, for example, after 1 year, 1 wstETH would be worth 1.1 stETH. Therefore, the rate would be 1.1 and is stored in the `stored_rates` variable in the stableswap pool.
+    Specific tokens have a rate which is denominated against another asset. For example, wstETH has a rate against stETH as the token can always be redeemed for a certain amount of stETH based on the rate. At origin, wstETH and stETH were 1:1, but as time passed and wstETH earned yield, the underlying amount of stETH increased. So, for example, after 1 year, 1 wstETH would be worth 1.1 stETH. Therefore, the rate would be 1.1 and is stored in the `stored_rates` variable in the Stableswap pool.
 
     The same applies to ERC4626 tokens like pufETH with a `convertToAssets` method. This kind of rate is also stored in the `stored_rates` variable.
 
-    The stableswap pool uses these rates to ensure accurate calculations when, for example, exchanging tokens or adding liquidity.
+    The Stableswap pool uses these rates to ensure accurate calculations when, for example, exchanging tokens or adding liquidity.

@@ -1,7 +1,7 @@
 MonetaryPolicy contracts are integrated into the crvUSD ecosystem, where they play a pivotal role in determining the interest rates for crvUSD markets.
 
 !!!deploy "Contract Source & Deployment"
-    Source code is available on [Github](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/mpolicies).
+    Source code is available on [GitHub](https://github.com/curvefi/curve-stablecoin/tree/master/contracts/mpolicies).
     Relevant contract deployments can be found [here](../references/deployed-contracts.md#curve-stablecoin).
 
 ## **Interest Rate Mechanics**
@@ -12,7 +12,7 @@ The interest rates in crvUSD markets are not static but fluctuate based on a set
 - The variables `sigma`, `rate0`, `TargetFraction`, and the `DebtFraction` specific to PegKeepers.
 
 !!! tip
-    A useful tool to explore and understand how the rate is affected by [0xreviews](https://twitter.com/0xreviews_xyz) is avaliable at: https://crvusd-rate.0xreviews.xyz/
+    A useful tool to explore and understand how the rate is affected by [0xreviews](https://twitter.com/0xreviews_xyz) is available at: https://crvusd-rate.0xreviews.xyz/
 
 The formula for calculating the interest rate (`r`) is as follows:
 
@@ -50,14 +50,14 @@ $$\text{annualRate} = (1 + \frac{rate}{10^{18}})^{365 \times 24 \times 60 \times
 !!! description "`MonetaryPolicy.rate() -> uint256: view`"
 
     Getter for the rate of the monetary policy contract. This is the current interest rate paid per second.
-    
+
     Returns: rate (`uint256`).
 
     ??? quote "Source code"
 
         === "MonetaryPolicy.vy"
 
-            ```vyper 
+            ```vyper
             @view
             @external
             def rate() -> uint256:
@@ -137,7 +137,7 @@ $$\text{annualRate} = (1 + \frac{rate}{10^{18}})^{365 \times 24 \times 60 \times
 ### `set_rate`
 !!! description "`MonetaryPolicy.set_rate(rate: uint256):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract, which is the CurveOwnershipAgent.
 
     Function to set a new rate0. New `rate0` has to be less than or equal to `MAX_RATE (=43959106799)`.
@@ -203,7 +203,7 @@ $$\text{annualRate} = (1 + \frac{rate}{10^{18}})^{365 \times 24 \times 60 \times
 
                 assert sigma >= MIN_SIGMA
                 assert sigma <= MAX_SIGMA
-                
+
                 ...
             ```
 
@@ -218,10 +218,10 @@ $$\text{annualRate} = (1 + \frac{rate}{10^{18}})^{365 \times 24 \times 60 \times
 ### `set_sigma`
 !!! description "`MonetaryPolicy.set_sigma(sigma: uint256):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract, which is the CurveOwnershipAgent.
 
-    Function to set a new sigma value. New value must be inbetween `MIN_SIGMA` and `MAX_SIGMA`.
+    Function to set a new sigma value. New value must be in-between `MIN_SIGMA` and `MAX_SIGMA`.
 
     Emits: `SetSigma`
 
@@ -284,7 +284,7 @@ $$\text{annualRate} = (1 + \frac{rate}{10^{18}})^{365 \times 24 \times 60 \times
                         sigma: uint256,
                         target_debt_fraction: uint256):
                 ...
-                
+
                 self.target_debt_fraction = target_debt_fraction
             ```
 
@@ -298,8 +298,8 @@ $$\text{annualRate} = (1 + \frac{rate}{10^{18}})^{365 \times 24 \times 60 \times
 
 ### `set_target_debt_fraction`
 !!! description "`MonetaryPolicy.set_target_debt_fraction(target_debt_fraction: uint256):`"
-    
-    !!!guard "Guarded Method" 
+
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract, which is the CurveOwnershipAgent.
 
     Function to set a new value for the debt fraction target. New value needs to be less than or equal to `MAX_TARGET_DEBT_FRACTION`.
@@ -312,7 +312,7 @@ $$\text{annualRate} = (1 + \frac{rate}{10^{18}})^{365 \times 24 \times 60 \times
 
     ??? quote "Source code"
 
-        === "MonetaryPolicy.vy"        
+        === "MonetaryPolicy.vy"
 
             ```vyper
             event SetTargetDebtFraction:
@@ -393,7 +393,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 ### `add_peg_keeper`
 !!! description "`MonetaryPolicy.add_peg_keeper(pk: PegKeeper):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
     Function to add an existing PegKeeper to the monetary policy contract.
@@ -437,7 +437,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 ### `remove_peg_keeper`
 !!! description "`MonetaryPolicy.remove_peg_keeper(pk: PegKeeper):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
     Function to remove an existing PegKeeper from the monetary policy contract.
@@ -523,7 +523,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
 ### `set_admin`
 !!! description "`MonetaryPolicy.set_admin(admin: address):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract, which is the CurveOwnershipAgent.
 
     Function to set a new admin.
@@ -598,8 +598,8 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
         ```
 
 
-### `CONTROLLER_FACOTRY`
-!!! description "`MonetaryPolicy.CONTROLLER_FACOTRY() -> address: view`"
+### `CONTROLLER_FACTORY`
+!!! description "`MonetaryPolicy.CONTROLLER_FACTORY() -> address: view`"
 
     Getter for the controller factory contract. immutable variable!
 
@@ -630,7 +630,7 @@ PegKeepers must be added to the MonetaryPolicy contract to calculate the rate as
     === "Example"
 
         ```shell
-        >>> MonetaryPolicy.CONTROLLER_FACOTRY()
+        >>> MonetaryPolicy.CONTROLLER_FACTORY()
         '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
         ```
 

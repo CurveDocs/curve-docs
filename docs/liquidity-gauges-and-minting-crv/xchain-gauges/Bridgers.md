@@ -11,21 +11,21 @@ Bridger wrappers are contracts used to transmit `ERC-20` tokens and especially `
     :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } Bridgers for each specific chain can be fetched from the `RootGaugeFactory`:
 
     <div class="highlight">
-    <pre><code>>>> Bridger.get_bridger(<input id="chainId" type="number" value="42161" min="0" 
-    style="width: 50px; 
-        background: transparent; 
-        border: none; 
-        border-bottom: 1px solid #ccc; 
-        color: inherit; 
-        font-family: inherit; 
-        font-size: inherit; 
-        -moz-appearance: textfield;" 
+    <pre><code>>>> Bridger.get_bridger(<input id="chainId" type="number" value="42161" min="0"
+    style="width: 50px;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        color: inherit;
+        font-family: inherit;
+        font-size: inherit;
+        -moz-appearance: textfield;"
         oninput="fetchBridger()"/>)
     <span id="bridgerOutput"></span></code></pre>
     </div>
 
     <style>
-    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
         -webkit-appearance: none;
         margin: 0;

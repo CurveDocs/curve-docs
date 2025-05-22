@@ -1,9 +1,9 @@
-**The StableSwap Factory utilizes the `create_forwarder_to` function to deploy its contracts from the implementations.**
+**The Stableswap Factory utilizes the `create_forwarder_to` function to deploy its contracts from the implementations.**
 
 !!!warning
     **Implementation contracts are upgradable.** They can either be replaced, or additional implementation contracts can be added. Therefore, please always make sure to check the most recent ones.
 
-It utilizes three different implementations: 
+It utilizes three different implementations:
 
 - **`metapool_implementations`**, containing multiple contracts that are used to deploy metapools.
 - **`plain_implementations`**, containing multiple contracts that are used to deploy plain pools.
@@ -15,7 +15,7 @@ It utilizes three different implementations:
 ### `metapool_implementations`
 !!! description "`Factory.metapool_implementations(_base_pool: address) -> address[10]:`"
 
-    Getter for a list of implementation contracts for metapools targetting `_base_pool`.
+    Getter for a list of implementation contracts for metapools targeting `_base_pool`.
 
     Returns: metapool implementation contracts (`address[10]`).
 
@@ -33,7 +33,7 @@ It utilizes three different implementations:
         @external
         def metapool_implementations(_base_pool: address) -> address[10]:
             """
-            @notice Get a list of implementation contracts for metapools targetting the given base pool
+            @notice Get a list of implementation contracts for metapools targeting the given base pool
             @dev A base pool is the pool for the LP token contained within the metapool
             @param _base_pool Address of the base pool
             @return List of implementation contract addresses

@@ -16,7 +16,7 @@ These kinds of oracle contracts **need to be deployed manually**, as there is cu
     The oracle contracts are fully immutable. Once deployed, they cannot change any parameters, stop the price updates, or alter the pools used to calculate the prices. All relevant data required for the oracle to function is passed into the `__init__` function during the deployment of the contract.
 
     ???quote "`__init__`"
-        
+
         === "CryptoFromPoolsRate.vy"
 
             ```python
@@ -507,7 +507,7 @@ The price is determined by combining two different oracle prices. When necessary
 
 ## **Rates**
 
-The oracle contract utilizes the `stored_rates` from a stableswap pool and considers these rates accordingly. The application of these rates is governed by the `USE_RATES` variable. If set to `true`, the rates are applied; if set to `false`, they are not.
+The oracle contract utilizes the `stored_rates` from a Stableswap pool and considers these rates accordingly. The application of these rates is governed by the `USE_RATES` variable. If set to `true`, the rates are applied; if set to `false`, they are not.
 
 ???quote "Source code"
 
@@ -551,7 +551,7 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
 ### `stored_rate`
 !!! description "`CryptoFromPoolsRate.stored_rate() -> uint256`"
 
-    Getter for the stored rates fetched from a stableswap pool. 
+    Getter for the stored rates fetched from a Stableswap pool.
 
     The `stored_rate` is calculated the following:
 
@@ -771,7 +771,7 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
     ??? quote "Source code"
 
         The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
-        
+
         === "CryptoFromPoolsRate.vy"
 
             ```python
@@ -891,7 +891,7 @@ Based on the values of `rate` and `cached_rate`, specific calculations are requi
     ??? quote "Source code"
 
         The following source code includes all changes up to commit hash [86cae3a](https://github.com/curvefi/curve-stablecoin/tree/86cae3a89f2138122be428b3c060cc75fa1df1b0); any changes made after this commit are not included.
-        
+
         === "CryptoFromPoolsRate.vy"
 
             ```python

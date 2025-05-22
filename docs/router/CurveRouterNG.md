@@ -10,7 +10,7 @@ Additionally, the contract provides **functions to calculate input and output am
     Source code for the contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-router-ng/tree/master/contracts).
 
 
-The contract utilizes **interfaces for all relevant Curve pools**, such as StableSwap, CryptoSwap, LLAMMA, and others, to execute swaps.
+The contract utilizes **interfaces for all relevant Curve pools**, such as Stableswap, Cryptoswap, LLAMMA, and others, to execute swaps.
 
 ??? quote "Interfaces"
 
@@ -141,17 +141,17 @@ The contract utilizes **interfaces for all relevant Curve pools**, such as Stabl
 
 ## **Route and Swap Parameters**
 
-The two most curcial input values when using the `CurveRouter` are `_route`, which determines the route of the exchange and `_swap_params`, which includes swap parameters such as input and output token, swap type, pool type and number of coins in the pool.
+The two most crucial input values when using the `CurveRouter` are `_route`, which determines the route of the exchange and `_swap_params`, which includes swap parameters such as input and output token, swap type, pool type and number of coins in the pool.
 
 
 ### `_route`
 
-The route input is an array of up to 11 addresses. When calling the function, the array must always include 11 addresses. Unused spots in the array need to be filled with `ZERO_ADDRESS`. The route consists of tokens and pools or zaps. The first address is always the input token, the last one always the output token. The addresses inbetween compose the route the user wants to trade.
+The route input is an array of up to 11 addresses. When calling the function, the array must always include 11 addresses. Unused spots in the array need to be filled with `ZERO_ADDRESS`. The route consists of tokens and pools or zaps. The first address is always the input token, the last one always the output token. The addresses in-between compose the route the user wants to trade.
 
 
 === "Example"
 
-    ```py 
+    ```py
     [
         '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',   # initial token: wETH
         '0x7f86bf177dd4f3494b841a37e810a34dd56c829b',   # pool1: TricryptoUSDC (USDC, wBTC, wETH)
@@ -201,7 +201,7 @@ The array structure includes the following elements: **`[i, j, swap_type, pool_t
 | 1 | Stable pools using the Stableswap algorithm |
 | 2 | Two-coin Crypto pools using the Cryptoswap algorithm |
 | 3 | Tricrypto pools with three coins using the Cryptoswap algorithm |
-| 4 | Llamma pools, typically used in crvUSD and lending markets |
+| 4 | LLAMMA pools, typically used in crvUSD and lending markets |
 
 **`n_coins`**: Number of coins contained within the pool.
 
@@ -218,7 +218,7 @@ The array structure includes the following elements: **`[i, j, swap_type, pool_t
     ]
     ```
 
-*Let's take a closer look at the first array, which represents the swap parameters for the first exchange (wETH -> USDC). `i = 2` because the coin index value of wETH in the tricryptoUSDC pool is 2. This can be obtained by calling `tricryptoUSDC.coins(n)`. Similarly, `j = 0` because USDC has the coin index value of 0. The swap type is a regular exchange, represented by `1`. The `pool_type` is 3, as it is a tricrypto pool (a cryptoswap algorithm consisting of three coins: USDC, wBTC, and wETH). The last value in the array represents the number of coins in the pool, which is 3.*
+*Let's take a closer look at the first array, which represents the swap parameters for the first exchange (wETH -> USDC). `i = 2` because the coin index value of wETH in the tricryptoUSDC pool is 2. This can be obtained by calling `tricryptoUSDC.coins(n)`. Similarly, `j = 0` because USDC has the coin index value of 0. The swap type is a regular exchange, represented by `1`. The `pool_type` is 3, as it is a Tricrypto pool (a Cryptoswap algorithm consisting of three coins: USDC, wBTC, and wETH). The last value in the array represents the number of coins in the pool, which is 3.*
 
 *The values of the second array should be set according to the crvUSD/USDC pool.*
 
@@ -228,7 +228,7 @@ The array structure includes the following elements: **`[i, j, swap_type, pool_t
 
 ## **Exchanging Tokens**
 
-The router has a single `exchange` function, which allows up to 5 swaps in a single transaction. 
+The router has a single `exchange` function, which allows up to 5 swaps in a single transaction.
 
 Routing and swap parameters need to be determined off-chain. The exchange functionality of the router is designed for gas efficiency over ease-of-use. An accompanying JavaScript library can be found on [:material-github: GitHub](https://github.com/curvefi/curve-router-js), which is used in the Curve UI to determine route and swap parameters.
 
@@ -686,11 +686,11 @@ There are two function to estimate input and output token amounts:
             '0xdA47862a83dac0c112BA89c6abC2159b95afd71C',   # PRISMA
             '0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B',   # PRISMA/ETH pool
             '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',   # ETH
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
             '0x0000000000000000000000000000000000000000'],
             [[1, 0, 1, 1, 2],   # first swap: cvxPRISMA <> PRISMA
             [1, 0, 1, 2, 2],    # second swap: PRISMA <> ETH
@@ -700,8 +700,8 @@ There are two function to estimate input and output token amounts:
             100000000000000000000,  # _amount
             ['0x3b21C2868B6028CfB38Ff86127eF22E68d16d53B',  # cvxPRISMA/PRISMA pool
             '0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B',   # PRISMA/ETH pool
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
             '0x0000000000000000000000000000000000000000'])
         18597416260226417   # expected output
         ```
@@ -911,22 +911,22 @@ There are two function to estimate input and output token amounts:
             '0xdA47862a83dac0c112BA89c6abC2159b95afd71C',   # PRISMA
             '0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B',   # PRISMA/ETH pool
             '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',   # ETH
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000'], 
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000'],
             [[1, 0, 1, 1, 2],   # first swap: cvxPRISMA <> PRISMA
             [1, 0, 1, 2, 2],    # second swap: PRISMA <> ETH
             [0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0]], 
+            [0, 0, 0, 0, 0]],
             100000000000000000000,  # _out_amount
             ['0x3b21C2868B6028CfB38Ff86127eF22E68d16d53B',  # cvxPRISMA/PRISMA pool
             '0x322135Dd9cBAE8Afa84727d9aE1434b5B3EBA44B',   # PRISMA/ETH pool
-            '0x0000000000000000000000000000000000000000', 
-            '0x0000000000000000000000000000000000000000', 
+            '0x0000000000000000000000000000000000000000',
+            '0x0000000000000000000000000000000000000000',
             '0x0000000000000000000000000000000000000000'])
         18597416260226417 # expected input
         ```

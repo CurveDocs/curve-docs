@@ -1,6 +1,6 @@
 **Crypto-Pools are exchange contracts containing two volatile (non-pegged) assets.**
 
-These exchange contracts are deployed via the [CryptoSwap Factory](../../../factory/cryptoswap/overview.md). Unlike newer Factory contracts, which utilize blueprint contracts, the earlier versions did not have this feature at the time of their deployments. Instead, in these earlier versions, the exchange contract is created using the Vyper built-in **`create_forwarder_to()`** function. 
+These exchange contracts are deployed via the [CryptoSwap Factory](../../../factory/cryptoswap/overview.md). Unlike newer Factory contracts, which utilize blueprint contracts, the earlier versions did not have this feature at the time of their deployments. Instead, in these earlier versions, the exchange contract is created using the Vyper built-in **`create_forwarder_to()`** function.
 
 The pool is then initialized via the **`initialize()`** function of the pool implementation contract, which sets all the relevant variables, such as paired tokens, prices, and parameters.
 
@@ -74,7 +74,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
     | `dx` | `uint256` | Amount of input coin being swapped in |
     | `min_dy` | `uint256` | Minimum amount of output coin to receive |
     | `use_eth` | `bool` | whether to use plain ETH; defaults to `False` (uses wETH instead) |
-    | `receiver` | `address` | Address to send output coin to. Deafaults to `msg.sender` |
+    | `receiver` | `address` | Address to send output coin to. Defaults to `msg.sender` |
 
     ??? quote "Source code"
 
@@ -227,7 +227,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 ### `exchange_underlying`
 !!! description "`CryptoSwap.exchange_underlying(i: uint256, j: uint256, dx: uint256, min_dy: uint256, receiver: address = msg.sender) -> uint256:`"
 
-    !!!note 
+    !!!note
         `exchange_underlying` exchanges tokens by using the 'underlying' ETH instead of wETH.
 
     Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`.
@@ -243,7 +243,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
     | `dx` | `uint256` | amount of input coin being swapped in |
     | `min_dy` | `uint256` | minimum amount of output coin to receive |
     | `use_eth` | `bool` | whether to use plain ETH; defaults to `False` (uses wETH instead) |
-    | `receiver` | `address` | address to send output coin to; deafaults to `msg.sender` |
+    | `receiver` | `address` | address to send output coin to; defaults to `msg.sender` |
 
     ??? quote "Source code"
 
@@ -395,7 +395,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 ### `exchange_extended`
 !!! description "`CryptoSwap.exchange_extended(i: uint256, j: uint256, dx: uint256, min_dy: uint256, use_eth: bool, sender: address, receiver: address, cb: bytes32) -> uint256:`"
 
-    !!!note 
+    !!!note
         This method does not allow swapping in native token, but does allow swaps that transfer out native token from the pool.
 
     Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy` with using a callback method.
@@ -411,7 +411,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
     | `dx` | `uint256` | amount of input coin being swapped in |
     | `min_dy` | `uint256` | minimum amount of output coin to receive |
     | `use_eth` | `bool` | whether to use plain ETH; defaults to `False` (uses wETH instead) |
-    | `receiver` | `address` | address to send output coin to; deafaults to `msg.sender` |
+    | `receiver` | `address` | address to send output coin to; defaults to `msg.sender` |
     | `cb` | `bytes32` | callback signature |
 
     ??? quote "Source code"
@@ -562,7 +562,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 ### `get_dy`
 !!! description "`CryptoSwap.get_dy(i: uint256, j: uint256, dx: uint256) -> uint256:`"
 
-    Getter for the received amount of coin `j` for swapping in `dx` amount of coin `i`. 
+    Getter for the received amount of coin `j` for swapping in `dx` amount of coin `i`.
 
     Returns: output amount (`uint256`).
 
@@ -634,7 +634,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
     | `amounts` |  `uint256[N_COINS]` | list of amounts to add of each coin |
     | `min_mint_amount` |  `uint256` | minimum amount of lp tokens to mint |
     | `use_eth` |  `bool` | `True` if native token is being added to the pool; default to `False` |
-    | `receiver` |  `address` | receiver of the lp tokens; deaults to `msg.sender` |
+    | `receiver` |  `address` | receiver of the lp tokens; defaults to `msg.sender` |
 
     ??? quote "Source code"
 
@@ -815,7 +815,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 ### `remove_liquidity`
 !!! description "`CryptoSwap.remove_liquidity(_amount: uint256, min_amounts: uint256[N_COINS], use_eth: bool = False, receiver: address = msg.sender):`"
 
-    Function to remove liquidity from the pool and burn the lp tokens. When removing liquidity via this function, no fees are charged as the coins are withdrawin in balanced proportions.
+    Function to remove liquidity from the pool and burn the lp tokens. When removing liquidity via this function, no fees are charged as the coins are withdrawn in balanced proportions.
 
     Emits: `RemoveLiquidity`
 
@@ -884,7 +884,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 ### `remove_liquidity_one_coin`
 !!! description "`CryptoSwap.remove_liquidity_one_coin(token_amount: uint256, i: uint256, min_amount: uint256, use_eth: bool = False, receiver: address = msg.sender) -> uint256:`"
 
-    Funtion to withdraw liquidity in a single token.
+    Function to withdraw liquidity in a single token.
 
     Returns: amount of withdrawn coin (`uint256`).
 
@@ -958,7 +958,7 @@ The pool is then initialized via the **`initialize()`** function of the pool imp
 ### `calc_withdraw_one_coin`
 !!! description "`CryptoSwap.calc_withdraw_one_coin(token_amount: uint256, i: uint256) -> uint256:`"
 
-    Method to calculate the amount of output token `i` when burning `token_amount` of lp tokens, taking fees into condsideration.
+    Method to calculate the amount of output token `i` when burning `token_amount` of lp tokens, taking fees into consideration.
 
     Returns: amount of token received (`uint256`).
 
@@ -1207,7 +1207,7 @@ Oracle prices are updated whenever the `tweak_price` function is called. This oc
 ### `price_oracle`
 !!! description "`CryptoSwap.price_oracle() -> uint256:`"
 
-    Getter for the oracle price of the coin at index `k` with regard to coin at index 0. 
+    Getter for the oracle price of the coin at index `k` with regard to coin at index 0.
 
     Returns: oracle price (`uint256`).
 
@@ -1246,7 +1246,7 @@ Oracle prices are updated whenever the `tweak_price` function is called. This oc
 ### `last_prices`
 !!! description "`CryptoSwap.last_prices() -> uint256: view`"
 
-    Getter for the last price of the coin at index `k` with regard to the coin at index 0. `last_price` stores the last price when calling the functions `_exchange()`, `add_liquidity()` or `remove_liquitiy_one_coin()`.
+    Getter for the last price of the coin at index `k` with regard to the coin at index 0. `last_price` stores the last price when calling the functions `_exchange()`, `add_liquidity()` or `remove_liquidity_one_coin()`.
 
     Returns: last price (`uint256`).
 
@@ -1289,7 +1289,7 @@ Oracle prices are updated whenever the `tweak_price` function is called. This oc
 !!! description "`CryptoSwap.price_scale -> uint256: view`"
 
     Getter for the price scale of the coin at index `k` with regard to the coin at index 0. Price scale determines the price band around which liquidity is
-    concentrated and is conditionally updated when calling the functions `_exchange()`, `add_liquidity()` or `remove_liquitiy_one_coin()`.
+    concentrated and is conditionally updated when calling the functions `_exchange()`, `add_liquidity()` or `remove_liquidity_one_coin()`.
 
     Returns: last price (`uint256`).
 
@@ -1549,7 +1549,7 @@ Fees are charged based on the balance/imbalance of the pool. Fee is low when the
 ### `claim_admin_fees`
 !!! description "`CryptoSwap.admin_fee() -> uint256:`"
 
-    Function to claim admin fees from the pool and send them to the fee receiver. `fee_receiver` is set within the [Factory](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99). 
+    Function to claim admin fees from the pool and send them to the fee receiver. `fee_receiver` is set within the [Factory](https://etherscan.io/address/0xF18056Bbd320E96A48e3Fbf8bC061322531aac99).
 
     Emits: `ClaimAdminFee`
 
@@ -1668,7 +1668,7 @@ The price scaling parameters can be adjusted by the admin of the pool, see [here
 
 ## **Bonding Curve Parameters**
 
-Similar to many AMMs, Curve v2 employs a bonding curve to determine asset prices based on the pool's availability of each asset. To centralize liquidity near the bonding curve's midpoint, Curve v2 utilizes an invariant that sits between the StableSwap (Curve v1) and the constant-product models (like Uniswap, Balancer, and others).
+Similar to many AMMs, Curve v2 employs a bonding curve to determine asset prices based on the pool's availability of each asset. To centralize liquidity near the bonding curve's midpoint, Curve v2 utilizes an invariant that sits between the Stableswap (Curve v1) and the constant-product models (like Uniswap, Balancer, and others).
 
 The bonding curve parameters can be adjusted by the admin of the pool, see [here](../pools/admin-controls.md).
 
@@ -1876,7 +1876,7 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 ### `factory`
 !!! description "`CryptoSwap.factory()`"
 
-    Getter for the factory contract. 
+    Getter for the factory contract.
 
     Returns: factory (`address`).
 
@@ -1895,14 +1895,14 @@ The bonding curve parameters can be adjusted by the admin of the pool, see [here
 
 ## **Internal Math Functions**
 
-All these math functions are interally embedded into the contract. They can not be called externally.
+All these math functions are internally embedded into the contract. They can not be called externally.
 
 ### `geometric_mean`
 !!! description "`CryptoSwap.geometric_mean(unsorted_x: uint256[N_COINS], sort: bool) -> uint256:`"
 
     Function to calculate the geometric mean of a list of numbers in 1e18 precision.
 
-    Returns: gemoetric mean (`uint256`).
+    Returns: geometric mean (`uint256`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -2082,7 +2082,7 @@ All these math functions are interally embedded into the contract. They can not 
             # x_sorted: uint256[N_COINS] = x
             # x_sorted[i] = 0
             # x_sorted = self.sort(x_sorted)  # From high to low
-            # x[not i] instead of x_sorted since x_soted has only 1 element
+            # x[not i] instead of x_sorted since x_sorted has only 1 element
 
             convergence_limit: uint256 = max(max(x_j / 10**14, D / 10**14), 100)
 

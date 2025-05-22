@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     const FeeCollectorContract = new web3.eth.Contract(FeeCollectorABI, FeeCollectorAddress);
     const Multicall3Contract = new web3.eth.Contract(Multicall3ABI, Multicall3Address);
-    
+
     async function updateValues() {
         const calls = [
             { target: FeeCollectorAddress, allowFailure: false, callData: web3.eth.abi.encodeFunctionSignature('target()') },
@@ -82,19 +82,19 @@ document.addEventListener('DOMContentLoaded', async function() {
     async function handleMultiInputQuery(inputIds, outputId, method) {
         const inputElements = inputIds.map(id => document.getElementById(id));
         const outputElement = document.getElementById(outputId);
-        
+
         async function fetchData() {
             const inputs = inputElements.map(el => el ? el.value.trim() : '');
-            
+
             // Handle default values (e.g., current timestamp for epoch)
             if (method === 'epoch' && inputs[0] === '') {
                 inputs[0] = Math.floor(Date.now() / 1000).toString();
                 inputElements[0].value = inputs[0];
             }
-            
+
             // Remove timestamp-related logic for can_exchange
             if (method === 'can_exchange' || method === 'is_killed') {
-                
+
                 if (method === 'can_exchange') {
                     // Convert single address to array for can_exchange method
                     inputs[0] = [inputs[0]];
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 outputElement.style.color = 'red';
                 return;
             }
-            
+
             try {
                 const result = await FeeCollectorContract.methods[method](...inputs).call();
                 let formattedResult;

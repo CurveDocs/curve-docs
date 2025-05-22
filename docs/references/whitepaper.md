@@ -12,7 +12,7 @@ hide_feature_button: true
 
     ---
 
-    Whitepaper on the general structure and workingsof the Curve DAO.
+    Whitepaper on the general structure and workings of the Curve DAO.
 
     [:octicons-arrow-right-24: PDF](../assets/pdf/whitepaper_curvedao.pdf)
 
@@ -45,18 +45,18 @@ hide_feature_button: true
 
 ---
 
-# **StableSwap Derivations**
+# **Stableswap Derivations**
 
-The StableSwap invariant is defined as:
+The Stableswap invariant is defined as:
 
 $$
 A n^n \sum x_i + D = A D n^n + \frac{D^{n+1}}{n^n \prod x_i}
 $$
 
 Where:
-- $A$ is the amplification coefficient  
-- $n$ is the number of coins  
-- $x_i$ is the amount of the $i$-th coin  
+- $A$ is the amplification coefficient
+- $n$ is the number of coins
+- $x_i$ is the amount of the $i$-th coin
 - $D$ is the invariant (i.e. the total virtual balance when all coins are equal)
 
 ---
@@ -180,7 +180,7 @@ Here’s a cleaned-up and well-structured version of your **Cryptoswap Derivatio
 
 ## Newton Step for `newton_D()` in Tricrypto and Twocrypto
 
-This derivation explains the mathematical logic behind the `newton_D()` function used in Curve’s tricrypto and twocrypto pools.
+This derivation explains the mathematical logic behind the `newton_D()` function used in Curve’s Tricrypto and Twocrypto pools.
 
 ---
 
@@ -261,8 +261,8 @@ F' = - \frac{A K_0 \gamma^2}{g^2} D^{n-2} S - \frac{2 n A K_0^2 \gamma^2}{g^3} D
 ## Derivation of \( \frac{F}{F'} \)
 
 \[
-\frac{F}{F'} = 
-\frac  
+\frac{F}{F'} =
+\frac
     {
         \frac{A K_0 \gamma^2}{g^2} D^{n-1} S + P - \frac{A K_0 \gamma^2}{g^2} D^n - \left( \frac{D}{n} \right)^n
     }
@@ -276,7 +276,7 @@ F' = - \frac{A K_0 \gamma^2}{g^2} D^{n-2} S - \frac{2 n A K_0^2 \gamma^2}{g^3} D
 Divide numerator and denominator by \( D^n / n^n \):
 
 \[
-= \frac  
+= \frac
     {
         \frac{\hat{A} K_0 \gamma^2}{g^2} D^{-1} S + K_0 - \frac{\hat{A} K_0 \gamma^2}{g^2} - 1
     }
@@ -288,7 +288,7 @@ Divide numerator and denominator by \( D^n / n^n \):
 Divide numerator and denominator by \( \frac{\hat{A} \gamma^2}{g^2 D} \):
 
 \[
-= \frac  
+= \frac
     {
         K_0 S + m_1 (K_0 - 1) - K_0 D
     }
@@ -300,7 +300,7 @@ Divide numerator and denominator by \( \frac{\hat{A} \gamma^2}{g^2 D} \):
 Multiply numerator and denominator by \( D \):
 
 \[
-= \frac  
+= \frac
     {
         K_0 S D + m_1 (K_0 - 1) D - K_0 D^2
     }
@@ -312,7 +312,7 @@ Multiply numerator and denominator by \( D \):
 Divide numerator and denominator by \( K_0 \):
 
 \[
-= \frac  
+= \frac
     {
         S D + m_1 \left(1 - \frac{1}{K_0}\right) D - D^2
     }
@@ -324,7 +324,7 @@ Divide numerator and denominator by \( K_0 \):
 Distribute:
 
 \[
-= \frac  
+= \frac
     {
         S D + m_1 \left(1 - \frac{1}{K_0} \right) D - D^2
     }
@@ -397,7 +397,7 @@ D_{k+1} = D_+ - D_-
 ## **Curve Stablecoin (crvUSD)**
 - https://crvusd-rate.0xreviews.xyz/
 - https://twitter.com/definikola/status/1674430800107044871
-- https://mirror.xyz/0x290101596c9f85eB7194f6090a8c94fF5AAa32ca/esqF1zwoaZ4ZSIjt-faZZiuKwLLw34nD0SGlqD2fZ6Q 
+- https://mirror.xyz/0x290101596c9f85eB7194f6090a8c94fF5AAa32ca/esqF1zwoaZ4ZSIjt-faZZiuKwLLw34nD0SGlqD2fZ6Q
 - https://mirror.xyz/albertlin.eth/H0m3nyq65anotTWhTdWDIWEfMPOofNPy-0qyARYXNF4
 - https://www.curve.wiki/post/from-uniswap-v3-to-crvusd-llamma-%E8%8B%B1%E6%96%87%E7%89%88
 - https://www.youtube.com/watch?v=p5G9injrXk8&t=2602s

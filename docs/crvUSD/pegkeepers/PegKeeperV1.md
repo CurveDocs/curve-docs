@@ -1,12 +1,12 @@
-## **Concept of PegKeepers**  
+## **Concept of PegKeepers**
 
-PegKeepers are contracts that help stabilize the peg of crvUSD. Each Keeper is allocated a specific amount of crvUSD to secure the peg. 
+PegKeepers are contracts that help stabilize the peg of crvUSD. Each Keeper is allocated a specific amount of crvUSD to secure the peg.
 The DAO decides this balance and can be **raised or lowered** by calling `set_debt_ceiling()` in the [Factory](../factory/overview.md).
 
 
 The underlying actions of the PegKeepers can be divided into two actions, which get executed when calling [`update()`](#update):
 
-- **crvUSD price > 1**: The PegKeeper mints and deposits crvUSD single-sidedly into the pool to which it is "linked", and receives LP tokens in exchange. This increases the balance of crvUSD in the pool and therefore decreases the price.  
+- **crvUSD price > 1**: The PegKeeper mints and deposits crvUSD single-sidedly into the pool to which it is "linked", and receives LP tokens in exchange. This increases the balance of crvUSD in the pool and therefore decreases the price.
 It is important to note that the LP tokens are not staked in the gauge (if there is one). Thus, the PegKeeper does not receive CRV emissions.
 
 - **crvUSD price < 1**: If PegKeepers hold a balance of the corresponding LP token, they can single-sidedly withdraw crvUSD from the liquidity pool and burn it. This action reduces the supply of crvUSD in the pool and should subsequently increase its price.
@@ -17,7 +17,7 @@ It is important to note that the LP tokens are not staked in the gauge (if there
 
 
 !!!deploy "Contract Source & Deployment"
-    Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/stabilizer/PegKeeper.vy). 
+    Source code for this contract is available on [GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/stabilizer/PegKeeper.vy).
 
     | PegKeepers                | Deployment Address  |
     | ------------------------- | ------------------- |
@@ -27,8 +27,8 @@ It is important to note that the LP tokens are not staked in the gauge (if there
     |`PegKeeper for crvUSD/TUSD`|[0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae](https://etherscan.io/address/0x1ef89Ed0eDd93D1EC09E4c07373f69C49f4dcCae#code)|
 
 
-## **Stabilisation Method** 
-The most important function in the PegKeeper contract is the `update()` function. When invoked, the PegKeeper either mints and single-sidedly deposits crvUSD into the StableSwap pool, or it withdraws crvUSD from the pool by redeeming the LP tokens received from previous deposits.
+## **Stabilization Method**
+The most important function in the PegKeeper contract is the `update()` function. When invoked, the PegKeeper either mints and single-sidedly deposits crvUSD into the Stableswap pool, or it withdraws crvUSD from the pool by redeeming the LP tokens received from previous deposits.
 
 - **Deposit and Mint:** This mechanism is triggered when the *price of crvUSD > 1*. Minting and depositing into the pool will increase the crvUSD supply and decrease its price. The LP tokens that the PegKeeper receives when depositing crvUSD into the pool are not staked in the gauge (if the pool has one), which means the PegKeeper does not receive CRV inflation rewards.
 
@@ -40,8 +40,8 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
 ### `update`
 !!! description "`PegKeeper.update(_beneficiary: address = msg.sender) -> uint256:`"
 
-    Function to either **mint and deposit** or **withdraw and burn** based on the balances within the pools.  
-    A share (`caller_share`) of the generated profit will be awarded to the function's caller. By default, this is set to `msg.sender`, but there is also the possibility to input a `_beneficiary` address to which the rewards will be sent. 
+    Function to either **mint and deposit** or **withdraw and burn** based on the balances within the pools.
+    A share (`caller_share`) of the generated profit will be awarded to the function's caller. By default, this is set to `msg.sender`, but there is also the possibility to input a `_beneficiary` address to which the rewards will be sent.
 
     Returns: caller profit (`uint256`).
 
@@ -177,7 +177,7 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
     === "Example"
 
         ```shell
-        >>> PegKepper.update()
+        >>> PegKeeper.update()
         ```
 
 
@@ -190,21 +190,21 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         last_change: public(uint256)
         ```
 
     === "Example"
 
         ```shell
-        >>> PegKepper.last_change()
+        >>> PegKeeper.last_change()
         1688794235
         ```
-   
+
 
 ## **Calculating and Withdrawing Profits**
 
-### `calc_profit` 
+### `calc_profit`
 !!! description "`PegKeeper.calc_profit() -> uint256:`"
 
     Function to calculate the generated profit in LP tokens.
@@ -244,7 +244,7 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
     === "Example"
 
         ```shell
-        >>> PegKepper.calc_profit()
+        >>> PegKeeper.calc_profit()
         41173451286504149038
         ```
 
@@ -252,7 +252,7 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
 ### `estimate_caller_profit`
 !!! description "`PegKeeper.estimate_caller_profit() -> uint256:`"
 
-    Function to estimate the profit from calling `update()`. The caller of the function will receive 20% of the total profits. 
+    Function to estimate the profit from calling `update()`. The caller of the function will receive 20% of the total profits.
 
     Returns: expected amount of profit going to the caller (`uint256`).
 
@@ -261,7 +261,7 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         ACTION_DELAY: constant(uint256) = 15 * 60
 
         @external
@@ -306,7 +306,7 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
     === "Example"
 
         ```shell
-        >>> PegKepper.estimate_caller_profit()
+        >>> PegKeeper.estimate_caller_profit()
         0
         ```
 
@@ -320,7 +320,7 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         SHARE_PRECISION: constant(uint256) = 10 ** 5
         caller_share: public(uint256)
 
@@ -364,7 +364,7 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
     === "Example"
 
         ```shell
-        >>> PegKepper.caller_share()
+        >>> PegKeeper.caller_share()
         20000
         ```
 
@@ -372,7 +372,7 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
 ### `set_new_caller_share`
 !!! description "`PegKeeper.set_new_caller_share(_new_caller_share: uint256):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
     Function to set the caller share to `_new_caller_share`.
@@ -411,7 +411,7 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
     === "Example"
 
         ```shell
-        >>> PegKepper.set_new_caller_share(30000)
+        >>> PegKeeper.set_new_caller_share(30000)
         ```
 
 
@@ -426,7 +426,7 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         event Profit:
             lp_amount: uint256
 
@@ -448,14 +448,14 @@ PegKeepers have unlimited approval for the liquidity pool, allowing them to depo
     === "Example"
 
         ```shell
-        >>> PegKepper.withdraw_profit():
+        >>> PegKeeper.withdraw_profit():
         1222209056795882453168
         ```
 
 
 ## **Admin and Receiver**
 
-PegKeepers have an `admin` and a `receiver`. Both of these variables can be changed by calling the respective admin-guarded functions, but such changes must first be approved by a DAO vote.  
+PegKeepers have an `admin` and a `receiver`. Both of these variables can be changed by calling the respective admin-guarded functions, but such changes must first be approved by a DAO vote.
 After approval, the newly designated admin or receiver is required to apply these changes within a timeframe of `3 * 86400` seconds, which equates to a timespan of *three days*. Should there be an attempt to implement these changes after this period, the function will revert.
 
 
@@ -468,7 +468,7 @@ After approval, the newly designated admin or receiver is required to apply thes
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         admin: public(address)
 
         @external
@@ -486,14 +486,14 @@ After approval, the newly designated admin or receiver is required to apply thes
             ...
 
             self.admin = _admin
-            
+
             ...
         ```
 
     === "Example"
 
         ```shell
-        >>> PegKepper.admin()
+        >>> PegKeeper.admin()
         '0x40907540d8a6C65c637785e8f8B742ae6b0b9968'
         ```
 
@@ -514,7 +514,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.future_admin()
+        >>> PegKeeper.future_admin()
         '0x0000000000000000000000000000000000000000'
         ```
 
@@ -522,7 +522,7 @@ After approval, the newly designated admin or receiver is required to apply thes
 ### `commit_new_admin`
 !!! description "`PegKeeper.commit_new_admin(_new_admin: address):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
     Function to commit a new admin.
@@ -535,7 +535,7 @@ After approval, the newly designated admin or receiver is required to apply thes
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         event CommitNewAdmin:
             admin: address
 
@@ -559,14 +559,14 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.commit_new_admin("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045")
+        >>> PegKeeper.commit_new_admin("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045")
         ```
 
 
 ### `apply_new_admin`
 !!! description "`PegKeeper.apply_new_admin():`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `future_admin` of the contract.
 
     Function to apply the new admin of the PegKeeper.
@@ -575,7 +575,7 @@ After approval, the newly designated admin or receiver is required to apply thes
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         event ApplyNewAdmin:
             admin: address
 
@@ -600,14 +600,14 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.apply_new_admin()
+        >>> PegKeeper.apply_new_admin()
         ```
 
 
 ### `new_admin_deadline`
 !!! description "`PegKeeper.new_admin_deadline() -> uint256: view`"
 
-    Getter for the timestamp indicating the deadline by which the `future_admin` can apply the admin change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a **timeperiod of three days**.
+    Getter for the timestamp indicating the deadline by which the `future_admin` can apply the admin change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a **time period of three days**.
 
     Returns: timestamp (`uint256`).
 
@@ -620,7 +620,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.new_admin_deadline()
+        >>> PegKeeper.new_admin_deadline()
         0
         ```
 
@@ -634,7 +634,7 @@ After approval, the newly designated admin or receiver is required to apply thes
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         receiver: public(address)
 
         @external
@@ -653,14 +653,14 @@ After approval, the newly designated admin or receiver is required to apply thes
 
             assert _receiver != empty(address)
             self.receiver = _receiver
-            
+
             ...
         ```
 
     === "Example"
 
         ```shell
-        >>> PegKepper.receiver()
+        >>> PegKeeper.receiver()
         '0xeCb456EA5365865EbAb8a2661B0c503410e9B347'
         ```
 
@@ -674,14 +674,14 @@ After approval, the newly designated admin or receiver is required to apply thes
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         future_admin: public(address)
         ```
 
     === "Example"
 
         ```shell
-        >>> PegKepper.future_receiver()
+        >>> PegKeeper.future_receiver()
         '0x0000000000000000000000000000000000000000'
         ```
 
@@ -689,7 +689,7 @@ After approval, the newly designated admin or receiver is required to apply thes
 ### `commit_new_receiver`
 !!! description "`PegKeeper.commit_new_receiver(_new_receiver: address):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
     Function to commit a new receiver address.
@@ -698,7 +698,7 @@ After approval, the newly designated admin or receiver is required to apply thes
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `_new_receiver` |  `address` | new receiver address | 
+    | `_new_receiver` |  `address` | new receiver address |
 
     ??? quote "Source code"
 
@@ -726,7 +726,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.commit_new_receiver("0x0000000000000000000000000000000000000000")
+        >>> PegKeeper.commit_new_receiver("0x0000000000000000000000000000000000000000")
         ```
 
 
@@ -739,7 +739,7 @@ After approval, the newly designated admin or receiver is required to apply thes
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         event ApplyNewReceiver:
             receiver: address
 
@@ -762,14 +762,14 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.apply_new_receiver():
+        >>> PegKeeper.apply_new_receiver():
         ```
 
 
 ### `new_receiver_deadline`
 !!! description "`PegKeeper.new_receiver_deadline() -> uint256: view`"
 
-    Getter for the timestamp indicating the deadline by which the `future_receiver` can apply the receiver change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a **timeperiod of three days**.
+    Getter for the timestamp indicating the deadline by which the `future_receiver` can apply the receiver change. Once the deadline is over, the address will no longer be able to apply the changes. The deadline is set for a **time period of three days**.
 
     Returns: timestamp (`uint256`).
 
@@ -782,7 +782,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.new_receiver_deadline()
+        >>> PegKeeper.new_receiver_deadline()
         0
         ```
 
@@ -790,7 +790,7 @@ After approval, the newly designated admin or receiver is required to apply thes
 ### `revert_new_option`
 !!! description "`PegKeeper.revert_new_options():`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
     Function to revert admin or receiver changes. Calling this function sets the admin and receiver deadline back to 0 and emits ApplyNewAdmin and ApplyNewReceiver events to revert the changes.
@@ -799,7 +799,7 @@ After approval, the newly designated admin or receiver is required to apply thes
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         event ApplyNewReceiver:
             receiver: address
 
@@ -825,7 +825,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.revert_new_options():
+        >>> PegKeeper.revert_new_options():
         ```
 
 
@@ -848,7 +848,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.debt()
+        >>> PegKeeper.debt()
         10569198033275719942044356
         ```
 
@@ -862,7 +862,7 @@ After approval, the newly designated admin or receiver is required to apply thes
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         FACTORY: immutable(address)
 
         @external
@@ -887,7 +887,7 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.FACTORY()
+        >>> PegKeeper.FACTORY()
         '0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC'
         ```
 
@@ -901,7 +901,7 @@ After approval, the newly designated admin or receiver is required to apply thes
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         PEGGED: immutable(address)
 
         @external
@@ -919,14 +919,14 @@ After approval, the newly designated admin or receiver is required to apply thes
             ...
 
             PEGGED = pegged
-            
+
             ...
         ```
 
     === "Example"
 
         ```shell
-        >>> PegKepper.PEGGED()
+        >>> PegKeeper.PEGGED()
         '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E'
         ```
 
@@ -958,14 +958,14 @@ After approval, the newly designated admin or receiver is required to apply thes
             ...
 
             POOL = _pool
-            
+
             ...
         ```
 
     === "Example"
 
         ```shell
-        >>> PegKepper.POOL()
+        >>> PegKeeper.POOL()
         '0x4DEcE678ceceb27446b35C672dC7d61F30bAD69E'
         ```
 
@@ -1004,6 +1004,6 @@ After approval, the newly designated admin or receiver is required to apply thes
     === "Example"
 
         ```shell
-        >>> PegKepper.AGGREGATOR()
+        >>> PegKeeper.AGGREGATOR()
         '0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7'
         ```

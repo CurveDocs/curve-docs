@@ -3,14 +3,14 @@
 <script src="/assets/javascripts/contracts/feecollector.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
 
-The `FeeCollector` serves as an entry point for the fee burning and distribution mechanism, acting as a universal contract that collects all admin fees from various revenue sources within the Curve ecosystem. 
+The `FeeCollector` serves as an entry point for the fee burning and distribution mechanism, acting as a universal contract that collects all admin fees from various revenue sources within the Curve ecosystem.
 
 ???+ vyper "`FeeCollector.vy`"
     The source code for the `FeeCollector.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-burners/blob/main/contracts/FeeCollector.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`.
 
-    This version of `FeeCollector` is only deployed on the following chains, as CowSwap is only deployed on these chains:
+    This version of `FeeCollector` is only deployed on the following chains, as CoWSwap is only deployed on these chains:
 
-    - :logos-ethereum: Ethereum at [`0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00`](https://etherscan.io/address/0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00) 
+    - :logos-ethereum: Ethereum at [`0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00`](https://etherscan.io/address/0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00)
     - :logos-gnosis: Gnosis at [`0xBb7404F9965487a9DdE721B3A5F0F3CcfA9aa4C5`](https://gnosisscan.io/address/0xBb7404F9965487a9DdE721B3A5F0F3CcfA9aa4C5)
 
 This new architecture simplifies the collection of fees and the burning of these fees into a designated fee token. The `FeeCollector` introduces a [`target`](#target) variable that represents the token into which all collected fees are burned. This variable can be changed to any token, but such a change requires a successfully passed on-chain vote, as the contract is fully controlled by the Curve DAO.
@@ -71,7 +71,7 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
 
     Getter for the current epoch based on a given timestamp.
 
-    Returns: current epoch value which corresponds to the `Epoch enum `(`uint256`). 
+    Returns: current epoch value which corresponds to the `Epoch enum `(`uint256`).
 
     | Input | Type      | Description                         |
     | ----- | --------- | ----------------------------------- |
@@ -113,24 +113,24 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current `epoch`. Default value is set to the current timestamp.
 
         <div class="highlight">
-        <pre><code>>>> FeeCollector.epoch(<input id="epochInput" 
-        type="number" 
-        value="{Math.floor(Date.now() / 1000)}" 
-        min="0" 
-        style="width: 100px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> FeeCollector.epoch(<input id="epochInput"
+        type="number"
+        value="{Math.floor(Date.now() / 1000)}"
+        min="0"
+        style="width: 100px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>)
         <span id="epochOutput">>>> Loading...</span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -148,7 +148,7 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
     | Input    | Type      | Description                                                             |
     | -------- | --------- | ----------------------------------------------------------------------- |
     | `_epoch` | `uint256` | Index of the Epoch enum for which to check start and end for            |
-    | `_ts`    | `uint256` | Timestamp to anochr to. Defaults to the current one (`block.timestamp`) |
+    | `_ts`    | `uint256` | Timestamp to anchor to. Defaults to the current one (`block.timestamp`) |
 
     ??? quote "Source code"
 
@@ -182,25 +182,25 @@ EPOCH_TIMESTAMPS: constant(uint256[17]) = [
 
         <div class="highlight">
         <pre><code>>>> FeeCollector.epoch_time_frame(
-        Epoch: <input id="epochTimeFrameEpochInput" 
-        type="number" 
-        style="width: 100px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit;" 
-            oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
-        Timestamp: <input id="epochTimeFrameTsInput" 
+        Epoch: <input id="epochTimeFrameEpochInput"
         type="number"
-        style="width: 150px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit;" 
+        style="width: 100px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
+        Timestamp: <input id="epochTimeFrameTsInput"
+        type="number"
+        style="width: 150px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;"
             oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>)
         <span id="epochWarning"></span>
         <span id="epochTimeFrameOutput">>>> Enter an epoch and a unix timestamp</span></code></pre>
@@ -272,23 +272,23 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
 
         <div class="highlight">
         <pre><code>>>> FeeCollector.fee(
-        Epoch: <input id="feeEpochInput" 
-        type="number" 
-        style="width: 100px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit;">
-        Timestamp: <input id="feeTsInput" 
+        Epoch: <input id="feeEpochInput"
         type="number"
-        style="width: 150px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 100px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;">
+        Timestamp: <input id="feeTsInput"
+        type="number"
+        style="width: 150px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;">
         )
         <span id="epochWarning"></span>
@@ -349,23 +349,23 @@ The `FeeCollector` contract has a keeper's fee, which incentivizes external user
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the `max_fee` of a specific epoch.
 
         <div class="highlight">
-        <pre><code>>>> FeeCollector.max_fee(<input id="maxFeeEpochInput" 
-        type="number" 
-        min="0" 
-        style="width: 100px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> FeeCollector.max_fee(<input id="maxFeeEpochInput"
+        type="number"
+        min="0"
+        style="width: 100px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>)
         <span id="maxFeeOutput">>>> Loading...</span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -433,7 +433,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
 *The general flow of the fee burning process is the following:*
 
 1. Admin fees are collected from pools or other revenue sources using the `withdraw_many` function. While fees from older pools need to be claimed manually, the accrued fees from newer pools (mostly NG pools) are periodically claimed when removing liquidity from the pool.
-2. The accrued tokens can be burned by calling the `collect` function. This creates, if there isn't already one, a conditional order on CowSwap which automatically exchanges the fee tokens into the `target` coin. Admin fees can only be burned during the `EXCHANGE` epoch. If `collect` is called during the `COLLECT epoch, the coins are transferred to the CowSwapBurner, and a conditional order is created, but the order is not yet valid and is waiting for the WatchTower to place the order with the CowSwap API.
+2. The accrued tokens can be burned by calling the `collect` function. This creates, if there isn't already one, a conditional order on CoWSwap which automatically exchanges the fee tokens into the `target` coin. Admin fees can only be burned during the `EXCHANGE` epoch. If `collect` is called during the `COLLECT epoch, the coins are transferred to the CowSwapBurner, and a conditional order is created, but the order is not yet valid and is waiting for the WatchTower to place the order with the CoWSwap API.
 3. After burning the tokens, they can be forwarded to the `FeeDistributor` using the `forward` function.
 
 
@@ -577,10 +577,10 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
         ```
 
 
-### `collect` 
+### `collect`
 !!! description "`FeeCollector.collect(_coins: DynArray[ERC20, MAX_LEN], _receiver: address=msg.sender)`"
 
-    Function that is the primary mechanism for burning coins and can only be called during the `COLLECT` epoch. It calls the `burn` function of the burner contract, which creates a [conditional order](https://github.com/cowprotocol/composable-cow) on CowSwap if one has not already been created. This process effectively "burns" the collected coins by swapping them into the target coin. Additionally, the caller is awarded a [keeper fee](#keepers-fee) for their role in the process.
+    Function that is the primary mechanism for burning coins and can only be called during the `COLLECT` epoch. It calls the `burn` function of the burner contract, which creates a [conditional order](https://github.com/cowprotocol/composable-cow) on CoWSwap if one has not already been created. This process effectively "burns" the collected coins by swapping them into the target coin. Additionally, the caller is awarded a [keeper fee](#keepers-fee) for their role in the process.
 
     !!!colab "Google Colab Notebook"
         Coin addresses to collect are converted into `uint160` and sorted from small to big.
@@ -725,16 +725,16 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example checks if a specific coin can be exchanged.
 
         <div class="highlight">
-        <pre><code>>>> FeeCollector.can_exchange(<input id="coinsInput" 
+        <pre><code>>>> FeeCollector.can_exchange(<input id="coinsInput"
         type="text"
         value="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
-        style="width: 310px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit;" 
+        style="width: 310px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;"
         />)
         <span id="canExchangeOutput">Loading...</span></code></pre>
         </div>
@@ -995,7 +995,7 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
     !!!guard "Guarded Method"
         This function is only callable by the `owner` of the contract.
 
-    Function to transfer coins from the contract with approval. This function is needed for back compatability along with dealing with raw ETH.
+    Function to transfer coins from the contract with approval. This function is needed for back compatibility along with dealing with raw ETH.
 
     | Input   | Type      | Description                          |
     | ------- | --------- | ------------------------------------ |
@@ -1011,9 +1011,9 @@ The `FeeCollector` contract has a [`target`](#target) variable, which represents
             def burn(_coin: address) -> bool:
                 """
                 @notice Transfer coin from contract with approval
-                @dev Needed for back compatability along with dealing raw ETH
+                @dev Needed for back compatibility along with dealing raw ETH
                 @param _coin Coin to transfer
-                @return True if did not fail, back compatability
+                @return True if did not fail, back compatibility
                 """
                 if _coin == ETH_ADDRESS:  # Deposit
                     WETH.deposit(value=self.balance)
@@ -1212,7 +1212,7 @@ When setting up a burner or hooker, they need to support a specific interface st
 
     === "Example"
 
-        This example sets the `burner` contract to `0x0000000000000000000000000000000000000000`. 
+        This example sets the `burner` contract to `0x0000000000000000000000000000000000000000`.
 
         ```shell
         >>> FeeCollector.burner()
@@ -1275,7 +1275,7 @@ When setting up a burner or hooker, they need to support a specific interface st
 
     === "Example"
 
-        This example sets the `hooker` contract to `0x0000000000000000000000000000000000000000`. 
+        This example sets the `hooker` contract to `0x0000000000000000000000000000000000000000`.
 
         ```shell
         >>> FeeCollector.hooker()
@@ -1347,16 +1347,16 @@ The contract includes a mechanism to "kill" certain coins across specific epochs
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } Example to check if a coin is killed. If a coin is not killed, the method will return 0. The method returns the sum of the indices within the Epoch enum. Therefore, after we have killed wETH for the epochs `COLLECT` and `EXCHANGE`, the call now returns 6 (indices of `COLLECT` and `EXCHANGE` are 2 and 4, which sum up to six).
 
         <div class="highlight">
-        <pre><code>>>> FeeCollector.is_killed(<input id="isKilledCoinInput" 
-        type="text" 
-        value="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2" 
-        style="width: 310px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit;" 
+        <pre><code>>>> FeeCollector.is_killed(<input id="isKilledCoinInput"
+        type="text"
+        value="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+        style="width: 310px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;"
         />)
         <span id="isKilledOutput">Loading...</span></code></pre>
         </div>

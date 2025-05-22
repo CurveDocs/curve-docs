@@ -9,7 +9,7 @@ This implementation enables **arbitrary assignment of an `admin` and `admin_fee`
 !!!vyper "Contract Implementations"
     The source code for the implementation can be found on GitHub in the [admin-implementation branch](https://github.com/curvefi/stableswap-ng/tree/admin-implementation). This implementation is initially used by CrossCurve on Sonic.
 
-    The implementations were added to the StableSwapFactory on Sonic via [Vote ID #1010](https://curve.finance/dao/ethereum/proposals/1010-OWNERSHIP/) and are deployed at `index = 710420`.
+    The implementations were added to the Stableswap Factory on Sonic via [Vote ID #1010](https://curve.finance/dao/ethereum/proposals/1010-OWNERSHIP/) and are deployed at `index = 710420`.
 
     ```py
     >>> Factory.metapool_implementations(710420)
@@ -96,7 +96,7 @@ At contract initialization, the admin is set to `ZERO_ADDRESS`. This means assig
 
                 self.admin = _new_admin
                 log SetAdmin(_new_admin)
-            
+
             @view
             @internal
             def _check_admins():
@@ -159,7 +159,7 @@ At contract initialization, the admin is set to `ZERO_ADDRESS`. This means assig
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the `Pool` or the `Factory`.
 
-    Function to set the admin fee of the pool. 
+    Function to set the admin fee of the pool.
 
     Emits: `SetAdmin` event.
 

@@ -1,7 +1,7 @@
 This contract contains **view-only external methods** which can be gas-inefficient when called from smart contracts.
 
 !!!deploy "Contract Source & Deployment"
-    Source code for this contract is available on [Github](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveCryptoViews3Optimized.vy).
+    Source code for this contract is available on [GitHub](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveCryptoViews3Optimized.vy).
     Full list of all deployments can be found [here](../../../references/deployed-contracts.md#twocrypto-ng).
 
 
@@ -97,9 +97,9 @@ This contract contains **view-only external methods** which can be gas-inefficie
         >>> ViewMethodContract.get_dx(0, 1, 1000, "0xf5f5B97624542D72A9E06f04804Bf81baA15e2B4")
         259849
         ```
-    
 
-### `calc_withdraw_one_coin` 
+
+### `calc_withdraw_one_coin`
 !!! description "`ViewMethodContract.calc_withdraw_one_coin(token_amount: uint256, i: uint256, swap: address) -> uint256:`"
 
     Getter method for the output tokens (including fees) when withdrawing one coin.

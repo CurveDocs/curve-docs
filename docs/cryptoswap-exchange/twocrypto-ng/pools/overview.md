@@ -1,6 +1,6 @@
 <h1> Pools: Overview </h1>
 
-**New Features Over the Regular Two-Coin CryptoSwap Implementation:**
+**New Features Over the Regular Two-Coin Cryptoswap Implementation:**
 
 - New fee claiming approach
 - [**`exchange_received`**](#exchange_received)
@@ -140,8 +140,8 @@ Admin fees of a Curve pool are usually claimed through an external function, cal
 
 ## **`exchange_received`**
 
-This new function **allows the exchange of tokens without actually transfering tokens in**, as the exchange is based on the change of the coins balances within the pool (see code below).    
-Users of this method are dex aggregators, arbitrageurs, or other users who **do not wish to grant approvals to the contract**. They can instead send tokens directly to the contract and call **`exchange_received()`**.
+This new function **allows the exchange of tokens without actually transferring tokens in**, as the exchange is based on the change of the coins balances within the pool (see code below).
+Users of this method are DEX aggregators, arbitrageurs, or other users who **do not wish to grant approvals to the contract**. They can instead send tokens directly to the contract and call **`exchange_received()`**.
 
 ??? quote "Transfer logic when using `exchange_received()`"
 
@@ -172,7 +172,7 @@ Users of this method are dex aggregators, arbitrageurs, or other users who **do 
             # If someone donates extra tokens to the contract: do not acknowledge.
             # We only want to know if there are dx amount of tokens. Anything extra,
             # we ignore. This is why we need to check if received_amounts (which
-            # accounts for coin balances of the contract) is atleast dx.
+            # accounts for coin balances of the contract) is at least dx.
             # If we checked for received_amounts == dx, an extra transfer without a
             # call to exchange_received will break the method.
             dx: uint256 = coin_balance - self.balances[_coin_idx]
@@ -201,7 +201,7 @@ Users of this method are dex aggregators, arbitrageurs, or other users who **do 
 ---
 
 !!!example
-    Lets say a user wants to swap **`GOV-TOKEN<>USDC`** through an aggregator. For simplicity we assume, **`GOV-TOKEN<>USDT`** exchange is done via a uniswap pool, **`USDT<>USDC`** via a Curve pool.
+    Lets say a user wants to swap **`GOV-TOKEN<>USDC`** through an aggregator. For simplicity we assume, **`GOV-TOKEN<>USDT`** exchange is done via a Uniswap pool, **`USDT<>USDC`** via a Curve pool.
 
 ``` mermaid
 graph LR
@@ -215,12 +215,12 @@ graph LR
 ```
 
 1. User gives approval the `AGGREGATOR`, which then transfers tokens into the aggregator contract
-2. Aggregator exchanges `GOV-TOKEN` for `USDT` using Uniswap  
+2. Aggregator exchanges `GOV-TOKEN` for `USDT` using Uniswap
 3. Transfers the `USDT` directly from Uniswap into the Curve pool
 4. Perform a swap on the Curve pool (`USDT<>USDC`) via **`exchange_received`**
 5. Transfer `USDC` to the user
 
 
-!!!info 
+!!!info
     This method saves aggregators one redundant ERC-20 transfer and eliminates the need to grant approval to a curve pool. Without this function, the aggregator would have to conduct an additional transaction, transferring USDT from the Uniswap pool to their aggregator contract after the exchange, and then sending it to the Curve pool for another exchange (USDT<>USDC).
     However, with this method in place, the aggregator can transfer the output tokens directly into the next pool and perform an exchange.

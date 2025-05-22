@@ -5,9 +5,9 @@ The `MetaRegistry` functions as a Curve Pool Registry Aggregator and offers an *
 
 !!!github "GitHub"
     The source code of the `MetaRegistry.vy` and `MetaRegistryL2.vy` contracts can be found on [:material-github: GitHub](https://github.com/curvefi/metaregistry/tree/main/contracts).
-    
+
     Additionally, each `MetaRegistry` is integrated into the chain-specific [`AddressProvider`](./address-provider.md) at `ID = 7`. To get the **most recent contract, users are advised to fetch it directly from the `AddressProvider`.
-    
+
     *For example, to query the `MetaRegistry` contract on Ethereum:*
 
     ```vyper
@@ -215,7 +215,7 @@ Because the deployment of liquidity pools is permissionless, a significant numbe
     | `_to`   | `address` | Address of coin to be received |
     | `i`     | `uint256` | Index of the pool to return    |
 
-    ??? quote "Source code" 
+    ??? quote "Source code"
 
         === "MetaRegistry.vy"
 
@@ -268,7 +268,7 @@ Because the deployment of liquidity pools is permissionless, a significant numbe
 ---
 
 
-## **Pool Specific Informations**
+## **Pool Specific information**
 
 All relevant pool and coin data for liquidity pools are stored in the `MetaRegistry`. This registry includes various functions that provide a wide range of data, such as pool balances, fees, decimals, and more.
 
@@ -302,7 +302,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
                         break
                     handler: address = self.get_registry[i]
                     total_pools += RegistryHandler(handler).pool_count()
-                return total_pools            
+                return total_pools
             ```
 
     === "Example"
@@ -657,7 +657,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
     === "Example"
 
         **Stableswap** pools return the `fee` per swap and the `admin_fee` percentage. For the `3pool`, it shows that the pool charges 1 basis point per swap, 50% of which goes to the DAO. Stableswap-NG pools additionally return `offpeg_fee_multiplier`.
-    
+
         **Cryptoswap** pools return `fee`, `admin_fee` percentage, `mid_fee` and `out_fee`. The fee is the dynamic fee charged per swap, and ranges between `mid_fee` (balances in the pool are fully balanced) and the `out_fee` (balances in the pool are fully imbalanced).
 
         ```shell
@@ -739,8 +739,8 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
     === "Example"
 
-        **Stableswap** pools return the amplification coefficient (`A`). 
-    
+        **Stableswap** pools return the amplification coefficient (`A`).
+
         **Cryptoswap** pools return the amplification coefficient (`A`), `D` invariant, `gamma`, `allowed_extra_profit`, `fee_gamma`, `adjustment_step` and `ma_half_time`.
 
         ```shell
@@ -827,7 +827,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 ### `get_pool_asset_type`
 !!! description "`MetaRegistry.get_pool_asset_type(_pool: address, _handler_id: uint256 = 0) -> uint256`"
 
-    Getter for the asset type of a pool according to: **`0 = USD`, `1 = ETH`, `2 = BTC`, `3 = Other`, `4 = CryptoPool`**. The asset type is only a property of StableSwap pools and is not enforced in CryptoSwap pools (which always return 4).
+    Getter for the asset type of a pool according to: **`0 = USD`, `1 = ETH`, `2 = BTC`, `3 = Other`, `4 = CryptoPool`**. The asset type is only a property of Stableswap pools and is not enforced in Cryptoswap pools (which always return 4).
 
     Returns: asset type (`uint256`).
 
@@ -953,7 +953,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 ### `get_virtual_price_from_lp_token`
 !!! description "`MetaRegistry.get_virtual_price_from_lp_token(_token: address, _handler_id: uint256 = 0) -> uint256`"
 
-    Getter for a token's virtual price. The virtual price of any pool starts with a value of `1.0` and increases as the pool accrues fees. This number constantly increases for StableSwap pools unless the pool's amplification coefficient changes. For CryptoSwap pools, there are moments when the virtual price can decrease (e.g., admin fee claims, changes to the pool's parameters, etc.).
+    Getter for a token's virtual price. The virtual price of any pool starts with a value of `1.0` and increases as the pool accrues fees. This number constantly increases for Stableswap pools unless the pool's amplification coefficient changes. For Cryptoswap pools, there are moments when the virtual price can decrease (e.g., admin fee claims, changes to the pool's parameters, etc.).
 
     Returns: virtual price of the LP token (`uint256`).
 
@@ -1262,7 +1262,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 
     Getter method for the coins in a pool. If the pool is a metapool, the method returns the LP token of the base pool, not the underlying coins. To additionally return the underlying coins, see: [`get_underlying_coins`](#get_underlying_coins).
 
-    Retuns: coins (`address[MAX_COINS]`).
+    Returns: coins (`address[MAX_COINS]`).
 
     | Input         | Type      | Description                                |
     | ------------- | --------- | ------------------------------------------ |
@@ -1556,7 +1556,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
         >>> MetaRegistry.get_balances('0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7')
         147006104035945155794243533, 141336760960804, 94869577680718, 0, 0, 0, 0, 0
 
-        >>> MetaRegistry.get_balances('0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA') 
+        >>> MetaRegistry.get_balances('0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA')
         6781730641038140101957300, 5934556341193690490470482, 0, 0, 0, 0, 0, 0
         ```
 
@@ -1565,7 +1565,7 @@ All relevant pool and coin data for liquidity pools are stored in the `MetaRegis
 !!! description "`MetaRegistry.get_underlying_coins(_pool: address, _handler_id: uint256 = 0) -> address[MAX_COINS]`"
 
     Getter for all coins in a pool, including the underlying ones. For non-metapools, it returns the same value as [`get_coins`](#get_coins).
-    
+
     Returns: underlying coins (`address[MAX_COINS]`).
 
     | Input         | Type      | Description                                |
@@ -2025,7 +2025,7 @@ The `MetaRegistry` makes use of `Handlers`, which are essentially wrappers aroun
 
 New handlers can be added or existing ones can be updated by the [`owner`](#owner) of the contract.
 
-*To fetch registry information from the contract, fhe following methods can be used:*
+*To fetch registry information from the contract, the following methods can be used:*
 
 - `get_registry_length`: Returns the total number of registries added.
 - `get_registry`: Fetches single registries.
@@ -2266,7 +2266,7 @@ New registries can be added by the `owner` of the contract using the [`add_regis
 
 ### `add_registry_handler`
 !!! description "`MetaRegistry.add_registry_handler(_registry_handler: address)`"
- 
+
     !!!guard "Guarded Method"
         This function is only callable by the `owner` of the contract.
 

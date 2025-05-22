@@ -1,6 +1,6 @@
 <h1>MetaRegistry: API </h1>
 
-The MetaRegistry offers an **on-chain API** for various properties of Curve pools.  
+The MetaRegistry offers an **on-chain API** for various properties of Curve pools.
 
 A full list of all deployment addresses can be found [here](../references/deployed-contracts.md#metaregistry).
 
@@ -89,7 +89,7 @@ A full list of all deployment addresses can be found [here](../references/deploy
     | `_to`   | `address` | Address of coin to be received |
     | `i`     | `uint256` | Index of the pool to return    |
 
-    ??? quote "Source code" 
+    ??? quote "Source code"
 
         ```vyper
         @view
@@ -137,7 +137,7 @@ A full list of all deployment addresses can be found [here](../references/deploy
 ---
 
 
-## **MetaRegistry Specific Informations**
+## **MetaRegistry Specific Information**
 
 The factory has a similar API to that of the main Registry, which can be used to query information about existing pools.
 
@@ -218,9 +218,9 @@ The factory has a similar API to that of the main Registry, which can be used to
 ---
 
 
-## **Pool Specific Informations**
+## **Pool Specific Information**
 
-*The following methods are used to fetch pool specific informations:*
+*The following methods are used to fetch pool specific information:*
 
 ### `get_pool_name`
 !!! description "`MetaRegistry.get_pool_name(_pool: address, _handler_id: uint256 = 0) -> String[64]:`"
@@ -288,7 +288,7 @@ The factory has a similar API to that of the main Registry, which can be used to
     === "Example"
         ```shell
         >>> MetaRegistry.is_meta("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA")
-        'true'        
+        'true'
         ```
 
 
@@ -335,8 +335,8 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     Getter for the fees that a Curve pool charges per swap. The fee data returned varies depending on the type of pool:
 
-    - **StableSwap pools:** Use a single fee parameter.
-    - **CryptoSwap pools:** Use multiple fee parameters due to their dynamic fee structure.
+    - **Stableswap pools:** Use a single fee parameter.
+    - **Cryptoswap pools:** Use multiple fee parameters due to their dynamic fee structure.
 
     | Input         | Type      | Description |
     | ------------- | --------- | ------------------- |
@@ -373,7 +373,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 
     ---
 
-    For **CryptoSwap**, the getter returns: `fee`, `admin_fee` percentage, `mid_fee` and `out_fee`. The fee is the dynamic fee charged per swap, and depends on the `mid_fee` (fee when the CryptoSwap pool is pegged) and the `out_fee`. To understand the dynamic fee algorithm, the reader is pointed to the CryptoSwap Paper.
+    For **Cryptoswap**, the getter returns: `fee`, `admin_fee` percentage, `mid_fee` and `out_fee`. The fee is the dynamic fee charged per swap, and depends on the `mid_fee` (fee when the Cryptoswap pool is pegged) and the `out_fee`. To understand the dynamic fee algorithm, the reader is pointed to the Cryptoswap Paper.
 
     === "Example"
         ```shell
@@ -410,7 +410,7 @@ The factory has a similar API to that of the main Registry, which can be used to
             return RegistryHandler(registry_handler).get_pool_params(_pool)
         ```
 
-    For **StableSwap**, the getter returns the pool's amplification coefficient (`A`).
+    For **Stableswap**, the getter returns the pool's amplification coefficient (`A`).
 
     === "Example"
         ```shell
@@ -419,16 +419,16 @@ The factory has a similar API to that of the main Registry, which can be used to
         ```
 
     ---
-    
-    For **CryptoSwap**, the getter returns:
 
-    1. Amplification coefficient (A)  
-    2. Invariant (D)  
-    3. Gamma coefficient (gamma)  
-    4. Allowed extra profit  
-    5. Fee gamma  
-    6. Adjustment step  
-    7. MA (moving average) half time  
+    For **Cryptoswap**, the getter returns:
+
+    1. Amplification coefficient (A)
+    2. Invariant (D)
+    3. Gamma coefficient (gamma)
+    4. Allowed extra profit
+    5. Fee gamma
+    6. Adjustment step
+    7. MA (moving average) half time
 
     === "Example"
         ```shell
@@ -474,7 +474,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `get_pool_asset_type`
 !!! description "`MetaRegistry.get_pool_asset_type(_pool: address, _handler_id: uint256 = 0) -> uint256:`"
 
-    Getter for the asset type of a pool. **`0 = USD`, `1 = ETH`, `2 = BTC`, `3 = Other`, `4 = CryptoPool`** token. The asset type is a property of StableSwaps, and is not enforced in CryptoSwap pools (which always return 4).
+    Getter for the asset type of a pool. **`0 = USD`, `1 = ETH`, `2 = BTC`, `3 = Other`, `4 = CryptoPool`** token. The asset type is a property of Stableswaps, and is not enforced in Cryptoswap pools (which always return 4).
 
     Returns: asset type id (`uint256`).
 
@@ -541,7 +541,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 ### `get_virtual_price_from_lp_token`
 !!! description "`MetaRegistry.get_virtual_price_from_lp_token(_token: address, _handler_id: uint256 = 0) -> uint256:`"
 
-    Getter for a token's virtual price. The virtual price of any pool begins with `1`, and increases as the pool accrues fees. This number constantly increases for StableSwap pools, unless the pool's amplification coefficient changes. For CryptoSwap pools, there are moments when the virtual price can go down (admin fee claims, changes to pool's parameters).
+    Getter for a token's virtual price. The virtual price of any pool begins with `1`, and increases as the pool accrues fees. This number constantly increases for Stableswap pools, unless the pool's amplification coefficient changes. For Cryptoswap pools, there are moments when the virtual price can go down (admin fee claims, changes to pool's parameters).
 
     Returns: virtual price of the lp token (`uint256`).
 
@@ -686,16 +686,16 @@ The factory has a similar API to that of the main Registry, which can be used to
 ---
 
 
-## **Coin Specific Informations**
+## **Coin Specific Information**
 
-*The following methods are used to fetch coin specific informations:*
+*The following methods are used to fetch coin specific information:*
 
 ### `get_coins`
 !!! description "`MetaRegistry.get_coins(_pool: address, _handler_id: uint256 = 0) -> address[MAX_COINS]:`"
 
     Getter method for the coins in a pool. If the pool is a metapool, it then returns the LP token of the base pool, and not the underlying coins.
 
-    Retuns: coin addresses (`address[MAX_COINS]`).
+    Returns: coin addresses (`address[MAX_COINS]`).
 
     | Input         | Type      | Description |
     | ------------- | --------- | ------------------- |
@@ -837,7 +837,7 @@ The factory has a similar API to that of the main Registry, which can be used to
         >>> MetaRegistry.get_balances("0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7")
         147006104035945155794243533, 141336760960804, 94869577680718, 0, 0, 0, 0, 0
 
-        >>> MetaRegistry.get_balances("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA") 
+        >>> MetaRegistry.get_balances("0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA")
         6781730641038140101957300, 5934556341193690490470482, 0, 0, 0, 0, 0, 0
         ```
 
@@ -846,7 +846,7 @@ The factory has a similar API to that of the main Registry, which can be used to
 !!! description "`MetaRegistry.get_underlying_coins(_pool: address, _handler_id: uint256 = 0) -> address[MAX_COINS]:`"
 
     Getter for the underlying coins in a metapool. For non-metapools it returns the same value as **`get_coins`**.
-    
+
     Returns: underlying coins (`address[MAX_COINS]`).
 
     | Input         | Type      | Description |
@@ -1072,12 +1072,12 @@ The factory has a similar API to that of the main Registry, which can be used to
 ---
 
 
-## **Handler and Registry Specific Informations**
+## **Handler and Registry Specific Information**
 
-*The following methods are used to fetch handler and registry specific informations and function to add or update handlers:*
+*The following methods are used to fetch handler and registry specific information and function to add or update handlers:*
 
 
-### `get_registry_handerls_from_pool`
+### `get_registry_handlers_from_pool`
 !!! description "`MetaRegistry.get_registry_handlers_from_pool(_pool: address) -> address[MAX_REGISTRIES]:`"
 
     Getter for the `RegistryHandler` that a pool has been registered in. Usually, each pool is registered in a single registry.
@@ -1257,7 +1257,7 @@ New registries can be added by the `owner` of the contract using the [`add_regis
 ### `owner`
 !!! description "`MetaRegistry.owner() -> address:`"
 
-    Getter for the owner of the contract. This address can perfom owner-guarded functions (see below).
+    Getter for the owner of the contract. This address can perform owner-guarded functions (see below).
 
     Returns: owner (`address`).
 
@@ -1281,7 +1281,7 @@ New registries can be added by the `owner` of the contract using the [`add_regis
 
 ### `add_registry_handler`
 !!! description "`MetaRegistry.add_registry_handler(_registry_handler: address):`"
- 
+
     !!!guard "Guarded Method"
         This function is only callable by the `owner` of the contract.
 

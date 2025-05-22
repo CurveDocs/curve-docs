@@ -20,7 +20,7 @@ Because the root gauges are deployed using a proxy pattern, they are automatical
 ### `initialize`
 !!! description "`RootGauge.initialize(_bridger: Bridger, _chain_id: uint256, _child: address)`"
 
-    Function to initialize the root gauge. Initializes the child gauge address, chain ID, bridger contract, and factory, aswell as sets the `inflation_params` and `last_period`. The function also sets the CRV token approval of the bridger contract to `max_value(uint256)`.
+    Function to initialize the root gauge. Initializes the child gauge address, chain ID, bridger contract, and factory, as well as sets the `inflation_params` and `last_period`. The function also sets the CRV token approval of the bridger contract to `max_value(uint256)`.
 
     | Parameter | Type | Description |
     | --------- | ---- | ----------- |

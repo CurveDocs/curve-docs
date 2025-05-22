@@ -5,12 +5,12 @@ hide:
 
 <h1>Curve Stablecoin: Overview</h1>
 
-Curve Stablecoin infrastructure enables users to **mint crvUSD using a selection of crypto collaterals**. Adding new collaterals is subject to DAO approval. 
+Curve Stablecoin infrastructure enables users to **mint crvUSD using a selection of crypto collaterals**. Adding new collaterals is subject to DAO approval.
 
 `crvUSD` is designed to provide a more **capital-efficient** stablecoin mechanism and **smoother liquidations**, while maintaining a decentralized design which the Curve DAO governs.
 
 !!!github "GitHub"
-    The source code for all releveant stablecoin contract can be found on [GitHub :material-github:](https://github.com/curvefi/curve-stablecoin). Related deployments can be found [here](../references/deployed-contracts.md#curve-stablecoin).
+    The source code for all relevant stablecoin contract can be found on [GitHub :material-github:](https://github.com/curvefi/curve-stablecoin). Related deployments can be found [here](../references/deployed-contracts.md#curve-stablecoin).
 
 
 ---
@@ -72,7 +72,7 @@ Curve Stablecoin infrastructure enables users to **mint crvUSD using a selection
 
     ---
 
-    PegKeepers are contracts that help **stabilize the peg of crvUSD**. They are allocated a specific amount of crvUSD to secure the peg. 
+    PegKeepers are contracts that help **stabilize the peg of crvUSD**. They are allocated a specific amount of crvUSD to secure the peg.
 
     [:octicons-arrow-right-24: Learn more](./pegkeepers/overview.md)
 

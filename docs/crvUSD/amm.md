@@ -13,16 +13,16 @@ LLAMMA (Lending Liquidating Automated Market Maker Algorithm) is the **market-ma
 | `y`                  | Collateral coin.                                                             |
 | `band_width_factor`  | Parameter which controls the width of each band.  Sometimes denoted `A`      |
 | `rate`               | Interest rate.                                                               |
-| `rate_mul`           | Rate multiplier, 1 + integral(rate * dt).                                    |
+| `rate_mul`           | Rate multiplier, 1 + integral(rate * `dt`).                                    |
 | `active_band`        | Current band. Other bands are either in one or the other coin, but not both. |
 | `min_band`           | Bands below this are definitely empty.                                       |
 | `max_band`           | Bands above this are definitely empty.                                       |
 | `bands_x[n]`, `bands_y[n]` | Amounts of coin x or y deposited in band n.                            |
-| `user_shares[user,n] / total_shares[n]` | Fraction of the n'th band owned by a user.                |
+| `user_shares[user,n] / total_shares[n]` | Fraction of the nth band owned by a user.                |
 | `p_oracle`           | External oracle price (can be from another AMM).                             |
-| `p (as in get_p)`    | Current price of AMM. It depends not only on the balances (x,y) in the band and active_band, but also on p_oracle. |
-| `p_current_up`, `p_current_down` | The value of p at constant p_oracle when y=0 or x=0 respectively for the band n. |
-| `p_oracle_up`, `p_oracle_down` | Edges of the band when p=p_oracle (steady state), happen when x=0 or y=0 respectively, for band n. |
+| `p (as in get_p)`    | Current price of AMM. It depends not only on the balances (x,y) in the band and `active_band`, but also on `p_oracle`. |
+| `p_current_up`, `p_current_down` | The value of p at constant `p_oracle` when `y=0` or `x=0` respectively for the band `n`. |
+| `p_oracle_up`, `p_oracle_down` | Edges of the band when `p=p_oracle` (steady state), happen when `x=0` or `y=0` respectively, for band `n`. |
 
 
 ---
@@ -41,7 +41,7 @@ Whenever a user performs a collateral-specific action such as creating a new loa
 ### `deposit_range`
 !!! description "`AMM.deposit_range(user: address, amount: uint256, n1: int256, n2: int256)`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract, which is the `Controller`.
 
     Function to deposit collateral `amount` for `user` in the range between the upper band `n1` and the lower band `n2`. Values for `n1` and `n2` are already determined in the `Controller` contract using the internal `_calculate_debt_n1` method.
@@ -61,7 +61,7 @@ Whenever a user performs a collateral-specific action such as creating a new loa
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             event Deposit:
                 provider: indexed(address)
                 amount: uint256
@@ -207,7 +207,7 @@ Whenever a user performs a collateral-specific action such as creating a new loa
 ### `withdraw`
 !!! description "`AMM.withdraw(user: address, frac: uint256) -> uint256[2]:`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract, which is the `Controller`.
 
     Function to withdraw liquidity from bands for `user`.
@@ -227,7 +227,7 @@ Whenever a user performs a collateral-specific action such as creating a new loa
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             event Withdraw:
                 provider: indexed(address)
                 amount_borrowed: uint256
@@ -327,7 +327,7 @@ Whenever a user performs a collateral-specific action such as creating a new loa
 
 # **Exchanging Tokens**
 
-The LLAMMA can be used to exchange tokens, just like any other AMM. This is crucial as arbitrage opportunities are created by the LLAMMA, which can be exploited by buying and selling tokens in the AMM. More information: TODO.
+The LLAMMA can be used to exchange tokens, just like any other AMM. This is crucial as arbitrage opportunities are created by the LLAMMA, which can be exploited by buying and selling tokens in the AMM.
 
 *There are two functions to exchange tokens:*
 
@@ -782,7 +782,7 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
 
 ### `exchange_dy`
 !!! description "`AMM.exchange_dy(i: uint256, j: uint256, out_amount: uint256, max_amount: uint256, _for: address = msg.sender) -> uint256[2]:`"
-    
+
     Function to exchange a maximum amount of `max_amount` of input token `i` for a total of `out_amount` of output token `j`. If `max_amount` is not enough to cover the purchase of `out_amount` of tokens, the function will revert.
 
     Returns: amount of coins swapped in and out (`uint256`).
@@ -793,13 +793,13 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
     | ------------ | --------- | ---------------------------------------------------- |
     | `i`          | `uint256` | Input coin index.                                    |
     | `j`          | `uint256` | Output coin index.                                   |
-    | `out_amount` | `uint256` | Desired amout of output tokens to receive.           |
+    | `out_amount` | `uint256` | Desired amount of output tokens to receive.           |
     | `max_amount` | `uint256` | Maximum amount of input token to use.                |
     | `_for`       | `address` | Address to send coins to (defaults to `msg.sender`). |
 
     ??? quote "Source code"
 
-        === "AMM.vy"            
+        === "AMM.vy"
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
@@ -1223,7 +1223,7 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
 ### `get_dy`
 !!! description "`AMM.get_dy(i: uint256, j: uint256, in_amount: uint256) -> uint256:`"
 
-    Function to calculate the amount of output tokens `j` to receive when exchanging for `in_amount` of input token `i`. 
+    Function to calculate the amount of output tokens `j` to receive when exchanging for `in_amount` of input token `i`.
 
     Returns: out amount (`uint256`).
 
@@ -1324,7 +1324,7 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             struct DetailedTrade:
                 in_amount: uint256
                 out_amount: uint256
@@ -1417,7 +1417,7 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             struct DetailedTrade:
                 in_amount: uint256
                 out_amount: uint256
@@ -1505,7 +1505,7 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             struct DetailedTrade:
                 in_amount: uint256
                 out_amount: uint256
@@ -1604,7 +1604,7 @@ Besides these two exchange functions, there are plenty of "helper functions" whi
                 p_o: uint256[2] = self._price_oracle_ro()
                 p_o_up: uint256 = self._p_oracle_up(n)
                 p_down: uint256 = unsafe_div(unsafe_div(p_o[0]**2, p_o_up) * p_o[0], p_o_up)  # p_current_down
-                p_up: uint256 = unsafe_div(p_down * A2, Aminus12)  # p_crurrent_up
+                p_up: uint256 = unsafe_div(p_down * A2, Aminus12)  # p_current_up
                 amount: uint256 = 0
                 y0: uint256 = 0
                 f: uint256 = 0
@@ -1732,9 +1732,9 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
 !!!warning ""
     The following sections assume that arbitrage traders are performing their role and arbitraging the bands. In theory, prices can move through bands without any action if arbitrage traders do not capitalize on the opportunity for free money. We assume that arbitrage traders are taking these opportunities and arbitraging the bands accordingly.
-    
 
-*There are three possible scenarios for bands regarding their content of assets. The asset composition of the individual bands is dependant on the collateral price bzw. the "liquidation status" of the loan:*
+
+*There are three possible scenarios for bands regarding their content of assets. The asset composition of the individual bands is dependant on the collateral price and the "liquidation status" of the loan:*
 
 1. **Band contains both collateral and borrowable token:** This indicates that the band is currently in continuous liquidation mode (either being soft-liquidated because the collateral price is decreasing or de-liquidated because the collateral price is increasing). The band in which the collateral price is currently located is defined as the [`active_band`](amm.md#active_band).
 
@@ -1773,7 +1773,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 ### `A`
 !!! description "`AMM.A() -> uint256: view`"
 
-    Getter for A (band width factor). This parameter defines the density of the liquidty and band size. The higher `A`, the smaller are the upper and lower prices of the bands an therefor the more leveraged the AMM within each band. The relative band size is $\frac{1}{A}$.
+    Getter for A (band width factor). This parameter defines the density of the liquidity and band size. The higher `A`, the smaller are the upper and lower prices of the bands an therefor the more leveraged the AMM within each band. The relative band size is $\frac{1}{A}$.
 
     Returns: band width factor (`uint256`).
 
@@ -1843,7 +1843,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             active_band: public(int256)
             ```
 
@@ -1883,7 +1883,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 ### `max_band`
 !!! description "`AMM.max_band() -> int256: view`"
 
-    Getter for the maximum band. thi is the highest band where liquidity was deposited into. All bands above are definitely empty. 
+    Getter for the maximum band. thi is the highest band where liquidity was deposited into. All bands above are definitely empty.
 
     Returns: maximum band (`int256`).
 
@@ -1964,13 +1964,13 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             bands_x: public(HashMap[int256, uint256])
             ```
 
     === "Example"
 
-        In this example, the `active_band` is `-40`, which consists both of the colltaral and borrowable token. All bands above do not hold any balances of the borrowable token as those bands fully consist of the collateral token. But all bands below are fully in the borrowable token.
+        In this example, the `active_band` is `-40`, which consists both of the collateral and borrowable token. All bands above do not hold any balances of the borrowable token as those bands fully consist of the collateral token. But all bands below are fully in the borrowable token.
 
         ```shell
         >>> AMM.bands_x(-39)
@@ -2007,7 +2007,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
     === "Example"
 
-        In this example, the `active_band` is `-40`, which consists both of the colltaral and borrowable token. All bands above do not hold any balances of the borrowable token as those bands fully consist of the collateral token. But all bands below are fully in the borrowable token.
+        In this example, the `active_band` is `-40`, which consists both of the collateral and borrowable token. All bands above do not hold any balances of the borrowable token as those bands fully consist of the collateral token. But all bands below are fully in the borrowable token.
 
         ```shell
         >>> AMM.bands_x(-39)
@@ -2091,12 +2091,12 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
     === "Example"
 
-        This user uses 4 bands for their loan. The function returns the collateral composition of all bands. In this case, the 4 bands do not hold any borrow token (the first four returned values), but they hold the collateral token (the last four return values). This signals, that user is not is soft-liquidation, as all his bands are still fully allocated in the collateral tokens. 
+        This user uses 4 bands for their loan. The function returns the collateral composition of all bands. In this case, the 4 bands do not hold any borrow token (the first four returned values), but they hold the collateral token (the last four return values). This signals, that user is not is soft-liquidation, as all his bands are still fully allocated in the collateral tokens.
 
-        **Fictive example:** E.g. if the first band of the loan would have been liquidated and the second band is currently undergoing liquidation, the returned values could look like the second example below. The first band would be fully in the borrow token (because the band as already been soft-liquidated), the second band would be in both, the borrow and collateral token (because the band is currently being liquidated) and the remaining two bands are still fully composited of the collteral token (because these bands have not been liquidated).
+        **Fictive example:** E.g. if the first band of the loan would have been liquidated and the second band is currently undergoing liquidation, the returned values could look like the second example below. The first band would be fully in the borrow token (because the band as already been soft-liquidated), the second band would be in both, the borrow and collateral token (because the band is currently being liquidated) and the remaining two bands are still fully composited of the collateral token (because these bands have not been liquidated).
 
         ```shell
-        >>> AMM.get_xy('0x5A684c08261380B91D8976eDB0cabf87744650a5') 
+        >>> AMM.get_xy('0x5A684c08261380B91D8976eDB0cabf87744650a5')
         [0, 0, 0, 0][524583942253332472, 525000000000000000, 525000000000000000, 525000000000000000]
 
         # see fivtive example above
@@ -2122,7 +2122,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             @external
             @view
             @nonreentrant('lock')
@@ -2187,7 +2187,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 ### `read_user_tick_numbers`
 !!! description "`AMM.read_user_tick_numbers(user: address) -> int256[2]:`"
 
-    Getter for the band (tick) numbers of a user's loan. 
+    Getter for the band (tick) numbers of a user's loan.
 
     Returns: highest and lowest band (`int256`).
 
@@ -2203,7 +2203,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
             ```vyper
             user_shares: HashMap[address, UserTicks]
-        
+
             @external
             @view
             @nonreentrant('lock')
@@ -2429,7 +2429,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             @external
             @view
             @nonreentrant('lock')
@@ -2601,7 +2601,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             @external
             @view
             @nonreentrant('lock')
@@ -2635,7 +2635,7 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
         >>> AMM.can_skip_bands(-50)
         'False'
         ```
- 
+
 
 ---
 
@@ -2648,10 +2648,10 @@ Each individual band has an upper ([`p_oracle_up`](#p_oracle_up)) and lower ([`p
 
 *The AMM relies on two different prices:*
 
-Soft- and de-liquidation of a loan only occurrs when the collateral price is within a band the user deposited liquidity into. The AMM creates an arbitrage opportunity by utilizing the following two prices:
+Soft- and de-liquidation of a loan only occurs when the collateral price is within a band the user deposited liquidity into. The AMM creates an arbitrage opportunity by utilizing the following two prices:
 
 - **`price_oracle`**: The collateral price fetched from a price oracle contract.
-- **`get_p`**: The price of colalteral in the AMM itself.
+- **`get_p`**: The price of collateral in the AMM itself.
 
 When `price_oracle` equals `get_p`, the external oracle price and the AMM price are identical, indicating no need for arbitrage. When the external oracle price diverges, the AMM price `get_p` is adjusted to be more sensitive than the regular `price_oracle`, creating arbitrage opportunities. Essentially, arbitrage traders are incentivized to maintain `get_p = price_oracle` within the AMM.
 
@@ -2661,10 +2661,10 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
 </figure>
 
 
-### `get_p` 
+### `get_p`
 !!! description "`AMM.get_p() -> uint256`"
 
-    Function to get the current collateral price within the AMM. `get_p` in always in the active band (`acitve_band`).
+    Function to get the current collateral price within the AMM. `get_p` in always in the active band (`active_band`).
 
     Returns: collateral price within the AMM (`uint256`).
 
@@ -2728,7 +2728,7 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
         ```
 
 
-### `price_oracle` 
+### `price_oracle`
 !!! description "`AMM.price_oracle() -> uint256: view`"
 
     Getter for the collateral price according to an external price oracle contract. The address of the price oracle contract is stored in the `price_oracle_contract` variable.
@@ -2741,7 +2741,7 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             @external
             @view
             def price_oracle() -> uint256:
@@ -2986,7 +2986,7 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             @external
             @view
             def p_current_down(n: int256) -> uint256:
@@ -3039,7 +3039,7 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             @external
             @view
             def p_oracle_up(n: int256) -> uint256:
@@ -3124,7 +3124,7 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             @external
             @view
             def p_oracle_down(n: int256) -> uint256:
@@ -3204,7 +3204,7 @@ When `price_oracle` equals `get_p`, the external oracle price and the AMM price 
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             price_oracle_contract: public(PriceOracle)
 
             @external
@@ -3330,10 +3330,10 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 ### `set_fee`
 !!! description "`AMM.set_fee(fee: uint256):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract, which is the `Controller` contract.
 
-    Function to set a new AMM exchange fee. 
+    Function to set a new AMM exchange fee.
 
     Emits: `SetFee`
 
@@ -3347,7 +3347,7 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             event SetFee:
                 fee: uint256
 
@@ -3385,7 +3385,7 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             admin_fee: public(uint256)
 
             @external
@@ -3432,16 +3432,16 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 ### `admin_fees_x`
 !!! description "`AMM.admin_fees_x() -> uint256: view`"
 
-    Getter for the accured admin fees in form of the borrowed token since the last fee collection.
+    Getter for the accrued admin fees in form of the borrowed token since the last fee collection.
 
-    Returns: accured fees (`uint256`).
+    Returns: accrued fees (`uint256`).
 
     ??? quote "Source code"
 
         === "AMM.vy"
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
-            
+
             ```vyper
             admin_fees_x: public(uint256)
             ```
@@ -3457,9 +3457,9 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 ### `admin_fees_y`
 !!! description "`AMM.admin_fees_y() -> uint256: view`"
 
-    Getter for the accured admin fees in form of the collateral token since the last fee collection.
+    Getter for the accrued admin fees in form of the collateral token since the last fee collection.
 
-    Returns: accured fees (`uint256`).
+    Returns: accrued fees (`uint256`).
 
     ??? quote "Source code"
 
@@ -3482,10 +3482,10 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 ### `set_admin_fee`
 !!! description "`AMM.set_admin_fee(fee: uint256):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract, which is the `Controller` contract.
 
-    Function to set a new admin fee value. 
+    Function to set a new admin fee value.
 
     Emits: `SetAdminFee`
 
@@ -3499,7 +3499,7 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             event SetAdminFee:
                 fee: uint256
 
@@ -3527,7 +3527,7 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 ### `reset_admin_fee`
 !!! description "`AMM.reset_admin_fees()`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract, which is the Controller.
 
     Function to reset the accumulated admin fees (`admin_fees_x` and `admin_fees_y`) to zero. This function is automatically called when `collect_fees()` via the `Controller` contract is called.
@@ -3538,7 +3538,7 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             @external
             @nonreentrant('lock')
             def reset_admin_fees():
@@ -3690,7 +3690,7 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 ### `set_rate`
 !!! description "`AMM.set_rate(rate: uint256) -> uint256:`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract, which is the `Controller` contract.
 
     Function to set the interest rate. The rate is always updated whenever the internal `_save_rate` function within the Controller contract is called (e.g., when a new loan is created or assets are repaid). The new rate is calculated in `get_rate_mul()`.
@@ -3714,7 +3714,7 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
                 rate: uint256
                 rate_mul: uint256
                 time: uint256
-                
+
             @external
             @nonreentrant('lock')
             def set_rate(rate: uint256) -> uint256:
@@ -3753,7 +3753,7 @@ The interest rate (`rate`) is updated whenever the `_save_rate()` method within 
 
 ## **Admin Ownership**
 
-The `admin` of each AMM is usually set to the corresponding `Controller` contract of the according market. This variable can only be set once and not updated agian as the `set_admin` function checks the follwoing: `assert self.admin == empty(address)`.
+The `admin` of each AMM is usually set to the corresponding `Controller` contract of the according market. This variable can only be set once and not updated again as the `set_admin` function checks the following: `assert self.admin == empty(address)`.
 
 The admin can only be set once, which is done when deploying the AMM. Therefore, the `admin` cannot be changed.
 
@@ -3771,7 +3771,7 @@ The admin can only be set once, which is done when deploying the AMM. Therefore,
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             admin: public(address)
             ```
 
@@ -3786,7 +3786,7 @@ The admin can only be set once, which is done when deploying the AMM. Therefore,
 ### `set_admin`
 !!! description "`AMM.set_admin(_admin: address):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable when `admin` is set to `ZERO_ADDRESS`. This condition was met at deployment, but after setting the admin for the first time, it cannot be changed. Admin for the AMM is always the corresponding Controller.
 
     Function to set the admin of the AMM. Maximum approval is given to the Controller in order for it to effectively call functions such as `deposit_range` and `withdraw`. This is achieved through an extra `approve_max` function, because it consumes less byte space compared to calling it directly.
@@ -3801,7 +3801,7 @@ The admin can only be set once, which is done when deploying the AMM. Therefore,
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             @external
             def set_admin(_admin: address):
                 """
@@ -3885,7 +3885,7 @@ The admin can only be set once, which is done when deploying the AMM. Therefore,
 
             The following source code includes all changes up to commit hash [afc2608](https://github.com/curvefi/curve-stablecoin/tree/afc26087ab558d33a94d037c88579d9dfc52396f); any changes made after this commit are not included.
 
-            ```vyper 
+            ```vyper
             liquidity_mining_callback: public(LMGauge)
             ```
 
@@ -3900,7 +3900,7 @@ The admin can only be set once, which is done when deploying the AMM. Therefore,
 ### `set_callback`
 !!! description "`AMM.set_callback(liquidity_mining_callback: LMGauge):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract, which is the Controller.
 
     Function to set the liquidity mining callback.

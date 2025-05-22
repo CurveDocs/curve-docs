@@ -15,10 +15,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     ];
 
     const Multicall3ABI = [{"inputs":[{"components":[{"internalType":"address","name":"target","type":"address"},{"internalType":"bytes","name":"callData","type":"bytes"}],"internalType":"struct Multicall3.Call[]","name":"calls","type":"tuple[]"}],"name":"aggregate","outputs":[{"internalType":"uint256","name":"blockNumber","type":"uint256"},{"internalType":"bytes[]","name":"returnData","type":"bytes[]"}],"stateMutability":"payable","type":"function"},{"inputs":[{"components":[{"internalType":"address","name":"target","type":"address"},{"internalType":"bool","name":"allowFailure","type":"bool"},{"internalType":"bytes","name":"callData","type":"bytes"}],"internalType":"struct Multicall3.Call3[]","name":"calls","type":"tuple[]"}],"name":"aggregate3","outputs":[{"components":[{"internalType":"bool","name":"success","type":"bool"},{"internalType":"bytes","name":"returnData","type":"bytes"}],"internalType":"struct Multicall3.Result[]","name":"returnData","type":"tuple[]"}],"stateMutability":"payable","type":"function"}];
-    
+
     const FeeSplitterContract = new web3.eth.Contract(FeeSplitterABI, FeeSplitterAddress);
     const Multicall3Contract = new web3.eth.Contract(Multicall3ABI, Multicall3Address);
-    
+
     async function updateValues() {
         const calls = [
             { target: FeeSplitterAddress, allowFailure: false, callData: web3.eth.abi.encodeFunctionSignature('version()') },
@@ -75,16 +75,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     async function handleInputQuery(inputId, outputId, method) {
         const inputElement = document.getElementById(inputId);
         const outputElement = document.getElementById(outputId);
-        
+
         async function fetchData() {
             const input = inputElement.value.trim();
-            
+
             if (input === '') {
                 outputElement.textContent = 'Please enter a valid input';
                 outputElement.style.color = 'red';
                 return;
             }
-            
+
             try {
                 const result = await FeeSplitterContract.methods[method](input).call();
                 let formattedResult;

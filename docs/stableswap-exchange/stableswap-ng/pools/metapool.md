@@ -1,9 +1,9 @@
 A metapool is a pool where a stablecoin is paired against the LP token from another pool, a so-called base pool.
 
 !!!deploy "Contract Source & Deployment"
-    Source code available on [Github](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapMetaNG.vy).
+    Source code available on [GitHub](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapMetaNG.vy).
 
-The deployment of metapools is permissionless and can be done via the [**`deploy_metapool`**](../../../factory/stableswap-ng/deployer-api.md#deploy_metapool) function within the StableSwap-NG Factory.
+The deployment of metapools is permissionless and can be done via the [**`deploy_metapool`**](../../../factory/stableswap-ng/deployer-api.md#deploy_metapool) function within the Stableswap-NG Factory.
 
 !!!warning "Examples"
     The examples following each code block of the corresponding functions provide a basic illustration of input/output values. **When using the function in production, ensure not to set `_min_dy`, `_min_amount`, etc., to zero or other arbitrary numbers**. Otherwise, MEV bots may frontrun or sandwich your transaction, leading to a potential loss of funds.
@@ -20,7 +20,7 @@ The deployment of metapools is permissionless and can be done via the [**`deploy
 
 *These function slightly differ to the ones from plain pools, as there needs to be some additional logic because of the basepools:*
 
-- **`_transfer_in()`**  
+- **`_transfer_in()`**
 
     ??? quote "`_transfer_in(coin_metapool_idx: int128, coin_basepool_idx: int128, dx: uint256, sender: address, expect_optimistic_transfer: bool, is_base_pool_swap: bool = False) -> uint256:`"
 
@@ -133,7 +133,7 @@ The deployment of metapools is permissionless and can be done via the [**`deploy
         | `_amount`  | `uint256` | Amount to transfer out.                   |
         | `receiver` | `address` | Address to send the tokens to.            |
 
-        ```vyper 
+        ```vyper
         stored_balances: DynArray[uint256, MAX_COINS]
 
         @internal
@@ -159,7 +159,7 @@ The deployment of metapools is permissionless and can be done via the [**`deploy
 
             self.stored_balances[_coin_idx] = coin_balance - _amount
         ```
-        
+
 
 !!!info "Methods with underlying coins"
     In metapools, `coin[0]` is always the metapool token, and `coin[1]` is always the basepool token. When working with the basepool underlying tokens such as `exchange_underlying` and others, the coin indices of the basepool are appended after `coin[0]`, which is the metapool token.
@@ -223,7 +223,7 @@ The deployment of metapools is permissionless and can be done via the [**`deploy
             @notice Perform an exchange between two coins
             @dev Index values can be found via the `coins` public getter method
             @param i Index value for the coin to send
-            @param j Index value of the coin to recieve
+            @param j Index value of the coin to receive
             @param _dx Amount of `i` being exchanged
             @param _min_dy Minimum amount of `j` to receive
             @return Actual amount of `j` received
@@ -335,7 +335,7 @@ The deployment of metapools is permissionless and can be done via the [**`deploy
     !!!danger
         `exchange_received` will revert if the pool contains a rebasing asset. A pool that contains a rebasing token should have an `asset_type` of 2. If this is not the case, the pool is using an incorrect implementation, and rebases can be stolen.
 
-    Function to exchange `_dx` amount of coin `i` for coin `j`, receiving a minimum amount of `_min_dy`. This is done without actually transferring the coins into the pool within the same call. The exchange is based on the change in the balance of coin `i`, eliminating the need to grant approval to the contract. This function does only swap between the token paird against the basepool and the basepool tokens. The method can not be used to exchange for underlying coins of the basepool.
+    Function to exchange `_dx` amount of coin `i` for coin `j`, receiving a minimum amount of `_min_dy`. This is done without actually transferring the coins into the pool within the same call. The exchange is based on the change in the balance of coin `i`, eliminating the need to grant approval to the contract. This function does only swap between the token paired against the basepool and the basepool tokens. The method can not be used to exchange for underlying coins of the basepool.
 
     **A detailed article can be found here: https://blog.curvemonitor.com/posts/exchange-received/.**
 
@@ -379,7 +379,7 @@ The deployment of metapools is permissionless and can be done via the [**`deploy
                 directly to the contract and call `exchange_received`.
                 Note: This is disabled if pool contains rebasing tokens.
             @param i Index value for the coin to send
-            @param j Index valie of the coin to recieve
+            @param j Index value of the coin to recieve
             @param _dx Amount of `i` being exchanged
             @param _min_dy Minimum amount of `j` to receive
             @return Actual amount of `j` received
@@ -1355,7 +1355,7 @@ There are no restrictions on how liquidity can be added or removed. Liquidity ca
 !!! description "`StableSwap.remove_liquidity(_burn_amount: uint256, _min_amounts: DynArray[uint256, MAX_COINS], _receiver: address = msg.sender, _claim_admin_fees: bool = True) -> DynArray[uint256, MAX_COINS]:`"
 
     !!!info
-        When removing liquidity in a balanced ratio, there is no need to update the price oracle, as this function does not alter the balance ratio within the pool. Calling this function only updates `D_oracle`.    
+        When removing liquidity in a balanced ratio, there is no need to update the price oracle, as this function does not alter the balance ratio within the pool. Calling this function only updates `D_oracle`.
         The calculation of `D` does not use Newton methods, ensuring that `remove_liquidity` should always work, even if the pool gets borked.
 
     Function to remove `_min_amount` coins from the liquidity pool based on the pools current ratios by burning `_burn_amount` of LP tokens. Admin fees might be claimed after liquidity is removed.
@@ -1955,7 +1955,7 @@ There are no restrictions on how liquidity can be added or removed. Liquidity ca
 
 ## **Fee Methods**
 
-Stableswap-ng introduces a dynamic fee based on the imbalance of the coins within the pool and their pegs:
+Stableswap-NG introduces a dynamic fee based on the imbalance of the coins within the pool and their pegs:
 
 ??? quote "`_dynamic_fee`"
 
@@ -2011,7 +2011,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
             ...
 
             self.fee = _fee
-            
+
             ...
         ```
 
@@ -2344,7 +2344,7 @@ More on dynamic fees [here](../pools/overview.md#dynamic-fees).
 
 The amplification coefficient **`A`** determines a pool’s tolerance for imbalance between the assets within it. A higher value means that trades will incur slippage sooner as the assets within the pool become imbalanced.
 
-The appropriate value for A is dependent upon the type of coin being used within the pool, and is subject to optimisation. It is possible to modify the amplification coefficient for a pool via the **`ramp_A`** function. See [admin controls](../pools/admin_controls.md#ramp_a).
+The appropriate value for A is dependent upon the type of coin being used within the pool, and is subject to optimization. It is possible to modify the amplification coefficient for a pool via the **`ramp_A`** function. See [admin controls](../pools/admin_controls.md#ramp_a).
 
 When a ramping of A has been initialized, the process can be stopped by calling the function [**`stop_ramp_A()`**](../pools/admin_controls.md#stop_ramp_a).
 
@@ -2641,7 +2641,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 ---
 
 
-## **Contract Info Methods** 
+## **Contract Info Methods**
 
 ### `BASE_POOL`
 !!! description "`StableSwap.BASE_POOL() -> address: view`"
@@ -2675,7 +2675,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
             ...
 
             BASE_POOL = _base_pool
-            
+
             ...
         ```
 
@@ -2721,7 +2721,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
             ...
 
             BASE_N_COINS = len(_base_coins)
-            
+
             ...
         ```
 
@@ -2769,7 +2769,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
             ...
 
             BASE_COINS = _base_coins
-            
+
             ...
         ```
 
@@ -2786,7 +2786,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 
 
 ### `coins`
-!!! description "`StableSwap.coins(arg0: uint256) -> addresss: view`"
+!!! description "`StableSwap.coins(arg0: uint256) -> address: view`"
 
     Getter for the coin at index `arg0` within the metapool. coins[0] always return the coin paired against the basepool.
 
@@ -2817,7 +2817,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
             ...
 
             coins = _coins  # <---------------- coins[1] is always base pool LP token.
-            
+
             ...
         ```
 
@@ -2838,7 +2838,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
 ### `balances`
 !!! description "`StableSwap.balances(i: uint256) -> uint256: view`"
 
-    Getter for the current balance of coin `i` within the pool. 
+    Getter for the current balance of coin `i` within the pool.
 
     Returns: coin balance (`uint256`).
 
@@ -2904,7 +2904,7 @@ When a ramping of A has been initialized, the process can be stopped by calling 
     Returns: coin balances (`DynArray[uint256, MAX_COINS]`).
 
     !!!info
-        This getter method does not account for admin fees. 
+        This getter method does not account for admin fees.
 
     ??? quote "Source code"
 

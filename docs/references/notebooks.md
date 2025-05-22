@@ -10,7 +10,7 @@ Notebooks are easy-to-use notebooks written in Python aiming to showcase the usa
 
 ## **Google Colab and JupyterHub**
 
-The first notebooks were hosted on a [JupyterHub server from Vyper](https://try.vyperlang.org/hub/). Due to performance issues, hosting was switched to [Google Colab](https://colab.google/). Old notebooks remain hosted on the JupyterHub server, but all new ones will be hosted on Google Colab.
+The first notebooks were hosted on a JupyterHub server maintained by the Vyper team. As that service is now deprecated, hosting was switched to [Google Colab](https://colab.google/).
 
 ---
 
@@ -37,7 +37,7 @@ After setting up these two secrets, the notebook can successfully be run directl
 
 ### **Curve Lending**
 
-| Conatract | Description | Link    |
+| Contract | Description | Link    |
 | :-------: | ----------- | :-----: |
 | [`Vault`](../lending/contracts/vault.md) | Obtaining Vault Shares: `deposit` and `mint` | [:logos-googlecolab: here](https://colab.research.google.com/drive/1Qj9nOk5TYXp6j6go3VIh6--r5VILnoo9?usp=sharing)  |
 | [`Vault`](../lending/contracts/vault.md) | Withdrawing Assets: `withdraw` and `redeem`  | [:logos-googlecolab: here](https://colab.research.google.com/drive/1Ta69fsIc7zmtjFlQ94a8MDYYLeo4GJJI?usp=sharing)  |

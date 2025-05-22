@@ -3,8 +3,8 @@
 This contract contains **view-only external methods** which can be gas-inefficient when called from smart contracts.
 
 !!!deploy "Contract Source & Deployment"
-    Source code available on [GitHub](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNGViews.vy).  
-    All Views contract deployments can be found in the [Deployment Addresses](../../../references/deployed-contracts.md#stableswap-ng) section.  
+    Source code available on [GitHub](https://github.com/curvefi/stableswap-ng/blob/bff1522b30819b7b240af17ccfb72b0effbf6c47/contracts/main/CurveStableSwapNGViews.vy).
+    All Views contract deployments can be found in the [Deployment Addresses](../../../references/deployed-contracts.md#stableswap-ng) section.
 
 
 ## **Token Exchange Methods**
@@ -33,7 +33,7 @@ This contract contains **view-only external methods** which can be gas-inefficie
             @notice Calculate the current input dx given output dy
             @dev Index values can be found via the `coins` public getter method
             @param i Index value for the coin to send
-            @param j Index valie of the coin to recieve
+            @param j Index value of the coin to receive
             @param dy Amount of `j` being received after exchange
             @return Amount of `i` predicted
             """
@@ -84,7 +84,7 @@ This contract contains **view-only external methods** which can be gas-inefficie
 ### `get_dy`
 !!! description "`StableSwap.get_dx(i: int128, j: int128, dy: uint256, pool: address) -> uint256:`"
 
-    Function to calucalte the predicted input amount `j` to receive `dy` of coin `i`.
+    Function to calculate the predicted input amount `j` to receive `dy` of coin `i`.
 
     Returns: predicted amount of `j` (`uint256`).
 
@@ -105,7 +105,7 @@ This contract contains **view-only external methods** which can be gas-inefficie
             @notice Calculate the current output dy given input dx
             @dev Index values can be found via the `coins` public getter method
             @param i Index value for the coin to send
-            @param j Index valie of the coin to recieve
+            @param j Index value of the coin to receive
             @param dx Amount of `i` being exchanged
             @return Amount of `j` predicted
             """
@@ -262,7 +262,7 @@ This contract contains **view-only external methods** which can be gas-inefficie
 ### `get_dx_underlying`
 !!! description "`StableSwap.get_dx_underlying(i: int128, j: int128, dy: uint256, pool: address) -> uint256:`"
 
-    Function to calucalte the predicted input amount `i` to receive `dy` of coin `j` on the underlying.
+    Function to calculate the predicted input amount `i` to receive `dy` of coin `j` on the underlying.
 
     Returns: predicted amount of `i` (`uint256`).
 
@@ -359,7 +359,7 @@ This contract contains **view-only external methods** which can be gas-inefficie
 ### `get_dy_underlying`
 !!! description "`StableSwap.get_dy_underlying(i: int128, j: int128, dx: uint256, pool: address) -> uint256:`"
 
-    Function to calucalte the predicted input amount `j` to receive `dy` of coin `i` on the underlying.
+    Function to calculate the predicted input amount `j` to receive `dy` of coin `i` on the underlying.
 
     Returns: predicted amount of `j` (`uint256`).
 
@@ -386,7 +386,7 @@ This contract contains **view-only external methods** which can be gas-inefficie
             @notice Calculate the current output dy given input dx on underlying
             @dev Index values can be found via the `coins` public getter method
             @param i Index value for the coin to send
-            @param j Index valie of the coin to recieve
+            @param j Index value of the coin to receive
             @param dx Amount of `i` being exchanged
             @return Amount of `j` predicted
             """
@@ -467,12 +467,12 @@ This contract contains **view-only external methods** which can be gas-inefficie
 
 
 
-## **Deposit / Withdrawl Methods**
+## **Deposit / Withdrawal Methods**
 
 ### `calc_token_amount`
 !!! description "`StableSwap.calc_token_amount(_amounts: DynArray[uint256, MAX_COINS], _is_deposit: bool, pool: address) -> uint256:`"
 
-    Function to calculate the addition or reduction of token supply from a deposit (add liquidity) or withdrawl (remove liquidity) including fees.
+    Function to calculate the addition or reduction of token supply from a deposit (add liquidity) or withdrawal (remove liquidity) including fees.
 
     Returns: expected amount of LP tokens received (`uint256`)
 
@@ -595,7 +595,7 @@ This contract contains **view-only external methods** which can be gas-inefficie
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @view
         @external
         def calc_withdraw_one_coin(_burn_amount: uint256, i: int128, pool: address) -> uint256:
@@ -680,7 +680,7 @@ This contract contains **view-only external methods** which can be gas-inefficie
             """
             @notice Return the fee for swapping between `i` and `j`
             @param i Index value for the coin to send
-            @param j Index value of the coin to recieve
+            @param j Index value of the coin to receive
             @return Swap fee expressed as an integer with 1e10 precision
             """
             N_COINS: uint256 = StableSwapNG(pool).N_COINS()

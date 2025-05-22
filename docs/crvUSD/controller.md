@@ -13,7 +13,7 @@ The Controller contract acts as a on-chain interface for **creating loans and fu
 
 - **Curve Stablecoin - minting crvUSD**
 
-    Minting crvUSD is only possible with whitelised collateral by the DAO and requires users to provide collateral against which they can mint[^1] crvUSD. Provided collateral is deposited into LLAMMA according to the number of bands chosen. Subsequently, **crvUSD is backed by the assets provided as collateral**.
+    Minting crvUSD is only possible with whitelisted collateral by the DAO and requires users to provide collateral against which they can mint[^1] crvUSD. Provided collateral is deposited into LLAMMA according to the number of bands chosen. Subsequently, **crvUSD is backed by the assets provided as collateral**.
 
     <figure markdown="span">
     ![](../assets/images/mint_controller1.svg){ width="500" }
@@ -48,7 +48,7 @@ The Controller contract acts as a on-chain interface for **creating loans and fu
 
 ## **Creating and Repaying Loans**
 
-New loans are created via the **`create_loan`** function. When creating a loan the user needs to specify the **amount of collateral**, **debt** and the **number of bands** to deposit the collateral into. 
+New loans are created via the **`create_loan`** function. When creating a loan the user needs to specify the **amount of collateral**, **debt** and the **number of bands** to deposit the collateral into.
 
 The maximum amount of borrowable debt is determined by the number of bands, the amount of collateral, and the oracle price.
 
@@ -67,7 +67,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 ### `create_loan`
 !!! description "`Controller.create_loan(collateral: uint256, debt: uint256, N: uint256, _for: address = msg.sender)`"
 
-    Function to create a new loan, requiring specification of the amount of `collateral` to be deposited into `N` bands and the amount of `debt` to be borrowed. The lower bands choosen, the higher the loss when the position is in soft-liquiation. Should there already be an existing loan, the function will revert. Before creating a loan, there is the option to set [`extra_health`](#extra_health) using [`set_extra_health`](#set_extra_health) which leads to a higher health when entering soft liquidation.
+    Function to create a new loan, requiring specification of the amount of `collateral` to be deposited into `N` bands and the amount of `debt` to be borrowed. Less bands mean the collateral is more concentrated into a smaller range, which can lead to higher losses in soft-liquidation. Should there already be an existing loan, the function will revert. Before creating a loan, there is the option to set [`extra_health`](#extra_health) using [`set_extra_health`](#set_extra_health) which leads to a higher health when entering soft liquidation.
 
     Emits: `UserState`, `Borrow`, `Deposit` and `Transfer`
 
@@ -81,7 +81,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -149,7 +149,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
                 log UserState(msg.sender, collateral, debt, n1, n2, liquidation_discount)
                 log Borrow(msg.sender, collateral, debt)
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -324,7 +324,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
                     log UserState(_for, collateral, debt, n1, n2, liquidation_discount)
                     log Borrow(_for, collateral, debt)
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -425,7 +425,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
         >>> Controller.user_state(trader)
         [1000000000000000000, 0, 1000000000000000000000, 10]
-        # [collateral, stablecoin, debt, bands]  
+        # [collateral, stablecoin, debt, bands]
         ```
 
 
@@ -536,7 +536,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
                     return data
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -761,7 +761,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
                     assert band_x == AMM.bands_x(data.active_band)
                     assert band_y == AMM.bands_y(data.active_band)
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -865,7 +865,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
     !!!warning
         The mechanisms of `extra_health` were introduced in an improved version of LLAMMA. Earlier deployed crvUSD or lending markets might not have this.
 
-    Getter for the extra health value for `arg0`. When setting extra health before creating a loan, a "health buffer" is added, which results in entering soft liquidation with more health. The `health` value when entering SL can be checked by using the [`health`](#health) function with using `bool = False`. 
+    Getter for the extra health value for `arg0`. When setting extra health before creating a loan, a "health buffer" is added, which results in entering soft liquidation with more health. The `health` value when entering SL can be checked by using the [`health`](#health) function with using `bool = False`.
 
     ??? quote "Source code"
 
@@ -894,7 +894,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
         10000000000000000       # 1% extra health
         >>> Controller.health('user2')
         49438860614534486       # 4.9438860614534486% health when entering SL
-        ``` 
+        ```
 
 
 ### `set_extra_health`
@@ -903,7 +903,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
     !!!warning
         The mechanisms of setting `extra_health` were introduced in an improved version of LLAMMA. Earlier deployed crvUSD or lending markets might not have this.
 
-    Function to set `_value` as extra health for a user. Doing so will add a buffer to the loan a user creats which allows users to enter soft-liquidation with a higher health.
+    Function to set `_value` as extra health for a user. Doing so will add a buffer to the loan a user creates which allows users to enter soft-liquidation with a higher health.
 
     Emits: `SetExtraHealth`
 
@@ -944,7 +944,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 ### `approval`
 !!! description "`Controller.approval(arg0: address, arg1: address) -> bool: view`"
 
-    !!!warning  
+    !!!warning
         The mechanism of granting approval, and therefore allowing, e.g., the creation of loans for another user, was introduced in an improved version of LLAMMA. Earlier deployed crvUSD or lending markets might not have this.
 
     Getter to check the approval status. Approval in this case is either `True` or `False`. It does not approve any specific values. Approval can be set using the [`approve`](#approve) function.
@@ -982,7 +982,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 ### `approve`
 !!! description "`Controller.approve(_spender: address, _allow: bool)`"
 
-    !!!warning  
+    !!!warning
         The mechanism of granting approval, and therefore allowing, e.g., the creation of loans for another user, was introduced in an improved version of LLAMMA. Earlier deployed crvUSD or lending markets might not have this.
 
     Emits: `Approval`
@@ -1053,7 +1053,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -1233,7 +1233,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -1378,7 +1378,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -1550,7 +1550,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -1644,7 +1644,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
                     self._save_rate()
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -1839,7 +1839,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
                     self._save_rate()
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -1955,12 +1955,12 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
     | `callbacker`     | `address`             | Address of the callback contract                     |
     | `callback_args`  | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5), such as `min_amount` |
     | `callback_bytes` | `Bytes[10**4]`        | Callback bytes passed to the LeverageZap. Defaults to `b""` |
-    | `_for`       | `address` | Address to repay debt for (requires approval); only avaliable in new implementation |
+    | `_for`       | `address` | Address to repay debt for (requires approval); only available in new implementation |
 
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -2068,7 +2068,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
                     self._save_rate()
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -2279,7 +2279,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
 
                     self._save_rate()
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -2383,7 +2383,7 @@ $$LTV = \text{100%} - \text{loan_discount} - 100 * \frac{N}{2*A}$$
         ```
 
 
---- 
+---
 
 
 ## **Adjusting Existing Loans**
@@ -2397,7 +2397,7 @@ An already existing loan can be managed in different ways:
 
 
 
-### `add_collateral` 
+### `add_collateral`
 !!! description "`Controller.add_collateral(collateral: uint256, _for: address = msg.sender)`"
 
     Function to add extra collateral to an existing loan. Reverts when trying to add `0` collateral tokens.
@@ -2412,7 +2412,7 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -2435,7 +2435,7 @@ An already existing loan can be managed in different ways:
                 @nonreentrant('lock')
                 def add_collateral(collateral: uint256, _for: address = msg.sender):
                     """
-                    @notice Add extra collateral to avoid bad liqidations
+                    @notice Add extra collateral to avoid bad liquidations
                     @param collateral Amount of collateral to add
                     @param _for Address to add collateral for
                     """
@@ -2492,7 +2492,7 @@ An already existing loan can be managed in different ways:
 
                     log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -2609,7 +2609,7 @@ An already existing loan can be managed in different ways:
                 @nonreentrant('lock')
                 def add_collateral(collateral: uint256, _for: address = msg.sender):
                     """
-                    @notice Add extra collateral to avoid bad liqidations
+                    @notice Add extra collateral to avoid bad liquidations
                     @param collateral Amount of collateral to add
                     @param _for Address to add collateral for
                     """
@@ -2666,7 +2666,7 @@ An already existing loan can be managed in different ways:
 
                     log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -2763,7 +2763,7 @@ An already existing loan can be managed in different ways:
         >>> Controller.add_collateral(10**18, trader)
 
         >>> Controller.user_state(trader)
-        [2000000000000000000, 0, 1000000892890902175729, 10]   
+        [2000000000000000000, 0, 1000000892890902175729, 10]
         # [collateral, stablecoin, debt, bands]
         ```
 
@@ -2783,7 +2783,7 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -2862,7 +2862,7 @@ An already existing loan can be managed in different ways:
 
                     log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -3049,7 +3049,7 @@ An already existing loan can be managed in different ways:
 
                     log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -3150,7 +3150,7 @@ An already existing loan can be managed in different ways:
 
         ```shell
         >>> Controller.remove_collateral(10**18, False)
-        
+
         >>> Controller.user_state(trader)
         [1000000000000000000, 0, 1000001403805330760116, 10]
         # [collateral, stablecoin, debt, bands]
@@ -3168,12 +3168,12 @@ An already existing loan can be managed in different ways:
     | ------------ | --------- | -------------------------------- |
     | `collateral` | `uint256` | Amount of collateral to add      |
     | `debt`       | `uint256` | Amount of debt to take           |
-    | `_for`       | `address` | Address to borrow for (requires approval); only avaliable in new implementation |
+    | `_for`       | `address` | Address to borrow for (requires approval); only available in new implementation |
 
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -3255,7 +3255,7 @@ An already existing loan can be managed in different ways:
 
                     log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -3440,7 +3440,7 @@ An already existing loan can be managed in different ways:
 
                     log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -3545,7 +3545,7 @@ An already existing loan can be managed in different ways:
 ### `borrow_more_extended`
 !!! description "`Controller.borrow_more_extended(collateral: uint256, debt: uint256, callbacker: address, callback_args: DynArray[uint256,5], callback_bytes: Bytes[10**4] = b"", _for: address = msg.sender)`"
 
-    Function to borrow more assets while adding more collateral. This method uses callacks to build up leverage. Earlier implementations of the contract did not have `callback_bytes` argument. This was added to enable [leveraging/de-leveraging using the 1inch router](./leverage/LeverageZap1inch.md#building-leverage).
+    Function to borrow more assets while adding more collateral. This method uses callbacks to build up leverage. Earlier implementations of the contract did not have `callback_bytes` argument. This was added to enable [leveraging/de-leveraging using the 1inch router](./leverage/LeverageZap1inch.md#building-leverage).
 
     Emits: `UserState` and `Borrow`
 
@@ -3553,16 +3553,16 @@ An already existing loan can be managed in different ways:
     | ---------------- | --------------------- | -------------------------------- |
     | `collateral`     | `uint256`             | Amount of collateral to add      |
     | `debt`           | `uint256`             | Amount of debt to take           |
-    | `callabacker`    | `address`             | Address of the callaback contract  |
+    | `callbacker`    | `address`             | Address of the callback contract  |
     | `debt`           | `DynArray[uint256,5]` | Amount of debt to take on  |
-    | `callback_args` | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5), such as `min_amount`, etc; see [`LeverageZap1inch.vy`](./leverage/LeverageZap1inch.md) for more informations |
+    | `callback_args` | `DynArray[uint256,5]` | Extra arguments for the callback (up to 5), such as `min_amount`, etc; see [`LeverageZap1inch.vy`](./leverage/LeverageZap1inch.md) for more information |
     | `callback_bytes` | `Bytes[10**4]`        | Callback bytes passed to the LeverageZap. Defaults to `b""` |
-    | `_for`       | `address` | Address to borrow for (requires approval); only avaliable in new implementation |
+    | `_for`       | `address` | Address to borrow for (requires approval); only available in new implementation |
 
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -3687,7 +3687,7 @@ An already existing loan can be managed in different ways:
 
                     log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -3839,7 +3839,7 @@ An already existing loan can be managed in different ways:
                 @internal
                 @view
                 def _check_approval(_for: address) -> bool:
-                    return msg.sender == _for or self.approval[_for][msg.sender]    
+                    return msg.sender == _for or self.approval[_for][msg.sender]
 
                 @internal
                 def execute_callback(callbacker: address, callback_sig: bytes4,
@@ -3916,7 +3916,7 @@ An already existing loan can be managed in different ways:
 
                     log UserState(_for, xy[1], debt, n1, n2, liquidation_discount)
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -4026,7 +4026,7 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -4186,7 +4186,7 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -4216,7 +4216,7 @@ An already existing loan can be managed in different ways:
                 @nonreentrant('lock')
                 def liquidate(user: address, min_x: uint256, use_eth: bool = True):
                     """
-                    @notice Peform a bad liquidation (or self-liquidation) of user if health is not good
+                    @notice perform a bad liquidation (or self-liquidation) of user if health is not good
                     @param min_x Minimal amount of stablecoin to receive (to avoid liquidators being sandwiched)
                     @param use_eth Use wrapping/unwrapping if collateral is ETH
                     """
@@ -4300,7 +4300,7 @@ An already existing loan can be managed in different ways:
                     log Repay(user, xy[1], debt)
                     log Liquidate(msg.sender, user, xy[1], xy[0], debt)
                     if final_debt == 0:
-                        log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removeal b/c we have not enough info
+                        log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removal b/c we have not enough info
                         self._remove_from_list(user)
 
                     d: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul
@@ -4309,7 +4309,7 @@ An already existing loan can be managed in different ways:
 
                     self._save_rate()
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -4439,7 +4439,7 @@ An already existing loan can be managed in different ways:
                 @nonreentrant('lock')
                 def liquidate(user: address, min_x: uint256, use_eth: bool = True):
                     """
-                    @notice Peform a bad liquidation (or self-liquidation) of user if health is not good
+                    @notice Perform a bad liquidation (or self-liquidation) of user if health is not good
                     @param min_x Minimal amount of stablecoin to receive (to avoid liquidators being sandwiched)
                     @param use_eth Use wrapping/unwrapping if collateral is ETH
                     """
@@ -4523,7 +4523,7 @@ An already existing loan can be managed in different ways:
                     log Repay(user, xy[1], debt)
                     log Liquidate(msg.sender, user, xy[1], xy[0], debt)
                     if final_debt == 0:
-                        log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removeal b/c we have not enough info
+                        log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removal b/c we have not enough info
                         self._remove_from_list(user)
 
                     d: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul
@@ -4532,7 +4532,7 @@ An already existing loan can be managed in different ways:
 
                     self._save_rate()
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -4655,7 +4655,7 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -4686,7 +4686,7 @@ An already existing loan can be managed in different ways:
                 def liquidate_extended(user: address, min_x: uint256, frac: uint256,
                                     callbacker: address, callback_args: DynArray[uint256,5], callback_bytes: Bytes[10**4] = b""):
                     """
-                    @notice Peform a bad liquidation (or self-liquidation) of user if health is not good
+                    @notice Perform a bad liquidation (or self-liquidation) of user if health is not good
                     @param min_x Minimal amount of stablecoin to receive (to avoid liquidators being sandwiched)
                     @param frac Fraction to liquidate; 100% = 10**18
                     @param callbacker Address of the callback contract
@@ -4772,7 +4772,7 @@ An already existing loan can be managed in different ways:
                     log Repay(user, xy[1], debt)
                     log Liquidate(msg.sender, user, xy[1], xy[0], debt)
                     if final_debt == 0:
-                        log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removeal b/c we have not enough info
+                        log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removal b/c we have not enough info
                         self._remove_from_list(user)
 
                     d: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul
@@ -4781,7 +4781,7 @@ An already existing loan can be managed in different ways:
 
                     self._save_rate()
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -4912,7 +4912,7 @@ An already existing loan can be managed in different ways:
                 def liquidate_extended(user: address, min_x: uint256, frac: uint256,
                                     callbacker: address, callback_args: DynArray[uint256,5], callback_bytes: Bytes[10**4] = b""):
                     """
-                    @notice Peform a bad liquidation (or self-liquidation) of user if health is not good
+                    @notice Perform a bad liquidation (or self-liquidation) of user if health is not good
                     @param min_x Minimal amount of stablecoin to receive (to avoid liquidators being sandwiched)
                     @param frac Fraction to liquidate; 100% = 10**18
                     @param callbacker Address of the callback contract
@@ -4998,7 +4998,7 @@ An already existing loan can be managed in different ways:
                     log Repay(user, xy[1], debt)
                     log Liquidate(msg.sender, user, xy[1], xy[0], debt)
                     if final_debt == 0:
-                        log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removeal b/c we have not enough info
+                        log UserState(user, 0, 0, 0, 0, 0)  # Not logging partial removal b/c we have not enough info
                         self._remove_from_list(user)
 
                     d: uint256 = self._total_debt.initial_debt * rate_mul / self._total_debt.rate_mul
@@ -5007,7 +5007,7 @@ An already existing loan can be managed in different ways:
 
                     self._save_rate()
                 ```
-            
+
             === "AMM.vy"
 
                 ```vyper
@@ -5125,7 +5125,7 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Collateral.vy"
@@ -5203,7 +5203,7 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Collateral.vy"
@@ -5321,7 +5321,7 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -5432,7 +5432,7 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -5507,7 +5507,7 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -5577,7 +5577,7 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -5859,7 +5859,7 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -5975,7 +5975,7 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -6128,7 +6128,7 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -6199,7 +6199,7 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -6238,7 +6238,7 @@ An already existing loan can be managed in different ways:
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -6311,14 +6311,14 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 ### `admin_fees`
 !!! description "`Controller.admin_fees() -> uint256`"
 
-    Getter for the claimable admin fees. Claimable by calling [`colletct_fees`](#collect_fees). 
+    Getter for the claimable admin fees. Claimable by calling [`collect_fees`](#collect_fees).
 
-    Returns: admin fees (`uint256`). 
+    Returns: admin fees (`uint256`).
 
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -6437,7 +6437,7 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -6463,7 +6463,7 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
                 ```vyper
                 event SetFee:
                     fee: uint256
-                
+
                 fee: public(uint256)
 
                 @external
@@ -6507,7 +6507,7 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
                 ```vyper
                 event SetFee:
                     fee: uint256
-                
+
                 fee: public(uint256)
 
                 @external
@@ -6549,7 +6549,7 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -6574,7 +6574,7 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
                 ```vyper
                 event SetAdminFee:
                     fee: uint256
-                
+
                 admin_fee: public(uint256)
 
                 @external
@@ -6599,14 +6599,14 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 ### `collect_fees`
 !!! description "`Controller.collect_fees()`"
 
-    Function to collects all fees, including borrwing-based fees and AMM-based fees (if there are any). Collected fees are sent to the `fee_receiver` specified in the [Factory](./factory/overview.md#fee-receiver).
+    Function to collects all fees, including borrowing-based fees and AMM-based fees (if there are any). Collected fees are sent to the `fee_receiver` specified in the [Factory](./factory/overview.md#fee-receiver).
 
     Emits: `CollectFees`
 
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -6759,7 +6759,7 @@ Changing the AMM fee can be done through [`set_amm_fee`](#set_amm_fee), and admi
 ---
 
 
-# **Loan and Liquidation Discount** 
+# **Loan and Liquidation Discount**
 
 *New values for `loan_discount` and `liquidation_discount` can be assigned by the admin of the Factory, which is the DAO.*
 
@@ -6777,7 +6777,7 @@ The **liquidation discount** is used to discount the collateral for calculating 
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -6849,18 +6849,18 @@ The **liquidation discount** is used to discount the collateral for calculating 
 ### `liquidation_discount`
 !!! description "`Controller.liquidation_discount() -> uint256: view`"
 
-    Getter for the liquidation discount. This value is used to discount the collateral value when calculating the health for liquidation puroses in order to incentivize liquidators.
+    Getter for the liquidation discount. This value is used to discount the collateral value when calculating the health for liquidation purposes in order to incentivize liquidators.
 
     Returns: liquidation discount (`uint256`).
 
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
-                
+
                 ```vyper
                 liquidation_discount: public(uint256)
 
@@ -6892,7 +6892,7 @@ The **liquidation discount** is used to discount the collateral for calculating 
             This implementation was used for [Optimism](../deployments/lending.md#logos-optimism-optimism) and [Fraxtal](../deployments/lending.md#logos-fraxtal-fraxtal) lending deployments.
 
             === "Controller.vy"
-                
+
                 ```vyper
                 liquidation_discount: public(uint256)
 
@@ -6939,7 +6939,7 @@ The **liquidation discount** is used to discount the collateral for calculating 
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -6971,7 +6971,7 @@ The **liquidation discount** is used to discount the collateral for calculating 
 ### `set_borrowing_discounts`
 !!! description "`Controller.set_borrowing_discounts(loan_discount: uint256, liquidation_discount: uint256)`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the Factory.
 
     Function to set new values for `loan_discount` and `liquidation_discount`. This metric defines the max LTV and where bad liquidations start.
@@ -6986,7 +6986,7 @@ The **liquidation discount** is used to discount the collateral for calculating 
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -7047,7 +7047,7 @@ The **liquidation discount** is used to discount the collateral for calculating 
 
         ```shell
         >>> Controller.set_borrowing_discounts(90000000000000000, 60000000000000000)
-        ``` 
+        ```
 
 
 ---
@@ -7055,9 +7055,9 @@ The **liquidation discount** is used to discount the collateral for calculating 
 
 # **Monetary Policy**
 
-Each controller has a monetary policy contract. This contract is responsible for the interest rates within the markets. 
+Each controller has a monetary policy contract. This contract is responsible for the interest rates within the markets.
 
-While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depend on several factors such as the price of crvUSD, pegkeeper debt, etc., the monetary policy for lending markets is solely based on a [semi-log monetary policy](../lending/contracts/semilog-mp.md) which determines the rate based on the utilization of the assets.
+While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depend on several factors such as the price of crvUSD, PegKeeper debt, etc., the monetary policy for lending markets is solely based on a [semi-log monetary policy](../lending/contracts/semilog-mp.md) which determines the rate based on the utilization of the assets.
 
 
 ### `monetary_policy`
@@ -7070,7 +7070,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -7108,7 +7108,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 ### `set_monetary_policy`
 !!! description "`Controller.set_monetary_policy(monetary_policy: address)`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract, which is the Factory.
 
     Function to set the monetary policy contract. Initially, the monetary policy contract is configured when a new market is added via the Factory. However, this function allows the contract address to be changed later. When setting the new address, the function calls `rate_write()` from the monetary policy contract to verify if the ABI is correct.
@@ -7122,7 +7122,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -7210,12 +7210,12 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
     Getter of the Factory contract of the Controller. This variable is immutable and can not be changed.
 
-    Returns: Factory (`address`). 
+    Returns: Factory (`address`).
 
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -7299,12 +7299,12 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 
     Getter of the `AMM` contract of the `Controller`. This variable is immutable and can not be changed.
 
-    Returns: `AMM` contract (`address`). 
+    Returns: `AMM` contract (`address`).
 
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -7383,7 +7383,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -7462,7 +7462,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -7611,7 +7611,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -7643,14 +7643,14 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
 ### `redeemed`
 !!! description "`Controller.redeemed() -> uint256: view`"
 
-    Getter for the total amount of crvUSD redeemed from this controller. Increments by the amount of debt that is repayed when calling `repay` or `repay_extended`.
+    Getter for the total amount of crvUSD redeemed from this controller. Increments by the amount of debt that is repaid when calling `repay` or `repay_extended`.
 
     Returns: total redeemed (`uint256`).
 
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"
@@ -7676,18 +7676,18 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
         ```shell
         >>> Controller.redeemed()
         16646401312086830122157869
-        ```        
+        ```
 
 
 ---
 
 
-# **Callbacks** 
+# **Callbacks**
 
 ### `set_callback`
 !!! description "`Controller.set_callback(cb: address) -> uint256: view`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the Factory.
 
     Function to set a callback for liquidity mining.
@@ -7699,7 +7699,7 @@ While [monetary policies for minting markets](../crvUSD/monetarypolicy.md) depen
     ??? quote "Source code"
 
         === "Commit `58289a4` — May 10, 2024"
-        
+
             The following source code includes all changes up to commit hash [`58289a4`](https://github.com/curvefi/curve-stablecoin/tree/`58289a4`283d7cc3c53aba2d3801dcac5ef124957); any changes made after this commit are not included.
 
             === "Controller.vy"

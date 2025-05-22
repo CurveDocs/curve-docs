@@ -205,14 +205,14 @@ A new crvUSD market can be added by the CurveOwnershipAgent. Therefore, adding a
     === "Example"
         ```shell
         >>> ControllerFactory.add_market("0xae78736cd615f374d3085123a210448e74fc6393",
-                                        100, 
+                                        100,
                                         6000000000000000,
-                                        0, 
-                                        "price oracle contract", 
-                                        "monetary policy contract", 
-                                        90000000000000000, 
-                                        60000000000000000, 
+                                        0,
+                                        "price oracle contract",
+                                        "monetary policy contract",
+                                        90000000000000000,
+                                        60000000000000000,
                                         10000000000000000000000000):
-                                        
+
         "returns AMM and Controller contract"
         ```

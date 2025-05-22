@@ -7,7 +7,7 @@ The `GaugeController` contract is responsible for managing and coordinating the 
 
 
 ???+ vyper "`GaugeController.vy`"
-    The source code for the `GaugeController.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/GaugeController.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.2.4` 
+    The source code for the `GaugeController.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/GaugeController.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.2.4`
 
     The contract is deployed on :logos-ethereum: Ethereum at [`0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB`](https://etherscan.io/address/0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB).
 
@@ -17,7 +17,7 @@ The contract also **acts as a registry for the gauges**, storing information suc
 
 ## **Adding Gauges and Gauge Data**
 
-After a liquidity gauge was deployed, it can be added to the `GaugeController` for it to be elegible to recieve CRV emissions. Adding a gauge requires a successfully passed DAO vote.
+After a liquidity gauge was deployed, it can be added to the `GaugeController` for it to be eligible to receive CRV emissions. Adding a gauge requires a successfully passed DAO vote.
 
 !!!info "Check if a Gauge has been added to the GaugeController"
 
@@ -26,7 +26,7 @@ After a liquidity gauge was deployed, it can be added to the `GaugeController` f
     ```shell
     >>> GaugeController.gauge_types('0xbfcf63294ad7105dea65aa58f8ae5be2d9d0952a')
     0
-    
+
     >>> GaugeController.gauge_types('0xc840e5ed7a1b6a9c1a6bf1ecaca6ddb151b2fd6e')
     Error: Returned error: execution reverted
     ```
@@ -50,7 +50,7 @@ After a liquidity gauge was deployed, it can be added to the `GaugeController` f
     | ----------- | --------- | ----------- |
     | `addr`      | `address` | Gauge address |
     | `gauge_type`| `int128`  | Gauge type |
-    | `weight`    | `uint256` | Gauge weight; defaults to 0 | 
+    | `weight`    | `uint256` | Gauge weight; defaults to 0 |
 
     ??? quote "Source code"
 
@@ -101,7 +101,7 @@ After a liquidity gauge was deployed, it can be added to the `GaugeController` f
             ```
 
     === "Example"
-        
+
         This example adds the gauge at address `0x41af8cC0811DD07F167752B821CF5B11DBa7Ca85` to the `GaugeController`.
 
         ```shell
@@ -133,21 +133,21 @@ After a liquidity gauge was deployed, it can be added to the `GaugeController` f
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } In this example, the address of a gauge at a specific index is returned.
 
         <div class="highlight">
-        <pre><code>>>> GaugeController.gauges(<input id="gaugeIndex" type="number" value="0" min="0" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> GaugeController.gauges(<input id="gaugeIndex" type="number" value="0" min="0"
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchGauge()"/>)
         <span id="gaugeOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -193,8 +193,8 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
 
 !!!example "Example: CRV emissions and Gauge Weights"
 
-    If a gauge receives 10% of the total weight, it will receive 10% of the emissions for the current week. 
-    
+    If a gauge receives 10% of the total weight, it will receive 10% of the emissions for the current week.
+
     At the time of writing, the inflation rate per second of CRV is `5181574864521283150 (CRV.rate())`, which equals 5.18157486452128315 CRV per second.
     The gauge will, therefore, receive approximately 313,381.65 CRV tokens as emissions for the current week, calculated as 5.18157486452128315 CRV per second * 10% * (7 * 86400 seconds).
 
@@ -393,21 +393,21 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the total allocated voting power by a specific user.
 
         <div class="highlight">
-        <pre><code>>>> GaugeController.vote_user_power(<input id="voteUserPowerInput" type="text" value="0x989AEb4d175e16225E39E87d0D97A3360524AD80" 
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> GaugeController.vote_user_power(<input id="voteUserPowerInput" type="text" value="0x989AEb4d175e16225E39E87d0D97A3360524AD80"
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchVoteUserPower()"/>)
         <span id="voteUserPowerOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -440,25 +440,25 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
 
         <div class="highlight">
         <pre><code>>>> GaugeController.last_user_vote(
-        User: <input id="lastUserVoteInput1" 
-        type="text" 
+        User: <input id="lastUserVoteInput1"
+        type="text"
         value="0x989AEb4d175e16225E39E87d0D97A3360524AD80"
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>
-        Gauge: <input id="lastUserVoteInput2" 
+        Gauge: <input id="lastUserVoteInput2"
         type="text"
         value="0x4e6bb6b7447b7b2aa268c16ab87f4bb48bf57939"
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>)
         <span id="lastUserVoteOutput"></span></code></pre>
         </div>
@@ -466,7 +466,7 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
 ### `vote_user_slopes`
 !!! description "`GaugeController.vote_user_slopes(arg0: address, arg1: address) -> slope: uint256, power: uint256, end: uint256`"
 
-    Getter method for informations about the current vote weight of a specific user for a specific gauge. In this variable, informations are stored at the time of voting.
+    Getter method for information about the current vote weight of a specific user for a specific gauge. In this variable, information are stored at the time of voting.
 
     Returns: slope (`uint256`), allocated voting-power (`uint256`) and veCRV lock end (`uint256`).
 
@@ -489,25 +489,25 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
 
         <div class="highlight">
         <pre><code>>>> GaugeController.vote_user_slopes(
-        User: <input id="voteUserSlopesInput1" 
-        type="text" 
+        User: <input id="voteUserSlopesInput1"
+        type="text"
         value="0x989AEb4d175e16225E39E87d0D97A3360524AD80"
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>
-        Gauge: <input id="voteUserSlopesInput2" 
+        Gauge: <input id="voteUserSlopesInput2"
         type="text"
         value="0x4e6bb6b7447b7b2aa268c16ab87f4bb48bf57939"
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>)
         <span id="voteUserSlopesOutput"></span></code></pre>
         </div>
@@ -572,25 +572,25 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
 
         <div class="highlight">
         <pre><code>>>> GaugeController.gauge_relative_weight(
-        Gauge: <input id="gaugeRelativeWeightInput1" 
-        type="text" 
+        Gauge: <input id="gaugeRelativeWeightInput1"
+        type="text"
         value="0x4e6bb6b7447b7b2aa268c16ab87f4bb48bf57939"
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>
-        Time: <input id="gaugeRelativeWeightInput2" 
+        Time: <input id="gaugeRelativeWeightInput2"
         class="timestamp-input"
         type="number"
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>)
         <span id="gaugeRelativeWeightOutput"></span></code></pre>
         </div>
@@ -629,21 +629,21 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current gauge weight of a specific gauge.
 
         <div class="highlight">
-        <pre><code>>>> GaugeController.get_gauge_weight(<input id="getGaugeWeightInput" type="text" value="0x4e6bb6b7447b7b2aa268c16ab87f4bb48bf57939" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> GaugeController.get_gauge_weight(<input id="getGaugeWeightInput" type="text" value="0x4e6bb6b7447b7b2aa268c16ab87f4bb48bf57939"
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchGetGaugeWeight()"/>)
         <span id="getGaugeWeightOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -717,21 +717,21 @@ Gauge weights are updated every Thursday at 00:00 UTC. At this timestamp, the CR
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the summed weight of a specific gauge type.
 
         <div class="highlight">
-        <pre><code>>>> GaugeController.get_weights_sum_per_type(<input id="getWeightsSumPerTypeInput" type="number" value="0" min="0" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> GaugeController.get_weights_sum_per_type(<input id="getWeightsSumPerTypeInput" type="number" value="0" min="0"
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchGetWeightsSumPerType()"/>)
         <span id="getWeightsSumPerTypeOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -778,25 +778,25 @@ struct Point:
 
         <div class="highlight">
         <pre><code>>>> GaugeController.points_weight(
-        User: <input id="pointsWeightInput1" 
-        type="text" 
+        User: <input id="pointsWeightInput1"
+        type="text"
         value="0x989AEb4d175e16225E39E87d0D97A3360524AD80"
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>
-        Point: <input id="pointsWeightInput2" 
+        Point: <input id="pointsWeightInput2"
         type="number"
         value="0"
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>)
         <span id="pointsWeightOutput"></span></code></pre>
         </div>
@@ -815,7 +815,7 @@ struct Point:
     ??? quote "Source code"
 
         === "GaugeController.vy"
-        
+
             ```vyper
             time_weight: public(HashMap[address, uint256])  # gauge_addr -> last scheduled time (next week)
             ```
@@ -825,21 +825,21 @@ struct Point:
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the last scheduled time the gauge weight of a specific gauge updates.
 
         <div class="highlight">
-        <pre><code>>>> GaugeController.time_weight(<input id="timeWeightInput" type="text" value="0x4e6bb6b7447b7b2aa268c16ab87f4bb48bf57939" 
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> GaugeController.time_weight(<input id="timeWeightInput" type="text" value="0x4e6bb6b7447b7b2aa268c16ab87f4bb48bf57939"
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchTimeWeight()"/>)
         <span id="timeWeightOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -850,7 +850,7 @@ struct Point:
 ### `points_sum`
 !!! description "`GaugeController.points_sum(arg0: int128, arg1: uint256) -> bias: uint256, slope: uint256: view`"
 
-    Getter for informations from `Point` struct. 
+    Getter for information from `Point` struct.
 
     Returns: bias (`uint256`) and slope (`uint256`).
 
@@ -873,26 +873,26 @@ struct Point:
 
         <div class="highlight">
         <pre><code>>>> GaugeController.points_sum(
-        Type: <input id="pointsSumInput1" 
-        type="number" 
+        Type: <input id="pointsSumInput1"
+        type="number"
         value="0"
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>
         Time: <input id="pointsSumInput2"
         class="timestamp-input"
         type="number"
         value="1708560000"
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>)
         <span id="pointsSumOutput"></span></code></pre>
         </div>
@@ -921,21 +921,21 @@ struct Point:
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the last scheduled time the gauge weights of a specific gauge type update.
 
         <div class="highlight">
-        <pre><code>>>> GaugeController.time_sum(<input id="timeSumInput" type="number" value="0" min="0" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> GaugeController.time_sum(<input id="timeSumInput" type="number" value="0" min="0"
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchTimeSum()"/>)
         <span id="timeSumOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -946,7 +946,7 @@ struct Point:
 ### `points_total`
 !!! description "`GaugeController.points_total(arg0: uint256) -> uint256: view`"
 
-    Getter for the currennt future total weight at timestamp `arg0`.
+    Getter for the current future total weight at timestamp `arg0`.
 
     Returns: total points (`uin256`).
 
@@ -967,21 +967,21 @@ struct Point:
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current future total weight at a specific timestamp.
 
         <div class="highlight">
-        <pre><code>>>> GaugeController.points_total(<input id="pointsTotalInput" type="number" value="1732752000" min="0" 
-        style="width: 100px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> GaugeController.points_total(<input id="pointsTotalInput" type="number" value="1732752000" min="0"
+        style="width: 100px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchPointsTotal()"/>)
         <span id="pointsTotalOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -1019,7 +1019,7 @@ struct Point:
 
     Getter for the weight for gauge type `arg0` at the next update, which is at timestamp `arg1`.
 
-    Returns: type weigt (`uint256`).
+    Returns: type weight (`uint256`).
 
     | Input  | Type      | Description   |
     | ------ | --------- | ------------- |
@@ -1040,25 +1040,25 @@ struct Point:
 
         <div class="highlight">
         <pre><code>>>> GaugeController.points_type_weight(
-        Type: <input id="pointsTypeWeightInput1" 
-        type="number" 
+        Type: <input id="pointsTypeWeightInput1"
+        type="number"
         value="0"
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>
-        Time: <input id="pointsTypeWeightInput2" 
+        Time: <input id="pointsTypeWeightInput2"
         class="timestamp-input"
         type="number"
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>)
         <span id="pointsTypeWeightOutput"></span></code></pre>
         </div>
@@ -1087,21 +1087,21 @@ struct Point:
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the last scheduled time when the gauge weights of a specific gauge type update.
 
         <div class="highlight">
-        <pre><code>>>> GaugeController.time_type_weight(<input id="timeTypeWeightInput" type="number" value="0" min="0" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> GaugeController.time_type_weight(<input id="timeTypeWeightInput" type="number" value="0" min="0"
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchTimeTypeWeight()"/>)
         <span id="timeTypeWeightOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -1124,7 +1124,7 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
 | :logos-ethereum: `Ethereum (crypto pools)` |     `5`    |
 | :no_entry_sign: `deprecated`               |     `6`    |
 |        :logos-arbitrum: `Arbitrum`         |     `7`    |
-|       :logos-avalanche: `Avalance`         |     `8`    |
+|       :logos-avalanche: `Avalanche`         |     `8`    |
 |         :logos-harmony: `Harmony`          |     `9`    |
 |               :moneybag: `Fundraising`     |    `10`    |
 |       :logos-optimism: `Optimism`          |    `11`    |
@@ -1135,7 +1135,7 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
 
     Getter for the gauge type of a specific gauge.
 
-    Returns: gauge type (`int128`). 
+    Returns: gauge type (`int128`).
 
     | Input   | Type      | Description   |
     | ------- | --------- | ------------- |
@@ -1167,21 +1167,21 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the gauge type of a specific gauge.
 
         <div class="highlight">
-        <pre><code>>>> GaugeController.gauge_types(<input id="gaugeTypesInput" type="text" value="0x4e6bb6b7447b7b2aa268c16ab87f4bb48bf57939" 
-        style="width: 350px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> GaugeController.gauge_types(<input id="gaugeTypesInput" type="text" value="0x4e6bb6b7447b7b2aa268c16ab87f4bb48bf57939"
+        style="width: 350px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchGaugeTypes()"/>)
         <span id="gaugeTypesOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -1236,19 +1236,19 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the name of a specific gauge type.
 
         <div class="highlight">
-        <pre><code>>>> GaugeController.gauge_type_names(<input id="gaugeTypeNamesInput" type="number" value="0" min="0" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
+        <pre><code>>>> GaugeController.gauge_type_names(<input id="gaugeTypeNamesInput" type="number" value="0" min="0"
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
             font-size: inherit;"/>)
         <span id="gaugeTypeNamesOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -1309,21 +1309,21 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the type weight of a specific gauge type.
 
         <div class="highlight">
-        <pre><code>>>> GaugeController.get_type_weight(<input id="getTypeWeightInput" type="number" value="0" min="0" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> GaugeController.get_type_weight(<input id="getTypeWeightInput" type="number" value="0" min="0"
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchGetTypeWeight()"/>)
         <span id="getTypeWeightOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -1496,7 +1496,7 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
             ```
 
     === "Example"
-        
+
         This example changes the weight of a gauge type with ID `14` to `1000000000000000000`.
 
         ```shell
@@ -1587,9 +1587,9 @@ Each liquidity gauge is assigned a type within the `GaugeController`. Grouping g
 
 ---
 
-## **Contract Ownership** 
+## **Contract Ownership**
 
-Admin ownership can be commited by calling `commit_transfer_ownership`. Changes then need to be applied. The current `admin` is the OwnershipAgent, which would require a DAO vote to change it.
+Admin ownership can be committed by calling `commit_transfer_ownership`. Changes then need to be applied. The current `admin` is the OwnershipAgent, which would require a DAO vote to change it.
 
 ### `admin`
 !!! description "`GaugeController.admin() -> address: view`"
@@ -1631,7 +1631,7 @@ Admin ownership can be commited by calling `commit_transfer_ownership`. Changes 
 ### `future_admin`
 !!! description "`GaugeController.future_admin() -> address: view`"
 
-    Getter for the future admin of the contract. 
+    Getter for the future admin of the contract.
 
     Returns: future admin (`address`).
 
@@ -1688,7 +1688,7 @@ Admin ownership can be commited by calling `commit_transfer_ownership`. Changes 
             ```
 
     === "Example"
-        
+
         This example commits the ownership of the contract to `0xd8da6bf26964af9d7eed9e03e53415d37aa96045`.
 
         ```shell

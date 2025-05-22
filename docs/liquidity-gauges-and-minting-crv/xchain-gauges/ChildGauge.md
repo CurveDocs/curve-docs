@@ -3,7 +3,7 @@
 The `ChildGauge` is the liquidity gauge contract on the sidechain. It is used to track the balance of liquidity providers and distribute CRV emissions to them. It is pretty much the same as the `Gauge` contract on Ethereum mainnet.
 
 ???+ vyper "`ChildGauge.vy`"
-    The source code for the `ChildGauge.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/blob/master/contracts/implementations/ChildGauge.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10` 
+    The source code for the `ChildGauge.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/blob/master/contracts/implementations/ChildGauge.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`
 
 ---
 
@@ -104,7 +104,7 @@ The `ChildGauge` is the liquidity gauge contract on the sidechain. It is used to
             def deposit(_value: uint256, _addr: address = msg.sender, _claim_rewards: bool = False):
                 """
                 @notice Deposit `_value` LP tokens
-                @dev Depositting also claims pending reward tokens
+                @dev Depositing also claims pending reward tokens
                 @param _value Number of tokens to deposit
                 @param _addr Address to deposit for
                 """
@@ -860,7 +860,7 @@ The process for adding external reward tokens follows two steps:
     - Only callable by gauge manager or factory admin
     - Stores token data in `reward_data` mapping
 
-2. **Deposit Rewards** (`deposit_reward_token`) 
+2. **Deposit Rewards** (`deposit_reward_token`)
     - Deposits reward tokens for distribution
     - Only callable by the authorized distributor
     - Distributes rewards linearly over specified period
@@ -1141,7 +1141,7 @@ The process for adding external reward tokens follows two steps:
     !!!guard "Guarded Method"
         This function is only callable by the `manager` of the gauge or the `owner` of the Factory.
 
-    Function to set the manager for the gauge. This function is a copy of the `set_gauge_manager` function for back-compatability.
+    Function to set the manager for the gauge. This function is a copy of the `set_gauge_manager` function for back-compatibility.
 
     Emits: `SetGaugeManager` event.
 
@@ -1163,7 +1163,7 @@ The process for adding external reward tokens follows two steps:
             def set_manager(_gauge_manager: address):
                 """
                 @notice Change the gauge manager for a gauge
-                @dev Copy of `set_gauge_manager` for back-compatability
+                @dev Copy of `set_gauge_manager` for back-compatibility
                 @dev The manager of this contract, or the ownership admin can outright modify gauge
                     managership. A gauge manager can also transfer managership to a new manager via this
                     method, but only for the gauge which they are the manager of.
@@ -1787,7 +1787,7 @@ For more information on how boosting works, please refer to the [Boosting Explai
 
 ### `update_voting_escrow`
 !!! description "`ChildGauge.update_voting_escrow()`"
-    
+
     Function to update the voting escrow contract to the voting escrow contract set in the factory. This function is callable by anyone.
 
     ??? quote "Source code"

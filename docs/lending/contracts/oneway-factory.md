@@ -1,6 +1,6 @@
 <h1>OneWay Lending Factory</h1>
 
-A one-way lending market is a **non-rehypothecating** market where one token is considered the collateral token and another token is the borrow token. This means the **deposited collateral cannot be lent out** but can only be used as collateral. 
+A one-way lending market is a **non-rehypothecating** market where one token is considered the collateral token and another token is the borrow token. This means the **deposited collateral cannot be lent out** but can only be used as collateral.
 
 !!!github "GitHub"
     The source code of the `OneWayLendingFactory.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/lending/OneWayLendingFactory.vy).
@@ -29,7 +29,7 @@ A lending market **must always include crvUSD, either as collateral or as the bo
 ### `create`
 !!! description "`OneWayLendingVaultFactory.create(borrowed_token: address, collateral_token: address, A: uint256, fee: uint256, loan_discount: uint256, liquidation_discount: uint256, price_oracle: address, name: String[64], min_borrow_rate: uint256 = 0, max_borrow_rate: uint256 = 0) -> Vault:`"
 
-    Function to create a new vault using a user-supplied price oracle contract. 
+    Function to create a new vault using a user-supplied price oracle contract.
 
     Returns: vault (`address`).
 
@@ -178,9 +178,9 @@ A lending market **must always include crvUSD, either as collateral or as the bo
 !!! description "`OneWayLendingVaultFactory.create(borrowed_token: address, collateral_token: address, A: uint256, fee: uint256, loan_discount: uint256, liquidation_discount: uint256, price_oracle: address, name: String[64], min_borrow_rate: uint256 = 0, max_borrow_rate: uint256 = 0) -> Vault:`"
 
     !!!warning "Valid Pool Oracles"
-        Only oracles from stableswap-ng, twocrypto-ng, and tricrypto-ng pools are valid. Oracles from other pools may not be manipulation resistant and therefore should not be used.
+        Only oracles from Stableswap-NG, Twocrypto-NG, and Tricrypto-NG pools are valid. Oracles from other pools may not be manipulation resistant and therefore should not be used.
 
-    Function to create a new vault using a existing oraclized Curve pool as the price oracle. 
+    Function to create a new vault using a existing oraclized Curve pool as the price oracle.
 
     Returns: vault (`address`).
 
@@ -194,7 +194,7 @@ A lending market **must always include crvUSD, either as collateral or as the bo
     | `fee`                  | `uint256`     | Fee for swaps in the AMM. |
     | `loan_discount`        | `uint256`     | Maximum discount. LTV = sqrt(((A - 1) / A) ** 4) - loan_discount. |
     | `liquidation_discount` | `uint256`     | Liquidation discount. LT = sqrt(((A - 1) / A) ** 4) - liquidation_discount |
-    | `pool`                 | `address`     | Curve tricrypto-ng, twocrypto-ng or stableswap-ng pool which has non-manipulatable `price_oracle()`. Must contain both collateral_token and borrowed_token. |
+    | `pool`                 | `address`     | Curve Tricrypto-NG, Twocrypto-NG or Stableswap-NG pool which has non-manipulatable `price_oracle()`. Must contain both collateral_token and borrowed_token. |
     | `name`                 | `String[64]`  | Name of the vault. |
     | `min_borrow_rate`      | `uint256`     | Custom minimum borrow rate; if not set will default to `min_default_borrow_rate` |
     | `max_borrow_rate`      | `uint256`     | Custom maximum borrow rate; if not set will default to `max_default_borrow_rate` |
@@ -404,7 +404,7 @@ Just like pools, vaults can have liquidity gauges. Once they are added to the `G
         ```shell
         In  [1]: OneWayLendingVaultFactory.deploy_gauge("0xE16D806c4198955534d4EB10E4861Ea94557602E")
         Out [1]: '0xACEBA186aDF691245dfb20365B48DB87DEA7b98F'                # returns address of deployed gauge
-        ``` 
+        ```
 
 
 ---
@@ -414,10 +414,10 @@ Just like pools, vaults can have liquidity gauges. Once they are added to the `G
 
 The Factory has a `MIN_RATE` and `MAX_RATE`. These variables are constants and can not be changed. The minimum rate is 0.1%, the maximum rate is 1000%.
 
-Additionally, the Factory has two variables, `min_default_borrow_rate` and `max_default_borrow_rate`, which are used as default values when creating new lending markets.  
-If no value is given when deploying a new market, the default rates are applied. Default rates can be changed by the `admin` via the `set_default_rates` method. 
+Additionally, the Factory has two variables, `min_default_borrow_rate` and `max_default_borrow_rate`, which are used as default values when creating new lending markets.
+If no value is given when deploying a new market, the default rates are applied. Default rates can be changed by the `admin` via the `set_default_rates` method.
 
-**Rates are denominated in seconds and have a base unit of 1e18**. 
+**Rates are denominated in seconds and have a base unit of 1e18**.
 
 *To get the annualized value, do:*
 
@@ -491,7 +491,7 @@ $$\text{Annualized Rate} = \text{rate} \times 86400 \times  365$$
                 """
                 @notice Change min and max default borrow rates for creating new markets
                 @param min_rate Minimal borrow rate (0 utilization)
-                @param max_rate Maxumum borrow rate (100% utilization)
+                @param max_rate Maximum borrow rate (100% utilization)
                 """
                 assert msg.sender == self.admin
 
@@ -532,7 +532,7 @@ $$\text{Annualized Rate} = \text{rate} \times 86400 \times  365$$
                 """
                 @notice Change min and max default borrow rates for creating new markets
                 @param min_rate Minimal borrow rate (0 utilization)
-                @param max_rate Maxumum borrow rate (100% utilization)
+                @param max_rate Maximum borrow rate (100% utilization)
                 """
                 assert msg.sender == self.admin
 
@@ -586,7 +586,7 @@ $$\text{Annualized Rate} = \text{rate} \times 86400 \times  365$$
                 """
                 @notice Change min and max default borrow rates for creating new markets
                 @param min_rate Minimal borrow rate (0 utilization)
-                @param max_rate Maxumum borrow rate (100% utilization)
+                @param max_rate Maximum borrow rate (100% utilization)
                 """
                 assert msg.sender == self.admin
 
@@ -604,7 +604,7 @@ $$\text{Annualized Rate} = \text{rate} \times 86400 \times  365$$
         ```shell
         In  [1]:  OneWayLendingVaultFactory.min_default_borrow_rate()
         Out [1]:  158548959
-        
+
         In  [2]:  OneWayLendingVaultFactory.max_default_borrow_rate()
         Out [2]:  15854895991
 
@@ -623,7 +623,7 @@ $$\text{Annualized Rate} = \text{rate} \times 86400 \times  365$$
 
 ## **Implementations**
 
-The implementations of the Factory can be upgraded by the `admin`, which is the Curve DAO. 
+The implementations of the Factory can be upgraded by the `admin`, which is the Curve DAO.
 
 !!!colab "Google Colab Notebook"
     A notebook on how to change implementations using the `set_implementations` function can be found here: [https://colab.research.google.com/drive/1r3Vhb28Wy8iX_YRBNpfnwjzS4dKuMADf?usp=sharing](https://colab.research.google.com/drive/1r3Vhb28Wy8iX_YRBNpfnwjzS4dKuMADf?usp=sharing)
@@ -806,7 +806,7 @@ The implementations of the Factory can be upgraded by the `admin`, which is the 
             def set_implementations(controller: address, amm: address, vault: address,
                                     pool_price_oracle: address, monetary_policy: address, gauge: address):
                 """
-                @notice Set new implementations (blueprints) for controller, amm, vault, pool price oracle and monetary polcy.
+                @notice Set new implementations (blueprints) for controller, amm, vault, pool price oracle and monetary policy.
                         Doesn't change existing ones
                 @param controller Address of the controller blueprint
                 @param amm Address of the AMM blueprint
@@ -925,7 +925,7 @@ The Factory contract is owned by the DAO ([CurveOwnershipAdmin](https://ethersca
 
 ## **Contract Info Methods**
 
-Most informations are queried based on vault indices. The first deployed vault is vault index 0, second one index 1, etc.
+Most information are queried based on vault indices. The first deployed vault is vault index 0, second one index 1, etc.
 
 *To get the index of a certain vault:*
 

@@ -19,7 +19,7 @@ This documentation outlines the technical implementation of the core Curve proto
 
 <div class="grid cards" markdown>
 
--   **:logos-crv: Curve DAO** 
+-   **:logos-crv: Curve DAO**
 
     ---
 
@@ -51,19 +51,19 @@ This documentation outlines the technical implementation of the core Curve proto
 
     [**:octicons-arrow-right-24: Getting started**](./lending/overview.md)
 
--   :material-scale-balance:{ .lg .middle } **StableSwap Exchange**
+-   :material-scale-balance:{ .lg .middle } **Stableswap Exchange**
 
     ---
 
-    Implementation of the Stableswap algorithm, as detailed in the [whitepaper](./assets/pdf/whitepaper_stableswap.pdf), into on-chain exchange contracts to facilitate trades between multiple relatively stable assets in comparison to each other (e.g., USDC<>USDT).
+    Implementation of the Stableswap algorithm, as detailed in the [Whitepaper](./assets/pdf/whitepaper_stableswap.pdf), into on-chain exchange contracts to facilitate trades between multiple relatively stable assets in comparison to each other (e.g., USDC<>USDT).
 
     [**:octicons-arrow-right-24: Getting started**](./stableswap-exchange/overview.md)
 
--   :material-scale-unbalanced:{ .lg .middle } **CryptoSwap Exchange**
+-   :material-scale-unbalanced:{ .lg .middle } **Cryptoswap Exchange**
 
     ---
 
-    Implementation of the Cryptoswap algorithm, as detailed in the [whitepaper](./assets/pdf/whitepaper_cryptoswap.pdf), into on-chain exchange contracts to facilitate trades between multiple volatile assets (e.g. CRV<>ETH).
+    Implementation of the Cryptoswap algorithm, as detailed in the [Whitepaper](./assets/pdf/whitepaper_cryptoswap.pdf), into on-chain exchange contracts to facilitate trades between multiple volatile assets (e.g. CRV<>ETH).
 
     [**:octicons-arrow-right-24: Getting started**](./cryptoswap-exchange/overview.md)
 
@@ -79,7 +79,7 @@ This documentation outlines the technical implementation of the core Curve proto
 
     ---
 
-    Permissionless deployment of liquidity pools, including stableswap and cryptoswap pools, along with liquidity gauges.
+    Permissionless deployment of liquidity pools, including Stableswap and Cryptoswap pools, along with liquidity gauges.
 
     [**:octicons-arrow-right-24: Getting started**](./factory/overview.md)
 
@@ -96,7 +96,7 @@ This documentation outlines the technical implementation of the core Curve proto
     ---
 
     Section targeted at integrators covering contracts like `AddressProvider` or `MetaRegistry`.
-    
+
     [**:octicons-arrow-right-24: Getting started**](./integration/overview.md)
 
 -   :logos-googlecolab: **Notebooks**

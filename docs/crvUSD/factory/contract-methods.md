@@ -51,7 +51,7 @@
 ### `rug_debt_ceiling`
 !!! description "`ControllerFactory.rug_debt_ceiling(_to: address):`"
 
-    Function to remove stablecoins above the debt seiling from a controller and burn them.
+    Function to remove stablecoins above the debt ceiling from a controller and burn them.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -174,7 +174,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     Getter for the stablecoin address.
 
-    Returns: stablecoin (`address`). 
+    Returns: stablecoin (`address`).
 
     ??? quote "Source code"
 
@@ -211,7 +211,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     Getter for the sum of all debts across the controllers.
 
-    Returns: total amount of debt (`uint256`). 
+    Returns: total amount of debt (`uint256`).
 
     ??? quote "Source code"
 
@@ -243,7 +243,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     Getter for the controller address for `collateral`.
 
-    Returns: controller `address`. 
+    Returns: controller `address`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -277,12 +277,12 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     Getter for the amm address for `collateral`.
 
-    Returns: amm `address`. 
+    Returns: amm `address`.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `collateral` |  `address` | Address of collateral token |
-    | `i` |  `uint256` | Index to iterate over several amms for the same collateral if needed |
+    | `i` |  `uint256` | Index to iterate over several AMMs for the same collateral if needed |
 
 
     ??? quote "Source code"
@@ -311,7 +311,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     Getter for the controller address at index `arg0`.
 
-    Returns: controller `address` at specific index. 
+    Returns: controller `address` at specific index.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -337,7 +337,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     Getter for the amm address at index `arg0`.
 
-    Returns: AMM `address` at specific index. 
+    Returns: AMM `address` at specific index.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|

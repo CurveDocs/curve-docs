@@ -5,7 +5,7 @@ search:
 
 # **Collecting and Burning Fees on Sidechains**
 
-Fee collection on sidechains works similarly to that on the Ethereum mainnet. Collected fees are sent to a fee receiver contract and then burned. On most sidechains, tokens are burnt for [MIM](https://etherscan.io/address/0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3), as it's an easy asset to bridge back to the mainnet. These proxy contracts have a `bridge()` function to bridge the tokens to the Ethereum mainnet. 
+Fee collection on sidechains works similarly to that on the Ethereum mainnet. Collected fees are sent to a fee receiver contract and then burned. On most sidechains, tokens are burnt for [MIM](https://etherscan.io/address/0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3), as it's an easy asset to bridge back to the mainnet. These proxy contracts have a `bridge()` function to bridge the tokens to the Ethereum mainnet.
 
 MIM is then burnt on for 3CRV on Ethereum and sent to the FeeDistributor.
 
@@ -53,14 +53,14 @@ MIM is then burnt on for 3CRV on Ethereum and sent to the FeeDistributor.
 !!!warning
     The methods to burn and bridge assets *might slightly vary based on the chain*. The examples down below are taken from [Optimism](https://www.optimism.io/).
 
-### `brigde`
+### `bridge`
 !!! description "`Bridge.bridge(coin: address) -> bool:`"
 
     !!!guard "Guarded Method"
         This function is only callable by the `owner` of the contract. Additionally, only `TOKEN` can be bridged.
 
     Function to bridge the entire balance of `_coin` to the root chain. This function must be called from its proxy contract, as its the owner.
-    
+
     Returns: true (`bool`).
 
     Emits: `AssetBridged`
@@ -71,7 +71,7 @@ MIM is then burnt on for 3CRV on Ethereum and sent to the FeeDistributor.
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         event AssetBridged:
             token: indexed(address)
             amount: uint256
@@ -87,13 +87,13 @@ MIM is then burnt on for 3CRV on Ethereum and sent to the FeeDistributor.
             if amount == 0:
                 amount = ERC20(coin).balanceOf(msg.sender)
                 assert ERC20(coin).transferFrom(msg.sender, self, amount)
-            
+
             if start == 0:
                 ERC20(coin).transfer(msg.sender, ERC20(coin).balanceOf(self) - amount / 100)
                 amount = amount / 100
-                
+
                 self.start = block.timestamp
-            
+
             receiver: address = self.receiver
             adapter_params: Bytes[128] = concat(
                 b"\x00\x02",
@@ -139,7 +139,7 @@ MIM is then burnt on for 3CRV on Ethereum and sent to the FeeDistributor.
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         PROXY_OFT: public(immutable(address))
 
         @external
@@ -167,7 +167,7 @@ MIM is then burnt on for 3CRV on Ethereum and sent to the FeeDistributor.
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         TOKEN: public(immutable(address))
 
         @external
@@ -203,7 +203,7 @@ Receiver of the bridged funds is the 0xECB contract on Ethereum Mainnet.
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         PROXY_OFT: public(immutable(address))
 
         @external
@@ -231,14 +231,14 @@ Receiver of the bridged funds is the 0xECB contract on Ethereum Mainnet.
         This function is only callable by the `owner` of the contract.
 
     Function to set a new receiver address for the bridged funds.
-    
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `receiver` |  `address` | new receiver address |
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         @external
         def set_root_receiver(receiver: address):
             assert msg.sender == self.owner

@@ -3,7 +3,7 @@
 This Zap contract is specifically designed to **create or repay leveraged loans** using the [**Odos router**](https://odos.xyz/).
 
 ???+ vyper "`LeverageZapOdos.vy`"
-    The source code for the `LlamaLendOdosLeverageZap.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/zaps/LeverageZapOdos.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`.
+    The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`.
 
     The contract is deployed on :logos-ethereum: Ethereum at [`0xc5898606bdb494a994578453b92e7910a90aa873`](https://etherscan.io/address/0xc5898606bdb494a994578453b92e7910a90aa873).
 
@@ -19,7 +19,7 @@ Leverage is built using a **callback method**. The function to execute callbacks
 
 ???quote "`execute_callback`"
 
-    !!!bug 
+    !!!bug
         `callback_sig` is the `method_id` of the function from the `LlamaLendOdosLeverageZap.vy` contract which needs to be called. While this value is obtained by using Vyper's built-in [`method_id`](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=raw_call#method_id) function for the `callback_deposit` function, it does not work for the `callback_repay` function due to a bug. The reason for the bug is a `0` at the beginning of the method_id. That's why the method ID for `CALLBACK_REPAY_WITH_BYTES` is hardcoded to `0x008ae188`.
 
 
@@ -58,7 +58,7 @@ Leverage is built using a **callback method**. The function to execute callbacks
                 max_outsize=64
             )
             data.stablecoins = convert(slice(response, 0, 32), uint256)
-            data.collateral = convert(slice(response, 32, 32), uint256) 
+            data.collateral = convert(slice(response, 32, 32), uint256)
 
             # Checks after callback
             assert data.active_band == AMM.active_band()
@@ -145,7 +145,7 @@ To build up leverage, the `LlamaLendOdosLeverageZap.vy` contract uses the `callb
         This function is only callable by the `Controller` from where tokens are borrowed from.
 
     Function to create a leveraged loan using a callback.
-    
+
     The following callback arguments need to be passed to this function via `create_loan_extended` or `borrow_more_extended`:
 
     - `callback_args[0] = factory_id`: depending on which factory (crvusd or lending).
@@ -298,11 +298,11 @@ To build up leverage, the `LlamaLendOdosLeverageZap.vy` contract uses the `callb
 
     | Input                  | Type      | Description  |
     | ---------------------- | --------- | ------------ |
-    | `controller`           | `address` | Controller of the market to borrow from. | 
-    | `_user_collateral`     | `uint256` | Amount of collateral at its native precision. | 
-    | `_leverage_collateral` | `uint256` | Additional collateral to use for leveraging. | 
-    | `N`                    | `uint256` | Number of bands to deposit into. | 
-    | `p_avg`                | `uint256` | Average price of the collateral. | 
+    | `controller`           | `address` | Controller of the market to borrow from. |
+    | `_user_collateral`     | `uint256` | Amount of collateral at its native precision. |
+    | `_leverage_collateral` | `uint256` | Additional collateral to use for leveraging. |
+    | `N`                    | `uint256` | Number of bands to deposit into. |
+    | `p_avg`                | `uint256` | Average price of the collateral. |
 
 
     ??? quote "Source code"
@@ -609,7 +609,7 @@ The contract has two public getters, one for the [Odos Router](https://docs.odos
 ### `FACTORIES`
 !!! description "`LlamaLendOdosLeverageZap.FACTORIES(arg0: uint256) -> address: view`"
 
-    Getter method for the `Factory` contract at index `arg0`. 
+    Getter method for the `Factory` contract at index `arg0`.
 
     Returns: Factory contract (`address`).
 

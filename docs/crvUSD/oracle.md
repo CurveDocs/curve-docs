@@ -1,11 +1,11 @@
-As crvusd markets use interal oracles, they utilizes in-house liquidity pools to aggregate the price of collateral. But there is a possibility to use Chainlink oracle prices as safety limits.
+As crvusd markets use internal oracles, they utilizes in-house liquidity pools to aggregate the price of collateral. But there is a possibility to use Chainlink oracle prices as safety limits.
 
 !!!warning
     Every market has its own price oracle contract, which can be fetched by calling `price_oracle_contract` within the controller of the market. The [wstETH oracle](https://etherscan.io/address/0xc1793A29609ffFF81f10139fa0A7A444c9e106Ad#code) will be used for the purpose of this documentation. Please be aware that oracle contracts can vary based on the collateral token.
 
 
 !!!tip
-    The formulas below use slightly different terminologies than the code to make them easier to read.  
+    The formulas below use slightly different terminologies than the code to make them easier to read.
     For abbreviations, see [here](./oracle.md#terminology-used-in-code).
 
 
@@ -45,16 +45,16 @@ $$tvl_{i} = \frac{TS_i * VP_i}{10^{18}}$$
 $$\text{last_tvl}_i = \frac{tvl_i * (10^{18} - \alpha) + \text{last_tvl}_i * \alpha}{10^{18}}$$
 
 
-$tvl_i = \text{TVL of i-th pool}$ in `TRICRYPTO[N_POOLS]`  
-$TS_i = \text{total supply of i-th pool}$ in `TRICRYPTO[N_POOLS]`  
-$VP_i = \text{virtual price of i-th pool}$ in `TRICRYPTO[N_POOLS]` 
-$\text{last_tvl}_i = \text{smoothed TVL of i-th pool}$ in `TRICRYPTO[N_POOLS]` 
+$tvl_i = \text{TVL of i-th pool}$ in `TRICRYPTO[N_POOLS]`
+$TS_i = \text{total supply of i-th pool}$ in `TRICRYPTO[N_POOLS]`
+$VP_i = \text{virtual price of i-th pool}$ in `TRICRYPTO[N_POOLS]`
+$\text{last_tvl}_i = \text{smoothed TVL of i-th pool}$ in `TRICRYPTO[N_POOLS]`
 
 
 ### `ema_tvl`
 !!! description "`Oracle.ema_tvl() -> uint256[N_POOLS]:`"
 
-    Function to calculate the Total-Value-Locked (TVL) Exponential-Moving-Average (EMA) of the `TRICRYPTO` pools. 
+    Function to calculate the Total-Value-Locked (TVL) Exponential-Moving-Average (EMA) of the `TRICRYPTO` pools.
 
     Returns: `last_tvl` (`uint256[N_POOLS]`).
 
@@ -94,7 +94,7 @@ $\text{last_tvl}_i = \text{smoothed TVL of i-th pool}$ in `TRICRYPTO[N_POOLS]`
 ### `last_tvl`
 !!! description "`Oracle.last_tvl(arg0: uint256) -> uint256:`"
 
-    Getter for the `last_tvl` of the tricrypto pool at index `arg0`.
+    Getter for the `last_tvl` of the Tricrypto pool at index `arg0`.
 
     Returns: `last_tvl` (`uint256[N_POOLS]`).
 
@@ -165,7 +165,7 @@ The internal `_raw_price()` function calculates the *raw price of the collateral
         p_staked = min(p_staked, 10**18) * WSTETH.stEthPerToken() / 10**18  # d_eth / d_wsteth
 
         return p_staked * crv_p / 10**18
-    ```   
+    ```
 
 
 $$price_{weighted} = (\frac{price_{eth} * price_{crvusd}}{price_{usd}}) * weight$$
@@ -176,12 +176,12 @@ $$price_{stETH} = min(price_{stETH}, 10^{18}) * \frac{rate_{wstETH}}{10^{18}}$$
 
 $$price = price_{stETH} * totalPrice_{weighted}$$
 
-$price_{weighted} =$ weighted price of ETH  
-$totalPrice_{weighted} =$ total weighted price of ETH  
-$price_{eth} =$ price oracle of eth in the tricrypto pools w.r.t usdc/usdt  
-$price_{usd} =$ price oracle of stableswap pool  
-$price_{crvusd} =$ price oracle of crvusd  
-$price_{stETH} =$ price of stETH w.r.t ETH  
+$price_{weighted} =$ weighted price of ETH
+$totalPrice_{weighted} =$ total weighted price of ETH
+$price_{ETH} =$ price oracle of ETH in the Tricrypto pools w.r.t USDC/USDT
+$price_{USD} =$ price oracle of Stableswap pool
+$price_{crvUSD} =$ price oracle of crvUSD
+$price_{stETH} =$ price of stETH w.r.t ETH
 $rate_{wstETH} =$ amount of stETH for 1 wstETH
 
 
@@ -189,7 +189,7 @@ $rate_{wstETH} =$ amount of stETH for 1 wstETH
 !!! description "`Oracle.raw_price() -> uint256: view`"
 
     Function to calculate the raw price.
-    
+
     Returns: raw price (`uint256`).
 
     ??? quote "Source code"
@@ -209,7 +209,7 @@ $rate_{wstETH} =$ amount of stETH for 1 wstETH
                 p_crypto_r: uint256 = TRICRYPTO[i].price_oracle(TRICRYPTO_IX[i])   # d_usdt/d_eth
                 p_stable_r: uint256 = STABLESWAP[i].price_oracle()                 # d_usdt/d_st
                 p_stable_agg: uint256 = agg_price                                  # d_usd/d_st
-                if IS_INVERSE[i]:   
+                if IS_INVERSE[i]:
                     p_stable_r = 10**36 / p_stable_r
                 weight: uint256 = tvls[i]
                 # Prices are already EMA but weights - not so much
@@ -286,10 +286,10 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 ### `set_use_chainlink`
 !!! description "`Oracle.set_use_chainlink(do_it: bool):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the Factory contract.
 
-    Function to toggle the usage of chainlink limits. 
+    Function to toggle the usage of chainlink limits.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -356,7 +356,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 ### `TRICRYPTO`
 !!! description "`Oracle.TRICRYPTO(arg0: uint256) -> uint256:`"
 
-    Getter for the tricrypto pool at index `arg0`.
+    Getter for the Tricrypto pool at index `arg0`.
 
     Returns: `last_tvl` (`uint256[N_POOLS]`).
 
@@ -381,12 +381,12 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 ### `TRICRYPTO_IX`
 !!! description "`Oracle.TRICRYPTO_IX(arg0: uint256) -> uint256:`"
 
-    Getter for the index of ETH in the tricrypto pool w.r.t the coin at index 0.
+    Getter for the index of ETH in the Tricrypto pool w.r.t the coin at index 0.
 
-    Returns: Index of ETH price oracle in the tricrypto pool (`uint256`).
+    Returns: Index of ETH price oracle in the Tricrypto pool (`uint256`).
 
     !!!tip
-        Returns 1, as ETH price oracle index in the tricrypto pool is 1. If the same index would be 0, it would return the price oracle of ETH. Their prices are all w.r.t the coin at index 0 (USDC or USDT).
+        Returns 1, as ETH price oracle index in the Tricrypto pool is 1. If the same index would be 0, it would return the price oracle of ETH. Their prices are all w.r.t the coin at index 0 (USDC or USDT).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -430,9 +430,9 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 ### `STABLESWAP`
 !!! description "`Oracle.STABLESWAP(arg0: uint256) -> address:`"
 
-    Getter for the stableswap pool at index `arg0`., 
+    Getter for the Stableswap pool at index `arg0`.,
 
-    Returns: stableswap pool (`address`).
+    Returns: Stableswap pool (`address`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -518,7 +518,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 ### `STAKEDSWAP`
 !!! description "`Oracle.STAKEDSWAP() -> address:`"
 
-    Getter for the stETH/ETH stableswap pool.
+    Getter for the stETH/ETH Stableswap pool.
 
     Returns: pool contract (`address`).
 
@@ -603,7 +603,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
 !!! description "`Oracle.price() -> uint256: view`"
 
     Function to calculate the raw price of the collateral token.
-    
+
     Returns: raw price (`uint256`).
 
     ??? quote "Source code"
@@ -623,7 +623,7 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
                 p_crypto_r: uint256 = TRICRYPTO[i].price_oracle(TRICRYPTO_IX[i])   # d_usdt/d_eth
                 p_stable_r: uint256 = STABLESWAP[i].price_oracle()                 # d_usdt/d_st
                 p_stable_agg: uint256 = agg_price                                  # d_usd/d_st
-                if IS_INVERSE[i]:   
+                if IS_INVERSE[i]:
                     p_stable_r = 10**36 / p_stable_r
                 weight: uint256 = tvls[i]
                 # Prices are already EMA but weights - not so much
@@ -666,14 +666,14 @@ Chainlink limits can be turned on and off by calling `set_use_chainlink(do_it: b
         ```
 
 
-### `price_w` 
+### `price_w`
 !!! description "`Oracle.price_w() -> uint256:`"
 
     Function to obtain the oracle price of the collateral token and update `last_tvl` and `last_timestamp`. This function is used in the AMM.
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `arg0` |  `uint256` | `last_tvl` of tricrypto pool at index `arg0` |
+    | `arg0` |  `uint256` | `last_tvl` of Tricrypto pool at index `arg0` |
 
     ??? quote "Source code"
 

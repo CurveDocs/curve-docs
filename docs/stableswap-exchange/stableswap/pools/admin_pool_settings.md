@@ -2,8 +2,8 @@
 
 The following are methods that may only be called by the pool admin (``owner``).
 
-Additionally, some admin methods require a two-phase transaction process, whereby changes are committed in a first 
-transaction and after a forced delay applied via a second transaction. The minimum delay after which a committed 
+Additionally, some admin methods require a two-phase transaction process, whereby changes are committed in a first
+transaction and after a forced delay applied via a second transaction. The minimum delay after which a committed
 action can be applied is given by the constant pool attribute ``admin_actions_delay``, which is set to 3 days.
 
 ## Pool Ownership Methods
@@ -18,7 +18,7 @@ action can be applied is given by the constant pool attribute ``admin_actions_de
     | ----------- | -------| ----|
     | `_owner`       |  `address` | Future owner of the pool contract |
 
-    Emits: <mark style="background-color: #FFD580; color: black">CommitNewAdmin</mark>  
+    Emits: <mark style="background-color: #FFD580; color: black">CommitNewAdmin</mark>
 
     ??? quote "Source code"
 
@@ -31,23 +31,23 @@ action can be applied is given by the constant pool attribute ``admin_actions_de
         def commit_transfer_ownership(_owner: address):
             assert msg.sender == self.owner  # dev: only owner
             assert self.transfer_ownership_deadline == 0  # dev: active transfer
-        
+
             _deadline: uint256 = block.timestamp + ADMIN_ACTIONS_DELAY
             self.transfer_ownership_deadline = _deadline
             self.future_owner = _owner
-        
+
             log CommitNewAdmin(_deadline, _owner)
         ```
 
     === "Example"
-    
+
         ```shell
         >>> pool.commit_transfer_ownership()
         todo: console output
         ```
 
     !!! note
-        The ownership can not be transferred before ``transfer_ownership_deadline``, which is the timestamp of the 
+        The ownership can not be transferred before ``transfer_ownership_deadline``, which is the timestamp of the
         current block delayed by ``ADMIN_ACTIONS_DELAY``.
 
 ### `StableSwap.apply_transfer_ownership`
@@ -66,11 +66,11 @@ action can be applied is given by the constant pool attribute ``admin_actions_de
             assert msg.sender == self.owner  # dev: only owner
             assert block.timestamp >= self.transfer_ownership_deadline  # dev: insufficient time
             assert self.transfer_ownership_deadline != 0  # dev: no active transfer
-        
+
             self.transfer_ownership_deadline = 0
             _owner: address = self.future_owner
             self.owner = _owner
-        
+
             log NewAdmin(_owner)
         ```
 
@@ -80,7 +80,7 @@ action can be applied is given by the constant pool attribute ``admin_actions_de
         >>> pool.apply_transfer_ownership()
         todo: log output
         ```
-        
+
     !!! warning
 
         Pool ownership can only be transferred once.
@@ -89,7 +89,7 @@ action can be applied is given by the constant pool attribute ``admin_actions_de
 
 !!! description "`StableSwap.revert_transfer_ownership()`"
 
-    Reverts any previously committed transfer of ownership. This method resets the 
+    Reverts any previously committed transfer of ownership. This method resets the
     ``transfer_ownership_deadline`` to ``0``.
 
     ??? quote "Source code"
@@ -98,7 +98,7 @@ action can be applied is given by the constant pool attribute ``admin_actions_de
         @external
         def revert_transfer_ownership():
             assert msg.sender == self.owner  # dev: only owner
-        
+
             self.transfer_ownership_deadline = 0
         ```
 
@@ -111,17 +111,17 @@ action can be applied is given by the constant pool attribute ``admin_actions_de
 
 ## Amplification Coefficient Admin Controls
 
-The amplification coefficient ``A`` determines a pool’s tolerance for imbalance between the assets within it. 
+The amplification coefficient ``A`` determines a pool’s tolerance for imbalance between the assets within it.
 A higher value means that trades will incur slippage sooner as the assets within the pool become imbalanced.
 
 !!! note
 
-    Within the pools, ``A`` is in fact implemented as ``1 / A`` and therefore a higher value implies that the pool will 
+    Within the pools, ``A`` is in fact implemented as ``1 / A`` and therefore a higher value implies that the pool will
     be more tolerant to slippage when imbalanced.
 
-The appropriate value for A is dependent upon the type of coin being used within the pool, and is subject to optimisation
-and pool-parameter update based on the market history of the trading pair. It is possible to modify the amplification 
-coefficient for a pool after it has been deployed. However, it requires a vote within the Curve DAO and must reach a 
+The appropriate value for A is dependent upon the type of coin being used within the pool, and is subject to optimization
+and pool-parameter update based on the market history of the trading pair. It is possible to modify the amplification
+coefficient for a pool after it has been deployed. However, it requires a vote within the Curve DAO and must reach a
 15% quorum.
 
 ### `StableSwap.ramp_A`
@@ -151,21 +151,21 @@ coefficient for a pool after it has been deployed. However, it requires a vote w
             assert msg.sender == self.owner  # dev: only owner
             assert block.timestamp >= self.initial_A_time + MIN_RAMP_TIME
             assert _future_time >= block.timestamp + MIN_RAMP_TIME  # dev: insufficient time
-        
+
             _initial_A: uint256 = self._A()
             _future_A_p: uint256 = _future_A * A_PRECISION
-        
+
             assert _future_A > 0 and _future_A < MAX_A
             if _future_A_p < _initial_A:
                 assert _future_A_p * MAX_A_CHANGE >= _initial_A
             else:
                 assert _future_A_p <= _initial_A * MAX_A_CHANGE
-        
+
             self.initial_A = _initial_A
             self.future_A = _future_A_p
             self.initial_A_time = block.timestamp
             self.future_A_time = _future_time
-        
+
             log RampA(_initial_A, _future_A_p, block.timestamp, _future_time)
         ```
 
@@ -190,19 +190,19 @@ coefficient for a pool after it has been deployed. However, it requires a vote w
         @external
         def stop_ramp_A():
             assert msg.sender == self.owner  # dev: only owner
-        
+
             current_A: uint256 = self._A()
             self.initial_A = current_A
             self.future_A = current_A
             self.initial_A_time = block.timestamp
             self.future_A_time = block.timestamp
             # now (block.timestamp < t1) is always False, so we return saved A
-        
+
             log StopRampA(current_A, block.timestamp)
         ```
 
     === "Example"
-    
+
         ```shell
         >>> pool.stop_ramp_A()
         todo: log output
@@ -211,7 +211,7 @@ coefficient for a pool after it has been deployed. However, it requires a vote w
 ## Swap Fees Admin Controls
 
 todo: hyperlink to fee collection and distribution
-Curve pools charge fees on token swaps, where the fee may differ between pools. An admin fee is charged on the pool fee. 
+Curve pools charge fees on token swaps, where the fee may differ between pools. An admin fee is charged on the pool fee.
 For an overview of how fees are distributed, please refer to Fee Collection and Distribution.
 
 
@@ -228,7 +228,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
     Emits: <mark style="background-color: #FFD580; color: black">CommitNewFee</mark>
 
     ??? quote "Source code"
-    
+
         ```vyper
         MAX_ADMIN_FEE: constant(uint256) = 10 * 10 ** 9
         MAX_FEE: constant(uint256) = 5 * 10 ** 9
@@ -240,17 +240,17 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
             assert self.admin_actions_deadline == 0  # dev: active action
             assert new_fee <= MAX_FEE  # dev: fee exceeds maximum
             assert new_admin_fee <= MAX_ADMIN_FEE  # dev: admin fee exceeds maximum
-        
+
             _deadline: uint256 = block.timestamp + ADMIN_ACTIONS_DELAY
             self.admin_actions_deadline = _deadline
             self.future_fee = new_fee
             self.future_admin_fee = new_admin_fee
-        
+
             log CommitNewFee(_deadline, new_fee, new_admin_fee)
         ```
 
     === "Example"
-    
+
         ```shell
         >>> pool.commit_new_fee()
         todo: log output
@@ -258,8 +258,8 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
 
     !!! note
 
-        Both the pool ``fee`` and the ``admin_fee`` are capped by the constants ``MAX_FEE`` and ``MAX_ADMIN_FEE``, 
-        respectively. By default ``MAX_FEE`` is set at 50% and ``MAX_ADMIN_FEE`` at 100% (which is charged on the 
+        Both the pool ``fee`` and the ``admin_fee`` are capped by the constants ``MAX_FEE`` and ``MAX_ADMIN_FEE``,
+        respectively. By default ``MAX_FEE`` is set at 50% and ``MAX_ADMIN_FEE`` at 100% (which is charged on the
         ``MAX_FEE`` amount).
 
 
@@ -279,13 +279,13 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
             assert msg.sender == self.owner  # dev: only owner
             assert block.timestamp >= self.admin_actions_deadline  # dev: insufficient time
             assert self.admin_actions_deadline != 0  # dev: no active action
-        
+
             self.admin_actions_deadline = 0
             _fee: uint256 = self.future_fee
             _admin_fee: uint256 = self.future_admin_fee
             self.fee = _fee
             self.admin_fee = _admin_fee
-        
+
             log NewFee(_fee, _admin_fee)
         ```
 
@@ -295,7 +295,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
         >>> pool.commit_new_fee()
         todo: log output
         ```
-    
+
     !!! note
 
         Unlike ownership transfers, pool and admin fees may be set more than once.
@@ -312,7 +312,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
         @external
         def revert_new_parameters():
             assert msg.sender == self.owner  # dev: only owner
-        
+
             self.admin_actions_deadline = 0
         ```
 
@@ -334,7 +334,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
     | `i`       |  `uint256` | Index of the coin to get admin balance for |
 
     ??? quote "Source code"
-    
+
         ```vyper
         @view
         @external
@@ -352,14 +352,14 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
 ### `StableSwap.withdraw_admin_fees`
 
 !!! description "`StableSwap.withdraw_admin_fees()`"
-    
+
     Withdraws and transfers admin fees of the pool to the pool owner.
 
     ```vyper
     @external
     def withdraw_admin_fees():
         assert msg.sender == self.owner  # dev: only owner
-    
+
         for i in range(N_COINS):
             c: address = self.coins[i]
             value: uint256 = ERC20(c).balanceOf(self) - self.balances[i]
@@ -408,18 +408,18 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
 !!! description "`StableSwap.kill_me()`"
 
     Pause a pool by setting the ``is_killed`` boolean flag to ``True``.
-    
-    This disables the following pool functionality: 
+
+    This disables the following pool functionality:
 
         - add_liquidity
         - exchange
         - remove_liquidity_imbalance
         - remove_liquidity_one_coin
-    
+
     It is only possible for existing LPs to remove liquidity via ``remove_liquidity`` from a paused pool.
 
     ??? quote "Source code"
-    
+
         ```vyper hl_lines="10 26 39 53 61"
         @external
         @nonreentrant('lock')
@@ -431,7 +431,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
             @return Amount of LP tokens received by depositing
             """
             assert not self.is_killed  # dev: is killed
-            
+
         ...
 
         @external
@@ -441,7 +441,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
             @notice Perform an exchange between two coins
             @dev Index values can be found via the `coins` public getter method
             @param i Index value for the coin to send
-            @param j Index valie of the coin to recieve
+            @param j Index value of the coin to receive
             @param dx Amount of `i` being exchanged
             @param min_dy Minimum amount of `j` to receive
             @return Actual amount of `j` received
@@ -501,7 +501,7 @@ For an overview of how fees are distributed, please refer to Fee Collection and 
     Unpause a pool that was previously paused, re-enabling exchanges.
 
     ??? quote "Source code"
-    
+
         ```vyper
         @external
         def unkill_me():

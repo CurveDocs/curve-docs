@@ -1,8 +1,8 @@
 The use for the Factory contract is to add new markets, raise or lower debt ceilings of already existing markets or PegKeepers, set blueprint contracts for AMM and Controller, and set the fee receiver.
 
 !!!deploy "Contract Source & Deployment"
-    **crvUSD Factory** contract is deployed to the Ethereum mainnet at: [0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC#code).  
-    Source code for this contract is available on [Github](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/ControllerFactory.vy).
+    **crvUSD Factory** contract is deployed to the Ethereum mainnet at: [0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC](https://etherscan.io/address/0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC#code).
+    Source code for this contract is available on [GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/ControllerFactory.vy).
 
 
 ## **Adding Markets and Adjusting Debt Ceilings**
@@ -10,7 +10,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 ### `add_market`
 !!! description "`Factory.add_market(token: address, A: uint256, fee: uint256, admin_fee: uint256, _price_oracle_contract: address, monetary_policy: address, loan_discount: uint256, liquidation_discount: uint256, debt_ceiling: uint256) -> address[2]:`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
     Function to add a new market and automatically deploy an AMM-Contract and a Controller-Contract from the implemented blueprint contracts (see [Implementations](#implementations-blueprint-contracts)). Calls `rate_write()` from the used MonetaryPolicy to check if it has a correct ABI. There are some limitation values for adding new markets regarding `fee`, `A` and `liquidation_discount`.
@@ -272,16 +272,16 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 ### `set_debt_ceiling`
 !!! description "`Factory.set_debt_ceiling(_to: address, debt_ceiling: uint256):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
     Function to set the debt ceiling of a market and mint the token amount given for it.
 
     Emits: `MintForMarket` or `RemoveFromMarket` and `SetDebtCeiling` (this event is not emitted when only residuals are burned)
 
-    **There are two possibilities on how to set the debt ceiling:**   
+    **There are two possibilities on how to set the debt ceiling:**
 
-    1. When raising the debt ceiling, the difference between `debt_ceiling` and `debt_ceiling_residual` will be minted to the controller. 
+    1. When raising the debt ceiling, the difference between `debt_ceiling` and `debt_ceiling_residual` will be minted to the controller.
     2. When reducing the debt ceiling, the minimum value of either the difference between `debt_ceiling_residual` and `debt_ceiling` or the crvUSD balance of the controller itself will get burnt.
 
     | Input      | Type   | Description |
@@ -293,7 +293,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
         === "ControllerFactory.vy"
 
-            ```vyper 
+            ```vyper
             event SetDebtCeiling:
                 addr: indexed(address)
                 debt_ceiling: uint256
@@ -384,7 +384,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 ### `rug_debt_ceiling`
 !!! description "`Factory.rug_debt_ceiling(_to: address):`"
 
-    Function to remove stablecoins above the debt seiling from a controller and burn them.
+    Function to remove stablecoins above the debt ceiling from a controller and burn them.
 
     Emits: `MintForMarket` or `RemoveFromMarket` and `SetDebtCeiling` (this event is not emitted when only residuals are burned)
 
@@ -448,7 +448,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         admin: public(address)
 
         @external
@@ -480,7 +480,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 ### `set_admin`
 !!! description "`Factory.set_admin(admin: address):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
     Function to set the admin of the contract.
@@ -493,7 +493,7 @@ The use for the Factory contract is to add new markets, raise or lower debt ceil
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         event SetAdmin:
             admin: address
 
@@ -531,7 +531,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         fee_receiver: public(address)
 
         @external
@@ -563,7 +563,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 ### `set_fee_receiver`
 !!! description "`Factory.set_fee_receiver(fee_receiver: address):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
     Function to set the fee receiver address.
@@ -572,11 +572,11 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
-    | `fee_receiver` |  `address` | new fee receiver address | 
+    | `fee_receiver` |  `address` | new fee receiver address |
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         event SetFeeReceiver:
             fee_receiver: address
 
@@ -605,7 +605,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 ### `collect_fees_above_ceiling`
 !!! description "`Factory.collect_fees_above_ceiling(_to: address):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
     Function to claim fees above the ceiling. This function will automatically increase the debt ceiling if it's not enough to claim admin fees.
@@ -618,7 +618,7 @@ A new receiver can be set by the `admin` of the contract (which is the DAO).
 
         === "Factory.vy"
 
-            ```vyper 
+            ```vyper
             @external
             @nonreentrant('lock')
             def collect_fees_above_ceiling(_to: address):
@@ -702,7 +702,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         collaterals: public(address[MAX_CONTROLLERS])
         ```
 
@@ -736,10 +736,10 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 ### `set_implementations`
 !!! description "`Factory.set_implementations(controller: address, amm: address):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to set new implementations (blueprints) for controller and amm. 
+    Function to set new implementations (blueprints) for controller and amm.
 
     Emits: `SetImplementations`
 
@@ -750,7 +750,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         event SetImplementations:
             amm: address
             controller: address
@@ -778,7 +778,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
         ```shell
         >>> Factory.set_implementation("todo")
         'todo'
-        ``` 
+        ```
 
 
 ## **Contract Info Methods**
@@ -787,7 +787,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     Getter for the stablecoin address.
 
-    Returns: stablecoin (`address`). 
+    Returns: stablecoin (`address`).
 
     ??? quote "Source code"
 
@@ -823,7 +823,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     Getter for the sum of all debts across all controllers.
 
-    Returns: total debt (`uint256`). 
+    Returns: total debt (`uint256`).
 
     ??? quote "Source code"
 
@@ -855,7 +855,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     Getter for the controller address for `collateral`.
 
-    Returns: controller (`address`). 
+    Returns: controller (`address`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -889,7 +889,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     Getter for the amm address for `collateral`.
 
-    Returns: amm (`address`). 
+    Returns: amm (`address`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|
@@ -949,7 +949,7 @@ The implementations are based on blueprint contracts specified in [EIP-5202](htt
 
     Getter for the amm address at index `arg0`.
 
-    Returns: amm (`address`). 
+    Returns: amm (`address`).
 
     | Input      | Type   | Description |
     | ----------- | -------| ----|

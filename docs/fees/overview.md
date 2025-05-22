@@ -24,7 +24,7 @@ The state of the system can be roughly summarized as follows:
   <figcaption>Overview of Curve's fee collection, burning, and distribution system</figcaption>
 </figure>
 
-*The collected admin fees can accrue in any type of tokens, whether they are LP or "regular" tokens. For simplicity, the `Hooker.vy` contract, which is essentially responsible for transferring the reward tokens from the `FeeCollector` to the `FeeDistributor`, was omitted from the graph. This infrastructure functions exactly the same on chains where the CowSwap Protocol is deployed (Gnosis and soon Arbitrum). The only difference is that instead of transferring the reward tokens to a `FeeDistributor` contract, they are bridged to the `FeeCollector` on the Ethereum mainnet.*
+*The collected admin fees can accrue in any type of tokens, whether they are LP or "regular" tokens. For simplicity, the `Hooker.vy` contract, which is essentially responsible for transferring the reward tokens from the `FeeCollector` to the `FeeDistributor`, was omitted from the graph. This infrastructure functions exactly the same on chains where the CoWSwap Protocol is deployed (Gnosis and soon Arbitrum). The only difference is that instead of transferring the reward tokens to a `FeeDistributor` contract, they are bridged to the `FeeCollector` on the Ethereum mainnet.*
 
 
 ---
@@ -40,7 +40,7 @@ The fee collection, burning, and distribution system of Curve involves the follo
 
     ---
     Contract which acts as the entry point for the fee burning system. All admin fees in various kinds of tokens are collected here.
-    
+
     [:octicons-arrow-right-24: `FeeCollector.vy`](FeeCollector.md)
 
 - **:material-call-split: Fee Splitter**
@@ -50,10 +50,10 @@ The fee collection, burning, and distribution system of Curve involves the follo
 
     [:octicons-arrow-right-24: `FeeSplitter.vy`](FeeSplitter.md)
 
-- **:logos-cowswap: CowSwap Burner**
+- **:logos-cowswap: CoWSwap Burner**
 
     ---
-    Contract which burns the collected admin fees into a unified token. The current system utilizes CowSwap's conditional orders to burn the accumulated fees into a specific target token.
+    Contract which burns the collected admin fees into a unified token. The current system utilizes CoWSwap's conditional orders to burn the accumulated fees into a specific target token.
 
     [:octicons-arrow-right-24: `CowSwapBurner.vy`](CowSwapBurner.md)
 
@@ -93,37 +93,37 @@ This system ensures efficient fee collection, conversion, and distribution acros
 
 <div class="grid cards" markdown>
 
--   :logos-cowswap: **CowSwap Architecture**
+-   :logos-cowswap: **CoWSwap Architecture**
 
     ---
 
     A more efficient system using contracts like FeeCollector, CowSwapBurner, and FeeSplitter. This architecture is currently available on Ethereum and Gnosis Chain, with plans to deploy on Arbitrum.
 
-    [:octicons-arrow-right-24: CowSwap Fee System](#cowswap-fee-system)
+    [:octicons-arrow-right-24: CoWSwap Fee System](#cowswap-fee-system)
 
 -   :fontawesome-solid-piggy-bank: **Original Architecture**
 
     ---
 
-    An older system using multiple burner contracts with manually added and hardcoded exchange routes. This architecture is still in use on some sidechains where the CowSwap system hasn't been implemented yet.
+    An older system using multiple burner contracts with manually added and hardcoded exchange routes. This architecture is still in use on some sidechains where the CoWSwap system hasn't been implemented yet.
 
     [:octicons-arrow-right-24: Original Architecture](./original-architecture/overview.md)
 
 </div>
 
-The choice of architecture depends on the blockchain and available infrastructure. For chains where the CowSwap system isn't deployed, admin fees are burned using the original architecture and then transferred to Ethereum via bridging contracts.
+The choice of architecture depends on the blockchain and available infrastructure. For chains where the CoWSwap system isn't deployed, admin fees are burned using the original architecture and then transferred to Ethereum via bridging contracts.
 
-This page will primarily focus on the CowSwap fee system while also providing information on the original architecture for context and comparison.
+This page will primarily focus on the CoWSwap fee system while also providing information on the original architecture for context and comparison.
 
 ---
 
-## **CowSwap Fee System**
+## **CoWSwap Fee System**
 
 The current fee system utilizes a set of contracts to efficiently collect, convert, and distribute fees:
 
 1. **FeeCollector**: Acts as the entry point for fee collection from various sources.
 2. **FeeSplitter**: Handles the distribution of crvUSD fees from crvUSD markets.
-3. **CowSwapBurner**: Converts collected fees into a unified token using CowSwap's conditional orders.
+3. **CowSwapBurner**: Converts collected fees into a unified token using CoWSwap's conditional orders.
 4. **Hooker**: Facilitates the execution of specific actions, such as forwarding fees.
 5. **FeeDistributor**: Distributes the converted fees to veCRV holders.
 
@@ -137,14 +137,14 @@ This system ensures that all types of fees can be efficiently processed **withou
 
 ## **Previous Architecture**
 
-Prior to this system, Curve used multiple different kinds of burners where the **exchange routes for the to-be-burned coins had to be manually added**. Additionally, exchange routes were hardcoded, which often led to semi-efficient fee burning. If coins were not manually added to the burners, they could not be burned, which resulted in unburned (but obviously not lost) fees. The old burner contracts required lots of maintenance and dev resources.
+Prior to this system, Curve used multiple different kinds of burners where the **exchange routes for the to-be-burned coins had to be manually added**. Additionally, exchange routes were hardcoded, which often led to semi-efficient fee burning. If coins were not manually added to the burners, they could not be burned, which resulted in unburned (but obviously not lost) fees. The old burner contracts required lots of maintenance and developer resources.
 
-The new system can and is deployed on other chains besides Ethereum but is **partly dependent on, e.g., CoWSwap deployments** if the `CowSwapBurner` is used. **If the CowSwap protocol is deployed on a sidechain, fees can be burned there. For chains where this is not the case, the admin fees are still being burned using the [original architecture](./original-architecture/sidechains.md) and then transfered via a bridging contract to Ethereum.**
+The new system can and is deployed on other chains besides Ethereum but is **partly dependent on, e.g., CoWSwap deployments** if the `CowSwapBurner` is used. **If the CoWSwap protocol is deployed on a sidechain, fees can be burned there. For chains where this is not the case, the admin fees are still being burned using the [original architecture](./original-architecture/sidechains.md) and then transferred via a bridging contract to Ethereum.**
 
 ---
 
 # **Further Reading**
 
 - [Old Fee Burning Architecture](./original-architecture/overview.md)
-- [CowSwap Protocol Documentation](https://docs.cow.fi/)
+- [CoWSwap Protocol Documentation](https://docs.cow.fi/)
 - [veCRV Documentation](../curve_dao/voting-escrow/voting-escrow.md)

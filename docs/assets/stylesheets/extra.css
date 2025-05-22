@@ -73,7 +73,7 @@
     mask-image: var(--md-admonition-icon--notebook);
   }
 }
-  
+
 /* Style for dark mode */
 [data-md-color-scheme="slate"] {
   .md-typeset .notebook>.admonition-title::before,
@@ -593,6 +593,8 @@ h3 {
   margin: 0 auto;
   width: fit-content;
 }
+
+.mermaid-diagram { }
 
 /* Announcement Bar */
 .md-banner {

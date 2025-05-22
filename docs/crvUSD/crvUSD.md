@@ -4,24 +4,24 @@
 !!!github "GitHub"
     The source code of the `crvUSD` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/master/contracts/Stablecoin.vy).
 
-`crvUSD` has been [deployed](https://etherscan.io/tx/0x5f501b4e420485ac3a18be3b88ad73413ac17ee45c776bb48cfd26902585e9fd) on May, 14th 2024 on Ethereum Mainnet. Prior to the lauch, there have been several deployments for the stablecoin and its components. Please always make sure you are using the latest deployment. See [`deployment-logs/mainnet.log`](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
+`crvUSD` has been [deployed](https://etherscan.io/tx/0x5f501b4e420485ac3a18be3b88ad73413ac17ee45c776bb48cfd26902585e9fd) on May, 14th 2024 on Ethereum Mainnet. Prior to the launch, there have been several deployments for the stablecoin and its components. Please always make sure you are using the latest deployment. See [`deployment-logs/mainnet.log`](https://github.com/curvefi/curve-stablecoin/blob/master/deployment-logs/mainnet.log).
 
 Since the initial deployment of crvUSD, the token was bridged to several chains, including the following:
 
 <div class="centered" markdown="block">
 
-| Chain                         | Token Address | 
-| :---------------------------: | :------------------: | 
-| :logos-ethereum: `Ethereum` | [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/token/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E) | 
+| Chain                         | Token Address |
+| :---------------------------: | :------------------: |
+| :logos-ethereum: `Ethereum` | [0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E](https://etherscan.io/token/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E) |
 | :logos-arbitrum: `Arbitrum` | [0x498Bf2B1e120FeD3ad3D42EA2165E9b73f99C1e5](https://arbiscan.io/address/0x498Bf2B1e120FeD3ad3D42EA2165E9b73f99C1e5) |
 | :logos-optimism: `Optimism` | [0xc52d7f23a2e460248db6ee192cb23dd12bddcbf6](https://optimistic.etherscan.io/address/0xc52d7f23a2e460248db6ee192cb23dd12bddcbf6) |
-| :logos-base: `Base`         | [0x417Ac0e078398C154EdFadD9Ef675d30Be60Af93](https://basescan.org/address/0x417Ac0e078398C154EdFadD9Ef675d30Be60Af93) | 
+| :logos-base: `Base`         | [0x417Ac0e078398C154EdFadD9Ef675d30Be60Af93](https://basescan.org/address/0x417Ac0e078398C154EdFadD9Ef675d30Be60Af93) |
 | :logos-gnosis: `Gnosis`     | [0xaBEf652195F98A91E490f047A5006B71c85f058d](https://gnosisscan.io/address/0xaBEf652195F98A91E490f047A5006B71c85f058d) |
-| :logos-polygon: `Polygon`     | [0xc4Ce1D6F5D98D65eE25Cf85e9F2E9DcFEe6Cb5d6](https://polygonscan.com/address/0xc4Ce1D6F5D98D65eE25Cf85e9F2E9DcFEe6Cb5d6) | 
+| :logos-polygon: `Polygon`     | [0xc4Ce1D6F5D98D65eE25Cf85e9F2E9DcFEe6Cb5d6](https://polygonscan.com/address/0xc4Ce1D6F5D98D65eE25Cf85e9F2E9DcFEe6Cb5d6) |
 | :logos-xlayer: `X-Layer`     | [0xda8f4eb4503acf5dec5420523637bb5b33a846f6](https://www.oklink.com/xlayer/address/0xda8f4eb4503acf5dec5420523637bb5b33a846f6) |
-| :logos-fraxtal: `Fraxtal`     | [0xB102f7Efa0d5dE071A8D37B3548e1C7CB148Caf3](https://fraxscan.com/address/0xB102f7Efa0d5dE071A8D37B3548e1C7CB148Caf3) | 
+| :logos-fraxtal: `Fraxtal`     | [0xB102f7Efa0d5dE071A8D37B3548e1C7CB148Caf3](https://fraxscan.com/address/0xB102f7Efa0d5dE071A8D37B3548e1C7CB148Caf3) |
 | :logos-bsc: `BinanceSmartChain`     | [0xe2fb3F127f5450DeE44afe054385d74C392BdeF4](https://bscscan.com/address/0xe2fb3F127f5450DeE44afe054385d74C392BdeF4) |
-| :logos-mantle: `Mantle`     | [0x0994206dfe8de6ec6920ff4d779b0d950605fb53](https://mantlescan.xyz/address/0x0994206dfe8de6ec6920ff4d779b0d950605fb53) | 
+| :logos-mantle: `Mantle`     | [0x0994206dfe8de6ec6920ff4d779b0d950605fb53](https://mantlescan.xyz/address/0x0994206dfe8de6ec6920ff4d779b0d950605fb53) |
 | :logos-zksync: `zk-Sync`     | [0x43cd37cc4b9ec54833c8ac362dd55e58bfd62b86](https://era.zksync.network/address/0x43cd37cc4b9ec54833c8ac362dd55e58bfd62b86) |
 
 </div>
@@ -33,7 +33,7 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
 ## **Mint and Burn**
 
 - crvUSD can only be minted by the `minter` of the contract, which is the Factory contract
-- crvUSD is minted in accordance with the `debt_ceiling`, either when **adding a new market** or when **raising its debt ceiling**. This is accomplished by calling the `set_new_debt_ceiling` function within the Factory contract.  
+- crvUSD is minted in accordance with the `debt_ceiling`, either when **adding a new market** or when **raising its debt ceiling**. This is accomplished by calling the `set_new_debt_ceiling` function within the Factory contract.
 - Burning crvUSD typically occurs when a **lower debt ceiling is set**, or if a user decides to burn their crvUSD for whatever reason.
 
 
@@ -60,7 +60,7 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
 ### `mint`
 !!! description "`crvUSD.mint(_to: address, _value: uint256) -> bool:`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `minter` of the contract, which is the Factory.
 
     Function to mint `_value` amount of tokens to `_to`.
@@ -112,7 +112,7 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
 ### `set_minter`
 !!! description "`crvUSD.set_minter(_minter: address):`"
 
-    !!!guard "Guarded Method" 
+    !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract, which is the Factory.
 
     Function to set the minter address of the token.
@@ -148,7 +148,7 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
         The function will revert if any EOA (Externally Owned Account) or contract other than the `admin` attempts to call this function.
 
 
-### `burn` 
+### `burn`
 !!! description "`crvUSD.burn(_value: uint256) -> bool:`"
 
     Function to burn `_value` amount of tokens from `msg.sender`.
@@ -163,7 +163,7 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         event Transfer:
             sender: indexed(address)
             receiver: indexed(address)
@@ -209,7 +209,7 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         event Transfer:
             sender: indexed(address)
             receiver: indexed(address)
@@ -260,7 +260,7 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         decimals: public(constant(uint8)) = 18
         ```
 
@@ -300,9 +300,9 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         name: public(immutable(String[64]))
-        
+
         @external
         def __init__(_name: String[64], _symbol: String[32]):
             name = _name
@@ -342,9 +342,9 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         symbol: public(immutable(String[32]))
-        
+
         @external
         def __init__(_name: String[64], _symbol: String[32]):
             name = _name
@@ -388,7 +388,7 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         balanceOf: public(HashMap[address, uint256])
         ```
 
@@ -408,7 +408,7 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         totalSupply: public(uint256)
         ```
 
@@ -450,7 +450,7 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
 ### `approve`
 !!! description "`crvUSD.approve(_spender: address, _value: uint256) -> bool:`"
 
-    Fucntion to allow `_spender` to transfer up to `_value` amount of tokens from the caller's amount.
+    function to allow `_spender` to transfer up to `_value` amount of tokens from the caller's amount.
 
     Returns: true (`bool`).
 
@@ -510,7 +510,7 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_spender` |  `address` | Address to increase the allowance of |
-    | `_add_value` |  `uint256` | Amount to increase the allwance by |
+    | `_add_value` |  `uint256` | Amount to increase the allowance by |
 
     !!!note
         This function will never overflow, and instead will bind allowance to `MAX_UINT256`. This has the potential to grant infinite approval.
@@ -568,7 +568,7 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `_spender` |  `address` | Address to decrease the allowance of |
-    | `_sub_value` |  `uint256` | Amount to decrease the allwance by |
+    | `_sub_value` |  `uint256` | Amount to decrease the allowance by |
 
     !!!note
         This function will never underflow, and instead will bound allowance to 0.
@@ -633,7 +633,7 @@ Since the initial deployment of crvUSD, the token was bridged to several chains,
     | `_s` |  `uint256` | Second 32 bytes of the ECDSA signature |
 
     !!!note
-        In the event of a chain fork, replay attacks are prevented as domain separator is recalculated.     
+        In the event of a chain fork, replay attacks are prevented as domain separator is recalculated.
         However, this is only if the resulting chains update their chainId.
 
     ??? quote "Source code"

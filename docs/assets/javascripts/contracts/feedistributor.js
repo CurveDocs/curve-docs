@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     const FeeDistributorContract = new web3.eth.Contract(FeeDistributorABI, FeeDistributorAddress);
     const Multicall3Contract = new web3.eth.Contract(Multicall3ABI, Multicall3Address);
-    
+
     async function updateValues() {
         const calls = [
             { target: FeeDistributorAddress, allowFailure: false, callData: web3.eth.abi.encodeFunctionSignature('token_last_balance()') },
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     async function handleQuery(inputId, outputId, method) {
         const inputElement = document.getElementById(inputId);
         const outputElement = document.getElementById(outputId);
-        
+
         async function fetchData() {
             const input = inputElement.value.trim();
             if (input === '') {
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 outputElement.style.color = 'red';
                 return;
             }
-            
+
             try {
                 let result;
                 if (method === 've_for_at') {

@@ -1,8 +1,8 @@
 **Tricrypto-NG pool contains of three non-pegged assets.**
 
 !!!info "Liquidity Pool (LP) Token"
-    The LP token is directly integrated into the exchange contract. Pool and LP token share the same address. 
-    
+    The LP token is directly integrated into the exchange contract. Pool and LP token share the same address.
+
     The token has the regular ERC-20 methods, which will not be further documented.
 
 For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored as a single unsigned integer. This consolidation reduces storage read and write operations, leading to more cost-efficient calls. When these parameters are accessed, they are subsequently unpacked.
@@ -57,7 +57,7 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
     Function to exchange `dx` amount of coin `i` for coin `j` and receive a minimum amount of `min_dy`.
 
     Returns: amount of output coin `j` received (`uint256`).
-    
+
     | Input      | Type   | Description |
     | ----------- | -------| ----|
     | `i` | `uint256` | Index value for the input coin |
@@ -251,7 +251,7 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
             tokens_bought: uint256
             fee: uint256
             packed_price_scale: uint256
-    
+
         @payable
         @external
         @nonreentrant('lock')
@@ -800,7 +800,7 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
 
 ## **Adding and Removing Liquidity**
 
-*The tricrypto-ng implementation utilizes the usual methods to add and remove liquidity.*
+*The Tricrypto-ng implementation utilizes the usual methods to add and remove liquidity.*
 
 **Adding liquidity** can be done via the `add_liquidity` method. The code uses a list of unsigned integers `uint256[N_COINS]` as input for the pools underlying tokens to add. **Any proportion is possible**. For example, adding fully single-sided can be done using `[0, 1e18]` or `[1e18, 0]`, but again, any variation is possible, e.g., `[1e18, 1e19]`.
 
@@ -1255,7 +1255,7 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
 ### `remove_liquidity`
 !!! description "`TriCrypto.remove_liquidity(_amount: uint256, min_amounts: uint256[N_COINS], use_eth: bool = False, receiver: address = msg.sender, claim_admin_fees: bool = True) -> uint256[N_COINS]:`"
 
-    Function to remove liquidity from the pool and burn the LP tokens. When removing liquidity with this function, no fees are charged as the coins are withdrawn in balanced proportions.  
+    Function to remove liquidity from the pool and burn the LP tokens. When removing liquidity with this function, no fees are charged as the coins are withdrawn in balanced proportions.
     If admin fees are claimed, they are claimed before withdrawing liquidity, ensuring the DAO gets paid first.
 
     Returns: withdrawn balances (`uint256[N_COINS]`).
@@ -2584,9 +2584,9 @@ For Tricrypto-NG pools, price scaling and fee parameters are bundled and stored 
 
 ## **Fees and Pool Profits**
 
-The cryptoswap algorithm uses different fees, such as `fee`, `mid_fee`, `out_fee`, or `fee_gamma` to determine the fees charged, more on that [here](../../overview.md#fees). All Fee values are denominated in 1e10 and [can be changed](./admin-controls.md#apply_new_parameters) by the admin.
+The Cryptoswap algorithm uses different fees, such as `fee`, `mid_fee`, `out_fee`, or `fee_gamma` to determine the fees charged, more on that [here](../../overview.md#fees). All Fee values are denominated in 1e10 and [can be changed](./admin-controls.md#apply_new_parameters) by the admin.
 
-Additionally, just as for other curve pools, there is an `ADMIN_FEE`, which is hardcoded to 50%. All twocrypto-ng pools share a universal `fee_receiver`, which is determined within the Factory contract.
+Additionally, just as for other curve pools, there is an `ADMIN_FEE`, which is hardcoded to 50%. All Twocrypto-NG pools share a universal `fee_receiver`, which is determined within the Factory contract.
 
 `xcp_profit` and `xcp_profit_a` are used for tracking pool profits, which is necessary for the pool's rebalancing mechanism. These values are denominated in 1e18.
 
@@ -3531,7 +3531,7 @@ Curve v2 pools automatically adjust liquidity to optimize depth close to the pre
 
 A bonding curve is used to determine asset prices according to the pool's supply of each asset, more [here](../../overview.md#bonding-curve-parameters).
 
-Bonding curve parameters `A` and `gamma` values are [upgradable](./admin-controls.md#amplification-coefficient-and-gamma) by the the pools admin.
+Bonding curve parameters `A` and `gamma` values are [upgradable](./admin-controls.md#amplification-coefficient-and-gamma) by the pools admin.
 
 
 ### `A`

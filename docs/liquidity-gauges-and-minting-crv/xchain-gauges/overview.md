@@ -1,4 +1,4 @@
-<h1>Curve Crosschain Gauges</h1>
+<h1>Curve Cross-chain Gauges</h1>
 
 Due to the x-chain gauge system, Curve allows to deploy liquidity gauges on alternate chains which are eligible for receiving CRV emissions and boosts.
 
@@ -30,7 +30,7 @@ The cross-chain gauge factory requires components to be deployed both on Ethereu
 
     ---
 
-    This is the main contract for deploying child gauges on alternate chains. This contract also serves as a registry for finding deployed gauges and as a psuedo CRV minter where users can claim CRV emissions they are entitled to from LPing.
+    This is the main contract for deploying child gauges on alternate chains. This contract also serves as a registry for finding deployed gauges and as a pseudo CRV minter where users can claim CRV emissions they are entitled to from LPing.
 
     [:octicons-arrow-right-24: `ChildGaugeFactory.vy`](./ChildGaugeFactory.md)
 
@@ -83,11 +83,11 @@ The cross-chain gauge factory requires components to be deployed both on Ethereu
 
 Before reading this section, it is recommended to understand how boosting works in general.
 
-!!!warning "Crosschain Boosts"
-    This system is farily new and is not rolled out on every chain yet. Crosschain boosts only work if there is a `L2 VotingEscrow Oracle` set in the `ChildGaugeFactory` for the child chain.
+!!!warning "Cross-chain Boosts"
+    This system is fairly new and is not rolled out on every chain yet. Cross-chain boosts only work if there is a `L2 VotingEscrow Oracle` set in the `ChildGaugeFactory` for the child chain.
 
 
-Because the `VotingEscrow`, where CRV are locked and user's veCRV informations are stored, is only deployed on Ethereum, a novel system was created to make crosschain boosts possible.
+Because the `VotingEscrow`, where CRV are locked and user's veCRV information are stored, is only deployed on Ethereum, a novel system was created to make cross-chain boosts possible.
 
 The idea of the system is pretty straight forward: an `Updater` contract on Ethereum queries the veCRV information of a user from the `VotingEscrow` contract on Ethereum and transmits the information to a `L2 VotingEscrow Oracle` on the child chain. This way, boosts on sidechains can be calculated using the veCRV information from Ethereum.
 

@@ -45,9 +45,9 @@ search:
 *Despite being launched on Ethereum, the Curve DAO Token can be bridged to various chains:*
 
 !!!danger "MULTICHAIN WARNING"
-    Multichain statement: https://twitter.com/MultichainOrg/status/1677180114227056641  
-    The Multichain service stopped currently, and all bridge transactions will be stuck on the source chains. 
-    There is no confirmed resume time.  
+    Multichain statement: https://twitter.com/MultichainOrg/status/1677180114227056641
+    The Multichain service stopped currently, and all bridge transactions will be stuck on the source chains.
+    There is no confirmed resume time.
     **Please don’t use the Multichain bridging service now.**
 
 | Chain | Contract Address | Bridge |
@@ -88,15 +88,15 @@ Curve DAO consists of multiple smart contracts connected by [Aragon](https://git
 Aragon [Voting App](https://wiki.aragon.org/archive/dev/apps/voting/) deployments are the main entry points used to create new votes, vote, check the status of a vote, and execute a successful vote.
 
 | Voting Type | Contract Address |
-| :---------: | :--------------: | 
+| :---------: | :--------------: |
 | `Ownership` | [0xe478de485ad2fe566d49342cbd03e49ed7db3356](https://etherscan.io/address/0xe478de485ad2fe566d49342cbd03e49ed7db3356) |
-| `Parameter` | [0xbcff8b0b9419b9a88c44546519b1e909cf330399](https://etherscan.io/address/0xbcff8b0b9419b9a88c44546519b1e909cf330399) | 
+| `Parameter` | [0xbcff8b0b9419b9a88c44546519b1e909cf330399](https://etherscan.io/address/0xbcff8b0b9419b9a88c44546519b1e909cf330399) |
 
 
 The following token addresses are used for determining voter weights within Curve’s Aragon DAOs.
 
 | Vote Type   | Contract Address  |
-| :---------: | :---------------: | 
+| :---------: | :---------------: |
 | `Ownership / Parameter` | [0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2](https://etherscan.io/address/0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2) |
 
 
@@ -106,7 +106,7 @@ The following token addresses are used for determining voter weights within Curv
 Aragon [Agent](https://hack.aragon.org/docs/guides-use-agent) deployments correspond to the different owner accounts within the DAO. Contract calls made due to a successful vote will be executed from these addresses. When deploying new contracts, these addresses should be given appropriate access to admin functionality.
 
 | Agent Type  | Contract Address  |
-| :---------: | :---------------: | 
+| :---------: | :---------------: |
 | `Ownership` | [0x40907540d8a6C65c637785e8f8B742ae6b0b9968](https://etherscan.io/address/0x40907540d8a6C65c637785e8f8B742ae6b0b9968) |
 | `Parameter` | [0x4EEb3bA4f221cA16ed4A0cC7254E2E32DF948c5f](https://etherscan.io/address/0x4EEb3bA4f221cA16ed4A0cC7254E2E32DF948c5f) |
 
@@ -117,7 +117,7 @@ Aragon [Agent](https://hack.aragon.org/docs/guides-use-agent) deployments corres
 The Emergency DAO is deployed at:
 
 | Vote Type   | Contract Address  |
-| :---------: | :---------------: | 
+| :---------: | :---------------: |
 | `eDAO` | [0x467947EE34aF926cF1DCac093870f613C96B1E0c](https://etherscan.io/address/0x467947EE34aF926cF1DCac093870f613C96B1E0c) |
 
 ---

@@ -3,7 +3,7 @@
 <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
 <script src="/assets/javascripts/contracts/feedistributor.js"></script>
 
-Fees used to be distributed to [`veCRV`](https://etherscan.io/address/0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2) in the form of [`3CRV`](https://etherscan.io/address/0x6c3f90f043a72fa612cbac8115ee7e52bde6e490) tokens, the LP token of the [`threepool`](https://etherscan.io/address/0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7), which consists of `USDT`, `USDC`, and `DAI`. After the release of Curve's own stablecoin [`crvUSD`](https://etherscan.io/token/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E) and following a successful DAO vote to change the reward token to it, a new `FeeDistributor` contract was deployed to distribute fees in the form of `crvUSD` tokens. **Fee claiming always takes place on Ethereum**.
+Fees used to be distributed to [`veCRV`](https://etherscan.io/address/0x5f3b5DfEb7B28CDbD7FAba78963EE202a494e2A2) in the form of [`3CRV`](https://etherscan.io/address/0x6c3f90f043a72fa612cbac8115ee7e52bde6e490) tokens, the LP token of the [`3Pool`](https://etherscan.io/address/0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7), which consists of `USDT`, `USDC`, and `DAI`. After the release of Curve's own stablecoin [`crvUSD`](https://etherscan.io/token/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E) and following a successful DAO vote to change the reward token to it, a new `FeeDistributor` contract was deployed to distribute fees in the form of `crvUSD` tokens. **Fee claiming always takes place on Ethereum**.
 
 ???+ vyper "`FeeDistributor.vy`"
     The source code for the `FeeDistributor.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/FeeDistributor.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.2.7` and `0.3.7`.
@@ -31,7 +31,7 @@ Fees used to be distributed to [`veCRV`](https://etherscan.io/address/0x5f3b5DfE
         ```
 
 Fees are **distributed on a weekly basis**. The proportional amount of fees that each user is to receive is calculated **based on their veCRV balance** relative to the total veCRV supply. This amount is calculated at the start of the week. The actual distribution occurs at the end of the week based on the fees that were collected. As such, a user that creates **a new vote-lock should expect to receive their first fee payout at the end of the following epoch week**. To facilitate this process, the contract keeps track of the reward token balance and the total veCRV balance using a system of **checkpoints**.
- 
+
 
 ---
 
@@ -53,8 +53,8 @@ The `claim` and `claim_many` functions allow users to claim their share of distr
 
     Function to claim the accrued fees for an address.
 
-    Returns: amount of rewards claimed (`uint256`). 
-    
+    Returns: amount of rewards claimed (`uint256`).
+
     Emits: `Claimed`
 
     | Input   | Type      | Description                                      |
@@ -64,7 +64,7 @@ The `claim` and `claim_many` functions allow users to claim their share of distr
     !!!info
         For off-chain integrators, this function can be called as though it were a view method in order to check the claimable amount.
 
-        Every veCRV related action (locking, extending a lock, increasing the locktime) increments a user’s veCRV epoch. A call to claim will consider at most 50 user epochs. For accounts that performed many veCRV actions, it may be required to call claim more than once to receive the fees. In such cases it can be more efficient to use `claim_many`.
+        Every veCRV related action (locking, extending a lock, increasing the lock time) increments a user’s veCRV epoch. A call to claim will consider at most 50 user epochs. For accounts that performed many veCRV actions, it may be required to call claim more than once to receive the fees. In such cases it can be more efficient to use `claim_many`.
 
     ??? quote "Source code"
 
@@ -192,7 +192,7 @@ The `claim` and `claim_many` functions allow users to claim their share of distr
 ### `claim_many`
 !!! description "`FeeDistributor.claim_many(_receivers: address[20]) -> bool`"
 
-    Function to perform multiple claims in a single call. This is useful to claim for multiple accounts at once, or for making many claims against the same account if that account has performed more than 50 veCRV related actions. 
+    Function to perform multiple claims in a single call. This is useful to claim for multiple accounts at once, or for making many claims against the same account if that account has performed more than 50 veCRV related actions.
 
     Returns: true (`boolean`).
 
@@ -200,13 +200,13 @@ The `claim` and `claim_many` functions allow users to claim their share of distr
 
     | Input   | Type           | Description |
     | ------- | -------------- | ----------- |
-    | `_addr` |  `address[20]` | List of 20 addresses to claim for. When claiming for less than 20 wallets, the remainig addresses need to be set to 'ZERO_ADDRESS' |
+    | `_addr` |  `address[20]` | List of 20 addresses to claim for. When claiming for less than 20 wallets, the remaining addresses need to be set to 'ZERO_ADDRESS' |
 
     ??? quote "Source code"
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             event Claimed:
                 recipient: indexed(address)
                 amount: uint256
@@ -348,7 +348,7 @@ The `claim` and `claim_many` functions allow users to claim their share of distr
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             @external
             def burn(_coin: address) -> bool:
                 """
@@ -388,7 +388,7 @@ Checkpointing is a critical process in the contract that ensures accurate tracki
 ### `checkpoint_token`
 !!! description "`FeeDistributor.checkpoint_token()`"
 
-    Function to update the token checkpoint. The token checkpoint tracks the balance of 3CRV/crvUSD within the distributor to determine the amount of fees to distribute in the given week. The checkpoint can be updated at most once every 24 hours. Fees that are received between the last checkpoint of the previous week and first checkpoint of the new week will be split evenly between the weeks. To ensure full distribution of fees in the current week, the burn process must be completed prior to the last checkpoint within the week. Aditionally, a token checkpoint is automatically taken during any `claim` action, if the last checkpoint is more than 24 hours old. 
+    Function to update the token checkpoint. The token checkpoint tracks the balance of 3CRV/crvUSD within the distributor to determine the amount of fees to distribute in the given week. The checkpoint can be updated at most once every 24 hours. Fees that are received between the last checkpoint of the previous week and first checkpoint of the new week will be split evenly between the weeks. To ensure full distribution of fees in the current week, the burn process must be completed prior to the last checkpoint within the week. Additionally, a token checkpoint is automatically taken during any `claim` action, if the last checkpoint is more than 24 hours old.
 
     Emits: `CheckpointToken`
 
@@ -396,7 +396,7 @@ Checkpointing is a critical process in the contract that ensures accurate tracki
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             event CheckpointToken:
                 time: uint256
                 tokens: uint256
@@ -504,7 +504,7 @@ Checkpointing is a critical process in the contract that ensures accurate tracki
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             token_last_balance: public(uint256)
             ```
 
@@ -544,15 +544,15 @@ Checkpointing is a critical process in the contract that ensures accurate tracki
 ### `can_checkpoint_token`
 !!! description "`FeeDistributor.can_checkpoint_token() -> bool: view`"
 
-    Function to check whether the `checkpoint_token` function can be called by anyone or only by the admin. The state of this variable can be changed using the `toggle_allow_checkpoint_token` function. 
+    Function to check whether the `checkpoint_token` function can be called by anyone or only by the admin. The state of this variable can be changed using the `toggle_allow_checkpoint_token` function.
 
-    Returns: true or flase (`bool`).
+    Returns: true or false (`bool`).
 
     ??? quote "Source code"
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             can_checkpoint_token: public(bool)
             ```
 
@@ -571,13 +571,13 @@ Checkpointing is a critical process in the contract that ensures accurate tracki
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Funtion to toggle permission for checkpointing by an account.
+    Function to toggle permission for checkpointing by an account.
 
     ??? quote "Source code"
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             event ToggleAllowCheckpointToken:
                 toggle_flag: bool
 
@@ -616,7 +616,7 @@ Checkpointing the ve-Supply is an essential process to ensure fair reward distri
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             @external
             def checkpoint_total_supply():
                 """
@@ -729,7 +729,7 @@ Checkpointing the ve-Supply is an essential process to ensure fair reward distri
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             @view
             @external
             def ve_for_at(_user: address, _timestamp: uint256) -> uint256:
@@ -759,7 +759,7 @@ Checkpointing the ve-Supply is an essential process to ensure fair reward distri
 
     Getter for the total supply of veCRV at the beginning of an epoch.
 
-    Returns: vecrv supply (`uint256`).
+    Returns: veCRV supply (`uint256`).
 
     | Input  | Type      | Description                  |
     | ------ | --------- | ---------------------------- |
@@ -786,7 +786,7 @@ Checkpointing the ve-Supply is an essential process to ensure fair reward distri
 
 # **Killing The FeeDistributor**
 
-The `FeeDistributor` can be killed by the `admin` of the contract, which is the Curve DAO. Doing so, transfers the entire token balance to the `emergency_return` address and block the ability to claim or burn. The contract can not be unkilled. 
+The `FeeDistributor` can be killed by the `admin` of the contract, which is the Curve DAO. Doing so, transfers the entire token balance to the `emergency_return` address and block the ability to claim or burn. The contract can not be unkilled.
 
 !!!colab "Google Colab Notebook"
     A Google Colab notebook that simulates killing the `FeeDistributor` and its respective consequences can be found here: [:simple-googlecolab: Google Colab Notebook](https://colab.research.google.com/drive/1YgjNqZ4TdDEVoa-xTbZIDSPdtOwxuiH9?usp=sharing).
@@ -795,15 +795,15 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 ### `is_killed`
 !!! description "`FeeDistributor.is_killed() -> bool: view`"
 
-    Getter method to check if the `FeeDistributor` contract is killed. When killed, the contract blocks `claim` and `burn` and the entire token balance is transfered to the `emergency_return` address.
+    Getter method to check if the `FeeDistributor` contract is killed. When killed, the contract blocks `claim` and `burn` and the entire token balance is transferred to the `emergency_return` address.
 
-    Returns: true or flase (`bool`).
+    Returns: true or false (`bool`).
 
     ??? quote "Source code"
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             is_killed: public(bool)
             ```
 
@@ -830,7 +830,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             is_killed: public(bool)
 
             @external
@@ -900,7 +900,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             @external
             def recover_balance(_coin: address) -> bool:
                 """
@@ -954,7 +954,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             admin: public(address)
             ```
 
@@ -978,7 +978,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             future_admin: public(address)
             ```
 
@@ -1009,7 +1009,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             event CommitAdmin:
                 admin: address
 
@@ -1050,7 +1050,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             event ApplyAdmin:
                 admin: address
 
@@ -1095,7 +1095,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             start_time: public(uint256)
 
             @external
@@ -1149,7 +1149,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             voting_escrow: public(address)
 
             @external
@@ -1199,7 +1199,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             token: public(address)
 
             @external
@@ -1253,7 +1253,7 @@ The `FeeDistributor` can be killed by the `admin` of the contract, which is the 
 
         === "FeeDistributor.vy"
 
-            ```vyper 
+            ```vyper
             user_epoch_of: public(HashMap[address, uint256])
             ```
 

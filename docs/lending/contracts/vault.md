@@ -1,6 +1,6 @@
 <h1>Vault</h1>
 
-The vault is an **implementation of a [ERC-4626](https://ethereum.org/developers/docs/standards/tokens/erc-4626)** vault which **deposits the underlying asset into the controller** and **tracks the progress of the fees earned**. 
+The vault is an **implementation of a [ERC-4626](https://ethereum.org/developers/docs/standards/tokens/erc-4626)** vault which **deposits the underlying asset into the controller** and **tracks the progress of the fees earned**.
 
 !!!github "GitHub"
     The source code of the `Vault.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-stablecoin/blob/lending/contracts/lending/Vault.vy).
@@ -248,7 +248,7 @@ Because shares are transferable, a user can also acquire shares by means other t
                     log_max_rate: int256 = self.log_max_rate
                     return self.exp(total_debt * (log_max_rate - log_min_rate) / total_reserves + log_min_rate)
             ```
-            
+
         === "AMM.vy"
 
             ```vyper
@@ -372,7 +372,7 @@ Because shares are transferable, a user can also acquire shares by means other t
 
     === "Example"
         ```shell
-        >>> Vault.previewDeposit(1000000000000000000):      # depositing 1 crvusd 
+        >>> Vault.previewDeposit(1000000000000000000):      # depositing 1 crvusd
         998709265069121019738                               # shares to receive
         ```
 
@@ -380,7 +380,7 @@ Because shares are transferable, a user can also acquire shares by means other t
 ### `mint`
 !!! description "`Vault.mint(shares: uint256, receiver: address = msg.sender) -> uint256:`"
 
-    Function to mint a specific amount of shares (`shares`) to `receiver` by depositing the necessary number of assets into the vault. 
+    Function to mint a specific amount of shares (`shares`) to `receiver` by depositing the necessary number of assets into the vault.
 
     Returns: amount of assets deposited (`uint256`).
 
@@ -412,7 +412,7 @@ Because shares are transferable, a user can also acquire shares by means other t
             def mint(shares: uint256, receiver: address = msg.sender) -> uint256:
                 """
                 @notice Mint given amount of shares taking whatever number of assets it requires
-                @param shares Number of sharess to mint
+                @param shares Number of shares to mint
                 @param receiver Optional receiver for the shares. If not specified - it's the sender
                 """
                 controller: Controller = self.controller
@@ -505,7 +505,7 @@ Because shares are transferable, a user can also acquire shares by means other t
                     log_max_rate: int256 = self.log_max_rate
                     return self.exp(total_debt * (log_max_rate - log_min_rate) / total_reserves + log_min_rate)
             ```
-            
+
         === "AMM.vy"
 
             ```vyper
@@ -595,7 +595,7 @@ Because shares are transferable, a user can also acquire shares by means other t
 
     === "Example"
         ```shell
-        >>> Vault.maxMint("0x7a16fF8270133F063aAb6C9977183D9e72835428"):    
+        >>> Vault.maxMint("0x7a16fF8270133F063aAb6C9977183D9e72835428"):
         119831204184300884951118160092
         ```
 
@@ -700,7 +700,7 @@ Because shares are transferable, a user can also acquire shares by means other t
 ### `maxSupply`
 !!! description "`Vault.maxSupply() -> uint256: view`"
 
-    Getter for the maximum amount of assets that can be supplied to the vault. This function is only avaliable in a newer version of the vault contract.
+    Getter for the maximum amount of assets that can be supplied to the vault. This function is only available in a newer version of the vault contract.
 
     Returns: maximum supply (`uint256`).
 
@@ -737,7 +737,7 @@ Because shares are transferable, a user can also acquire shares by means other t
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the factory.
 
-    Function to set the maximum amount of assets that can be supplied to the vault. This function is only avaliable in a newer version of the vault contract.
+    Function to set the maximum amount of assets that can be supplied to the vault. This function is only available in a newer version of the vault contract.
 
     Emits: `SetMaxSupply`
 
@@ -931,7 +931,7 @@ Because shares are transferable, a user can also acquire shares by means other t
                     log_max_rate: int256 = self.log_max_rate
                     return self.exp(total_debt * (log_max_rate - log_min_rate) / total_reserves + log_min_rate)
             ```
-            
+
         === "AMM.vy"
 
             ```vyper
@@ -1293,7 +1293,7 @@ Because shares are transferable, a user can also acquire shares by means other t
         === "Vault.vy"
 
             ```vyper
-            @external   
+            @external
             @view
             @nonreentrant('lock')
             def maxRedeem(owner: address) -> uint256:
@@ -1453,7 +1453,7 @@ Out [2]: 248442280773618417                 # -> 0.248 -> 24.8%
 ```
 
 
-More on rates and when they are updated here: [SemiLog Monetary Policy](./semilog-mp.md)
+More on rates and when they are updated here: [Semilog Monetary Policy](./semilog-mp.md)
 
 ---
 
@@ -1833,7 +1833,7 @@ $$\text{utilization} = \frac{\text{debt}}{\text{totalAssets}}$$
     === "Example"
         ```shell
         >>> Vault.controller():
-        '0x7443944962D04720f8c220C0D25f56F869d6EfD4'        
+        '0x7443944962D04720f8c220C0D25f56F869d6EfD4'
         ```
 
 

@@ -775,7 +775,7 @@ Additionally, there are helper functions available to retrieve essential data, s
                 if is_underlying and (_registry == self.registry or Registry(_registry).is_meta(_pool)):
                     return CurvePool(_pool).get_dy_underlying(i, j, _amount)
 
-                return CurvePool(_pool).get_dy(i, j, _amount)    
+                return CurvePool(_pool).get_dy(i, j, _amount)
 
             @view
             @internal
@@ -799,13 +799,13 @@ Additionally, there are helper functions available to retrieve essential data, s
                 j: uint256 = 0
                 i, j = CryptoRegistry(_registry).get_coin_indices(_pool, _from, _to) # dev: no market
 
-                return CryptoPool(_pool).get_dy(i, j, _amount) 
+                return CryptoPool(_pool).get_dy(i, j, _amount)
             ```
 
     === "Example"
         ```shell
         >>> CurveRegistryExchange.get_exchange_amount('0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7', '0x6b175474e89094c44da98b954eedeac495271d0f', '0xdac17f958d2ee523a2206206994597c13d831ec7', 1000000000000000000000000)
-        1000242275074               # swapping DAI for USDT using threepool
+        1000242275074               # swapping DAI for USDT using 3Pool
 
         >>> CurveRegistryExchange.get_exchange_amount('0xd51a44d3fae010294c616388b506acda1bfaae46', '0xdac17f958d2ee523a2206206994597c13d831ec7', '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 10000000000)
         3315937652359468906         # swapping USDT for ETH using tricrypto2
@@ -900,7 +900,7 @@ Additionally, there are helper functions available to retrieve essential data, s
                         best_pool = pool
                         max_dy = dy
 
-                return best_pool, max_dy   
+                return best_pool, max_dy
 
             @view
             @internal
@@ -928,7 +928,7 @@ Additionally, there are helper functions available to retrieve essential data, s
                 if is_underlying and (_registry == self.registry or Registry(_registry).is_meta(_pool)):
                     return CurvePool(_pool).get_dy_underlying(i, j, _amount)
 
-                return CurvePool(_pool).get_dy(i, j, _amount)    
+                return CurvePool(_pool).get_dy(i, j, _amount)
 
             @view
             @internal
@@ -952,7 +952,7 @@ Additionally, there are helper functions available to retrieve essential data, s
                 j: uint256 = 0
                 i, j = CryptoRegistry(_registry).get_coin_indices(_pool, _from, _to) # dev: no market
 
-                return CryptoPool(_pool).get_dy(i, j, _amount)    
+                return CryptoPool(_pool).get_dy(i, j, _amount)
             ```
 
     === "Example"
@@ -1133,7 +1133,7 @@ Additionally, there are helper functions available to retrieve essential data, s
 ### `factory_registry`
 !!! description "`CurveRegistryExchange.factory_registry() -> address: view`"
 
-    Getter for the factory regstiry contract.
+    Getter for the factory registry contract.
 
     Returns: factory registry (`address`).
 
@@ -1203,7 +1203,7 @@ Additionally, there are helper functions available to retrieve essential data, s
 ### `update_registry_address`
 !!! description "`CurveRegistryExchange.update_registry_address() -> bool`"
 
-    Function to update `registry`, `factory_registry` and `crypto_registry`. This function is callable by anyone and sets the variables to the current vaules in the `AddressProvider` contract. 
+    Function to update `registry`, `factory_registry` and `crypto_registry`. This function is callable by anyone and sets the variables to the current values in the `AddressProvider` contract.
 
     Returns: True (`bool`).
 
@@ -1292,7 +1292,7 @@ The contract is designed to set a calculator contract that can perform various t
 
     | Input   | Type      | Description  |
     | ------- | --------- | ------------ |
-    | `_pool` | `address` | Liquidity pool address. | 
+    | `_pool` | `address` | Liquidity pool address. |
 
     ??? quote "Source code"
 
@@ -1334,8 +1334,8 @@ The contract is designed to set a calculator contract that can perform various t
 
     | Input   | Type      | Description  |
     | ------- | --------- | ------------ |
-    | `_pool` | `address` | Liquidity pool to set the calculator for. | 
-    | `_calculator` | `address` | Calculator contract. | 
+    | `_pool` | `address` | Liquidity pool to set the calculator for. |
+    | `_calculator` | `address` | Calculator contract. |
 
     ??? quote "Source code"
 
@@ -1373,7 +1373,7 @@ The contract is designed to set a calculator contract that can perform various t
 
     | Input   | Type      | Description  |
     | ------- | --------- | ------------ |
-    | `_calculator` | `address` | Calculator address. | 
+    | `_calculator` | `address` | Calculator address. |
 
     ??? quote "Source code"
 
@@ -1407,7 +1407,7 @@ The `admin` of the `AddressProvider` contract has the ability to set the `is_kil
 
 
 ### `is_killed`
-!!! description "`CurveRegistryExchange.is_killed() -> boool: view`"
+!!! description "`CurveRegistryExchange.is_killed() -> bool: view`"
 
     !!!warning
         If the `is_killed` status is set to `true`, the contract will not allow any token exchanges and will revert when trying to exchange tokens.
@@ -1443,7 +1443,7 @@ The `admin` of the `AddressProvider` contract has the ability to set the `is_kil
 
     | Input        | Type   | Description  |
     | ------------ | ------ | ------------ |
-    | `_is_killed` | `bool` | `true` or `false`. | 
+    | `_is_killed` | `bool` | `true` or `false`. |
 
     ??? quote "Source code"
 
@@ -1467,7 +1467,7 @@ The `admin` of the `AddressProvider` contract has the ability to set the `is_kil
 ---
 
 
-## **Transfering Funds**
+## **Transferring Funds**
 
 In the event that the contract holds an ERC20 or ETH balance, these tokens can be claimed by the `admin` of the `AddressProvider` contract. Although this should not occur at all, a possible scenario in which this could happen is when users mistakenly send their tokens directly to the contract address.
 
@@ -1478,13 +1478,13 @@ In the event that the contract holds an ERC20 or ETH balance, these tokens can b
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the `AddressProvider` contract.
 
-    Function to transfer an ERC20 or ETH balance held by this contract. When calling this function, the entire balance is transfered to the `admin` of the `AddressProvider`. This method can be used when tokens are mistakenly sent to the contract. Other than that, the contract does not hold any user assets.
+    Function to transfer an ERC20 or ETH balance held by this contract. When calling this function, the entire balance is transferred to the `admin` of the `AddressProvider`. This method can be used when tokens are mistakenly sent to the contract. Other than that, the contract does not hold any user assets.
 
     Returns: True (`bool`).
 
     | Input   | Type      | Description  |
     | ------- | --------- | ------------ |
-    | `_token` | `address` | Token to transfer. | 
+    | `_token` | `address` | Token to transfer. |
 
     ??? quote "Source code"
 

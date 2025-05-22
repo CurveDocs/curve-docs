@@ -27,7 +27,7 @@ The ***CurveOwnershipAgent*** is the current `admin` of the VotingEscrow. As suc
             @param addr Address of Smart contract checker
             """
             assert msg.sender == self.admin
-            self.future_smart_wallet_checker = addr  
+            self.future_smart_wallet_checker = addr
         ```
 
     === "Example"
@@ -84,7 +84,7 @@ The ***CurveOwnershipAgent*** is the current `admin` of the VotingEscrow. As suc
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         event CommitOwnership:
             admin: address
 
@@ -99,7 +99,7 @@ The ***CurveOwnershipAgent*** is the current `admin` of the VotingEscrow. As suc
             """
             assert msg.sender == self.admin  # dev: admin only
             self.future_admin = addr
-            log CommitOwnership(addr)   
+            log CommitOwnership(addr)
         ```
 
     === "Example"
@@ -136,7 +136,7 @@ The ***CurveOwnershipAgent*** is the current `admin` of the VotingEscrow. As suc
             _admin: address = self.future_admin
             assert _admin != ZERO_ADDRESS  # dev: admin not set
             self.admin = _admin
-            log ApplyOwnership(_admin)  
+            log ApplyOwnership(_admin)
         ```
 
 

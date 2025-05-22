@@ -1,11 +1,11 @@
 <h1>Pool Factory: Overview</h1>
 
-The TriCrypto-NG Factory allows the permissionless deployment of two-coin volatile asset pools, as well as gauges. **The liquidity pool and LP token share the same contract.**
+The Tricrypto-NG Factory allows the permissionless deployment of two-coin volatile asset pools, as well as gauges. **The liquidity pool and LP token share the same contract.**
 
-Additionally, the Factory contract is the direct admin and fee receiver of all pools. In turn, the Factory is controlled by the CurveDAO. 
+Additionally, the Factory contract is the direct admin and fee receiver of all pools. In turn, the Factory is controlled by the CurveDAO.
 
 !!!deploy "Contract Source & Deployment"
-    Source code for this contract is available on [Github](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveTricryptoFactory.vy).  
+    Source code for this contract is available on [GitHub](https://github.com/curvefi/tricrypto-ng/blob/main/contracts/main/CurveTricryptoFactory.vy).
     A list of all deployed contracts can be found [here](../../references/deployed-contracts.md#pool-factory).
 
 
@@ -13,7 +13,7 @@ Additionally, the Factory contract is the direct admin and fee receiver of all p
 
 
 ## **Implementations**
- 
+
 **The Tricrypto-NG Factory makes use of blueprint contracts to deploy its contracts from the implementations.**
 
 !!!warning
@@ -26,7 +26,7 @@ It utilizes four different implementations:
 - `views_implementation`, containing a view methods contract relevant for integrators and users looking to interact with the AMMs.
 - `math_implementation`, containing math functions used in the AMM.
 
-*More on the [**Math Implementation**](../../cryptoswap-exchange/tricrypto-ng/utility-contracts/math.md) and [**Views Implementation**](../../cryptoswap-exchange/tricrypto-ng/utility-contracts/views.md).* 
+*More on the [**Math Implementation**](../../cryptoswap-exchange/tricrypto-ng/utility-contracts/math.md) and [**Views Implementation**](../../cryptoswap-exchange/tricrypto-ng/utility-contracts/views.md).*
 
 
 ## **Query Implementations**
@@ -121,7 +121,7 @@ It utilizes four different implementations:
 
 
 
-## **Set New Implementations** 
+## **Set New Implementations**
 
 *New implementations can be set via these admin-only functions:*
 
@@ -131,7 +131,7 @@ It utilizes four different implementations:
     !!!guard "Guarded Method"
         This function is only callable by the `admin` of the contract.
 
-    Function to set a `_pool_implementation` for `_implementation_index`. 
+    Function to set a `_pool_implementation` for `_implementation_index`.
 
     Emits event: `UpdatePoolImplementation`
 
@@ -145,7 +145,7 @@ It utilizes four different implementations:
 
         ```vyper
         event UpdatePoolImplementation:
-            _implemention_id: uint256
+            _implementation_id: uint256
             _old_pool_implementation: address
             _new_pool_implementation: address
 
@@ -304,7 +304,7 @@ It utilizes four different implementations:
         >>> Factory.set_math_implementation("todo")
         'todo'
         ```
-    
+
 
 ---
 
@@ -326,7 +326,7 @@ It utilizes four different implementations:
             ```vyper
             fee_receiver: public(address)
             ```
-    
+
     === "Example"
 
         ```shell
@@ -356,7 +356,7 @@ It utilizes four different implementations:
             _old_fee_receiver: address
             _new_fee_receiver: address
 
-        admin: public(address) 
+        admin: public(address)
         fee_receiver: public(address)
 
         @external

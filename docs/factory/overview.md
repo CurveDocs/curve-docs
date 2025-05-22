@@ -18,13 +18,13 @@ Each Factory contract includes **built-in functions designed to populate the [Me
 
 ## **Available Factories**
 
-Curve Factories facilitate the deployment of pools containing almost any combination of assets, whether they are stable or volatile, rebasing or not. Note that some variations (e.g., cryptoswap pool) might not yet be supported on sidechains or Layer 2 networks.
+Curve Factories facilitate the deployment of pools containing almost any combination of assets, whether they are stable or volatile, rebasing or not. Note that some variations (e.g., Cryptoswap pool) might not yet be supported on sidechains or Layer 2 networks.
 
 *For a straightforward, non-technical explanation of pool variations, visit: https://resources.curve.finance/pools/overview/*
 
 <div class="grid cards" markdown>
 
--   **StableSwap-NG**
+-   **Stableswap-NG**
 
     ---
 
@@ -32,7 +32,7 @@ Curve Factories facilitate the deployment of pools containing almost any combina
 
     [:octicons-arrow-right-24: `CurveStableswapFactoryNG.vy`](./stableswap-ng/overview.md)
 
--   **TwoCrypto-NG**
+-   **Twocrypto-NG**
 
     ---
 
@@ -40,7 +40,7 @@ Curve Factories facilitate the deployment of pools containing almost any combina
 
     [:octicons-arrow-right-24: `CurveTwocryptoFactory.vy`](./twocrypto-ng/overview.md)
 
--   **TriCrypto-NG**
+-   **Tricrypto-NG**
     ---
 
     Factory for deploying three-coin volatile asset pools (e.g., `crvUSD <> ETH <> BTC`).
@@ -51,7 +51,7 @@ Curve Factories facilitate the deployment of pools containing almost any combina
 
     ---
 
-    Factories for older stableswap, twocrypto, or tricrypto pools.
+    Factories for older Stableswap, Twocrypto, or Tricrypto pools.
 
     [:octicons-arrow-right-24: `soon`](#)
 
@@ -72,10 +72,10 @@ Liquidity pools, gauges, and LP token contracts are created based on their respe
 
 - **`create_forwarder_to`**
 
-    Traditional Factories such as the regular [stableswap](./stableswap/deployer-api.md) or [cryptoswap](./cryptoswap/deployer-api.md) utilize Vyper's [`create_forwarder_to`](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=create_forwarder_to#chain-interaction) function (renamed to `create_minimal_proxy_to` in Vyper version 0.3.4) to deploy liquidity pools, LP tokens, and gauges.
+    Traditional Factories such as the regular [Stableswap](./stableswap/deployer-api.md) or [Cryptoswap](./cryptoswap/deployer-api.md) utilize Vyper's [`create_forwarder_to`](https://docs.vyperlang.org/en/stable/built-in-functions.html?highlight=create_forwarder_to#chain-interaction) function (renamed to `create_minimal_proxy_to` in Vyper version 0.3.4) to deploy liquidity pools, LP tokens, and gauges.
 
 - **`Blueprint Contracts`**
-    
+
     Newer factories utilize blueprint contracts as outlined in [EIP-5202](https://eips.ethereum.org/EIPS/eip-5202). The corresponding contracts are directly created from their blueprint implementations, which has become the preferred method for all newly deployed factories.
 
 

@@ -44,7 +44,7 @@ When LP tokens are deposited into a gauge, the smart contract mints an equivalen
             def deposit(_value: uint256, _addr: address = msg.sender, _claim_rewards: bool = False):
                 """
                 @notice Deposit `_value` LP tokens
-                @dev Depositting also claims pending reward tokens
+                @dev Depositing also claims pending reward tokens
                 @param _value Number of tokens to deposit
                 @param _addr Address to deposit for
                 """
@@ -149,7 +149,7 @@ Reward tokens can be claimed using the `claim_rewards` function. This function c
 
     CRV emissions directed to the gauge are claimable from the [`Minter.vy`](../minter/Minter.md) contract using the [`mint`](../minter/Minter.md#mint) function.
 
-The liquidity gauge records checkpoints to determine how much external rewards each user is entitled to claim. 
+The liquidity gauge records checkpoints to determine how much external rewards each user is entitled to claim.
 
 ???quote "`_checkpoint_rewards`"
 
@@ -220,7 +220,7 @@ The liquidity gauge records checkpoints to determine how much external rewards e
 
     !!!warning "Claiming for another user"
         When claiming for another user, the rewards can not be redirected to another wallet.
-    
+
     Function to claim rewards from the gauge.
 
     | Input       | Type      | Description                        |
@@ -346,7 +346,7 @@ The liquidity gauge records checkpoints to determine how much external rewards e
 ### `claimable_reward`
 !!! description "`LiquidityGaugeV6.claimable_reward(_user: address, _reward_token: address) -> uint256`"
 
-    Function to check the claimable amount of `_reward_token` for `_user`. 
+    Function to check the claimable amount of `_reward_token` for `_user`.
 
     Returns: claimable tokens (`uint256`).
 
@@ -461,7 +461,7 @@ The liquidity gauge records checkpoints to determine how much external rewards e
 
 Newer liquidity gauges (from `LiquidityGaugeV3.vy` and upwards) introduce the possibility to add what are termed "permissionless rewards." However, the term "permissionless" might be misleading as only a `distributor` address, set by the gauge's `manager`, can add these rewards. The `manager` address is set to [`tx.origin`](https://docs.vyperlang.org/en/stable/constants-and-vars.html?highlight=tx.origin#block-and-transaction-properties) at the time of contract deployment.
 
-To add rewards to a gauge, a reward token and a distributor must be set by calling the `set_reward_distributor` function. This action can only be performed by the `manager` or the `admin` of the Factory contract, wich deployed the pool. Each reward token can have only one distributor. The "right to add a reward token" can be transfered. Tokens are added as rewards to the gauge via the `add_reward` method.
+To add rewards to a gauge, a reward token and a distributor must be set by calling the `set_reward_distributor` function. This action can only be performed by the `manager` or the `admin` of the Factory contract, which deployed the pool. Each reward token can have only one distributor. The "right to add a reward token" can be transferred. Tokens are added as rewards to the gauge via the `add_reward` method.
 
 !!!warning "NOT BOOSTABLE: Distribution of Externally Added Rewards"
     Externally added rewards are not boostable and are distributed purely based on the user's unboosted share of liquidity in the gauge.
@@ -656,7 +656,7 @@ To add rewards to a gauge, a reward token and a distributor must be set by calli
 
             ```python
             event SetGaugeManager:
-                _gauge_manager: address 
+                _gauge_manager: address
 
             manager: public(address)
 
@@ -865,7 +865,7 @@ $$\text{boost factor} = \frac{lim}{l \times 0.4}$$
 | $\text{voting_total}$   | Total veCRV balance.                         |
 
 
-[^1]: A user does not neccessarily need to deposit the LP into the gauge himself. Someone else can deposit for him or the "staked LP token" can be transfered to him.
+[^1]: A user does not necessarily need to deposit the LP into the gauge himself. Someone else can deposit for him or the "staked LP token" can be transferred to him.
 
 ---
 
@@ -886,7 +886,7 @@ voting_total = 10000                        # total veCRV balance
 
 **NO BOOST**
 
-*Lets calculate the LP position of a user that has a vecrv balance of 0:*
+*Lets calculate the LP position of a user that has a veCRV balance of 0:*
 
 $\text{lim} = 1000 * 0.4 = 400$
 
@@ -904,7 +904,7 @@ $\text{boost factor} = \frac{400}{400} = 1$
 
 **BOOST**
 
-*Lets calculate the LP position of a user that has a vecrv balance of 500 and therefore receives a boost on his provided liquidity:*
+*Lets calculate the LP position of a user that has a veCRV balance of 500 and therefore receives a boost on his provided liquidity:*
 
 $\text{lim} = 1000 * 0.4 = 400$
 
@@ -983,7 +983,7 @@ $\text{boost factor} = \frac{1000}{400} = 2.5$
 ### `working_supply`
 !!! description "`LiquidityGaugeV6.working_supply() -> uint256: view`"
 
-    Getter for the working supply. This variale represents the sum of all `working_balances` of users who provided liquidity in the gauge.
+    Getter for the working supply. This variable represents the sum of all `working_balances` of users who provided liquidity in the gauge.
 
     Returns: working supply (`uint256`).
 
@@ -992,7 +992,7 @@ $\text{boost factor} = \frac{1000}{400} = 2.5$
         === "LiquidityGaugeV6.vy"
 
             ```python
-            working_supply: public(uint256) 
+            working_supply: public(uint256)
 
             @internal
             def _update_liquidity_limit(addr: address, l: uint256, L: uint256):
@@ -1048,7 +1048,7 @@ $\text{boost factor} = \frac{1000}{400} = 2.5$
 
     | Input  | Type      | Description                            |
     | ------ | --------- | -------------------------------------- |
-    | `addr` | `address` | Address who's checkpoint is recoreded. |
+    | `addr` | `address` | Address who's checkpoint is recorded. |
 
     ??? quote "Source code"
 
@@ -1111,7 +1111,7 @@ $\text{boost factor} = \frac{1000}{400} = 2.5$
                                 # of the first epoch until it ends, and then the rate of
                                 # the last epoch.
                                 # If more than one epoch is crossed - the gauge gets less,
-                                # but that'd meen it wasn't called for more than 1 year
+                                # but that'd mean it wasn't called for more than 1 year
                                 _integrate_inv_supply += rate * w * (prev_future_epoch - prev_week_time) / _working_supply
                                 rate = new_rate
                                 _integrate_inv_supply += rate * w * (week_time - prev_future_epoch) / _working_supply
@@ -1259,7 +1259,7 @@ $\text{boost factor} = \frac{1000}{400} = 2.5$
                                 # of the first epoch until it ends, and then the rate of
                                 # the last epoch.
                                 # If more than one epoch is crossed - the gauge gets less,
-                                # but that'd meen it wasn't called for more than 1 year
+                                # but that'd mean it wasn't called for more than 1 year
                                 _integrate_inv_supply += rate * w * (prev_future_epoch - prev_week_time) / _working_supply
                                 rate = new_rate
                                 _integrate_inv_supply += rate * w * (week_time - prev_future_epoch) / _working_supply
@@ -1336,7 +1336,7 @@ Liquidity gauges have a "killed status" stored in the `is_killed` variable. This
 ### `is_killed`
 !!! description "`LiquidityGaugeV6.is_killed() -> bool: view`"
 
-    Getter function to check if the gauge is killed. If `ture`, the inflation rate for the gauge will be set to zero.
+    Getter function to check if the gauge is killed. If `true`, the inflation rate for the gauge will be set to zero.
 
     Returns: killed status (`bool`).
 
@@ -1419,7 +1419,7 @@ Liquidity gauges have a "killed status" stored in the `is_killed` variable. This
 
 ## **Contract Info Methods**
 
-*Basic contract informations:*
+*Basic contract information:*
 
 ### `integrate_fraction`
 !!! description "`LiquidityGaugeV6.integrate_fraction(arg0: address) -> uint256: view`"
@@ -1521,7 +1521,7 @@ Liquidity gauges have a "killed status" stored in the `is_killed` variable. This
     === "Example"
         ```shell
         >>> LiquidityGaugeV6.inflation_rate()
-        5181574864521283150             # 5.18157486452 CRV per second    
+        5181574864521283150             # 5.18157486452 CRV per second
         ```
 
 
@@ -1619,4 +1619,3 @@ Liquidity gauges have a "killed status" stored in the `is_killed` variable. This
         >>> LiquidityGaugeV6.lp_token()
         '0x86EA1191a219989d2dA3a85c949a12A92f8ED3Db'
         ```
-    

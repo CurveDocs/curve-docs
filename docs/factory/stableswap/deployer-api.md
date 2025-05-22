@@ -82,11 +82,11 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
             """
             # fee must be between 0.04% and 1%
             assert _fee >= 4000000 and _fee <= 100000000, "Invalid fee"
-        
+
             n_coins: uint256 = MAX_PLAIN_COINS
             rate_multipliers: uint256[MAX_PLAIN_COINS] = empty(uint256[MAX_PLAIN_COINS])
             decimals: uint256[MAX_PLAIN_COINS] = empty(uint256[MAX_PLAIN_COINS])
-        
+
             for i in range(MAX_PLAIN_COINS):
                 coin: address = _coins[i]
                 if coin == ZERO_ADDRESS:
@@ -94,28 +94,28 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
                     n_coins = i
                     break
                 assert self.base_pool_assets[coin] == False, "Invalid asset, deploy a metapool"
-        
+
                 if _coins[i] == 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE:
                     assert i == 0, "ETH must be first coin"
                     decimals[0] = 18
                 else:
                     decimals[i] = ERC20(coin).decimals()
                     assert decimals[i] < 19, "Max 18 decimals for coins"
-        
+
                 rate_multipliers[i] = 10 ** (36 - decimals[i])
-        
+
                 for x in range(i, i+MAX_PLAIN_COINS):
                     if x+1 == MAX_PLAIN_COINS:
                         break
                     if _coins[x+1] == ZERO_ADDRESS:
                         break
                     assert coin != _coins[x+1], "Duplicate coins"
-        
+
             implementation: address = self.plain_implementations[n_coins][_implementation_idx]
             assert implementation != ZERO_ADDRESS, "Invalid implementation index"
             pool: address = create_forwarder_to(implementation)
             CurvePlainPool(pool).initialize(_name, _symbol, _coins, rate_multipliers, _A, _fee)
-        
+
             length: uint256 = self.pool_count
             self.pool_list[length] = pool
             self.pool_count = length + 1
@@ -125,7 +125,7 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
             self.pool_data[pool].implementation = implementation
             if _asset_type != 0:
                 self.pool_data[pool].asset_type = _asset_type
-        
+
             for i in range(MAX_PLAIN_COINS):
                 coin: address = _coins[i]
                 if coin == ZERO_ADDRESS:
@@ -146,7 +146,7 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
                         length = self.market_counts[key]
                         self.markets[key][length] = pool
                         self.market_counts[key] = length + 1
-        
+
             log PlainPoolDeployed(_coins, _A, _fee, msg.sender)
             return pool
         ```
@@ -162,7 +162,7 @@ The pool **deployment is permissionless**, but it must adhere to certain paramet
             _fee: 4000000,
             _asset_type: 0,
             _implementation_idx: 0,
-            )    
+            )
 
         'returns address of deployed pool'
         ```
@@ -243,46 +243,46 @@ Limitations when deploying meta pools:
             """
             # fee must be between 0.04% and 1%
             assert _fee >= 4000000 and _fee <= 100000000, "Invalid fee"
-        
+
             implementation: address = self.base_pool_data[_base_pool].implementations[_implementation_idx]
             assert implementation != ZERO_ADDRESS, "Invalid implementation index"
-        
+
             # things break if a token has >18 decimals
             decimals: uint256 = ERC20(_coin).decimals()
             assert decimals < 19, "Max 18 decimals for coins"
-        
+
             pool: address = create_forwarder_to(implementation)
             CurvePool(pool).initialize(_name, _symbol, _coin, 10 ** (36 - decimals), _A, _fee)
             ERC20(_coin).approve(pool, MAX_UINT256)
-        
+
             # add pool to pool_list
             length: uint256 = self.pool_count
             self.pool_list[length] = pool
             self.pool_count = length + 1
-        
+
             base_lp_token: address = self.base_pool_data[_base_pool].lp_token
-        
+
             self.pool_data[pool].decimals = [decimals, 0, 0, 0]
             self.pool_data[pool].n_coins = 2
             self.pool_data[pool].base_pool = _base_pool
             self.pool_data[pool].coins[0] = _coin
             self.pool_data[pool].coins[1] = self.base_pool_data[_base_pool].lp_token
             self.pool_data[pool].implementation = implementation
-        
+
             is_finished: bool = False
             for i in range(MAX_COINS):
                 swappable_coin: address = self.base_pool_data[_base_pool].coins[i]
                 if swappable_coin == ZERO_ADDRESS:
                     is_finished = True
                     swappable_coin = base_lp_token
-        
+
                 key: uint256 = bitwise_xor(convert(_coin, uint256), convert(swappable_coin, uint256))
                 length = self.market_counts[key]
                 self.markets[key][length] = pool
                 self.market_counts[key] = length + 1
                 if is_finished:
                     break
-        
+
             log MetaPoolDeployed(_coin, _base_pool, _A, _fee, msg.sender)
             return pool
         ```

@@ -19,7 +19,7 @@ For a broader understanding of the use case of the CRV token, check out [Underst
 ### `approve`
 !!! description "`CRV.approve(_spender: address, _value: uint256) -> bool`"
 
-    !!!warning 
+    !!!warning
         Approval may only be from `zero -> nonzero` or from `nonzero -> zero` in order to mitigate the potential race condition described here: https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
 
     Function to approve `_spender` to transfer `_value` tokens on behalf of `msg.sender`.
@@ -35,7 +35,7 @@ For a broader understanding of the use case of the CRV token, check out [Underst
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         event Approval:
             _owner: indexed(address)
             _spender: indexed(address)
@@ -103,29 +103,29 @@ For a broader understanding of the use case of the CRV token, check out [Underst
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the allowance of two addresses.
 
         <div class="highlight">
-        <pre><code>>>> CRV.allowance(<input id="allowanceOwner" 
-        type="text" 
-        value="0xd061D61a4d941c39E5453435B6345Dc261C2fcE0" 
-        style="width: 300px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> CRV.allowance(<input id="allowanceOwner"
+        type="text"
+        value="0xd061D61a4d941c39E5453435B6345Dc261C2fcE0"
+        style="width: 300px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
-        <input id="allowanceSpender" 
-        type="text" 
-        value="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045" 
-        style="width: 300px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <input id="allowanceSpender"
+        type="text"
+        value="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+        style="width: 300px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>)
         <span id="allowanceOutput"></span></code></pre>
         </div>
@@ -138,7 +138,7 @@ For a broader understanding of the use case of the CRV token, check out [Underst
 
         Additionally, transfers to `ZERO_ADDRESS` are not allowed.
 
-    Function to transfer `_value` tokens from `msg.sender` to `_to`. 
+    Function to transfer `_value` tokens from `msg.sender` to `_to`.
 
     Returns: true (`bool`).
 
@@ -151,7 +151,7 @@ For a broader understanding of the use case of the CRV token, check out [Underst
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
@@ -205,7 +205,7 @@ For a broader understanding of the use case of the CRV token, check out [Underst
 
     ??? quote "Source code"
 
-        ```vyper 
+        ```vyper
         event Transfer:
             _from: indexed(address)
             _to: indexed(address)
@@ -406,29 +406,29 @@ with $\text{rate}_\text{current}$ fetched from the [`rate()`](#rate) function.
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the mintable supply between two timestamps.
 
         <div class="highlight">
-        <pre><code>>>> CRV.mintable_in_timeframe(<input id="mintableStart" 
-        type="text" 
-        value="1682892000" 
-        style="width: 70px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> CRV.mintable_in_timeframe(<input id="mintableStart"
+        type="text"
+        value="1682892000"
+        style="width: 70px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
-        <input id="mintableEnd" 
-        type="text" 
-        value="1683496800" 
-        style="width: 70px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <input id="mintableEnd"
+        type="text"
+        value="1683496800"
+        style="width: 70px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>)
         <span id="mintableOutput"></span></code></pre>
         </div>
@@ -575,13 +575,13 @@ with $\text{rate}_\text{current}$ fetched from the [`rate()`](#rate) function.
 !!! description "`CRV.rate() -> uint256: view`"
 
     Getter for the current inflation rate of the CRV token emission. The rate is denominated in emissions per second and has a base of 1e18.
-    
+
     To calculate the CRV emission per day:
 
     - $\text{daily_emission} = \text{rate} * 86400$
 
     - $\text{weekly_emission} = \text{rate} * 86400 * 7$
-    
+
     - $\text{yearly_emission} = \text{rate} * 86400 * 365$
 
     Returns: current inflation rate (`uint256`).
@@ -601,7 +601,7 @@ with $\text{rate}_\text{current}$ fetched from the [`rate()`](#rate) function.
         <span id="rateOutput"></span></code></pre>
         </div>
 
-### `update_mining_parameters` 
+### `update_mining_parameters`
 !!! description "`CRV.update_mining_parameters()`"
 
     Function to update the mining parameters for the token. By updating, the newly decreased inflation rate is applied. This function is callable by anyone. However, the call will revert if `block.timestamp` is less than or equal to `start_epoch_time` + `RATE_REDUCTION_TIME`, indicating that one year has not yet passed and therefore the rate cannot be updated yet.
@@ -749,7 +749,7 @@ with $\text{rate}_\text{current}$ fetched from the [`rate()`](#rate) function.
 
 ## Admin Controls and Other Methods
 
-The controls over the Curve DAO Token are strictly limited. The `admin` of the contract can only modify the `name`, `admin`, or `minter`[^1]. 
+The controls over the Curve DAO Token are strictly limited. The `admin` of the contract can only modify the `name`, `admin`, or `minter`[^1].
 
 Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65c637785e8f8B742ae6b0b9968) is the current admin of the contract, any changes to these parameters would require a successfully passed DAO vote.
 
@@ -777,10 +777,10 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
             """
             ...
             self.admin = msg.sender
-            ... 
+            ...
         ```
 
-    === "Example" 
+    === "Example"
 
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This example returns the current `admin` of the contract.
 
@@ -808,7 +808,7 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
         ```vyper
         event SetAdmin:
             admin: address
-        
+
         admin: public(address)
 
         @external
@@ -850,7 +850,7 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
             """
             init_supply: uint256 = INITIAL_SUPPLY * 10 ** _decimals
             self.name = _name
-            
+
             ...
         ```
 
@@ -869,7 +869,7 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
     Getter of the token symbol. Symbol of the token can be changed by calling the **`set_name`** function.
 
     Returns: token symbol (`String[32]`).
-    
+
     ??? quote "Source code"
 
         ```vyper
@@ -883,10 +883,10 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
             @param _symbol Token symbol
             @param _decimals Number of decimals for token
             """
-            ... 
+            ...
 
             self.symbol = _symbol
-            
+
             ...
         ```
 
@@ -961,7 +961,7 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
         ```vyper
         event SetMinter:
             minter: address
-        
+
         minter: public(address)
 
         @external
@@ -985,8 +985,8 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
         >>> CRV.set_minter("0x0000000000000000000000000000000000000000")
         ```
 
-### `avaliable_supply`
-!!! description "`CRV.avaliably_supply() -> uint256`"
+### `available_supply`
+!!! description "`CRV.available_supply() -> uint256`"
 
     Getter for the current number of CRV tokens - claimed of unclaimed - in existence.
 
@@ -1050,7 +1050,7 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
 
     Getter of the decimals of the token.
 
-    Returns: decimals (`uint256`).    
+    Returns: decimals (`uint256`).
 
     ??? quote "Source code"
 
@@ -1101,17 +1101,17 @@ Since the [`CurveOwnershipAgent`](https://etherscan.io/address/0x40907540d8a6C65
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } This ex
 
         <div class="highlight">
-        <pre><code>>>> CRV.balanceOf(<input id="balanceOfAddress" 
-        type="text" 
-        value="0xd061D61a4d941c39E5453435B6345Dc261C2fcE0" 
-        style="width: 300px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> CRV.balanceOf(<input id="balanceOfAddress"
+        type="text"
+        value="0xd061D61a4d941c39E5453435B6345Dc261C2fcE0"
+        style="width: 300px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>)
         <span id="balanceOfOutput">>>> Loading...</span></code></pre>
         </div>

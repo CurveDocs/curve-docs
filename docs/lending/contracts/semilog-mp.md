@@ -21,7 +21,7 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
 
 *A graph to display the interplay between `min_rate`, `max_rate`, and market utilization:[^1]*
 
-[^1]: For simplicity, the minimum input value is set at 1% and the maximum at 100%. In reality, these values can range from 0.01% to 1000%. 
+[^1]: For simplicity, the minimum input value is set at 1% and the maximum at 100%. In reality, these values can range from 0.01% to 1000%.
 
 <style>
     #graphContainer {
@@ -176,7 +176,7 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
                                 return [`Rate: ${rate}%`, `Utilization: ${utilization}%`];
                             },
                             labelPointStyle: function() {
-                                return {    
+                                return {
                                     pointStyle: 'circle',
                                     rotation: 0,
                                     boxWidth: 0, // Set boxWidth to 0 to remove the square
@@ -242,7 +242,7 @@ $$\text{rate} = \text{rate}_{\text{min}} \cdot \left(\frac{\text{rate}_{\text{ma
 
 ## **Rates**
 
-**The rate values are based on 1e18 and NOT annualized.** 
+**The rate values are based on 1e18 and NOT annualized.**
 
 *To calculate the Borrow APR:*
 
@@ -418,7 +418,7 @@ Rate calculations occur within the MonetaryPolicy contract. The rate is regularl
             @external
             def rate_write(_for: address = msg.sender) -> uint256:
                 return self.calculate_rate(_for, 0, 0)
-                
+
             @internal
             @view
             def calculate_rate(_for: address, d_reserves: int256, d_debt: int256) -> uint256:
@@ -466,7 +466,7 @@ Rates within the MonetaryPolicy contract can only be **changed by the `admin` of
 
     !!!guard "Guarded Methods"
         This function can only be called by the `admin` of `FACTORY`.
-    
+
     Function to set new values for `min_rate` and `max_rate`, and consequently `log_min_rate` and `log_max_rate` as well. New rate values can be chosen quite deliberately, but need to be **within the bounds of `MIN_RATE` and `MAX_RATE`**:
 
     - `MIN_RATE = 31709791 (0.01%)`
@@ -565,7 +565,7 @@ Rates within the MonetaryPolicy contract can only be **changed by the `admin` of
     Returns: maximum interest rate (`uint256`).
 
     ??? quote "Source code"
-    
+
         === "SemilogMonetaryPolicy.vy"
 
             ```vyper
@@ -599,7 +599,7 @@ Rates within the MonetaryPolicy contract can only be **changed by the `admin` of
     Returns: semi-log minimum rate (`int256`).
 
     ??? quote "Source code"
-    
+
         === "SemilogMonetaryPolicy.vy"
 
             ```vyper

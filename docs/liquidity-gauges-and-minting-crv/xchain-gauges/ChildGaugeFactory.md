@@ -4,7 +4,7 @@ The `ChildGaugeFactory` contract is used to deploy liquidity gauges on the child
 
 
 ???+ vyper "`ChildGaugeFactory.vy`"
-    The source code for the `ChildGaugeFactory.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/blob/master/contracts/ChildGaugeFactory.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10` 
+    The source code for the `ChildGaugeFactory.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/curve-xchain-factory/blob/master/contracts/ChildGaugeFactory.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.3.10`
 
     A full list of all deployed `ChildGaugeFactory` contracts can be found [here](../../deployments/crosschain.md#childgauge-factory).
 
@@ -231,7 +231,7 @@ When claiming emissions via `claim` or `claim_many`, and `is_mirrored` is set to
                 _new_total: uint256
 
             WEEK: constant(uint256) = 86400 * 7
-            
+
             crv: public(ERC20)
 
             root_factory: public(address)
@@ -725,7 +725,7 @@ The `root_factory` and `root_implementation` variables store the addresses of th
     Getter for the root implementation address.
 
     Returns: `RootGauge` implementation contract on Ethereum (`address`).
-    
+
     ??? quote "Source code"
 
         === "ChildGaugeFactory.vy"
@@ -1138,7 +1138,7 @@ The `crv` and `voting_escrow` variables store the addresses of the CRV token and
         >>> ChildGaugeFactory.call_proxy()
         '0x0000000000000000000000000000000000000000'
 
-        >>> ChildGaugeFactory.set_call_proxy('0x1234567890123456789012345678901234567894')  
+        >>> ChildGaugeFactory.set_call_proxy('0x1234567890123456789012345678901234567894')
 
         >>> ChildGaugeFactory.call_proxy()
         '0x1234567890123456789012345678901234567894'

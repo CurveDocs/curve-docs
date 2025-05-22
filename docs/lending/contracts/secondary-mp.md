@@ -47,7 +47,7 @@ Alpha ($\alpha$) and Beta ($\beta$) essentially determine how the borrow rate sc
 
 - Alpha ($\alpha$): This is the ratio of the borrowing rate to the AMM rate at 0% utilization. If you set $\alpha$ to 1%, it means that when the utilization is 0%, the borrowing rate will be 1% of the rate provided by the AMM.
 - Beta ($\beta$): This is the ratio of the borrowing rate to the AMM rate at 100% utilization. If you set $\beta$ to 50%, it means that when the utilization is 100%, the borrowing rate will be 50% of the rate provided by the AMM.
- 
+
 
 !!!info "Setting Parameters"
     `target_utilization`, `low_ratio`, and `high_ratio` are set when deploying the contract. The values can later only be changed by the `admin` of the contract. For more, see here: [`set_parameters`](#set_parameters).
@@ -60,7 +60,7 @@ Alpha ($\alpha$) and Beta ($\beta$) essentially determine how the borrow rate sc
 
 ## **Rates**
 
-**The rate values are based on 1e18 and NOT annualized.** 
+**The rate values are based on 1e18 and NOT annualized.**
 
 *To calculate the Borrow APR (annualized):*
 
@@ -94,7 +94,7 @@ Rate calculations occur within the MonetaryPolicy contract. The rate is regularl
 
         @external
         def rate_write(_for: address = msg.sender) -> uint256:
-            return self.calculate_rate(_for, 0, 0)  
+            return self.calculate_rate(_for, 0, 0)
 
         @internal
         @view
@@ -566,6 +566,3 @@ For parameter calculations see [here](#parameters).
         >>> MonetaryPolicy.FACTORY()
         '0xeA6876DDE9e3467564acBeE1Ed5bac88783205E0'
         ```
-
-
-

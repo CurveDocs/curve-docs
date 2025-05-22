@@ -7,7 +7,7 @@ The `CowSwapBurner` is an essential component of the fee burning architecture, d
 
     The `CowSwapBurner` is only deployed on Ethereum and Gnosis so far, as CowSwap is only deployed on these chains.[^1]
 
-    - :logos-ethereum: Ethereum at [`0xC0fC3dDfec95ca45A0D2393F518D3EA1ccF44f8b`](https://etherscan.io/address/0xC0fC3dDfec95ca45A0D2393F518D3EA1ccF44f8b) 
+    - :logos-ethereum: Ethereum at [`0xC0fC3dDfec95ca45A0D2393F518D3EA1ccF44f8b`](https://etherscan.io/address/0xC0fC3dDfec95ca45A0D2393F518D3EA1ccF44f8b)
     - :logos-gnosis: Gnosis at [`0x566b9F24200A9B51b76792D4e81B569AF27eda83`](https://gnosisscan.io/address/0x566b9F24200A9B51b76792D4e81B569AF27eda83)
 
     [^1]: CowSwap recently deployed on Arbitrum. In the future, a new burner contract will be deployed on Arbitrum as well.
@@ -24,7 +24,7 @@ The old system used various kinds of burners with hardcoded routes, which often 
 
 ## **Conditional Orders**
 
-Conditional CowSwap orders are automatically created for each token to be burned using the `burn` function. This function is not directly externally callable by users through this contract; instead, it is called when the `collect` function within the `FeeCollector` contract is invoked. Additionally, there is a caller fee to incentivize this contract call.
+Conditional CoWSwap orders are automatically created for each token to be burned using the `burn` function. This function is not directly externally callable by users through this contract; instead, it is called when the `collect` function within the `FeeCollector` contract is invoked. Additionally, there is a caller fee to incentivize this contract call.
 
 
 ```vyper
@@ -107,8 +107,8 @@ composable_cow.create(ConditionalOrderParams({
     Getter for the current order parameters of a token.
 
     Returns: GPv2Order_Data consisting of:
-    
-    - sellToken: `ERC20` 
+
+    - sellToken: `ERC20`
     - buyToken: `ERC20`
     - receiver: `address`
     - sellAmount: `uint256`
@@ -260,7 +260,7 @@ composable_cow.create(ConditionalOrderParams({
     | `_sender`         | `address`                  | `msg.sender` context calling `isValidSignature` |
     | `_ctx`            | `bytes32`                  | Execution context                               |
     | `_static_input`   | `Bytes[STATIC_DATA_LEN]`   | `sellToken` encoded as `bytes(Bytes[20])`       |
-    | `_offchain_input` | `Bxtes[OFFCHAIN_DATA_LEN]` | Not used, zero-length bytes                     |
+    | `_offchain_input` | `Bytes[OFFCHAIN_DATA_LEN]` | Not used, zero-length bytes                     |
 
     ??? quote "Source code"
 
@@ -351,7 +351,7 @@ composable_cow.create(ConditionalOrderParams({
     | `_owner`            | `address`                  | Owner of conditional order (self)                      |
     | `_sender`           | `address`                  | `msg.sender` context calling `isValidSignature`        |
     | `_hash`             | `bytes32`                  | `EIP-712` order digest                                 |
-    | `_domain_seperator` | `bytes32`                  | `EIP-712` domain separator                             |
+    | `_domain_separator` | `bytes32`                  | `EIP-712` domain separator                             |
     | `_ctx`              | `bytes32`                  | Execution context                                      |
     | `_static_input`     | `Bytes[STATIC_DATA_LEN]`   | ConditionalOrder's staticData (coin address)           |
     | `_offchain_input`   | `Bytes[OFFCHAIN_DATA_LEN]` | Conditional order type-specific data NOT known at time of creation for a specific discrete order (or zero-length bytes if not applicable).  |
@@ -468,7 +468,7 @@ composable_cow.create(ConditionalOrderParams({
 
     Getter for the minimum amount of target token to be bought in an order. This value ensure that each executed order meets a certain minimum value. This variable can be changed by the `owner` of the `FeeCollector` using the [`set_target_threshold`](#set_target_threshold) function. Due to the gas efficiency of L2's, the value can be set much lower e.g. on Gnosis than on Ethereum.[^3]
 
-    [^3]: The minimum target threshold value on Gnosis is `1 (1e18)`, on Ethereum `50 (50 * 1e18)`. 
+    [^3]: The minimum target threshold value on Gnosis is `1 (1e18)`, on Ethereum `50 (50 * 1e18)`.
 
     Returns: target threshold (`uint256`).
 
@@ -553,7 +553,7 @@ Additionally, there is a recover function which lets the `owner` or `emergency_o
 
     Function to push the entire balance of the target coin to the `FeeCollector`. This function can be called externally, but is also called directly by the `FeeCollector` before the target coins are forwarded to the hooker contract using the `forward` function.
 
-    Returns: amout of target coins pushed (`uint256`).
+    Returns: amount of target coins pushed (`uint256`).
 
     ??? quote "Source code"
 
@@ -851,7 +851,7 @@ SUPPORTED_INTERFACES: constant(bytes4[4]) = [
 ### `VERSION`
 !!! description "`CowSwapBurner.VERSION() -> String[20]: view`"
 
-    Getter for the burner version. 
+    Getter for the burner version.
 
     Returns: version (`String[20]`)
 

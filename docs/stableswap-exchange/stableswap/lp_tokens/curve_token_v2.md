@@ -1,4 +1,4 @@
-The implementation for a Curve Token V2 may be viewed on 
+The implementation for a Curve Token V2 may be viewed on
 [GitHub](https://github.com/curvefi/curve-contract/blob/master/contracts/tokens/CurveTokenV2.vy).
 
 !!! note
@@ -13,7 +13,7 @@ The implementation for a Curve Token V2 may be viewed on
 
 !!! warning
 
-    For Curve LP Tokens V1 and V2, non-zero to non-zero approvals are prohibited. Instead, after every non-zero approval, 
+    For Curve LP Tokens V1 and V2, non-zero to non-zero approvals are prohibited. Instead, after every non-zero approval,
     the allowance for the spender must be reset to `0`.
 
 ### `CurveToken.minter`
@@ -38,9 +38,9 @@ The implementation for a Curve Token V2 may be viewed on
             self.minter = msg.sender
             log Transfer(ZERO_ADDRESS, msg.sender, init_supply)
         ```
-        
+
     === "Example"
-    
+
         ```shell
         >>> lp_token.minter()
         ""
@@ -66,9 +66,9 @@ The implementation for a Curve Token V2 may be viewed on
             self.name = _name
             self.symbol = _symbol
         ```
-        
+
     === "Example"
-    
+
         ```shell
         >>> lp_token.minter()
         todo: ""
@@ -78,7 +78,7 @@ The implementation for a Curve Token V2 may be viewed on
 
 !!! description "`CurveToken.mint(_to: address, _value: uint256) → bool`"
 
-    Mint an amount of the token and assign it to an account. This encapsulates the modification of balances such that 
+    Mint an amount of the token and assign it to an account. This encapsulates the modification of balances such that
     the proper events are emitted. Returns `True` if not reverted.
 
     | Input      | Type   | Description |
@@ -107,9 +107,9 @@ The implementation for a Curve Token V2 may be viewed on
             log Transfer(ZERO_ADDRESS, _to, _value)
             return True
         ```
-        
+
     === "Example"
-    
+
         ```shell
         >>> lp_token.mint()
         todo: ""
@@ -140,16 +140,16 @@ The implementation for a Curve Token V2 may be viewed on
             """
             assert msg.sender == self.minter
             assert _to != ZERO_ADDRESS
-        
+
             self.total_supply -= _value
             self.balanceOf[_to] -= _value
             log Transfer(_to, ZERO_ADDRESS, _value)
-        
+
             return True
         ```
-        
+
     === "Example"
-    
+
         ```shell
         >>> lp_token.burnFrom()
         todo: ""

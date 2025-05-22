@@ -20,7 +20,7 @@ This section hosts useful resources for the various components of the Curve ecos
 ## **Curve Stablecoin (crvUSD)**
 - https://crvusd-rate.0xreviews.xyz/
 - https://twitter.com/definikola/status/1674430800107044871
-- https://mirror.xyz/0x290101596c9f85eB7194f6090a8c94fF5AAa32ca/esqF1zwoaZ4ZSIjt-faZZiuKwLLw34nD0SGlqD2fZ6Q 
+- https://mirror.xyz/0x290101596c9f85eB7194f6090a8c94fF5AAa32ca/esqF1zwoaZ4ZSIjt-faZZiuKwLLw34nD0SGlqD2fZ6Q
 - https://mirror.xyz/albertlin.eth/H0m3nyq65anotTWhTdWDIWEfMPOofNPy-0qyARYXNF4
 - https://www.curve.wiki/post/from-uniswap-v3-to-crvusd-llamma-%E8%8B%B1%E6%96%87%E7%89%88
 - https://www.youtube.com/watch?v=p5G9injrXk8&t=2602s

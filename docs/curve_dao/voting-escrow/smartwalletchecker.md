@@ -48,7 +48,7 @@ Once this happens, the previously approved smart contracts will **not be able to
         function approveWallet(address _wallet) public {
             require(msg.sender == dao, "!dao");
             wallets[_wallet] = true;
-        
+
             emit ApproveWallet(_wallet);
         }
         ```
@@ -81,7 +81,7 @@ Once this happens, the previously approved smart contracts will **not be able to
         function revokeWallet(address _wallet) external {
             require(msg.sender == dao, "!dao");
             wallets[_wallet] = false;
-                
+
             emit RevokeWallet(_wallet);
         }
         ```
@@ -139,7 +139,7 @@ Once this happens, the previously approved smart contracts will **not be able to
 
         ```solidity
         address public dao
-        
+
         constructor(address _dao) public {
             dao = _dao;
             wallets[0xF147b8125d2ef93FB6965Db97D6746952a133934] = true;

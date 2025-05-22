@@ -52,7 +52,7 @@ To calculate this time-weighted average, the `RewardsHandler` uses a `TWA module
             ratio in the vault.
             """
             # get the circulating supply from a helper contract.
-            # supply in circulation = controllers' debt + peg keppers' debt
+            # supply in circulation = controllers' debt + peg keepers' debt
             circulating_supply: uint256 = staticcall self.stablecoin_lens.circulating_supply()
 
             # obtain the supply of crvUSD contained in the vault by checking its totalAssets.
@@ -178,11 +178,11 @@ Snapshots can only be taken once a minimum time interval ([`min_snapshot_dt_seco
 *Snapshots are taken by calling the [`take_snapshot`](#take_snapshot) function. When this function is called, the snapshot value is computed and stored as follows:*
 
 1. **Determine the circulating supply of crvUSD.** Directly calling `crvUSD.totalSupply()` is not feasible because some crvUSD is minted to specific contracts and is not part of the circulating supply (e.g., unborrowed crvUSD held by Controllers, crvUSD allocated to PegKeepers, or crvUSD assigned to the [`FlashLender`](../crvUSD/flashlender.md)). Therefore, the [`StablecoinLens`](./StablecoinLens.md) contract is used to obtain the actual circulating supply of crvUSD.
-   
+
 2. **Obtain the amount of crvUSD held in the Vault** by calling `Vault.totalAssets()`, which excludes rewards that have not yet been distributed.
 
 3. **Calculate the supply ratio** as follows:
-   
+
     $$\text{SupplyRatio} = \frac{\text{SupplyInVault} \times 10^{18}}{\text{CirculatingSupply}}$$
 
 4. **Store the calculated supply ratio** and the timestamp at which the snapshot was taken in the dynamic array.
@@ -195,9 +195,9 @@ Snapshots can only be taken once a minimum time interval ([`min_snapshot_dt_seco
     !!!warning "MEVing Snapshot Taking"
         There's no point in MEVing this snapshot as the rewards distribution rate can always be reduced (if a malicious actor inflates the value of the snapshot) or the minimum amount of rewards can always be increased (if a malicious actor deflates the value of the snapshot).
 
-    Function to take a snapshot of the current deposited supply ratio in the Vault. This function is fully permissionless and can be called by anyone. Snapshots are used to compute the time-weighted average of the TVL to decide on the amount of rewards to ask for (weight). 
-    
-    Minimum time inbetween snapshots is defined by `min_snapshot_dt_seconds`. The maximum number of snapshots is set to `10^18`, which is equivalent to 31.7 billion years if a snapshot were to be taken every second.
+    Function to take a snapshot of the current deposited supply ratio in the Vault. This function is fully permissionless and can be called by anyone. Snapshots are used to compute the time-weighted average of the TVL to decide on the amount of rewards to ask for (weight).
+
+    Minimum time in-between snapshots is defined by `min_snapshot_dt_seconds`. The maximum number of snapshots is set to `10^18`, which is equivalent to 31.7 billion years if a snapshot were to be taken every second.
 
     Emits: `SnapshotTaken` event.
 
@@ -227,7 +227,7 @@ Snapshots can only be taken once a minimum time interval ([`min_snapshot_dt_seco
                 ratio in the vault.
                 """
                 # get the circulating supply from a helper contract.
-                # supply in circulation = controllers' debt + peg keppers' debt
+                # supply in circulation = controllers' debt + peg keepers' debt
                 circulating_supply: uint256 = staticcall self.stablecoin_lens.circulating_supply()
 
                 # obtain the supply of crvUSD contained in the vault by checking its totalAssets.
@@ -391,21 +391,21 @@ Snapshots can only be taken once a minimum time interval ([`min_snapshot_dt_seco
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } In this example, the address and weight of a receiver at a specific index is returned.
 
         <div class="highlight">
-        <pre><code>>>> RewardsHandler.snapshots(<input id="snapshotIndex" type="number" value="0" min="0" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> RewardsHandler.snapshots(<input id="snapshotIndex" type="number" value="0" min="0"
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchSnapshot()"/>)
         <span id="snapshotOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -543,7 +543,7 @@ The value is calculated over a specified time window defined by `twa_window` by 
             twa_window: public(uint256)  # Time window in seconds for TWA calculation
             last_snapshot_timestamp: public(uint256)  # Timestamp of the last snapshot
 
-            
+
             struct Snapshot:
                 tracked_value: uint256
                 timestamp: uint256
@@ -850,7 +850,7 @@ The value is calculated over a specified time window defined by `twa_window` by 
 
 # **Reward Distribution**
 
-Rewards are distributed to the Vault thought the `RewardsHandler` contract using a simple `process_rewards` function. This function permnissionlessly lets anyone distribute rewards to the Savings Vault.
+Rewards are distributed to the Vault thought the `RewardsHandler` contract using a simple `process_rewards` function. This function permissionlessly lets anyone distribute rewards to the Savings Vault.
 
 ### `process_rewards`
 !!! description "`RewardsHandler.process_rewards()`"
@@ -876,7 +876,7 @@ Rewards are distributed to the Vault thought the `RewardsHandler` contract using
                 if take_snapshot:
                     self._take_snapshot()
 
-                # prevent the rewards from being distributed untill the distribution rate
+                # prevent the rewards from being distributed until the distribution rate
                 # has been set
                 assert (staticcall vault.profitMaxUnlockTime() != 0), "rewards should be distributed over time"
 
@@ -923,16 +923,16 @@ Rewards are distributed to the Vault thought the `RewardsHandler` contract using
             @internal
             def _process_report(strategy: address) -> (uint256, uint256):
                 """
-                Processing a report means comparing the debt that the strategy has taken 
-                with the current amount of funds it is reporting. If the strategy owes 
-                less than it currently has, it means it has had a profit, else (assets < debt) 
+                Processing a report means comparing the debt that the strategy has taken
+                with the current amount of funds it is reporting. If the strategy owes
+                less than it currently has, it means it has had a profit, else (assets < debt)
                 it has had a loss.
 
-                Different strategies might choose different reporting strategies: pessimistic, 
+                Different strategies might choose different reporting strategies: pessimistic,
                 only realised P&L, ... The best way to report depends on the strategy.
 
-                The profit will be distributed following a smooth curve over the vaults 
-                profit_max_unlock_time seconds. Losses will be taken immediately, first from the 
+                The profit will be distributed following a smooth curve over the vaults
+                profit_max_unlock_time seconds. Losses will be taken immediately, first from the
                 profit buffer (avoiding an impact in pps), then will reduce pps.
 
                 Any applicable fees are charged and distributed during the report as well
@@ -946,12 +946,12 @@ Rewards are distributed to the Vault thought the `RewardsHandler` contract using
 
                 total_assets: uint256 = 0
                 current_debt: uint256 = 0
-                
+
                 if strategy != self:
                     # Make sure we have a valid strategy.
                     assert self.strategies[strategy].activation != 0, "inactive strategy"
 
-                    # Vault assesses profits using 4626 compliant interface. 
+                    # Vault assesses profits using 4626 compliant interface.
                     # NOTE: It is important that a strategies `convertToAssets` implementation
                     # cannot be manipulated or else the vault could report incorrect gains/losses.
                     strategy_shares: uint256 = IStrategy(strategy).balanceOf(self)
@@ -963,7 +963,7 @@ Rewards are distributed to the Vault thought the `RewardsHandler` contract using
                     # Accrue any airdropped `asset` into `total_idle`
                     total_assets = ERC20(_asset).balanceOf(self)
                     current_debt = self.total_idle
-                
+
                 gain: uint256 = 0
                 loss: uint256 = 0
 
@@ -1032,7 +1032,7 @@ Rewards are distributed to the Vault thought the `RewardsHandler` contract using
                 total_locked_shares: uint256 = self.balance_of[self]
                 # Get the desired end amount of shares after all accounting.
                 ending_supply: uint256 = total_supply + shares_to_lock - shares_to_burn - self._unlocked_shares()
-                
+
                 # If we will end with more shares than we have now.
                 if ending_supply > total_supply:
                     # Issue the difference.
@@ -1069,7 +1069,7 @@ Rewards are distributed to the Vault thought the `RewardsHandler` contract using
                         # Add in any refunds since it is now idle.
                         current_debt = unsafe_add(current_debt, total_refunds)
                         self.total_idle = current_debt
-                        
+
                 # Or record any reported loss
                 elif loss > 0:
                     current_debt = unsafe_sub(current_debt, loss)
@@ -1080,7 +1080,7 @@ Rewards are distributed to the Vault thought the `RewardsHandler` contract using
                         # Add in any refunds since it is now idle.
                         current_debt = unsafe_add(current_debt, total_refunds)
                         self.total_idle = current_debt
-                    
+
                 # Issue shares for fees that were calculated above if applicable.
                 if total_fees_shares > 0:
                     # Accountant fees are (total_fees - protocol_fees).
@@ -1096,7 +1096,7 @@ Rewards are distributed to the Vault thought the `RewardsHandler` contract using
                     previously_locked_time: uint256 = 0
                     _full_profit_unlock_date: uint256 = self.full_profit_unlock_date
                     # Check if we need to account for shares still unlocking.
-                    if _full_profit_unlock_date > block.timestamp: 
+                    if _full_profit_unlock_date > block.timestamp:
                         # There will only be previously locked shares if time remains.
                         # We calculate this here since it will not occur every time we lock shares.
                         previously_locked_time = (total_locked_shares - shares_to_lock) * (_full_profit_unlock_date - block.timestamp)
@@ -1110,10 +1110,10 @@ Rewards are distributed to the Vault thought the `RewardsHandler` contract using
                     # Update the last profitable report timestamp.
                     self.last_profit_update = block.timestamp
                 else:
-                    # NOTE: only setting this to the 0 will turn in the desired effect, 
+                    # NOTE: only setting this to the 0 will turn in the desired effect,
                     # no need to update profit_unlocking_rate
                     self.full_profit_unlock_date = 0
-                
+
                 # Record the report of profit timestamp.
                 self.strategies[strategy].last_report = block.timestamp
 
@@ -1365,7 +1365,7 @@ For a detailed explanation of how to use the access control module, please refer
     !!!guard "Guarded Method by Snekmate 🐍"
         This contract makes use of a Snekmate module to manage roles and permissions. This specific function is restricted to the `RATE_MANAGER` role.
 
-    Function to set the distribution time for the rewards. This is the time it takes to stream the rewards. Setting this value to 0 will immediately distribute all the rewards. If the value is set to a number greater than 0, the rewards will be distributed over the specified number of seconds. 
+    Function to set the distribution time for the rewards. This is the time it takes to stream the rewards. Setting this value to 0 will immediately distribute all the rewards. If the value is set to a number greater than 0, the rewards will be distributed over the specified number of seconds.
 
     Emits: `UpdateProfitMaxUnlockTime` and `StrategyReported` events from the `Vault` contract.
 
@@ -1438,7 +1438,7 @@ For a detailed explanation of how to use the access control module, please refer
                     We only need to update locking period if setting to 0,
                     since the current period will use the old rate and on the next
                     report it will be reset with the new unlocking time.
-                
+
                     Setting to 0 will cause any currently locked profit to instantly
                     unlock and an immediate increase in the vaults Price Per Share.
 
@@ -1478,16 +1478,16 @@ For a detailed explanation of how to use the access control module, please refer
             @internal
             def _process_report(strategy: address) -> (uint256, uint256):
                 """
-                Processing a report means comparing the debt that the strategy has taken 
-                with the current amount of funds it is reporting. If the strategy owes 
-                less than it currently has, it means it has had a profit, else (assets < debt) 
+                Processing a report means comparing the debt that the strategy has taken
+                with the current amount of funds it is reporting. If the strategy owes
+                less than it currently has, it means it has had a profit, else (assets < debt)
                 it has had a loss.
 
-                Different strategies might choose different reporting strategies: pessimistic, 
+                Different strategies might choose different reporting strategies: pessimistic,
                 only realised P&L, ... The best way to report depends on the strategy.
 
-                The profit will be distributed following a smooth curve over the vaults 
-                profit_max_unlock_time seconds. Losses will be taken immediately, first from the 
+                The profit will be distributed following a smooth curve over the vaults
+                profit_max_unlock_time seconds. Losses will be taken immediately, first from the
                 profit buffer (avoiding an impact in pps), then will reduce pps.
 
                 Any applicable fees are charged and distributed during the report as well
@@ -1501,12 +1501,12 @@ For a detailed explanation of how to use the access control module, please refer
 
                 total_assets: uint256 = 0
                 current_debt: uint256 = 0
-                
+
                 if strategy != self:
                     # Make sure we have a valid strategy.
                     assert self.strategies[strategy].activation != 0, "inactive strategy"
 
-                    # Vault assesses profits using 4626 compliant interface. 
+                    # Vault assesses profits using 4626 compliant interface.
                     # NOTE: It is important that a strategies `convertToAssets` implementation
                     # cannot be manipulated or else the vault could report incorrect gains/losses.
                     strategy_shares: uint256 = IStrategy(strategy).balanceOf(self)
@@ -1518,7 +1518,7 @@ For a detailed explanation of how to use the access control module, please refer
                     # Accrue any airdropped `asset` into `total_idle`
                     total_assets = ERC20(_asset).balanceOf(self)
                     current_debt = self.total_idle
-                
+
                 gain: uint256 = 0
                 loss: uint256 = 0
 
@@ -1587,7 +1587,7 @@ For a detailed explanation of how to use the access control module, please refer
                 total_locked_shares: uint256 = self.balance_of[self]
                 # Get the desired end amount of shares after all accounting.
                 ending_supply: uint256 = total_supply + shares_to_lock - shares_to_burn - self._unlocked_shares()
-                
+
                 # If we will end with more shares than we have now.
                 if ending_supply > total_supply:
                     # Issue the difference.
@@ -1624,7 +1624,7 @@ For a detailed explanation of how to use the access control module, please refer
                         # Add in any refunds since it is now idle.
                         current_debt = unsafe_add(current_debt, total_refunds)
                         self.total_idle = current_debt
-                        
+
                 # Or record any reported loss
                 elif loss > 0:
                     current_debt = unsafe_sub(current_debt, loss)
@@ -1635,7 +1635,7 @@ For a detailed explanation of how to use the access control module, please refer
                         # Add in any refunds since it is now idle.
                         current_debt = unsafe_add(current_debt, total_refunds)
                         self.total_idle = current_debt
-                    
+
                 # Issue shares for fees that were calculated above if applicable.
                 if total_fees_shares > 0:
                     # Accountant fees are (total_fees - protocol_fees).
@@ -1651,7 +1651,7 @@ For a detailed explanation of how to use the access control module, please refer
                     previously_locked_time: uint256 = 0
                     _full_profit_unlock_date: uint256 = self.full_profit_unlock_date
                     # Check if we need to account for shares still unlocking.
-                    if _full_profit_unlock_date > block.timestamp: 
+                    if _full_profit_unlock_date > block.timestamp:
                         # There will only be previously locked shares if time remains.
                         # We calculate this here since it will not occur every time we lock shares.
                         previously_locked_time = (total_locked_shares - shares_to_lock) * (_full_profit_unlock_date - block.timestamp)
@@ -1665,10 +1665,10 @@ For a detailed explanation of how to use the access control module, please refer
                     # Update the last profitable report timestamp.
                     self.last_profit_update = block.timestamp
                 else:
-                    # NOTE: only setting this to the 0 will turn in the desired effect, 
+                    # NOTE: only setting this to the 0 will turn in the desired effect,
                     # no need to update profit_unlocking_rate
                     self.full_profit_unlock_date = 0
-                
+
                 # Record the report of profit timestamp.
                 self.strategies[strategy].last_report = block.timestamp
 
@@ -1804,7 +1804,7 @@ For a detailed explanation of how to use the access control module, please refer
             @external
             def set_minimum_weight(new_minimum_weight: uint256):
                 """
-                @notice Update the minimum weight that the the vault will ask for.
+                @notice Update the minimum weight that the vault will ask for.
 
                 @dev This function can be used to prevent the rewards requested from being
                 manipulated (i.e. MEV twa snapshots to obtain lower APR for the vault). Setting
@@ -2078,21 +2078,21 @@ For a detailed explanation of how to use the access control module, please refer
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } In this example, the address and weight of a receiver at a specific index is returned.
 
         <div class="highlight">
-        <pre><code>>>> RewardsHandler.supportsInterface(<input id="supportedInterface" type="text" value="0xA1AAB33F" 
-        style="width: 80px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> RewardsHandler.supportsInterface(<input id="supportedInterface" type="text" value="0xA1AAB33F"
+        style="width: 80px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchSupportedInterface()"/>)
         <span id="supportedInterfaceOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -2106,12 +2106,12 @@ For a detailed explanation of how to use the access control module, please refer
     !!!guard "Guarded Method by Snekmate 🐍"
         This contract makes use of a Snekmate module to manage roles and permissions. This specific function is restricted to the `RECOVERY_MANAGER` role.
 
-    Function to recover funds accidently sent to the contract. This function can not recover `crvUSD` tokens as any `crvUSD` tokens sent to the contract are considered as donations and will be distributed to stakers.
+    Function to recover funds accidentally sent to the contract. This function can not recover `crvUSD` tokens as any `crvUSD` tokens sent to the contract are considered as donations and will be distributed to stakers.
 
     | Input      | Type      | Description                            |
     | ---------- | --------- | -------------------------------------- |
     | `token`    | `IERC20`  | Address of the token to recover        |
-    | `receiver` | `address` | Receier address of the recovered funds |
+    | `receiver` | `address` | Receiver address of the recovered funds |
 
     ??? quote "Source code"
 

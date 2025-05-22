@@ -43,14 +43,14 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
 
     Consider the following receivers and their respective weight caps:
 
-    - `receiver1` has a **dynamic** weight with a cap of 10% 
+    - `receiver1` has a **dynamic** weight with a cap of 10%
     - `receiver2` has a **static** weight of 10%
     - `receiver3` has a **static** weight of 80%
 
     Due to the dynamic nature of `receiver1`'s weight, the actual weight is determined in the receiver contract based on different conditions (e.g. ratio of staked assets, etc.). If the receiver contract would ask for more than 10% of the total weight, the weight is ultimately capped at 10%. If he asks for less than 10%, the spare weight is then rolled over to the weight of the `excess_receiver` (in this case `receiver3`).
 
     As a result, the final weights are adjusted as follows:
-    
+
     - `receiver1` ends up with a weight of 8%
     - `receiver2` remains at 10%
     - `receiver3` receives an adjusted weight of 82%, which includes the 2% rolled over from `receiver1`.
@@ -64,13 +64,13 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
         IsDynamic["Dynamic weight?"]
         IsDynamic -->|Yes| DynamicCalc["Weight calculation in receiver contract"]
         IsDynamic -->|No| StaticWeight["Use weight from Receiver struct"]
-        
+
         DynamicCalc --> CheckCap["Returned weight<br>exceeds defined weight<br>in Receiver struct?"]
         CheckCap -->|Yes| CapWeight["Use defined weight<br>in Receiver struct"]
         CheckCap -->|No| UseWeight["Use actual dynamic weight"]
-        
+
         UseWeight --> RollOver["Roll over unused weight<br>to excess_receiver"]
-        
+
         style IsDynamic fill:#e6e6fa,stroke:#483d8b,stroke-width:2px
         style CheckCap fill:#e6e6fa,stroke:#483d8b,stroke-width:2px
         style DynamicCalc fill:#f5f5f5,stroke:#708090,stroke-width:1px
@@ -291,21 +291,21 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } In this example, the address and weight of a receiver at a specific index is returned.
 
         <div class="highlight">
-        <pre><code>>>> FeeSplitter.receivers(<input id="receiverIndex" type="number" value="0" min="0" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> FeeSplitter.receivers(<input id="receiverIndex" type="number" value="0" min="0"
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="fetchReceiver()"/>)
         <span id="receiverOutput"></span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -350,7 +350,7 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
 ### `excess_receiver`
 !!! description "`FeeSplitter.excess_receiver() -> address`"
 
-    Getter for the excess receiver. That is the last receiver address in [`receivers`](#receivers) and is the one that receives additional weight ontop of his on weight, if prior receivers with a dynamic weight allocate less than their cap (see this example at the top).
+    Getter for the excess receiver. That is the last receiver address in [`receivers`](#receivers) and is the one that receives additional weight on top of his on weight, if prior receivers with a dynamic weight allocate less than their cap (see this example at the top).
 
     Returns: excess receiver (`address`)
 
@@ -392,10 +392,10 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
     !!!guard "Guarded Method by [Snekmate 🐍](https://github.com/pcaversaccio/snekmate)"
         This contract makes use of a Snekmate module to manage roles and permissions. This specific function can only be called by the current `owner` of the contract.
 
-    Function to set receivers and their respective weights. New receveivers can not simply be added or removed from the exisiting array of receivers. One must include the current receivers in the array of `Receiver` structs. The weight is based on a scale of 1e5, meaning e.g. 100% corresponds to a weight value of 10000, and 50% would be a weight value of 5000. 
-    
-    The function will revert if a receiver address is `ZERO_ADDRESS`, if the weight is `0` or greater than `10000` (`MAX_BPS`), or if the sum of the weights of all receivers does not equal `10000` (100%). 
-    
+    Function to set receivers and their respective weights. New receivers can not simply be added or removed from the existing array of receivers. One must include the current receivers in the array of `Receiver` structs. The weight is based on a scale of 1e5, meaning e.g. 100% corresponds to a weight value of 10000, and 50% would be a weight value of 5000.
+
+    The function will revert if a receiver address is `ZERO_ADDRESS`, if the weight is `0` or greater than `10000` (`MAX_BPS`), or if the sum of the weights of all receivers does not equal `10000` (100%).
+
     Additionally, when adding receivers with dynamic weights, they must support the `DYNAMIC_WEIGHT_EIP165_ID` as specified in EIP-165 and implement a `weight()` function which returns the weight the receiver asks for.
 
     Emits: `SetReceivers`
@@ -460,7 +460,7 @@ If a weight is dynamic, the `weight` value in the struct acts as an upper cap. I
 
         ```shell
         >>> FeeSplitter.set_receivers([
-            ("0x70CCBE10F980d80b7eBaab7D2E3A73e87D67B775", 1000), 
+            ("0x70CCBE10F980d80b7eBaab7D2E3A73e87D67B775", 1000),
             ("0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00", 9000)])
         ```
 
@@ -516,7 +516,7 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
 
             ```python
             from contracts.interfaces import IController
-            
+
             controllers: public(DynArray[IController, MAX_CONTROLLERS])
 
             MAX_CONTROLLERS: constant(uint256) = 50
@@ -535,24 +535,24 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } In this example, a `Controller` address at a specific index is returned.
 
         <div class="highlight">
-        <pre><code>>>> FeeSplitter.controllers(<input id="controllerIndex" 
-        type="number" 
-        value="0" 
-        min="0" 
-        style="width: 50px; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #ccc; 
-            color: inherit; 
-            font-family: inherit; 
-            font-size: inherit; 
-            -moz-appearance: textfield;" 
+        <pre><code>>>> FeeSplitter.controllers(<input id="controllerIndex"
+        type="number"
+        value="0"
+        min="0"
+        style="width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            -moz-appearance: textfield;"
             oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>)
         <span id="controllerOutput">>>> Loading...</span></code></pre>
         </div>
 
         <style>
-        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
@@ -589,7 +589,7 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
             ```
 
         === "ControllerMulticlaim.vy"
-        
+
             ```python
             from contracts.interfaces import IController
 
@@ -601,15 +601,15 @@ The contract maintains a list of allowed `Controller` contracts from which fees 
         :material-information-outline:{ title='This interactive example fetches the output directly on-chain.' } In this example, it is checked if a specific `Controller` address is allowed to be claimed from.
 
         <div class="highlight">
-        <pre><code>>>> FeeSplitter.allowed_controllers(<input id="allowedControllerAddress" 
-        type="text" 
-        value="0xa920de414ea4ab66b97da1bfe9e6eca7d4219635" 
-        style="width: 330px; 
-               background: transparent; 
-               border: none; 
-               border-bottom: 1px solid #ccc; 
-               color: inherit; 
-               font-family: inherit; 
+        <pre><code>>>> FeeSplitter.allowed_controllers(<input id="allowedControllerAddress"
+        type="text"
+        value="0xa920de414ea4ab66b97da1bfe9e6eca7d4219635"
+        style="width: 330px;
+               background: transparent;
+               border: none;
+               border-bottom: 1px solid #ccc;
+               color: inherit;
+               font-family: inherit;
                font-size: inherit;"/>)
         <span id="allowedControllerOutput">>>> Loading...</span></code></pre>
         </div>
@@ -937,7 +937,7 @@ Ownership of the contract is managed using the [`ownable.vy`](https://github.com
 
     === "Example"
 
-        In this example, the ownership of the contract is transferred to a new address. The ownership is transfered from the Curve DAO to our overlord Vitalik Buterin.
+        In this example, the ownership of the contract is transferred to a new address. The ownership is transferred from the Curve DAO to our overlord Vitalik Buterin.
 
         ```shell
         >>> FeeSplitter.owner()
@@ -1071,7 +1071,7 @@ Ownership of the contract is managed using the [`ownable.vy`](https://github.com
 
     Getter for the version of the contract.
 
-    Returns: version (`String[8]`). 
+    Returns: version (`String[8]`).
 
     ??? quote "Source code"
 

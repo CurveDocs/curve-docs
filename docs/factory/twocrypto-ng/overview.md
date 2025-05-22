@@ -1,11 +1,11 @@
 <h1>Pool Factory: Overview</h1>
 
-The TwoCrypto-NG Factory allows the permissionless deployment of two-coin volatile asset pools, as well as gauges. **The liquidity pool and LP token share the same contract.**
+The Twocrypto-NG Factory allows the permissionless deployment of two-coin volatile asset pools, as well as gauges. **The liquidity pool and LP token share the same contract.**
 
 Additionally, the Factory contract is the direct admin and fee receiver of all pools. In turn, the Factory is controlled by the CurveDAO.
 
 !!!deploy "Contract Source & Deployment"
-    Source code for the Factory is available on [Github](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/CurveTwocryptoFactory.vy).   
+    Source code for the Factory is available on [GitHub](https://github.com/curvefi/twocrypto-ng/blob/main/contracts/main/TwocryptoFactory.vy).
     A full list of all deployments can be found [here](../../references/deployed-contracts.md#twocrypto-ng).
 
 
@@ -14,7 +14,7 @@ Additionally, the Factory contract is the direct admin and fee receiver of all p
 
 ## **Implementations**
 
-The TwoCrypto-NG Factory makes use of **blueprint contracts** ([EIP-5202](https://eips.ethereum.org/EIPS/eip-5202)) to deploy liquidity pools and gauges.
+The Twocrypto-NG Factory makes use of **blueprint contracts** ([EIP-5202](https://eips.ethereum.org/EIPS/eip-5202)) to deploy liquidity pools and gauges.
 
 !!!warning
     **Implementation contracts are upgradable.** They can either be replaced, or additional implementation contracts can be added. Therefore, always make sure to check the most recent ones.
@@ -30,7 +30,7 @@ It utilizes four different implementations:
 
 
 ## **Query Implementations**
- 
+
 ### `pool_implementations`
 !!! description "`Factory.pool_implementations(arg0: uint256) -> address: view`"
 
@@ -49,7 +49,7 @@ It utilizes four different implementations:
             ```vyper
             pool_implementations: public(HashMap[uint256, address])
             ```
-    
+
     === "Example"
 
         ```shell
@@ -72,7 +72,7 @@ It utilizes four different implementations:
             ```vyper
             gauge_implementation: public(address)
             ```
-    
+
     === "Example"
 
         ```shell
@@ -95,7 +95,7 @@ It utilizes four different implementations:
             ```vyper
             views_implementation: public(address)
             ```
-    
+
     === "Example"
 
         ```shell
@@ -118,7 +118,7 @@ It utilizes four different implementations:
             ```vyper
             math_implementation: public(address)
             ```
-    
+
     === "Example"
 
         ```shell
@@ -128,7 +128,7 @@ It utilizes four different implementations:
 
 
 
-## **Set New Implementations** 
+## **Set New Implementations**
 
 *New implementations can be set via the following admin-only functions:*
 
@@ -154,7 +154,7 @@ It utilizes four different implementations:
 
             ```vyper
             event UpdatePoolImplementation:
-                _implemention_id: uint256
+                _implementation_id: uint256
                 _old_pool_implementation: address
                 _new_pool_implementation: address
 
@@ -180,7 +180,7 @@ It utilizes four different implementations:
 
                 self.pool_implementations[_implementation_index] = _pool_implementation
             ```
-    
+
     === "Example"
 
         ```shell
@@ -225,7 +225,7 @@ It utilizes four different implementations:
                 log UpdateGaugeImplementation(self.gauge_implementation, _gauge_implementation)
                 self.gauge_implementation = _gauge_implementation
             ```
-    
+
     === "Example"
 
         ```shell
@@ -270,7 +270,7 @@ It utilizes four different implementations:
                 log UpdateViewsImplementation(self.views_implementation, _views_implementation)
                 self.views_implementation = _views_implementation
             ```
-    
+
     === "Example"
 
         ```shell
@@ -314,7 +314,7 @@ It utilizes four different implementations:
                 log UpdateMathImplementation(self.math_implementation, _math_implementation)
                 self.math_implementation = _math_implementation
             ```
-    
+
     === "Example"
 
         ```shell
@@ -350,7 +350,7 @@ It utilizes four different implementations:
                 log UpdateFeeReceiver(empty(address), _fee_receiver)
                 log TransferOwnership(empty(address), _admin)
             ```
-    
+
     === "Example"
 
         ```shell
@@ -395,7 +395,7 @@ It utilizes four different implementations:
                 log UpdateFeeReceiver(self.fee_receiver, _fee_receiver)
                 self.fee_receiver = _fee_receiver
             ```
-    
+
     === "Example"
 
         ```shell

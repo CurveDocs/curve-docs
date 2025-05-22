@@ -394,7 +394,7 @@ For more details on the calculations and research behind these parameters, see [
                 self.price_deviation = 5 * 10 ** (18 - 4) # 0.0005 = 0.05%
                 ...
                 log PriceDeviation(self.price_deviation)
-                ...       
+                ...
             ```
 
     === "Example"
@@ -537,7 +537,7 @@ For more details on the calculations and research behind these parameters, see [
             ```vyper
             event PriceDeviation:
                 price_deviation: uint256
-                        
+
             price_deviation: public(uint256)
 
             @external
@@ -809,7 +809,7 @@ Only the `admin` and `emergency_admin` are able to kill. The former is the Curve
 
         >>> PegKeeperRegulator.is_killed()
         1           # providing killed
-        
+
         >>> PegKeeperRegulator.is_killed()
         2           # withdrawing killed
 
@@ -933,7 +933,7 @@ Both their ownerships can be transferred using the corresponding [`set_admin`](#
             event SetAdmin:
                 admin: address
 
-            admin: public(address) 
+            admin: public(address)
 
             @external
             def set_admin(_admin: address):
@@ -1038,7 +1038,7 @@ Both their ownerships can be transferred using the corresponding [`set_admin`](#
             fee_receiver: public(address)
 
             @external
-            def __init__(_stablecoin: ERC20, _agg: Aggregator, _fee_receiver: address, _admin: address, _emergency_admin: address): 
+            def __init__(_stablecoin: ERC20, _agg: Aggregator, _fee_receiver: address, _admin: address, _emergency_admin: address):
                 ...
                 self.fee_receiver = _fee_receiver
                 ...
@@ -1054,7 +1054,7 @@ Both their ownerships can be transferred using the corresponding [`set_admin`](#
 ### `aggregator`
 !!! description "`PegKeeperRegulator.aggregator() -> address: view`"
 
-    Getter for the crvusd price aggregator contract. This address is set when intializing the contract and can be changed using [`set_aggregator`](#set_aggregator).
+    Getter for the crvusd price aggregator contract. This address is set when initializing the contract and can be changed using [`set_aggregator`](#set_aggregator).
 
     Returns: price aggregator contract (`address`).
 
@@ -1171,7 +1171,7 @@ Both their ownerships can be transferred using the corresponding [`set_admin`](#
 ### `stablecoin`
 !!! description "`PegKeeperRegulator.stablecoin() -> address: view`"
 
-    Getter for the stablecoin the PegKeeper stabilizes, which is crvUSD. This address is set when intializing the contract and can not be changed.
+    Getter for the stablecoin the PegKeeper stabilizes, which is crvUSD. This address is set when initializing the contract and can not be changed.
 
     Returns: stablecoin (`address`).
 

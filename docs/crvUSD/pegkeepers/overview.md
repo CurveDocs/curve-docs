@@ -42,8 +42,8 @@ For a comprehensive understanding of the factors influencing the interest rate, 
 The initial version of `PegKeeper.vy` encountered two significant problems:
 
 ## **Spam Attack Issue**
-A notable challenge in the first version of PegKeepers was its **susceptibility to spam attacks**.  
-This issue stemmed from the ability of an attacker to manipulate the price of crvUSD very close to 1, followed by executing the `update` function to make a minimal deposit (or withdrawal), before moving the price back. With a mandatory **15-minute cooldown** before the `update` function could be called again, an attacker could exploit this interval to periodically disrupt the PegKeepers' capacity for peg stabilization.  
+A notable challenge in the first version of PegKeepers was its **susceptibility to spam attacks**.
+This issue stemmed from the ability of an attacker to manipulate the price of crvUSD very close to 1, followed by executing the `update` function to make a minimal deposit (or withdrawal), before moving the price back. With a mandatory **15-minute cooldown** before the `update` function could be called again, an attacker could exploit this interval to periodically disrupt the PegKeepers' capacity for peg stabilization.
 Although executing such an attack would entail **significant costs for the attacker**, resulting in **substantial revenue for the liquidity pool**, the potential for continuous exploitation was still present. This issue highlighted the need for a refined approach to prevent such manipulative activities and ensure the effective stabilization of the peg.
 
 
@@ -71,7 +71,7 @@ Central to this new structure is the `PegKeeperRegulator.vy` contract, which gra
 
 ## **Mitigating Spam Attacks with Oracle Price Verification**
 
-To address the spam attack issue in the first version of PegKeepers, an innovative solution involving the `price_oracle` and `get_p` function from stableswap pools was implemented. This approach allows the system to verify if the current AMM market prices significantly deviate from the pool's oracle's EMA price, thereby ensuring actions to stabilize the peg are only taken when the price is within an accepted deviation.
+To address the spam attack issue in the first version of PegKeepers, an innovative solution involving the `price_oracle` and `get_p` function from Stableswap pools was implemented. This approach allows the system to verify if the current AMM market prices significantly deviate from the pool's oracle's EMA price, thereby ensuring actions to stabilize the peg are only taken when the price is within an accepted deviation.
 
 *The solution utilizes two prices from the pools:*
 
@@ -100,7 +100,7 @@ Further details on setting the price_deviation parameter can be found in the Cur
 
 ## **Mitigating Depeg Issue using Absolute Deviation Error**
 
-In order to mitigate potential depged risk and therefore leaving the PegKeeper with debt, a `worst_price_threshold` variable was introduced.
+In order to mitigate potential depegged risk and therefore leaving the PegKeeper with debt, a `worst_price_threshold` variable was introduced.
 
 
 ```vyper
