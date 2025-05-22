@@ -171,11 +171,6 @@ This corresponds to the `newton_x` function in `math.vy`.
 
 ---
 
-
-Here’s a cleaned-up and well-structured version of your **Cryptoswap Derivations** document. The content remains mathematically equivalent, but the presentation is clearer, more readable, and easier to follow:
-
----
-
 # **Cryptoswap Derivations**
 
 ## Newton Step for `newton_D()` in Tricrypto and Twocrypto
