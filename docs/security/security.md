@@ -3,7 +3,7 @@
 Curve Finance prioritizes the security of its protocols and user funds above all else. We maintain a bug bounty program to encourage responsible disclosure of potential vulnerabilities and actively collaborate with security researchers and whitehat hackers to ensure the safety of our ecosystem. Our security practices include regular audits, continuous monitoring, and swift response to potential threats.
 
 !!!github "Security Contact & Disclosure Reports"
-    For security-related inquiries and vulnerability reports: security@curve.fi
+    For security-related inquiries and vulnerability reports: security@curve.finance
 
     Security audits and disclosure reports are available on [:material-github:GitHub](https://github.com/curvefi/security-incident-reports)
 
