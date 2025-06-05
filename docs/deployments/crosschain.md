@@ -200,6 +200,15 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../govern
 | L2 Vault           | [0x3c0a405E914337139992625D5100Ea141a9C4d11](https://taikoscan.io/address/0x3c0a405E914337139992625D5100Ea141a9C4d11) |
 
 
+**:logos-hyperliquid: Hyperliquid**
+
+| Contract Type        | Contract Address                                                                                                         |
+| :-------------------: | :-----------------------------------------------------------------------------------------------------------------------: |
+| L2 Emergency Admin | [0xb101b2b0aa02b7167D238B98dc1B0b0404a760E8](https://www.hyperscan.com/address/0xb101b2b0aa02b7167D238B98dc1B0b0404a760E8) |
+| L2 Ownership Admin | [0xb101b2b0aa02b7167D238B98dc1B0b0404a760E8](https://www.hyperscan.com/address/0xb101b2b0aa02b7167D238B98dc1B0b0404a760E8) |
+| L2 Parameter Admin | [0xb101b2b0aa02b7167D238B98dc1B0b0404a760E8](https://www.hyperscan.com/address/0xb101b2b0aa02b7167D238B98dc1B0b0404a760E8) |
+| L2 Vault           | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://www.hyperscan.com/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef) |
+
 ---
 
 
@@ -424,3 +433,4 @@ The `RootLiquidityGaugeFactory` contract on Ethereum is utilized across a majori
 | `167000` | :logos-taiko: Taiko | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://taikoscan.io/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef) |
 | `21000000` | :logos-corn: Corn | [0x87FE17697D0f14A222e8bEf386a0860eCffDD617](https://cornscan.io/address/0x87FE17697D0f14A222e8bEf386a0860eCffDD617) |
 | `57073` | :logos-ink: Ink | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://explorer.inkonchain.com/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b) |
+| `999` | :logos-hyperliquid: Hyperliquid | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://www.hyperscan.com/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6) |

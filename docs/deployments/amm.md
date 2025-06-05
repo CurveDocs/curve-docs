@@ -292,6 +292,17 @@ search:
 | `Plain AMM` | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://explorer.inkonchain.com/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26) |
 | `Meta AMM`  | [0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499](https://explorer.inkonchain.com/address/0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499) |
 
+
+**:logos-hyperliquid: Hyperliquid**
+
+| Contract Type  | Contract Address |
+| :---------: | :----------------: |
+| `Math`      | [0x686bdb3D24Bc6F3ED89ed3d3B659765c54aC78B4](https://www.hyperscan.com/address/0x686bdb3D24Bc6F3ED89ed3d3B659765c54aC78B4) |
+| `Views`     | [0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b](https://www.hyperscan.com/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b) |
+| `Factory`   | [0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22](https://www.hyperscan.com/address/0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22) |
+| `Plain AMM` | [0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2](https://www.hyperscan.com/address/0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2) |
+| `Meta AMM`  | [0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8](https://www.hyperscan.com/address/0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8) |
+
 ---
 
 
@@ -555,6 +566,16 @@ search:
 | `Views`     | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://explorer.inkonchain.com/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a) |
 | `Factory`   | [0xd125E7a0cEddF89c6473412d85835450897be6Dc](https://explorer.inkonchain.com/address/0xd125E7a0cEddF89c6473412d85835450897be6Dc) |
 | `AMM` | [0x76303e4fDcA0AbF28aB3ee42Ce086E6503431F1D](https://explorer.inkonchain.com/address/0x76303e4fDcA0AbF28aB3ee42Ce086E6503431F1D) |
+
+
+**:logos-hyperliquid: Hyperliquid**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: |
+| `Math`      | [0x64379C265Fc6595065D7d835AAaa731c0584dB80](https://www.hyperscan.com/address/0x64379C265Fc6595065D7d835AAaa731c0584dB80) |
+| `Views`     | [0xd3B17f862956464ae4403cCF829CE69199856e1e](https://www.hyperscan.com/address/0xd3B17f862956464ae4403cCF829CE69199856e1e) |
+| `Factory`   | [0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F](https://www.hyperscan.com/address/0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F) |
+| `AMM`       | [0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495](https://www.hyperscan.com/address/0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495) |
 
 
 ---
@@ -843,3 +864,13 @@ search:
 | `Views`     | [0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F](https://explorer.inkonchain.com/address/0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F) |
 | `Factory`   | [0x5Ea9DD3b6f042A34Df818C6c1324BC5A7c61427a](https://explorer.inkonchain.com/address/0x5Ea9DD3b6f042A34Df818C6c1324BC5A7c61427a) |
 | `AMM native disable` | [0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5](https://explorer.inkonchain.com/address/0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5) |
+
+
+**:logos-hyperliquid: Hyperliquid**
+
+| Contract Type | Contract Address |
+| :---------: | :----------------: |
+| `Math`      | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://www.hyperscan.com/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26) |
+| `Views`     | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://www.hyperscan.com/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a) |
+| `Factory`   | [0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499](https://www.hyperscan.com/address/0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499) |
+| `AMM`       | [0x635742dCC8313DCf8c904206037d962c042EAfBd](https://www.hyperscan.com/address/0x635742dCC8313DCf8c904206037d962c042EAfBd) |

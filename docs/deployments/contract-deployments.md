@@ -609,6 +609,7 @@ The `RootLiquidityGaugeFactory` contract on Ethereum is utilized across a majori
 | `250` | :logos-fantom: Fantom | [0x004A476B5B76738E34c86C7144554B9d34402F13](https://ftmscout.com/address/0x004A476B5B76738E34c86C7144554B9d34402F13) |
 | `2222` | :logos-kava: Kava | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://explorer.kava.io/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
 | `1284` | Moonbeam | [0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8](https://moonbeam.moonscan.io/address/0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8) |
+| `999` | :logos-hyperliquid: Hyperliquid | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://www.hyperscan.com/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6) |
 
 ---
 
@@ -637,6 +638,7 @@ The full documentation for the `AddressProvider` contracts can be found [here](.
 | :logos-kava: `Kava`             | [0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98](https://kavascan.io/search?q=0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98) |
 | :logos-xlayer: `X-Layer`        | [0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98](https://www.okx.com/web3/explorer/xlayer/address/0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98) |
 | :logos-zksync: `zk-Sync`        | [0x960C90aE833af0fd699dBc2503468A07cC28FA4F](https://era.zksync.network/address/0x960C90aE833af0fd699dBc2503468A07cC28FA4F) |
+| :logos-hyperliquid: `Hyperliquid` | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://www.hyperscan.com/address/0x1764ee18e8B3ccA4787249Ceb249356192594585) |
 
 ---
 
@@ -702,6 +704,7 @@ The full documentation for the `Stableswap-NG` contracts can be found [here](../
 |:logos-aurora: Aurora| [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://explorer.aurora.dev/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E) |
 |:logos-xlayer: X-Layer| [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://www.oklink.com/xlayer/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E) |
 |:logos-zksync: zk-Sync| [0x5eeE3091f747E60a045a2E715a4c71e600e31F6E](https://explorer.zksync.io/address/0x5eeE3091f747E60a045a2E715a4c71e600e31F6E) |
+|:logos-hyperliquid: Hyperliquid | [0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22](https://www.hyperscan.com/address/0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22) |
 
 ---
 
@@ -735,6 +738,7 @@ The full documentation for the `Twocrypto-NG` contracts can be found [here](../c
 |:logos-aurora: Aurora| [0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F](https://explorer.aurora.dev/address/0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F) |
 |:logos-xlayer: X-Layer| [0x0c59d36b23f809f8b6c7cb4c8c590a0ac103baef](https://www.oklink.com/xlayer/address/0x0c59d36b23f809f8b6c7cb4c8c590a0ac103baef) |
 |:logos-zksync: zk-Sync| [0xf3a546AF64aFd6BB8292746BA66DB33aFAE72114](https://era.zksync.network/address/0xf3a546AF64aFd6BB8292746BA66DB33aFAE72114) |
+|:logos-hyperliquid: Hyperliquid | [0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F](https://www.hyperscan.com/address/0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F) |
 
 ---
 
@@ -768,6 +772,7 @@ The full documentation for the `Tricrypto-NG` contracts can be found [here](../c
 |:logos-aurora: Aurora| [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://explorer.aurora.dev/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a) |
 |:logos-xlayer: X-Layer| [0xd3b17f862956464ae4403ccf829ce69199856e1e](https://www.oklink.com/xlayer/address/0xd3b17f862956464ae4403ccf829ce69199856e1e) |
 |:logos-zksync: zk-Sync| [0x5d4174C40f1246dABe49693845442927d5929f0D](https://explorer.zksync.io/address/0x5d4174C40f1246dABe49693845442927d5929f0D) |
+|:logos-hyperliquid: Hyperliquid | [0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499](https://www.hyperscan.com/address/0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499) |
 
 ---
 
@@ -792,6 +797,7 @@ The full documentation for the `Router` contracts can be found [here](../router/
 | :logos-kava: `Kava`               | [0x0DCDED3545D565bA3B19E683431381007245d983](https://kavascan.com/address/0x0DCDED3545D565bA3B19E683431381007245d983) |
 | :logos-xlayer: `X-Layer`          | [0xBFab8ebc836E1c4D81837798FC076D219C9a1855](https://www.oklink.com/xlayer/address/0xBFab8ebc836E1c4D81837798FC076D219C9a1855) |
 | :logos-zksync: `zk-Sync`          | [0x7C915390e109CA66934f1eB285854375D1B127FA](https://era.zksync.network/address/0x7C915390e109CA66934f1eB285854375D1B127FA) |
+| :logos-hyperliquid: `Hyperliquid`  | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://www.hyperscan.com/address/0xd2002373543Ce3527023C75e7518C274A51ce712) |
 
 ---
 
@@ -862,6 +868,7 @@ Source code for the `DepositAndStakeZap` contracts is available on [:material-gi
 | :logos-mantle: `Mantle` | [0xF0d4c12A5768D806021F80a262B4d39d26C58b8D](https://mantlescan.xyz/address/0xF0d4c12A5768D806021F80a262B4d39d26C58b8D) |
 | :logos-kava: `Kava` | [0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD](https://kavascan.com/address/0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD) |
 | :logos-zksync: `zk-Sync` | [0x253548e98C769aD2850da8DB3E4c2b2cE46E3839](https://era.zksync.network/address/0x253548e98C769aD2850da8DB3E4c2b2cE46E3839) |
+| :logos-hyperliquid: `Hyperliquid`  | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://www.hyperscan.com/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC) |
 
 ---
 
@@ -890,6 +897,7 @@ Source code for the `MetaZapNG` contracts is available on [:material-github: Git
 | :logos-aurora: `Aurora`| [0x9293f068912bae932843a1bA01806c54f416019D](https://explorer.aurora.dev/address/0x9293f068912bae932843a1bA01806c54f416019D) |
 | :logos-xlayer: `X-Layer`| [0x604388bb1159afd21eb5191ce22b4decdee2ae22](https://www.okx.com/web3/explorer/xlayer/address/0x604388bb1159afd21eb5191ce22b4decdee2ae22) |
 | :logos-zksync: `zk-Sync` | [0x4232Dcc6D31543A2431079BdE2082C69eA3A771E](https://era.zksync.network/address/0x4232Dcc6D31543A2431079BdE2082C69eA3A771E) |
+| :logos-hyperliquid: `Hyperliquid`  | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://www.hyperscan.com/address/0xFAbC421e3368D158d802684A217a83c083c94CeB) |
 
 ---
 
