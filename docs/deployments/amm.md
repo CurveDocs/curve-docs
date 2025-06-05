@@ -873,4 +873,4 @@ search:
 | `Math`      | [0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26](https://www.hyperscan.com/address/0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26) |
 | `Views`     | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://www.hyperscan.com/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a) |
 | `Factory`   | [0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499](https://www.hyperscan.com/address/0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499) |
-| `AMM`       | [0x635742dCC8313DCf8c904206037d962c042EAfBd](https://www.hyperscan.com/address/0x635742dCC8313DCf8c904206037d962c042EAfBd) |
+| `AMM native disable`       | [0x635742dCC8313DCf8c904206037d962c042EAfBd](https://www.hyperscan.com/address/0x635742dCC8313DCf8c904206037d962c042EAfBd) |
