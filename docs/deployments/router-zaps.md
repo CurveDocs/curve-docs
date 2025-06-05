@@ -35,6 +35,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-taiko: `Taiko` | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://taikoscan.io/address/0xd2002373543Ce3527023C75e7518C274A51ce712) |
 | :logos-corn: `Corn` | [0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b](https://cornscan.io/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b) |
 | :logos-ink: `Ink` | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://explorer.inkonchain.com/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B) |
+| :logos-hyperliquid: `Hyperliquid` | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://www.hyperscan.com/address/0xd2002373543Ce3527023C75e7518C274A51ce712) |
 
 ---
 
@@ -120,6 +121,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-taiko: `Taiko` | [0xd125E7a0cEddF89c6473412d85835450897be6Dc](https://taikoscan.io/address/0xd125E7a0cEddF89c6473412d85835450897be6Dc) |
 | :logos-corn: `Corn` | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://cornscan.io/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf) |
 | :logos-ink: `Ink` | [0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD](https://explorer.inkonchain.com/address/0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD) |
+| :logos-hyperliquid: `Hyperliquid` | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://www.hyperscan.com/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC) |
 
 ---
 
@@ -156,6 +158,7 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-taiko: `Taiko` | [0x9AF14D26075f142eb3F292D5065EB3faa646167b](https://taikoscan.io/address/0x9AF14D26075f142eb3F292D5065EB3faa646167b) |
 | :logos-corn: `Corn` | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://cornscan.io/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a) |
 | :logos-ink: `Ink` | [0x3E3B5F27bbf5CC967E074b70E9f4046e31663181](https://explorer.inkonchain.com/address/0x3E3B5F27bbf5CC967E074b70E9f4046e31663181) |
+| :logos-hyperliquid: `Hyperliquid` | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://www.hyperscan.com/address/0xFAbC421e3368D158d802684A217a83c083c94CeB) |
 
 ---
 
