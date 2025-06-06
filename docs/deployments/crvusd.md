@@ -165,7 +165,7 @@ For testing in production purposes, several contract deployments have taken plac
 | :---------: | :----------------: |
 |`AMM`|[0xEd325262f54b2987e74436f4556a27f748146da1](https://etherscan.io/address/0xEd325262f54b2987e74436f4556a27f748146da1#code)|
 |`Controller`|[0x652aEa6B22310C89DCc506710CaD24d2Dba56B11](https://etherscan.io/address/0x652aEa6B22310C89DCc506710CaD24d2Dba56B11#code)|
-|`MonetaryPolicy`|[0x8c5A7F011f733fBb0A6c969c058716d5CE9bc933](https://etherscan.io/address/0x8c5A7F011f733fBb0A6c969c058716d5CE9bc933#code)|
+|`MonetaryPolicy`|[0x8d76f31e7c3b8f637131df15d9b4a3f8ba93bd75](https://etherscan.io/address/0x8d76f31e7c3b8f637131df15d9b4a3f8ba93bd75#code)|
 |`CollateralToken (weETH)`|[0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee](https://etherscan.io/address/0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee)|
 |`PriceOracle`|[0x0a9aE947495034C0bBBAB845Fd75b5BBAfc91aAb](https://etherscan.io/address/0x0a9aE947495034C0bBBAB845Fd75b5BBAfc91aAb#code)|
 
