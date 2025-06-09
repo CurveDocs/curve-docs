@@ -303,6 +303,29 @@ search:
 | `Plain AMM` | [0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2](https://www.hyperscan.com/address/0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2) |
 | `Meta AMM`  | [0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8](https://www.hyperscan.com/address/0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8) |
 
+
+**:logos-xdc: XDC**
+
+| Contract Type  | Contract Address |
+| :---------: | :----------------: |
+| `Math`      | [0xDF264E9a02E0D1C1F0b83AE067dE2Bc0031e1e7a](https://xdcscan.com/address/0xDF264E9a02E0D1C1F0b83AE067dE2Bc0031e1e7a) |
+| `Views`     | [0x9bBc929C45F2C06ccb4acd2C6D9FFE577d505Dfc](https://xdcscan.com/address/0x9bBc929C45F2C06ccb4acd2C6D9FFE577d505Dfc) |
+| `Factory`   | [0x5aEa9aaDd0974e8914229a23699bB6b343c97B09](https://xdcscan.com/address/0x5aEa9aaDd0974e8914229a23699bB6b343c97B09) |
+| `Plain AMM` | [0xA626B239e30dF83a228e5D87daB005819267d1BA](https://xdcscan.com/address/0xA626B239e30dF83a228e5D87daB005819267d1BA) |
+| `Meta AMM`  | [0x73E5a7225E22682b8Abd5aaE322Ea4ab140Ec652](https://xdcscan.com/address/0x73E5a7225E22682b8Abd5aaE322Ea4ab140Ec652) |
+
+
+**:logos-plume: Plume**
+
+| Contract Type  | Contract Address |
+| :---------: | :----------------: |
+| `Math`      | [0xDF264E9a02E0D1C1F0b83AE067dE2Bc0031e1e7a](https://explorer.plume.org/address/0xDF264E9a02E0D1C1F0b83AE067dE2Bc0031e1e7a) |
+| `Views`     | [0x9bBc929C45F2C06ccb4acd2C6D9FFE577d505Dfc](https://explorer.plume.org/address/0x9bBc929C45F2C06ccb4acd2C6D9FFE577d505Dfc) |
+| `Factory`   | [0x5aEa9aaDd0974e8914229a23699bB6b343c97B09](https://explorer.plume.org/address/0x5aEa9aaDd0974e8914229a23699bB6b343c97B09) |
+| `Plain AMM` | [0xA626B239e30dF83a228e5D87daB005819267d1BA](https://explorer.plume.org/address/0xA626B239e30dF83a228e5D87daB005819267d1BA) |
+| `Meta AMM`  | [0x73E5a7225E22682b8Abd5aaE322Ea4ab140Ec652](https://explorer.plume.org/address/0x73E5a7225E22682b8Abd5aaE322Ea4ab140Ec652) |
+
+
 ---
 
 
@@ -576,6 +599,26 @@ search:
 | `Views`     | [0xd3B17f862956464ae4403cCF829CE69199856e1e](https://www.hyperscan.com/address/0xd3B17f862956464ae4403cCF829CE69199856e1e) |
 | `Factory`   | [0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F](https://www.hyperscan.com/address/0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F) |
 | `AMM`       | [0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495](https://www.hyperscan.com/address/0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495) |
+
+
+**:logos-xdc: XDC**
+
+| Contract Type  | Contract Address |
+| :---------: | :----------------: |
+| `Math`      | [0xE8acB9bDd10E9685361a2D540e60378d26b0223f](https://xdcscan.com/address/0xE8acB9bDd10E9685361a2D540e60378d26b0223f) |
+| `Views`     | [0xC1a0003b9bFB0C958DA455d12417df0bA79bBA78](https://xdcscan.com/address/0xC1a0003b9bFB0C958DA455d12417df0bA79bBA78) |
+| `Factory`   | [0xa17b39BF1c2FE776Af38a999bE7Bb7bEa737a6EC](https://xdcscan.com/address/0xa17b39BF1c2FE776Af38a999bE7Bb7bEa737a6EC) |
+| `AMM` | [0x2320f304651F825353124890e4BE17e826BE5841](https://xdcscan.com/address/0x2320f304651F825353124890e4BE17e826BE5841) |
+
+
+**:logos-plume: Plume**
+
+| Contract Type  | Contract Address |
+| :---------: | :----------------: |
+| `Math`      | [0xE8acB9bDd10E9685361a2D540e60378d26b0223f](https://explorer.plume.org/address/0xE8acB9bDd10E9685361a2D540e60378d26b0223f) |
+| `Views`     | [0xC1a0003b9bFB0C958DA455d12417df0bA79bBA78](https://explorer.plume.org/address/0xC1a0003b9bFB0C958DA455d12417df0bA79bBA78) |
+| `Factory`   | [0xa17b39BF1c2FE776Af38a999bE7Bb7bEa737a6EC](https://explorer.plume.org/address/0xa17b39BF1c2FE776Af38a999bE7Bb7bEa737a6EC) |
+| `AMM` | [0x2320f304651F825353124890e4BE17e826BE5841](https://explorer.plume.org/address/0x2320f304651F825353124890e4BE17e826BE5841) |
 
 
 ---
@@ -874,3 +917,23 @@ search:
 | `Views`     | [0xf3A6aa40cf048a3960E9664847E9a7be025a390a](https://www.hyperscan.com/address/0xf3A6aa40cf048a3960E9664847E9a7be025a390a) |
 | `Factory`   | [0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499](https://www.hyperscan.com/address/0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499) |
 | `AMM native disable`       | [0x635742dCC8313DCf8c904206037d962c042EAfBd](https://www.hyperscan.com/address/0x635742dCC8313DCf8c904206037d962c042EAfBd) |
+
+
+**:logos-xdc: XDC**
+
+| Contract Type  | Contract Address |
+| :---------: | :----------------: |
+| `Math`      | [0xab53d6899E9c347A5DedDcE3d97D4aeA36B0f8d7](https://xdcscan.com/address/0xab53d6899E9c347A5DedDcE3d97D4aeA36B0f8d7) |
+| `Views`     | [0xF1f6e500d9Ccb9F3477cF078A5ea74F75fC3fc96](https://xdcscan.com/address/0xF1f6e500d9Ccb9F3477cF078A5ea74F75fC3fc96) |
+| `Factory`   | [0x729c764aE95e7a9DEA9F950B5AEdbF1A9F3D7c03](https://xdcscan.com/address/0x729c764aE95e7a9DEA9F950B5AEdbF1A9F3D7c03) |
+| `AMM native disable` | [0x016a5D98dC76Fb638F2942E94Fd12b323e792219](https://xdcscan.com/address/0x016a5D98dC76Fb638F2942E94Fd12b323e792219) |
+
+
+**:logos-plume: Plume**
+
+| Contract Type  | Contract Address |
+| :---------: | :----------------: |
+| `Math`      | [0xab53d6899E9c347A5DedDcE3d97D4aeA36B0f8d7](https://explorer.plume.org/address/0xab53d6899E9c347A5DedDcE3d97D4aeA36B0f8d7) |
+| `Views`     | [0xF1f6e500d9Ccb9F3477cF078A5ea74F75fC3fc96](https://explorer.plume.org/address/0xF1f6e500d9Ccb9F3477cF078A5ea74F75fC3fc96) |
+| `Factory`   | [0x729c764aE95e7a9DEA9F950B5AEdbF1A9F3D7c03](https://explorer.plume.org/address/0x729c764aE95e7a9DEA9F950B5AEdbF1A9F3D7c03) |
+| `AMM native disable` | [0x016a5D98dC76Fb638F2942E94Fd12b323e792219](https://explorer.plume.org/address/0x016a5D98dC76Fb638F2942E94Fd12b323e792219) |

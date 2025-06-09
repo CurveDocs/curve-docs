@@ -36,6 +36,8 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-corn: `Corn` | [0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b](https://cornscan.io/address/0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b) |
 | :logos-ink: `Ink` | [0xd7E72f3615aa65b92A4DBdC211E296a35512988B](https://explorer.inkonchain.com/address/0xd7E72f3615aa65b92A4DBdC211E296a35512988B) |
 | :logos-hyperliquid: `Hyperliquid` | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://www.hyperscan.com/address/0xd2002373543Ce3527023C75e7518C274A51ce712) |
+| :logos-xdc: `XDC` | [0x3F5A41B922a76759b9C77D36b3d337E88cD1dc5e](https://xdcscan.com/address/0x3F5A41B922a76759b9C77D36b3d337E88cD1dc5e) |
+| :logos-plume: `Plume` | [0x3F5A41B922a76759b9C77D36b3d337E88cD1dc5e](https://explorer.plume.org/address/0x3F5A41B922a76759b9C77D36b3d337E88cD1dc5e) |
 
 ---
 
@@ -122,6 +124,9 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-corn: `Corn` | [0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf](https://cornscan.io/address/0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf) |
 | :logos-ink: `Ink` | [0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD](https://explorer.inkonchain.com/address/0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD) |
 | :logos-hyperliquid: `Hyperliquid` | [0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC](https://www.hyperscan.com/address/0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC) |
+| :logos-xdc: `XDC` | [0x374D3B496F86416dF0B88830Ad9c59837aA9f078](https://xdcscan.com/address/0x374D3B496F86416dF0B88830Ad9c59837aA9f078) |
+| :logos-plume: `Plume` | [0x374D3B496F86416dF0B88830Ad9c59837aA9f078](https://explorer.plume.org/address/0x374D3B496F86416dF0B88830Ad9c59837aA9f078) |
+
 
 ---
 
@@ -159,8 +164,12 @@ Routers that performs up to 5 swaps in a single transaction and can do estimatio
 | :logos-corn: `Corn` | [0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a](https://cornscan.io/address/0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a) |
 | :logos-ink: `Ink` | [0x3E3B5F27bbf5CC967E074b70E9f4046e31663181](https://explorer.inkonchain.com/address/0x3E3B5F27bbf5CC967E074b70E9f4046e31663181) |
 | :logos-hyperliquid: `Hyperliquid` | [0xFAbC421e3368D158d802684A217a83c083c94CeB](https://www.hyperscan.com/address/0xFAbC421e3368D158d802684A217a83c083c94CeB) |
+| :logos-xdc: `XDC` | [0xd05b37dFe4c0377dbCb8030eAD07b41888716fE4](https://xdcscan.com/address/0xd05b37dFe4c0377dbCb8030eAD07b41888716fE4) |
+| :logos-plume: `Plume` | [0xd05b37dFe4c0377dbCb8030eAD07b41888716fE4](https://explorer.plume.org/address/0xd05b37dFe4c0377dbCb8030eAD07b41888716fE4) |
+
 
 ---
+
 
 # **Llamalend LeverageZap**
 

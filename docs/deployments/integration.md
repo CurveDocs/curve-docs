@@ -39,7 +39,9 @@ Contract functionality is documented [here :material-arrow-up-right:](../integra
 | :logos-taiko: `Taiko` | [0x87FE17697D0f14A222e8bEf386a0860eCffDD617](https://taikoscan.io/address/0x87FE17697D0f14A222e8bEf386a0860eCffDD617) |
 | :logos-corn: `Corn` | [0xd2002373543Ce3527023C75e7518C274A51ce712](https://cornscan.io/address/0xd2002373543Ce3527023C75e7518C274A51ce712) |
 | :logos-ink: `Ink` | [0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22](https://explorer.inkonchain.com/address/0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22) |
-| :logos-hyperliquid: Hyperliquid | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://www.hyperscan.com/address/0x1764ee18e8B3ccA4787249Ceb249356192594585) |
+| :logos-hyperliquid: `Hyperliquid` | [0x1764ee18e8B3ccA4787249Ceb249356192594585](https://www.hyperscan.com/address/0x1764ee18e8B3ccA4787249Ceb249356192594585) |
+| :logos-xdc: `XDC` | [0x907CE289E9Ee0BBcb0F69132B1C28A9Affc29FCA](https://xdcscan.com/address/0x907CE289E9Ee0BBcb0F69132B1C28A9Affc29FCA) |
+| :logos-plume: `Plume` | [0x907CE289E9Ee0BBcb0F69132B1C28A9Affc29FCA](https://explorer.plume.org/address/0x907CE289E9Ee0BBcb0F69132B1C28A9Affc29FCA) |
 
 
 ---
