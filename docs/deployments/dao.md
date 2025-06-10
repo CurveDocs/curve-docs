@@ -146,6 +146,7 @@ The Emergency DAO is deployed at:
 | :logos-aurora: `Aurora` | [0xf3a431008396df8a8b2df492c913706bdb0874ef](https://explorer.aurora.dev/address/0xf3a431008396df8a8b2df492c913706bdb0874ef) |
 | :logos-kava: `Kava` | - |
 | :logos-xlayer: `X-Layer` | [0xf3a431008396df8a8b2df492c913706bdb0874ef](https://www.oklink.com/xlayer/address/0xf3a431008396df8a8b2df492c913706bdb0874ef) |
+| :logos-hyperliquid: `Hyperliquid` | [0xf3A431008396df8A8b2DF492C913706BDB0874ef](https://purrsec.com/address/0xf3A431008396df8A8b2DF492C913706BDB0874ef) |
 
 
 ---
