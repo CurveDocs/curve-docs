@@ -193,6 +193,7 @@ Full `x-gov` documentation can be found here: [Cross-Chain Governance](../govern
 
 | Contract Type      | Contract Address |
 | :----------------: | :--------------: |
+| L1 Boradcaster     | [0x05a3a7b57cb60419ff0b087e9eae8469c28ac8cd](https://etherscan.io/address/0x05a3a7b57cb60419ff0b087e9eae8469c28ac8cd) |
 | L2 Relayer         | [0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69](https://taikoscan.io/address/0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69) |
 | L2 Ownership Agent | [0x6c9578402A3ace046A12839f45F84Aa5448E9c30](https://taikoscan.io/address/0x6c9578402A3ace046A12839f45F84Aa5448E9c30) |
 | L2 Parameter Agent | [0xEC5AFc9590964f2fA0FeED54f0fBB2A34480908D](https://taikoscan.io/address/0xEC5AFc9590964f2fA0FeED54f0fBB2A34480908D) |
