@@ -4,4 +4,4 @@ hide:
   - toc
 ---
 
-*soon*
+See Blockhash Infrastructure documentation here: [Curve Block Oracle](../../../block-oracle/overview.md).

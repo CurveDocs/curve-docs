@@ -241,6 +241,35 @@
   mask-image: var(--md-admonition-icon--deploy);
 }
 
+/* abi */
+:root {
+  --md-admonition-icon--abi: "🧩";
+}
+
+.md-typeset .admonition.abi,
+.md-typeset details.abi {
+  border-color: #1976D2; /* Blue */
+}
+
+.md-typeset .abi > .admonition-title,
+.md-typeset .abi > summary {
+  background-color: rgba(25, 118, 210, 0.1); /* Light blue background */
+  border-color: #1976D2;
+}
+
+.md-typeset .abi > .admonition-title::before,
+.md-typeset .abi > summary::before {
+  content: var(--md-admonition-icon--abi);
+  color: #1976D2;
+  font-size: 1.3em;
+  margin-right: 0.5em;
+  background: none !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  vertical-align: -0.3em;
+  line-height: 1;
+}
+
 
 /* pdf */
 :root {

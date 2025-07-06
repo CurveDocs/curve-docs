@@ -190,6 +190,12 @@ nav:
     - CurveRouterNG: router/CurveRouterNG.md
     - CurveRegistryExchange: router/CurveRegistryExchange.md
 
+  - Curve Block Oracle:
+    - Overview: block-oracle/overview.md
+    - BlockOracle: block-oracle/BlockOracle.md
+    - MainnetBlockView: block-oracle/MainnetBlockView.md
+    - HeaderVerifier: block-oracle/HeaderVerifier.md
+    - LZBlockRelay: block-oracle/LZBlockRelay.md
 
   - crvUSD:
     - Overview: crvUSD/overview.md
