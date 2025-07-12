@@ -192,4 +192,4 @@ For testing in production purposes, several contract deployments have taken plac
 | :logos-fantom: `Fantom` | [0x5191946500e75f0A74476F146dF7d386e52961d9](https://ftmscan.com/address/0x5191946500e75f0A74476F146dF7d386e52961d9#code) |
 | :logos-sonic: `Sonic` | [0xb5f0edecff09081354db252ceec000b213186fac](https://sonicscan.org/address/0xb5f0edecff09081354db252ceec000b213186fac) |
 | :logos-sonic: `Taiko` | [0x8c74d11da5E6cE0498cd280F9209dFB0C5e048A7](https://taikoscan.io/address/0x8c74d11da5E6cE0498cd280F9209dFB0C5e048A7) |
-| :logos-xdc: `XDC` | [0x09F8D940EAD55853c51045bcbfE67341B686C071](https://xdcscan.com/address/0x09F8D940EAD55853c51045bcbfE67341B686C071) |
+| :logos-xdc: `XDC` | [0x3d8EADb739D1Ef95dd53D718e4810721837c69c1](https://xdcscan.com/address/0x3d8EADb739D1Ef95dd53D718e4810721837c69c1) |
