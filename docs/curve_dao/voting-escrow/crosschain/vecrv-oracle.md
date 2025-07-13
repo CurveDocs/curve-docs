@@ -11,6 +11,7 @@ The `L2VotingEscrowOracle` contract is used to fetch information from the `Votin
     The `L2VotingEscrowOracle` contract is deployed at the following addresses and is version `1.0.0`:
 
     - :logos-optimism: Optimism: [`0xf1946d4879646e0fcd8f5bb32a5636ed8055176d`](https://optimistic.etherscan.io/address/0xf1946d4879646e0fcd8f5bb32a5636ed8055176d)
+    - :logos-arbitrum: Arbitrum: [`0x4D1AF9911e4c19f64Be36c36EF39Fd026Bc9bb61`](https://arbiscan.io/address/0x4D1AF9911e4c19f64Be36c36EF39Fd026Bc9bb61)
     - :logos-fraxtal: Fraxtal: [`0xF3daD3Ca2eF135b248128Ab1Ed984FB6F2185CBf`](https://fraxscan.com/address/0xF3daD3Ca2eF135b248128Ab1Ed984FB6F2185CBf)
     - :logos-sonic: Sonic: [`0x361aa6D20fbf6185490eB2ddf1DD1D3F301C201d`](https://sonicscan.org/address/0x361aa6D20fbf6185490eB2ddf1DD1D3F301C201d)
     - :logos-mantle: Mantle: [`0x852F32c22C5035EA12566EDFB4415625776D75d5`](https://mantlescan.xyz/address/0x852F32c22C5035EA12566EDFB4415625776D75d5)
