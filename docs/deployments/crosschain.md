@@ -458,3 +458,18 @@ The `RootLiquidityGaugeFactory` contract on Ethereum is utilized across a majori
 | `999` | :logos-hyperliquid: Hyperliquid | [0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6](https://www.hyperscan.com/address/0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6) |
 | `50` | :logos-xdc: XDC | [0x95cB855840342bE0F023A6A7e6f0A9202BFEfE1b](https://xdcscan.com/address/0x95cB855840342bE0F023A6A7e6f0A9202BFEfE1b) |
 | `98866` | :logos-plume: Plume | [0x95cB855840342bE0F023A6A7e6f0A9202BFEfE1b](https://explorer.plume.org/address/0x95cB855840342bE0F023A6A7e6f0A9202BFEfE1b) |
+
+
+---
+
+# **veCRV Oracles**
+
+| Chain ID | Chain | Address |
+| ------ | ----- | ------- |
+| `10` | :logos-optimism: Optimism | [`0xf1946d4879646e0fcd8f5bb32a5636ed8055176d`](https://optimistic.etherscan.io/address/0xf1946d4879646e0fcd8f5bb32a5636ed8055176d) |
+| `42161` | :logos-arbitrum: Arbitrum | [`0x4D1AF9911e4c19f64Be36c36EF39Fd026Bc9bb61`](https://arbiscan.io/address/0x4D1AF9911e4c19f64Be36c36EF39Fd026Bc9bb61) |
+| `252` | :logos-fraxtal: Fraxtal | [`0xF3daD3Ca2eF135b248128Ab1Ed984FB6F2185CBf`](https://fraxscan.com/address/0xF3daD3Ca2eF135b248128Ab1Ed984FB6F2185CBf) |
+| `146` | :logos-Sonic: Sonic | [`0x361aa6D20fbf6185490eB2ddf1DD1D3F301C201d`](https://sonicscan.org/address/0x361aa6D20fbf6185490eB2ddf1DD1D3F301C201d) |
+| `5000` | :logos-mantle: Mantle | [`0x852F32c22C5035EA12566EDFB4415625776D75d5`](https://mantlescan.xyz/address/0x852F32c22C5035EA12566EDFB4415625776D75d5) |
+| `8453` | :logos-base: Base | [`0xeB896fB7D1AaE921d586B0E5a037496aFd3E2412`](https://basescan.org/address/0xeB896fB7D1AaE921d586B0E5a037496aFd3E2412) |
+| `167000` | :logos-taiko: Taiko | [`0x5C57BdcFF69B4F1D894EA70c0470D39C8FA0ee30`](https://taikoscan.io/address/0x5C57BdcFF69B4F1D894EA70c0470D39C8FA0ee30) |
