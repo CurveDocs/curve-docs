@@ -462,9 +462,7 @@ The `RootLiquidityGaugeFactory` contract on Ethereum is utilized across a majori
 
 ---
 
-## **veCRV**
-
-### **veCRV Oracles** 
+# **veCRV Oracles**
 
 | Chain ID | Chain | Address |
 | ------ | ----- | ------- |
