@@ -124,13 +124,12 @@ nav:
   - Curve DAO Token: curve_dao/crv-token.md
 
   - Vote-Escrowed CRV:
-    - VotingEscrow:
-      - Contract Methods: curve_dao/voting-escrow/voting-escrow.md
-      - Admin Controls: curve_dao/voting-escrow/admin-controls.md
+    - VotingEscrow (veCRV): curve_dao/voting-escrow/voting-escrow.md
     - SmartWalletChecker: curve_dao/voting-escrow/smartwalletchecker.md
     - Crosschain veCRV:
       - veCRV Oracle: curve_dao/voting-escrow/crosschain/vecrv-oracle.md
       - veCRV Delegation: curve_dao/voting-escrow/crosschain/vecrv-delegation.md
+      - veCRV Verifiers: curve_dao/voting-escrow/crosschain/vecrv-verifiers.md
 
   - Liquidity Gauges and Minting CRV:
 
