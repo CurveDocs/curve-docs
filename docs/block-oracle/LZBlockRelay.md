@@ -1,21 +1,8 @@
 <h1>LZBlockRelay</h1>
 
-The `LZBlockRelay` contract is a cross-chain block hash relay built on LayerZero’s messaging protocol. It is designed to be deployed on multiple EVM-compatible chains alongside the `BlockOracle` and `MainnetBlockView` contracts. Its primary function is to facilitate secure, decentralized relay of recent Ethereum mainnet block hashes to other chains, enabling cross-chain state proofs and trust-minimized interoperability.
+The `LZBlockRelay` contract is a cross-chain block hash relay built on LayerZero’s messaging protocol, designed for deployment on multiple EVM-compatible chains alongside the `BlockOracle` and `MainnetBlockView` contracts. Its core function is to securely and efficiently relay recent Ethereum mainnet block hashes to other chains, enabling trust-minimized cross-chain state proofs and interoperability.
 
-The contract supports two main operational modes:
-
-- **Read-enabled chains:** Can directly request (`lzRead`) block hashes from `MainnetBlockView` on Ethereum mainnet and broadcast the results to other chains.
-- **Broadcast-only chains:** Can only receive block hash broadcasts from read-enabled chains.
-
-Upon receiving a LayerZero message (`lzReceive`), the contract verifies the message source, commits the block hash to the local `BlockOracle`, and, if appropriate, rebroadcasts the hash to additional chains. All LayerZero peer and channel configuration is owner-controlled, and only trusted peers should be set to prevent malicious message injection.
-
-**Key Features:**
-
-- Secure, threshold-based block hash relay across chains
-- LayerZero-based cross-chain messaging and peer management
-- Owner-controlled configuration for read channels, peers, and oracle assignment
-- Permissionless fee quoting and state views for integration and monitoring
-- Designed for integration with Curve’s cross-chain oracle and state proof infrastructure
+Operating in two modes — **read-enabled** (which can request and broadcast block hashes) and **broadcast-only** (which only receives broadcasts) — the contract verifies incoming LayerZero messages, commits block hashes to the local `BlockOracle`, and, when appropriate, rebroadcasts them to additional chains. All LayerZero peer and channel configurations are owner-controlled to ensure only trusted sources are permitted, supporting robust, decentralized, and secure cross-chain communication.
 
 ???+ vyper "`LZBlockRelay.vy`"
     The source code for the `LZBlockRelay.vy` contract can be found on [:material-github: GitHub](https://github.com/curvefi/blockhash-oracle/blob/main/contracts/messengers/LZBlockRelay.vy). The contract is written using [Vyper](https://github.com/vyperlang/vyper) version `0.4.3`.
@@ -30,7 +17,7 @@ Upon receiving a LayerZero message (`lzReceive`), the contract verifies the mess
 
 ---
 
-## Configuration & Ownership
+## **Configuration & Ownership**
 
 This section covers owner-only functions for configuring LayerZero channels, peers, delegates, and the block oracle. These functions are critical for secure cross-chain operation and must be managed by the contract owner (DAO).
 
@@ -114,12 +101,6 @@ This section covers owner-only functions for configuring LayerZero channels, pee
                 log PeerSet(eid=_eid, peer=_peer)
             ```
 
-    === "Example"
-
-        ```shell
-        >>> LZBlockRelay.
-        ```
-
 ### `set_block_oracle`
 !!! description "`LZBlockRelay.set_block_oracle(_oracle: address)`"
 
@@ -158,9 +139,8 @@ This section covers owner-only functions for configuring LayerZero channels, pee
     === "Example"
 
         ```shell
-        >>> LZBlockRelay.
+        >>> LZBlockRelay.set_block_oracle('0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8')
         ```
-
 
 ### `withdraw_eth`
 !!! description "`LZBlockRelay.withdraw_eth(_amount: uint256)`"
@@ -197,12 +177,14 @@ This section covers owner-only functions for configuring LayerZero channels, pee
     === "Example"
 
         ```shell
-        >>> LZBlockRelay.
+        >>> LZBlockRelay.withdraw_eth(1000000000000000000)
         ```
+
 
 ---
 
-# LayerZero Messaging & Peers
+
+# **LayerZero Messaging & Peers**
 
 This section documents LayerZero-specific configuration and peer management. These functions are critical for secure cross-chain communication. Only trusted peers should be set to avoid malicious message injection.
 
@@ -255,7 +237,6 @@ This section documents LayerZero-specific configuration and peer management. The
         '0x1a44076050125825900e736c501f859c50fE728c'
         ```
 
-
 ### `peers`
 !!! description "`LZBlockRelay.peers(_eid: uint32) -> bytes32: view`"
 
@@ -298,7 +279,6 @@ This section documents LayerZero-specific configuration and peer management. The
         >>> LZBlockRelay.peers(0)
         '0x0000000000000000000000000000000000000000000000000000000000000000'
         ```
-
 
 ### `setPeer`
 !!! description "`LZBlockRelay.setPeer(_eid: uint32, _peer: bytes32)`"
@@ -368,13 +348,6 @@ This section documents LayerZero-specific configuration and peer management. The
                 log PeerSet(eid=_eid, peer=_peer)
             ```
 
-    === "Example"
-
-        ```shell
-        >>> todo
-        ```
-
-
 ### `set_peers`
 !!! description "`LZBlockRelay.set_peers(_eids: DynArray[uint32, MAX_N_BROADCAST], _peers: DynArray[address, MAX_N_BROADCAST])`"
 
@@ -438,13 +411,6 @@ This section documents LayerZero-specific configuration and peer management. The
                 log PeerSet(eid=_eid, peer=_peer)
             ```
 
-    === "Example"
-
-        ```shell
-        >>> todo
-        ```
-
-
 ### `setDelegate`
 !!! description "`LZBlockRelay.setDelegate(_delegate: address)`"
 
@@ -500,13 +466,6 @@ This section documents LayerZero-specific configuration and peer management. The
                 extcall endpoint.setDelegate(_delegate)
             ```
 
-    === "Example"
-
-        ```shell
-        >>> todo
-        ```
-
-
 ### `isComposeMsgSender`
 !!! description "`LZBlockRelay.isComposeMsgSender(_origin: Origin, _message: Bytes[MAX_MESSAGE_SIZE], _sender: address) -> bool`"
 
@@ -561,13 +520,6 @@ This section documents LayerZero-specific configuration and peer management. The
                 return _sender == self
             ```
 
-    === "Example"
-
-        ```shell
-        >>> todo
-        ```
-
-
 ### `allowInitializePath`
 !!! description "`LZBlockRelay.allowInitializePath(_origin: Origin) -> bool`"
 
@@ -617,13 +569,6 @@ This section documents LayerZero-specific configuration and peer management. The
                 """
                 return self.peers[_origin.srcEid] == _origin.sender
             ```
-
-    === "Example"
-
-        ```shell
-        >>> todo
-        ```
-
 
 ### `nextNonce`
 !!! description "`LZBlockRelay.nextNonce(_srcEid: uint32, _sender: bytes32) -> uint64`"
@@ -678,20 +623,16 @@ This section documents LayerZero-specific configuration and peer management. The
                 return 0
             ```
 
-    === "Example"
-
-        ```shell
-        >>> todo
-        ```
 
 ---
 
-# Block Hash Operations
+
+# **Block Hash Operations**
 
 This section covers the core cross-chain and block hash relay logic. These functions are responsible for requesting, broadcasting, and receiving block hashes. 
 
 !!!info
-    Only block hashes received via trusted LayerZero channels are committed to the oracle.
+    Currently, only block hashes received via trusted LayerZero channels are committed to the oracle. Later on, more channels can be added.
 
 
 ### `request_block_hash`
@@ -796,9 +737,8 @@ This section covers the core cross-chain and block hash relay logic. These funct
     === "Example"
 
         ```shell
-        >>> todo
+        >>> soon
         ```
-
 
 ### `broadcast_latest_block`
 !!! description "`LZBlockRelay.broadcast_latest_block(_target_eids: DynArray[uint32, MAX_N_BROADCAST], _target_fees: DynArray[uint256, MAX_N_BROADCAST], _lz_receive_gas_limit: uint128):`"
@@ -863,9 +803,8 @@ This section covers the core cross-chain and block hash relay logic. These funct
     === "Example"
 
         ```shell
-        >>> todo
+        >>> soon
         ```
-
 
 ### `lzReceive`
 !!! description "`LZBlockRelay.lzReceive(_origin: OApp.Origin, _guid: bytes32, _message: Bytes[OApp.MAX_MESSAGE_SIZE], _executor: address, _extraData: Bytes[OApp.MAX_EXTRA_DATA_SIZE])`"
@@ -962,16 +901,14 @@ This section covers the core cross-chain and block hash relay logic. These funct
     === "Example"
 
         ```shell
-        >>> todo
+        >>> soon
         ```
 
 
 ---
 
 
-# Fee Quoting
-
-This section documents view functions for estimating LayerZero fees. These are important for users and integrators to estimate the cost of cross-chain operations.
+# **Fee Quoting**
 
 ### `quote_read_fee`
 !!! description "`LZBlockRelay.quote_read_fee(_read_gas_limit: uint128, _value: uint128) -> uint256: view`"
@@ -1121,9 +1058,8 @@ This section documents view functions for estimating LayerZero fees. These are i
     === "Example"
 
         ```shell
-        >>> todo
+        >>> soon
         ```
-
 
 ### `quote_broadcast_fees`
 !!! description "`LZBlockRelay.quote_broadcast_fees(_target_eids: DynArray[uint32, MAX_N_BROADCAST], _lz_receive_gas_limit: uint128) -> DynArray[uint256, MAX_N_BROADCAST]: view`"
@@ -1283,14 +1219,14 @@ This section documents view functions for estimating LayerZero fees. These are i
     === "Example"
 
         ```shell
-        >>> todo
+        >>> soon
         ```
+
 
 ---
 
-# State & Utility Views
 
-This section provides read-only access to contract state and configuration. These views are useful for monitoring and integration.
+# **State & Utility Views**
 
 ### `read_enabled`
 !!! description "`LZBlockRelay.read_enabled() -> bool: view`"
@@ -1314,7 +1250,6 @@ This section provides read-only access to contract state and configuration. Thes
         'true'
         ```
 
-
 ### `read_channel`
 !!! description "`LZBlockRelay.read_channel() -> uint32: view`"
 
@@ -1336,7 +1271,6 @@ This section provides read-only access to contract state and configuration. Thes
         >>> LZBlockRelay.read_channel()
         30101
         ```
-
 
 ### `mainnet_eid`
 !!! description "`LZBlockRelay.mainnet_eid() -> uint32: view`"
@@ -1360,7 +1294,6 @@ This section provides read-only access to contract state and configuration. Thes
         30101
         ```
 
-
 ### `mainnet_block_view`
 !!! description "`LZBlockRelay.mainnet_block_view() -> address: view`"
 
@@ -1382,7 +1315,6 @@ This section provides read-only access to contract state and configuration. Thes
         >>> LZBlockRelay.mainnet_block_view()
         '0xb10CfacE69cc0B7F1AE0Dc8E6aD186914f6e7EEA'
         ```
-
 
 ### `block_oracle`
 !!! description "`LZBlockRelay.block_oracle() -> address: view`"
@@ -1406,14 +1338,12 @@ This section provides read-only access to contract state and configuration. Thes
         '0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8'
         ```
 
+
 ---
 
-## Ownership
 
-Standard Ownable interface for querying the current owner and transferring or renouncing ownership. Ownership controls all privileged operations, including configuration and peer management. Owner of the contract is the DAO. Security: Secure key management for the owner account is critical for contract security.
+## **Ownership**
 
-### `owner`
-### `transfer_ownership`
-### `renounce_ownership`
+Standard Ownable interface for querying the current owner and transferring or renouncing ownership. Ownership controls all privileged operations, including configuration and peer management. Owner of the contract is the DAO.
 
-
+More here: https://github.com/pcaversaccio/snekmate/blob/main/src/snekmate/auth/ownable.vy

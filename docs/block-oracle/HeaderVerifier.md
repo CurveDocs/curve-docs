@@ -1,3 +1,5 @@
+<h1>HeaderVerifier</h1>
+
 The `HeaderVerifier` contract decodes RLP-encoded Ethereum block headers and forwards the extracted data to oracle contracts. It uses the `BlockHeaderRLPDecoder` module to parse block headers and extract key information such as block hash, parent hash, state root, receipt root, block number, and timestamp. The contract serves as a bridge between raw block header data and oracle systems, enabling cross-chain verification and data availability without implementing security checks or validation logic.
 
 ???+ vyper "`HeaderVerifier.vy`"

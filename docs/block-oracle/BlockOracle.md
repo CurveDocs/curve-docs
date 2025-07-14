@@ -19,7 +19,7 @@ The `BlockOracle` contract is a decentralized block hash oracle which implements
 
 # **Committers**
 
-This section details the management and querying of committers—externally owned accounts (EOAs) or contracts authorized to participate in the block hash commitment process. Committers are tracked on-chain and are required for consensus operations. Only the contract owner can modify the committer set; all users can query committer status.
+Committers are tracked on-chain and are required for consensus operations. Only the contract owner can modify the committer set; all users can query committer status.
 
 ## Managing Committers
 
@@ -221,7 +221,7 @@ Owner-only functions for adding or removing committers, as well as retrieving th
 
 ## Threshold Management
 
-Owner-only functions for setting and querying the threshold parameter, which defines the minimum number of matching committer votes required to confirm a block hash. The threshold cannot exceed the number of registered committers. Proper threshold configuration is critical for the security and liveness of the oracle.
+Owner-only functions for setting and querying the threshold parameter, which defines the minimum number of matching committer votes required to confirm a block hash. The threshold cannot exceed the number of registered committers.
 
 ### `set_threshold`
 !!! description "`BlockOracle.set_threshold(_new_threshold: uint256)`"
@@ -295,7 +295,7 @@ Owner-only functions for setting and querying the threshold parameter, which def
 
 # **Committing Block Hashes**
 
-Functions and views related to the process by which committers submit, update, and track block hash commitments. Only registered committers may call commit functions. The contract maintains a mapping of committer votes and a count of votes per block hash. Commitments are mutable until a block is confirmed; after confirmation, the block hash is immutable.
+Only registered committers may call commit functions. The contract maintains a mapping of committer votes and a count of votes per block hash. Commitments are mutable until a block is confirmed; after confirmation, the block hash is immutable.
 
 ### `commit_block`
 !!! description "`BlockOracle.commit_block(_block_number: uint256, _block_hash: bytes32, _apply: bool = True) -> bool`"
@@ -417,7 +417,7 @@ Functions and views related to the process by which committers submit, update, a
 
 # **Block Application**
 
-Functions for confirming and applying block hashes once the threshold is met. Includes both permissionless (anyone can call) and owner-only (admin) application. Also provides views for querying confirmed block hashes and the most recent confirmed block number. Once applied, block hashes are immutable and serve as the canonical record for the oracle.
+Block application includes both permissionless (anyone can call) and owner-only (admin) application. Also provides views for querying confirmed block hashes and the most recent confirmed block number. Once applied, block hashes are immutable and serve as the canonical record for the oracle.
 
 ### `apply_block`
 !!! description "`BlockOracle.apply_block(_block_number: uint256, _block_hash: bytes32)`"
@@ -802,7 +802,3 @@ Owner-only functions for setting and querying the verifier contract address. The
 # **Ownership**
 
 Standard Ownable interface for querying the current owner and transferring or renouncing ownership. Ownership controls all privileged operations, including committer management, threshold updates, and verifier assignment. Owner of the contract is the DAO.
-
-### `owner`
-### `transfer_ownership`
-### `renounce_ownership`
