@@ -1342,7 +1342,7 @@ This section covers the core cross-chain and block hash relay logic. These funct
 ---
 
 
-## **Ownership**
+# **Ownership**
 
 Standard Ownable interface for querying the current owner and transferring or renouncing ownership. Ownership controls all privileged operations, including configuration and peer management. Owner of the contract is the DAO.
 
