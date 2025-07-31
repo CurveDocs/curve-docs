@@ -87,7 +87,7 @@ hide:
         <th>Chain</th>
         <th>Deployment Type</th>
         <th id="sub-type-header" style="display: none;">Sub Type</th>
-        <th>Contract Name</th>
+        <th>Contract</th>
         <th>Address</th>
         <th>Actions</th>
       </tr>
@@ -613,17 +613,22 @@ let verificationResults = {};
 // Display name mappings for cleaner UI
 const deploymentTypeNames = {
   'amm': 'AMM',
-  'core': 'Core Contracts',
-  'x-gov': 'x-gov',
+  'dao': 'DAO',
   'x-dao': 'x-dao',
-  'curve-block-oracle': 'curve-block-oracle',
-  'gauges': 'Gauges',
+  'x-gov': 'x-gov',
+  'core': 'Core Contracts',
+  'tokens': 'Ecosystem Tokens',
   'fees': 'Fees & Burners',
   'integrations': 'Integrations',
-  'tokens': 'Ecosystem Tokens',
-  'vecrv': 'Crosschain veCRV',
+  'crvusd': 'crvUSD',
   'scrvusd': 'scrvUSD',
-  'crvusd': 'crvUSD CDP',
+  'router': 'Router & Zap',
+  'lending': 'Lending',
+  'gauges': 'Gauges',
+  'factory': 'Factory',
+  'registry': 'Registry',
+  'curve-block-oracle': 'curve-block-oracle',
+  'vecrv': 'Crosschain veCRV',
   'llamalend': 'LlamaLend'
 };
 
@@ -743,37 +748,43 @@ const contractNameMappings = {
   'router & zap.crypto-calc-zap': 'CryptoCalc',
   'router & zap.deposit-and-stake-zap': 'Deposit & Stake Zap',
   'router & zap.meta-zap-ng': 'MetaZap NG'
-};
+  };
+  
+  // Chain display name mapping
+  const chainDisplayNames = {
+    ethereum: 'Ethereum',
+    arbitrum: 'Arbitrum',
+    optimism: 'Optimism',
+    base: 'Base',
+    polygon: 'Polygon',
+    gnosis: 'Gnosis',
+    avalanche: 'Avalanche',
+    fantom: 'Fantom',
+    mantle: 'Mantle',
+    zksync: 'zkSync',
+    sonic: 'Sonic',
+    taiko: 'Taiko',
+    corn: 'Corn',
+    ink: 'Ink',
+    xlayer: 'X-Layer',
+    kava: 'Kava',
+    aurora: 'Aurora',
+    celo: 'Celo',
+    linea: 'Linea',
+    scroll: 'Scroll',
+    fraxtal: 'Fraxtal',
+    hyperliquid: 'Hyperliquid',
+    plume: 'Plume',
+    xdc: 'XDC',
+    etherlink: 'Etherlink',
+    moonbeam: 'Moonbeam',
+    tac: 'TAC',
+    bsc: 'BSC'
+  };
+  
 
-// Chain icons mapping - using correct paths from server root
-const chainIcons = {
-  ethereum: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTAwIiBoZWlnaHQ9IjI1MDAiIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIgZmlsbD0iIzYyN0VFQSIvPjxnIGZpbGw9IiNGRkYiIGZpbGwtcnVsZT0ibm9uemVybyI+PHBhdGggZmlsbC1vcGFjaXR5PSIuNjAyIiBkPSJNMTYuNDk4IDR2OC44N2w3LjQ5NyAzLjM1eiIvPjxwYXRoIGQ9Ik0xNi40OTggNEw5IDE2LjIybDcuNDk4LTMuMzV6Ii8+PHBhdGggZmlsbC1vcGFjaXR5PSIuNjAyIiBkPSJNMTYuNDk4IDIxLjk2OHY2LjAyN0wyNCAxNy42MTZ6Ii8+PHBhdGggZD0iTTE2LjQ5OCAyNy45OTV2LTYuMDI4TDkgMTcuNjE2eiIvPjxwYXRoIGZpbGwtb3BhY2l0eT0iLjIiIGQ9Ik0xNi40OTggMjAuNTczbDcuNDk3LTQuMzUzLTcuNDk3LTMuMzQ4eiIvPjxwYXRoIGZpbGwtb3BhY2l0eT0iLjYwMiIgZD0iTTkgMTYuMjJsNy40OTggNC4zNTN2LTcuNzAxeiIvPjwvZz48L2c+PC9zdmc+',
-  arbitrum: 'curve-docs/overrides/.icons/logos/arbitrum.svg',
-  optimism: 'curve-docs/overrides/.icons/logos/optimism.svg',
-  base: 'curve-docs/overrides/.icons/logos/base.svg',
-  polygon: 'curve-docs/overrides/.icons/logos/polygon.svg',
-  gnosis: 'curve-docs/overrides/.icons/logos/gnosis.svg',
-  avalanche: 'curve-docs/overrides/.icons/logos/avalanche.svg',
-  fantom: 'curve-docs/overrides/.icons/logos/fantom.svg',
-  bsc: 'curve-docs/overrides/.icons/logos/bsc.svg',
-  mantle: 'curve-docs/overrides/.icons/logos/mantle.svg',
-  fraxtal: 'curve-docs/overrides/.icons/logos/fraxtal.svg',
-  sonic: 'curve-docs/overrides/.icons/logos/sonic.svg',
-  taiko: 'curve-docs/overrides/.icons/logos/taiko.svg',
-  corn: 'curve-docs/overrides/.icons/logos/corn.svg',
-  ink: 'curve-docs/overrides/.icons/logos/ink.svg',
-  aurora: 'curve-docs/overrides/.icons/logos/aurora.svg',
-  celo: 'curve-docs/overrides/.icons/logos/celo.svg',
-  kava: 'curve-docs/overrides/.icons/logos/kava.svg',
-  hyperliquid: 'curve-docs/overrides/.icons/logos/hyperliquid.svg',
-  plume: 'curve-docs/overrides/.icons/logos/plume.svg',
-  xdc: 'curve-docs/overrides/.icons/logos/xdc.svg',
-  etherlink: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTAwIiBoZWlnaHQ9IjI1MDAiIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIgZmlsbD0iIzYyN0VFQSIvPjxnIGZpbGw9IiNGRkYiIGZpbGwtcnVsZT0ibm9uemVybyI+PHBhdGggZmlsbC1vcGFjaXR5PSIuNjAyIiBkPSJNMTYuNDk4IDR2OC44N2w3LjQ5NyAzLjM1eiIvPjxwYXRoIGQ9Ik0xNi40OTggNEw5IDE2LjIybDcuNDk4LTMuMzV6Ii8+PHBhdGggZmlsbC1vcGFjaXR5PSIuNjAyIiBkPSJNMTYuNDk4IDIxLjk2OHY2LjAyN0wyNCAxNy42MTZ6Ii8+PHBhdGggZD0iTTE2LjQ5OCAyNy45OTV2LTYuMDI4TDkgMTcuNjE2eiIvPjxwYXRoIGZpbGwtb3BhY2l0eT0iLjIiIGQ9Ik0xNi40OTggMjAuNTczbDcuNDk3LTQuMzUzLTcuNDk3LTMuMzQ4eiIvPjxwYXRoIGZpbGwtb3BhY2l0eT0iLjYwMiIgZD0iTTkgMTYuMjJsNy40OTggNC4zNTN2LTcuNzAxeiIvPjwvZz48L2c+PC9zdmc+',
-  moonbeam: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTAwIiBoZWlnaHQ9IjI1MDAiIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIgZmlsbD0iIzYyN0VFQSIvPjxnIGZpbGw9IiNGRkYiIGZpbGwtcnVsZT0ibm9uemVybyI+PHBhdGggZmlsbC1vcGFjaXR5PSIuNjAyIiBkPSJNMTYuNDk4IDR2OC44N2w3LjQ5NyAzLjM1eiIvPjxwYXRoIGQ9Ik0xNi40OTggNEw5IDE2LjIybDcuNDk4LTMuMzV6Ii8+PHBhdGggZmlsbC1vcGFjaXR5PSIuNjAyIiBkPSJNMTYuNDk4IDIxLjk2OHY2LjAyN0wyNCAxNy42MTZ6Ii8+PHBhdGggZD0iTTE2LjQ5OCAyNy45OTV2LTYuMDI4TDkgMTcuNjE2eiIvPjxwYXRoIGZpbGwtb3BhY2l0eT0iLjIiIGQ9Ik0xNi40OTggMjAuNTczbDcuNDk3LTQuMzUzLTcuNDk3LTMuMzQ4eiIvPjxwYXRoIGZpbGwtb3BhY2l0eT0iLjYwMiIgZD0iTTkgMTYuMjJsNy40OTggNC4zNTN2LTcuNzAxeiIvPjwvZz48L2c+PC9zdmc+',
-  tac: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTAwIiBoZWlnaHQ9IjI1MDAiIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIgZmlsbD0iIzYyN0VFQSIvPjxnIGZpbGw9IiNGRkYiIGZpbGwtcnVsZT0ibm9uemVybyI+PHBhdGggZmlsbC1vcGFjaXR5PSIuNjAyIiBkPSJNMTYuNDk4IDR2OC44N2w3LjQ5NyAzLjM1eiIvPjxwYXRoIGQ9Ik0xNi40OTggNEw5IDE2LjIybDcuNDk4LTMuMzV6Ii8+PHBhdGggZmlsbC1vcGFjaXR5PSIuNjAyIiBkPSJNMTYuNDk4IDIxLjk2OHY2LjAyN0wyNCAxNy42MTZ6Ii8+PHBhdGggZD0iTTE2LjQ5OCAyNy45OTV2LTYuMDI4TDkgMTcuNjE2eiIvPjxwYXRoIGZpbGwtb3BhY2l0eT0iLjIiIGQ9Ik0xNi40OTggMjAuNTczbDcuNDk3LTQuMzUzLTcuNDk3LTMuMzQ4eiIvPjxwYXRoIGZpbGwtb3BhY2l0eT0iLjYwMiIgZD0iTTkgMTYuMjJsNy40OTggNC4zNTN2LTcuNzAxeiIvPjwvZz48L2c+PC9zdmc+'
-};
-
-// Chain configuration for explorers and RPCs
+  
+  // Chain configuration for explorers and RPCs
 const chainConfig = {
   ethereum: {
     explorer: 'https://etherscan.io/address/',
@@ -800,11 +811,11 @@ const chainConfig = {
     rpc: 'https://rpc.gnosischain.com'
   },
   avalanche: {
-    explorer: 'https://snowtrace.io/address/',
+    explorer: 'https://snowscan.xyz/address/',
     rpc: 'https://api.avax.network/ext/bc/C/rpc'
   },
   fantom: {
-    explorer: 'https://ftmscan.com/address/',
+    explorer: 'https://explorer.fantom.network/address/',
     rpc: 'https://rpc.ftm.tools'
   },
   bsc: {
@@ -812,7 +823,7 @@ const chainConfig = {
     rpc: 'https://bsc-dataseed.binance.org'
   },
   mantle: {
-    explorer: 'https://explorer.mantle.xyz/address/',
+    explorer: 'https://mantlescan.xyz/address/',
     rpc: 'https://rpc.mantle.xyz'
   },
   fraxtal: {
@@ -820,23 +831,23 @@ const chainConfig = {
     rpc: 'https://rpc.frax.com'
   },
   sonic: {
-    explorer: 'https://explorer.sonic.game/address/',
+    explorer: 'https://sonicscan.org/address/',
     rpc: 'https://mainnet.sonic.game'
   },
   taiko: {
-    explorer: 'https://explorer.katla.taiko.xyz/address/',
+    explorer: 'https://taikoscan.io/address/',
     rpc: 'https://rpc.katla.taiko.xyz'
   },
   corn: {
-    explorer: 'https://explorer.corn.xyz/address/',
+    explorer: 'https://cornscan.io/address/',
     rpc: 'https://rpc.corn.xyz'
   },
   ink: {
-    explorer: 'https://explorer.ink.xyz/address/',
+    explorer: 'https://explorer.inkonchain.com//address/',
     rpc: 'https://rpc.ink.xyz'
   },
   xlayer: {
-    explorer: 'https://explorer.xlayer.xyz/address/',
+    explorer: 'https://www.oklink.com/x-layer/address/',
     rpc: 'https://rpc.xlayer.xyz'
   }
 };
@@ -925,7 +936,7 @@ function populateFilters() {
     label.appendChild(checkbox);
     
     const text = document.createElement('span');
-    text.textContent = chain.charAt(0).toUpperCase() + chain.slice(1);
+    text.textContent = chainDisplayNames[chain] || chain.charAt(0).toUpperCase() + chain.slice(1);
     
     label.appendChild(text);
     optionDiv.appendChild(label);
@@ -1151,7 +1162,7 @@ function renderTable() {
     
     const chainCell = document.createElement('td');
     chainCell.className = 'chain-cell';
-    chainCell.textContent = item.chain.charAt(0).toUpperCase() + item.chain.slice(1);
+    chainCell.textContent = chainDisplayNames[item.chain] || item.chain.charAt(0).toUpperCase() + item.chain.slice(1);
     
     const typeCell = document.createElement('td');
     typeCell.textContent = deploymentTypeNames[item.deploymentType] || item.deploymentType.charAt(0).toUpperCase() + item.deploymentType.slice(1);
