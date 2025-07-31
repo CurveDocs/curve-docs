@@ -1,0 +1,1875 @@
+{
+    "ethereum": {
+    "tokens": {
+      "crv": "0xD533a949740bb3306d119CC777fa900bA034cd52",
+      "vecrv": "0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2",
+      "crvUSD": "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E",
+      "scrvUSD": "0x0655977FEb2f289A4aB78af67BAB0d17aAb84367"
+    },
+    "core": {
+      "gauge-controller": "0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB",
+      "minter": "0xd061D61a4d941c39E5453435B6345Dc261C2fcE0",
+      "community-fund": "0xe3997288987e6297ad550a69b31439504f513267",
+      "treasury": "0x6508ef65b0bd57eabd0f1d52685a70433b2d290b"
+    },
+    "dao": {
+      "voting-ownership": "0xe478de485ad2fe566d49342cbd03e49ed7db3356",
+      "voting-parameter": "0xbcff8b0b9419b9a88c44546519b1e909cf330399",
+      "agent-ownership": "0x40907540d8a6C65c637785e8f8B742ae6b0b9968",
+      "agent-parameter": "0x4EEb3bA4f221cA16ed4A0cC7254E2E32DF948c5f",
+      "emergency-dao": "0x467947EE34aF926cF1DCac093870f613C96B1E0c"
+    },
+    "x-dao": {
+      "keepers": {
+        "avax-lz": "0x90fe734080403F9dBDb343478A390B901CF3922C",
+        "ftm-lz": "0x9116ED9cfA7f291C3F7c8F855Db065c7ab5723e7",
+        "bsc-lz": "0x49cdecc38B4CAf6a07c13558A32820333BC2aB61",
+        "kava-lz": "0xbBFE8c07430a2ccc00A12874534Fe7f929914e7D",
+        "polygon-lz": "0x845F4E2a88B12978e50C08b46a1d5A1b0eEe28aA",
+        "ccip": "0x51a00F38CB1c055EbbBE380D3bA3D27CAE5d9e61"
+      },
+      "crv-bridges": {
+        "avax-lz": "0x5cc0144A511807608eF644c9e99B486124D1cFd6",
+        "ftm-lz": "0x7ce8aF75A9180B602445bE230860DDcb4cAc3E42",
+        "bnb-lz": "0xC91113B4Dd89dd20FDEECDAC82477Bc99A840355",
+        "kava-lz": "0x3C8D2A033131551a3f09E7b5c07DB01d547311CC",
+        "sonic-lz": "0x5A537a46D780B1C70138aB98eDce69e7a53177ba"
+      },
+      "crvusd-bridges": {
+        "avax-lz": "0x26D01ce989037befd7Ff63837A86e2da32E7D7e2",
+        "ftm-lz": "0x0A92Fd5271dB1C41564BD01ef6b1a75fC1db4d4f",
+        "bnb-lz": "0x76EAfda658C54548B460B3f190386699DE3827d8",
+        "kava-lz": "0x1C4e4553F95C28bc529233Cc35D550befE7B83Fc",
+        "sonic-lz": "0xf6F07B393e4cEE82EFBcD502Db2903f28aA0472e"
+      },
+      "scrvusd-bridges": {
+        "avax-lz": "0x26E91B1f142b9bF0bB37e82959bA79D2Aa6b99b8",
+        "ftm-lz": "0x08132eA9b02750E118cF5F5C640B7c46A8E638E8",
+        "bnb-lz": "0xAE0666C978500f2C05784242B79B08C478Dd999c",
+        "sonic-lz": "0x6F8012b70ba1fb7F40873CD7f1b03c6fb5bf666C"
+      }
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc"
+    },
+    "gauges": {
+      "gauge-controller": "0x2F50D538606Fa9EDD2B11E2446BEb18C9D5846bB",
+      "root-gauge-factory": "0x306A45a1478A000dC701A6e1f7a569afb8D9DCD6"
+    },
+    "fees": {
+      "fee-receiver": "0xeCb456EA5365865EbAb8a2661B0c503410e9B347",
+      "fee-collector": "0xa2Bcd1a4Efbd04B63cd03f5aFf2561106ebCCE00",
+      "hooker": "0x9A9DF35cd8E88565694CA6AD5093c236C7f6f69D",
+      "cowswap-burner": "0xC0fC3dDfec95ca45A0D2393F518D3EA1ccF44f8b",
+      "fee-distributor-crvusd": "0xD16d5eC345Dd86Fb63C6a9C43c517210F1027914",
+      "fee-distributor-3crv": "0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc",
+      "fee-splitter": "0x2dFd89449faff8a532790667baB21cF733C064f2"
+    },
+    "integrations": {
+      "address-provider": "0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98",
+      "meta-registry": "0xF98B45FA17DE75FB1aD0e7aFD971b0ca00e379fC",
+      "rate-provider": "0xA834f3d23749233c9B61ba723588570A1cCA0Ed7",
+      "crv-circulating-supply": "0x14139EB676342b6bC8E41E0d419969f23A49881e"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xc9CBC565A9F4120a2740ec6f64CC24AeB2bB3E5E",
+        "views": "0xFF53042865dF617de4bB871bD0988E7B93439cCF",
+        "factory": "0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf",
+        "plain-amm-implementation": "0xDCc91f930b42619377C200BA05b7513f2958b202",
+        "meta-amm-implementation": "0xede71F77d7c900dCA5892720E76316C6E575F0F7",
+        "gauge-implementation": "0x38D9BdA812da2C68dFC6aDE85A7F7a54E77F8325"
+      },
+      "twocrypto": {
+        "math": "0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1",
+        "views": "0x07CdEBF81977E111B08C126DEFA07818d0045b80",
+        "factory": "0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F",
+        "amm-implementation": "0x934791f7F391727db92BFF94cd789c4623d14c52",
+        "gauge-implementation": "0x38D9BdA812da2C68dFC6aDE85A7F7a54E77F8325"
+      },
+      "tricrypto": {
+        "math": "0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE",
+        "views": "0x064253915b8449fdEFac2c4A74aA9fdF56691a31",
+        "factory": "0x729c764aE95e7a9DEA9F950B5AEdbF1A9F3D7c03",
+        "amm-implementation": "0x66442B0C5260B92cAa9c234ECf2408CBf6b19a6f",
+        "gauge-implementation": "0x5fC124a161d888893529f67580ef94C2784e9233"
+      },
+      "router & zap": {
+        "router-v1": "0x16C6521Dff6baB339122a0FE25a9116693265353",
+        "router-v2": "0x45312ea0eFf7E09C83CBE249fa1d7598c4C8cd4e",
+        "stable-calc-zap": "0xCA8d0747B5573D69653C3aC22242e6341C36e4b4",
+        "crypto-calc-zap": "0xA72C85C258A81761433B4e8da60505Fe3Dd551CC",
+        "deposit-and-stake-zap": "0x56C526b0159a258887e0d79ec3a80dfb940d0cD7",
+        "meta-zap-ng": "0xDfeF1725Ab767f165171709C6d1E1A6247425fE0"
+      }
+    },
+    "crvusd": {
+      "controller-factory": "0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC",
+      "controller-implementation": "0xe3e3Fb7E9f48d26817b7210C9bD6B22744790415",
+      "amm-implementation": "0x2B7e624bdb839975d56D8428d9f6A4cf1160D3e9",
+      "crvusd-price-aggregator": "0xe5Afcf332a5457E8FafCD668BcE3dF953762Dfe7",
+      "crvusd-price-aggregator-v3": "0x18672b1b0c623a30089A280Ed9256379fb0E4E62",
+      "flash-lender": "0x26dE7861e213A5351F6ED767d00e0839930e9eE1",
+      "leverage-zap-1inch": "0x3294514B78Df4Bb90132567fcf8E5e99f390B687",
+      "leverage-zap-odos": "0xc5898606bdb494a994578453b92e7910a90aa873",
+      "pegkeepers": {
+        "pegkeeper-regulator": "0x36a04CAffc681fa179558B2Aaba30395CDdd855f",
+        "usdc": "0x9201da0D97CaAAff53f01B2fB56767C7072dE340",
+        "usdt": "0xFb726F57d251aB5C731E5C64eD4F5F94351eF9F3",
+        "pyUSD": "0x3fA20eAa107DE08B38a8734063D605d5842fe09C"
+      }
+    },
+    "llamalend": {
+      "one-way-lending-factory": "0xeA6876DDE9e3467564acBeE1Ed5bac88783205E0",
+      "amm-implementation": "0xB57A959cdB3D5e460f9a7Cc48ed05ec29dfF049a",
+      "controller-implementation": "0x584B0Fd8F038fe8AEDf4057Ca3cB3D840446fBbf",
+      "vault-implementation": "0xc014F34D5Ba10B6799d76b0F5ACdEEe577805085",
+      "gauge-implementation": "0x79D584d2D49eC8CE8Ea379d69364b700bd35874D",
+      "pool-price-oracle-implementation": "0xC455e6c7936C2382f04306D329ABc5d36444D3F8",
+      "monetary-policy-implementation": "0x4863c6dF17dD59311B7f67E694DD835ADC87f2d3"
+    },
+    "scrvusd": {
+      "vault": "0x0655977FEb2f289A4aB78af67BAB0d17aAb84367",
+      "rewards-handler": "0xe8d1e2531761406af1615a6764b0d5ff52736f56",
+      "stablecoin-lens": "0xe24e2db9f6bb40bbe7c1c025bc87104f5401ecd7"
+    }
+    },
+    "arbitrum": {
+    "tokens": {
+      "crv": "0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978",
+      "vecrv": "",
+      "crvUSD": "0x498Bf2B1e120FeD3ad3D42EA2165E9b73f99C1e5",
+      "scrvUSD": ""
+    },
+    "x-gov": {
+      "l1-broadcaster": "0xb7b0FF38E0A01D798B5cd395BbA6Ddb56A323830",
+      "l2-relayer": "0xb7b0FF38E0A01D798B5cd395BbA6Ddb56A323830",
+      "ownership-agent": "0x452030a5D962d37D97A9D65487663cD5fd9C2B32",
+      "parameter-agent": "0x5ccbB27FB594c5cF6aC0670bbcb360c0072F6839",
+      "emergency-agent": "0x2CB6E1Adf22Af1A38d7C3370441743a123991EC3",
+      "vault": "0x25877b9413Cc7832A6d142891b50bd53935feF82"
+    },
+    "x-dao": {
+      "curve-block-oracle": {
+        "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+        "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+        "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+        "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+      }
+    }, 
+    "gauges": {
+      "child-gauge-factory": "0x988d1037e9608B21050A8EFba0c6C45e01A3Bce7",
+      "root-gauge-factory": ""
+    },
+    "vecrv": {
+      "oracle": "0x4D1AF9911e4c19f64Be36c36EF39Fd026Bc9bb61",
+      "verifier": "0x852F32c22C5035EA12566EDFB4415625776D75d5",
+      "delegation-verifier": "0x820945D1E5759a57874846371F22b56b73c6AE85"
+    },
+    "fees": {
+      "fee-receiver": "0xd4F94D0aaa640BBb72b5EEc2D85F6D114D81a88E"
+    },
+    "integrations": {
+      "address-provider": "0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98",
+      "meta-registry": "0x13526206545e2DC7CcfBaF28dC88F440ce7AD3e0",
+      "rate-provider": "0xcbc1BE39ba277525E774976c61660f29fA75C5a4"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xD4a8bd4d59d65869E99f20b642023a5015619B34",
+        "views": "0x3BbA971980A721C7A33cEF62cE01c0d744F26e95",
+        "factory": "0x9AF14D26075f142eb3F292D5065EB3faa646167b",
+        "plain-amm-implementation": "0xf6841C27fe35ED7069189aFD5b81513578AFD7FF",
+        "meta-amm-implementation": "0xFf02cBD91F57A778Bab7218DA562594a680B8B61"
+      },
+      "twocrypto": {
+        "math": "0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1",
+        "views": "0x07CdEBF81977E111B08C126DEFA07818d0045b80",
+        "factory": "0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F",
+        "amm-implementation": "0x934791f7F391727db92BFF94cd789c4623d14c52"
+      },
+      "tricrypto": {
+        "math": "0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22",
+        "views": "0x06452f9c013fc37169B57Eab8F50A7A48c9198A3",
+        "factory": "0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8",
+        "amm-native-disable-implementation": "0x1f7C86AffE5bCF7a1D74a8c8E2ef9E03BF31c1BD",
+        "amm-native-enable-implementationd": "0xd7E72f3615aa65b92A4DBdC211E296a35512988B"
+      },
+      "router & zap": {
+        "router": "0x2191718CD32d02B8E60BAdFFeA33E4B5DD9A0A0D",
+        "stable-calc-zap": "0xCA8d0747B5573D69653C3aC22242e6341C36e4b4",
+        "crypto-calc-zap": "0xA72C85C258A81761433B4e8da60505Fe3Dd551CC",
+        "deposit-and-stake-zap": "0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD",
+        "meta-zap-ng": "0x59AfCD3e931018dc493AA1d833B11bb5A0744906"
+      }
+    },
+    "llamalend": {
+      "one-way-lending-factory": "0xcaEC110C784c9DF37240a8Ce096D352A75922DeA",
+      "amm-implementation": "0xaA2377F39419F8f4CB98885076c41fE547C65a6A",
+      "controller-implementation": "0x2287b7b2bF3d82c3ecC11ca176F4B4F35f920775",
+      "vault-implementation": "0x104e15102E4Cf33e0e2cB7C304D406B523B04d7a",
+      "pool-price-oracle-implementation": "0x57390a776A2312eF8BFc25e8624483303Dd8DfF8",
+      "monetary-policy-implementation": "0x0b3536245faDABCF091778C4289caEbDc2c8f5C1",
+      "odos-leverage-zap": "0xb7b240cfa985306563a301bc417bc9715059a117"
+    }
+  },
+  "aurora": {
+    "tokens": {
+      "crv": "",
+      "vecrv": "",
+      "crvUSD": "",
+      "scrvUSD": ""
+    },
+    "x-gov": {
+      "l1-broadcaster": "",
+      "l2-relayer": "",
+      "ownership-agent": "",
+      "parameter-agent": "",
+      "emergency-agent": "",
+      "vault": ""
+    },
+    "x-dao": {
+      "curve-block-oracle": {
+        "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+        "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+        "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+        "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+      }
+    },
+    "gauges": {
+      "child-gauge-factory": "",
+      "root-gauge-factory": ""
+    },
+    "vecrv": {
+      "oracle": ""
+    },
+    "fees": {
+      "fee-receiver": "0xf3a431008396df8a8b2df492c913706bdb0874ef"
+    },
+    "integrations": {
+      "address-provider": "0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98",
+      "meta-registry": "0xFf02cBD91F57A778Bab7218DA562594a680B8B61",
+      "rate-provider": "0x21688e843a99B0a47E750e7dDD2b5dAFd9269d30"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8",
+        "views": "0xD4a8bd4d59d65869E99f20b642023a5015619B34",
+        "factory": "0x5eeE3091f747E60a045a2E715a4c71e600e31F6E",
+        "plain-amm-implementation": "0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26",
+        "meta-amm-implementation": "0xf3A6aa40cf048a3960E9664847E9a7be025a390a"
+      },
+      "twocrypto": {
+        "math": "0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1",
+        "views": "0x07CdEBF81977E111B08C126DEFA07818d0045b80",
+        "factory": "0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F",
+        "amm-implementation": "0x934791f7F391727db92BFF94cd789c4623d14c52"
+      },
+      "tricrypto": {
+        "math": "",
+        "views": "",
+        "factory": "",
+        "amm-native-disable-implementation": "",
+        "amm-native-enable-implementationd": ""
+      },
+      "router & zap": {
+        "router": "",
+        "stable-calc-zap": "",
+        "crypto-calc-zap": "",
+        "deposit-and-stake-zap": "",
+        "meta-zap-ng": ""
+      }
+    }
+    },
+    "avalanche": {
+    "tokens": {
+      "crv": "0xEEbC562d445F4bC13aC75c8caABb438DFae42A1B",
+      "vecrv": "",
+      "crvUSD": "0xCb7c161602d04C4e8aF1832046EE08AAF96d855D",
+      "scrvUSD": "0xA3ea433509F7941df3e33857D9c9f212Ad4A4e64"
+    },
+    "x-gov": {
+      "l1-broadcaster": "0x5786696bB5bE7fCDb9997E7f89355d9e97FF8d89",
+      "l2-relayer": "0x3895064FD74a86542206C4c39eb1bf14BB9aF9a6",
+      "ownership-agent": "0xeD953C2849785A8AEd7bC2ee8cf5fdE776E1Dc07",
+      "parameter-agent": "0x33F9A2F3B85e7D4Ff4f9286a9a8525060100D855",
+      "emergency-agent": "0x1309DB123020F0533aFAfaF11D26286d5871bEB0",
+      "vault": "0xad422855ac8010f82F08696CA7750EfE061aa6D6"
+    },
+    "x-dao": {
+      "crv-bridge": "0x5cc0144A511807608eF644c9e99B486124D1cFd6",
+      "crvusd-bridge": "0x26D01ce989037befd7Ff63837A86e2da32E7D7e2",
+      "scrvusd-bridge": "0x26E91B1f142b9bF0bB37e82959bA79D2Aa6b99b8",
+      "block-hash-oracle": "0xD823D2a2B5AF77835e972A0D5B77f5F5A9a003A6",
+      "crv-minter": "0xcaf4969dAb56C20fCb89ceC041079AB02158fE3E",
+      "crvusd-minter": "0x4765288DE2672A961cc5A9f52bE75005cAF005a5",
+      "scrvusd-minter": "0x47ca04Ee05f167583122833abfb0f14aC5677Ee4",
+      "gauge-type-oracle": "0x01689FE734D0aA98be3A9a761aE11a20Dd968E41",
+      "gauge-type-prover": "0x0B2584EfC66e9954e72d516be2Bb855EF0Defe62",
+      "message-digest-prover": "0xd5cF10C83aC5F30Ab27B6156DA9c238Aa63a63d0"
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0x97aDC08FA1D849D2C48C5dcC1DaB568B169b0267"
+    },
+    "vecrv": {
+      "oracle": ""
+    },
+    "fees": {
+      "fee-receiver": "0x06534b0BF7Ff378F162d4F348390BDA53b15fA35"
+    },
+    "integrations": {
+      "address-provider": "0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98",
+      "meta-registry": "0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf",
+      "rate-provider": "0x3261cA38b2129140c4199C63f7E09830B123CaFc"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xd7E72f3615aa65b92A4DBdC211E296a35512988B",
+        "views": "0xe548590f9fAe7a23EA6501b144B0D58b74Fc4B53",
+        "factory": "0x1764ee18e8B3ccA4787249Ceb249356192594585",
+        "plain-amm-implementation": "0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3",
+        "meta-amm-implementation": "0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26"
+      },
+      "twocrypto": {
+        "math": "0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1",
+        "views": "0x07CdEBF81977E111B08C126DEFA07818d0045b80",
+        "factory": "0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F",
+        "amm-implementation": "0x934791f7F391727db92BFF94cd789c4623d14c52"
+      },
+      "tricrypto": {
+        "math": "0x505d666E4DD174DcDD7FA090ed95554486d2Be44",
+        "views": "0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC",
+        "factory": "0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a",
+        "amm-native-disable-implementation": "0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf",
+        "amm-native-enable-implementationd": "0xFAbC421e3368D158d802684A217a83c083c94CeB"
+      },
+      "router & zap": {
+        "router": "0x0DCDED3545D565bA3B19E683431381007245d983",
+        "stable-calc-zap": "0xCA8d0747B5573D69653C3aC22242e6341C36e4b4",
+        "crypto-calc-zap": "0xA72C85C258A81761433B4e8da60505Fe3Dd551CC",
+        "deposit-and-stake-zap": "0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD",
+        "meta-zap-ng": "0xA54f3c1DFa5f7DbF2564829d14b3B74a65d26Ae2"
+      }
+    }
+  },
+  "base": {
+    "tokens": {
+      "crv": "0x8Ee73c484A26e0A5df2Ee2a4960B789967dd0415",
+      "vecrv": "",
+      "crvUSD": "0x417Ac0e078398C154EdFadD9Ef675d30Be60Af93",
+      "scrvUSD": "0x646a737b9b6024e49f5908762b3ff73e65b5160c"
+    },
+    "x-gov": {
+      "l1-broadcaster": "0xcb843280c5037acfa67b8d4adc71484ced7c48c9",
+      "l2-relayer": "0xCb843280C5037ACfA67b8D4aDC71484ceD7C48C9",
+      "ownership-agent": "0x2c163fe0f079d138b9c04f780d735289344C8B80",
+      "parameter-agent": "0x7Ea4B72f04D8B02994F4EdB171Ce5F56eEdF457F",
+      "emergency-agent": "0x95F0f720CAdDED982E6998b3390E6D3788c2CE5C",
+      "vault": "0xA4c0eA0fb8eb652e11C8123E589197E18Ca78AA8"
+    },
+    "x-dao": {
+
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8"
+    },
+    "vecrv": {
+      "oracle": "0xeB896fB7D1AaE921d586B0E5a037496aFd3E2412",
+      "verifier": "0x3fE593E651Cd0B383AD36b75F4159f30BB0631A6",
+      "delegation-verifier": "0xAeB976BB02b5c36DcD57372a3B18326BfA4983C8"
+    },
+    "fees": {
+      "fee-receiver": "0xe8269B33E47761f552E1a3070119560d5fa8bBD6"
+    },
+    "integrations": {
+      "address-provider": "0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98",
+      "meta-registry": "0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD",
+      "rate-provider": "0x33e72383472f77B0C6d8F791D1613C75aE2C5915"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3",
+        "views": "0xA54f3c1DFa5f7DbF2564829d14b3B74a65d26Ae2",
+        "factory": "0xd2002373543Ce3527023C75e7518C274A51ce712",
+        "plain-amm-implementation": "0xf3A6aa40cf048a3960E9664847E9a7be025a390a",
+        "meta-amm-implementation": "0x635742dCC8313DCf8c904206037d962c042EAfBd"
+      },
+      "twocrypto": {
+        "math": "0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1",
+        "views": "0xd3B17f862956464ae4403cCF829CE69199856e1e",
+        "factory": "0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F",
+        "amm-implementation": "0x934791f7F391727db92BFF94cd789c4623d14c52"
+      },
+      "tricrypto": {
+        "math": "0x5373E1B9f2781099f6796DFe5D68DE59ac2F18E3",
+        "views": "0x05d4E2Ed7216A204e5FB4e3F5187eCfaa5eF3Ef7",
+        "factory": "0xA5961898870943c68037F6848d2D866Ed2016bcB",
+        "amm-native-disable-implementation": "0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf",
+        "amm-native-enable-implementationd": "0xa274c88e09fDF1798a7517096557e6c1bEa1f65A"
+      },
+      "router & zap": {
+        "router": "0x4f37A9d177470499A2dD084621020b023fcffc1F",
+        "stable-calc-zap": "0x5552b631e2aD801fAa129Aacf4B701071cC9D1f7",
+        "crypto-calc-zap": "0xEfadDdE5B43917CcC738AdE6962295A0B343f7CE",
+        "deposit-and-stake-zap": "0x69522fb5337663d3B4dFB0030b881c1A750Adb4f",
+        "meta-zap-ng": "0x3f445D38E820c010a7A6E33c5F80cBEBE6930f61"
+      }
+    }
+    },
+    "bsc": {
+    "tokens": {
+      "crv": "0x9996D0276612d23b35f90C51EE935520B3d7355B",
+      "vecrv": "",
+      "crvUSD": "0xe2fb3F127f5450DeE44afe054385d74C392BdeF4",
+      "scrvUSD": "0xAE0666C978500f2C05784242B79B08C478Dd999c"
+    },
+    "x-gov": {
+      "l1-broadcaster": "0x5786696bB5bE7fCDb9997E7f89355d9e97FF8d89",
+      "l2-relayer": "0x37b6d6d425438a9f8e40C8B4c06c10560967b678",
+      "ownership-agent": "0xC97E2328c5701572C0DFB199b9f860d6ccD74199",
+      "parameter-agent": "0x618a38a556B66FdDdcB5495Be412Df911D18eA1d",
+      "emergency-agent": "0xC940CE179f1F1bdC1EA1c02A2d0481bfD84C3280",
+      "vault": "0x44C927BacD65da570cB1F0A2F625367049525022"
+    },
+    "x-dao": {
+      "crv-bridge": "0xC91113B4Dd89dd20FDEECDAC82477Bc99A840355",
+      "crvusd-bridge": "0x0A92Fd5271dB1C41564BD01ef6b1a75fC1db4d4f",
+      "scrvusd-bridge": "0xAE0666C978500f2C05784242B79B08C478Dd999c",
+      "block-hash-oracle": "0x7cDe6Ef7e2e2FD3B6355637F1303586D7262ba37",
+      "crv-minter": "0x458599F83764aE9D0528301c1b6CB18dE63726bF",
+      "crvusd-minter": "0xc417E91098402Dd4F677782a2eC204C429CE513A",
+      "scrvusd-minter": "0x4C62AC3F6088E882C9B2a315056bc298D22128bd",
+      "gauge-type-oracle": "0x60dcc21869C6De55b50a196bE3c6D2Da189efD18",
+      "gauge-type-prover": "0xd7454AEbf1C37661dfb5d2857F6aF7a2E09975bc",
+      "message-digest-prover": "0xbfF1f56c8e48e2F2F52941e16FEecc76C49f1825"
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8"
+    },
+    "vecrv": {
+      "oracle": ""
+    },
+    "fees": {
+      "fee-receiver": "0x98B4029CaBEf7Fd525A36B0BF8555EC1d42ec0B6"
+    },
+    "integrations": {
+      "address-provider": "0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98",
+      "meta-registry": "0x4C7A5A5D57F98D362f1c00D7135F0dA5B6f82227",
+      "rate-provider": "0xfb37b8D939FFa77114005e61CFc2e543d6F49A81"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5",
+        "views": "0xbC7654d2DD901AaAa3BE4Cb5Bc0f10dEA9f96443",
+        "factory": "0xd7E72f3615aa65b92A4DBdC211E296a35512988B",
+        "plain-amm-implementation": "0x505d666E4DD174DcDD7FA090ed95554486d2Be44",
+        "meta-amm-implementation": "0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC"
+      },
+      "twocrypto": {
+        "math": "0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1",
+        "views": "0x07CdEBF81977E111B08C126DEFA07818d0045b80",
+        "factory": "0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F",
+        "amm-implementation": "0x934791f7F391727db92BFF94cd789c4623d14c52"
+      },
+      "tricrypto": {
+        "math": "",
+        "views": "",
+        "factory": "",
+        "amm-native-disable-implementation": "",
+        "amm-native-enable-implementationd": ""
+      },
+      "router & zap": {
+        "router": "0xA72C85C258A81761433B4e8da60505Fe3Dd551CC",
+        "stable-calc-zap": "0x0fE38dCC905eC14F6099a83Ac5C93BF2601300CF",
+        "crypto-calc-zap": "0xd6681e74eEA20d196c15038C580f721EF2aB6320",
+        "deposit-and-stake-zap": "0x4f37A9d177470499A2dD084621020b023fcffc1F",
+        "meta-zap-ng": "0x07920e98a66e462c2aa4c8fa6200bc68ca161ea0"
+      }
+    }
+    },
+    "celo": {
+    "tokens": {
+      "crv": "0x173fd7434B8B50dF08e3298f173487ebDB35FD14",
+      "vecrv": "",
+      "crvUSD": "",
+      "scrvUSD": ""
+    },
+    "x-gov": {
+      "l1-broadcaster": "",
+      "l2-relayer": "",
+      "ownership-agent": "",
+      "parameter-agent": "",
+      "emergency-agent": "",
+      "vault": ""
+    },
+    "x-dao": {
+
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8"
+    },
+    "vecrv": {
+      "oracle": ""
+    },
+    "fees": {
+      "fee-receiver": "0x56bc95Ded2BEF162131905dfd600F2b9F1B380a4"
+    },
+    "integrations": {
+      "address-provider": "0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98",
+      "meta-registry": "0x19bd1AB34d6ABB584b9C1D5519093bfAA7f6c7d2",
+      "rate-provider": "0x64AFA95e0C3D8410240a4262df9Fd82B12b64eDd"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xd7E72f3615aa65b92A4DBdC211E296a35512988B",
+        "views": "0xA54f3c1DFa5f7DbF2564829d14b3B74a65d26Ae2",
+        "factory": "0x1764ee18e8B3ccA4787249Ceb249356192594585",
+        "plain-amm-implementation": "0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3",
+        "meta-amm-implementation": "0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26"
+      },
+      "twocrypto": {
+        "math": "0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1",
+        "views": "0x07CdEBF81977E111B08C126DEFA07818d0045b80",
+        "factory": "0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F",
+        "amm-implementation": "0x934791f7F391727db92BFF94cd789c4623d14c52"
+      },
+      "tricrypto": {
+        "math": "",
+        "views": "",
+        "factory": "",
+        "amm-native-disable-implementation": "",
+        "amm-native-enable-implementationd": ""
+      },
+      "router & zap": {
+        "router": "",
+        "stable-calc-zap": "0xCA8d0747B5573D69653C3aC22242e6341C36e4b4",
+        "crypto-calc-zap": "0xA72C85C258A81761433B4e8da60505Fe3Dd551CC",
+        "deposit-and-stake-zap": "",
+        "meta-zap-ng": ""
+      }
+    }
+    },
+    "corn": {
+    "tokens": {
+      "crv": "0x1b3757d5EE281Eaf6a9c8E5D9b8488b4475Aa955",
+      "vecrv": "",
+      "crvUSD": "0xEAEdD2B1b3F0fEC6388A4d6b2fE500B59Fd9f755",
+      "scrvUSD": ""
+    },
+    "x-gov": {
+      "l1-broadcaster": "",
+      "l2-relayer": "",
+      "ownership-agent": "0x676053Ab2fFfBdd0464eC784A52dA1dEA5355300",
+      "parameter-agent": "0x11DFBcB581D2146338B76739C086FA902f233f1c",
+      "emergency-agent": "0x970777A6A50c3927Cd7735A538431512b2592C96",
+      "vault": "0x506F594ceb4E33F5161139bAe3Ee911014df9f7f"
+    },
+    "x-dao": {
+
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0x87FE17697D0f14A222e8bEf386a0860eCffDD617"
+    },
+    "vecrv": {
+      "oracle": ""
+    },
+    "fees": {
+      "fee-receiver": "0x506F594ceb4E33F5161139bAe3Ee911014df9f7f"
+    },
+    "integrations": {
+      "address-provider": "0xd2002373543Ce3527023C75e7518C274A51ce712",
+      "meta-registry": "0x686bdb3D24Bc6F3ED89ed3d3B659765c54aC78B4",
+      "rate-provider": "0xC1b393EfEF38140662b91441C6710Aa704973228"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2",
+        "views": "0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8",
+        "factory": "0xd7E72f3615aa65b92A4DBdC211E296a35512988B",
+        "plain-amm-implementation": "0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22",
+        "meta-amm-implementation": "0x06452f9c013fc37169B57Eab8F50A7A48c9198A3"
+      },
+      "twocrypto": {
+        "math": "0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495",
+        "views": "0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F",
+        "factory": "0x5Ea9DD3b6f042A34Df818C6c1324BC5A7c61427a",
+        "amm-implementation": "0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5"
+      },
+      "tricrypto": {
+        "math": "0x635742dCC8313DCf8c904206037d962c042EAfBd",
+        "views": "0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499",
+        "factory": "0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a",
+        "implementation": "0x046207cB759F527b6c10C2D61DBaca45513685CC"
+      },
+      "router & zap": {
+        "router": "0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b",
+        "stable-calc-zap": "",
+        "crypto-calc-zap": "",
+        "deposit-and-stake-zap": "0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf",
+        "meta-zap-ng": "0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a"
+      }
+    }
+  },
+  "etherlink": {
+    "tokens": {
+      "crv": "",
+      "vecrv": "",
+      "crvUSD": "",
+      "scrvUSD": ""
+    },
+    "x-gov": {
+      "l1-broadcaster": "",
+      "l2-relayer": "",
+      "ownership-agent": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
+      "parameter-agent": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
+      "emergency-agent": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
+      "vault": "0x193110Ce1542d7371e1515BD6A2E470fDefc310D"
+    },
+    "x-dao": {
+
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0x41D2c5128A7241EC1f7CE346B162C347C19548B7"
+    },
+    "vecrv": {
+      "oracle": ""
+    },
+    "fees": {
+      "fee-receiver": "0x193110Ce1542d7371e1515BD6A2E470fDefc310D"
+    },
+    "integrations": {
+      "address-provider": "0x4574921eb950d3Fd5B01562162EC566Cb8bc3648",
+      "meta-registry": "0xe6dA14500f0b5783E2325F9C5a7eE5d99DA0fB42",
+      "rate-provider": "0x129578f94C253b8Bc903Bf2b73D07BF2583cc11d"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xe460dec242bc0A1a364c250a9D2F731d8D923650",
+        "views": "0xC9459A955a885467f01Ccc531c51dBcC957993c0",
+        "factory": "0x8271e06E5887FE5ba05234f5315c19f3Ec90E8aD",
+        "plain-amm-implementation": "0xFC687EFAFED297b765eDEcF8179c32195597C2df",
+        "meta-amm-implementation": "0x845b942DeEF9BC20a39A8b34B23e8c33aC2921BF"
+      },
+      "twocrypto": {
+        "math": "0x95249Dd40dDa3c0cbB4A7dd7D287E04aA68A3D4B",
+        "views": "0x17c67C3A38F68cbc4dEC77Fd7378978971B6c271",
+        "factory": "0xe7FBd704B938cB8fe26313C3464D4b7B7348c88C",
+        "amm-implementation": "0x5F870C2cf22ff829B5DC1Da09856B79dA6544f94"
+      },
+      "tricrypto": {
+        "math": "0xA4A2E7E11cBe5213B316E801D2172Ef10e566A96",
+        "views": "0x2Fe4A238F6A3BD7fAA68e0B6951e3FAFdB2876Eb",
+        "factory": "0x6E28493348446503db04A49621d8e6C9A40015FB",
+        "amm-implementation": "0x286182220E734AaC601282ba059de531d4BEAC1f"
+      },
+      "router & zap": {
+        "router": "0xFF5Cb29241F002fFeD2eAa224e3e996D24A6E8d1",
+        "stable-calc-zap": "",
+        "crypto-calc-zap": "",
+        "deposit-and-stake-zap": "0xB2Be7692B07b640C9f2ee1187cee2fAec741F872",
+        "meta-zap-ng": "0x2AF43209B366A4491CCe0A97C5a7B6059fd21295"
+      }
+    }
+    },
+    "fantom": {
+    "tokens": {
+      "crv": "0xE6c259bc0FCE25b71fE95A00361D3878E16232C3",
+      "vecrv": "",
+      "crvUSD": "",
+      "scrvUSD": "0x5191946500e75f0A74476F146dF7d386e52961d9"
+    },
+    "x-gov": {
+      "l1-broadcaster": "0x5786696bB5bE7fCDb9997E7f89355d9e97FF8d89",
+      "l2-relayer": "0x002599c7D4299A268b332B3240d60308f93C99eC",
+      "ownership-agent": "0xd62Ade30F740de7ef766008258B4b2F574A084F7",
+      "parameter-agent": "0x837814ba42c6f3B39f0A5060168F7027695DDAb1",
+      "emergency-agent": "0x42113C6818ACb87ca3CaFDbBc6a6ae396f1548E6",
+      "vault": "0x49C8De2D10C9A56DD9A59ab5Ca1216111276394C"
+    },
+    "x-dao": {
+      "crv-bridge": "0x7ce8aF75A9180B602445bE230860DDcb4cAc3E42",
+      "crvusd-bridge": "0x76EAfda658C54548B460B3f190386699DE3827d8",
+      "scrvusd-bridge": "0x08132eA9b02750E118cF5F5C640B7c46A8E638E8",
+      "block-hash-oracle": "0xF179D410C710e3c35A17468B2624dCFCC7DB8267",
+      "crv-minter": "0x444D6B4d7Ad9521FbFB563B4f896ace22DDB70c6",
+      "crvusd-minter": "0x01689FE734D0aA98be3A9a761aE11a20Dd968E41",
+      "scrvusd-minter": "0xF830b9E88f994BbB069aC884d40fA2E09d050BB8",
+      "gauge-type-oracle": "0x898Cd2cCE27CE3eb7eACBDD85FEd8181379f0F46",
+      "gauge-type-prover": "0x7FA0a0E2820b7B12aeFb3A2A3c0C6F83aAD87054",
+      "message-digest-prover": "0xAb0ab357a10c0161002A91426912933750082A9d"
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0x004A476B5B76738E34c86C7144554B9d34402F13"
+    },
+    "vecrv": {
+      "oracle": ""
+    },
+    "fees": {
+      "fee-receiver": "0x2B039565B2b7a1A9192D4847fbd33B25b836B950"
+    },
+    "integrations": {
+      "address-provider": "0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98",
+      "meta-registry": "",
+      "rate-provider": ""
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xf3A6aa40cf048a3960E9664847E9a7be025a390a",
+        "views": "0x33e72383472f77B0C6d8F791D1613C75aE2C5915",
+        "factory": "0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b",
+        "plain-amm-implementation": "0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499",
+        "meta-amm-implementation": "0x046207cB759F527b6c10C2D61DBaca45513685CC"
+      },
+      "twocrypto": {
+        "math": "0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1",
+        "views": "0x07CdEBF81977E111B08C126DEFA07818d0045b80",
+        "factory": "0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F",
+        "amm-implementation": "0x934791f7F391727db92BFF94cd789c4623d14c52"
+      },
+      "tricrypto": {
+        "math": "",
+        "views": "",
+        "factory": "",
+        "amm-native-disable-implementation": "",
+        "amm-native-enable-implementationd": ""
+      },
+      "router & zap": {
+        "router": "0x0DCDED3545D565bA3B19E683431381007245d983",
+        "stable-calc-zap": "0xCA8d0747B5573D69653C3aC22242e6341C36e4b4",
+        "crypto-calc-zap": "0xA72C85C258A81761433B4e8da60505Fe3Dd551CC",
+        "deposit-and-stake-zap": "0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD",
+        "meta-zap-ng": "0x21688e843a99B0a47E750e7dDD2b5dAFd9269d30"
+      }
+    }
+  },
+  "fraxtal": {
+    "tokens": {
+      "crv": "0x331b9182088e2a7d6d3fe4742aba1fb231aecc56",
+      "vecrv": "",
+      "crvUSD": "0xB102f7Efa0d5dE071A8D37B3548e1C7CB148Caf3",
+      "scrvUSD": "0xaB94C721040b33aA8b0b4D159Da9878e2a836Ed0"
+    },
+    "x-gov": {
+      "l1-broadcaster": "0xE0fE4416214e95F0C67Dc044AAf1E63d6972e0b9",
+      "l2-relayer": "0x7BE6BD57A319A7180f71552E58c9d32Da32b6f96",
+      "ownership-agent": "0x4BbdFEd5696b3a8F6B3813506b5389959C5CDC57",
+      "parameter-agent": "0x61E0521A1FA8CA2f544ab6b7B7e89059e5b361FF",
+      "emergency-agent": "0xeF3D6Bc9a603AcABAEd46f43506F01e7eC4d1301",
+      "vault": "0x50eD95CEb917443eE0790Eea97494121CA318a6C"
+    },
+    "x-dao": {
+
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0x0B8D6B6CeFC7Aa1C2852442e518443B1b22e1C52"
+    },
+    "vecrv": {
+      "oracle": "0xF3daD3Ca2eF135b248128Ab1Ed984FB6F2185CBf",
+      "verifier": "0x4D1AF9911e4c19f64Be36c36EF39Fd026Bc9bb61",
+      "delegation-verifier": "0x852F32c22C5035EA12566EDFB4415625776D75d5"
+    },
+    "fees": {
+      "fee-receiver": "0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6"
+    },
+    "integrations": {
+      "address-provider": "0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98",
+      "meta-registry": "0xd125E7a0cEddF89c6473412d85835450897be6Dc",
+      "rate-provider": "0x07920E98a66e462C2Aa4c8fa6200bc68CA161ea0"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0x506F594ceb4E33F5161139bAe3Ee911014df9f7f",
+        "views": "0xeEcCd039d7228530D5F0c3ce7291Dd9677CCFFb1",
+        "factory": "0xd2002373543Ce3527023C75e7518C274A51ce712",
+        "plain-amm-implementation": "0x1764ee18e8B3ccA4787249Ceb249356192594585",
+        "meta-amm-implementation": "0x5eeE3091f747E60a045a2E715a4c71e600e31F6E"
+      },
+      "twocrypto": {
+        "math": "0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1",
+        "views": "0x07CdEBF81977E111B08C126DEFA07818d0045b80",
+        "factory": "0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F",
+        "amm-implementation": "0x934791f7F391727db92BFF94cd789c4623d14c52"
+      },
+      "tricrypto": {
+        "math": "0x0C9D8c7e486e822C29488Ff51BFf0167B4650953",
+        "views": "0x64379C265Fc6595065D7d835AAaa731c0584dB80",
+        "factory": "0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F",
+        "amm-native-disable-implementation": "0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495",
+        "amm-native-enable-implementationd": "0xd3b17f862956464ae4403ccf829ce69199856e1e"
+      },
+      "router & zap": {
+        "router": "0x56C526b0159a258887e0d79ec3a80dfb940d0cD7",
+        "stable-calc-zap": "0xCA8d0747B5573D69653C3aC22242e6341C36e4b4",
+        "crypto-calc-zap": "0x69522fb5337663d3B4dFB0030b881c1A750Adb4f",
+        "deposit-and-stake-zap": "0xF0d4c12A5768D806021F80a262B4d39d26C58b8D",
+        "meta-zap-ng": "0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b"
+      }
+    },
+    "llamalend": {
+      "one-way-lending-factory": "0xf3c9bdAB17B7016fBE3B77D17b1602A7db93ac66",
+      "amm-implementation": "0x59CfFdC8cf8b9b71D91Da6de480c957993020E8A",
+      "controller-implementation": "0x7002B727Ef8F5571Cb5F9D70D13DBEEb4dFAe9d1",
+      "vault-implementation": "0xc1DB00a8E5Ef7bfa476395cdbcc98235477cDE4E",
+      "pool-price-oracle-implementation": "0x0cD5A1e9E19Af1f1b910Ac3C3452A16B2B37155b",
+      "monetary-policy-implementation": "0x86D347cE5f1E6f7Ef4Da00FB7c8d31fBD16996F0",
+      "llamalend-leverage-zap": "0x37c5ab57af7100bdc9b668d766e193ccbf6614fd"
+    }
+    },
+    "gnosis": {
+    "tokens": {
+      "crv": "0x712b3d230F3C1c19db860d80619288b1F0BDd0Bd",
+      "vecrv": "",
+      "crvUSD": "0xaBEf652195F98A91E490f047A5006B71c85f058d",
+      "scrvUSD": ""
+    },
+    "x-gov": {
+      "l1-broadcaster": "0x22089A449ABdAd415d3B8476A501BFe70870C1a7",
+      "l2-relayer": "0x22089A449ABdAd415d3B8476A501BFe70870C1a7",
+      "ownership-agent": "0x383544581A70d2C4E4688d2C5C18C3941e0c8637",
+      "parameter-agent": "0x91304259119506185Fd74e3950bdd65A7e03E15E",
+      "emergency-agent": "0xEFDA01FE1dE71c9bDcFd78A58EA34d9F8f8bde90",
+      "vault": "0x0B8c6A25904a1b8A0712Bc857390130a438c52AA"
+    },
+    "x-dao": {
+
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0x06471ED238306a427241B3eA81352244E77B004F"
+    },
+    "vecrv": {
+      "oracle": "0x2Fa3cbAc10f1Ec7618a383a005862D900b470334",
+      "verifier": "0xA7F15AC62F659E7587B722321a6d5F34D1f60E6E",
+      "delegation-verifier": "0x45D43e82a7224295D42503a0c165654ACFfbb4c9"
+    },
+    "fees": {
+      "fee-receiver": "0xB055EbbAcc8Eefc166c169e9Ce2886D0406aB49b",
+      "fee-collector": "0xBb7404F9965487a9DdE721B3A5F0F3CcfA9aa4C5",
+      "hooker": "0xE898893ebAe7b75dc4cAB0fb16e24137309ff178",
+      "cowswap-burner": "0x566b9F24200A9B51b76792D4e81B569AF27eda83",
+      "gnosis-fee-bridger": "0xc4AA2fB0A8837a06d296b1c0DE1990E401659449"
+    },
+    "integrations": {
+      "address-provider": "0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98",
+      "meta-registry": "0xb6265659d7e9FEccB59e076e949Da556FC5E1429",
+      "rate-provider": "0x149ff1DECfe441cD685306965DB5Ac73f6808851"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xFAbC421e3368D158d802684A217a83c083c94CeB",
+        "views": "0xa0EC67a3C483674f77915893346A8CA3AbE2b785",
+        "factory": "0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8",
+        "plain-amm-implementation": "0x3d6cb2f6dcf47cdd9c13e4e3beae9af041d8796a",
+        "meta-amm-implementation": "0xC1b393EfEF38140662b91441C6710Aa704973228"
+      },
+      "twocrypto": {
+        "math": "0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1",
+        "views": "0x07CdEBF81977E111B08C126DEFA07818d0045b80",
+        "factory": "0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F",
+        "amm-implementation": "0x934791f7F391727db92BFF94cd789c4623d14c52"
+      },
+      "tricrypto": {
+        "math": "0xff02cbd91f57a778bab7218da562594a680b8b61",
+        "views": "0xe548590f9fAe7a23EA6501b144B0D58b74Fc4B53",
+        "factory": "0xb47988ad49dce8d909c6f9cf7b26caf04e1445c8",
+        "amm-native-disable-implementation": "0x3f445D38E820c010a7A6E33c5F80cBEBE6930f61",
+        "amm-native-enable-implementationd": "0xa54f3c1dfa5f7dbf2564829d14b3b74a65d26ae2"
+      },
+      "router & zap": {
+        "router": "0x0DCDED3545D565bA3B19E683431381007245d983",
+        "stable-calc-zap": "0xCA8d0747B5573D69653C3aC22242e6341C36e4b4",
+        "crypto-calc-zap": "0xA72C85C258A81761433B4e8da60505Fe3Dd551CC",
+        "deposit-and-stake-zap": "0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD",
+        "meta-zap-ng": "0x08390C76DFDaB74249754C8e71cC2747351bd388"
+      }
+    }
+  },
+  "hyperliquid": {
+    "tokens": {
+      "crv": "",
+      "vecrv": "",
+      "crvUSD": "",
+      "scrvUSD": ""
+    },
+    "x-gov": {
+      "emergency-admin": "0xb101b2b0aa02b7167D238B98dc1B0b0404a760E8",
+      "ownership-admin": "0xb101b2b0aa02b7167D238B98dc1B0b0404a760E8",
+      "parameter-admin": "0xb101b2b0aa02b7167D238B98dc1B0b0404a760E8",
+      "vault": "0xf3A431008396df8A8b2DF492C913706BDB0874ef"
+    },
+    "x-dao": {
+
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6"
+    },
+    "vecrv": {
+      "oracle": ""
+    },
+    "fees": {
+      "fee-receiver": "0xf3A431008396df8A8b2DF492C913706BDB0874ef"
+    },
+    "integrations": {
+      "address-provider": "0x1764ee18e8B3ccA4787249Ceb249356192594585",
+      "meta-registry": "0x5eeE3091f747E60a045a2E715a4c71e600e31F6E",
+      "rate-provider": "0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0x686bdb3D24Bc6F3ED89ed3d3B659765c54aC78B4",
+        "views": "0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b",
+        "factory": "0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22",
+        "plain-amm-implementation": "0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2",
+        "meta-amm-implementation": "0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8"
+      },
+      "twocrypto": {
+        "math": "0x64379C265Fc6595065D7d835AAaa731c0584dB80",
+        "views": "0xd3B17f862956464ae4403cCF829CE69199856e1e",
+        "factory": "0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F",
+        "amm-implementation": "0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495"
+      },
+      "tricrypto": {
+        "math": "0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26",
+        "views": "0xf3A6aa40cf048a3960E9664847E9a7be025a390a",
+        "factory": "0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499",
+        "amm-implementation": "0x635742dCC8313DCf8c904206037d962c042EAfBd"
+      },
+      "router & zap": {
+        "router": "0xd2002373543Ce3527023C75e7518C274A51ce712",
+        "stable-calc-zap": "",
+        "crypto-calc-zap": "",
+        "deposit-and-stake-zap": "0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC",
+        "meta-zap-ng": "0xFAbC421e3368D158d802684A217a83c083c94CeB"
+      }
+    }
+  },
+  "ink": {
+    "tokens": {
+      "crv": "0xAC73671a1762FE835208Fb93b7aE7490d1c2cCb3",
+      "vecrv": "",
+      "crvUSD": "0x39fec550CC6DDCEd810eCCfA9B2931b4B5f2344D",
+      "scrvUSD": ""
+    },
+    "x-gov": {
+      "l1-broadcaster": "",
+      "l2-relayer": "",
+      "ownership-agent": "0xcAEF324bea3Ff5c7a08710081294F3344fFAdC54",
+      "parameter-agent": "0x63Eb7846642630456707C3efBb50A03c79B89D81",
+      "emergency-agent": "0xa8eB7B41fe8dF7Ea3de982397AD183721784D987",
+      "vault": "0x686bdb3D24Bc6F3ED89ed3d3B659765c54aC78B4"
+    },
+    "x-dao": {
+
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8"
+    },
+    "vecrv": {
+      "oracle": ""
+    },
+    "fees": {
+      "fee-receiver": "0x686bdb3D24Bc6F3ED89ed3d3B659765c54aC78B4"
+    },
+    "integrations": {
+      "address-provider": "0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22",
+      "meta-registry": "0x06452f9c013fc37169B57Eab8F50A7A48c9198A3",
+      "rate-provider": "0x19bd1AB34d6ABB584b9C1D5519093bfAA7f6c7d2"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xbC0797015fcFc47d9C1856639CaE50D0e69FbEE8",
+        "views": "0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3",
+        "factory": "0x046207cB759F527b6c10C2D61DBaca45513685CC",
+        "plain-amm-implementation": "0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26",
+        "meta-amm-implementation": "0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499"
+      },
+      "twocrypto": {
+        "math": "0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf",
+        "views": "0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a",
+        "factory": "0xd125E7a0cEddF89c6473412d85835450897be6Dc",
+        "amm-implementation": "0x76303e4fDcA0AbF28aB3ee42Ce086E6503431F1D"
+      },
+      "tricrypto": {
+        "math": "0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495",
+        "views": "0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F",
+        "factory": "0x5Ea9DD3b6f042A34Df818C6c1324BC5A7c61427a",
+        "amm-implementation": "0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5"
+      },
+      "router & zap": {
+        "router": "0xd7E72f3615aa65b92A4DBdC211E296a35512988B",
+        "stable-calc-zap": "",
+        "crypto-calc-zap": "",
+        "deposit-and-stake-zap": "0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD",
+        "meta-zap-ng": "0x3E3B5F27bbf5CC967E074b70E9f4046e31663181"
+      }
+    }
+  },
+  "kava": {
+    "tokens": {
+      "crv": "0x7736C61F00c72e868AA9904c9063e8445A1eF5DD",
+      "vecrv": "",
+      "crvUSD": "0x98B4029CaBEf7Fd525A36B0BF8555EC1d42ec0B6",
+      "scrvUSD": ""
+    },
+    "x-gov": {
+      "l1-broadcaster": "0x5786696bB5bE7fCDb9997E7f89355d9e97FF8d89",
+      "l2-relayer": "0xA5961898870943c68037F6848d2D866Ed2016bcB",
+      "ownership-agent": "0xeC6a886148B38C233B07cc6732142dccaBF1051D",
+      "parameter-agent": "0x6e53131F68a034873b6bFA15502aF094Ef0c5854",
+      "emergency-agent": "0xA177D2bd2BD723878bD95982c0855291953f74C9",
+      "vault": ""
+    },
+    "x-dao": {
+      "crv-bridge": "0x3C8D2A033131551a3f09E7b5c07DB01d547311CC",
+      "crvusd-bridge": "0x1C4e4553F95C28bc529233Cc35D550befE7B83Fc",
+      "scrvusd-bridge": "",
+      "block-hash-oracle": "0x05d4E2Ed7216A204e5FB4e3F5187eCfaa5eF3Ef7",
+      "crv-minter": "0x65a0b01756E837e6670634816E4F5B3a3fF21107",
+      "crvusd-minter": "0xEfDE221f306152971D8e9f181bFe998447975810",
+      "scrvusd-minter": "",
+      "gauge-type-oracle": "0x1E7B1Bd0490ddE12F6E3d09766Beb05552AFe27A",
+      "gauge-type-prover": "0x64ed8CfF5Ad3DaEb217abE03a00Ff2D90b86456b",
+      "message-digest-prover": "0x5373E1B9f2781099f6796DFe5D68DE59ac2F18E3"
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8"
+    },
+    "vecrv": {
+      "oracle": ""
+    },
+    "fees": {
+      "fee-receiver": ""
+    },
+    "integrations": {
+      "address-provider": "0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98",
+      "meta-registry": "",
+      "rate-provider": ""
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xd7E72f3615aa65b92A4DBdC211E296a35512988B",
+        "views": "0xB6845b562F01eB02ef20CBB63553d2a768e5a1Cb",
+        "factory": "0x1764ee18e8B3ccA4787249Ceb249356192594585",
+        "plain-amm-implementation": "0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3",
+        "meta-amm-implementation": "0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26"
+      },
+      "twocrypto": {
+        "math": "0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1",
+        "views": "0x0C9D8c7e486e822C29488Ff51BFf0167B4650953",
+        "factory": "0xd3B17f862956464ae4403cCF829CE69199856e1e",
+        "amm-implementation": "0x934791f7F391727db92BFF94cd789c4623d14c52"
+      },
+      "tricrypto": {
+        "math": "",
+        "views": "",
+        "factory": "",
+        "amm-native-disable-implementation": "",
+        "amm-native-enable-implementationd": ""
+      },
+      "router & zap": {
+        "router": "0x0DCDED3545D565bA3B19E683431381007245d983",
+        "stable-calc-zap": "0xCA8d0747B5573D69653C3aC22242e6341C36e4b4",
+        "crypto-calc-zap": "0xA72C85C258A81761433B4e8da60505Fe3Dd551CC",
+        "deposit-and-stake-zap": "0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD",
+        "meta-zap-ng": ""
+      }
+    }
+  },
+  "mantle": {
+    "tokens": {
+      "crv": "0xE265FC71d45fd791c9ebf3EE0a53FBB220Eb8f75",
+      "vecrv": "",
+      "crvUSD": "0x0994206dfe8de6ec6920ff4d779b0d950605fb53",
+      "scrvUSD": ""
+    },
+    "x-gov": {
+      "l1-broadcaster": "0xb50b9a0d8a4ed8115fe174f300465ea4686d86df",
+      "l2-relayer": "0xB50B9a0D8A4ED8115Fe174F300465Ea4686d86Df",
+      "ownership-agent": "0xfe87a6cdca1eeb90987c6a196a1c5f5c76f5f2b0",
+      "parameter-agent": "0x024d362f7aa162d8591304016fd60a209efc527e",
+      "emergency-agent": "0x4339b53cf7f6eec1a997ceea81165e45c1244429",
+      "vault": "0x77A214bd4ee3650e5608339BBbE04b09f5546ECF"
+    },
+    "x-dao": {
+
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0x0B8D6B6CeFC7Aa1C2852442e518443B1b22e1C52"
+    },
+    "vecrv": {
+      "oracle": "0x852F32c22C5035EA12566EDFB4415625776D75d5",
+      "verifier": "0x820945D1E5759a57874846371F22b56b73c6AE85",
+      "delegation-verifier": "0x1df9cEeE7aB8804749B795D64307A3CFE0e84905"
+    },
+    "fees": {
+      "fee-receiver": "0xf3A431008396df8A8b2DF492C913706BDB0874ef"
+    },
+    "integrations": {
+      "address-provider": "0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98",
+      "meta-registry": "0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf",
+      "rate-provider": "0x3f445D38E820c010a7A6E33c5F80cBEBE6930f61"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6",
+        "views": "0xFf02cBD91F57A778Bab7218DA562594a680B8B61",
+        "factory": "0x5eeE3091f747E60a045a2E715a4c71e600e31F6E",
+        "plain-amm-implementation": "0x87FE17697D0f14A222e8bEf386a0860eCffDD617",
+        "meta-amm-implementation": "0x1764ee18e8B3ccA4787249Ceb249356192594585"
+      },
+      "twocrypto": {
+        "math": "0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1",
+        "views": "0x07CdEBF81977E111B08C126DEFA07818d0045b80",
+        "factory": "0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F",
+        "amm-implementation": "0x934791f7F391727db92BFF94cd789c4623d14c52"
+      },
+      "tricrypto": {
+        "math": "",
+        "views": "",
+        "factory": "",
+        "amm-native-disable-implementation": "",
+        "amm-native-enable-implementationd": ""
+      },
+      "router & zap": {
+        "router": "",
+        "stable-calc-zap": "",
+        "crypto-calc-zap": "",
+        "deposit-and-stake-zap": "",
+        "meta-zap-ng": ""
+      }
+    }
+  },
+  "moonbeam": {
+    "tokens": {
+      "crv": "",
+      "vecrv": "",
+      "crvUSD": "",
+      "scrvUSD": ""
+    },
+    "x-gov": {
+      "l1-broadcaster": "",
+      "l2-relayer": "",
+      "ownership-agent": "",
+      "parameter-agent": "",
+      "emergency-agent": "",
+      "vault": ""
+    },
+    "x-dao": {
+
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8"
+    },
+    "vecrv": {
+      "oracle": ""
+    },
+    "fees": {
+      "fee-receiver": "0x114C4042B11a2b16F58Fe1BFe847589a122F678a"
+    },
+    "integrations": {
+      "address-provider": "",
+      "meta-registry": "",
+      "rate-provider": ""
+    },
+    "amm": {
+      "stableswap": {
+        "math": "",
+        "views": "",
+        "factory": "",
+        "plain-amm-implementation": "",
+        "meta-amm-implementation": ""
+      },
+      "twocrypto": {
+        "math": "",
+        "views": "",
+        "factory": "",
+        "amm-implementation": ""
+      },
+      "tricrypto": {
+        "math": "",
+        "views": "",
+        "factory": "",
+        "amm-native-disable-implementation": "",
+        "amm-native-enable-implementationd": ""
+      },
+      "router & zap": {
+        "router": "",
+        "stable-calc-zap": "",
+        "crypto-calc-zap": "",
+        "deposit-and-stake-zap": "",
+        "meta-zap-ng": ""
+      }
+    }
+    },
+    "optimism": {
+    "tokens": {
+      "crv": "0x0994206dfE8De6Ec6920FF4D779B0d950605Fb53",
+      "vecrv": "",
+      "crvUSD": "0xc52d7f23a2e460248db6ee192cb23dd12bddcbf6",
+      "scrvUSD": "0x289f635106d5b822a505b39ac237a0ae9189335b"
+    },
+    "x-gov": {
+      "l1-broadcaster": "0x8e1e5001c7b8920196c7e3edf2bcf47b2b6153ff",
+      "l2-relayer": "0x8e1e5001C7B8920196c7E3EdF2BCf47B2B6153ff",
+      "ownership-agent": "0x28c4A1Fa47EEE9226F8dE7D6AF0a41C62Ca98267",
+      "parameter-agent": "0xE7F2B72E94d1c2497150c24EA8D65aFFf1027b9b",
+      "emergency-agent": "0x9fF1ddE4BE9BbD891836863d227248047B3D881b",
+      "vault": "0xD166EEdf272B860E991d331B71041799379185D5"
+    },
+    "x-dao": {
+
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0x871fBD4E01012e2E8457346059e8C189d664DbA4"
+    },
+    "vecrv": {
+      "oracle": "0xf1946d4879646e0fcd8f5bb32a5636ed8055176d",
+      "verifier": "0x4eee0D7F5C84EF30AEd22137EED4188ac778f97f",
+      "delegation-verifier": "0x1d04Fcb6293690D75E9262A89Ac3B816772E6841"
+    },
+    "fees": {
+      "fee-receiver": "0xbF7E49483881C76487b0989CD7d9A8239B20CA41"
+    },
+    "integrations": {
+      "address-provider": "0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98",
+      "meta-registry": "0xc65CB3156225380BEda366610BaB18D5835A1647",
+      "rate-provider": "0x3f4a2BffA78D50CD61401a440526378E2155A8aE"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26",
+        "views": "0xbC7654d2DD901AaAa3BE4Cb5Bc0f10dEA9f96443",
+        "factory": "0x5eeE3091f747E60a045a2E715a4c71e600e31F6E",
+        "plain-amm-implementation": "0x635742dCC8313DCf8c904206037d962c042EAfBd",
+        "meta-amm-implementation": "0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499"
+      },
+      "twocrypto": {
+        "math": "0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1",
+        "views": "0x07CdEBF81977E111B08C126DEFA07818d0045b80",
+        "factory": "0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F",
+        "amm-implementation": "0x934791f7F391727db92BFF94cd789c4623d14c52"
+      },
+      "tricrypto": {
+        "math": "0x19bd1AB34d6ABB584b9C1D5519093bfAA7f6c7d2",
+        "views": "0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf",
+        "factory": "0xc6C09471Ee39C7E30a067952FcC89c8922f9Ab53",
+        "amm-native-disable-implementation": "0x0458ea5F4CD00E873264Be2031Ceb8f9d9b3116c",
+        "amm-native-enable-implementationd": "0x1FE2a06c8bd81AE65FD1C5036451890b37976369"
+      },
+      "router & zap": {
+        "router": "0x0DCDED3545D565bA3B19E683431381007245d983",
+        "stable-calc-zap": "0xCA8d0747B5573D69653C3aC22242e6341C36e4b4",
+        "crypto-calc-zap": "0xA72C85C258A81761433B4e8da60505Fe3Dd551CC",
+        "deposit-and-stake-zap": "0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD",
+        "meta-zap-ng": "0x07920E98a66e462C2Aa4c8fa6200bc68CA161ea0"
+      }
+    },
+    "llamalend": {
+      "one-way-lending-factory": "0x5EA8f3D674C70b020586933A0a5b250734798BeF",
+      "amm-implementation": "0x40b8c0c9186eAEaf84023d81CD2a709e81fCFbC1",
+      "controller-implementation": "0xCc65F473815c97bDe543Db458358F09852eDb5B4",
+      "vault-implementation": "0x3B1DF11b96b2F5525aBe75eebeFb1ce0928d2411",
+      "pool-price-oracle-implementation": "0x227c9AD884e0E32a698FB38ba0511eE36fA92b7d",
+      "monetary-policy-implementation": "0xa2294769e9CFA9Fd029030F7be94E2602821677B",
+      "llamalend-leverage-zap": "0x273e44B9a1841857d9360e8792bB59f9e1FfE9Da"
+    }
+  },
+  "plume": {
+    "tokens": {
+      "crv": "",
+      "vecrv": "",
+      "crvUSD": "",
+      "scrvUSD": ""
+    },
+    "x-gov": {
+      "emergency-admin": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
+      "ownership-admin": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
+      "parameter-admin": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
+      "vault": "0xBaF6cacFfFb6D57d548F0FAff486E9884a0D1747"
+    },
+    "x-dao": {
+
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0x95cB855840342bE0F023A6A7e6f0A9202BFEfE1b"
+    },
+    "vecrv": {
+      "oracle": ""
+    },
+    "fees": {
+      "fee-receiver": "0xBaF6cacFfFb6D57d548F0FAff486E9884a0D1747"
+    },
+    "integrations": {
+      "address-provider": "0x907CE289E9Ee0BBcb0F69132B1C28A9Affc29FCA",
+      "meta-registry": "0xB4c6A1e8A14e9Fe74c88b06275b747145DD41206",
+      "rate-provider": "0xBB56F907e8F455f9f71ed6a394B60ff666a60639"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xDF264E9a02E0D1C1F0b83AE067dE2Bc0031e1e7a",
+        "views": "0x9bBc929C45F2C06ccb4acd2C6D9FFE577d505Dfc",
+        "factory": "0x5aEa9aaDd0974e8914229a23699bB6b343c97B09",
+        "plain-amm-implementation": "0xA626B239e30dF83a228e5D87daB005819267d1BA",
+        "meta-amm-implementation": "0x73E5a7225E22682b8Abd5aaE322Ea4ab140Ec652"
+      },
+      "twocrypto": {
+        "math": "0xE8acB9bDd10E9685361a2D540e60378d26b0223f",
+        "views": "0xC1a0003b9bFB0C958DA455d12417df0bA79bBA78",
+        "factory": "0xa17b39BF1c2FE776Af38a999bE7Bb7bEa737a6EC",
+        "amm-implementation": "0x2320f304651F825353124890e4BE17e826BE5841"
+      },
+      "tricrypto": {
+        "math": "0xab53d6899E9c347A5DedDcE3d97D4aeA36B0f8d7",
+        "views": "0xF1f6e500d9Ccb9F3477cF078A5ea74F75fC3fc96",
+        "factory": "0x729c764aE95e7a9DEA9F950B5AEdbF1A9F3D7c03",
+        "amm-implementation": "0x016a5D98dC76Fb638F2942E94Fd12b323e792219"
+      },
+      "router & zap": {
+        "router": "0x3F5A41B922a76759b9C77D36b3d337E88cD1dc5e",
+        "stable-calc-zap": "",
+        "crypto-calc-zap": "",
+        "deposit-and-stake-zap": "0x374D3B496F86416dF0B88830Ad9c59837aA9f078",
+        "meta-zap-ng": "0xd05b37dFe4c0377dbCb8030eAD07b41888716fE4"
+      }
+    }
+    },
+    "polygon": {
+    "tokens": {
+      "crv": "0x172370d5Cd63279eFa6d502DAB29171933a610AF",
+      "vecrv": "",
+      "crvUSD": "0xc4Ce1D6F5D98D65eE25Cf85e9F2E9DcFEe6Cb5d6",
+      "scrvUSD": ""
+    },
+    "x-gov": {
+      "l1-broadcaster": "0x91e95f16f7F1b988391A869771Ffb50Df4ceBDF7",
+      "l2-relayer": "0x91e95f16f7F1b988391A869771Ffb50Df4ceBDF7",
+      "ownership-agent": "0x8cB05bFEd65b522a7cF98d590F1711A9Db43af71",
+      "parameter-agent": "0x3CF7c393519ea55D1E1F2c55a6395be63b1A9F9C",
+      "emergency-agent": "0x9FD6E204e08867170ddE54a8374083fF592eBD3E",
+      "vault": ""
+    },
+    "x-dao": {
+      "crv-bridge": "0x708eA72651cDE801979d0305A6b88F9E4d6FC6Cc",
+      "crvusd-bridge": "0x4782965BB280A8A6CA7dAEB31BEb25E181F66994",
+      "scrvusd-bridge": "",
+      "block-hash-oracle": "0xEeE35C0d23Ac93fdF9033B54453a41e23Ca66D04",
+      "crv-minter": "0x36f610B511c026d2C4c9c9d7350a1855Ab7A4494",
+      "crvusd-minter": "0xdcbd8606338Fb6E636D62fB1Bf1658AaF6B4bD62",
+      "scrvusd-minter": "",
+      "gauge-type-oracle": "0xa5a1d8DCAf455De190902EFACcCDA551a3Caa193",
+      "gauge-type-prover": "0xA092A338c97F18FF5F23EC1Ef64bcb40354eaa5A",
+      "message-digest-prover": "0x43DaC0b0d040376335f084e058fc6212677A6043"
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0x55a1C26CE60490A15Bdd6bD73De4F6346525e01e"
+    },
+    "vecrv": {
+      "oracle": ""
+    },
+    "fees": {
+      "fee-receiver": "0x774D1Dba98cfBD1F2Bc3A1F59c494125e07C48F9"
+    },
+    "integrations": {
+      "address-provider": "0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98",
+      "meta-registry": "0x296d2B5C23833A70D07c8fCBB97d846c1ff90DDD",
+      "rate-provider": "0xe0B15824862f3222fdFeD99FeBD0f7e0EC26E1FA"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xd7E72f3615aa65b92A4DBdC211E296a35512988B",
+        "views": "0xf2eff2Cd0d9C82b7b2f17FbBed703fA7931dB1da",
+        "factory": "0x1764ee18e8B3ccA4787249Ceb249356192594585",
+        "plain-amm-implementation": "0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3",
+        "meta-amm-implementation": "0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26"
+      },
+      "twocrypto": {
+        "math": "0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1",
+        "views": "0x07CdEBF81977E111B08C126DEFA07818d0045b80",
+        "factory": "0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F",
+        "amm-implementation": "0x934791f7F391727db92BFF94cd789c4623d14c52"
+      },
+      "tricrypto": {
+        "math": "0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC",
+        "views": "0xFAbC421e3368D158d802684A217a83c083c94CeB",
+        "factory": "0xC1b393EfEF38140662b91441C6710Aa704973228",
+        "amm-native-disable-implementation": "0x3d6cB2F6DcF47CDd9C13E4e3beAe9af041d8796a",
+        "amm-native-enable-implementationd": "0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf"
+      },
+      "router & zap": {
+        "router": "0x0DCDED3545D565bA3B19E683431381007245d983",
+        "stable-calc-zap": "0xCA8d0747B5573D69653C3aC22242e6341C36e4b4",
+        "crypto-calc-zap": "0xA72C85C258A81761433B4e8da60505Fe3Dd551CC",
+        "deposit-and-stake-zap": "0x37c5ab57AF7100Bdc9B668d766e193CCbF6614FD",
+        "meta-zap-ng": "0x4c7a5a5d57f98d362f1c00d7135f0da5b6f82227"
+      }
+    }
+  },
+  "sonic": {
+    "tokens": {
+      "crv": "0x5af79133999f7908953e94b7a5cf367740ebee35",
+      "vecrv": "",
+      "crvUSD": "0x7FFf4C4a827C84E32c5E175052834111B2ccd270",
+      "scrvUSD": "0xb5f0edecff09081354db252ceec000b213186fac"
+    },
+    "x-gov": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69",
+      "ownership-agent": "0x6c9578402A3ace046A12839f45F84Aa5448E9c30",
+      "parameter-agent": "0xEC5AFc9590964f2fA0FeED54f0fBB2A34480908D",
+      "emergency-agent": "0xA73EdCf18421B56D9AF1cE08A34E102E23b2C4B6",
+      "vault": "0x3c0a405E914337139992625D5100Ea141a9C4d11"
+    },
+    "x-dao": {
+      "crv-bridge": "0x5A537a46D780B1C70138aB98eDce69e7a53177ba",
+      "crvusd-bridge": "0xf6F07B393e4cEE82EFBcD502Db2903f28aA0472e",
+      "scrvusd-bridge": "0x6F8012b70ba1fb7F40873CD7f1b03c6fb5bf666C",
+      "block-hash-oracle": "0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8",
+      "crv-minter": "0x5De4EF4879F4fe3bBADF2227D2aC5d0E2D76C895",
+      "crvusd-minter": "0xF830b9E88f994BbB069aC884d40fA2E09d050BB8",
+      "scrvusd-minter": "0xc0b338DA0fDD43Dc48539837594cf6363795FEeA",
+      "gauge-type-oracle": "0x74d6aABD6197E83d963F0B48be9C034F93E8E66d",
+      "gauge-type-prover": "0x47ca04Ee05f167583122833abfb0f14aC5677Ee4",
+      "message-digest-prover": "0xF3daD3Ca2eF135b248128Ab1Ed984FB6F2185CBf"
+    },
+    "curve-block-oracle": {
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0xf3A431008396df8A8b2DF492C913706BDB0874ef"
+    },
+    "vecrv": {
+      "oracle": "0x361aa6D20fbf6185490eB2ddf1DD1D3F301C201d",
+      "verifier": "0x38334e319D257d8f580f66393d25A6CD647A6AbC",
+      "delegation-verifier": "0xC29229b477582CE810e8C261b2869b9d8c82F4a7"
+    },
+    "fees": {
+      "fee-receiver": "0x3c0a405E914337139992625D5100Ea141a9C4d11"
+    },
+    "integrations": {
+      "address-provider": "0x87FE17697D0f14A222e8bEf386a0860eCffDD617",
+      "meta-registry": "0x1764ee18e8B3ccA4787249Ceb249356192594585",
+      "rate-provider": "0xFAbC421e3368D158d802684A217a83c083c94CeB"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xd2002373543Ce3527023C75e7518C274A51ce712",
+        "views": "0x686bdb3D24Bc6F3ED89ed3d3B659765c54aC78B4",
+        "factory": "0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8",
+        "plain-amm-implementation": "0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b",
+        "meta-amm-implementation": "0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2"
+      },
+      "twocrypto": {
+        "math": "0x0C9D8c7e486e822C29488Ff51BFf0167B4650953",
+        "views": "0x64379C265Fc6595065D7d835AAaa731c0584dB80",
+        "factory": "0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495",
+        "amm-implementation": "0xd3B17f862956464ae4403cCF829CE69199856e1e"
+      },
+      "tricrypto": {
+        "math": "0xe265FC390E9129b7E337Da23cD42E00C34Da2CE3",
+        "views": "0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26",
+        "factory": "0x635742dCC8313DCf8c904206037d962c042EAfBd",
+        "amm-implementation": "0xf3A6aa40cf048a3960E9664847E9a7be025a390a"
+      },
+      "router & zap": {
+        "router": "0x5eeE3091f747E60a045a2E715a4c71e600e31F6E",
+        "stable-calc-zap": "",
+        "crypto-calc-zap": "",
+        "deposit-and-stake-zap": "0x505d666E4DD174DcDD7FA090ed95554486d2Be44",
+        "meta-zap-ng": "0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC"
+      }
+    },
+    "llamalend": {
+      "one-way-lending-factory": "0x30D1859DaD5A52aE03B6e259d1b48c4b12933993",
+      "amm-implementation": "0x98C391EC9D4b8e6a25A6F375d316e82506efBcF7",
+      "controller-implementation": "0x97223D110fbBa277155E0eF869900DeBb7FE1B6e",
+      "vault-implementation": "0x837fD0c38792620aC871055B2f43D3F61809e0f2",
+      "pool-price-oracle-implementation": "0x271eA597a95aF4f20FA61B0D77cB38E2fBBe8Ed9",
+      "monetary-policy-implementation": "0xDa39894132ADC64E7d3B5Ca20B85C9bfb2b494db",
+      "llamalend-leverage-zap": "0x5552b631e2aD801fAa129Aacf4B701071cC9D1f7"
+    }
+  },
+  "tac": {
+    "tokens": {
+      "crv": "",
+      "vecrv": "",
+      "crvUSD": "",
+      "scrvUSD": ""
+    },
+    "x-gov": {
+      "l1-broadcaster": "",
+      "l2-relayer": "",
+      "ownership-agent": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
+      "parameter-agent": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
+      "emergency-agent": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
+      "vault": "0xBaF6cacFfFb6D57d548F0FAff486E9884a0D1747"
+    },
+    "x-dao": {
+
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0x95cB855840342bE0F023A6A7e6f0A9202BFEfE1b",
+      "child-gauge-implementation": "0xc0038FAE184591F21738abF574AC1BFfB5E6C734"
+    },
+    "vecrv": {
+      "oracle": ""
+    },
+    "fees": {
+      "fee-receiver": "0xBaF6cacFfFb6D57d548F0FAff486E9884a0D1747"
+    },
+    "integrations": {
+      "address-provider": "0x907CE289E9Ee0BBcb0F69132B1C28A9Affc29FCA",
+      "meta-registry": "0xB4c6A1e8A14e9Fe74c88b06275b747145DD41206",
+      "rate-provider": "0xBB56F907e8F455f9f71ed6a394B60ff666a60639"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xDF264E9a02E0D1C1F0b83AE067dE2Bc0031e1e7a",
+        "views": "0x9bBc929C45F2C06ccb4acd2C6D9FFE577d505Dfc",
+        "factory": "0x5aEa9aaDd0974e8914229a23699bB6b343c97B09",
+        "plain-amm-implementation": "0xA626B239e30dF83a228e5D87daB005819267d1BA",
+        "meta-amm-implementation": "0x73E5a7225E22682b8Abd5aaE322Ea4ab140Ec652"
+      },
+      "twocrypto": {
+        "math": "0xE8acB9bDd10E9685361a2D540e60378d26b0223f",
+        "views": "0xC1a0003b9bFB0C958DA455d12417df0bA79bBA78",
+        "factory": "0xa17b39BF1c2FE776Af38a999bE7Bb7bEa737a6EC",
+        "amm-implementation": "0x2320f304651F825353124890e4BE17e826BE5841"
+      },
+      "tricrypto": {
+        "math": "0xab53d6899E9c347A5DedDcE3d97D4aeA36B0f8d7",
+        "views": "0xF1f6e500d9Ccb9F3477cF078A5ea74F75fC3fc96",
+        "factory": "0x729c764aE95e7a9DEA9F950B5AEdbF1A9F3D7c03",
+        "amm-implementation": "0x016a5D98dC76Fb638F2942E94Fd12b323e792219"
+      },
+      "router & zap": {
+        "router": "0x3F5A41B922a76759b9C77D36b3d337E88cD1dc5e",
+        "stable-calc-zap": "",
+        "crypto-calc-zap": "",
+        "deposit-and-stake-zap": "0x374D3B496F86416dF0B88830Ad9c59837aA9f078",
+        "meta-zap-ng": "0xd05b37dFe4c0377dbCb8030eAD07b41888716fE4"
+      }
+    }
+  },
+  "taiko": {
+    "tokens": {
+      "crv": "0x09413312b263fD252C16e592A45f4689F26cb79d",
+      "vecrv": "",
+      "crvUSD": "0xc8F4518ed4bAB9a972808a493107926cE8237068",
+      "scrvUSD": "0x8c74d11da5E6cE0498cd280F9209dFB0C5e048A7"
+    },
+    "x-gov": {
+      "l1-broadcaster": "0x05a3a7b57cb60419ff0b087e9eae8469c28ac8cd",
+      "l2-relayer": "0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69",
+      "ownership-agent": "0x6c9578402A3ace046A12839f45F84Aa5448E9c30",
+      "parameter-agent": "0xEC5AFc9590964f2fA0FeED54f0fBB2A34480908D",
+      "emergency-agent": "0xA73EdCf18421B56D9AF1cE08A34E102E23b2C4B6",
+      "vault": "0x3c0a405E914337139992625D5100Ea141a9C4d11"
+    },
+    "x-dao": {
+
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0xf3A431008396df8A8b2DF492C913706BDB0874ef",
+      "child-gauge-implementation": "0x3E3B5F27bbf5CC967E074b70E9f4046e31663181"
+    },
+    "vecrv": {
+      "oracle": "0x5C57BdcFF69B4F1D894EA70c0470D39C8FA0ee30",
+      "verifier": "0x3B519ae13D7CeB72CC922815f5dAaD741aD5087B",
+      "delegation-verifier": "0xD41f7CcB1e72e282b50b0f331944f8ea7D4CACB6"
+    },
+    "fees": {
+      "fee-receiver": "0x3c0a405E914337139992625D5100Ea141a9C4d11"
+    },
+    "integrations": {
+      "address-provider": "0x87FE17697D0f14A222e8bEf386a0860eCffDD617",
+      "meta-registry": "0x1764ee18e8B3ccA4787249Ceb249356192594585",
+      "rate-provider": "0x8F7632122125699da7E22d465fa16EdE4f687Fa4"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0x686bdb3D24Bc6F3ED89ed3d3B659765c54aC78B4",
+        "views": "0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b",
+        "factory": "0x06452f9c013fc37169B57Eab8F50A7A48c9198A3",
+        "plain-amm-implementation": "0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2",
+        "meta-amm-implementation": "0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22"
+      },
+      "twocrypto": {
+        "math": "0x166c4084Ad2434E8F2425C64dabFE6875A0D45c5",
+        "views": "0x5Ea9DD3b6f042A34Df818C6c1324BC5A7c61427a",
+        "factory": "0xFAbC421e3368D158d802684A217a83c083c94CeB",
+        "amm-implementation": "0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC"
+      },
+      "tricrypto": {
+        "math": "0x635742dCC8313DCf8c904206037d962c042EAfBd",
+        "views": "0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499",
+        "factory": "0x0C9D8c7e486e822C29488Ff51BFf0167B4650953",
+        "amm-implementation": "0x7Ca46A636b02D4aBC66883D7FF164bDE506DC66a"
+      },
+      "router & zap": {
+        "router": "0xd2002373543Ce3527023C75e7518C274A51ce712",
+        "stable-calc-zap": "",
+        "crypto-calc-zap": "",
+        "deposit-and-stake-zap": "0xd125E7a0cEddF89c6473412d85835450897be6Dc",
+        "meta-zap-ng": "0x9AF14D26075f142eb3F292D5065EB3faa646167b"
+      }
+    }
+  },
+  "x-layer": {
+    "tokens": {
+      "crv": "0x3d5320821bfca19fb0b5428f2c79d63bd5246f89",
+      "vecrv": "",
+      "crvUSD": "0xda8f4eb4503acf5dec5420523637bb5b33a846f6",
+      "scrvUSD": ""
+    },
+    "x-gov": {
+      "l1-broadcaster": "0x9D9e70CA10fE911Dee9869F21e5ebB24A9519Ade",
+      "l2-relayer": "0x9D9e70CA10fE911Dee9869F21e5ebB24A9519Ade",
+      "ownership-agent": "0x6628b9e7c0029cea234b382be17101648f32cd8f",
+      "parameter-agent": "0xccc4864762412f3273bf7ca9264295909504ebb5",
+      "emergency-agent": "0x9ffc6f671d88593aae56d9d34f2b40d7a56d467f",
+      "vault": "0x0848F3800F04b3ad4309A5f27814be7FC4740cB9"
+    },
+    "x-dao": {
+
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0xD5C3e070E121488806AaA5565283A164ACEB94Df"
+    },
+    "vecrv": {
+      "oracle": ""
+    },
+    "fees": {
+      "fee-receiver": "0xf3a431008396df8a8b2df492c913706bdb0874ef"
+    },
+    "integrations": {
+      "address-provider": "0x5ffe7fb82894076ecb99a30d6a32e969e6e35e98",
+      "meta-registry": "0x87DD13Dd25a1DBde0E1EdcF5B8Fa6cfff7eABCaD",
+      "rate-provider": "0xB6845b562F01eB02ef20CBB63553d2a768e5a1Cb"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0x8b3efbefa6ed222077455d6f0dcda3bf4f3f57a6",
+        "views": "0xb47988aD49DCE8D909c6f9Cf7B26caF04e1445c8",
+        "factory": "0x5eeE3091f747E60a045a2E715a4c71e600e31F6E",
+        "plain-amm-implementation": "0x87fe17697d0f14a222e8bef386a0860ecffdd617",
+        "meta-amm-implementation": "0x1764ee18e8b3cca4787249ceb249356192594585"
+      },
+      "twocrypto": {
+        "math": "0x1Fd8Af16DC4BEBd950521308D55d0543b6cDF4A1",
+        "views": "0x5a8c93ee12a8df4455ba111647ada41f29d5cfcc",
+        "factory": "0x0c59d36b23f809f8b6c7cb4c8c590a0ac103baef",
+        "amm-implementation": "0x934791f7F391727db92BFF94cd789c4623d14c52"
+      },
+      "tricrypto": {
+        "math": "",
+        "views": "",
+        "factory": "",
+        "amm-native-disable-implementation": "",
+        "amm-native-enable-implementationd": ""
+      },
+      "router & zap": {
+        "router": "0xBFab8ebc836E1c4D81837798FC076D219C9a1855",
+        "stable-calc-zap": "",
+        "crypto-calc-zap": "",
+        "deposit-and-stake-zap": "",
+        "meta-zap-ng": "0x604388bb1159afd21eb5191ce22b4decdee2ae22"
+      }
+    }
+  },
+  "xdc": {
+    "tokens": {
+      "crv": "",
+      "vecrv": "",
+      "crvUSD": "",
+      "scrvUSD": "0x3d8EADb739D1Ef95dd53D718e4810721837c69c1"
+    },
+    "x-gov": {
+      "emergency-admin": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
+      "ownership-admin": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
+      "parameter-admin": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
+      "vault": "0xBaF6cacFfFb6D57d548F0FAff486E9884a0D1747"
+    },
+    "x-dao": {
+      "crv-bridge": "",
+      "crvusd-bridge": "0x1Ae4Ab5274a96B75d6f55a696c9D550D218261b0",
+      "scrvusd-bridge": "",
+      "block-hash-oracle": "",
+      "crv-minter": "",
+      "crvusd-minter": "0x6a2691068C7CbdA03292Ba0f9c77A25F658bAeF5",
+      "scrvusd-minter": "",
+      "gauge-type-oracle": "",
+      "gauge-type-prover": "",
+      "message-digest-prover": ""
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "block-oracle": "0xb10cface69821Ff7b245Cf5f28f3e714fDbd86b8",
+      "header-verifier": "0xB10CDEC0DE69c88a47c280a97A5AEcA8b0b83385",
+      "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
+    },
+    "gauges": {
+      "child-gauge-factory": "0x95cB855840342bE0F023A6A7e6f0A9202BFEfE1b",
+      "child-gauge-implementation": "0xc0038FAE184591F21738abF574AC1BFfB5E6C734"
+    },
+    "vecrv": {
+      "oracle": ""
+    },
+    "fees": {
+      "fee-receiver": "0xBaF6cacFfFb6D57d548F0FAff486E9884a0D1747"
+    },
+    "integrations": {
+      "address-provider": "0x907CE289E9Ee0BBcb0F69132B1C28A9Affc29FCA",
+      "meta-registry": "0xB4c6A1e8A14e9Fe74c88b06275b747145DD41206",
+      "rate-provider": "0xBB56F907e8F455f9f71ed6a394B60ff666a60639"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xDF264E9a02E0D1C1F0b83AE067dE2Bc0031e1e7a",
+        "views": "0x9bBc929C45F2C06ccb4acd2C6D9FFE577d505Dfc",
+        "factory": "0x5aEa9aaDd0974e8914229a23699bB6b343c97B09",
+        "plain-amm-implementation": "0xA626B239e30dF83a228e5D87daB005819267d1BA",
+        "meta-amm-implementation": "0x73E5a7225E22682b8Abd5aaE322Ea4ab140Ec652"
+      },
+      "twocrypto": {
+        "math": "0xE8acB9bDd10E9685361a2D540e60378d26b0223f",
+        "views": "0xC1a0003b9bFB0C958DA455d12417df0bA79bBA78",
+        "factory": "0xa17b39BF1c2FE776Af38a999bE7Bb7bEa737a6EC",
+        "amm-implementation": "0x2320f304651F825353124890e4BE17e826BE5841"
+      },
+      "tricrypto": {
+        "math": "0xab53d6899E9c347A5DedDcE3d97D4aeA36B0f8d7",
+        "views": "0xF1f6e500d9Ccb9F3477cF078A5ea74F75fC3fc96",
+        "factory": "0x729c764aE95e7a9DEA9F950B5AEdbF1A9F3D7c03",
+        "amm-implementation": "0x016a5D98dC76Fb638F2942E94Fd12b323e792219"
+      },
+      "router & zap": {
+        "router": "0x3F5A41B922a76759b9C77D36b3d337E88cD1dc5e",
+        "stable-calc-zap": "",
+        "crypto-calc-zap": "",
+        "deposit-and-stake-zap": "0x374D3B496F86416dF0B88830Ad9c59837aA9f078",
+        "meta-zap-ng": "0xd05b37dFe4c0377dbCb8030eAD07b41888716fE4"
+      }
+    }
+  }
+}
