@@ -4,7 +4,7 @@ hide:
 ---
 
 !!!info "Full deployment JSON"
-    The full json file with all deployment across all chains can be found here: [:material-github: GitHub](#).
+    The full json file with all deployment across all chains can be found here: [:material-github: GitHub](https://github.com/CurveDocs/curve-docs/blob/master/docs/deployments/interactive-deployments.md).
 
     If a contract address is missing or wrong or something else is off, please feel free to create an [Issue](https://github.com/CurveDocs/curve-docs/issues).
 
