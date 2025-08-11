@@ -2,14 +2,19 @@
 When writing Vyper code we follow these conventions:
 
 ## Compiler Version
-   We use `vyper==0.4.x` as our compiler version, where `x` is any valid patch version. Old repos should be updated to the latest version when possible.
+We use `vyper==0.4.x` as our compiler version, where `x` is any valid patch version. Old repos should be updated to the latest version when possible.
+
+Always declare the version explicitly because not doing so will lead to using compiler version is available in the virtual environment leading to unexpected behavior changes.
+
+Use `pragma version x.y.z` to specify which which version to use, do not use `@version x.y.z` as this is not consistent with other `pragma` directive we might use.
+
+Always pin a specific version of the compiler, do not use ranges (i.e. `>=0.4.0`).
 
 ## Naming Conventions
 
 ### Storage Variables
 
 - Storage variables should be named in `snake_case`.
-
 
 ### Import Conventions
 

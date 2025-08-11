@@ -18,7 +18,7 @@ dependencies = [
 ]
 ```
 
-Compilation dependecies version should **ALWAYS** be pinned to a specific version. This allows us to fix the dependencies to an audited version and manually introduce changes that might break the code.
+Compilation dependecies version should **ALWAYS** be pinned to a specific version. This allows us to fix the dependencies to an audited version.
 
 Example `pyproject.toml` development dependencies:
 ```toml

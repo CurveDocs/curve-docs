@@ -89,7 +89,3 @@ This profile can then be enabled from the cli using the flag `--hypothesis-profi
 
 Furthermore this section can contain global fixtures that are shared across unitary and fork tests.
 
-## FAQ
-- Why does this folder not contain a `fixtures.py` file to store global fixtures? 
-
-    If we were to create a `fixtures.py` file, it would quickly become unwieldy as the number of fixtures grows.autocomplet However some IDEs like PyCharm do not support this and will not be able to resolve the fixtures.conftest.py file`` anyways by adding `pytest_plugins = ["tests.utils.fixtures"]` in the `conftest.py` fileneed to connect this towe
