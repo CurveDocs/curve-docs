@@ -34,5 +34,4 @@ Note that `dev-dependencies` might not be installed by default when using `uv sy
 
 It is recommended to pin testing dependencies to a specific version, although it's not required.
 
-#
 

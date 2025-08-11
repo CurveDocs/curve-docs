@@ -10,6 +10,7 @@ Use `pragma version x.y.z` to specify which which version to use, do not use `@v
 
 Always pin a specific version of the compiler, do not use ranges (i.e. `>=0.4.0`).
 
+
 ## Naming Conventions
 
 ### Storage Variables
