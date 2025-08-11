@@ -29,12 +29,14 @@ Provide enough information about the vulnerability
 
 **Bug Bounty Payout**
 
+Rewards are based on exploitable TVL (funds that can actually be stolen) rather than affected TVL (total funds at risk).
+
 <div align="center" style="font-size: 1.2em;" markdown="block">
 | Likelihood ↓ / Severity → | Low | Moderate | High |
 | :-: | :-: | :-: | :-: |
-| Almost Certain | $10,000 | $50,000 | $250,000 |
-| Possible | $1,000 | $10,000 | $50,000 |
-| Unlikely | $250 | $1,000 | $5,000 |
+| Almost Certain | up to $30,000 | up to $150,000 | up to $750,000 |
+| Possible | up to $3,000 | up to $30,000 | up to $150,000 |
+| Unlikely | up to $750 | up to $3,000 | up to $15,000 |
 </div>
 
 ---
