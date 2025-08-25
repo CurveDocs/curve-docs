@@ -194,6 +194,8 @@ Functions and variables related to adding liquidity as donations and tracking do
 
     Returns: Amount of LP tokens issued (to receiver or donation buffer) (`uint256`)
 
+    Emits: `Donation` event if `donation=True` and always a `AddLiquidity` event.
+
     | Input             | Type               | Description                                      |
     | ----------------- | ------------------ | ------------------------------------------------ |
     | `amounts`         | `uint256[N_COINS]` | Amounts of each coin to add. |
@@ -206,10 +208,16 @@ Functions and variables related to adding liquidity as donations and tracking do
         === "FXSwap.vy"
 
             ```py
-            cached_price_scale: uint256  # <------------------------ Internal price scale.
-            cached_price_oracle: uint256  # <------- Price target given by moving average.
+            event AddLiquidity:
+                receiver: indexed(address)
+                token_amounts: uint256[N_COINS]
+                fee: uint256
+                token_supply: uint256
+                price_scale: uint256
 
-            balances: public(uint256[N_COINS])
+            event Donation:
+                donor: indexed(address)
+                token_amounts: uint256[N_COINS]
 
             @external
             @nonreentrant
@@ -503,7 +511,6 @@ Variables that control the time-based unlocking mechanism for donation shares.
 
     Returns: unlock duration in seconds (`uint256`)
 
-
     ??? quote "Source code"
 
         === "FXSwap.vy"
@@ -572,7 +579,6 @@ Variables that control the anti-MEV protection mechanism, which throttles donati
 
     Returns: UNIX timestamp (`uint256`)
 
-
     ??? quote "Source code"
 
         === "FXSwap.vy"
@@ -609,11 +615,10 @@ Variables that control the anti-MEV protection mechanism, which throttles donati
 !!! description "`FXSwap.donation_protection_period`"
 
     Getter for the **normalization/cap period** (in seconds) for donation protection. It defines both the maximum window length and the scale used in `protection_factor = (expiry − now) / donation_protection_period`. *(Default in code: 10 minutes).* 
-    
+
     Value is set at deployment and can be changed by the `admin` of the factory from which the contract was deployed via the `set_donation_protection_params` function.
 
     Returns: period in seconds (`uint256`)
-
 
     ??? quote "Source code"
 
@@ -652,7 +657,7 @@ Variables that control the anti-MEV protection mechanism, which throttles donati
 !!! description "`FXSwap.donation_protection_lp_threshold() -> uint256: view`"
 
     Getter for the **LP add threshold** (in 1e18 precision) used when extending the protection window. A regular LP add with relative size `≥ threshold` grants a full `donation_protection_period` extension; smaller adds extend proportionally. *(Default in code: 20% = `0.20e18`).* 
-    
+
     Value is set at deployment and can be changed by the `admin` of the factory from which the contract was deployed via the `set_donation_protection_params` function.
 
     Returns: relative LP threshold (`uint256`, 1e18 = 100%)
@@ -696,7 +701,10 @@ Functions that allow the pool admin to modify donation-related parameters after 
 ### `set_donation_duration`
 !!! description "`FXSwap.set_donation_duration(duration: uint256):`"
 
-    Admin function to set the donation duration. The time required for donations to fully release from locked state.
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the factory from which the pool has been deployed.
+
+    Function to set the `donation_duration`. Can be any value > 0.
 
     | Input      | Type      | Description                    |
     | ---------- | --------- | ------------------------------ |
@@ -743,7 +751,10 @@ Functions that allow the pool admin to modify donation-related parameters after 
 ### `set_donation_protection_params`
 !!! description "`FXSwap.set_donation_protection_params(_period: uint256, _threshold: uint256, _max_shares_ratio: uint256):`"
 
-    Admin function to set donation protection parameters. These parameters control the anti-MEV protection mechanism.
+    !!!guard "Guarded Method"
+        This function is only callable by the `admin` of the factory from which the pool has been deployed.
+
+    Function to set donation protection parameters. These parameters control the anti-MEV protection mechanism and can be set to any value > 0.
 
     | Input              | Type      | Description                                                                 |
     | ------------------ | --------- | --------------------------------------------------------------------------- |
