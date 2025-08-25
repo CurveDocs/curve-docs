@@ -130,11 +130,13 @@ relative_lp_add: uint256 = d_token * PRECISION // (token_supply + d_token)
 The protection window doesn't block donations entirely but **throttles** the amount that can be used for rebalancing to prevent MEV attacks. The new `donation_protection_expiry_ts` (calculated when regular liquidity is added) is used to compute a `protection_factor` that limits how much of the unlocked shares can actually be used for pool rebalancing.
 
 The protection factor acts as a **"throttle"** on donation usage:
+
 - **Protection factor = 0**: No protection active, 100% of unlocked donations can be used
-- **Protection factor = 0.5**: Half protection active, only 50% of unlocked donations can be used  
+- **Protection factor = 0.5**: Half protection active, only 50% of unlocked donations can be used
 - **Protection factor = 1**: Full protection active, 0% of unlocked donations can be used
 
-For example, if there are 1000 unlocked donation shares and the protection factor is 0.3 (30%), then only 700 shares (1000 × 0.7) can be used for rebalancing. The remaining 300 shares remain locked until the protection period expires.
+!!!example 
+    For example, if there are 1000 unlocked donation shares and the protection factor is 0.3 (30%), then only 700 shares (1000 × 0.7) can be used for rebalancing. The remaining 300 shares remain locked until the protection period expires.
 
 The eligible donation amount is calculated as:
 
