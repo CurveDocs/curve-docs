@@ -1,0 +1,1 @@
+Extends the capabilities of the Curve DAO allowing it to interact with contracts on different networks.
