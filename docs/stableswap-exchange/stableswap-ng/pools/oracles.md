@@ -41,9 +41,7 @@
 
 ## **Price and D Oracles**
 
-
-
-*Stableswap-NG pools have the following oracles:*
+Stableswap-NG pools have the following oracles:
 
 <div class="grid cards" markdown>
 
@@ -52,6 +50,9 @@
     ---
 
     An exponential moving-average price oracle of an asset within the AMM with regard to the coin at index 0.
+
+    !!!warning "Oracleized Assets"
+        Does not account for rates of oracleized assets (e.g., ERC-4626 tokens). See function documentation for details.
 
 
 -   **`D_oracle`**
@@ -62,27 +63,7 @@
 
 </div>
 
-!!!example "Example: Price Oracle for crvUSD/USDC"
-
-    The [`crvUSD/USDC`](https://etherscan.io/address/0x4dece678ceceb27446b35c672dc7d61f30bad69e) pool consists of `crvUSD <> USDC`.
-
-    Because `USDC` is the coin at index 0, `price_oracle()` returns the price of `crvUSD` with regard to `USDC`.
-
-    ```vyper
-    >>> price_oracle() = 999043303185591283
-    0.99904330318       # price of crvUSD w.r.t USDC
-    ```
-
-    *In order to get the reverse EMA (price of `USDC` with regard to `crvUSD`):*
-
-    $\frac{10^{36}}{\text{price_oracle()}} = 1.0009576e+18$
-
-
----
-
-
-The AMM implementation utilizes two private variables, `last_prices_packed` and `last_D_packed`, to store the latest spot and EMA values. These values serve as the foundation for calculating the oracles.
-
+The AMM implementation utilizes two non-public variables, `last_prices_packed` and `last_D_packed`, to store the latest spot and EMA values. These values serve as the foundation for calculating the oracles.
 
 !!!danger "Oracle Manipulation Risk"
     The spot price cannot be immediately used for the calculation of the moving average, as this would permit single-block oracle manipulation. Consequently, the `_calc_moving_average` method, which calculates the moving average of the oracle, uses `last_prices_packed` or `last_D_packed`. These variables retain prices from previous actions.
@@ -162,6 +143,18 @@ If this is the case, `last_price` is updated at every action, so there will be t
 
     Returns: EMA price of coin `i` (`uint256`).
 
+    !!!warning
+        If a pool is using oracleized assets such as ERC-4626 tokens or tokens with their own price oracle contract, `price_oracle` will not take that "rate" into consideration and instead returns the price oracle of the underlying token w.r.t. the coin at index 0. 
+        For example: The price oracle of the sUSDS/USDT pool (sUSDS being a yield-bearing asset which is worth approximately 1.065 USDS = $1.065) will return something like `1000156958194158311` because it does not take this rate into consideration. 
+
+        To calculate the actual price oracle of sUSDS w.r.t. USDT, one needs to take the rate into consideration:
+
+        ```py
+        pool.price_oracle = 1000156958194158311                                         # price oracle of USDS/USDT
+        sUSDS.convertToAssets(10^18) = 1064915056757443479                              # conversion rate of sUSDS to USDS
+        (1000156958194158311 * 1064915056757443479) / 10^18 = 1065082203901684122       # 1.065 sUSDS per USDT
+        ```
+
     | Input  | Type      | Description                        |
     | ------ | --------- | ---------------------------------- |
     | `i`    | `uint256` | Index value of the coin to calculate the EMA price for. i = 0 returns the price oracle for coin(1). |
@@ -207,10 +200,18 @@ If this is the case, `last_price` is updated at every action, so there will be t
 
     === "Example"
 
+        The [`crvUSD/USDC`](https://etherscan.io/address/0x4dece678ceceb27446b35c672dc7d61f30bad69e) pool consists of `crvUSD <> USDC`.
+
+        Because `USDC` is the coin at index 0, `price_oracle()` returns the price of `crvUSD` with regard to `USDC`.
+
         ```shell
         >>> StableSwap.price_oracle(0)
-        1000187813326452556
+        999043303185591283          # 0.99904330318 = price of crvUSD w.r.t USDC
         ```
+
+        *In order to get the reverse EMA (price of `USDC` with regard to `crvUSD`):*
+
+        $\frac{10^{36}}{\text{price_oracle()}} = 1.0009576e+18$
 
 
 ### `D_oracle`
