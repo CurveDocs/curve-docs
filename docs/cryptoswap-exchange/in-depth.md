@@ -65,8 +65,16 @@ This example highlights two important takeaways about rebalancing:
 
 * If the user had not rebalanced, they would have kept their initial asset value.
 * If the price continued to increase without a rebalance, the user's impermanent loss would have been larger, as they would need to buy back assets at an even higher price to re-enter the liquidity range.
- 
-Rebalancing is necessary, but both frequent and infrequent rebalancing can lead to significant losses. Cryptoswap automates this process to strike a balance, ensuring LPs remain profitable while maintaining high liquidity depth for swappers.
+
+!!! info "Cryptoswap Rebalancing"
+    Rebalancing is necessary, but both frequent and infrequent rebalancing can lead to significant losses. 
+    
+    Cryptoswap automates this process to strike a balance, only rebalancing when two conditions are met:
+    
+    1. Price has changed more than the minimum amount
+    2. The rebalance costs less than 50% profit earned from swaps  
+  
+    This ensure LPs remain profitable and minimizes rebalances, while maintaining high liquidity depth for swappers.
 
 ## **Parameters**
 
