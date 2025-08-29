@@ -1,3 +1,5 @@
+<h1>Cryptoswap: In Depth</h1>
+
 Cryptoswap is an automated market maker (AMM) pool developed by Curve for swapping between **uncorrelated assets**, such as `ETH` and `USDT`, where the exchange rate between these assets changes.
 
 To understand Cryptoswap, it's helpful to first understand Stableswap, Curve's original AMM. Stableswap was designed to swap **pegged assets** (e.g., `USDC/USDT`) by concentrating liquidity around a fixed price (1 `USDT` = 1 `USDC`). While these products have different use cases, they are built on similar underlying technology.
