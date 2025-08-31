@@ -307,6 +307,8 @@ nav:
         - Overview: cryptoswap-exchange/twocrypto-ng/pools/overview.md
         - Twocrypto Pool: cryptoswap-exchange/twocrypto-ng/pools/twocrypto.md
         - Admin Controls: cryptoswap-exchange/twocrypto-ng/pools/admin-controls.md
+      - Implementations:
+        - Refuels: cryptoswap-exchange/twocrypto-ng/implementations/refuel.md
       - Utility Contracts:
         - Math: cryptoswap-exchange/twocrypto-ng/utility-contracts/math.md
         - Views: cryptoswap-exchange/twocrypto-ng/utility-contracts/views.md
