@@ -83,7 +83,7 @@ This article from Nagaking goes into detail about each of Cryptoswap's parameter
 There are two main parameters which change change the shape of the Liquidity Bonding Curve, these are `A` and `gamma`.
 
 - **`A`**: controls liquidity concentration in the center of the bonding curve
-- **`gamma`**: controls overall breadth of the curve; can fine-tune the extremes
+- **`gamma`**: controls whether liquidity drops off gradually or sharply away from the center of the bonding curve
 
 Here is how they affect the curve in practice (note that orange curve are equal in both charts):
 
@@ -114,7 +114,7 @@ The algorithm is designed to protect LPs from Rebalancing losses (as much as pos
 
 **3. It's Capital Efficient**
 
-This efficiency stands in contrast to classic AMMs like Uniswap v2, which use the $x \cdot y = k$ formula. In those models, liquidity is spread thinly across all possible prices (from zero to infinity). By concentrating liquidity around the current market price, Cryptoswap offers significantly lower slippage for traders and generates more fees for LPs from the same amount of capital.
+This efficiency stands in contrast to classic AMMs with the `x*y=k` invariant, which use the $x \cdot y = k$ formula. In those models, liquidity is spread thinly across all possible prices (from zero to infinity). By concentrating liquidity around the current market price, Cryptoswap offers significantly lower slippage for traders and generates more fees for LPs from the same amount of capital.
 
 ## **Stale Pools - How Cryptoswap Pools Can Become Stuck**
 
