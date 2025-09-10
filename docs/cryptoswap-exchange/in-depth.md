@@ -39,7 +39,24 @@ The shape of this liquidity bonding curve and how imbalanced a pool can become b
 
 Cryptoswap pools build upon the core Stableswap algorithm, but with a key innovation: *where* liquidity is concentrated. Instead of targeting a fixed peg, Cryptoswap automatically concentrates and rebalances liquidity around the pool's **recent average price**.  This allows it to efficiently support **volatile asset pairs** (e.g., `crvUSD/ETH`) while making the entire process **fully passive for liquidity providers**.
 
-As the market price moves, the algorithm must "rebalance" its liquidity to follow it. This process is handled carefully, because **rebalancing realizes impermanent loss**. To protect LPs, Cryptoswap only rebalances when two conditions are met:
+## **Parameters**
+
+This article from Nagaking goes into detail about each of Cryptoswap's parameters: [Deep Dive: Curve v2 Parameters](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).
+
+The shape of the Liquidity Bonding Curve is governed by 2 parameters, `A` which is also present in Stableswap, as well as a new parameter called `gamma`:
+
+- **`A`**: controls liquidity concentration in the center of the bonding curve
+- **`gamma`**: controls whether liquidity drops off gradually or sharply away from the center of the bonding curve
+
+Here is how they affect the curve in practice (note that orange curve are equal in both charts):
+
+![Cryptoswap A and Gamma](../assets/images/cryptoswap/a_and_gamma.png)
+
+As the image shows, a higher `A` means more liquidity is concentrated around the price at which it's balanced, called the `price_scale`.  Where as a higher `gamma` means liquidity is spread wider.
+
+## **Rebalancing**
+
+Assets within Cryptoswap pools are volatile, so prices and exchange rates are constantly changing.  Cryptoswap's goal is to center most liquidity close to the current price, which allows more trading volume, and therefore more profit for LPs.  So as prices move the algorithm must recenter or "rebalance" its liquidity to follow it.  This process is handled carefully, because **rebalancing realizes impermanent loss**. To protect LPs, Cryptoswap only rebalances when two conditions are met:
 
 1.  The internal price must move beyond a minimum threshold, known as the **adjustment step**.
 2.  The cost of rebalancing must be less than 50% of the trading fees earned by LPs. **This core safeguard ensures that impermanent loss is only realized when it is sufficiently offset by trading profits**, helping to prevent the erosion of LP deposits from rebalancing fees over time.
@@ -76,20 +93,6 @@ This example highlights two important takeaways about rebalancing:
   
     This ensure LPs remain profitable and minimizes rebalances, while maintaining high liquidity depth for swappers.
 
-## **Parameters**
-
-This article from Nagaking goes into detail about each of Cryptoswap's parameters: [Deep Dive: Curve v2 Parameters](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).
-
-There are two main parameters which change change the shape of the Liquidity Bonding Curve, these are `A` and `gamma`.
-
-- **`A`**: controls liquidity concentration in the center of the bonding curve
-- **`gamma`**: controls whether liquidity drops off gradually or sharply away from the center of the bonding curve
-
-Here is how they affect the curve in practice (note that orange curve are equal in both charts):
-
-![Cryptoswap A and Gamma](../assets/images/cryptoswap/a_and_gamma.png)
-
-As the image shows, a higher `A` means more liquidity is concentrated around the price at which it's balanced, called the `price_scale`.  Where as a higher `gamma` means liquidity is spread wider.
 
 ## **Dynamic Fees**
 
@@ -102,17 +105,17 @@ For Cryptoswap pools, this works as follows:
   <figcaption></figcaption>
 </figure>
 
-## **Why is Cryptoswap a great algorithm?**
+## **Cryptoswap Benefits**
 
-**1. It's Passive and Decentralized**
+**1. Passive LPing and Decentralization**
 
 Cryptoswap was built on the original cypherpunk ethos of DeFi: that anyone should be able to provide liquidity easily, passively, and profitably. Compared to protocols that require LPs to become active managers, Cryptoswap's design allows for broader participation, increasing the resilience of the ecosystem.
 
-**2. It Automatically Manages Impermanent Loss**
+**2. Automatically Impermanent Loss Management**
 
 The algorithm is designed to protect LPs from Rebalancing losses (as much as possible). By only rebalancing when the fees earned are **more than double the cost**, it ensures that the act of locking in impermanent loss is itself profitable. This prevents the pool from "chasing" the price at a loss to LPs.
 
-**3. It's Capital Efficient**
+**3. Capital Efficiency**
 
 This efficiency stands in contrast to classic AMMs with the `x*y=k` invariant, which use the $x \cdot y = k$ formula. In those models, liquidity is spread thinly across all possible prices (from zero to infinity). By concentrating liquidity around the current market price, Cryptoswap offers significantly lower slippage for traders and generates more fees for LPs from the same amount of capital.
 
@@ -154,7 +157,7 @@ If your pool's liquidity becomes stale, you have three primary options:
 
 2.  **Seed a New Pool:** This option is typically only viable for protocols that own most of the pool's liquidity (POL). It involves deploying a new pool with better parameters and "killing" the old gauge, if applicable.
 
-3.  **Wash Trade the Pool:** Manually generating high trading volume (likely via flash loans) can create the necessary fee income to allow the pool to rebalance. This approach is extremely capital-intensive and should only be used as a last resort.
+3.  **Wash Trade the Pool:** This involves generating high trading volume (often via flash loans) to create enough fee profit for the pool to rebalance. This requires careful coding and simulation, and is performed at a loss with no guarantee of a lasting fix, as another market swing can immediately undo the rebalance. This strategy should only be considered as a last resort.
 
 ## **Why Not Use Stableswap with an External Oracle?**
 
