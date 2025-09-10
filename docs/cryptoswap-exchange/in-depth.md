@@ -17,7 +17,7 @@ Let's look at an example with a `crvUSD/USDC` pool, where each block represents 
 
 ![Simple Stableswap Example](../assets/images/cryptoswap/stableswap-swap.png)
 
-Stableswap pools are designed to function effectively even when heavily imbalanced. Depending on the **Amplification coefficient** (`A`), pools can maintain close to 1:1 pricing even when significantly imbalanced. If the imbalance becomes large enough to cause a price deviation from the 1:1 peg, it creates an arbitrage opportunity. This incentivizes traders to rebalance the pool, with each swap generating fees for liquidity providers (LPs).
+Stableswap pools are designed to function effectively even when heavily imbalanced. Depending on the **Amplification Coefficient** (`A`), pools can maintain close to 1:1 pricing even when significantly imbalanced. If the imbalance becomes large enough to cause a price deviation from the 1:1 peg, it creates an arbitrage opportunity. This incentivizes traders to rebalance the pool, with each swap generating fees for liquidity providers (LPs).
 
 While the blocks offer a helpful visual, Stableswap's liquidity is more accurately represented by a bonding curve:
 
@@ -43,7 +43,7 @@ Cryptoswap pools build upon the core Stableswap algorithm, but with a key innova
 
 This article from Nagaking goes into detail about each of Cryptoswap's parameters: [Deep Dive: Curve v2 Parameters](https://nagaking.substack.com/p/deep-dive-curve-v2-parameters).
 
-The shape of the Liquidity Bonding Curve is governed by 2 parameters, `A` which is also present in Stableswap, as well as a new parameter called `gamma`:
+The shape of the Liquidity Bonding Curve is governed by two parameters: `A` which is also present in Stableswap, as well as a new parameter called `gamma`:
 
 - **`A`**: controls liquidity concentration in the center of the bonding curve
 - **`gamma`**: controls whether liquidity drops off gradually or sharply away from the center of the bonding curve
@@ -52,11 +52,11 @@ Here is how they affect the curve in practice (note that orange curve are equal 
 
 ![Cryptoswap A and Gamma](../assets/images/cryptoswap/a_and_gamma.png)
 
-As the image shows, a higher `A` means more liquidity is concentrated around the price at which it's balanced, called the `price_scale`.  Where as a higher `gamma` means liquidity is spread wider.
+As the image shows, a higher `A` means more liquidity is concentrated around the price at which it's balanced, called the `price_scale`.  Whereas a higher `gamma` means liquidity is spread wider.
 
 ## **Rebalancing**
 
-Assets within Cryptoswap pools are volatile, so prices and exchange rates are constantly changing.  Cryptoswap's goal is to center most liquidity close to the current price, which allows more trading volume, and therefore more profit for LPs.  So as prices move the algorithm must recenter or "rebalance" its liquidity to follow it.  This process is handled carefully, because **rebalancing realizes impermanent loss**. To protect LPs, Cryptoswap only rebalances when two conditions are met:
+Assets within Cryptoswap pools are volatile, so prices and exchange rates are constantly changing.  Cryptoswap's goal is to center most liquidity close to the current price, which allows more trading volume, and therefore more profit for LPs.  So, as prices move, the algorithm must re-center or "rebalance" its liquidity to follow it.  This process is handled carefully, because **rebalancing realizes impermanent loss**. To protect LPs, Cryptoswap only rebalances when two conditions are met:
 
 1.  The internal price must move beyond a minimum threshold, known as the **adjustment step**.
 2.  The cost of rebalancing must be less than 50% of the trading fees earned by LPs. **This core safeguard ensures that impermanent loss is only realized when it is sufficiently offset by trading profits**, helping to prevent the erosion of LP deposits from rebalancing fees over time.
@@ -88,10 +88,10 @@ This example highlights two important takeaways about rebalancing:
     
     Cryptoswap automates this process to strike a balance, only rebalancing when two conditions are met:
     
-    1. Price has changed more than the minimum amount
-    2. The rebalance costs less than 50% profit earned from swaps  
+    1. The price has changed more than the minimum amount
+    2. The rebalance costs less than 50% of the profit earned from swaps  
   
-    This ensure LPs remain profitable and minimizes rebalances, while maintaining high liquidity depth for swappers.
+    This ensures LPs remain profitable and minimizes rebalances, while maintaining high liquidity depth for swappers.
 
 
 ## **Dynamic Fees**
@@ -113,7 +113,7 @@ Cryptoswap was built on the original cypherpunk ethos of DeFi: that anyone shoul
 
 **2. Automatic Impermanent Loss Management**
 
-The algorithm is designed to protect LPs from Rebalancing losses (as much as possible). By only rebalancing when the fees earned are **more than double the cost**, it ensures that the act of locking in impermanent loss is itself profitable. This prevents the pool from "chasing" the price at a loss to LPs.
+The algorithm is designed to protect LPs from rebalancing losses (as much as possible). By only rebalancing when the fees earned are **more than double the cost**, it ensures that the act of locking in impermanent loss is itself profitable. This prevents the pool from "chasing" the price at a loss to LPs.
 
 **3. Capital Efficiency**
 
@@ -121,7 +121,7 @@ This efficiency stands in contrast to classic AMMs with the `x*y=k` invariant, w
 
 ## **Stale Pools - How Cryptoswap Pools Can Become Stuck**
 
-A Cryptoswap pool's main safety feature is its refusal to rebalance at a loss to LPs. However, this can sometimes cause a pool to become **stuck**, meaning it has a **stale liquidity concentration** because the last rebalance price (`price scale`) is very different from the current price. This can trigger a negative feedback loop during periods of high volatility:
+A Cryptoswap pool's main safety feature is its refusal to rebalance at a loss to LPs. However, this can sometimes cause a pool to become **stuck**, meaning it has a **stale liquidity concentration** because the last rebalance price (`price_scale`) is very different from the current price. This can trigger a negative feedback loop during periods of high volatility:
 
 As the market price moves away from the pool's last rebalance price, the available liquidity for traders decreases. This leads to fewer swaps and, consequently, lower fee generation. Without enough profit from fees, the pool cannot afford to rebalance and follow the price, leaving its liquidity stranded.
 
@@ -129,7 +129,7 @@ As the market price moves away from the pool's last rebalance price, the availab
 
 ## **Monitoring Liquidity Balance within Pools**
 
-To see how balanced liquidity is within a pool, navigate to the pool's page, for example the [EURe/USDC pool on Arbitrum](https://www.curve.finance/dex/arbitrum/pools/factory-twocrypto-89/deposit). At the bottom of the pool details, click the `Advanced` tab. You will then see the following details:
+To see how balanced liquidity is within a pool, navigate to the pool's page, for example, the [EURe/USDC pool on Arbitrum](https://www.curve.finance/dex/arbitrum/pools/factory-twocrypto-89/deposit). At the bottom of the pool details, click the `Advanced` tab. You will then see the following details:
 
 ![Cryptoswap Pool Details UI](../assets/images/cryptoswap/price-scale.png)
 
