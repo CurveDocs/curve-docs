@@ -111,7 +111,7 @@ For Cryptoswap pools, this works as follows:
 
 Cryptoswap was built on the original cypherpunk ethos of DeFi: that anyone should be able to provide liquidity easily, passively, and profitably. Compared to protocols that require LPs to become active managers, Cryptoswap's design allows for broader participation, increasing the resilience of the ecosystem.
 
-**2. Automatically Impermanent Loss Management**
+**2. Automatic Impermanent Loss Management**
 
 The algorithm is designed to protect LPs from Rebalancing losses (as much as possible). By only rebalancing when the fees earned are **more than double the cost**, it ensures that the act of locking in impermanent loss is itself profitable. This prevents the pool from "chasing" the price at a loss to LPs.
 
