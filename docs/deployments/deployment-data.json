@@ -465,7 +465,9 @@
       "child-gauge-factory": "0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8"
     },
     "vecrv": {
-      "oracle": ""
+      "oracle": "0xA3ea433509F7941df3e33857D9c9f212Ad4A4e64",
+      "verifier": "0x47ca04Ee05f167583122833abfb0f14aC5677Ee4",
+      "delegation-verifier": "0xA588Cf5e85851f8234AA89DA0aBe7D3DE2Adfa30"
     },
     "fees": {
       "fee-receiver": "0x98B4029CaBEf7Fd525A36B0BF8555EC1d42ec0B6"
