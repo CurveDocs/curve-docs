@@ -90,7 +90,7 @@
       "tricrypto": {
         "math": "0xcBFf3004a20dBfE2731543AA38599A526e0fD6eE",
         "views": "0x064253915b8449fdEFac2c4A74aA9fdF56691a31",
-        "factory": "0x729c764aE95e7a9DEA9F950B5AEdbF1A9F3D7c03",
+        "factory": "0x0c0e5f2ff0ff18a3be9b835635039256dc4b4963",
         "amm-implementation": "0x66442B0C5260B92cAa9c234ECf2408CBf6b19a6f",
         "gauge-implementation": "0x5fC124a161d888893529f67580ef94C2784e9233"
       },
