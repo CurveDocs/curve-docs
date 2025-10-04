@@ -200,6 +200,12 @@ nav:
     - HeaderVerifier: block-oracle/HeaderVerifier.md
     - LZBlockRelay: block-oracle/LZBlockRelay.md
 
+  - Fast Bridge:
+    - Overview: fast-bridge/overview.md
+    - FastBridgeL2: fast-bridge/FastBridgeL2.md
+    - FastBridgeVault: fast-bridge/FastBridgeVault.md
+    - L2MessengerLZ: fast-bridge/L2MessengerLZ.md
+    - VaultMessengerLZ: fast-bridge/VaultMessengerLZ.md
 
   - crvUSD:
     - Overview: crvUSD/overview.md
