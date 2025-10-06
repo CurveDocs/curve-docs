@@ -18,7 +18,7 @@ The VaultMessengerLZ contract provides essential functions for receiving LayerZe
 ### `lzReceive`
 !!! description "`VaultMessengerLZ.lzReceive(_origin: OApp.Origin, _guid: bytes32, _message: Bytes[OApp.MAX_MESSAGE_SIZE], _executor: address, _extraData: Bytes[OApp.MAX_EXTRA_DATA_SIZE])`"
 
-    Receives LayerZero messages from L2 networks and processes fast bridge requests. This function decodes the message payload and triggers crvUSD minting in the FastBridgeVault, providing immediate access to bridged funds.
+    Receives LayerZero messages originating from L2 networks and processes fast bridge requests. This function decodes the message payload and triggers crvUSD minting in the FastBridgeVault, providing immediate access to bridged funds.
 
     | Input      | Type      | Description |
     | ---------- | --------- | ------------ |

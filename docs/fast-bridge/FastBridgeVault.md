@@ -19,7 +19,7 @@ work together to provide immediate access to bridged funds while maintaining the
 ### `mint`
 !!! description "`FastBridgeVault.mint(_receiver: address, _amount: uint256) -> uint256`"
 
-    Mints crvUSD tokens to a receiver from the vault's balance. This function handles both regular minting (for authorized minters) and claiming of previously bridged tokens. It applies fees and respects kill switches for emergency situations.
+    Releases pre-minted crvUSD from the vault's balance to the receiver. For callers with `MINTER_ROLE`, the function can additionally increase the receiver's claimable balance by `_amount`. The operation applies fees and respects kill switches for emergency situations. The vault's fast releases are economically backed by the incoming native-bridge transfers and debt-ceiling rug mechanism; it does not increase total crvUSD supply beyond what is backed by the slow bridge path.
 
     | Input      | Type      | Description |
     | ---------- | --------- | ------------ |

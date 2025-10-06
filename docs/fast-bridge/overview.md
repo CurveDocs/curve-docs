@@ -71,16 +71,6 @@ The FastBridge system implements multiple layers of limits to manage risk. These
 
 Risk management is a critical aspect of the FastBridge system, as it involves pre-minting crvUSD tokens that are backed by pending bridge transactions. The system employs a sophisticated limit structure that balances user convenience with protocol safety, ensuring that the system can handle various market conditions while protecting against potential risks.
 
-**Debt Ceilings (Per Network)**
-
-Debt ceilings represent the maximum total exposure the system can have on each L2 network. Debt ceilings are set per L2 network independently and represent the maximum amount of "unbacked" crvUSD that can be minted. These are conservative limits designed to protect the protocol:
-
-| Network | Debt Ceiling |
-|---------|--------------|
-| Arbitrum | TBD |
-| Optimism | TBD |
-| Fraxtal | TBD |
-
 ---
 
 **Daily Bridge Limits**
@@ -93,20 +83,26 @@ Each L2 network has a daily limit on how much crvUSD can be bridged within a 24-
 | **Interval Tracking** | 24-hour periods (86400 seconds) | Ensures smooth processing of bridge transactions |
 | **Reset Mechanism** | Limits reset every 24 hours | Allows continuous bridging while maintaining caps |
 
-**Implementation:** Limits are enforced by the `FastBridgeL2` contract, where each bridge transaction reduces the available daily limit. Limits are tracked using `block.timestamp // INTERVAL` where `INTERVAL = 86400`, and users can check available amounts using `allowed_to_bridge()`.
-
----
+Limits are enforced by the `FastBridgeL2` contract, where each bridge transaction reduces the available daily limit. Limits are tracked using `block.timestamp // INTERVAL` where `INTERVAL = 86400`, and users can check available amounts using `allowed_to_bridge()`.
 
 **Minimum Bridge Amounts**
 
-To prevent uneconomical transactions, the system enforces minimum bridge amounts to prevent gas-inefficient small transactions as claiming small amounts can be expensive on Ethereum (high relative fee).  
+To prevent uneconomical transactions, the system enforces minimum bridge amounts to prevent gas-inefficient small transactions as claiming small amounts can be expensive on Ethereum (high relative fee).
+
 The minimum amount can be adjusted by the DAO.
 
+---
 
 ## **Emergency Controls**
 
 In case of emergencies, the system includes additional controls. The Kill Switch can stop all minting operations (KILLER_ROLE), Individual Kills can stop specific minters (KILLER_ROLE), Limit Adjustment can modify daily limits (DEFAULT_ADMIN_ROLE), and Debt Ceiling Updates can modify debt ceilings (Governance).
 
+---
+
 ## **Fee Structure**
 
-The FastBridge system implements a carefully designed fee structure that balances user accessibility with operational sustainability. Initially, there will be fee-free transfers for the first 1-4 weeks to encourage adoption and gather usage data. After this initial period, fees are set to cover the keeper operational expenses and ensure the system's long-term viability. 
+The FastBridge system implements a carefully designed fee structure that balances user accessibility with operational sustainability. Initially, there will be fee-free transfers for the first 1-4 weeks to encourage adoption and gather usage data. After this initial period, fees are set to cover the keeper operational expenses and ensure the system's long-term viability.
+
+- Native token fees on L2: Callers of `FastBridgeL2.bridge()` must provide `msg.value` covering both the native bridge fee and the LayerZero messaging fee. Any excess `msg.value` is refunded to the caller.
+- Vault fee on mainnet: The vault may take a fee (with 10^18 precision) from amounts released via fast bridge. The fee is sent to `fee_receiver` and is adjustable by admin within a hard cap of 100%.
+- Pre-minted release: The vault releases pre-minted crvUSD immediately upon fast message arrival; this is economically backed by the pending native bridge inflow and managed via the vault’s debt-ceiling rug mechanism.
