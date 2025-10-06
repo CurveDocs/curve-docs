@@ -242,3 +242,26 @@ Provide enough information about the vulnerability
     [:material-file-pdf-box: Audit Report](../assets/pdf/audits/ChainSecurity_Curve_scrvUSD_audit.pdf)
 
 </div>
+
+
+---
+
+
+## **Cross Chain**
+
+
+<div class="grid cards" markdown>
+
+-   [:octicons-link-external-24: Docs](../crvUSD/overview.md){ .md-button .md-button--mini style="float: right; padding: 0px 4px; margin-top: 2px; font-size: 0.7em;" }
+    **Curve Stablecoin**
+
+    ---
+
+    Auditor: [:logos-mixbytes: MixBytes](https://mixbytes.io/)
+    Date: 5. June, 2023
+
+    [:material-github: Audit Report](https://github.com/curvefi/security-incident-reports/blob/main/audits/crvusd/Curve%20Stablecoin%20(crvUSD)%20Security%20Audit%20Report.pdf)
+
+</div>
+
+
