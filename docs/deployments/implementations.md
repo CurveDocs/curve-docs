@@ -13,7 +13,7 @@ Curve uses [ERC-5202](https://eips.ethereum.org/EIPS/eip-5202) blueprint contrac
 
 `CurveStableswapFactoryNG`: [`0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf`](https://etherscan.io/address/0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf). 
 
-- Sonic: `710420` for both plain and metapool implementations: More information [here](../stableswap-exchange/stableswap-ng/implementations/custom1.md).
+- Sonic: `710420` for both plain and metapool implementations with settable admin and admin fee: More information [here](../stableswap-exchange/stableswap-ng/implementations/custom1.md).
 
 ## **Cryptoswap-NG**
 
