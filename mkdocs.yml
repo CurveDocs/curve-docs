@@ -365,7 +365,9 @@ nav:
     - Contract Ownership: references/curve-practices.md
     - Notebooks: references/notebooks.md
 
-  - Deployment Addresses: deployments/interactive-deployments.md
+  - Deployment Addresses:
+    - Interactive Deployments: deployments/interactive-deployments.md
+    - Implementations: deployments/implementations.md
     # - Curve DAO: deployments/dao.md
     # - Cross-Chain Gauges & Governance: deployments/crosschain.md
     # - AMM: deployments/amm.md
