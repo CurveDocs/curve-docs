@@ -142,7 +142,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "0xb7b0FF38E0A01D798B5cd395BbA6Ddb56A323830",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0xb7b0FF38E0A01D798B5cd395BbA6Ddb56A323830",
       "ownership-agent": "0x452030a5D962d37D97A9D65487663cD5fd9C2B32",
       "parameter-agent": "0x5ccbB27FB594c5cF6aC0670bbcb360c0072F6839",
@@ -221,12 +221,14 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "",
-      "l2-relayer": "",
-      "ownership-agent": "",
-      "parameter-agent": "",
-      "emergency-agent": "",
-      "vault": ""
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0x3c0a405E914337139992625D5100Ea141a9C4d11",
+      "ownership-agent": "0x2eB4CDC05fe72f6027c7cA989B1cC8Bfc298F155",
+      "parameter-agent": "0x549dE2e0275c2586C2463a7b2893fbFdf7587B96",
+      "emergency-agent": "0x527CBD2D178a855B47de44Df54cf202Eb62EF8Af",
+      "vault": "0x3d8EADb739D1Ef95dd53D718e4810721837c69c1",
+      "agent": "0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69",
+      "verifier": "0x6a2691068C7CbdA03292Ba0f9c77A25F658bAeF5"
     },
     "x-dao": {
       "curve-block-oracle": {
@@ -241,7 +243,9 @@
       "root-gauge-factory": ""
     },
     "vecrv": {
-      "oracle": ""
+      "oracle": "0x070A5C8a99002F50C18B52B90e938BC477611b16",
+      "verifier": "0x004A476B5B76738E34c86C7144554B9d34402F13",
+      "delegation-verifier": "0xbD2775B8eADaE81501898eB208715f0040E51882"
     },
     "fees": {
       "fee-receiver": "0xf3a431008396df8a8b2df492c913706bdb0874ef"
@@ -289,12 +293,14 @@
       "scrvUSD": "0xA3ea433509F7941df3e33857D9c9f212Ad4A4e64"
     },
     "x-gov": {
-      "l1-broadcaster": "0x5786696bB5bE7fCDb9997E7f89355d9e97FF8d89",
-      "l2-relayer": "0x3895064FD74a86542206C4c39eb1bf14BB9aF9a6",
-      "ownership-agent": "0xeD953C2849785A8AEd7bC2ee8cf5fdE776E1Dc07",
-      "parameter-agent": "0x33F9A2F3B85e7D4Ff4f9286a9a8525060100D855",
-      "emergency-agent": "0x1309DB123020F0533aFAfaF11D26286d5871bEB0",
-      "vault": "0xad422855ac8010f82F08696CA7750EfE061aa6D6"
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0xC6452F058fF4bb248D852C7b5f0E8753B8DbAbda",
+      "ownership-agent": "0xC9882d48adC78aD4322d147A116d6e6DFB2ddeA1",
+      "parameter-agent": "0x0dD6c1C07AC65B90b248C91cf35b89A4c9A80783",
+      "emergency-agent": "0xca56f8A214591D010Dd8D2B212a09E619a7edFAa",
+      "vault": "0x2C152d46B4213e0B9C91Bf3c66b3c9300E414eaa",
+      "agent": "0xc1065623836A3c9767F387E51653b5102df4df86",
+      "verifier": "0xb1b9FB9e4501623B0491908740924E5d8201aCcf"
     },
     "x-dao": {
       "crv-bridge": "0x5cc0144A511807608eF644c9e99B486124D1cFd6",
@@ -318,7 +324,9 @@
       "child-gauge-factory": "0x97aDC08FA1D849D2C48C5dcC1DaB568B169b0267"
     },
     "vecrv": {
-      "oracle": ""
+      "oracle": "0x1Db36DD6eB571CEdF0743582745EF1A333742155",
+      "verifier": "0x5C57BdcFF69B4F1D894EA70c0470D39C8FA0ee30",
+      "delegation-verifier": "0x3B519ae13D7CeB72CC922815f5dAaD741aD5087B"
     },
     "fees": {
       "fee-receiver": "0x06534b0BF7Ff378F162d4F348390BDA53b15fA35"
@@ -366,7 +374,7 @@
       "scrvUSD": "0x646a737b9b6024e49f5908762b3ff73e65b5160c"
     },
     "x-gov": {
-      "l1-broadcaster": "0xcb843280c5037acfa67b8d4adc71484ced7c48c9",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0xCb843280C5037ACfA67b8D4aDC71484ceD7C48C9",
       "ownership-agent": "0x2c163fe0f079d138b9c04f780d735289344C8B80",
       "parameter-agent": "0x7Ea4B72f04D8B02994F4EdB171Ce5F56eEdF457F",
@@ -428,7 +436,7 @@
       }
     }
     },
-    "bsc": {
+  "bsc": {
     "tokens": {
       "crv": "0x9996D0276612d23b35f90C51EE935520B3d7355B",
       "vecrv": "",
@@ -436,12 +444,14 @@
       "scrvUSD": "0x0094Ad026643994c8fB2136ec912D508B15fe0E5"
     },
     "x-gov": {
-      "l1-broadcaster": "0x5786696bB5bE7fCDb9997E7f89355d9e97FF8d89",
-      "l2-relayer": "0x37b6d6d425438a9f8e40C8B4c06c10560967b678",
-      "ownership-agent": "0xC97E2328c5701572C0DFB199b9f860d6ccD74199",
-      "parameter-agent": "0x618a38a556B66FdDdcB5495Be412Df911D18eA1d",
-      "emergency-agent": "0xC940CE179f1F1bdC1EA1c02A2d0481bfD84C3280",
-      "vault": "0x44C927BacD65da570cB1F0A2F625367049525022"
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0x3B519ae13D7CeB72CC922815f5dAaD741aD5087B",
+      "ownership-agent": "0x817B8B77e20459d4159813FFA7A44ee4b8ca4B90",
+      "parameter-agent": "0x4ba1f6C78aB918A4601ff8260585541765403271",
+      "emergency-agent": "0x6055dF2dFE4600bb778F8ECB50AAf0e24c28fa33",
+      "vault": "0xD41f7CcB1e72e282b50b0f331944f8ea7D4CACB6",
+      "agent": "0x5C57BdcFF69B4F1D894EA70c0470D39C8FA0ee30",
+      "verifier": "0x22D490A4E8710252793DF769cA01FA619aF81e64"
     },
     "x-dao": {
       "crv-bridge": "0xC91113B4Dd89dd20FDEECDAC82477Bc99A840355",
@@ -507,7 +517,7 @@
       }
     }
     },
-    "celo": {
+  "celo": {
     "tokens": {
       "crv": "0x173fd7434B8B50dF08e3298f173487ebDB35FD14",
       "vecrv": "",
@@ -515,12 +525,14 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "",
-      "l2-relayer": "",
-      "ownership-agent": "",
-      "parameter-agent": "",
-      "emergency-agent": "",
-      "vault": ""
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0x3c0a405E914337139992625D5100Ea141a9C4d11",
+      "ownership-agent": "0x2eB4CDC05fe72f6027c7cA989B1cC8Bfc298F155",
+      "parameter-agent": "0x549dE2e0275c2586C2463a7b2893fbFdf7587B96",
+      "emergency-agent": "0x527CBD2D178a855B47de44Df54cf202Eb62EF8Af",
+      "vault": "0x3d8EADb739D1Ef95dd53D718e4810721837c69c1",
+      "agent": "0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69",
+      "verifier": "0x6a2691068C7CbdA03292Ba0f9c77A25F658bAeF5"
     },
     "x-dao": {
 
@@ -535,7 +547,9 @@
       "child-gauge-factory": "0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8"
     },
     "vecrv": {
-      "oracle": ""
+      "oracle": "0x070A5C8a99002F50C18B52B90e938BC477611b16",
+      "verifier": "0x004A476B5B76738E34c86C7144554B9d34402F13",
+      "delegation-verifier": "0xbD2775B8eADaE81501898eB208715f0040E51882"
     },
     "fees": {
       "fee-receiver": "0x56bc95Ded2BEF162131905dfd600F2b9F1B380a4"
@@ -575,7 +589,7 @@
       }
     }
     },
-    "corn": {
+  "corn": {
     "tokens": {
       "crv": "0x1b3757d5EE281Eaf6a9c8E5D9b8488b4475Aa955",
       "vecrv": "",
@@ -583,12 +597,14 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "",
-      "l2-relayer": "",
-      "ownership-agent": "0x676053Ab2fFfBdd0464eC784A52dA1dEA5355300",
-      "parameter-agent": "0x11DFBcB581D2146338B76739C086FA902f233f1c",
-      "emergency-agent": "0x970777A6A50c3927Cd7735A538431512b2592C96",
-      "vault": "0x506F594ceb4E33F5161139bAe3Ee911014df9f7f"
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0x5bcA7dDF1bcccB2eE8e46c56bfc9d3CDC77262bC",
+      "ownership-agent": "0x2641ed8034CE92f57377F88852E95eB97AeFDf3a",
+      "parameter-agent": "0x4f172B31Da98bc3806aeB98C22525d43304bfea2",
+      "emergency-agent": "0xb0261f64E512322EfB35E92C353301eC36b9712B",
+      "vault": "0x13DFF1809D1E9ddf9Ac901F47817B7F45220A846",
+      "agent": "0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8",
+      "verifier": "0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69"
     },
     "x-dao": {
 
@@ -603,7 +619,9 @@
       "child-gauge-factory": "0x87FE17697D0f14A222e8bEf386a0860eCffDD617"
     },
     "vecrv": {
-      "oracle": ""
+      "oracle": "0x3d8EADb739D1Ef95dd53D718e4810721837c69c1",
+      "verifier": "0x6a2691068C7CbdA03292Ba0f9c77A25F658bAeF5",
+      "delegation-verifier": "0xc2cD391ABc3C4A9F7ac21917c2E9acfd817c01Bc"
     },
     "fees": {
       "fee-receiver": "0x506F594ceb4E33F5161139bAe3Ee911014df9f7f"
@@ -650,12 +668,14 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "",
-      "l2-relayer": "",
-      "ownership-agent": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
-      "parameter-agent": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
-      "emergency-agent": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
-      "vault": "0x193110Ce1542d7371e1515BD6A2E470fDefc310D"
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0xC772063cE3e622B458B706Dd2e36309418A1aE42",
+      "ownership-agent": "0x22ADEBd365cA77414bF0Dc8BcB1BC1c6a9653123",
+      "parameter-agent": "0x6495D38522d517437cC89cc6647E490a67D196EA",
+      "emergency-agent": "0x66184f86eD9fa2ef4E5fCA0FC877BDcA48f57eE9",
+      "vault": "0xba7cBf26922fAAd4c5B9A7A6667ae27C817B90aA",
+      "agent": "0x988d1037e9608B21050A8EFba0c6C45e01A3Bce7",
+      "verifier": "0x74d6aABD6197E83d963F0B48be9C034F93E8E66d"
     },
     "x-dao": {
 
@@ -670,7 +690,9 @@
       "child-gauge-factory": "0x41D2c5128A7241EC1f7CE346B162C347C19548B7"
     },
     "vecrv": {
-      "oracle": ""
+      "oracle": "0x5De4EF4879F4fe3bBADF2227D2aC5d0E2D76C895",
+      "verifier": "0x3195A313F409714e1f173ca095Dba7BfBb5767F7",
+      "delegation-verifier": "0x8Fb3Ec8f2d1Dc089E70CD61f1E49496d443B2124"
     },
     "fees": {
       "fee-receiver": "0x193110Ce1542d7371e1515BD6A2E470fDefc310D"
@@ -709,7 +731,7 @@
       }
     }
     },
-    "fantom": {
+  "fantom": {
     "tokens": {
       "crv": "0xE6c259bc0FCE25b71fE95A00361D3878E16232C3",
       "vecrv": "",
@@ -717,12 +739,14 @@
       "scrvUSD": "0x5191946500e75f0A74476F146dF7d386e52961d9"
     },
     "x-gov": {
-      "l1-broadcaster": "0x5786696bB5bE7fCDb9997E7f89355d9e97FF8d89",
-      "l2-relayer": "0x002599c7D4299A268b332B3240d60308f93C99eC",
-      "ownership-agent": "0xd62Ade30F740de7ef766008258B4b2F574A084F7",
-      "parameter-agent": "0x837814ba42c6f3B39f0A5060168F7027695DDAb1",
-      "emergency-agent": "0x42113C6818ACb87ca3CaFDbBc6a6ae396f1548E6",
-      "vault": "0x49C8De2D10C9A56DD9A59ab5Ca1216111276394C"
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0xc0b338DA0fDD43Dc48539837594cf6363795FEeA",
+      "ownership-agent": "0xe55B70c3c10f60A4069F0B5dB80EAD3D2b1A2f56",
+      "parameter-agent": "0xA78863d522bEC7374f5F962B578609fc067EbC0B",
+      "emergency-agent": "0xf5C39aa7079610246EdE8d55612f654A3AB66B6C",
+      "vault": "0x72dfD998CEd5aDd9A0a6A684f27C75975C2fc00E",
+      "agent": "0x8Fb3Ec8f2d1Dc089E70CD61f1E49496d443B2124",
+      "verifier": "0x297A536954C4a41D9B24c40293C4dbfA9ea0869F"
     },
     "x-dao": {
       "crv-bridge": "0x7ce8aF75A9180B602445bE230860DDcb4cAc3E42",
@@ -746,7 +770,9 @@
       "child-gauge-factory": "0x004A476B5B76738E34c86C7144554B9d34402F13"
     },
     "vecrv": {
-      "oracle": ""
+      "oracle": "0xC6452F058fF4bb248D852C7b5f0E8753B8DbAbda",
+      "verifier": "0x2C152d46B4213e0B9C91Bf3c66b3c9300E414eaa",
+      "delegation-verifier": "0x0094Ad026643994c8fB2136ec912D508B15fe0E5"
     },
     "fees": {
       "fee-receiver": "0x2B039565B2b7a1A9192D4847fbd33B25b836B950"
@@ -794,7 +820,7 @@
       "scrvUSD": "0xaB94C721040b33aA8b0b4D159Da9878e2a836Ed0"
     },
     "x-gov": {
-      "l1-broadcaster": "0xE0fE4416214e95F0C67Dc044AAf1E63d6972e0b9",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x7BE6BD57A319A7180f71552E58c9d32Da32b6f96",
       "ownership-agent": "0x4BbdFEd5696b3a8F6B3813506b5389959C5CDC57",
       "parameter-agent": "0x61E0521A1FA8CA2f544ab6b7B7e89059e5b361FF",
@@ -873,12 +899,14 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "0x22089A449ABdAd415d3B8476A501BFe70870C1a7",
-      "l2-relayer": "0x22089A449ABdAd415d3B8476A501BFe70870C1a7",
-      "ownership-agent": "0x383544581A70d2C4E4688d2C5C18C3941e0c8637",
-      "parameter-agent": "0x91304259119506185Fd74e3950bdd65A7e03E15E",
-      "emergency-agent": "0xEFDA01FE1dE71c9bDcFd78A58EA34d9F8f8bde90",
-      "vault": "0x0B8c6A25904a1b8A0712Bc857390130a438c52AA"
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0xe0A1D8C3d243789EC6853b0d00903E70fded32d0",
+      "ownership-agent": "0x1F0b0d3B02483308eB478A9DCCd56a42D5F5C51C",
+      "parameter-agent": "0x121a54b18efc3F2063e76a94b110cDFD2C4f3695",
+      "emergency-agent": "0x39EB0398153898DE010D38405F8d1baBbB168524",
+      "vault": "0x015FD904EE5238A09285f54bCBC70dE2A878D1b8",
+      "agent": "0x0dE10187c6699F069619D480Bf69B4E54545280f",
+      "verifier": "0x5dFAFdA4D5B26bE0e99e6A8C6B1eB97eD99B9bD3"
     },
     "x-dao": {
 
@@ -947,10 +975,14 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "emergency-admin": "0xb101b2b0aa02b7167D238B98dc1B0b0404a760E8",
-      "ownership-admin": "0xb101b2b0aa02b7167D238B98dc1B0b0404a760E8",
-      "parameter-admin": "0xb101b2b0aa02b7167D238B98dc1B0b0404a760E8",
-      "vault": "0xf3A431008396df8A8b2DF492C913706BDB0874ef"
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0x5bcA7dDF1bcccB2eE8e46c56bfc9d3CDC77262bC",
+      "ownership-admin": "0x2641ed8034CE92f57377F88852E95eB97AeFDf3a",
+      "parameter-admin": "0x4f172B31Da98bc3806aeB98C22525d43304bfea2",
+      "emergency-admin": "0xb0261f64E512322EfB35E92C353301eC36b9712B",
+      "vault": "0x13DFF1809D1E9ddf9Ac901F47817B7F45220A846",
+      "agent": "0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8",
+      "verifier": "0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69"
     },
     "x-dao": {
 
@@ -1012,12 +1044,14 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "",
-      "l2-relayer": "",
-      "ownership-agent": "0xcAEF324bea3Ff5c7a08710081294F3344fFAdC54",
-      "parameter-agent": "0x63Eb7846642630456707C3efBb50A03c79B89D81",
-      "emergency-agent": "0xa8eB7B41fe8dF7Ea3de982397AD183721784D987",
-      "vault": "0x686bdb3D24Bc6F3ED89ed3d3B659765c54aC78B4"
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0x13DFF1809D1E9ddf9Ac901F47817B7F45220A846",
+      "ownership-agent": "0x9eC09455AB210A6Ff83A22276cB8dE981D94C874",
+      "parameter-agent": "0xb9E905Bc7a616881C7C2622BF682bCf1b87621Fa",
+      "emergency-agent": "0x4221Eeb8d9C667083724Af779F864ECaA526a3B1",
+      "vault": "0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69",
+      "agent": "0x5bcA7dDF1bcccB2eE8e46c56bfc9d3CDC77262bC",
+      "verifier": "0x3c0a405E914337139992625D5100Ea141a9C4d11"
     },
     "x-dao": {
 
@@ -1029,10 +1063,12 @@
       "lz-block-relay": "0xFacEFeeD696BFC0ebe7EaD3FFBb9a56290d31752"
     },
     "gauges": {
-      "child-gauge-factory": "0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8"
+      "child-gauge-factory": "0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b"
     },
     "vecrv": {
-      "oracle": ""
+      "oracle": "0x6a2691068C7CbdA03292Ba0f9c77A25F658bAeF5",
+      "verifier": "0xc2cD391ABc3C4A9F7ac21917c2E9acfd817c01Bc",
+      "delegation-verifier": "0x070A5C8a99002F50C18B52B90e938BC477611b16"
     },
     "fees": {
       "fee-receiver": "0x686bdb3D24Bc6F3ED89ed3d3B659765c54aC78B4"
@@ -1079,12 +1115,14 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "0x5786696bB5bE7fCDb9997E7f89355d9e97FF8d89",
-      "l2-relayer": "0xA5961898870943c68037F6848d2D866Ed2016bcB",
-      "ownership-agent": "0xeC6a886148B38C233B07cc6732142dccaBF1051D",
-      "parameter-agent": "0x6e53131F68a034873b6bFA15502aF094Ef0c5854",
-      "emergency-agent": "0xA177D2bd2BD723878bD95982c0855291953f74C9",
-      "vault": ""
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0x6a2691068C7CbdA03292Ba0f9c77A25F658bAeF5",
+      "ownership-agent": "0xeef94Cd0fbAfc0D62046F8a4bA21066ac991c9BA",
+      "parameter-agent": "0xde451398551BF288F2D8CD75AD2ab6586a6bBAc4",
+      "emergency-agent": "0x8a28d25008d0E769ca93F81738f08953d22D7322",
+      "vault": "0xc2cD391ABc3C4A9F7ac21917c2E9acfd817c01Bc",
+      "agent": "0x3d8EADb739D1Ef95dd53D718e4810721837c69c1",
+      "verifier": "0x070A5C8a99002F50C18B52B90e938BC477611b16"
     },
     "x-dao": {
       "crv-bridge": "0x3C8D2A033131551a3f09E7b5c07DB01d547311CC",
@@ -1156,7 +1194,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "0xb50b9a0d8a4ed8115fe174f300465ea4686d86df",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0xB50B9a0D8A4ED8115Fe174F300465Ea4686d86Df",
       "ownership-agent": "0xfe87a6cdca1eeb90987c6a196a1c5f5c76f5f2b0",
       "parameter-agent": "0x024d362f7aa162d8591304016fd60a209efc527e",
@@ -1226,12 +1264,14 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "",
-      "l2-relayer": "",
-      "ownership-agent": "",
-      "parameter-agent": "",
-      "emergency-agent": "",
-      "vault": ""
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0x3c0a405E914337139992625D5100Ea141a9C4d11",
+      "ownership-agent": "0x2eB4CDC05fe72f6027c7cA989B1cC8Bfc298F155",
+      "parameter-agent": "0x549dE2e0275c2586C2463a7b2893fbFdf7587B96",
+      "emergency-agent": "0x527CBD2D178a855B47de44Df54cf202Eb62EF8Af",
+      "vault": "0x3d8EADb739D1Ef95dd53D718e4810721837c69c1",
+      "agent": "0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69",
+      "verifier": "0x6a2691068C7CbdA03292Ba0f9c77A25F658bAeF5"
     },
     "x-dao": {
 
@@ -1294,7 +1334,7 @@
       "scrvUSD": "0x289f635106d5b822a505b39ac237a0ae9189335b"
     },
     "x-gov": {
-      "l1-broadcaster": "0x8e1e5001c7b8920196c7e3edf2bcf47b2b6153ff",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x8e1e5001C7B8920196c7E3EdF2BCf47B2B6153ff",
       "ownership-agent": "0x28c4A1Fa47EEE9226F8dE7D6AF0a41C62Ca98267",
       "parameter-agent": "0xE7F2B72E94d1c2497150c24EA8D65aFFf1027b9b",
@@ -1365,6 +1405,78 @@
       "llamalend-leverage-zap": "0x273e44B9a1841857d9360e8792bB59f9e1FfE9Da"
     }
   },
+  "plasma": {
+    "tokens": {
+      "crv": "",
+      "vecrv": "",
+      "crvUSD": "",
+      "scrvUSD": ""
+    },
+    "x-gov": {
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0x5bcA7dDF1bcccB2eE8e46c56bfc9d3CDC77262bC",
+      "ownership-admin": "0x2641ed8034CE92f57377F88852E95eB97AeFDf3a",
+      "parameter-admin": "0x4f172B31Da98bc3806aeB98C22525d43304bfea2",
+      "emergency-admin": "0xb0261f64E512322EfB35E92C353301eC36b9712B",
+      "vault": "0x13DFF1809D1E9ddf9Ac901F47817B7F45220A846",
+      "agent": "0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8",
+      "verifier": "0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69"
+    },
+    "x-dao": {
+
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "",
+      "block-oracle": "",
+      "header-verifier": "",
+      "lz-block-relay": ""
+    },
+    "gauges": {
+      "child-gauge-factory": "0x41D2c5128A7241EC1f7CE346B162C347C19548B7",
+      "gauge-implementation": "0xbb8A5E91295131Ce07B6Bfe301C49bcD925A2902"
+    },
+    "vecrv": {
+      "oracle": "0x3d8EADb739D1Ef95dd53D718e4810721837c69c1",
+      "verifier": "0x6a2691068C7CbdA03292Ba0f9c77A25F658bAeF5",
+      "delegation-verifier": "0xc2cD391ABc3C4A9F7ac21917c2E9acfd817c01Bc"
+    },
+    "fees": {
+      "fee-receiver": "0x193110Ce1542d7371e1515BD6A2E470fDefc310D"
+    },
+    "integrations": {
+      "address-provider": "0x4574921eb950d3Fd5B01562162EC566Cb8bc3648",
+      "meta-registry": "0xe6dA14500f0b5783E2325F9C5a7eE5d99DA0fB42",
+      "rate-provider": "0x129578f94C253b8Bc903Bf2b73D07BF2583cc11d"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0xe460dec242bc0A1a364c250a9D2F731d8D923650",
+        "views": "0xC9459A955a885467f01Ccc531c51dBcC957993c0",
+        "factory": "0x8271e06E5887FE5ba05234f5315c19f3Ec90E8aD",
+        "plain-amm-implementation": "0xFC687EFAFED297b765eDEcF8179c32195597C2df",
+        "meta-amm-implementation": "0x845b942DeEF9BC20a39A8b34B23e8c33aC2921BF"
+      },
+      "twocrypto": {
+        "math": "0x95249Dd40dDa3c0cbB4A7dd7D287E04aA68A3D4B",
+        "views": "0x17c67C3A38F68cbc4dEC77Fd7378978971B6c271",
+        "factory": "0xe7FBd704B938cB8fe26313C3464D4b7B7348c88C",
+        "amm-implementation": "0x5F870C2cf22ff829B5DC1Da09856B79dA6544f94"
+      },
+      "tricrypto": {
+        "math": "0xA4A2E7E11cBe5213B316E801D2172Ef10e566A96",
+        "views": "0x2Fe4A238F6A3BD7fAA68e0B6951e3FAFdB2876Eb",
+        "factory": "0x6E28493348446503db04A49621d8e6C9A40015FB",
+        "amm-implementation": "0x286182220E734AaC601282ba059de531d4BEAC1f"
+      },
+      "router & zap": {
+        "router": "0xFF5Cb29241F002fFeD2eAa224e3e996D24A6E8d1",
+        "stable-calc-zap": "",
+        "crypto-calc-zap": "",
+        "deposit-and-stake-zap": "0xB2Be7692B07b640C9f2ee1187cee2fAec741F872",
+        "meta-zap-ng": "0x2AF43209B366A4491CCe0A97C5a7B6059fd21295"
+      }
+    }
+    },
   "plume": {
     "tokens": {
       "crv": "",
@@ -1373,10 +1485,14 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "emergency-admin": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
-      "ownership-admin": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
-      "parameter-admin": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
-      "vault": "0xBaF6cacFfFb6D57d548F0FAff486E9884a0D1747"
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0x5bcA7dDF1bcccB2eE8e46c56bfc9d3CDC77262bC",
+      "ownership-admin": "0x2641ed8034CE92f57377F88852E95eB97AeFDf3a",
+      "parameter-admin": "0x4f172B31Da98bc3806aeB98C22525d43304bfea2",
+      "emergency-admin": "0xb0261f64E512322EfB35E92C353301eC36b9712B",
+      "vault": "0x13DFF1809D1E9ddf9Ac901F47817B7F45220A846",
+      "agent": "0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8",
+      "verifier": "0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69"
     },
     "x-dao": {
 
@@ -1391,7 +1507,9 @@
       "child-gauge-factory": "0x95cB855840342bE0F023A6A7e6f0A9202BFEfE1b"
     },
     "vecrv": {
-      "oracle": ""
+      "oracle": "0x3d8EADb739D1Ef95dd53D718e4810721837c69c1",
+      "verifier": "0x6a2691068C7CbdA03292Ba0f9c77A25F658bAeF5",
+      "delegation-verifier": "0xc2cD391ABc3C4A9F7ac21917c2E9acfd817c01Bc"
     },
     "fees": {
       "fee-receiver": "0xBaF6cacFfFb6D57d548F0FAff486E9884a0D1747"
@@ -1430,7 +1548,7 @@
       }
     }
     },
-    "polygon": {
+  "polygon": {
     "tokens": {
       "crv": "0x172370d5Cd63279eFa6d502DAB29171933a610AF",
       "vecrv": "",
@@ -1438,12 +1556,14 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "0x91e95f16f7F1b988391A869771Ffb50Df4ceBDF7",
-      "l2-relayer": "0x91e95f16f7F1b988391A869771Ffb50Df4ceBDF7",
-      "ownership-agent": "0x8cB05bFEd65b522a7cF98d590F1711A9Db43af71",
-      "parameter-agent": "0x3CF7c393519ea55D1E1F2c55a6395be63b1A9F9C",
-      "emergency-agent": "0x9FD6E204e08867170ddE54a8374083fF592eBD3E",
-      "vault": ""
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0x74d6aABD6197E83d963F0B48be9C034F93E8E66d",
+      "ownership-agent": "0x242f512143F54459594B88b1b427225A0EACa105",
+      "parameter-agent": "0x663cFF3F0380b4d4D5cCaF3cc68Ec4B974929f24",
+      "emergency-agent": "0x1e0d926b0f2eeBd790FC925E16d044da76b98dce",
+      "vault": "0xA3ea433509F7941df3e33857D9c9f212Ad4A4e64",
+      "agent": "0xba7cBf26922fAAd4c5B9A7A6667ae27C817B90aA",
+      "verifier": "0x47ca04Ee05f167583122833abfb0f14aC5677Ee4"
     },
     "x-dao": {
       "crv-bridge": "0x708eA72651cDE801979d0305A6b88F9E4d6FC6Cc",
@@ -1467,7 +1587,9 @@
       "child-gauge-factory": "0x55a1C26CE60490A15Bdd6bD73De4F6346525e01e"
     },
     "vecrv": {
-      "oracle": ""
+      "oracle": "0x5Af79133999f7908953E94b7A5CF367740Ebee35",
+      "verifier": "0x5De4EF4879F4fe3bBADF2227D2aC5d0E2D76C895",
+      "delegation-verifier": "0x3195A313F409714e1f173ca095Dba7BfBb5767F7"
     },
     "fees": {
       "fee-receiver": "0x774D1Dba98cfBD1F2Bc3A1F59c494125e07C48F9"
@@ -1601,12 +1723,14 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "",
-      "l2-relayer": "",
-      "ownership-agent": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
-      "parameter-agent": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
-      "emergency-agent": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
-      "vault": "0xBaF6cacFfFb6D57d548F0FAff486E9884a0D1747"
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0x5bcA7dDF1bcccB2eE8e46c56bfc9d3CDC77262bC",
+      "ownership-agent": "0x2641ed8034CE92f57377F88852E95eB97AeFDf3a",
+      "parameter-agent": "0x4f172B31Da98bc3806aeB98C22525d43304bfea2",
+      "emergency-agent": "0xb0261f64E512322EfB35E92C353301eC36b9712B",
+      "vault": "0x13DFF1809D1E9ddf9Ac901F47817B7F45220A846",
+      "agent": "0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8",
+      "verifier": "0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69"
     },
     "x-dao": {
 
@@ -1622,7 +1746,9 @@
       "child-gauge-implementation": "0xc0038FAE184591F21738abF574AC1BFfB5E6C734"
     },
     "vecrv": {
-      "oracle": ""
+      "oracle": "0x6a2691068C7CbdA03292Ba0f9c77A25F658bAeF5",
+      "verifier": "0xc2cD391ABc3C4A9F7ac21917c2E9acfd817c01Bc",
+      "delegation-verifier": "0x070A5C8a99002F50C18B52B90e938BC477611b16"
     },
     "fees": {
       "fee-receiver": "0xBaF6cacFfFb6D57d548F0FAff486E9884a0D1747"
@@ -1669,7 +1795,7 @@
       "scrvUSD": "0x8c74d11da5E6cE0498cd280F9209dFB0C5e048A7"
     },
     "x-gov": {
-      "l1-broadcaster": "0x05a3a7b57cb60419ff0b087e9eae8469c28ac8cd",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69",
       "ownership-agent": "0x6c9578402A3ace046A12839f45F84Aa5448E9c30",
       "parameter-agent": "0xEC5AFc9590964f2fA0FeED54f0fBB2A34480908D",
@@ -1739,7 +1865,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "0x9D9e70CA10fE911Dee9869F21e5ebB24A9519Ade",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x9D9e70CA10fE911Dee9869F21e5ebB24A9519Ade",
       "ownership-agent": "0x6628b9e7c0029cea234b382be17101648f32cd8f",
       "parameter-agent": "0xccc4864762412f3273bf7ca9264295909504ebb5",
@@ -1759,7 +1885,9 @@
       "child-gauge-factory": "0xD5C3e070E121488806AaA5565283A164ACEB94Df"
     },
     "vecrv": {
-      "oracle": ""
+      "oracle": "0xe35A879E5EfB4F1Bb7F70dCF3250f2e19f096bd8",
+      "verifier": "0x5bcA7dDF1bcccB2eE8e46c56bfc9d3CDC77262bC",
+      "delegation-verifier": "0x13DFF1809D1E9ddf9Ac901F47817B7F45220A846"
     },
     "fees": {
       "fee-receiver": "0xf3a431008396df8a8b2df492c913706bdb0874ef"
@@ -1807,10 +1935,14 @@
       "scrvUSD": "0x3d8EADb739D1Ef95dd53D718e4810721837c69c1"
     },
     "x-gov": {
-      "emergency-admin": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
-      "ownership-admin": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
-      "parameter-admin": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
-      "vault": "0xBaF6cacFfFb6D57d548F0FAff486E9884a0D1747"
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
+      "l2-relayer": "0x97aDC08FA1D849D2C48C5dcC1DaB568B169b0267",
+      "ownership-admin": "0x764d32CAc199394eB30BBcDcf26e1dd446A58532",
+      "parameter-admin": "0xD6043e0abF6C6A9995fe0062CBACe2B324B46B4D",
+      "emergency-admin": "0xad7c0463DF7AEfee3Fa9771fd5d6ff122380E20F",
+      "vault": "0x988d1037e9608B21050A8EFba0c6C45e01A3Bce7",
+      "agent": "0x55a1C26CE60490A15Bdd6bD73De4F6346525e01e",
+      "verifier": "0xC772063cE3e622B458B706Dd2e36309418A1aE42"
     },
     "x-dao": {
       "crv-bridge": "",
@@ -1835,7 +1967,9 @@
       "child-gauge-implementation": "0xc0038FAE184591F21738abF574AC1BFfB5E6C734"
     },
     "vecrv": {
-      "oracle": ""
+      "oracle": "0x47ca04Ee05f167583122833abfb0f14aC5677Ee4",
+      "verifier": "0xA588Cf5e85851f8234AA89DA0aBe7D3DE2Adfa30",
+      "delegation-verifier": "0x5Af79133999f7908953E94b7A5CF367740Ebee35"
     },
     "fees": {
       "fee-receiver": "0xBaF6cacFfFb6D57d548F0FAff486E9884a0D1747"
