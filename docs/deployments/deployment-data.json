@@ -142,7 +142,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "0xb7b0FF38E0A01D798B5cd395BbA6Ddb56A323830",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0xb7b0FF38E0A01D798B5cd395BbA6Ddb56A323830",
       "ownership-agent": "0x452030a5D962d37D97A9D65487663cD5fd9C2B32",
       "parameter-agent": "0x5ccbB27FB594c5cF6aC0670bbcb360c0072F6839",
@@ -221,7 +221,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x3c0a405E914337139992625D5100Ea141a9C4d11",
       "ownership-agent": "0x2eB4CDC05fe72f6027c7cA989B1cC8Bfc298F155",
       "parameter-agent": "0x549dE2e0275c2586C2463a7b2893fbFdf7587B96",
@@ -293,7 +293,7 @@
       "scrvUSD": "0xA3ea433509F7941df3e33857D9c9f212Ad4A4e64"
     },
     "x-gov": {
-      "l1-broadcaster": "0x5786696bB5bE7fCDb9997E7f89355d9e97FF8d89",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0xC6452F058fF4bb248D852C7b5f0E8753B8DbAbda",
       "ownership-agent": "0xC9882d48adC78aD4322d147A116d6e6DFB2ddeA1",
       "parameter-agent": "0x0dD6c1C07AC65B90b248C91cf35b89A4c9A80783",
@@ -374,7 +374,7 @@
       "scrvUSD": "0x646a737b9b6024e49f5908762b3ff73e65b5160c"
     },
     "x-gov": {
-      "l1-broadcaster": "0xcb843280c5037acfa67b8d4adc71484ced7c48c9",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0xCb843280C5037ACfA67b8D4aDC71484ceD7C48C9",
       "ownership-agent": "0x2c163fe0f079d138b9c04f780d735289344C8B80",
       "parameter-agent": "0x7Ea4B72f04D8B02994F4EdB171Ce5F56eEdF457F",
@@ -444,7 +444,7 @@
       "scrvUSD": "0x0094Ad026643994c8fB2136ec912D508B15fe0E5"
     },
     "x-gov": {
-      "l1-broadcaster": "0x5786696bB5bE7fCDb9997E7f89355d9e97FF8d89",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x3B519ae13D7CeB72CC922815f5dAaD741aD5087B",
       "ownership-agent": "0x817B8B77e20459d4159813FFA7A44ee4b8ca4B90",
       "parameter-agent": "0x4ba1f6C78aB918A4601ff8260585541765403271",
@@ -525,7 +525,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x3c0a405E914337139992625D5100Ea141a9C4d11",
       "ownership-agent": "0x2eB4CDC05fe72f6027c7cA989B1cC8Bfc298F155",
       "parameter-agent": "0x549dE2e0275c2586C2463a7b2893fbFdf7587B96",
@@ -597,7 +597,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x5bcA7dDF1bcccB2eE8e46c56bfc9d3CDC77262bC",
       "ownership-agent": "0x2641ed8034CE92f57377F88852E95eB97AeFDf3a",
       "parameter-agent": "0x4f172B31Da98bc3806aeB98C22525d43304bfea2",
@@ -668,7 +668,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0xC772063cE3e622B458B706Dd2e36309418A1aE42",
       "ownership-agent": "0x22ADEBd365cA77414bF0Dc8BcB1BC1c6a9653123",
       "parameter-agent": "0x6495D38522d517437cC89cc6647E490a67D196EA",
@@ -739,7 +739,7 @@
       "scrvUSD": "0x5191946500e75f0A74476F146dF7d386e52961d9"
     },
     "x-gov": {
-      "l1-broadcaster": "0x5786696bB5bE7fCDb9997E7f89355d9e97FF8d89",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0xc0b338DA0fDD43Dc48539837594cf6363795FEeA",
       "ownership-agent": "0xe55B70c3c10f60A4069F0B5dB80EAD3D2b1A2f56",
       "parameter-agent": "0xA78863d522bEC7374f5F962B578609fc067EbC0B",
@@ -820,7 +820,7 @@
       "scrvUSD": "0xaB94C721040b33aA8b0b4D159Da9878e2a836Ed0"
     },
     "x-gov": {
-      "l1-broadcaster": "0xE0fE4416214e95F0C67Dc044AAf1E63d6972e0b9",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x7BE6BD57A319A7180f71552E58c9d32Da32b6f96",
       "ownership-agent": "0x4BbdFEd5696b3a8F6B3813506b5389959C5CDC57",
       "parameter-agent": "0x61E0521A1FA8CA2f544ab6b7B7e89059e5b361FF",
@@ -899,7 +899,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "0x22089A449ABdAd415d3B8476A501BFe70870C1a7",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0xe0A1D8C3d243789EC6853b0d00903E70fded32d0",
       "ownership-agent": "0x1F0b0d3B02483308eB478A9DCCd56a42D5F5C51C",
       "parameter-agent": "0x121a54b18efc3F2063e76a94b110cDFD2C4f3695",
@@ -975,7 +975,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x5bcA7dDF1bcccB2eE8e46c56bfc9d3CDC77262bC",
       "ownership-admin": "0x2641ed8034CE92f57377F88852E95eB97AeFDf3a",
       "parameter-admin": "0x4f172B31Da98bc3806aeB98C22525d43304bfea2",
@@ -1044,7 +1044,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x13DFF1809D1E9ddf9Ac901F47817B7F45220A846",
       "ownership-agent": "0x9eC09455AB210A6Ff83A22276cB8dE981D94C874",
       "parameter-agent": "0xb9E905Bc7a616881C7C2622BF682bCf1b87621Fa",
@@ -1115,7 +1115,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "0x5786696bB5bE7fCDb9997E7f89355d9e97FF8d89",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x6a2691068C7CbdA03292Ba0f9c77A25F658bAeF5",
       "ownership-agent": "0xeef94Cd0fbAfc0D62046F8a4bA21066ac991c9BA",
       "parameter-agent": "0xde451398551BF288F2D8CD75AD2ab6586a6bBAc4",
@@ -1194,7 +1194,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "0xb50b9a0d8a4ed8115fe174f300465ea4686d86df",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0xB50B9a0D8A4ED8115Fe174F300465Ea4686d86Df",
       "ownership-agent": "0xfe87a6cdca1eeb90987c6a196a1c5f5c76f5f2b0",
       "parameter-agent": "0x024d362f7aa162d8591304016fd60a209efc527e",
@@ -1264,7 +1264,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x3c0a405E914337139992625D5100Ea141a9C4d11",
       "ownership-agent": "0x2eB4CDC05fe72f6027c7cA989B1cC8Bfc298F155",
       "parameter-agent": "0x549dE2e0275c2586C2463a7b2893fbFdf7587B96",
@@ -1334,7 +1334,7 @@
       "scrvUSD": "0x289f635106d5b822a505b39ac237a0ae9189335b"
     },
     "x-gov": {
-      "l1-broadcaster": "0x8e1e5001c7b8920196c7e3edf2bcf47b2b6153ff",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x8e1e5001C7B8920196c7E3EdF2BCf47B2B6153ff",
       "ownership-agent": "0x28c4A1Fa47EEE9226F8dE7D6AF0a41C62Ca98267",
       "parameter-agent": "0xE7F2B72E94d1c2497150c24EA8D65aFFf1027b9b",
@@ -1413,7 +1413,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x5bcA7dDF1bcccB2eE8e46c56bfc9d3CDC77262bC",
       "ownership-admin": "0x2641ed8034CE92f57377F88852E95eB97AeFDf3a",
       "parameter-admin": "0x4f172B31Da98bc3806aeB98C22525d43304bfea2",
@@ -1485,7 +1485,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x5bcA7dDF1bcccB2eE8e46c56bfc9d3CDC77262bC",
       "ownership-admin": "0x2641ed8034CE92f57377F88852E95eB97AeFDf3a",
       "parameter-admin": "0x4f172B31Da98bc3806aeB98C22525d43304bfea2",
@@ -1556,7 +1556,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "0x91e95f16f7F1b988391A869771Ffb50Df4ceBDF7",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x74d6aABD6197E83d963F0B48be9C034F93E8E66d",
       "ownership-agent": "0x242f512143F54459594B88b1b427225A0EACa105",
       "parameter-agent": "0x663cFF3F0380b4d4D5cCaF3cc68Ec4B974929f24",
@@ -1723,7 +1723,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x5bcA7dDF1bcccB2eE8e46c56bfc9d3CDC77262bC",
       "ownership-agent": "0x2641ed8034CE92f57377F88852E95eB97AeFDf3a",
       "parameter-agent": "0x4f172B31Da98bc3806aeB98C22525d43304bfea2",
@@ -1795,7 +1795,7 @@
       "scrvUSD": "0x8c74d11da5E6cE0498cd280F9209dFB0C5e048A7"
     },
     "x-gov": {
-      "l1-broadcaster": "0x05a3a7b57cb60419ff0b087e9eae8469c28ac8cd",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0xE5De15A9C9bBedb4F5EC13B131E61245f2983A69",
       "ownership-agent": "0x6c9578402A3ace046A12839f45F84Aa5448E9c30",
       "parameter-agent": "0xEC5AFc9590964f2fA0FeED54f0fBB2A34480908D",
@@ -1865,7 +1865,7 @@
       "scrvUSD": ""
     },
     "x-gov": {
-      "l1-broadcaster": "0x9D9e70CA10fE911Dee9869F21e5ebB24A9519Ade",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x9D9e70CA10fE911Dee9869F21e5ebB24A9519Ade",
       "ownership-agent": "0x6628b9e7c0029cea234b382be17101648f32cd8f",
       "parameter-agent": "0xccc4864762412f3273bf7ca9264295909504ebb5",
@@ -1935,7 +1935,7 @@
       "scrvUSD": "0x3d8EADb739D1Ef95dd53D718e4810721837c69c1"
     },
     "x-gov": {
-      "l1-broadcaster": "",
+      "l1-broadcaster": "0x7BA33456EC00812C6B6BB6C1C3dfF579c34CC2cc",
       "l2-relayer": "0x97aDC08FA1D849D2C48C5dcC1DaB568B169b0267",
       "ownership-admin": "0x764d32CAc199394eB30BBcDcf26e1dd446A58532",
       "parameter-admin": "0xD6043e0abF6C6A9995fe0062CBACe2B324B46B4D",
