@@ -40,7 +40,7 @@ Curve uses [ERC-5202](https://eips.ethereum.org/EIPS/eip-5202) blueprint contrac
 | :logos-bsc: BSC | `110205523814837221872401067839670671012439480455633721548677383351514213591649` | [`0xbe365a090321E0E012f448B42feDfB74A7Ea4d9D`](https://bscscan.com/address/0xbe365a090321E0E012f448B42feDfB74A7Ea4d9D) | TwoCrypto (50% DAO fee) — for FX / regular pairs (where donations may stream from within Curve protocol) |
 
 
-### **Tricrypto-NG Factory**
+### **Tricrypto-NG**
 
 `CurveTricryptoFactory`: [`0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963`](https://etherscan.io/address/0x0c0e5f2fF0ff18a3be9b835635039256dC4B4963)
 
