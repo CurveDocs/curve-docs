@@ -1857,6 +1857,77 @@
       }
     }
   },
+  "unichain": {
+    "tokens": {
+      "crv": "",
+      "vecrv": "",
+      "crvUSD": "",
+      "scrvUSD": ""
+    },
+    "x-gov": {
+      "l1-broadcaster": "",
+      "l2-relayer": "",
+      "ownership-agent": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
+      "parameter-agent": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
+      "emergency-agent": "0xabc336d4C71ad275695744d32DdB1d8266Db1cbF",
+      "vault": "0xf3A431008396df8A8b2DF492C913706BDB0874ef"
+    },
+    "x-dao": {
+
+    },
+    "curve-block-oracle": {
+      "l1-broadcaster": "",
+      "block-oracle": "",
+      "header-verifier": "",
+      "lz-block-relay": ""
+    },
+    "gauges": {
+      "child-gauge-factory": "0x8b3EFBEfa6eD222077455d6f0DCdA3bF4f3F57A6",
+      "child-gauge-implementation": "0x506F594ceb4E33F5161139bAe3Ee911014df9f7f"
+    },
+    "vecrv": {
+      "oracle": "",
+      "verifier": "",
+      "delegation-verifier": ""
+    },
+    "fees": {
+      "fee-receiver": ""
+    },
+    "integrations": {
+      "address-provider": "0x1764ee18e8B3ccA4787249Ceb249356192594585",
+      "meta-registry": "0x5eeE3091f747E60a045a2E715a4c71e600e31F6E",
+      "rate-provider": "0x0c59d36b23f809f8b6C7cb4c8C590a0AC103baEf"
+    },
+    "amm": {
+      "stableswap": {
+        "math": "0x686bdb3D24Bc6F3ED89ed3d3B659765c54aC78B4",
+        "views": "0xe61Fb97Ef6eBFBa12B36Ffd7be785c1F5A2DE66b",
+        "factory": "0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22",
+        "plain-amm-implementation": "0xa7Ba18EeFcD9513230987eC2faB6711AF5AbD9c2",
+        "meta-amm-implementation": "0x7C2085419BE6a04f4ad88ea91bC9F5C6E6C463D8"
+      },
+      "twocrypto": {
+        "math": "0x64379C265Fc6595065D7d835AAaa731c0584dB80",
+        "views": "0xd3B17f862956464ae4403cCF829CE69199856e1e",
+        "factory": "0xc9Fe0C63Af9A39402e8a5514f9c43Af0322b665F",
+        "amm-implementation": "0x1A83348F9cCFD3Fe1A8C0adBa580Ac4e267Fe495"
+      },
+      "tricrypto": {
+        "math": "0xa7b9d886A9a374A1C86DC52d2BA585c5CDFdac26",
+        "views": "0xf3A6aa40cf048a3960E9664847E9a7be025a390a",
+        "factory": "0x5702BDB1Ec244704E3cBBaAE11a0275aE5b07499",
+        "amm-native-disable-implementation": "0x635742dCC8313DCf8c904206037d962c042EAfBd",
+        "amm-native-enable-implementationd": ""
+      },
+      "router & zap": {
+        "router": "0xd2002373543Ce3527023C75e7518C274A51ce712",
+        "stable-calc-zap": "",
+        "crypto-calc-zap": "",
+        "deposit-and-stake-zap": "0x5a8C93EE12a8Df4455BA111647AdA41f29D5CfcC",
+        "meta-zap-ng": "0xFAbC421e3368D158d802684A217a83c083c94CeB"
+      }
+    }
+  },
   "x-layer": {
     "tokens": {
       "crv": "0x3d5320821bfca19fb0b5428f2c79d63bd5246f89",
