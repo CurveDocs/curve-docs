@@ -154,7 +154,7 @@ nav:
 
   - Governance and Voting:
     - Overview: governance/overview.md
-    - Curve-DAO Tool: governance/curve-dao.md
+    - Curve Voting Library: governance/curve-dao.md
     - L2 Governance (x-gov):
       - Overview: governance/x-gov/overview.md
       - Broadcaster: governance/x-gov/broadcaster.md
