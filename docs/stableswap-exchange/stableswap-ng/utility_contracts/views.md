@@ -75,14 +75,14 @@ This contract contains **view-only external methods** which can be gas-inefficie
     === "Example"
 
         ```shell
-        >>> StableSwap.get_y('todo')
+        >>> StableSwap.get_dx('todo')
         'todo'
         ```
 
 
 
 ### `get_dy`
-!!! description "`StableSwap.get_dx(i: int128, j: int128, dy: uint256, pool: address) -> uint256:`"
+!!! description "`StableSwap.get_dy(i: int128, j: int128, dx: uint256, pool: address) -> uint256:`"
 
     Function to calculate the predicted input amount `j` to receive `dy` of coin `i`.
 
