@@ -23,6 +23,8 @@ For notebooks, mostly [Titanoboa](https://github.com/vyperlang/titanoboa) is use
 !!!colab "Notebook: Titanoboa Guide"
     A very simple notebook on the basic usage of Titanoboa and how it's used throughout all the notebooks can be found here: [https://colab.research.google.com/drive/1zHMuvNVZP8oB-Q1dA8NqgGLFpLI2JGni?usp=sharing](https://colab.research.google.com/drive/1zHMuvNVZP8oB-Q1dA8NqgGLFpLI2JGni).
 
+For users looking to move beyond notebooks into full smart contract project development and testing, [Moccasin](https://github.com/Cyfrin/moccasin) is a recommended Python-based framework. Built by Cyfrin, Moccasin provides a comprehensive development environment for Vyper contracts with built-in testing, deployment scripts, and network management. It uses Titanoboa under the hood, making it a natural next step for those familiar with the notebooks here.
+
 ---
 
 ## **How to run Notebooks**
