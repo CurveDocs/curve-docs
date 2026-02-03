@@ -33,6 +33,8 @@ The FastBridge system consists of several key components that work together to e
 
 ## **Deployments**
 
+Live monitoring of FastBridge activity is available at the [FastBridge Monitor](https://curvefi.github.io/fast-bridge/).
+
 ### Vaults (Ethereum Mainnet)
 
 | Network | Contract | Address |
@@ -48,8 +50,6 @@ The FastBridge system consists of several key components that work together to e
 | Arbitrum | FastBridgeL2 | [0x1f2af270029d028400265ce1dd0919ba8780dae1](https://arbiscan.io/address/0x1f2af270029d028400265ce1dd0919ba8780dae1) |
 | Optimism | FastBridgeL2 | [0xd16d5ec345dd86fb63c6a9c43c517210f1027914](https://optimistic.etherscan.io/address/0xd16d5ec345dd86fb63c6a9c43c517210f1027914) |
 | Fraxtal | FastBridgeL2 | [0x3fe593e651cd0b383ad36b75f4159f30bb0631a6](https://fraxscan.com/address/0x3fe593e651cd0b383ad36b75f4159f30bb0631a6) |
-
-For more information, see the [FastBridge Overview](https://docs.curve.finance/fast-bridge/overview/).
 
 ---
 
