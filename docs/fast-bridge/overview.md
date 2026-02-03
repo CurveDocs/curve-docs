@@ -31,6 +31,28 @@ The FastBridge system consists of several key components that work together to e
 
 ---
 
+## **Deployments**
+
+### Vaults (Ethereum Mainnet)
+
+| Network | Contract | Address |
+|---------|----------|---------|
+| Arbitrum | FastBridgeVault | [0xadB10d2d5A95e58Ddb1A0744a0d2D7B55Db7843D](https://etherscan.io/address/0xadB10d2d5A95e58Ddb1A0744a0d2D7B55Db7843D) |
+| Optimism | FastBridgeVault | [0x97d024859B68394122B3d0bb407dD7299cC8E937](https://etherscan.io/address/0x97d024859B68394122B3d0bb407dD7299cC8E937) |
+| Fraxtal | FastBridgeVault | [0x5EF620631AA46e7d2F6f963B6bE4F6823521B9eC](https://etherscan.io/address/0x5EF620631AA46e7d2F6f963B6bE4F6823521B9eC) |
+
+### FastBridgeL2 Contracts
+
+| Network | Contract | Address |
+|---------|----------|---------|
+| Arbitrum | FastBridgeL2 | [0x1f2af270029d028400265ce1dd0919ba8780dae1](https://arbiscan.io/address/0x1f2af270029d028400265ce1dd0919ba8780dae1) |
+| Optimism | FastBridgeL2 | [0xd16d5ec345dd86fb63c6a9c43c517210f1027914](https://optimistic.etherscan.io/address/0xd16d5ec345dd86fb63c6a9c43c517210f1027914) |
+| Fraxtal | FastBridgeL2 | [0x3fe593e651cd0b383ad36b75f4159f30bb0631a6](https://fraxscan.com/address/0x3fe593e651cd0b383ad36b75f4159f30bb0631a6) |
+
+For more information, see the [FastBridge Overview](https://docs.curve.finance/fast-bridge/overview/).
+
+---
+
 ## **How It Works**
 
 The FastBridge process involves a carefully orchestrated sequence of events that ensures both immediate access to funds and long-term security. The system operates through four main phases that work in parallel to provide users with the best possible experience.
