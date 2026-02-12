@@ -732,7 +732,9 @@
       "views": "0x2Fe4A238F6A3BD7fAA68e0B6951e3FAFdB2876Eb",
       "factory": "0x6E28493348446503db04A49621d8e6C9A40015FB",
       "amm-implementation": "0x286182220E734AaC601282ba059de531d4BEAC1f"
-    },
+    }
+  }
+},
   "fantom": {
     "tokens": {
       "crv": "0xE6c259bc0FCE25b71fE95A00361D3878E16232C3",
