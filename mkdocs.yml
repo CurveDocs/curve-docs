@@ -1,5 +1,5 @@
 site_name: Curve Technical Docs
-site_url: https://docs.curve.finance/
+site_url: https://dev.curve.finance/
 site_author: CurveFi
 
 plugins:
@@ -202,6 +202,7 @@ nav:
 
   - Fast Bridge:
     - Overview: fast-bridge/overview.md
+    - Integration Guide: fast-bridge/integration.md
     - FastBridgeL2: fast-bridge/FastBridgeL2.md
     - FastBridgeVault: fast-bridge/FastBridgeVault.md
     - L2MessengerLZ: fast-bridge/L2MessengerLZ.md
